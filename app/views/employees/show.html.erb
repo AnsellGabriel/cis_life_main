@@ -1,0 +1,9 @@
+
+<%= render @employee %>
+
+<div>
+  <%= link_to "Edit", edit_employee_path(@employee), class: 'btn btn-primary' %> |
+  <%= link_to "Back", employees_path, class: 'btn btn-primary' %>
+
+  <%= button_to "Delete", @employee, method: :delete, class: 'btn btn-danger' %>
+</div>

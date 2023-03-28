@@ -1,0 +1,43 @@
+<%%= content_tag :h1, "List of <%= plural_table_name.titleize %>" %>
+<%#% subtitle @subtitle if @subtitle %>
+
+<div class="text-end mb-3">
+  <%%= link_to new_<%= singular_table_name %>_path, class: 'btn btn-primary' do %>
+    New <%= human_name.titleize %>
+  <%% end %>
+</div>
+
+<div class="table-responsive">
+  <table class="table table-striped table-bordered table-hover">
+    <thead>
+      <tr>
+
+      <th>ID</th>
+    <% attributes.each do |attribute| -%>
+    <th><%= attribute.human_name.titleize %></th>
+    <% end -%>
+    <th></th>
+
+      </tr>
+    </thead>
+
+    <tbody>
+      <%% @<%= plural_table_name %>.each do |<%= singular_table_name %>| %>
+        <tr>
+
+        <td><%%= <%= singular_table_name %>.id %></td>
+    <% attributes.each do |attribute| -%>
+    <td><%%= <%= singular_table_name %>.<%= attribute.name %> %></td>
+    <% end -%>
+
+          <td>
+            <%%= link_to 'View', <%= singular_table_name %>, class: 'btn' %>
+            <%%= link_to 'Edit', edit_<%= singular_table_name %>_path(<%= singular_table_name %>), class: 'btn' %>
+            <%%= link_to 'Delete', <%= singular_table_name %>, method: :delete, data: { confirm: 'Are you sure?' }, class: 'btn' %>
+          </td>
+
+        </tr>
+      <%% end %>
+    </tbody>
+  </table>
+</div>
