@@ -1,0 +1,20 @@
+
+<%= simple_form_for(@coop_branch) do |f| %>
+  <%= f.error_notification %>
+  <%= f.error_notification message: f.object.errors[:base].to_sentence if f.object.errors[:base].present? %>
+
+  <div class="form-inputs mb-3">
+    <%= f.input :name %>
+    <%= f.input :region %>
+    <%= f.input :province %>
+    <%= f.input :municipality %>
+    <%= f.input :barangay %>
+    <%= f.input :contact_details %>
+    <%= f.association :cooperative %>
+  </div>
+
+  <div class="form-actions text-end">
+    <%= link_to "Back", coop_branches_path, class: 'btn btn-secondary' %>
+    <%= f.button :submit, class: 'btn-success' %>
+  </div>
+<% end %>

@@ -1,0 +1,9 @@
+
+<%= render @agent_group %>
+
+<div>
+  <%= link_to "Edit", edit_agent_group_path(@agent_group), class: 'btn btn-primary' %> |
+  <%= link_to "Back", agent_groups_path, class: 'btn btn-primary' %>
+
+  <%= button_to "Delete", @agent_group, method: :delete, class: 'btn btn-danger' %>
+</div>

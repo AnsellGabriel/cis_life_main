@@ -1,0 +1,53 @@
+<%= content_tag :h1, "List of Coops" %>
+
+
+<div class="text-end mb-3">
+  <%= link_to new_coop_path, class: 'btn btn-primary' do %>
+    New Coop
+  <% end %>
+</div>
+
+<div class="table-responsive">
+  <table class="table table-striped table-bordered table-hover">
+    <thead>
+      <tr>
+
+      <th>ID</th>
+        <th>Last Name</th>
+        <th>First Name</th>
+        <th>Middle Name</th>
+        <th>Birthdate</th>
+        <th>Mobile Number</th>
+        <th>Designation</th>
+        <th>Cooperative</th>
+        <th>Coop Branch</th>
+        <th></th>
+
+      </tr>
+    </thead>
+
+    <tbody>
+      <% @coops.each do |coop| %>
+        <tr>
+
+        <td><%= coop.id %></td>
+        <td><%= coop.last_name %></td>
+        <td><%= coop.first_name %></td>
+        <td><%= coop.middle_name %></td>
+        <td><%= coop.birthdate %></td>
+        <td><%= coop.mobile_number %></td>
+        <td><%= coop.designation %></td>
+        <td><%= coop.cooperative %></td>
+        <td><%= coop.coop_branch %></td>
+    
+          <td>
+            <%= link_to 'View', coop, class: 'btn' %>
+            <%= link_to 'Edit', edit_coop_path(coop), class: 'btn' %>
+            <%= link_to 'Delete', coop, method: :delete, data: { confirm: 'Are you sure?' }, class: 'btn' %>
+          </td>
+
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+</div>

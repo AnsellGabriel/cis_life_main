@@ -1,0 +1,49 @@
+<%= content_tag :h1, "List of Cooperatives" %>
+
+
+<div class="text-end mb-3">
+  <%= link_to new_cooperative_path, class: 'btn btn-primary' do %>
+    New Cooperative
+  <% end %>
+</div>
+
+<div class="table-responsive">
+  <table class="table table-striped table-bordered table-hover">
+    <thead>
+      <tr>
+
+      <th>ID</th>
+        <th>Name</th>
+        <th>Region</th>
+        <th>Province</th>
+        <th>Municipality</th>
+        <th>Barangay</th>
+        <th>Contact Details</th>
+        <th></th>
+
+      </tr>
+    </thead>
+
+    <tbody>
+      <% @cooperatives.each do |cooperative| %>
+        <tr>
+
+        <td><%= cooperative.id %></td>
+        <td><%= cooperative.name %></td>
+        <td><%= cooperative.region %></td>
+        <td><%= cooperative.province %></td>
+        <td><%= cooperative.municipality %></td>
+        <td><%= cooperative.barangay %></td>
+        <td><%= cooperative.contact_details %></td>
+    
+          <td>
+            <%= link_to 'View', cooperative, class: 'btn' %>
+            <%= link_to 'Edit', edit_cooperative_path(cooperative), class: 'btn' %>
+            <%= link_to 'Delete', cooperative, method: :delete, data: { confirm: 'Are you sure?' }, class: 'btn' %>
+          </td>
+
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+</div>

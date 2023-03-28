@@ -1,0 +1,17 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  last_name: MyString
+  first_name: MyString
+  middle_name: MyString
+  birthdate: 2023-03-28
+  mobile_number: MyString
+  agent_group: one
+
+two:
+  last_name: MyString
+  first_name: MyString
+  middle_name: MyString
+  birthdate: 2023-03-28
+  mobile_number: MyString
+  agent_group: two

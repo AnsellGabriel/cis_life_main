@@ -1,0 +1,51 @@
+<%= content_tag :h1, "List of Coop Branches" %>
+
+
+<div class="text-end mb-3">
+  <%= link_to new_coop_branch_path, class: 'btn btn-primary' do %>
+    New Coop Branch
+  <% end %>
+</div>
+
+<div class="table-responsive">
+  <table class="table table-striped table-bordered table-hover">
+    <thead>
+      <tr>
+
+      <th>ID</th>
+        <th>Name</th>
+        <th>Region</th>
+        <th>Province</th>
+        <th>Municipality</th>
+        <th>Barangay</th>
+        <th>Contact Details</th>
+        <th>Cooperative</th>
+        <th></th>
+
+      </tr>
+    </thead>
+
+    <tbody>
+      <% @coop_branches.each do |coop_branch| %>
+        <tr>
+
+        <td><%= coop_branch.id %></td>
+        <td><%= coop_branch.name %></td>
+        <td><%= coop_branch.region %></td>
+        <td><%= coop_branch.province %></td>
+        <td><%= coop_branch.municipality %></td>
+        <td><%= coop_branch.barangay %></td>
+        <td><%= coop_branch.contact_details %></td>
+        <td><%= coop_branch.cooperative %></td>
+    
+          <td>
+            <%= link_to 'View', coop_branch, class: 'btn' %>
+            <%= link_to 'Edit', edit_coop_branch_path(coop_branch), class: 'btn' %>
+            <%= link_to 'Delete', coop_branch, method: :delete, data: { confirm: 'Are you sure?' }, class: 'btn' %>
+          </td>
+
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+</div>

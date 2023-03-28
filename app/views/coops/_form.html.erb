@@ -1,0 +1,21 @@
+
+<%= simple_form_for(@coop) do |f| %>
+  <%= f.error_notification %>
+  <%= f.error_notification message: f.object.errors[:base].to_sentence if f.object.errors[:base].present? %>
+
+  <div class="form-inputs mb-3">
+    <%= f.input :last_name %>
+    <%= f.input :first_name %>
+    <%= f.input :middle_name %>
+    <%= f.input :birthdate %>
+    <%= f.input :mobile_number %>
+    <%= f.input :designation %>
+    <%= f.association :cooperative %>
+    <%= f.association :coop_branch %>
+  </div>
+
+  <div class="form-actions text-end">
+    <%= link_to "Back", coops_path, class: 'btn btn-secondary' %>
+    <%= f.button :submit, class: 'btn-success' %>
+  </div>
+<% end %>

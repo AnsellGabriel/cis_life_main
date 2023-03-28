@@ -1,0 +1,9 @@
+
+<%= render @department %>
+
+<div>
+  <%= link_to "Edit", edit_department_path(@department), class: 'btn btn-primary' %> |
+  <%= link_to "Back", departments_path, class: 'btn btn-primary' %>
+
+  <%= button_to "Delete", @department, method: :delete, class: 'btn btn-danger' %>
+</div>
