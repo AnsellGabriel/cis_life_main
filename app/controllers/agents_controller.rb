@@ -12,7 +12,10 @@ class AgentsController < ApplicationController
 
   # GET /agents/new
   def new
-    @agent = Agent.new
+    @agent = Agent.new(last_name: FFaker::Name.last_name, first_name: FFaker::Name.first_name, middle_name: FFaker::Name.last_name, mobile_number: FFaker::PhoneNumber)
+    
+    # new instance of the "User" class associated with the "Agent" instance.
+    @agent.build_user
   end
 
   # GET /agents/1/edit
@@ -25,7 +28,7 @@ class AgentsController < ApplicationController
 
     respond_to do |format|
       if @agent.save
-        format.html { redirect_to agent_url(@agent), notice: "Agent was successfully created." }
+        format.html { redirect_to unauthenticated_root_path, notice: "Agent was successfully created." }
         format.json { render :show, status: :created, location: @agent }
       else
         format.html { render :new, status: :unprocessable_entity }
@@ -65,6 +68,6 @@ class AgentsController < ApplicationController
 
     # Only allow a list of trusted parameters through.
     def agent_params
-      params.require(:agent).permit(:last_name, :first_name, :middle_name, :birthdate, :mobile_number, :agent_group_id)
+      params.require(:agent).permit(:last_name, :first_name, :middle_name, :birthdate, :mobile_number, :agent_group_id, user_attributes: [:email, :password, :password_confirmation, :userable_type, :userable_id])
     end
 end

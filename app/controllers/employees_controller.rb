@@ -12,7 +12,10 @@ class EmployeesController < ApplicationController
 
   # GET /employees/new
   def new
-    @employee = Employee.new
+    @employee = Employee.new(last_name: FFaker::Name.last_name, first_name: FFaker::Name.first_name, middle_name: FFaker::Name.last_name, employee_number: FFaker::Number, mobile_number: FFaker::PhoneNumber, designation: FFaker::String)
+    
+    # new instance of the "User" class associated with the "Employee" instance.
+    @employee.build_user
   end
 
   # GET /employees/1/edit
@@ -25,7 +28,7 @@ class EmployeesController < ApplicationController
 
     respond_to do |format|
       if @employee.save
-        format.html { redirect_to employee_url(@employee), notice: "Employee was successfully created." }
+        format.html { redirect_to unauthenticated_root_path, notice: "Employee was successfully created." }
         format.json { render :show, status: :created, location: @employee }
       else
         format.html { render :new, status: :unprocessable_entity }
@@ -65,6 +68,6 @@ class EmployeesController < ApplicationController
 
     # Only allow a list of trusted parameters through.
     def employee_params
-      params.require(:employee).permit(:last_name, :first_name, :middle_name, :birthdate, :employee_number, :mobile_number, :designation, :department_id)
+      params.require(:employee).permit(:last_name, :first_name, :middle_name, :birthdate, :employee_number, :mobile_number, :designation, :department_id, user_attributes: [:email, :password, :password_confirmation, :userable_type, :userable_id])
     end
 end

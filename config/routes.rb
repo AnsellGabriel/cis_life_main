@@ -7,7 +7,10 @@ Rails.application.routes.draw do
   resources :coops
   resources :employees
 
-  devise_for :users
+  devise_for :users, controllers: {
+    registrations: 'users/registrations',
+  }
+
   devise_scope :user do
     authenticated :user do
       root 'employees#index', as: :authenticated_root

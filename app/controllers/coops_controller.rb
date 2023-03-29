@@ -12,7 +12,10 @@ class CoopsController < ApplicationController
 
   # GET /coops/new
   def new
-    @coop = Coop.new
+    @coop = Coop.new(last_name: FFaker::Name.last_name, first_name: FFaker::Name.first_name, middle_name: FFaker::Name.last_name, mobile_number: FFaker::PhoneNumber, designation: FFaker::String)
+    
+    # new instance of the "User" class associated with the "Coop" instance.
+    @coop.build_user
   end
 
   # GET /coops/1/edit
@@ -25,7 +28,7 @@ class CoopsController < ApplicationController
 
     respond_to do |format|
       if @coop.save
-        format.html { redirect_to coop_url(@coop), notice: "Coop was successfully created." }
+        format.html { redirect_to unauthenticated_root_path, notice: "Coop was successfully created." }
         format.json { render :show, status: :created, location: @coop }
       else
         format.html { render :new, status: :unprocessable_entity }
@@ -65,6 +68,6 @@ class CoopsController < ApplicationController
 
     # Only allow a list of trusted parameters through.
     def coop_params
-      params.require(:coop).permit(:last_name, :first_name, :middle_name, :birthdate, :mobile_number, :designation, :cooperative_id, :coop_branch_id)
+      params.require(:coop).permit(:last_name, :first_name, :middle_name, :birthdate, :mobile_number, :designation, :cooperative_id, :coop_branch_id, user_attributes: [:email, :password, :password_confirmation, :userable_type, :userable_id])
     end
 end
