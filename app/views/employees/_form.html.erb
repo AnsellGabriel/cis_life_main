@@ -1,5 +1,5 @@
 
-<%= simple_form_for @employee, html: { class: 'hidden', id: 'employeeForm' } do |f| %>
+<%= simple_form_for @employee do |f| %>
   <%= f.error_notification %>
   <%= f.error_notification message: f.object.errors[:base].to_sentence if f.object.errors[:base].present? %>
 

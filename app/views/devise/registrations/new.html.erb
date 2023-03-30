@@ -2,9 +2,17 @@
 
 <%= select_tag :category, options_for_select([['Select a role', '', {disabled: true, selected: true}],'Agent', 'Coop', 'Employee']), id: "formCategory" %>
 
-<%= render "agents/form", agent: @agent %>
-<%= render "coops/form", agent: @coop %>
-<%= render "employees/form", agent: @employee %>
+<div class="hidden" id="agentForm">
+    <%= render "agents/form", agent: @agent %>
+</div>
+
+<div class="hidden" id="coopForm">
+    <%= render "coops/form", agent: @coop %>
+</div>
+
+<div class="hidden" id="employeeForm">
+    <%= render "employees/form", agent: @employee %>
+</div>
 
 <%= render "devise/shared/links" %>
 
