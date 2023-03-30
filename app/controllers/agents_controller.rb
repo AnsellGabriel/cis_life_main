@@ -28,11 +28,10 @@ class AgentsController < ApplicationController
 
     respond_to do |format|
       if @agent.save
-        format.html { redirect_to unauthenticated_root_path, notice: "Agent was successfully created." }
-        format.json { render :show, status: :created, location: @agent }
+        format.html { redirect_to unauthenticated_root_path}
+        flash[:success] = "Agent created successfully"
       else
         format.html { render :new, status: :unprocessable_entity }
-        format.json { render json: @agent.errors, status: :unprocessable_entity }
       end
     end
   end

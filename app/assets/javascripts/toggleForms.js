@@ -1,4 +1,4 @@
-export function toggleForms() {
+function toggleForms() {
     const elem = document.getElementById('formCategory');
     const agentForm = document.getElementById('agentForm');
     const coopForm = document.getElementById('coopForm');
@@ -20,3 +20,4 @@ export function toggleForms() {
         }
     });
 };
+
