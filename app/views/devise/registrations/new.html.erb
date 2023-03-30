@@ -1,7 +1,6 @@
 <h2>Sign up</h2>
 
-<%= select_tag :category, options_for_select(['Agent', 'Coop', 'Employee']), id: "formCategory" %>
-
+<%= select_tag :category, options_for_select([['Select a role', '', {disabled: true, selected: true}],'Agent', 'Coop', 'Employee']), id: "formCategory" %>
 <%= render "agents/form", agent: @agent %>
 <%= render "coops/form", agent: @coop %>
 <%= render "employees/form", agent: @employee %>

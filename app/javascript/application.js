@@ -3,5 +3,8 @@ import "@hotwired/turbo-rails"
 import "controllers"
 import "@popperjs/core"
 import "bootstrap"
+import { toggleForms } from "./toggleForms.js";
 
-
+document.addEventListener("DOMContentLoaded", function() {
+    toggleForms();
+});
