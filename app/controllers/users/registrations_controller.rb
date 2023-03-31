@@ -11,11 +11,11 @@ class Users::RegistrationsController < Devise::RegistrationsController
     @agent.build_user
 
     @coop = Coop.new(last_name: FFaker::Name.last_name, first_name: FFaker::Name.first_name, middle_name: FFaker::Name.last_name, mobile_number: FFaker::PhoneNumber, designation: FFaker::String)
-    # new instance of the "User" class associated with the "Agent" instance.
+    # new instance of the "User" class associated with the "Coop" instance.
     @coop.build_user
 
     @employee = Employee.new(last_name: FFaker::Name.last_name, first_name: FFaker::Name.first_name, middle_name: FFaker::Name.last_name, employee_number: FFaker::Number, mobile_number: FFaker::PhoneNumber, designation: FFaker::String)
-    # new instance of the "User" class associated with the "Agent" instance.
+    # new instance of the "User" class associated with the "Employee" instance.
     @employee.build_user
   end
 

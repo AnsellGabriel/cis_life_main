@@ -11,11 +11,11 @@ ActiveAdmin.register_page "Dashboard" do
     end
 
     # Here is an example of a simple dashboard with columns and panels.
-    #
     columns do
       column do
         panel "Unapproved Users" do
           ul do
+            # Display a list of all users that are not approved
             User.where(approved: false).each do |user|
               li link_to(user.email, admin_user_path(user))
             end

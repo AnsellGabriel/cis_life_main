@@ -5,31 +5,35 @@
 
   <div class="form-inputs mb-3">
     <%# fields for User model associated with Employee %>
-    <%= f.fields_for :user do |u| %>
-      <%= u.input :email,
-                required: true,
-                autofocus: true,
-                input_html: { autocomplete: "email" }%>
-    <%= u.input :password,
-                required: true,
-                hint: ("#{@minimum_password_length} characters minimum" if @minimum_password_length),
-                input_html: { autocomplete: "new-password" } %>
-    <%= u.input :password_confirmation,
-                required: true,
-                input_html: { autocomplete: "new-password" } %>
+    <% unless current_user %>
+      <%= f.fields_for :user do |u| %>
+        <%= u.input :email,
+                  required: true,
+                  autofocus: true,
+                  input_html: { autocomplete: "email" }%>
+      <%= u.input :password,
+                  required: true,
+                  hint: ("#{@minimum_password_length} characters minimum" if @minimum_password_length),
+                  input_html: { autocomplete: "new-password" } %>
+      <%= u.input :password_confirmation,
+                  required: true,
+                  input_html: { autocomplete: "new-password" } %>
 
-      <%= u.hidden_field :userable_type, value: "Employee" %>
-      <%= u.hidden_field :userable_id, value: @employee.id %>
+        <%= u.hidden_field :userable_type, value: "Employee" %>
+        <%= u.hidden_field :userable_id, value: @employee.id %>
+      <% end %>
     <% end %>
 
-    <%= f.input :last_name %>
+    <%= f.association :department %>
+    <%= f.input :designation %>
+    <%= f.input :employee_number %>
     <%= f.input :first_name %>
     <%= f.input :middle_name %>
+    <%= f.input :last_name %>
     <%= f.input :birthdate %>
-    <%= f.input :employee_number %>
     <%= f.input :mobile_number %>
-    <%= f.input :designation %>
-    <%= f.association :department %>
+    
+    
   </div>
 
   <div class="form-actions text-end">

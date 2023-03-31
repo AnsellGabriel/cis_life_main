@@ -1,7 +1,8 @@
 class ApplicationController < ActionController::Base
     protected
+    # Overwriting the sign_out redirect path method for unapproved users
     def after_sign_in_path_for(resource)
-      if !resource.approved?
+      if resource.is_a?(User) && !resource.approved?
         sign_out resource
         root_path
       else

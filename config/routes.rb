@@ -7,7 +7,9 @@ Rails.application.routes.draw do
   resources :cooperatives
   resources :departments
   resources :agents
-  resources :coops
+  resources :coops do
+    root 'coops#home', as: :home
+  end
   resources :employees
 
   devise_for :users, controllers: {

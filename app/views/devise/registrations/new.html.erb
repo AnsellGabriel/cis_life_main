@@ -1,6 +1,6 @@
-<h2>Sign up</h2>
+<h2>Register</h2>
 
-<%= select_tag :category, options_for_select([['Select a role', '', {disabled: true, selected: true}],'Agent', 'Coop', 'Employee']), id: "formCategory" %>
+<%= select_tag :category, options_for_select([['Select a role', '', {disabled: true, selected: true}],'Agent', 'Coop', 'Employee']), id: "formCategory", class: "form-select" %>
 
 <div class="hidden" id="agentForm">
     <%= render "agents/form", agent: @agent %>
@@ -13,8 +13,6 @@
 <div class="hidden" id="employeeForm">
     <%= render "employees/form", agent: @employee %>
 </div>
-
-<%= render "devise/shared/links" %>
 
 <%= javascript_include_tag 'toggleForms' %>
 <script type="module">

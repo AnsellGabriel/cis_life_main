@@ -1,3 +1,4 @@
+// Purpose: To toggle the forms on the new user page based on the role selected
 function toggleForms() {
     const roleSelection = document.getElementById('formCategory');
     const agentForm = document.getElementById('agentForm');

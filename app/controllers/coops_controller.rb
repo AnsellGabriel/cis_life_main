@@ -1,6 +1,9 @@
 class CoopsController < ApplicationController
   before_action :set_coop, only: %i[ show edit update destroy ]
 
+  def home
+  end
+  
   # GET /coops or /coops.json
   def index
     @coops = Coop.all

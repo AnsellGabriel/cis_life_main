@@ -31,3 +31,20 @@
     background-color: #d4edda;
     border-color: #c3e6cb;
   }
+  input[type="submit"], button, .btn {
+    color: #fff; 
+    background-color: #007bff !important;
+    border-color: #007bff !important;
+    background-image: none !important;
+    border-radius: 0.25rem !important;
+    height: 40px;
+    width: auto;
+  }
+ 
+  a {
+    text-decoration: none !important;
+  }
+
+  .btn {
+    color: #fff !important;
+  }
