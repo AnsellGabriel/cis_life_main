@@ -28,7 +28,7 @@ class EmployeesController < ApplicationController
 
     respond_to do |format|
       if @employee.save
-        format.html { redirect_to unauthenticated_root_path, notice: "Employee was successfully created." }
+        format.html { redirect_to unauthenticated_root_path, notice: "Account created successfully. Please wait for the admin to approve your account." }
         format.json { render :show, status: :created, location: @employee }
       else
         format.html { render :new, status: :unprocessable_entity }

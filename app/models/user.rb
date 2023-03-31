@@ -7,4 +7,8 @@ class User < ApplicationRecord
   belongs_to :userable, polymorphic: true
   attribute :admin, :boolean, default: false
   attribute :approved, :boolean, default: false
+
+  def active_for_authentication?
+    super && approved?
+  end
 end

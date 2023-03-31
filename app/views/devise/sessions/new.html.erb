@@ -33,12 +33,6 @@
     </div>
   <% end %>
 
-  <% if !resource.approved? %>
-    <div class="alert alert-warning">
-      Your account is awaiting approval by an administrator. You will not be able to log in until it has been approved.
-    </div>
-  <% end %>
-
   <div class="form-group">
     <%= f.submit "Log in", class: "btn btn-primary" %>
   </div>
