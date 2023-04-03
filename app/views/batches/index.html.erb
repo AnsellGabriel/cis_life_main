@@ -1,0 +1,51 @@
+<%= content_tag :h1, "List of Batches" %>
+
+
+<div class="text-end mb-3">
+  <%= link_to new_batch_path, class: 'btn btn-primary' do %>
+    New Batch
+  <% end %>
+</div>
+
+<div class="table-responsive">
+  <table class="table table-striped table-bordered table-hover">
+    <thead>
+      <tr>
+
+      <th>ID</th>
+        <th>Coop Member</th>
+        <th>Group Remit</th>
+        <th>Effectivity Date</th>
+        <th>Expiry Date</th>
+        <th>Active</th>
+        <th>Coop Sf Amount</th>
+        <th>Agent Sf Amount</th>
+        <th></th>
+
+      </tr>
+    </thead>
+
+    <tbody>
+      <% @batches.each do |batch| %>
+        <tr>
+
+        <td><%= batch.id %></td>
+        <td><%= batch.coop_member %></td>
+        <td><%= batch.group_remit %></td>
+        <td><%= batch.effectivity_date %></td>
+        <td><%= batch.expiry_date %></td>
+        <td><%= batch.active %></td>
+        <td><%= batch.coop_sf_amount %></td>
+        <td><%= batch.agent_sf_amount %></td>
+    
+          <td>
+            <%= link_to 'View', batch, class: 'btn' %>
+            <%= link_to 'Edit', edit_batch_path(batch), class: 'btn' %>
+            <%= link_to 'Delete', batch, method: :delete, data: { confirm: 'Are you sure?' }, class: 'btn' %>
+          </td>
+
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+</div>

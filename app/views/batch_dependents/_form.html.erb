@@ -1,0 +1,17 @@
+
+<%= simple_form_for(@batch_dependent) do |f| %>
+  <%= f.error_notification %>
+  <%= f.error_notification message: f.object.errors[:base].to_sentence if f.object.errors[:base].present? %>
+
+  <div class="form-inputs mb-3">
+    <%= f.association :batch %>
+    <%= f.association :coop_dependent %>
+    <%= f.input :premium %>
+    <%= f.association :agreement_benefit %>
+  </div>
+
+  <div class="form-actions text-end">
+    <%= link_to "Back", batch_dependents_path, class: 'btn btn-secondary' %>
+    <%= f.button :submit, class: 'btn-success' %>
+  </div>
+<% end %>

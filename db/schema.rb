@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_04_03_011643) do
+ActiveRecord::Schema[7.0].define(version: 2023_04_03_022347) do
   create_table "active_admin_comments", force: :cascade do |t|
     t.string "namespace"
     t.text "body"
@@ -54,6 +54,53 @@ ActiveRecord::Schema[7.0].define(version: 2023_04_03_011643) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["agent_group_id"], name: "index_agents_on_agent_group_id"
+  end
+
+  create_table "agreement_benefits", force: :cascade do |t|
+    t.string "name"
+    t.text "description"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  create_table "agreements", force: :cascade do |t|
+    t.string "name"
+    t.text "description"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  create_table "anniversaries", force: :cascade do |t|
+    t.string "name"
+    t.date "anniversary_date"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  create_table "batch_dependents", force: :cascade do |t|
+    t.integer "batch_id", null: false
+    t.integer "coop_dependent_id", null: false
+    t.float "premium"
+    t.integer "agreement_benefit_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["agreement_benefit_id"], name: "index_batch_dependents_on_agreement_benefit_id"
+    t.index ["batch_id"], name: "index_batch_dependents_on_batch_id"
+    t.index ["coop_dependent_id"], name: "index_batch_dependents_on_coop_dependent_id"
+  end
+
+  create_table "batches", force: :cascade do |t|
+    t.integer "coop_member_id", null: false
+    t.integer "group_remit_id", null: false
+    t.date "effectivity_date"
+    t.string "expiry_date"
+    t.boolean "active"
+    t.float "coop_sf_amount"
+    t.float "agent_sf_amount"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["coop_member_id"], name: "index_batches_on_coop_member_id"
+    t.index ["group_remit_id"], name: "index_batches_on_group_remit_id"
   end
 
   create_table "coop_branches", force: :cascade do |t|
@@ -113,6 +160,21 @@ ActiveRecord::Schema[7.0].define(version: 2023_04_03_011643) do
     t.index ["cooperative_id"], name: "index_coop_members_on_cooperative_id"
   end
 
+  create_table "coop_users", force: :cascade do |t|
+    t.string "last_name"
+    t.string "first_name"
+    t.string "middle_name"
+    t.date "birthdate"
+    t.string "mobile_number"
+    t.string "designation"
+    t.integer "cooperative_id", null: false
+    t.integer "coop_branch_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["coop_branch_id"], name: "index_coops_on_coop_branch_id"
+    t.index ["cooperative_id"], name: "index_coops_on_cooperative_id"
+  end
+
   create_table "cooperatives", force: :cascade do |t|
     t.string "name"
     t.string "region"
@@ -128,21 +190,6 @@ ActiveRecord::Schema[7.0].define(version: 2023_04_03_011643) do
     t.string "cooperative_type"
     t.string "acronym"
     t.string "street"
-  end
-
-  create_table "coop_users", force: :cascade do |t|
-    t.string "last_name"
-    t.string "first_name"
-    t.string "middle_name"
-    t.date "birthdate"
-    t.string "mobile_number"
-    t.string "designation"
-    t.integer "cooperative_id", null: false
-    t.integer "coop_branch_id", null: false
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.index ["coop_branch_id"], name: "index_coops_on_coop_branch_id"
-    t.index ["cooperative_id"], name: "index_coops_on_cooperative_id"
   end
 
   create_table "departments", force: :cascade do |t|
@@ -166,6 +213,17 @@ ActiveRecord::Schema[7.0].define(version: 2023_04_03_011643) do
     t.index ["department_id"], name: "index_employees_on_department_id"
   end
 
+  create_table "group_remits", force: :cascade do |t|
+    t.string "name"
+    t.text "description"
+    t.integer "agreement_id", null: false
+    t.integer "anniversary_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["agreement_id"], name: "index_group_remits_on_agreement_id"
+    t.index ["anniversary_id"], name: "index_group_remits_on_anniversary_id"
+  end
+
   create_table "users", force: :cascade do |t|
     t.string "email", default: "", null: false
     t.string "encrypted_password", default: "", null: false
@@ -183,6 +241,11 @@ ActiveRecord::Schema[7.0].define(version: 2023_04_03_011643) do
   end
 
   add_foreign_key "agents", "agent_groups"
+  add_foreign_key "batch_dependents", "agreement_benefits"
+  add_foreign_key "batch_dependents", "batches"
+  add_foreign_key "batch_dependents", "coop_dependents"
+  add_foreign_key "batches", "coop_members"
+  add_foreign_key "batches", "group_remits"
   add_foreign_key "coop_branches", "cooperatives"
   add_foreign_key "coop_member_beneficiaries", "coop_members"
   add_foreign_key "coop_member_dependents", "coop_members"
@@ -191,4 +254,6 @@ ActiveRecord::Schema[7.0].define(version: 2023_04_03_011643) do
   add_foreign_key "coop_users", "coop_branches"
   add_foreign_key "coop_users", "cooperatives"
   add_foreign_key "employees", "departments"
+  add_foreign_key "group_remits", "agreements"
+  add_foreign_key "group_remits", "anniversaries"
 end

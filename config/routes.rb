@@ -1,4 +1,10 @@
 Rails.application.routes.draw do
+  resources :batch_dependents
+  resources :batches
+  resources :group_remits
+  resources :agreement_benefits
+  resources :anniversaries
+  resources :agreements
   resources :coop_member_beneficiaries
   resources :coop_member_dependents
   resources :coop_members

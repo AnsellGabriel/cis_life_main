@@ -1,0 +1,41 @@
+<%= content_tag :h1, "List of Agreement Benefits" %>
+
+
+<div class="text-end mb-3">
+  <%= link_to new_agreement_benefit_path, class: 'btn btn-primary' do %>
+    New Agreement Benefit
+  <% end %>
+</div>
+
+<div class="table-responsive">
+  <table class="table table-striped table-bordered table-hover">
+    <thead>
+      <tr>
+
+      <th>ID</th>
+        <th>Name</th>
+        <th>Description</th>
+        <th></th>
+
+      </tr>
+    </thead>
+
+    <tbody>
+      <% @agreement_benefits.each do |agreement_benefit| %>
+        <tr>
+
+        <td><%= agreement_benefit.id %></td>
+        <td><%= agreement_benefit.name %></td>
+        <td><%= agreement_benefit.description %></td>
+    
+          <td>
+            <%= link_to 'View', agreement_benefit, class: 'btn' %>
+            <%= link_to 'Edit', edit_agreement_benefit_path(agreement_benefit), class: 'btn' %>
+            <%= link_to 'Delete', agreement_benefit, method: :delete, data: { confirm: 'Are you sure?' }, class: 'btn' %>
+          </td>
+
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+</div>

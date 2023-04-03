@@ -1,0 +1,2 @@
+class Anniversary < ApplicationRecord
+end

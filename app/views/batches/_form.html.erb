@@ -1,0 +1,20 @@
+
+<%= simple_form_for(@batch) do |f| %>
+  <%= f.error_notification %>
+  <%= f.error_notification message: f.object.errors[:base].to_sentence if f.object.errors[:base].present? %>
+
+  <div class="form-inputs mb-3">
+    <%= f.association :coop_member %>
+    <%= f.association :group_remit %>
+    <%= f.input :effectivity_date %>
+    <%= f.input :expiry_date %>
+    <%= f.input :active %>
+    <%= f.input :coop_sf_amount %>
+    <%= f.input :agent_sf_amount %>
+  </div>
+
+  <div class="form-actions text-end">
+    <%= link_to "Back", batches_path, class: 'btn btn-secondary' %>
+    <%= f.button :submit, class: 'btn-success' %>
+  </div>
+<% end %>

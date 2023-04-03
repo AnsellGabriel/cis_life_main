@@ -1,0 +1,45 @@
+<%= content_tag :h1, "List of Batch Dependents" %>
+
+
+<div class="text-end mb-3">
+  <%= link_to new_batch_dependent_path, class: 'btn btn-primary' do %>
+    New Batch Dependent
+  <% end %>
+</div>
+
+<div class="table-responsive">
+  <table class="table table-striped table-bordered table-hover">
+    <thead>
+      <tr>
+
+      <th>ID</th>
+        <th>Batch</th>
+        <th>Coop Dependent</th>
+        <th>Premium</th>
+        <th>Agreement Benefit</th>
+        <th></th>
+
+      </tr>
+    </thead>
+
+    <tbody>
+      <% @batch_dependents.each do |batch_dependent| %>
+        <tr>
+
+        <td><%= batch_dependent.id %></td>
+        <td><%= batch_dependent.batch %></td>
+        <td><%= batch_dependent.coop_dependent %></td>
+        <td><%= batch_dependent.premium %></td>
+        <td><%= batch_dependent.agreement_benefit %></td>
+    
+          <td>
+            <%= link_to 'View', batch_dependent, class: 'btn' %>
+            <%= link_to 'Edit', edit_batch_dependent_path(batch_dependent), class: 'btn' %>
+            <%= link_to 'Delete', batch_dependent, method: :delete, data: { confirm: 'Are you sure?' }, class: 'btn' %>
+          </td>
+
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+</div>

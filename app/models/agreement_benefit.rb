@@ -1,0 +1,2 @@
+class AgreementBenefit < ApplicationRecord
+end

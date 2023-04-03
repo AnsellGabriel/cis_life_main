@@ -1,0 +1,41 @@
+<%= content_tag :h1, "List of Agreements" %>
+
+
+<div class="text-end mb-3">
+  <%= link_to new_agreement_path, class: 'btn btn-primary' do %>
+    New Agreement
+  <% end %>
+</div>
+
+<div class="table-responsive">
+  <table class="table table-striped table-bordered table-hover">
+    <thead>
+      <tr>
+
+      <th>ID</th>
+        <th>Name</th>
+        <th>Description</th>
+        <th></th>
+
+      </tr>
+    </thead>
+
+    <tbody>
+      <% @agreements.each do |agreement| %>
+        <tr>
+
+        <td><%= agreement.id %></td>
+        <td><%= agreement.name %></td>
+        <td><%= agreement.description %></td>
+    
+          <td>
+            <%= link_to 'View', agreement, class: 'btn' %>
+            <%= link_to 'Edit', edit_agreement_path(agreement), class: 'btn' %>
+            <%= link_to 'Delete', agreement, method: :delete, data: { confirm: 'Are you sure?' }, class: 'btn' %>
+          </td>
+
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+</div>
