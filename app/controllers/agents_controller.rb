@@ -1,5 +1,7 @@
 class AgentsController < ApplicationController
   before_action :set_agent, only: %i[ show edit update destroy ]
+  before_action :authenticate_user!, only: %i[ index show edit update destroy ]
+
 
   # GET /agents or /agents.json
   def index

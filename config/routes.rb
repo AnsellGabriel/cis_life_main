@@ -1,4 +1,7 @@
 Rails.application.routes.draw do
+  resources :coop_member_beneficiaries
+  resources :coop_member_dependents
+  resources :coop_members
   devise_for :admin_users, ActiveAdmin::Devise.config
   ActiveAdmin.routes(self)
   

@@ -1,0 +1,2 @@
+module CoopMemberBeneficiariesHelper
+end
