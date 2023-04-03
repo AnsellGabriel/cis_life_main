@@ -14,16 +14,16 @@
           <li class="nav-item">
             <%= link_to "Home", authenticated_root_path, class: "nav-link" %>
           </li>
-          <li class="nav-item">
-            <a class="nav-link">
-              Enroll Member
-            </a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link">
-              Remittance
-            </a>
-          </li>
+          <% if current_user.userable_type === "CoopUser" %>
+            <li class="nav-item">
+              <%= link_to "Enroll Member", new_coop_member_path, class: "nav-link" %>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link">
+                Remittance
+              </a>
+            </li>
+          <% end %>
           <%#= link_to "Evaluate", view_evaluate_process_claims_path, class: "nav-link" %>
           <li class="nav-item dropdown">
             <a class="nav-link dropdown-toggle" href="#" id="navbarScrollingDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">

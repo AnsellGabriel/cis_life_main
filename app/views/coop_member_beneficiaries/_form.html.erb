@@ -1,5 +1,5 @@
 
-<%= simple_form_for(@coop_member_beneficiary) do |f| %>
+<%= simple_form_for(@beneficiary) do |f| %>
   <%= f.error_notification %>
   <%= f.error_notification message: f.object.errors[:base].to_sentence if f.object.errors[:base].present? %>
 
@@ -9,7 +9,7 @@
     <%= f.input :middle_name %>
     <%= f.input :suffix %>
     <%= f.input :birthdate %>
-    <%= f.association :coop_member %>
+    <%= f.hidden_field :coop_member_id, value: @coop_member.id %>
     <%= f.input :relationship %>
   </div>
 
@@ -18,3 +18,4 @@
     <%= f.button :submit, class: 'btn-success' %>
   </div>
 <% end %>
+<%= console %>

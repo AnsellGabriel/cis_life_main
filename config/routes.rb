@@ -1,25 +1,13 @@
 Rails.application.routes.draw do
-  resources :batch_dependents
-  resources :batches
-  resources :group_remits
-  resources :agreement_benefits
-  resources :anniversaries
-  resources :agreements
-  resources :coop_member_beneficiaries
-  resources :coop_member_dependents
-  resources :coop_members
+  resources :batch_dependents, :batches, :group_remits, :agreement_benefits, :anniversaries, :agreements, :agent_groups, :coop_branches, :cooperatives, :departments, :agents, :coop_users, :employees
+
+  resources :coop_members do
+    resources :coop_member_beneficiaries, path: 'beneficiaries', as: 'beneficiaries'
+    resources :coop_member_dependents
+  end
+
   devise_for :admin_users, ActiveAdmin::Devise.config
   ActiveAdmin.routes(self)
-  
-  resources :agent_groups
-  resources :coop_branches
-  resources :cooperatives
-  resources :departments
-  resources :agents
-  resources :coop_users do
-    root 'coops#home', as: :home
-  end
-  resources :employees
 
   devise_for :users, controllers: {
     registrations: 'users/registrations',

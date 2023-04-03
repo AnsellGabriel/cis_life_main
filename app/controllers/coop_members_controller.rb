@@ -1,4 +1,23 @@
 class CoopMembersController < InheritedResources::Base
+  def index
+    @cooperative = current_user.userable.cooperative
+    super
+  end
+
+  def new
+    @cooperative = current_user.userable.cooperative
+    super
+  end
+
+  def edit
+    @cooperative = current_user.userable.cooperative
+    super
+  end
+  
+  def show
+    @coop_member = CoopMember.find(params[:id])
+    @beneficiaries = @coop_member.coop_member_beneficiaries
+  end
 
   private
 

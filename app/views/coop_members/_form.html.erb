@@ -4,8 +4,8 @@
   <%= f.error_notification message: f.object.errors[:base].to_sentence if f.object.errors[:base].present? %>
 
   <div class="form-inputs mb-3">
-    <%= f.association :cooperative %>
-    <%= f.association :coop_branch %>
+    <%= f.hidden_field :cooperative_id, value: @cooperative.id %>
+    <%= f.association :coop_branch, collection: @cooperative.coop_branches %>
     <%= f.input :last_name %>
     <%= f.input :first_name %>
     <%= f.input :middle_name %>

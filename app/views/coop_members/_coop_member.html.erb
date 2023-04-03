@@ -1,47 +1,25 @@
+<%= content_tag :h1, "#{coop_member.last_name}, #{coop_member.first_name} #{coop_member.middle_name} #{coop_member.suffix}" %>
+
 <div id="<%= dom_id coop_member %>">
+
   <p>
     <strong>Cooperative:</strong>
-    <%= coop_member.cooperative_id %>
-  </p>
-
-  <p>
-    <strong>Coop branch:</strong>
-    <%= coop_member.coop_branch_id %>
-  </p>
-
-  <p>
-    <strong>Last name:</strong>
-    <%= coop_member.last_name %>
-  </p>
-
-  <p>
-    <strong>First name:</strong>
-    <%= coop_member.first_name %>
-  </p>
-
-  <p>
-    <strong>Middle name:</strong>
-    <%= coop_member.middle_name %>
-  </p>
-
-  <p>
-    <strong>Suffix:</strong>
-    <%= coop_member.suffix %>
+    <%= "#{coop_member.cooperative.name}, #{coop_member.coop_branch.name}" %>
   </p>
 
   <p>
     <strong>Birthdate:</strong>
-    <%= coop_member.birthdate %>
-  </p>
-
-  <p>
-    <strong>Mobile number:</strong>
-    <%= coop_member.mobile_number %>
+    <%= coop_member.birthdate.strftime('%B %d, %Y') %>
   </p>
 
   <p>
     <strong>Email:</strong>
     <%= coop_member.email %>
+  </p>
+
+  <p>
+    <strong>Mobile number:</strong>
+    <%= coop_member.mobile_number %>
   </p>
 
 </div>
