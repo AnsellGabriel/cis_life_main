@@ -1,0 +1,9 @@
+
+<%= render @coop_user %>
+
+<div>
+  <%= link_to "Edit", edit_coop_user_path(@coop_user), class: 'btn btn-primary' %> |
+  <%= link_to "Back", coop_users_path, class: 'btn btn-primary' %>
+
+  <%= button_to "Delete", @coop_user, method: :delete, class: 'btn btn-danger' %>
+</div>

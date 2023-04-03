@@ -7,11 +7,11 @@
 </div>
 
 <div class="hidden" id="coopForm">
-    <%= render "coops/form", agent: @coop %>
+    <%= render "coop_users/form", coop_user: @coop_user %>
 </div>
 
 <div class="hidden" id="employeeForm">
-    <%= render "employees/form", agent: @employee %>
+    <%= render "employees/form", employee: @employee %>
 </div>
 
 <%= javascript_include_tag 'toggleForms' %>

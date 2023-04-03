@@ -1,10 +1,10 @@
 
-<%= simple_form_for @coop do |f| %>
+<%= simple_form_for @coop_user do |f| %>
   <%= f.error_notification %>
   <%= f.error_notification message: f.object.errors[:base].to_sentence if f.object.errors[:base].present? %>
 
   <div class="form-inputs mb-3">
-    <%# fields for User model associated with Coop %>
+    <%# fields for User model associated with Coop_user %>
     <% unless current_user %>
       <%= f.fields_for :user do |u| %>
         <%= u.input :email,
@@ -20,7 +20,7 @@
                   input_html: { autocomplete: "new-password" } %>
 
         <%= u.hidden_field :userable_type, value: "Coop" %>
-        <%= u.hidden_field :userable_id, value: @coop.id %>
+        <%= u.hidden_field :userable_id, value: @coop_user.id %>
       <% end %>
     <% end %>
 
@@ -36,7 +36,7 @@
   </div>
 
   <div class="form-actions text-end">
-    <%= link_to "Back", coops_path, class: 'btn btn-secondary' %>
+    <%= link_to "Back", coop_users_path, class: 'btn btn-secondary' %>
     <%= f.button :submit, class: 'btn-success' %>
   </div>
 <% end %>

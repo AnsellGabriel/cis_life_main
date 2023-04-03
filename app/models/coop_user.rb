@@ -1,4 +1,4 @@
-class Coop < ApplicationRecord
+class CoopUser < ApplicationRecord
   belongs_to :cooperative
   belongs_to :coop_branch
   has_one :user, as: :userable, dependent: :destroy

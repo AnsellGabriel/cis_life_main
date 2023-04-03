@@ -10,7 +10,7 @@ Rails.application.routes.draw do
   resources :cooperatives
   resources :departments
   resources :agents
-  resources :coops do
+  resources :coop_users do
     root 'coops#home', as: :home
   end
   resources :employees

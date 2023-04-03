@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_03_30_082903) do
+ActiveRecord::Schema[7.0].define(version: 2023_04_03_011643) do
   create_table "active_admin_comments", force: :cascade do |t|
     t.string "namespace"
     t.text "body"
@@ -66,7 +66,51 @@ ActiveRecord::Schema[7.0].define(version: 2023_03_30_082903) do
     t.integer "cooperative_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.text "description"
+    t.string "street"
     t.index ["cooperative_id"], name: "index_coop_branches_on_cooperative_id"
+  end
+
+  create_table "coop_member_beneficiaries", force: :cascade do |t|
+    t.string "last_name"
+    t.string "first_name"
+    t.string "middle_name"
+    t.string "suffix"
+    t.date "birthdate"
+    t.integer "coop_member_id", null: false
+    t.string "relationship"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["coop_member_id"], name: "index_coop_member_beneficiaries_on_coop_member_id"
+  end
+
+  create_table "coop_member_dependents", force: :cascade do |t|
+    t.string "last_name"
+    t.string "first_name"
+    t.string "middle_name"
+    t.string "suffix"
+    t.date "birthdate"
+    t.integer "coop_member_id", null: false
+    t.string "relationship"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["coop_member_id"], name: "index_coop_member_dependents_on_coop_member_id"
+  end
+
+  create_table "coop_members", force: :cascade do |t|
+    t.integer "cooperative_id", null: false
+    t.integer "coop_branch_id", null: false
+    t.string "last_name"
+    t.string "first_name"
+    t.string "middle_name"
+    t.string "suffix"
+    t.date "birthdate"
+    t.integer "mobile_number"
+    t.string "email"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["coop_branch_id"], name: "index_coop_members_on_coop_branch_id"
+    t.index ["cooperative_id"], name: "index_coop_members_on_cooperative_id"
   end
 
   create_table "cooperatives", force: :cascade do |t|
@@ -78,9 +122,15 @@ ActiveRecord::Schema[7.0].define(version: 2023_03_30_082903) do
     t.string "contact_details"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.text "description"
+    t.integer "registration_number"
+    t.integer "tin_number"
+    t.string "cooperative_type"
+    t.string "acronym"
+    t.string "street"
   end
 
-  create_table "coops", force: :cascade do |t|
+  create_table "coop_users", force: :cascade do |t|
     t.string "last_name"
     t.string "first_name"
     t.string "middle_name"
@@ -134,7 +184,11 @@ ActiveRecord::Schema[7.0].define(version: 2023_03_30_082903) do
 
   add_foreign_key "agents", "agent_groups"
   add_foreign_key "coop_branches", "cooperatives"
-  add_foreign_key "coops", "coop_branches"
-  add_foreign_key "coops", "cooperatives"
+  add_foreign_key "coop_member_beneficiaries", "coop_members"
+  add_foreign_key "coop_member_dependents", "coop_members"
+  add_foreign_key "coop_members", "coop_branches"
+  add_foreign_key "coop_members", "cooperatives"
+  add_foreign_key "coop_users", "coop_branches"
+  add_foreign_key "coop_users", "cooperatives"
   add_foreign_key "employees", "departments"
 end

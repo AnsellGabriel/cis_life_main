@@ -1,0 +1,53 @@
+<%= content_tag :h1, "List of Coop Users" %>
+
+
+<div class="text-end mb-3">
+  <%= link_to new_coop_user_path, class: 'btn btn-primary' do %>
+    New Coop User
+  <% end %>
+</div>
+
+<div class="table-responsive">
+  <table class="table table-striped table-bordered table-hover">
+    <thead>
+      <tr>
+
+      <th>ID</th>
+        <th>Last Name</th>
+        <th>First Name</th>
+        <th>Middle Name</th>
+        <th>Birthdate</th>
+        <th>Mobile Number</th>
+        <th>Designation</th>
+        <th>Cooperative</th>
+        <th>Coop Branch</th>
+        <th></th>
+
+      </tr>
+    </thead>
+
+    <tbody>
+      <% @coop_users.each do |coop_user| %>
+        <tr>
+
+        <td><%= coop_user.id %></td>
+        <td><%= coop_user.last_name %></td>
+        <td><%= coop_user.first_name %></td>
+        <td><%= coop_user.middle_name %></td>
+        <td><%= coop_user.birthdate %></td>
+        <td><%= coop_user.mobile_number %></td>
+        <td><%= coop_user.designation %></td>
+        <td><%= coop_user.cooperative %></td>
+        <td><%= coop_user.coop_branch %></td>
+    
+          <td>
+            <%= link_to 'View', coop_user, class: 'btn' %>
+            <%= link_to 'Edit', edit_coop_path(coop_user), class: 'btn' %>
+            <%= link_to 'Delete', coop_user, method: :delete, data: { confirm: 'Are you sure?' }, class: 'btn' %>
+          </td>
+
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+</div>
