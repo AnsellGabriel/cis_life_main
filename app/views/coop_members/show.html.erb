@@ -1,17 +1,21 @@
 <div>
-  <%= link_to "Edit", edit_coop_member_path(@coop_member), class: 'btn btn-primary' %> 
+  <%= link_to "Edit member details", edit_coop_member_path(@coop_member), class: 'btn btn-primary' %> 
   <%= link_to "Back", coop_members_path, class: 'btn btn-primary' %>
   <%= link_to "Delete", @coop_member, data: { turbo_method: :delete, turbo_confirm: 'Are you sure?' }, class: 'btn' %>
 </div>
 
 <%= render @coop_member %>
+<% if @beneficiaries.count < 5 %>
+  <div class="mb-3">
+    <%= link_to "Add beneficiary", new_coop_member_beneficiary_path(@coop_member), class: 'btn btn-primary' %>
+  </div>
+<% end %>
 
-<%= content_tag :h3, "Beneficiaries:" %>
 
-<div class="mb-3">
-  <%= link_to "Add beneficiary", new_coop_member_beneficiary_path(@coop_member), class: 'btn btn-primary' %>
-</div>
 
+
+<% unless @beneficiaries.count === 0 %>
+<%= content_tag :h3, "#{@beneficiaries.count > 1 ? 'Beneficiaries' : 'Beneficiary'}" %>
 <div class="table-responsive">
   <table class="table table-striped table-bordered table-hover">
     <thead>
@@ -52,3 +56,4 @@
     </tbody>
   </table>
 </div>
+<% end %>

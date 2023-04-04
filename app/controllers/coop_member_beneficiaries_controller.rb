@@ -6,7 +6,7 @@ class CoopMemberBeneficiariesController < InheritedResources::Base
   
   def new
     @coop_member = CoopMember.find(params[:coop_member_id])
-    @beneficiary = @coop_member.coop_member_beneficiaries.build
+    @beneficiary = @coop_member.coop_member_beneficiaries.build(last_name: FFaker::Name.last_name, first_name: FFaker::Name.first_name, middle_name: FFaker::Name.last_name, suffix: 'Jr', relationship: 'Brother')
   end
 
   def edit

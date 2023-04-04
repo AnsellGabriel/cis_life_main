@@ -6,6 +6,8 @@ class CoopMembersController < InheritedResources::Base
 
   def new
     @cooperative = current_user.userable.cooperative
+    @coop_member = CoopMember.new
+    @beneficiary = @coop_member.coop_member_beneficiaries.build
     super
   end
 
@@ -23,7 +25,7 @@ class CoopMembersController < InheritedResources::Base
   private
 
     def coop_member_params
-      params.require(:coop_member).permit(:cooperative_id, :coop_branch_id, :last_name, :first_name, :middle_name, :suffix, :birthdate, :mobile_number, :email)
+      params.require(:coop_member).permit(:cooperative_id, :coop_branch_id, :last_name, :first_name, :middle_name, :suffix, :birthdate, :mobile_number, :email, :coop_member_beneficiaries_attributes => [:id, :last_name, :first_name, :middle_name, :suffix, :birthdate, :relationship, :coop_member_id, :_destroy])
     end
 
 end
