@@ -1,9 +1,6 @@
-
-<%= render @coop_member_beneficiary %>
-
 <div>
-  <%= link_to "Edit", edit_coop_member_beneficiary_path(@coop_member_beneficiary), class: 'btn btn-primary' %> |
-  <%= link_to "Back", coop_member_path, class: 'btn btn-primary' %>
-
-  <%= button_to "Delete", @coop_member_beneficiary, method: :delete, class: 'btn btn-danger' %>
+  <%= link_to "Edit", edit_coop_member_beneficiary_path(@coop_member), class: 'btn btn-primary' %>
+  <%= link_to "Back", :back, class: 'btn btn-primary' %>
+  <%= link_to "Delete", @coop_member_beneficiary, method: :delete, data: { turbo_method: :delete, turbo_confirm: 'Are you sure?' }, class: 'btn btn-danger' %>
 </div>
+<%= render @beneficiary %>

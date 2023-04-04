@@ -17,6 +17,7 @@ class CoopMembersController < InheritedResources::Base
   def show
     @coop_member = CoopMember.find(params[:id])
     @beneficiaries = @coop_member.coop_member_beneficiaries
+    super
   end
 
   private

@@ -1,10 +1,11 @@
 class CoopMemberBeneficiariesController < InheritedResources::Base
-  before_action :set_beneficiary_coop_member
+  before_action :set_beneficiary_coop_member, only: [:show, :edit, :update, :destroy]
 
   def show
   end
   
   def new
+    @coop_member = CoopMember.find(params[:coop_member_id])
     @beneficiary = @coop_member.coop_member_beneficiaries.build
   end
 
@@ -12,6 +13,7 @@ class CoopMemberBeneficiariesController < InheritedResources::Base
   end
 
   def create
+    @coop_member = CoopMember.find(params[:coop_member_id])
     @beneficiary = @coop_member.coop_member_beneficiaries.build(coop_member_beneficiary_params)
     respond_to do |format|
       if @beneficiary.save

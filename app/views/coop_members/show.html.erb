@@ -8,7 +8,7 @@
 
 <%= content_tag :h3, "Beneficiaries:" %>
 
-<div class="text-end mb-3">
+<div class="mb-3">
   <%= link_to "Add beneficiary", new_coop_member_beneficiary_path(@coop_member), class: 'btn btn-primary' %>
 </div>
 
@@ -42,9 +42,9 @@
         <td><%= beneficiary.relationship %></td>
     
           <td>
-            <%= link_to 'View', beneficiary, class: 'btn' %>
-            <%= link_to 'Edit', beneficiary, class: 'btn' %>
-            <%= link_to 'Delete', beneficiary, method: :delete, data: { confirm: 'Are you sure?' }, class: 'btn' %>
+            <%= link_to 'View', "#{@coop_member.id}/beneficiaries/#{beneficiary.id}", class: 'btn' %>
+            <%= link_to 'Edit', "#{@coop_member.id}/beneficiaries/#{beneficiary.id}/edit", class: 'btn' %>
+            <%= link_to 'Delete', "#{@coop_member.id}/beneficiaries/#{beneficiary.id}", method: :delete, data: { turbo_method: :delete, turbo_confirm: 'Are you sure?' }, class: 'btn' %>
           </td>
 
         </tr>
@@ -52,5 +52,3 @@
     </tbody>
   </table>
 </div>
-
-
