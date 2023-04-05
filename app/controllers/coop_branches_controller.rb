@@ -3,7 +3,8 @@ class CoopBranchesController < ApplicationController
 
   # GET /coop_branches or /coop_branches.json
   def index
-    @coop_branches = CoopBranch.all
+    @cooperative = Cooperative.find(params[:cooperative_id])
+    @coop_branches = @cooperative.coop_branches.all
   end
 
   # GET /coop_branches/1 or /coop_branches/1.json
@@ -12,7 +13,8 @@ class CoopBranchesController < ApplicationController
 
   # GET /coop_branches/new
   def new
-    @coop_branch = CoopBranch.new
+    @cooperative = Cooperative.find(params[:cooperative_id])
+    @coop_branch = @cooperative.coop_branches.build
   end
 
   # GET /coop_branches/1/edit
@@ -21,11 +23,12 @@ class CoopBranchesController < ApplicationController
 
   # POST /coop_branches or /coop_branches.json
   def create
-    @coop_branch = CoopBranch.new(coop_branch_params)
+    @cooperative = Cooperative.find(params[:cooperative_id])
+    @coop_branch = @cooperative.coop_branches.build(coop_branch_params)
 
     respond_to do |format|
       if @coop_branch.save
-        format.html { redirect_to coop_branch_url(@coop_branch), notice: "Coop branch was successfully created." }
+        format.html { redirect_to cooperative_coop_branches_path, notice: "Coop branch was successfully created." }
         format.json { render :show, status: :created, location: @coop_branch }
       else
         format.html { render :new, status: :unprocessable_entity }
@@ -38,7 +41,7 @@ class CoopBranchesController < ApplicationController
   def update
     respond_to do |format|
       if @coop_branch.update(coop_branch_params)
-        format.html { redirect_to coop_branch_url(@coop_branch), notice: "Coop branch was successfully updated." }
+        format.html { redirect_to cooperative_coop_branch_path, notice: "Coop branch was successfully updated." }
         format.json { render :show, status: :ok, location: @coop_branch }
       else
         format.html { render :edit, status: :unprocessable_entity }
@@ -52,7 +55,7 @@ class CoopBranchesController < ApplicationController
     @coop_branch.destroy
 
     respond_to do |format|
-      format.html { redirect_to coop_branches_url, notice: "Coop branch was successfully destroyed." }
+      format.html { redirect_to cooperative_coop_branches_path, notice: "Coop branch was successfully destroyed." }
       format.json { head :no_content }
     end
   end
@@ -60,7 +63,8 @@ class CoopBranchesController < ApplicationController
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_coop_branch
-      @coop_branch = CoopBranch.find(params[:id])
+      @cooperative = Cooperative.find(params[:cooperative_id])
+      @coop_branch = @cooperative.coop_branches.find(params[:id])
     end
 
     # Only allow a list of trusted parameters through.

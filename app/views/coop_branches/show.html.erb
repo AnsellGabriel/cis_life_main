@@ -1,9 +1,7 @@
 
+<div>
+  <%= link_to "Back", :back, class: 'btn btn-primary' %>
+</div>
+
 <%= render @coop_branch %>
 
-<div>
-  <%= link_to "Edit", edit_coop_branch_path(@coop_branch), class: 'btn btn-primary' %> |
-  <%= link_to "Back", coop_branches_path, class: 'btn btn-primary' %>
-
-  <%= button_to "Delete", @coop_branch, method: :delete, class: 'btn btn-danger' %>
-</div>

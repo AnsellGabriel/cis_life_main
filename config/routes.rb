@@ -1,9 +1,13 @@
 Rails.application.routes.draw do
-  resources :batch_dependents, :batches, :group_remits, :agreement_benefits, :anniversaries, :agreements, :agent_groups, :coop_branches, :cooperatives, :departments, :agents, :coop_users, :employees
+  resources :batch_dependents, :batches, :group_remits, :agreement_benefits, :anniversaries, :agreements, :agent_groups, :departments, :agents, :coop_users, :employees
+
+  resources :cooperatives do
+    resources :coop_branches
+  end
 
   resources :coop_members do
     resources :coop_member_beneficiaries, path: 'beneficiaries', as: 'beneficiaries'
-    resources :coop_member_dependents
+    resources :coop_member_dependents, path: 'dependents', as: 'dependents'
   end
 
   devise_for :admin_users, ActiveAdmin::Devise.config

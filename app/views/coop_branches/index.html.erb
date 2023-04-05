@@ -2,7 +2,7 @@
 
 
 <div class="text-end mb-3">
-  <%= link_to new_coop_branch_path, class: 'btn btn-primary' do %>
+  <%= link_to new_cooperative_coop_branch_path, class: 'btn btn-primary' do %>
     New Coop Branch
   <% end %>
 </div>
@@ -36,12 +36,11 @@
         <td><%= coop_branch.municipality %></td>
         <td><%= coop_branch.barangay %></td>
         <td><%= coop_branch.contact_details %></td>
-        <td><%= coop_branch.cooperative %></td>
+        <td><%= coop_branch.cooperative.name %></td>
     
           <td>
-            <%= link_to 'View', coop_branch, class: 'btn' %>
-            <%= link_to 'Edit', edit_coop_branch_path(coop_branch), class: 'btn' %>
-            <%= link_to 'Delete', coop_branch, method: :delete, data: { confirm: 'Are you sure?' }, class: 'btn' %>
+            <%= link_to 'View', cooperative_coop_branch_path(id: coop_branch.id), class: 'btn' %>
+            <%= link_to 'Edit', edit_cooperative_coop_branch_path(id: coop_branch.id), class: 'btn' %>
           </td>
 
         </tr>
@@ -49,3 +48,4 @@
     </tbody>
   </table>
 </div>
+<%= console %>

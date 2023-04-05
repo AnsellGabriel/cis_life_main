@@ -1,5 +1,5 @@
 
-<%= simple_form_for(@coop_branch) do |f| %>
+<%= simple_form_for [@cooperative, @coop_branch] do |f| %>
   <%= f.error_notification %>
   <%= f.error_notification message: f.object.errors[:base].to_sentence if f.object.errors[:base].present? %>
 
@@ -14,7 +14,7 @@
   </div>
 
   <div class="form-actions text-end">
-    <%= link_to "Back", coop_branches_path, class: 'btn btn-secondary' %>
+    <%= link_to "Back", :back, class: 'btn btn-secondary' %>
     <%= f.button :submit, class: 'btn-success' %>
   </div>
 <% end %>
