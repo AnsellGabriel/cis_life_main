@@ -31,7 +31,7 @@ class CoopUsersController < ApplicationController
 
     respond_to do |format|
       if @coop_user.save
-        format.html { redirect_to unauthenticated_root_path, notice: "Account was successfully created." }
+        format.html { redirect_to unauthenticated_root_path, notice: "Account was successfully created. Please contact the administrator to activate your account." }
         format.json { render :show, status: :created, location: @coop_user }
       else
         format.html { render :new, status: :unprocessable_entity }

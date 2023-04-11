@@ -1,25 +1,149 @@
-<%= content_tag :h1, "#{coop_member.last_name}, #{coop_member.first_name} #{coop_member.middle_name} #{coop_member.suffix}" %>
-
-<div id="<%= dom_id coop_member %>">
-
-  <p>
-    <strong>Cooperative:</strong>
-    <%= "#{coop_member.cooperative.name}, #{coop_member.coop_branch.name}" %>
-  </p>
-
-  <p>
-    <strong>Birthdate:</strong>
-    <%= coop_member.birthdate.strftime('%B %d, %Y') %>
-  </p>
-
-  <p>
-    <strong>Email:</strong>
-    <%= coop_member.email %>
-  </p>
-
-  <p>
-    <strong>Mobile number:</strong>
-    <%= coop_member.mobile_number %>
-  </p>
-
-</div>
+<div class="col-md-8">
+  <div class="card mb-3">
+    <div class="card-body">
+      <div class="row">
+        <div class="col-sm-3">
+          <h6 class="mb-0">Cooperative</h6>
+        </div>
+        <div class="col-sm-9 text-secondary">
+          <%= "#{coop_member.cooperative.name}, #{coop_member.coop_branch.name}" %>        
+        </div>
+      </div>
+      <hr>
+      <div class="row">
+        <div class="col-sm-3">
+          <h6 class="mb-0">Mobile No.</h6>
+        </div>
+        <div class="col-sm-3 text-secondary">
+          <%= coop_member.mobile_number %>
+        </div>
+        <div class="col-sm-3">
+          <h6 class="mb-0">Email</h6>
+        </div>
+        <div class="col-sm-3 text-secondary">
+          <%= coop_member.email %>
+        </div>
+      </div>
+      <hr>
+      <div class="row">
+        <div class="col-sm-3">
+          <h6 class="mb-0">Birthdate</h6>
+        </div>
+        <div class="col-sm-3 text-secondary">
+          <%= coop_member.birthdate.strftime('%B %d, %Y') %>
+        </div>
+        <div class="col-sm-3">
+          <h6 class="mb-0">Birth Place</h6>
+        </div>
+        <div class="col-sm-3 text-secondary">
+          <%= coop_member.birth_place %>
+        </div>
+      </div>
+      <hr>
+      <div class="row">
+        <div class="col-sm-3">
+          <h6 class="mb-0">Age</h6>
+        </div>
+        <div class="col-sm-3 text-secondary">
+          <%= @age %>
+        </div>
+        <div class="col-sm-3">
+          <h6 class="mb-0">Gender</h6>
+        </div>
+        <div class="col-sm-3 text-secondary">
+          <%= coop_member.gender %>
+        </div>
+      </div>
+      <hr>
+      <div class="row">
+        <div class="col-sm-3">
+          <h6 class="mb-0">Address</h6>
+        </div>
+        <div class="col-sm-9 text-secondary">
+          <%= coop_member.address %>
+        </div>
+      </div>
+      <hr>
+      <div class="row">
+        <div class="col-sm-3">
+          <h6 class="mb-0">SSS #</h6>
+        </div>
+        <div class="col-sm-3 text-secondary">
+          <%= coop_member.sss_no %>
+        </div>
+        <div class="col-sm-3">
+          <h6 class="mb-0">TIN #</h6>
+        </div>
+        <div class="col-sm-3 text-secondary">
+          <%= coop_member.tin_no %>
+        </div>
+      </div>
+      <hr>
+      <div class="row">
+        <div class="col-sm-3">
+          <h6 class="mb-0">Civil Status</h6>
+        </div>
+        <div class="col-sm-3 text-secondary">
+          <%= coop_member.civil_status %>
+        </div>
+        <% if coop_member.civil_status === "married" %>
+          <div class="col-sm-3">
+            <h6 class="mb-0">Spouse</h6>
+          </div>
+          <div class="col-sm-3 text-secondary">
+            <%= coop_member.legal_spouse %>
+          </div>
+        <% end %>
+      </div>
+      <hr>
+      <div class="row">
+        <div class="col-sm-3">
+          <h6 class="mb-0">Height</h6>
+        </div>
+        <div class="col-sm-3 text-secondary">
+          <%= "#{coop_member.height} cm" %>
+        </div>
+        <div class="col-sm-3">
+          <h6 class="mb-0">Weight</h6>
+        </div>
+        <div class="col-sm-3 text-secondary">
+          <%= "#{coop_member.weight} kg" %>
+        </div>
+      </div>
+      <% unless coop_member.occupation === nil or coop_member.occupation === '' %>
+        <hr>
+        <div class="row">
+          <div class="col-sm-3">
+            <h6 class="mb-0">Occupation</h6>
+          </div>
+          <div class="col-sm-3 text-secondary">
+            <%= coop_member.occupation %>
+          </div>
+          <div class="col-sm-3">
+            <h6 class="mb-0">Employer</h6>
+          </div>
+          <div class="col-sm-3 text-secondary">
+            <%= coop_member.employer %>
+          </div>
+        </div>
+        <hr>
+        <div class="row">
+          <div class="col-sm-3">
+            <h6 class="mb-0">Work Address</h6>
+          </div>
+          <div class="col-sm-9 text-secondary">
+            <%= coop_member.work_address %>
+          </div>
+        </div>
+        <hr>
+        <div class="row">
+          <div class="col-sm-3">
+            <h6 class="mb-0">Work Phone #</h6>
+          </div>
+          <div class="col-sm-9 text-secondary">
+            <%= coop_member.work_phone_number %>
+          </div>
+        </div>
+      <% end %>
+    </div>
+  </div>

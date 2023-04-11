@@ -52,6 +52,8 @@ gem 'bootstrap', '~> 5.1', '>= 5.1.3'
 gem 'simple_form'
 gem 'devise'
 gem 'activeadmin'
+gem "roo", "~> 2.10.0"
+
 
 
 

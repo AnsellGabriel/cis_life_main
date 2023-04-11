@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_04_03_022347) do
+ActiveRecord::Schema[7.0].define(version: 2023_04_11_051028) do
   create_table "active_admin_comments", force: :cascade do |t|
     t.string "namespace"
     t.text "body"
@@ -156,6 +156,19 @@ ActiveRecord::Schema[7.0].define(version: 2023_04_03_022347) do
     t.string "email"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.string "gender"
+    t.string "birth_place"
+    t.integer "sss_no"
+    t.integer "tin_no"
+    t.string "address"
+    t.string "civil_status"
+    t.string "legal_spouse"
+    t.float "height"
+    t.float "weight"
+    t.string "occupation"
+    t.string "employer"
+    t.string "work_address"
+    t.integer "work_phone_number"
     t.index ["coop_branch_id"], name: "index_coop_members_on_coop_branch_id"
     t.index ["cooperative_id"], name: "index_coop_members_on_cooperative_id"
   end
@@ -243,7 +256,6 @@ ActiveRecord::Schema[7.0].define(version: 2023_04_03_022347) do
   add_foreign_key "agents", "agent_groups"
   add_foreign_key "batch_dependents", "agreement_benefits"
   add_foreign_key "batch_dependents", "batches"
-  add_foreign_key "batch_dependents", "coop_dependents"
   add_foreign_key "batches", "coop_members"
   add_foreign_key "batches", "group_remits"
   add_foreign_key "coop_branches", "cooperatives"

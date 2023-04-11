@@ -1,6 +1,6 @@
 <%= content_tag :h1, "#{@cooperative.name} Members" %>
 
-<div class="table-responsive">
+<div class="table-responsive mt-3">
   <table class="table table-striped table-bordered table-hover">
     <thead>
       <tr>
@@ -10,28 +10,23 @@
         <th>Last Name</th>
         <th>First Name</th>
         <th>Middle Name</th>
-        <th>Suffix</th>
+        <th>Age</th>
         <th>Birthdate</th>
-        <th>Mobile Number</th>
-        <th>Email</th>
-        <th></th>
-
+        <th>Actions</th>
       </tr>
     </thead>
 
     <tbody>
       <% @coop_members.each do |coop_member| %>
         <tr>
-
+      
         <td><%= coop_member.id %></td>
         <td><%= coop_member.coop_branch.name %></td>
         <td><%= coop_member.last_name %></td>
         <td><%= coop_member.first_name %></td>
         <td><%= coop_member.middle_name %></td>
-        <td><%= coop_member.suffix %></td>
+        <td><%= Date.today.year - coop_member.birthdate.year - ((Date.today.month > coop_member.birthdate.month || (Date.today.month == coop_member.birthdate.month && Date.today.day >= coop_member.birthdate.day)) ? 0 : 1) %></td>
         <td><%= coop_member.birthdate.strftime('%B %d, %Y') %></td>
-        <td><%= coop_member.mobile_number %></td>
-        <td><%= coop_member.email %></td>
     
           <td>
             <%= link_to 'View', coop_member, class: 'btn' %>

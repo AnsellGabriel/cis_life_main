@@ -2,30 +2,82 @@
 <%= simple_form_for(@coop_member, data: { controller: 'nested-form', nested_form_wrapper_selector_value: '.nested-form-wrapper' }) do |f| %>
   <%= f.error_notification %>
   <%= f.error_notification message: f.object.errors[:base].to_sentence if f.object.errors[:base].present? %>
-
+  
   <div class="form-inputs mb-3">
     <%= f.hidden_field :cooperative_id, value: @cooperative.id %>
-    <%= f.association :coop_branch, collection: @cooperative.coop_branches %> 
-    <%= f.input :last_name %>
-    <%= f.input :first_name %>
-    <%= f.input :middle_name %>
-    <%= f.input :suffix %>
-    <%= f.input :birthdate %>
-    <%= f.input :mobile_number %>
-    <%= f.input :email %>
+    <div class="row">
+      <div class="col-4">
+        <%= f.association :coop_branch, collection: @cooperative.coop_branches %> 
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-3">
+       <%= f.input :last_name %>
+      </div>
+      <div class="col-3">
+        <%= f.input :first_name %>
+      </div>
+      <div class="col-3">
+        <%= f.input :middle_name %>
+      </div>
+      <div class="col-2">
+        <%= f.input :suffix %>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-3">
+        <%= f.input :birthdate, as: :date, html5: true %>
+      </div>
+      <div class="col-3">
+        <%= f.input :birth_place %>
+      </div>
+      <div class="col-3">
+        <%= f.input :email %>
+      </div>
+      <div class="col-3">
+        <%= f.input :mobile_number %>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col">
+        <%= f.input :address %>
+      </div>
+      <div class="col-3">
+        <%= f.input :sss_no %>
+      </div>
+      <div class="col-3">
+        <%= f.input :tin_no %>
+      </div>
+    </div>
+    <div class="row">
+    <div class="col-3">
+        <%= f.input :civil_status %>
+      </div>
+      <div class="col-3">
+        <%= f.input :legal_spouse %>
+      </div>
+      <div class="col-3">
+        <%= f.input :height %>
+      </div>
+      <div class="col-3">
+        <%= f.input :weight %>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-3">
+        <%= f.input :occupation %>
+      </div>
+      <div class="col-3">
+        <%= f.input :employer %>
+      </div>
+      <div class="col-3">
+        <%= f.input :work_address %>
+      </div>
+      <div class="col-3">
+        <%= f.input :work_phone_number %>
+      </div>
+    </div>
   </div>
-
-  <template data-nested-form-target="template">
-    <%= f.fields_for :coop_member_beneficiaries, CoopMemberBeneficiary.new, child_index: 'NEW_RECORD' do |beneficiary_fields| %>
-      <%= render "coop_member_beneficiaries/nested_form", f: beneficiary_fields %>
-    <% end %>
-  </template>
-  <%= f.fields_for :coop_member_beneficiaries do |beneficiary_fields| %>
-    <%= render "coop_member_beneficiaries/nested_form", f: beneficiary_fields %>
-  <% end %>
-
-  <div data-nested-form-target="target"></div>
-  <button type="button" data-action="nested-form#add">Add Beneficiary</button>
 
   <div class="form-actions text-end">
     <%= link_to "Back", coop_members_path, class: 'btn btn-secondary' %>
