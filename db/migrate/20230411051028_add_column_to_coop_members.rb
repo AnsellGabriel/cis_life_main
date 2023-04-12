@@ -11,6 +11,6 @@ class AddColumnToCoopMembers < ActiveRecord::Migration[7.0]
     add_column :coop_members, :occupation, :string
     add_column :coop_members, :employer, :string
     add_column :coop_members, :work_address, :string
-    add_column :coop_members, :work_phone_number, :integer
+    add_column :coop_members, :work_phone_number, :string
   end
 end

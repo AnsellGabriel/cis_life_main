@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_04_11_051028) do
+ActiveRecord::Schema[7.0].define(version: 2023_04_12_025903) do
   create_table "active_admin_comments", force: :cascade do |t|
     t.string "namespace"
     t.text "body"
@@ -152,7 +152,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_04_11_051028) do
     t.string "middle_name"
     t.string "suffix"
     t.date "birthdate"
-    t.integer "mobile_number"
+    t.string "mobile_number"
     t.string "email"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
@@ -198,11 +198,13 @@ ActiveRecord::Schema[7.0].define(version: 2023_04_11_051028) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.text "description"
-    t.integer "registration_number"
+    t.string "registration_number"
     t.integer "tin_number"
     t.string "cooperative_type"
     t.string "acronym"
     t.string "street"
+    t.string "email"
+    t.string "contact_number"
   end
 
   create_table "departments", force: :cascade do |t|

@@ -6,36 +6,55 @@
 #   movies = Movie.create([{ name: "Star Wars" }, { name: "Lord of the Rings" }])
 #   Character.create(name: "Luke", movie: movies.first)
 AdminUser.create!(email: 'admin@example.com', password: 'password', password_confirmation: 'password') if Rails.env.development?
-Cooperative.create!(name:'Coop 1', description:'Coop 1 Multi-purpose cooperative', contact_details:'09123456789', region:'Region 1', province:'Province 1', municipality:'Municipality 1', barangay:'Barangay 1', street:'Street 1', acronym: 'COOP1', cooperative_type: 'Multi-purpose', registration_number: 123456789, tin_number: 123456789)
+
+cooperatives_spreadsheet = Roo::Spreadsheet.open("/Users/macbookair/Desktop/cis_data/Operating-Coops.xlsx")
+
+(5..100).each do |row|
+    spreadsheet = cooperatives_spreadsheet
+    Cooperative.find_or_create_by!(
+        registration_number: spreadsheet.cell(row, 'A'), 
+        name: spreadsheet.cell(row, 'B'), 
+        region: spreadsheet.cell(row, 'C'), 
+        province: spreadsheet.cell(row, 'D'), 
+        municipality: spreadsheet.cell(row, 'E'), 
+        street: spreadsheet.cell(row, 'F'), 
+        cooperative_type: spreadsheet.cell(row, 'H'),
+        email: spreadsheet.cell(row, 'K'), 
+        contact_number: spreadsheet.cell(row, 'J'),
+    )
+end
+
 CoopBranch.create!(name: 'Branch 1', cooperative_id: 1, region: "Region 1", province: "Province 1", municipality: "Municipality 1", barangay: "Barangay 1", street: "Street 1", contact_details: "09123456789")
 
-spreadsheet = Roo::Spreadsheet.open("/Users/macbookair/Downloads/gyrt_member.xlsx")
+coop_member_spreadsheet = Roo::Spreadsheet.open("/Users/macbookair/Downloads/gyrt_member.xlsx")
 
-(2..spreadsheet.last_row).each do |row|
-    member = CoopMember.find_or_create_by!(
+(2..coop_member_spreadsheet.last_row).each do |row|
+    spreadsheet = coop_member_spreadsheet
+    CoopMember.find_or_create_by!(
         last_name: spreadsheet.cell(row, 'A'), 
         first_name: spreadsheet.cell(row, 'B'), 
         middle_name: spreadsheet.cell(row, 'C'), 
         birthdate: spreadsheet.cell(row, 'D'), 
         coop_branch_id: 1, 
-        mobile_number: 12432, 
+        mobile_number: '0967859365746', 
         email: 'test@gmail.com', 
         cooperative_id: 1,
         gender: 'male',
         civil_status: 'single',
-        address: 'address',
-        occupation: 'occupation',
-        employer: 'employer',
-        work_address: 'work_address',
-        work_phone_number: 123456789,
-        suffix: 'suffix',
-        birth_place: 'birth_place',
-        sss_no: 123456789,
-        tin_no: 123456789,
-        legal_spouse: 'legal_spouse',
-        height: 123,
-        weight: 123
+        address: 'Blk 1 Lot 1, phase2, Brgy. 1, Municipality 1, Province 1, Region 1',
+        occupation: 'Programmer',
+        employer: '!cisp',
+        work_address: '1CISP bldg, Mapagbigay st, Diliman, Quezon City',
+        work_phone_number: '0912948574629',
+        suffix: '',
+        birth_place: 'Quezon City',
+        sss_no: 1827463748,
+        tin_no: 2948573849,
+        legal_spouse: 'Glenda Worker',
+        height: 178,
+        weight: 60
     )
 
+    
     # puts "#{member.last_name} #{member.first_name} #{member.middle_name}" if member.save
 end

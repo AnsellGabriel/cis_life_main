@@ -14,39 +14,46 @@
  *= require_self
  */
 
- @import "bootstrap";
+@import "bootstrap";
 
 .hidden {
-    display: none;
+  display: none;
 }
 
 .alert {
-    padding: 1rem;
-    margin-bottom: 1rem;
-    border-radius: 0.25rem;
-  }
-  
-  .alert-success {
-    color: #155724;
-    background-color: #d4edda;
-    border-color: #c3e6cb;
-  }
+  padding: 1rem;
+  margin-bottom: 1rem;
+  border-radius: 0.25rem;
+}
 
-  
-  input[type="submit"], button, .btn {
-    color: #fff; 
-    background-color: #007bff !important;
-    border-color: #007bff !important;
-    background-image: none !important;
-    border-radius: 0.25rem !important;
-    height: 40px;
-    width: auto;
-  }
- 
-  a {
-    text-decoration: none !important;
-  }
+.alert-success {
+  color: #155724;
+  background-color: #d4edda;
+  border-color: #c3e6cb;
+}
 
-  .btn {
-    color: #fff !important;
-  }
+input[type="submit"],
+button,
+.btn .btn-success {
+  color: #fff !important;
+    background-color: #198754 !important;
+    border-color: #198754 !important;
+  background-image: none !important;
+  border-radius: 0.25rem !important;
+  font-weight: 400 !important;
+    line-height: 1.5 !important;
+}
+
+a {
+  text-decoration: none !important;
+}
+
+.btn {
+  color: #fff !important;
+}
+
+input[type="number"]::-webkit-inner-spin-button,
+input[type="number"]::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}

@@ -29,9 +29,9 @@
         <td><%= coop_member.birthdate.strftime('%B %d, %Y') %></td>
     
           <td>
-            <%= link_to 'View', coop_member, class: 'btn' %>
-            <%= link_to 'Edit', edit_coop_member_path(coop_member), class: 'btn' %>
-            <%= link_to 'Delete', coop_member, data: { turbo_method: :delete, turbo_confirm: 'Are you sure?' }, class: 'btn' %>
+            <%= link_to 'View', coop_member, class: 'btn btn-primary' %>
+            <%= link_to 'Edit', edit_coop_member_path(coop_member), class: 'btn btn-secondary' %>
+            <%= link_to 'Delete', coop_member, data: { turbo_method: :delete, turbo_confirm: 'Are you sure?' }, class: 'btn btn-danger' %>
           </td>
 
         </tr>

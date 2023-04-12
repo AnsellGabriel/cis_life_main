@@ -8,7 +8,7 @@ class CreateCoopMembers < ActiveRecord::Migration[7.0]
       t.string :middle_name
       t.string :suffix
       t.date :birthdate
-      t.integer :mobile_number
+      t.string :mobile_number
       t.string :email
 
       t.timestamps
