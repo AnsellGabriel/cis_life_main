@@ -3,6 +3,7 @@ class CoopMembersController < InheritedResources::Base
 
   def index
     @cooperative = current_user.userable.cooperative
+    @coop_members = @cooperative.coop_members
     super
   end
 

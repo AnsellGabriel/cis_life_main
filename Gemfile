@@ -53,8 +53,7 @@ gem 'simple_form'
 gem 'devise'
 gem 'activeadmin'
 gem "roo", "~> 2.10.0"
-
-
+gem 'requestjs-rails'
 
 
 group :development, :test do

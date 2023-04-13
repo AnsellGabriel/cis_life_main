@@ -53,7 +53,7 @@
     <div class="col-3">
         <%= f.label :civil_status, "Civil Status ", class: "form-label" %>
         <abbr title="required">*</abbr>
-        <%= f.collection_select :civil_status, ["Single", "Married", "Divorced", "Separated", "Widowed"], :to_s, :to_s, {}, class: "form-control" %>
+        <%= f.collection_select :civil_status, ["Single", "Married", "Divorced", "Separated", "Widowed"], :to_s, :to_s, {}, class: "form-select" %>
       </div>
       <div class="col-3">
         <%= f.input :legal_spouse %>

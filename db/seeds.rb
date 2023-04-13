@@ -24,7 +24,9 @@ cooperatives_spreadsheet = Roo::Spreadsheet.open("/Users/macbookair/Desktop/cis_
     )
 end
 
-CoopBranch.create!(name: 'Branch 1', cooperative_id: 1, region: "Region 1", province: "Province 1", municipality: "Municipality 1", barangay: "Barangay 1", street: "Street 1", contact_details: "09123456789")
+10.times do |i|
+    CoopBranch.create!(name: "Branch #{i}", cooperative_id: 1, region: "Region 1", province: "Province 1", municipality: "Municipality 1", barangay: "Barangay 1", street: "Street 1", contact_details: "09123456789")
+end
 
 coop_member_spreadsheet = Roo::Spreadsheet.open("/Users/macbookair/Downloads/gyrt_member.xlsx")
 

@@ -5,6 +5,10 @@ class CoopBranchesController < ApplicationController
   def index
     @cooperative = Cooperative.find(params[:cooperative_id])
     @coop_branches = @cooperative.coop_branches.all
+  
+    respond_to do |format|
+      format.html # render the index view template
+    end
   end
 
   # GET /coop_branches/1 or /coop_branches/1.json

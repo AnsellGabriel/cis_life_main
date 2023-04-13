@@ -23,9 +23,13 @@
         <%= u.hidden_field :userable_id, value: @coop_user.id %>
       <% end %>
     <% end %>
+    
+    <div data-controller="coop">
+      <%= f.association :cooperative, input_html: { id: "coop_id", data: { action: "change->coop#change", controller: "slim-select" }  } %>
+      <%= f.association :coop_branch, input_html: { id: "branch_id", data: { coop_target: "branchSelect" } } %>
+    </div>
+   
 
-    <%= f.association :cooperative %>
-    <%= f.association :coop_branch %>
     <%= f.input :designation %>
     <%= f.input :first_name %>
     <%= f.input :middle_name %>

@@ -58,6 +58,20 @@ class CooperativesController < ApplicationController
     end
   end
 
+  def selected
+    @target = params[:target]
+    @coop_branches = CoopBranch.where(cooperative_id: params[:id])
+    respond_to do |format|
+      format.turbo_stream
+    end
+  end
+
+  def branches
+    @target = params[:target]
+    @branches = Cooperative.find(params[:id]).coop_branches
+    format.turbo_stream # render the index.turbo_stream.erb template
+  end
+
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_cooperative
