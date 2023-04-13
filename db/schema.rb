@@ -93,10 +93,11 @@ ActiveRecord::Schema[7.0].define(version: 2023_04_12_025903) do
     t.integer "coop_member_id", null: false
     t.integer "group_remit_id", null: false
     t.date "effectivity_date"
-    t.string "expiry_date"
+    t.date "expiry_date"
     t.boolean "active"
     t.float "coop_sf_amount"
     t.float "agent_sf_amount"
+    t.string "status"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["coop_member_id"], name: "index_batches_on_coop_member_id"
@@ -168,7 +169,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_04_12_025903) do
     t.string "occupation"
     t.string "employer"
     t.string "work_address"
-    t.integer "work_phone_number"
+    t.string "work_phone_number"
     t.index ["coop_branch_id"], name: "index_coop_members_on_coop_branch_id"
     t.index ["cooperative_id"], name: "index_coop_members_on_cooperative_id"
   end

@@ -4,10 +4,10 @@
   <%= f.error_notification message: f.object.errors[:base].to_sentence if f.object.errors[:base].present? %>
 
   <div class="form-inputs mb-3">
-    <%= f.association :coop_member %>
+    <%= f.association :coop_member, collection: @cooperative.coop_members %>
     <%= f.association :group_remit %>
-    <%= f.input :effectivity_date %>
-    <%= f.input :expiry_date %>
+    <%= f.input :effectivity_date, as: :date, html5: true %>
+    <%= f.input :expiry_date, as: :date, html5: true %>
     <%= f.input :active %>
     <%= f.input :coop_sf_amount %>
     <%= f.input :agent_sf_amount %>

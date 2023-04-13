@@ -1,6 +1,7 @@
-<h2>Register</h2>
-
-<%= select_tag :category, options_for_select([['Select a role', '', {disabled: true, selected: true}],'Agent', 'Coop', 'Employee']), id: "formCategory", class: "form-select" %>
+<div class="form-group">
+    <h2 class="mb-3">Register</h2>
+    <%= select_tag :category, options_for_select([['Select a role', '', {disabled: true, selected: true}],'Agent', 'Coop', 'Employee']), id: "formCategory", class: "form-select mb-3" %>
+</div>
 
 <div class="hidden" id="agentForm">
     <%= render "agents/form", agent: @agent %>

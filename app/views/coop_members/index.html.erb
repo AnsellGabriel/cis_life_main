@@ -1,4 +1,12 @@
 <%= content_tag :h1, "#{@cooperative.name} Members" %>
+<div class="mb-3">
+  <%= link_to "Enroll Member", new_coop_member_path, class: "btn btn-primary"%>
+</div>
+<div>
+  <%= form_with url: coop_members_path, method: :get do %>
+    <%= text_field_tag 'filter', nil, placeholder: 'Filter by last name', class: "form-control", style: "width: auto"%>
+  <% end %>
+</div>
 
 <div class="table-responsive mt-3">
   <table class="table table-striped table-bordered table-hover">
@@ -39,3 +47,5 @@
     </tbody>
   </table>
 </div>
+
+<%== pagy_bootstrap_nav(@pagy) %>

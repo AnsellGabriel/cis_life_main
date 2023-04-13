@@ -3,7 +3,8 @@ class CoopMembersController < InheritedResources::Base
 
   def index
     @cooperative = current_user.userable.cooperative
-    @coop_members = @cooperative.coop_members
+    @members = @cooperative.coop_members.where("last_name LIKE ?", "%#{params[:filter]}%")
+    @pagy, @coop_members = pagy(@members, items: 10)
     super
   end
 

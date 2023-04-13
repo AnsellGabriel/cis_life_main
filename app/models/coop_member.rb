@@ -1,9 +1,12 @@
 class CoopMember < ApplicationRecord
   before_validation :uppercase_fields
-  validates :mobile_number, format: { with: /(\+?\d{2}?\s?\d{3}\s?\d{3}\s?\d{4})|([0]\d{3}\s?\d{3}\s?\d{4})/, message: "Invalid mobile number format" }
+  
+  VALID_PH_MOBILE_NUMBER_REGEX = /\A(09|\+639)\d{9}\z/
+  validates :mobile_number, presence: true, format: { with: VALID_PH_MOBILE_NUMBER_REGEX, message: "must be a valid Philippine mobile number" }
+  validates :work_phone_number, allow_blank: true, format: { with: VALID_PH_MOBILE_NUMBER_REGEX, message: "must be a valid Philippine mobile number" }
 
 
-  validates_presence_of :coop_branch_id, :last_name, :first_name, :middle_name, :birthdate, :mobile_number, :address, :civil_status
+  validates_presence_of :coop_branch_id, :last_name, :first_name, :middle_name, :birthdate, :address, :civil_status
   validates :email, format: { with: URI::MailTo::EMAIL_REGEXP }
 
   belongs_to :cooperative

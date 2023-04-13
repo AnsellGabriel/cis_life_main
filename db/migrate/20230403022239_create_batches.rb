@@ -4,10 +4,11 @@ class CreateBatches < ActiveRecord::Migration[7.0]
       t.references :coop_member, null: false, foreign_key: true
       t.references :group_remit, null: false, foreign_key: true
       t.date :effectivity_date
-      t.string :expiry_date
+      t.date :expiry_date
       t.boolean :active
       t.float :coop_sf_amount
       t.float :agent_sf_amount
+      t.string :status
 
       t.timestamps
     end

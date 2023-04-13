@@ -54,6 +54,7 @@ gem 'devise'
 gem 'activeadmin'
 gem "roo", "~> 2.10.0"
 gem 'requestjs-rails'
+gem 'pagy'
 
 
 group :development, :test do

@@ -1,4 +1,6 @@
 class ApplicationController < ActionController::Base
+  include Pagy::Backend
+
   def root
     case current_user.userable_type
     when "Agent"
