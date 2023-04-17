@@ -15,13 +15,13 @@
           <h6 class="mb-0">Mobile No.</h6>
         </div>
         <div class="col-sm-3 text-secondary">
-          <%= coop_member.mobile_number %>
+          <%= member.mobile_number %>
         </div>
         <div class="col-sm-3">
           <h6 class="mb-0">Email</h6>
         </div>
         <div class="col-sm-3 text-secondary">
-          <%= coop_member.email %>
+          <%= member.email %>
         </div>
       </div>
       <hr>
@@ -30,13 +30,13 @@
           <h6 class="mb-0">Birthdate</h6>
         </div>
         <div class="col-sm-3 text-secondary">
-          <%= coop_member.birthdate.strftime('%B %d, %Y') %>
+          <%= member.birth_date.strftime('%B %d, %Y') %>
         </div>
         <div class="col-sm-3">
           <h6 class="mb-0">Birth Place</h6>
         </div>
         <div class="col-sm-3 text-secondary">
-          <%= coop_member.birth_place %>
+          <%= member.birth_place %>
         </div>
       </div>
       <hr>
@@ -51,7 +51,7 @@
           <h6 class="mb-0">Gender</h6>
         </div>
         <div class="col-sm-3 text-secondary">
-          <%= coop_member.gender %>
+          <%= member.gender %>
         </div>
       </div>
       <hr>
@@ -60,7 +60,7 @@
           <h6 class="mb-0">Address</h6>
         </div>
         <div class="col-sm-9 text-secondary">
-          <%= coop_member.address %>
+          <%= member.address %>
         </div>
       </div>
       <hr>
@@ -69,13 +69,13 @@
           <h6 class="mb-0">SSS #</h6>
         </div>
         <div class="col-sm-3 text-secondary">
-          <%= coop_member.sss_no %>
+          <%= member.sss_no %>
         </div>
         <div class="col-sm-3">
           <h6 class="mb-0">TIN #</h6>
         </div>
         <div class="col-sm-3 text-secondary">
-          <%= coop_member.tin_no %>
+          <%= member.tin_no %>
         </div>
       </div>
       <hr>
@@ -84,14 +84,14 @@
           <h6 class="mb-0">Civil Status</h6>
         </div>
         <div class="col-sm-3 text-secondary">
-          <%= coop_member.civil_status %>
+          <%= member.civil_status %>
         </div>
-        <% if coop_member.civil_status === "married" %>
+        <% if member.civil_status === "married" %>
           <div class="col-sm-3">
             <h6 class="mb-0">Spouse</h6>
           </div>
           <div class="col-sm-3 text-secondary">
-            <%= coop_member.legal_spouse %>
+            <%= member.legal_spouse %>
           </div>
         <% end %>
       </div>
@@ -101,29 +101,29 @@
           <h6 class="mb-0">Height</h6>
         </div>
         <div class="col-sm-3 text-secondary">
-          <%= "#{coop_member.height} cm" %>
+          <%= "#{member.height} cm" %>
         </div>
         <div class="col-sm-3">
           <h6 class="mb-0">Weight</h6>
         </div>
         <div class="col-sm-3 text-secondary">
-          <%= "#{coop_member.weight} kg" %>
+          <%= "#{member.weight} kg" %>
         </div>
       </div>
-      <% unless coop_member.occupation === nil or coop_member.occupation === '' %>
+      <% unless member.occupation === nil or member.occupation === '' %>
         <hr>
         <div class="row">
           <div class="col-sm-3">
             <h6 class="mb-0">Occupation</h6>
           </div>
           <div class="col-sm-3 text-secondary">
-            <%= coop_member.occupation %>
+            <%= member.occupation %>
           </div>
           <div class="col-sm-3">
             <h6 class="mb-0">Employer</h6>
           </div>
           <div class="col-sm-3 text-secondary">
-            <%= coop_member.employer %>
+            <%= member.employer %>
           </div>
         </div>
         <hr>
@@ -132,7 +132,7 @@
             <h6 class="mb-0">Work Address</h6>
           </div>
           <div class="col-sm-9 text-secondary">
-            <%= coop_member.work_address %>
+            <%= member.work_address %>
           </div>
         </div>
         <hr>
@@ -141,7 +141,7 @@
             <h6 class="mb-0">Work Phone #</h6>
           </div>
           <div class="col-sm-9 text-secondary">
-            <%= coop_member.work_phone_number %>
+            <%= member.work_phone_number %>
           </div>
         </div>
       <% end %>

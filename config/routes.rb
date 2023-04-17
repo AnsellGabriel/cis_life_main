@@ -1,11 +1,12 @@
 Rails.application.routes.draw do
-  get 'batches/index'
-  get 'batches/show'
-  get 'batches/new'
-  get 'batches/create'
-  get 'batches/edit'
-  get 'batches/update'
-  get 'batches/destroy'
+  resources :members
+  # get 'batches/index'
+  # get 'batches/show'
+  # get 'batches/new'
+  # get 'batches/create'
+  # get 'batches/edit'
+  # get 'batches/update'
+  # get 'batches/destroy'
   resources :batch_dependents, :batches, :group_remits, :agreement_benefits, :anniversaries, :agreements, :agent_groups, :departments, :agents, :coop_users, :employees
 
   resources :cooperatives do

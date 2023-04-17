@@ -1,12 +1,12 @@
-<%= content_tag :h1, "#{@coop_member.last_name}, #{@coop_member.first_name} #{@coop_member.middle_name} #{@coop_member.suffix}" %>
+<%= content_tag :h1, "#{@member.last_name}, #{@member.first_name} #{@member.middle_name} #{@member.suffix}" %>
 
 <div class="mb-4">
-  <%= link_to "Edit member details", edit_coop_member_path(@coop_member), class: 'btn btn-primary' %> 
+  <%= link_to "Edit member details", edit_member_path(@coop_member), class: 'btn btn-primary' %> 
   <%= link_to "Back", coop_members_path, class: 'btn btn-primary' %>
   <%= link_to "Delete", @coop_member, data: { turbo_method: :delete, turbo_confirm: 'Are you sure?' }, class: 'btn' %>
 </div>
 
-<%= render @coop_member %>
+<%= render partial: 'coop_member', locals: { member: @member, coop_member: @coop_member } %>
 
 
 

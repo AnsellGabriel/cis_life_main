@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_04_12_025903) do
+ActiveRecord::Schema[7.0].define(version: 2023_04_14_011629) do
   create_table "active_admin_comments", force: :cascade do |t|
     t.string "namespace"
     t.text "body"
@@ -79,14 +79,11 @@ ActiveRecord::Schema[7.0].define(version: 2023_04_12_025903) do
 
   create_table "batch_dependents", force: :cascade do |t|
     t.integer "batch_id", null: false
-    t.integer "coop_dependent_id", null: false
-    t.float "premium"
     t.integer "agreement_benefit_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["agreement_benefit_id"], name: "index_batch_dependents_on_agreement_benefit_id"
     t.index ["batch_id"], name: "index_batch_dependents_on_batch_id"
-    t.index ["coop_dependent_id"], name: "index_batch_dependents_on_coop_dependent_id"
   end
 
   create_table "batches", force: :cascade do |t|
@@ -148,30 +145,14 @@ ActiveRecord::Schema[7.0].define(version: 2023_04_12_025903) do
   create_table "coop_members", force: :cascade do |t|
     t.integer "cooperative_id", null: false
     t.integer "coop_branch_id", null: false
-    t.string "last_name"
-    t.string "first_name"
-    t.string "middle_name"
-    t.string "suffix"
-    t.date "birthdate"
-    t.string "mobile_number"
-    t.string "email"
+    t.integer "member_id", null: false
+    t.date "membership_date"
+    t.boolean "transferred", default: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.string "gender"
-    t.string "birth_place"
-    t.integer "sss_no"
-    t.integer "tin_no"
-    t.string "address"
-    t.string "civil_status"
-    t.string "legal_spouse"
-    t.float "height"
-    t.float "weight"
-    t.string "occupation"
-    t.string "employer"
-    t.string "work_address"
-    t.string "work_phone_number"
     t.index ["coop_branch_id"], name: "index_coop_members_on_coop_branch_id"
     t.index ["cooperative_id"], name: "index_coop_members_on_cooperative_id"
+    t.index ["member_id"], name: "index_coop_members_on_member_id"
   end
 
   create_table "coop_users", force: :cascade do |t|
@@ -185,8 +166,8 @@ ActiveRecord::Schema[7.0].define(version: 2023_04_12_025903) do
     t.integer "coop_branch_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["coop_branch_id"], name: "index_coops_on_coop_branch_id"
-    t.index ["cooperative_id"], name: "index_coops_on_cooperative_id"
+    t.index ["coop_branch_id"], name: "index_coop_users_on_coop_branch_id"
+    t.index ["cooperative_id"], name: "index_coop_users_on_cooperative_id"
   end
 
   create_table "cooperatives", force: :cascade do |t|
@@ -240,6 +221,31 @@ ActiveRecord::Schema[7.0].define(version: 2023_04_12_025903) do
     t.index ["anniversary_id"], name: "index_group_remits_on_anniversary_id"
   end
 
+  create_table "members", force: :cascade do |t|
+    t.string "last_name"
+    t.string "first_name"
+    t.string "middle_name"
+    t.string "suffix"
+    t.string "email"
+    t.string "mobile_number"
+    t.date "birth_date"
+    t.string "birth_place"
+    t.string "gender"
+    t.string "sss_no"
+    t.string "tin_no"
+    t.string "address"
+    t.string "civil_status"
+    t.string "legal_spouse"
+    t.float "height"
+    t.float "weight"
+    t.string "occupation"
+    t.string "employer"
+    t.string "work_address"
+    t.string "work_phone_number"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
   create_table "users", force: :cascade do |t|
     t.string "email", default: "", null: false
     t.string "encrypted_password", default: "", null: false
@@ -266,6 +272,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_04_12_025903) do
   add_foreign_key "coop_member_dependents", "coop_members"
   add_foreign_key "coop_members", "coop_branches"
   add_foreign_key "coop_members", "cooperatives"
+  add_foreign_key "coop_members", "members"
   add_foreign_key "coop_users", "coop_branches"
   add_foreign_key "coop_users", "cooperatives"
   add_foreign_key "employees", "departments"

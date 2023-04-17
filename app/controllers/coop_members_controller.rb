@@ -2,15 +2,22 @@ class CoopMembersController < InheritedResources::Base
   before_action :authenticate_user!
 
   def index
+    # get current cooperative
     @cooperative = current_user.userable.cooperative
-    @members = @cooperative.coop_members.where("last_name LIKE ?", "%#{params[:filter]}%")
-    @pagy, @coop_members = pagy(@members, items: 10)
+    # get all coop members of the cooperative
+    @coop_members = CoopMember.where(cooperative_id: @cooperative.id)
+    # get all members data of the cooperative
+    f_members = Member.joins(:coop_members).where(coop_members: { id: @coop_members.ids })
+    # filter members based on last name
+    @members = f_members.where("last_name LIKE ?", "%#{params[:filter]}%")
+    # paginate members
+    @pagy, @filtered_members = pagy(@members, items: 10)
     super
   end
 
   def new
     @cooperative = current_user.userable.cooperative
-    @coop_member = CoopMember.new(coop_branch_id: 1, last_name: FFaker::Name.last_name, first_name: FFaker::Name.first_name, middle_name: FFaker::Name.last_name, suffix: 'Jr', birthdate: Date.today, mobile_number: '09123456789', email: FFaker::Internet.email)
+    # @coop_member = CoopMember.new(coop_branch_id: 1, last_name: FFaker::Name.last_name, first_name: FFaker::Name.first_name, middle_name: FFaker::Name.last_name, suffix: 'Jr', birthdate: Date.today, mobile_number: '09123456789', email: FFaker::Internet.email)
     # @beneficiary = @coop_member.coop_member_beneficiaries.build(last_name: FFaker::Name.last_name, first_name: FFaker::Name.first_name, middle_name: FFaker::Name.last_name, suffix: 'Jr', relationship: 'Brother')
     @beneficiary = @coop_member.coop_member_beneficiaries.build
     super
@@ -50,10 +57,12 @@ class CoopMembersController < InheritedResources::Base
   
   def show
     @coop_member = CoopMember.find(params[:id])
-    @beneficiaries = @coop_member.coop_member_beneficiaries
+    @member = @coop_member.member
+    # @beneficiaries = @coop_member.coop_member_beneficiaries
+
     # compute coop_member age
-    birthdate = @coop_member.birthdate
-    @age = Date.today.year - birthdate.year - ((Date.today.month > birthdate.month || (Date.today.month == birthdate.month && Date.today.day >= birthdate.day)) ? 0 : 1)
+    birth_date = @member.birth_date
+    @age = Date.today.year - birth_date.year - ((Date.today.month > birth_date.month || (Date.today.month == birth_date.month && Date.today.day >= birth_date.day)) ? 0 : 1)
     super
   end
 

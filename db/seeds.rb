@@ -25,22 +25,20 @@ cooperatives_spreadsheet = Roo::Spreadsheet.open("/Users/macbookair/Desktop/cis_
 end
 
 10.times do |i|
-    CoopBranch.create!(name: "Branch #{i}", cooperative_id: 1, region: "Region 1", province: "Province 1", municipality: "Municipality 1", barangay: "Barangay 1", street: "Street 1", contact_details: "09123456789")
+    CoopBranch.create!(name: "Branch #{i+1}", cooperative_id: 1, region: "Region 1", province: "Province 1", municipality: "Municipality 1", barangay: "Barangay 1", street: "Street 1", contact_details: "09123456789")
 end
 
 coop_member_spreadsheet = Roo::Spreadsheet.open("/Users/macbookair/Downloads/gyrt_member.xlsx")
 
 (2..coop_member_spreadsheet.last_row).each do |row|
     spreadsheet = coop_member_spreadsheet
-    CoopMember.find_or_create_by!(
+    Member.find_or_create_by!(
         last_name: spreadsheet.cell(row, 'A'), 
         first_name: spreadsheet.cell(row, 'B'), 
         middle_name: spreadsheet.cell(row, 'C'), 
-        birthdate: spreadsheet.cell(row, 'D'), 
-        coop_branch_id: 1, 
+        birth_date: spreadsheet.cell(row, 'D'),  
         mobile_number: '09678593657', 
         email: 'test@gmail.com', 
-        cooperative_id: 1,
         gender: 'male',
         civil_status: 'single',
         address: 'Blk 1 Lot 1, phase2, Brgy. 1, Municipality 1, Province 1, Region 1',
@@ -56,7 +54,29 @@ coop_member_spreadsheet = Roo::Spreadsheet.open("/Users/macbookair/Downloads/gyr
         height: 178,
         weight: 60
     )
-
-    
-    # puts "#{member.last_name} #{member.first_name} #{member.middle_name}" if member.save
 end
+
+
+
+CoopMember.create(cooperative_id: 1, member_id: 1, coop_branch_id: 1,  membership_date: '12/12/2023', transferred: false)
+
+CoopMember.create(cooperative_id: 1, member_id: 2, coop_branch_id: 2, membership_date: '12/12/2023', transferred: false)
+
+CoopMember.create(cooperative_id: 1, member_id: 3, coop_branch_id: 3, membership_date: '12/12/2023', transferred: false)
+
+
+CoopMember.create(cooperative_id: 1, member_id: 4, coop_branch_id: 4, membership_date: '12/12/2023', transferred: false)
+
+
+CoopMember.create(cooperative_id: 1, member_id: 5, coop_branch_id: 5, membership_date: '12/12/2023', transferred: false)
+
+
+CoopMember.create(cooperative_id: 1, member_id: 6, coop_branch_id: 6, membership_date: '12/12/2023', transferred: false)
+
+
+CoopMember.create(cooperative_id: 1, member_id: 7, coop_branch_id: 7, membership_date: '12/12/2023', transferred: false)
+
+
+CoopMember.create(cooperative_id: 1, member_id: 8, coop_branch_id: 8, membership_date: '12/12/2023', transferred: false)
+#     # puts "#{member.last_name} #{member.first_name} #{member.middle_name}" if member.save
+# end

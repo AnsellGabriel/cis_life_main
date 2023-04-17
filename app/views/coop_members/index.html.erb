@@ -1,6 +1,6 @@
 <%= content_tag :h1, "#{@cooperative.name} Members" %>
 <div class="mb-3">
-  <%= link_to "Enroll Member", new_coop_member_path, class: "btn btn-primary"%>
+  <%= link_to "Enroll Member", new_member_path, class: "btn btn-primary"%>
 </div>
 <div>
   <%= form_with url: coop_members_path, method: :get do %>
@@ -14,7 +14,7 @@
       <tr>
 
       <th>ID</th>
-        <th>Coop Branch</th>
+        <%# <th>Coop Branch</th> %>
         <th>Last Name</th>
         <th>First Name</th>
         <th>Middle Name</th>
@@ -25,21 +25,21 @@
     </thead>
 
     <tbody>
-      <% @coop_members.each do |coop_member| %>
+      <% @filtered_members.each do |member| %>
         <tr>
-      
-        <td><%= coop_member.id %></td>
-        <td><%= coop_member.coop_branch.name %></td>
-        <td><%= coop_member.last_name %></td>
-        <td><%= coop_member.first_name %></td>
-        <td><%= coop_member.middle_name %></td>
-        <td><%= Date.today.year - coop_member.birthdate.year - ((Date.today.month > coop_member.birthdate.month || (Date.today.month == coop_member.birthdate.month && Date.today.day >= coop_member.birthdate.day)) ? 0 : 1) %></td>
-        <td><%= coop_member.birthdate.strftime('%B %d, %Y') %></td>
+        <%# <% member = coop_member.member %> 
+        <td><%= member.id %></td>
+        <%# <td><%= member.coop_members.branch.name %>
+        <td><%= member.last_name %></td>
+        <td><%= member.first_name %></td>
+        <td><%= member.middle_name %></td>
+        <td><%= Date.today.year - member.birth_date.year - ((Date.today.month > member.birth_date.month || (Date.today.month == member.birth_date.month && Date.today.day >= member.birth_date.day)) ? 0 : 1) %></td>
+        <td><%= member.birth_date.strftime('%B %d, %Y') %></td>
     
           <td>
-            <%= link_to 'View', coop_member, class: 'btn btn-primary' %>
-            <%= link_to 'Edit', edit_coop_member_path(coop_member), class: 'btn btn-secondary' %>
-            <%= link_to 'Delete', coop_member, data: { turbo_method: :delete, turbo_confirm: 'Are you sure?' }, class: 'btn btn-danger' %>
+            <%= link_to 'View', member, class: 'btn btn-primary' %>
+            <%= link_to 'Edit', edit_member_path(member), class: 'btn btn-secondary' %>
+            <%= link_to 'Delete', member, data: { turbo_method: :delete, turbo_confirm: 'Are you sure?' }, class: 'btn btn-danger' %>
           </td>
 
         </tr>

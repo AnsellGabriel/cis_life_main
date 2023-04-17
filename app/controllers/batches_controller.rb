@@ -2,6 +2,7 @@ class BatchesController < ApplicationController
   before_action :set_cooperative 
 
   def index
+    @batches = Batch.all
   end
 
   def show
