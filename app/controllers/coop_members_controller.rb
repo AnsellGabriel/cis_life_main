@@ -1,22 +1,23 @@
 class CoopMembersController < InheritedResources::Base
   before_action :authenticate_user!
+  before_action :set_cooperative, only: [:index, :new, :create, :edit, :update, :show]
 
   def index
-    # get current cooperative
-    @cooperative = current_user.userable.cooperative
+    # ransack gem for search
+    # coop member id
+
     # get all coop members of the cooperative
     @coop_members = CoopMember.where(cooperative_id: @cooperative.id)
     # get all members data of the cooperative
     f_members = Member.joins(:coop_members).where(coop_members: { id: @coop_members.ids })
-    # filter members based on last name
-    @members = f_members.where("last_name LIKE ?", "%#{params[:filter]}%")
+    # filter members based on last name, first name, middle name
+    @members = f_members.where("last_name LIKE ? AND first_name LIKE ? AND middle_name LIKE ?", "%#{params[:last_name_filter]}%", "%#{params[:first_name_filter]}%", "%#{params[:middle_name_filter]}%")
     # paginate members
     @pagy, @filtered_members = pagy(@members, items: 10)
     super
   end
 
   def new
-    @cooperative = current_user.userable.cooperative
     # @coop_member = CoopMember.new(coop_branch_id: 1, last_name: FFaker::Name.last_name, first_name: FFaker::Name.first_name, middle_name: FFaker::Name.last_name, suffix: 'Jr', birthdate: Date.today, mobile_number: '09123456789', email: FFaker::Internet.email)
     # @beneficiary = @coop_member.coop_member_beneficiaries.build(last_name: FFaker::Name.last_name, first_name: FFaker::Name.first_name, middle_name: FFaker::Name.last_name, suffix: 'Jr', relationship: 'Brother')
     @beneficiary = @coop_member.coop_member_beneficiaries.build
@@ -24,7 +25,6 @@ class CoopMembersController < InheritedResources::Base
   end
 
   def create
-    @cooperative = current_user.userable.cooperative
     @coop_member = CoopMember.new(coop_member_params)
 
     respond_to do |format|
@@ -38,12 +38,10 @@ class CoopMembersController < InheritedResources::Base
 
 
   def edit
-    @cooperative = current_user.userable.cooperative
     super
   end
 
   def update
-    @cooperative = current_user.userable.cooperative
     @coop_member = CoopMember.find(params[:id])
 
     respond_to do |format|
@@ -67,6 +65,9 @@ class CoopMembersController < InheritedResources::Base
   end
 
   private
+    def set_cooperative
+      @cooperative = current_user.userable.cooperative
+    end
 
     def coop_member_params
       params.require(:coop_member).permit(:cooperative_id, :coop_branch_id, :last_name, :first_name, :middle_name, :suffix, :birthdate, :mobile_number, :email, :birth_place, :address, :sss_no, :tin_no, :civil_status, :legal_spouse, :height, :weight, :occupation, :employer, :work_address, :work_phone_number)

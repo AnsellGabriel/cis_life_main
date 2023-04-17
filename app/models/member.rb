@@ -4,14 +4,14 @@ class Member < ApplicationRecord
   VALID_PH_MOBILE_NUMBER_REGEX = /\A(09|\+639)\d{9}\z/
   validates :mobile_number, presence: true, format: { with: VALID_PH_MOBILE_NUMBER_REGEX, message: "must be a valid Philippine mobile number" }
   validates :work_phone_number, allow_blank: true, format: { with: VALID_PH_MOBILE_NUMBER_REGEX, message: "must be a valid Philippine mobile number" }
-  validates_presence_of :last_name, :first_name, :middle_name, :birth_date, :address, :civil_status
+  validates_presence_of :last_name, :first_name, :middle_name, :birth_date, :address, :civil_status, :gender
   validates :email, format: { with: URI::MailTo::EMAIL_REGEXP }
 
   # belongs_to :cooperative
   # belongs_to :coop_branch
   # has_many :coop_member_dependents, dependent: :destroy
   # has_many :coop_member_beneficiaries, dependent: :destroy
-  has_many :coop_members
+  has_many :coop_members, dependent: :destroy
   accepts_nested_attributes_for :coop_members
 
   # accepts_nested_attributes_for :coop_member_beneficiaries, allow_destroy: true, reject_if: :all_blank  

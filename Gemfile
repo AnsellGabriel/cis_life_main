@@ -55,6 +55,7 @@ gem 'activeadmin'
 gem "roo", "~> 2.10.0"
 gem 'requestjs-rails'
 gem 'pagy'
+gem 'ransack'
 
 
 group :development, :test do

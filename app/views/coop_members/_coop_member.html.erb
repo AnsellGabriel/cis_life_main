@@ -51,7 +51,7 @@
           <h6 class="mb-0">Gender</h6>
         </div>
         <div class="col-sm-3 text-secondary">
-          <%= member.gender %>
+          <%= member.gender.titleize %>
         </div>
       </div>
       <hr>
@@ -66,13 +66,13 @@
       <hr>
       <div class="row">
         <div class="col-sm-3">
-          <h6 class="mb-0">SSS #</h6>
+          <h6 class="mb-0">SSS No.</h6>
         </div>
         <div class="col-sm-3 text-secondary">
           <%= member.sss_no %>
         </div>
         <div class="col-sm-3">
-          <h6 class="mb-0">TIN #</h6>
+          <h6 class="mb-0">TIN No.</h6>
         </div>
         <div class="col-sm-3 text-secondary">
           <%= member.tin_no %>
@@ -86,7 +86,7 @@
         <div class="col-sm-3 text-secondary">
           <%= member.civil_status %>
         </div>
-        <% if member.civil_status === "married" %>
+        <% if member.civil_status === "Married" %>
           <div class="col-sm-3">
             <h6 class="mb-0">Spouse</h6>
           </div>
@@ -138,7 +138,7 @@
         <hr>
         <div class="row">
           <div class="col-sm-3">
-            <h6 class="mb-0">Work Phone #</h6>
+            <h6 class="mb-0">Work Phone No.</h6>
           </div>
           <div class="col-sm-9 text-secondary">
             <%= member.work_phone_number %>

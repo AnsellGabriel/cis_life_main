@@ -306,6 +306,7 @@ DEPENDENCIES
   pagy
   puma (~> 5.0)
   rails (~> 7.0.4, >= 7.0.4.3)
+  ransack
   requestjs-rails
   roo (~> 2.10.0)
   selenium-webdriver
