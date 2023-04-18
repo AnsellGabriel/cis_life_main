@@ -5,20 +5,20 @@
   <div class="form-inputs mb-3">
     <div class="row">
       <div class="col-4">
-        <%= f.simple_fields_for :coop_members do |member| %>
-          <div class="form-group d-flex align-items-end coop-member-form">
-            <div class="">
-              <%= member.input :membership_date, as: :date, html5: true %>
+          <%= f.simple_fields_for :coop_members do |member| %>
+            <div class="form-group d-flex align-items-end coop-member-form">
+              <div class="">
+                <%= member.input :membership_date, as: :date, html5: true %>
+              </div>
+              <div class="">
+                <%= member.hidden_field :cooperative_id, value: @cooperative.id %>
+                <%= member.collection_select :coop_branch_id, @cooperative.coop_branches, :id, :name, { prompt: "Select a branch" }, style: "width: auto" ,class: "form-select mb-3"  %>
+              </div>
+              <div class="">
+                <%= member.input :transferred, as: :boolean, label: "Transferred?" %>
+              </div>
             </div>
-            <div class="">
-              <%= member.hidden_field :cooperative_id, value: @cooperative.id %>
-              <%= member.collection_select :coop_branch_id, @cooperative.coop_branches, :id, :name, { prompt: "Select a branch" }, style: "width: auto" ,class: "form-select mb-3"  %>
-            </div>
-            <div class="">
-              <%= member.input :transferred, as: :boolean, label: "Transferred?" %>
-            </div>
-          </div>
-        <% end %>
+          <% end %>
       </div>
     </div>
     <div class="row">
@@ -101,4 +101,3 @@
     <%= f.button :submit, class: 'btn btn-success' %>
   </div>
 <% end %>
-<% console %>

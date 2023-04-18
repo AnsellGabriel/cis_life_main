@@ -1,37 +1,58 @@
-<div id="<%= dom_id batch %>">
-  <p>
-    <strong>Coop member:</strong>
-    <%= batch.coop_member_id %>
-  </p>
-
-  <p>
-    <strong>Group remit:</strong>
-    <%= batch.group_remit_id %>
-  </p>
-
-  <p>
-    <strong>Effectivity date:</strong>
-    <%= batch.effectivity_date %>
-  </p>
-
-  <p>
-    <strong>Expiry date:</strong>
-    <%= batch.expiry_date %>
-  </p>
-
-  <p>
-    <strong>Active:</strong>
-    <%= batch.active %>
-  </p>
-
-  <p>
-    <strong>Coop sf amount:</strong>
-    <%= batch.coop_sf_amount %>
-  </p>
-
-  <p>
-    <strong>Agent sf amount:</strong>
-    <%= batch.agent_sf_amount %>
-  </p>
-
-</div>
+<div class="col-md-8">
+  <div class="card mb-3">
+    <div class="card-body">
+      <div class="row">
+        <div class="col-sm">
+          <h6 class="mb-0">Effectivity date:</h6>
+        </div>
+        <div class="col-sm text-secondary">
+          <%= batch.effectivity_date.strftime('%B %d, %Y') %>        
+        </div>
+        <div class="col-sm">
+          <h6 class="mb-0">Expiry date:</h6>
+        </div>
+        <div class="col-sm text-secondary">
+          <%= batch.expiry_date.strftime('%B %d, %Y') %>
+        </div>
+      </div>
+      <hr class="mb-3">
+      <div class="row">
+        <div class="col-sm-3">
+          <h6 class="mb-0">Coop Commission</h6>
+        </div>
+        <div class="col-sm-3 text-secondary">
+          <%= number_to_currency(((batch.coop_sf_amount / 100) * 2500), unit: "₱", precision: 2) %>        </div>
+        <div class="col-sm-3">
+          <h6 class="mb-0">Agent Commission</h6>
+        </div>
+        <div class="col-sm-3 text-secondary">
+          <%= number_to_currency(((batch.agent_sf_amount / 100) * 2500), unit: "₱", precision: 2) %>   
+        </div>
+      </div>
+      <hr>
+      <div class="row">
+        <div class="col-sm-3">
+          <h6 class="mb-0">Active?</h6>
+        </div>
+        <div class="col-sm-3 text-secondary">
+          <%= batch.active ? "Active" : "Inactive" %>
+        </div>
+      </div>
+      <hr>
+      <div class="row">
+        <div class="col-sm-3">
+          <h6 class="mb-0">Members:</h6>
+        </div>
+      </div>
+      <hr>
+      <div class="row">
+        <div class="col-sm">
+          <% @sorted_members.each do |coop| %>
+              <%= link_to coop_member_path(coop.coop_members.find_by(cooperative_id: @cooperative.id).id) do %>
+                <div class="">
+                  <%= coop.last_name %>, <%= coop.first_name %> <%= coop.middle_name %>
+                </div>
+              <% end %>
+          <% end %>       
+        </div>
+      </div>

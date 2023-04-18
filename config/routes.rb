@@ -1,4 +1,6 @@
 Rails.application.routes.draw do
+  resources :member_beneficiaries
+  resources :member_dependents
   resources :members
   # get 'batches/index'
   # get 'batches/show'

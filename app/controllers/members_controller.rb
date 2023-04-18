@@ -23,7 +23,7 @@ class MembersController < InheritedResources::Base
       mobile_number: '09123456789',
       birth_date: FFaker::Time.date
     )
-    @member.coop_members.build
+    @coop_member = @member.coop_members.build
   end
 
   def create

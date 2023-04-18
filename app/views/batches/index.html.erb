@@ -1,7 +1,7 @@
 <%= content_tag :h1, "List of Batches" %>
 
 
-<div class="text-end mb-3">
+<div class="mb-3">
   <%= link_to new_batch_path, class: 'btn btn-primary' do %>
     New Batch
   <% end %>
@@ -13,13 +13,11 @@
       <tr>
 
       <th>ID</th>
-        <th>Coop Member</th>
-        <th>Group Remit</th>
         <th>Effectivity Date</th>
         <th>Expiry Date</th>
         <th>Active</th>
-        <th>Coop Sf Amount</th>
-        <th>Agent Sf Amount</th>
+        <th>Coop Commission</th>
+        <th>Agent Commission</th>
         <th></th>
 
       </tr>
@@ -28,20 +26,16 @@
     <tbody>
       <% @batches.each do |batch| %>
         <tr>
-
         <td><%= batch.id %></td>
-        <td><%= batch.coop_member %></td>
-        <td><%= batch.group_remit %></td>
-        <td><%= batch.effectivity_date %></td>
-        <td><%= batch.expiry_date %></td>
-        <td><%= batch.active %></td>
-        <td><%= batch.coop_sf_amount %></td>
-        <td><%= batch.agent_sf_amount %></td>
-    
+        <td><%= batch.effectivity_date.strftime('%B %d, %Y') %></td>
+        <td><%= batch.expiry_date.strftime('%B %d, %Y') %></td>
+        <td><%= batch.active? ? "Active" : "Inactive" %></td>
+        <td><%= number_to_currency(((batch.coop_sf_amount / 100) * 2500), unit: "₱", precision: 2) %></td>
+        <td><%= number_to_currency(((batch.agent_sf_amount / 100) * 2500), unit: "₱", precision: 2) %></td>    
           <td>
-            <%= link_to 'View', batch, class: 'btn' %>
-            <%= link_to 'Edit', edit_batch_path(batch), class: 'btn' %>
-            <%= link_to 'Delete', batch, method: :delete, data: { confirm: 'Are you sure?' }, class: 'btn' %>
+            <%= link_to 'View', batch, class: 'btn btn-primary' %>
+            <%= link_to 'Edit', edit_batch_path(batch), class: 'btn btn-secondary' %>
+            <%= link_to "Delete", batch, data: { turbo_method: :delete, turbo_confirm: 'Are you sure?' }, class: 'btn btn-danger' %>
           </td>
 
         </tr>
@@ -49,3 +43,5 @@
     </tbody>
   </table>
 </div>
+
+<%== pagy_bootstrap_nav(@pagy) %>

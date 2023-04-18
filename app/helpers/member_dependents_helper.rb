@@ -1,0 +1,2 @@
+module MemberDependentsHelper
+end
