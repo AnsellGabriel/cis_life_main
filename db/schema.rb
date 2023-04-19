@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_04_19_030139) do
+ActiveRecord::Schema[7.0].define(version: 2023_04_19_035927) do
   create_table "active_admin_comments", force: :cascade do |t|
     t.string "namespace"
     t.text "body"
@@ -101,13 +101,10 @@ ActiveRecord::Schema[7.0].define(version: 2023_04_19_030139) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.decimal "premium"
-  end
-
-  create_table "batches_coop_members", id: false, force: :cascade do |t|
-    t.integer "batch_id", null: false
+    t.integer "age"
+    t.string "insurance_status"
     t.integer "coop_member_id", null: false
-    t.index ["batch_id", "coop_member_id"], name: "index_batches_coop_members_on_batch_id_and_coop_member_id"
-    t.index ["coop_member_id", "batch_id"], name: "index_batches_coop_members_on_coop_member_id_and_batch_id"
+    t.index ["coop_member_id"], name: "index_batches_on_coop_member_id"
   end
 
   create_table "coop_branches", force: :cascade do |t|
@@ -123,32 +120,6 @@ ActiveRecord::Schema[7.0].define(version: 2023_04_19_030139) do
     t.text "description"
     t.string "street"
     t.index ["cooperative_id"], name: "index_coop_branches_on_cooperative_id"
-  end
-
-  create_table "coop_member_beneficiaries", force: :cascade do |t|
-    t.string "last_name"
-    t.string "first_name"
-    t.string "middle_name"
-    t.string "suffix"
-    t.date "birthdate"
-    t.integer "coop_member_id", null: false
-    t.string "relationship"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.index ["coop_member_id"], name: "index_coop_member_beneficiaries_on_coop_member_id"
-  end
-
-  create_table "coop_member_dependents", force: :cascade do |t|
-    t.string "last_name"
-    t.string "first_name"
-    t.string "middle_name"
-    t.string "suffix"
-    t.date "birthdate"
-    t.integer "coop_member_id", null: false
-    t.string "relationship"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.index ["coop_member_id"], name: "index_coop_member_dependents_on_coop_member_id"
   end
 
   create_table "coop_members", force: :cascade do |t|
@@ -230,21 +201,6 @@ ActiveRecord::Schema[7.0].define(version: 2023_04_19_030139) do
     t.index ["anniversary_id"], name: "index_group_remits_on_anniversary_id"
   end
 
-  create_table "member_beneficiaries", force: :cascade do |t|
-    t.string "last_name"
-    t.string "first_name"
-    t.string "middle_name"
-    t.string "suffix"
-    t.date "birth_date"
-    t.string "relationship"
-    t.integer "member_id", null: false
-    t.integer "batch_id", null: false
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.index ["batch_id"], name: "index_member_beneficiaries_on_batch_id"
-    t.index ["member_id"], name: "index_member_beneficiaries_on_member_id"
-  end
-
   create_table "member_dependents", force: :cascade do |t|
     t.string "last_name"
     t.string "first_name"
@@ -308,11 +264,8 @@ ActiveRecord::Schema[7.0].define(version: 2023_04_19_030139) do
   add_foreign_key "batch_dependents", "agreement_benefits"
   add_foreign_key "batch_dependents", "batches"
   add_foreign_key "batch_dependents", "member_dependents"
-  add_foreign_key "batches_coop_members", "batches"
-  add_foreign_key "batches_coop_members", "coop_members"
+  add_foreign_key "batches", "coop_members"
   add_foreign_key "coop_branches", "cooperatives"
-  add_foreign_key "coop_member_beneficiaries", "coop_members"
-  add_foreign_key "coop_member_dependents", "coop_members"
   add_foreign_key "coop_members", "coop_branches"
   add_foreign_key "coop_members", "cooperatives"
   add_foreign_key "coop_members", "members"
@@ -321,7 +274,5 @@ ActiveRecord::Schema[7.0].define(version: 2023_04_19_030139) do
   add_foreign_key "employees", "departments"
   add_foreign_key "group_remits", "agreements"
   add_foreign_key "group_remits", "anniversaries"
-  add_foreign_key "member_beneficiaries", "batches"
-  add_foreign_key "member_beneficiaries", "members"
   add_foreign_key "member_dependents", "members"
 end

@@ -10,13 +10,15 @@
       <%= f.input :expiry_date, as: :date, html5: true %>
       <%= f.input :coop_sf_amount, label: "Coop Service Fee (%)" %>
       <%= f.input :agent_sf_amount, label: "Agent Service Fee (%)" %>
-      <%= f.input :premium, label: "Premium" %>
+      <%= f.input :premium %>
+      <%= f.hidden_field :status, value: "recent" %>
     </div>
-    <%= f.association :coop_members, collection: @coop_members.map { |m| ["#{m.member.last_name}, #{m.member.first_name} #{m.member.middle_name}", m.id] }, input_html: { data: { controller: "slim-select" }  } %>
+
+  <%= f.association :coop_member, collection: @coop_members, label_method: lambda { |coop| "#{coop.member.last_name}, #{coop.member.first_name} #{coop.member.middle_name}" }, value_method: :id, input_html: { data: { controller: "slim-select" }  } %>
   </div>
 
   <div class="form-actions">
     <%= f.button :submit, class: 'btn-success' %>
-    <%= link_to "Back", batches_path, class: 'btn btn-secondary' %>
+    <%= link_to "Back", :back, class: 'btn btn-secondary' %>
   </div>
 <% end %>

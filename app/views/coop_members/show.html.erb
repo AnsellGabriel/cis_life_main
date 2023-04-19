@@ -1,9 +1,9 @@
+<div><%= link_to "Coop Members", coop_members_path, class: 'btn btn-primary mb-3' %></div>
 <%= content_tag :h1, "#{@member.last_name}, #{@member.first_name} #{@member.middle_name} #{@member.suffix}" %>
 
 <div class="mb-4">
   <%= link_to "Edit member details", edit_member_path(@member), class: 'btn btn-primary' %> 
-  <%= link_to "Back", coop_members_path, class: 'btn btn-primary' %>
-  <%= link_to "Delete", @coop_member, data: { turbo_method: :delete, turbo_confirm: 'Are you sure?' }, class: 'btn' %>
+  <%= link_to "Delete", @coop_member, data: { turbo_method: :delete, turbo_confirm: 'Are you sure?' }, class: 'btn btn-danger' %>
 </div>
 
 <%= render partial: 'coop_member', locals: { member: @member, coop_member: @coop_member } %>

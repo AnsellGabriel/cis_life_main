@@ -6,7 +6,7 @@ class CoopMember < ApplicationRecord
   belongs_to :cooperative
   belongs_to :coop_branch
   belongs_to :member
-  has_and_belongs_to_many :batches
+  has_many :batches
 
   # has_many :coop_member_dependents, dependent: :destroy
   # has_many :coop_member_beneficiaries, dependent: :destroy

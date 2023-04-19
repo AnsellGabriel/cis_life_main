@@ -9,7 +9,7 @@ class CoopMembersController < InheritedResources::Base
     # get all coop members of the cooperative
     @coop_members = CoopMember.where(cooperative_id: @cooperative.id)
     # get all members data of the cooperative
-    f_members = Member.joins(:coop_members).where(coop_members: { id: @coop_members.ids })
+    f_members = Member.joins(:coop_members).where(coop_members: { id: @coop_members.ids }).order(:last_name)
     # filter members based on last name, first name, middle name
     @members = f_members.where("last_name LIKE ? AND first_name LIKE ? AND middle_name LIKE ?", "%#{params[:last_name_filter]}%", "%#{params[:first_name_filter]}%", "%#{params[:middle_name_filter]}%")
     # paginate members
