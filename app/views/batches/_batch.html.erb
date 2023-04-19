@@ -21,12 +21,12 @@
           <h6 class="mb-0">Coop Commission</h6>
         </div>
         <div class="col-sm-3 text-secondary">
-          <%= number_to_currency(((batch.coop_sf_amount / 100) * 2500), unit: "₱", precision: 2) %>        </div>
+          <%= number_to_currency(((batch.coop_sf_amount / 100) * batch.premium), unit: "₱", precision: 2) %>        </div>
         <div class="col-sm-3">
           <h6 class="mb-0">Agent Commission</h6>
         </div>
         <div class="col-sm-3 text-secondary">
-          <%= number_to_currency(((batch.agent_sf_amount / 100) * 2500), unit: "₱", precision: 2) %>   
+          <%= number_to_currency(((batch.agent_sf_amount / 100) * batch.premium), unit: "₱", precision: 2) %>   
         </div>
       </div>
       <hr>
@@ -37,6 +37,11 @@
         <div class="col-sm-3 text-secondary">
           <%= batch.active ? "Active" : "Inactive" %>
         </div>
+        <div class="col-sm-3">
+          <h6 class="mb-0">Status</h6>
+        </div>
+        <div class="col-sm-3 text-secondary">
+          <%= batch.status == 'recent' ? 'New' : batch.status.to_s.titleize %>        </div>
       </div>
       <hr>
       <div class="row">

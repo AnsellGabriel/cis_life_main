@@ -6,7 +6,7 @@ ruby "3.0.3"
 # Bundle edge Rails instead: gem "rails", github: "rails/rails", branch: "main"
 gem "rails", "~> 7.0.4", ">= 7.0.4.3"
 
-# The original asset pipeline for Rails [https://github.com/rails/sprockets-rails]
+# The original arails sset pipeline for Rails [https://github.com/rails/sprockets-rails]
 gem "sprockets-rails"
 
 # Use sqlite3 as the database for Active Record
@@ -53,6 +53,7 @@ gem 'simple_form'
 gem 'devise'
 gem 'activeadmin'
 gem "roo", "~> 2.10.0"
+gem 'csv'
 gem 'requestjs-rails'
 gem 'pagy'
 gem 'ransack'

@@ -15,7 +15,7 @@ class BatchesController < ApplicationController
   end
 
   def new
-    @batch = Batch.new(effectivity_date: FFaker::Time.date, expiry_date: FFaker::Time.date, active: true, coop_sf_amount: 10, agent_sf_amount: 5, status: 'active')
+    @batch = Batch.new(effectivity_date: FFaker::Time.date, expiry_date: FFaker::Time.date, active: true, coop_sf_amount: 10, agent_sf_amount: 5, status: 0)
 
     @coop_members = @cooperative.coop_members
   end
@@ -54,7 +54,7 @@ class BatchesController < ApplicationController
 
   private
     def batch_params
-      params.require(:batch).permit(:effectivity_date, :expiry_date, :active, :coop_sf_amount, :agent_sf_amount, :status, coop_member_ids: [])
+      params.require(:batch).permit(:effectivity_date, :expiry_date, :active, :coop_sf_amount, :agent_sf_amount, :status, :premium,coop_member_ids: [])
     end
 
     def set_cooperative

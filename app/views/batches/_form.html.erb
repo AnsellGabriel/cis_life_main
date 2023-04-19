@@ -10,6 +10,7 @@
       <%= f.input :expiry_date, as: :date, html5: true %>
       <%= f.input :coop_sf_amount, label: "Coop Service Fee (%)" %>
       <%= f.input :agent_sf_amount, label: "Agent Service Fee (%)" %>
+      <%= f.input :premium, label: "Premium" %>
     </div>
     <%= f.association :coop_members, collection: @coop_members.map { |m| ["#{m.member.last_name}, #{m.member.first_name} #{m.member.middle_name}", m.id] }, input_html: { data: { controller: "slim-select" }  } %>
   </div>

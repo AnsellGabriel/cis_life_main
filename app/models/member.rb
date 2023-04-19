@@ -12,6 +12,7 @@ class Member < ApplicationRecord
   # has_many :coop_member_dependents, dependent: :destroy
   # has_many :coop_member_beneficiaries, dependent: :destroy
   has_many :coop_members, dependent: :destroy
+  has_many :member_dependents, dependent: :destroy
   accepts_nested_attributes_for :coop_members
 
   # accepts_nested_attributes_for :coop_member_beneficiaries, allow_destroy: true, reject_if: :all_blank  

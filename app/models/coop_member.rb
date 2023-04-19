@@ -1,6 +1,6 @@
 class CoopMember < ApplicationRecord
   validates_presence_of :coop_branch_id, :membership_date, :cooperative_id
-  validates :coop_branch_id, presence: true, exclusion: { in: [nil, "", "Select a branch"] }
+  # validates :coop_branch_id, presence: true, exclusion: { in: [nil, "", "Select a branch"] }
 
 
   belongs_to :cooperative
