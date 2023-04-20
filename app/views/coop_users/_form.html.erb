@@ -26,7 +26,7 @@
     
     <div data-controller="coop">
       <%= f.association :cooperative, input_html: { id: "coop_id", data: { action: "change->coop#change", controller: "slim-select" }  } %>
-      <%= f.association :coop_branch, input_html: { id: "branch_id", data: { coop_target: "branchSelect" } } %>
+      <%= f.association :coop_branch, collection: [], input_html: { id: "branch_id", data: { coop_target: "branchSelect" } } %>
     </div>
    
 

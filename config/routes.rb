@@ -1,23 +1,21 @@
-Rails.application.routes.draw do
-  resources :member_dependents
-  resources :members
-  # get 'batches/index'
-  # get 'batches/show'
-  # get 'batches/new'
-  # get 'batches/create'
-  # get 'batches/edit'
-  # get 'batches/update'
-  # get 'batches/destroy'
-  resources :batch_dependents, :batches, :group_remits, :agreement_benefits, :anniversaries, :agreements, :agent_groups, :departments, :agents, :coop_users, :employees
+Rails.application.routes.draw do 
+  resources :batch_dependents, :agreement_benefits, :anniversaries, :agreements, :agent_groups, :departments, :agents, :coop_users, :employees
+
+  resources :group_remits do 
+    resources :batches
+  end
 
   resources :cooperatives do
     get :selected, on: :member
     resources :coop_branches
   end
 
+  resources :members do
+    resources :member_dependents, path: 'dependents', as: 'dependents'
+  end
+
   resources :coop_members do
-    resources :coop_member_beneficiaries, path: 'beneficiaries', as: 'beneficiaries'
-    resources :coop_member_dependents, path: 'dependents', as: 'dependents'
+    get :selected, on: :member
   end
 
   devise_for :admin_users, ActiveAdmin::Devise.config

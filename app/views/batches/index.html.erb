@@ -14,9 +14,9 @@
 
         <th>ID</th>
         <th>Member</th>
+        <th>Status</th>
         <th>Effectivity Date</th>
         <th>Expiry Date</th>
-        <th>Status</th>
         <th>Coop Commission</th>
         <th>Agent Commission</th>
         <th>Actions</th>
@@ -30,9 +30,9 @@
         <% member = batch.coop_member.member %>
         <td><%= batch.id %></td>
         <td><%= "#{member.last_name}, #{member.first_name} #{member.middle_name}" %></td>
+        <td><%= batch.status == 'recent' ? 'New' : batch.status.to_s.titleize %></td>
         <td><%= batch.effectivity_date.strftime('%B %d, %Y') %></td>
         <td><%= batch.expiry_date.strftime('%B %d, %Y') %></td>
-        <td><%= batch.status == 'recent' ? 'New' : batch.status.to_s.titleize %></td>
         <td><%= number_to_currency(((batch.coop_sf_amount / 100) * batch.premium), unit: "₱", precision: 2) %></td>
         <td><%= number_to_currency(((batch.agent_sf_amount / 100) * batch.premium), unit: "₱", precision: 2) %></td>    
           <td>
@@ -48,4 +48,3 @@
 </div>
 
 <%== pagy_bootstrap_nav(@pagy) %>
-<% console %>

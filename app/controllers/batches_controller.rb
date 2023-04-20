@@ -11,7 +11,6 @@ class BatchesController < ApplicationController
   end
 
   def show
-    @batch = Batch.find(params[:id])
     @batch_member = @batch.coop_member
   end
 
@@ -19,15 +18,24 @@ class BatchesController < ApplicationController
     @batch = Batch.new(effectivity_date: FFaker::Time.date, expiry_date: FFaker::Time.date, active: true, coop_sf_amount: 10, agent_sf_amount: 5, status: :recent)
 
     @coop_members = @cooperative.coop_members
+    @members = Member.joins(:coop_members).where(coop_members: { id: @coop_members.ids }).order(:last_name)
+
+    # @member_dependent = @member.member_dependents.build
+    @batch_dependent = @batch.batch_dependents.build
   end
 
   def create
+    @coop_members = @cooperative.coop_members
+    @members = Member.joins(:coop_members).where(coop_members: { id: @coop_members.ids }).order(:last_name)
+
     @batch = Batch.new(batch_params)
 
-    if @batch.save
-      redirect_to @batch
-    else
-      render :new
+    respond_to do |format|
+      if @batch.save!
+        format.html { redirect_to @batch, notice: "Batch created"}
+      else
+        format.html { render :new, status: :unprocessable_entity }
+      end
     end
 
   end
@@ -36,13 +44,17 @@ class BatchesController < ApplicationController
     @coop_members = @cooperative.coop_members
     @coop_member = @batch.coop_member
     @member = @coop_member.member
+    @members = Member.joins(:coop_members).where(coop_members: { id: @coop_members.ids }).order(:last_name)
+
   end
 
   def update
-    if @batch.update(batch_params)
-      redirect_to @batch
-    else
-      render :edit
+    respond_to do |format|
+      if @batch.update(batch_params)
+        format.html { redirect_to @batch, notice: "Batch updated"}
+      else
+        format.html { render :edit, status: :unprocessable_entity }
+      end
     end
   end
 
@@ -56,7 +68,7 @@ class BatchesController < ApplicationController
 
   private
     def batch_params
-      params.require(:batch).permit(:effectivity_date, :expiry_date, :active, :coop_sf_amount, :agent_sf_amount, :status, :premium, :coop_member_id)
+      params.require(:batch).permit(:effectivity_date, :expiry_date, :active, :coop_sf_amount, :agent_sf_amount, :status, :premium, :coop_member_id, batch_dependents_attributes: [:member_dependent_id, :beneficiary, :_destroy])
     end
 
     def set_cooperative

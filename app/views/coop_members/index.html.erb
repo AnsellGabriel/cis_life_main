@@ -1,6 +1,6 @@
 <%= content_tag :h1, "#{@cooperative.name} Members" %>
 <div class="mb-3">
-  <%= link_to "Enroll Members", new_member_path, class: "btn btn-primary"%>
+  <%= link_to "Enroll New Member", new_member_path, class: "btn btn-primary"%>
 </div>
 
 <%= form_with url: coop_members_path, method: :get do %>

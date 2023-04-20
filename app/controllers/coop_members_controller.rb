@@ -64,6 +64,16 @@ class CoopMembersController < InheritedResources::Base
     super
   end
 
+  def selected
+    @target = params[:target]
+    @member = CoopMember.find(params[:id]).member
+    @member_dependents = MemberDependent.where(member_id: @member.id)
+    
+    respond_to do |format|
+      format.turbo_stream
+    end
+  end
+
   private
     def set_cooperative
       @cooperative = current_user.userable.cooperative
