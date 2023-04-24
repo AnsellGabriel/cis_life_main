@@ -12,6 +12,7 @@ class BatchesController < ApplicationController
   end
 
   def show
+    @group_remit = GroupRemit.find(params[:group_remit_id])
     @batch_member = @batch.coop_member
   end
 
@@ -56,9 +57,13 @@ class BatchesController < ApplicationController
   end
 
   def update
+    @group_remit = GroupRemit.find(params[:group_remit_id])
+
     respond_to do |format|
       if @batch.update(batch_params)
-        format.html { redirect_to @batch, notice: "Batch updated"}
+        format.html { 
+          redirect_to group_remit_batch_path(@group_remit, @batch), notice: "Batch updated"
+        }
       else
         format.html { render :edit, status: :unprocessable_entity }
       end

@@ -1,0 +1,58 @@
+
+<%= simple_form_for(@batch, url: group_remit_batch_path) do |f| %>
+  <%= f.error_notification %>
+  <%= f.error_notification message: f.object.errors[:base].to_sentence if f.object.errors[:base].present? %>
+  <div class="form-inputs mb-3">
+  <div class="row">
+    <div class="col-3 d-flex align-items-end">
+      <%= f.input :active, wrapper_html: {class: "ps-3"} %>
+    </div>
+  </div>
+    <div class="row">
+      <div class="col-6 mb-3" data-controller="batch">
+
+        <%= f.association :coop_member, collection: @members.map { |member| ["#{member.last_name}, #{member.first_name} #{member.middle_name}", member.id] }, input_html: { id: "member_id", data: { action: "change->batch#change", controller: "slim-select" }  } %>
+
+        <%= f.fields_for :batch_dependents do |d| %>
+          <%= d.label :member_dependent_id, label: "Beneficiary"%>
+          <%= d.select :member_dependent_id, [], {prompt: "No Beneficiaries"}, { id: "dependent_id", data: { batch_target: "dependentSelect" }, class: "form-select" } %>
+          <% d.hidden_field :beneficiary, value: true%>
+        <% end %>
+
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-3">
+        <%= f.input :effectivity_date, as: :date, html5: true %>
+      </div>
+      <div class="col-3">
+        <%= f.input :expiry_date, as: :date, html5: true %>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-3">
+        <%= f.input :premium %>
+      </div>
+      <div class="col-3">
+        <%= f.input :coop_sf_amount, label: "Coop Service Fee (%)" %>
+      </div>
+      <div class="col-3">
+        <%= f.input :agent_sf_amount, label: "Agent Service Fee (%)" %>
+      </div>
+    </div>
+    <div class="row">
+      
+    </div>
+        <%= f.hidden_field :status, value: "recent" %>
+  </div>
+
+  <div class="form-actions">
+    <%= f.button :submit, class: 'btn-success' %>
+    <%= link_to "Back", :back, class: 'btn btn-secondary' %>
+  </div>
+<% end %>
+
+ 
+      </div>
+    </div>
+  </div>

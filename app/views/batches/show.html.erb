@@ -1,5 +1,5 @@
 <div>
-  <%= link_to "Batches", group_remit_batches_path, class: 'btn btn-secondary mb-3' %>
+  <%= link_to "#{@group_remit.name}", group_remit_path(@group_remit), class: 'btn btn-secondary mb-3' %>
 </div>
 <%= content_tag :h1, "Batch #{@batch.id}" %>
 

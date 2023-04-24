@@ -1,5 +1,50 @@
 class MembersController < InheritedResources::Base
-  before_action :set_cooperative, only: [:new, :create, :edit, :update]
+  before_action :set_cooperative, only: %i[import new create edit update]
+
+  def import
+    file = params[:file]
+    redirect_to coop_members_path, alert: "Only CSV file format please" unless file.content_type == "text/csv"
+
+    file = File.open(file)
+    csv = CSV.parse(file, headers: true)
+    csv.each do |row|
+      member_hash = {
+        last_name: row["Last Name"],
+        first_name: row["First Name"],
+        middle_name: row["Middle Name"],
+        suffix: row["Suffix"],
+        birth_place: row["Birth Place"],
+        birth_date: row["Birthdate"],
+        gender: row["Gender"],
+        address: row["Address"],
+        sss_no: row["SSS #"],
+        tin_no: row["TIN #"],
+        mobile_number: row["Mobile #"],
+        email: row["Email"],
+        civil_status: row["Civil Status"],
+        height: row["Height (cm)"],
+        weight: row["Weight (kg)"],
+        occupation: row["Occupation"],
+        employer: row["Employer"],
+        work_address: row["Work Address"],
+        legal_spouse: row["Spouse"],
+        work_phone_number: row["Work Phone #"],
+        coop_members_attributes: {
+          cooperative_id: @cooperative.id,
+          coop_branch_id: CoopBranch.find_by(name: row["Branch"]).id,
+          membership_date: row["Membership Date"],
+          transferred: row["Transferred?"].downcase == "yes"
+        }
+      }
+      byebug
+      Member.find_or_create_by!(member_hash)
+    end
+    
+
+
+
+    redirect_to coop_members_path, notice: "Members imported successfully"
+  end
 
   def new
     @member = Member.new(

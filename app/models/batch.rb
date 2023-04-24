@@ -1,5 +1,5 @@
 class Batch < ApplicationRecord
-  validates_presence_of :effectivity_date, :expiry_date, :active, :coop_sf_amount, :agent_sf_amount, :status, :premium, :coop_member_id
+  validates_presence_of :effectivity_date, :expiry_date, :coop_sf_amount, :agent_sf_amount, :status, :premium, :coop_member_id
 
   enum status: {
     recent: 0,

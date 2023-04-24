@@ -12,6 +12,9 @@ Rails.application.routes.draw do
 
   resources :members do
     resources :member_dependents, path: 'dependents', as: 'dependents'
+    collection do
+      post :import
+    end
   end
 
   resources :coop_members do

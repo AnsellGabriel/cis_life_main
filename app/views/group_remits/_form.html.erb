@@ -14,7 +14,14 @@
     <%= f.association :anniversary %>
 
     <template data-nested-form-target="template">
-      <%= f.fields_for :batches, Batch.new, child_index: 'NEW_RECORD' do |batches_fields| %>
+      <%= f.fields_for :batches, Batch.new(
+        effectivity_date: FFaker::Time.date, 
+        expiry_date: FFaker::Time.date, 
+        active: true, 
+        coop_sf_amount: 10, 
+        agent_sf_amount: 5, 
+        status: :recent
+      ), child_index: 'NEW_RECORD' do |batches_fields| %>
         <%= render "batch_fields", f: batches_fields %>
       <% end %>
     </template>
