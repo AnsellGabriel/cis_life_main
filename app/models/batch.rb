@@ -9,6 +9,7 @@ class Batch < ApplicationRecord
   # belongs_to :group_remit
 
   belongs_to :coop_member
+  belongs_to :group_remit
   
   has_many :batch_dependents, dependent: :destroy
   accepts_nested_attributes_for :batch_dependents

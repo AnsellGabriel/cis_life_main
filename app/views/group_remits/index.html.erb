@@ -29,13 +29,13 @@
         <td><%= group_remit.id %></td>
         <td><%= group_remit.name %></td>
         <td><%= group_remit.description %></td>
-        <td><%= group_remit.agreement %></td>
-        <td><%= group_remit.anniversary %></td>
+        <td><%= group_remit.agreement.name %></td>
+        <td><%= group_remit.anniversary.name %></td>
     
           <td>
-            <%= link_to 'View', group_remit, class: 'btn' %>
-            <%= link_to 'Edit', edit_group_remit_path(group_remit), class: 'btn' %>
-            <%= link_to 'Delete', group_remit, method: :delete, data: { confirm: 'Are you sure?' }, class: 'btn' %>
+            <%= link_to 'View', group_remit, class: 'btn btn-primary' %>
+            <%= link_to 'Edit', edit_group_remit_path(group_remit), class: 'btn btn-secondary' %>
+            <%= link_to 'Delete', group_remit, method: :delete, data: { confirm: 'Are you sure?' }, class: 'btn btn-danger' %>
           </td>
 
         </tr>

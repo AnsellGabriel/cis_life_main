@@ -5,7 +5,8 @@ class BatchesController < ApplicationController
 
   def index
     # get all batches of the cooperative
-    @batches = Batch.includes(:coop_member).where(coop_member: { cooperative_id: @cooperative.id }).all
+    @group_remit = GroupRemit.find(params[:group_remit_id])
+    @batches = @group_remit.batches
 
     @pagy, @batches = pagy(@batches, items: 10)
   end
@@ -15,24 +16,30 @@ class BatchesController < ApplicationController
   end
 
   def new
-    @batch = Batch.new(effectivity_date: FFaker::Time.date, expiry_date: FFaker::Time.date, active: true, coop_sf_amount: 10, agent_sf_amount: 5, status: :recent)
-
     @coop_members = @cooperative.coop_members
     @members = Member.joins(:coop_members).where(coop_members: { id: @coop_members.ids }).order(:last_name)
 
+    @group_remit = GroupRemit.find(params[:group_remit_id])
+    @batch = @group_remit.batches.new(effectivity_date: FFaker::Time.date, expiry_date: FFaker::Time.date, active: true, coop_sf_amount: 10, agent_sf_amount: 5, status: :recent)
+
+    
+
     # @member_dependent = @member.member_dependents.build
-    @batch_dependent = @batch.batch_dependents.build
+    # @batch_dependent = @batch.batch_dependents.build
   end
 
   def create
     @coop_members = @cooperative.coop_members
     @members = Member.joins(:coop_members).where(coop_members: { id: @coop_members.ids }).order(:last_name)
 
-    @batch = Batch.new(batch_params)
+    @group_remit = GroupRemit.find(params[:group_remit_id])
+    @batch = @group_remit.batches.new(batch_params)
 
     respond_to do |format|
       if @batch.save!
-        format.html { redirect_to @batch, notice: "Batch created"}
+        format.html { 
+          redirect_to group_remit_batch_path(@group_remit, @batch), notice: "Batch created"
+        }
       else
         format.html { render :new, status: :unprocessable_entity }
       end
@@ -60,9 +67,9 @@ class BatchesController < ApplicationController
 
   def destroy
     if @batch.destroy
-      redirect_to batches_path, notice: 'Batch was successfully destroyed.'
+      redirect_to group_remit_path, notice: 'Batch was successfully destroyed.'
     else
-      redirect_to batch_path(@batch), alert: 'Unable to destroy batch.'
+      redirect_to group_remit_batch_path(@group_remit, @batch), alert: 'Unable to destroy batch.'
     end
   end
 

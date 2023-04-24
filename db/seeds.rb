@@ -24,6 +24,12 @@ cooperatives_spreadsheet = Roo::Spreadsheet.open("/Users/macbookair/Desktop/cis_
     )
 end
 
+Agreement.create(name: 'Agreement 1', description: 'Agreement 1 description', premium: 10500.00)
+
+Anniversary.create(name: 'Anniversary 1', anniversary_date: FFaker::Time.date)
+
+GroupRemit.create(name: 'Group Remit 1', description: 'Group Remit 1 description', agreement_id: 1, anniversary_id: 1)
+
 10.times do |i|
     CoopBranch.create!(name: "Branch #{i+1}", cooperative_id: 1, region: "Region 1", province: "Province 1", municipality: "Municipality 1", barangay: "Barangay 1", street: "Street 1", contact_details: "09123456789")
 end

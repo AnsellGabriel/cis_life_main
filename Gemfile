@@ -57,6 +57,9 @@ gem 'csv'
 gem 'requestjs-rails'
 gem 'pagy'
 gem 'ransack'
+gem 'jquery-rails'
+gem 'cocoon'
+
 
 
 group :development, :test do

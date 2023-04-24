@@ -1,5 +1,9 @@
 
-<%= simple_form_for(@group_remit) do |f| %>
+<%= simple_form_for(@group_remit, html: { data: { 
+  controller: 'nested-form', 
+  nested_form_wrapper_selector_value: '.nested-form-wrapper' 
+    } 
+  }) do |f| %>
   <%= f.error_notification %>
   <%= f.error_notification message: f.object.errors[:base].to_sentence if f.object.errors[:base].present? %>
 
@@ -8,7 +12,22 @@
     <%= f.input :description %>
     <%= f.association :agreement %>
     <%= f.association :anniversary %>
-  </div>
+
+    <template data-nested-form-target="template">
+      <%= f.fields_for :batches, Batch.new, child_index: 'NEW_RECORD' do |batches_fields| %>
+        <%= render "batch_fields", f: batches_fields %>
+      <% end %>
+    </template>
+
+    <%= f.fields_for :batches do |batches_fields| %>
+      <%= render "batch_fields", f: batches_fields %>
+    <% end %>
+
+    <!-- Inserted elements will be injected before that target. -->
+    <div data-nested-form-target="target"></div>
+    
+    <button type="button" data-action="nested-form#add" class="btn btn-primary">Add Batch</button>
+
 
   <div class="form-actions text-end">
     <%= link_to "Back", group_remits_path, class: 'btn btn-secondary' %>
