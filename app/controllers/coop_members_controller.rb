@@ -45,7 +45,7 @@ class CoopMembersController < InheritedResources::Base
     @coop_member = CoopMember.find(params[:id])
 
     respond_to do |format|
-      if @coop_member.update(coop_member_params)
+      if @coop_member.update!(coop_member_params)
         format.html { redirect_to @coop_member, notice: "Coop member updated."}
       else
         format.html { render :new, status: :unprocessable_entity }

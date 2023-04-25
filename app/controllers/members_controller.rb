@@ -5,14 +5,19 @@ class MembersController < InheritedResources::Base
     file = params[:file]
     redirect_to coop_members_path, alert: "Only CSV file format please" unless file.content_type == "text/csv"
 
+    #! Attributes with Date type should have a format of: yyyy-mm-dd
     file = File.open(file)
     csv = CSV.parse(file, headers: true)
+    
+    created_members_counter = 0
+    updated_members_counter = 0
+
     csv.each do |row|
       member_hash = {
-        last_name: row["Last Name"],
-        first_name: row["First Name"],
-        middle_name: row["Middle Name"],
-        suffix: row["Suffix"],
+        last_name: row["Last Name"].upcase,
+        first_name: row["First Name"].upcase,
+        middle_name: row["Middle Name"].upcase,
+        suffix: row["Suffix"].upcase,
         birth_place: row["Birth Place"],
         birth_date: row["Birthdate"],
         gender: row["Gender"],
@@ -28,22 +33,39 @@ class MembersController < InheritedResources::Base
         employer: row["Employer"],
         work_address: row["Work Address"],
         legal_spouse: row["Spouse"],
-        work_phone_number: row["Work Phone #"],
-        coop_members_attributes: {
-          cooperative_id: @cooperative.id,
-          coop_branch_id: CoopBranch.find_by(name: row["Branch"]).id,
-          membership_date: row["Membership Date"],
-          transferred: row["Transferred?"].downcase == "yes"
-        }
+        work_phone_number: row["Work Phone #"]
       }
-      byebug
-      Member.find_or_create_by!(member_hash)
+
+      coop_member_hash = {
+        cooperative_id: @cooperative.id,
+        coop_branch_id: CoopBranch.find_by(name: row["Branch"]).id,
+        membership_date: row["Membership Date"],
+        transferred: row["Transferred?"].downcase == "yes"
+      } 
+
+      # Check if a member with the same first name, last name, and birth date already exists
+      existing_member = Member.find_by(
+        first_name: member_hash[:first_name],
+        last_name: member_hash[:last_name],
+        birth_date: member_hash[:birth_date]
+      )
+      
+      if existing_member
+        # If a member already exists, update the record with the new data
+        existing_member.update(member_hash)
+        existing_member.coop_members.find_by(cooperative_id: @cooperative.id).update(coop_member_hash)
+
+        updated_members_counter += 1
+      else
+        # If a member does not exist, create a new record
+        new_member = Member.create(member_hash)
+        new_member.coop_members.create(coop_member_hash)
+
+        created_members_counter += 1
+      end
     end
-    
 
-
-
-    redirect_to coop_members_path, notice: "Members imported successfully"
+    redirect_to coop_members_path, notice: "#{created_members_counter} member(s) imported, #{updated_members_counter} member(s) updated."
   end
 
   def new
