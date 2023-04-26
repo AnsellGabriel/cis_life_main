@@ -1,12 +1,12 @@
 <div class="col-md-8">
   <div class="card mb-3">
     <div class="card-body">
-     <div class="row">
+      <div class="row">
         <div class="col-sm-3">
           <h6 class="mb-0">Member:</h6>
         </div>
         <div class="col-sm-9">
-          <%= link_to "#{batch_member.member.last_name}, #{batch_member.member.first_name} #{batch_member.member.middle_name}", coop_member_path(batch_member.id) %>    
+          <%= link_to "#{batch_member.member.last_name}, #{batch_member.member.first_name} #{batch_member.member.middle_name}", coop_member_path(batch_member.id) %>
         </div>
       </div>
       <hr>
@@ -15,7 +15,7 @@
           <h6 class="mb-0">Effectivity date:</h6>
         </div>
         <div class="col-sm text-secondary">
-          <%= batch.effectivity_date.strftime('%B %d, %Y') %>        
+          <%= batch.effectivity_date.strftime('%B %d, %Y') %>
         </div>
         <div class="col-sm">
           <h6 class="mb-0">Expiry date:</h6>
@@ -35,7 +35,7 @@
           <h6 class="mb-0">Agent Commission</h6>
         </div>
         <div class="col-sm-3 text-secondary">
-          <%= number_to_currency(((batch.agent_sf_amount / 100) * batch.premium), unit: "₱", precision: 2) %>   
+          <%= number_to_currency(((batch.agent_sf_amount / 100) * batch.premium), unit: "₱", precision: 2) %>
         </div>
       </div>
       <hr>
@@ -50,6 +50,6 @@
           <h6 class="mb-0">Status</h6>
         </div>
         <div class="col-sm-3 text-secondary">
-          <%= batch.status == 'recent' ? 'New' : batch.status.to_s.titleize %>        
+          <%= batch.status == 'recent' ? 'New' : batch.status.to_s.titleize %>
         </div>
       </div>

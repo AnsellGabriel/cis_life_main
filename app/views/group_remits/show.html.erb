@@ -1,10 +1,17 @@
 <%= content_tag :h1, "#{@group_remit.name} batches" %>
+<%= content_tag :h6, "Total Premium: #{number_to_currency(@total_premium, unit: "₱", precision: 2)}" %>
+<%= content_tag :h6, "Total Coop Commission: #{number_to_currency(@total_coop_commission, unit: "₱", precision: 2)}" %>
+<%= content_tag :h6, "Total Agent Commission: #{number_to_currency(@total_agent_commission, unit: "₱", precision: 2)}" %>
+
 
 <div class="mb-3">
-  <%= link_to new_group_remit_batch_path(@group_remit), class: 'btn btn-primary' do %>
+  <%= link_to new_group_remit_batch_path(@group_remit), data: {turbo_frame: "batch_form"}, class: 'btn btn-primary' do %>
     New Batch
   <% end %>
 </div>
+
+<%= turbo_frame_tag "batch_form" do %>
+<% end %>
 
 <div class="table-responsive">
   <table class="table table-striped table-bordered table-hover">
@@ -14,8 +21,7 @@
         <th>ID</th>
         <th>Member</th>
         <th>Status</th>
-        <th>Effectivity Date</th>
-        <th>Expiry Date</th>
+        <th>Premium</th>
         <th>Coop Commission</th>
         <th>Agent Commission</th>
         <th>Actions</th>
@@ -30,8 +36,7 @@
         <td><%= batch.id %></td>
         <td><%= "#{member.last_name}, #{member.first_name} #{member.middle_name}" %></td>
         <td><%= batch.status == 'recent' ? 'New' : batch.status.to_s.titleize %></td>
-        <td><%= batch.effectivity_date.strftime('%B %d, %Y') %></td>
-        <td><%= batch.expiry_date.strftime('%B %d, %Y') %></td>
+        <td><%= number_to_currency(batch.premium, unit: "₱", precision: 2) %></td>
         <td><%= number_to_currency(((batch.coop_sf_amount / 100) * batch.premium), unit: "₱", precision: 2) %></td>
         <td><%= number_to_currency(((batch.agent_sf_amount / 100) * batch.premium), unit: "₱", precision: 2) %></td>    
           

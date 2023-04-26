@@ -8,10 +8,14 @@
   <%= f.error_notification message: f.object.errors[:base].to_sentence if f.object.errors[:base].present? %>
 
   <div class="form-inputs mb-3">
+    <div class="d-flex">
+      <%= f.association :agreement %>
+      <%= f.association :anniversary %>
+    </div>
     <%= f.input :name %>
     <%= f.input :description %>
-    <%= f.association :agreement %>
-    <%= f.association :anniversary %>
+    
+    
 
     <template data-nested-form-target="template">
       <%= f.fields_for :batches, Batch.new(

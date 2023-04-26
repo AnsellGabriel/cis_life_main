@@ -1,5 +1,9 @@
 Rails.application.routes.draw do 
-  resources :batch_dependents, :agreement_benefits, :anniversaries, :agreements, :agent_groups, :departments, :agents, :coop_users, :employees
+  resources :batch_dependents, :anniversaries, :agreements, :agent_groups, :departments, :agents, :coop_users, :employees
+
+  resources :agreement_benefits do
+    get :selected, on: :member
+  end
 
   resources :group_remits do 
     resources :batches

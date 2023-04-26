@@ -5,7 +5,7 @@ class MembersController < InheritedResources::Base
     file = params[:file]
     redirect_to coop_members_path, alert: "Only CSV file format please" unless file.content_type == "text/csv"
 
-    #! Attributes with Date type should have a format of: yyyy-mm-dd
+    # ! Attributes with Date type should have a format of: yyyy-mm-dd
     file = File.open(file)
     csv = CSV.parse(file, headers: true)
     
@@ -65,7 +65,7 @@ class MembersController < InheritedResources::Base
       end
     end
 
-    redirect_to coop_members_path, notice: "#{created_members_counter} member(s) imported, #{updated_members_counter} member(s) updated."
+    redirect_to coop_members_path, notice: "#{created_members_counter} member(s) enrolled, #{updated_members_counter} member(s) updated."
   end
 
   def new

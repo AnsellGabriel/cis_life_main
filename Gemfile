@@ -59,6 +59,7 @@ gem 'pagy'
 gem 'ransack'
 gem 'jquery-rails'
 gem 'cocoon'
+gem 'htmlbeautifier'
 
 
 

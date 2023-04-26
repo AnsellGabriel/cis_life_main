@@ -14,3 +14,4 @@ pin "slim-select", to: "https://ga.jspm.io/npm:slim-select@2.4.5/dist/slimselect
 pin "jquery", to: "https://ga.jspm.io/npm:jquery@3.6.4/dist/jquery.js"
 
 pin "@nathanvda/cocoon", to: "https://ga.jspm.io/npm:@nathanvda/cocoon@1.2.14/cocoon.js"
+

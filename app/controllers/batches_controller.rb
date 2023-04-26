@@ -21,7 +21,7 @@ class BatchesController < ApplicationController
     @members = Member.joins(:coop_members).where(coop_members: { id: @coop_members.ids }).order(:last_name)
 
     @group_remit = GroupRemit.find(params[:group_remit_id])
-    @batch = @group_remit.batches.new(effectivity_date: FFaker::Time.date, expiry_date: FFaker::Time.date, active: true, coop_sf_amount: 10, agent_sf_amount: 5, status: :recent)
+    @batch = @group_remit.batches.new(effectivity_date: FFaker::Time.date, expiry_date: FFaker::Time.date, active: true, status: :recent)
 
     
 
@@ -80,7 +80,7 @@ class BatchesController < ApplicationController
 
   private
     def batch_params
-      params.require(:batch).permit(:effectivity_date, :expiry_date, :active, :coop_sf_amount, :agent_sf_amount, :status, :premium, :coop_member_id, batch_dependents_attributes: [:member_dependent_id, :beneficiary, :_destroy])
+      params.require(:batch).permit(:effectivity_date, :expiry_date, :active, :coop_sf_amount, :agent_sf_amount, :status, :premium, :coop_member_id, :agreement_benefit_id, batch_dependents_attributes: [:member_dependent_id, :beneficiary, :_destroy])
     end
 
     def set_cooperative

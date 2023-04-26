@@ -12,6 +12,10 @@ class GroupRemitsController < InheritedResources::Base
   def show
     @batches = @group_remit.batches
     @pagy, @batches = pagy(@batches, items: 10)
+    @total_premium = @group_remit.batches.sum(:premium)
+    @total_coop_commission = @group_remit.batches.sum(:coop_sf_amount)
+    @total_agent_commission = @group_remit.batches.sum(:agent_sf_amount)
+
   end
 
   def new
