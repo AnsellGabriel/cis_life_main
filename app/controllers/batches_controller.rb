@@ -32,7 +32,7 @@ class BatchesController < ApplicationController
   def create
     @coop_members = @cooperative.coop_members
     @members = Member.joins(:coop_members).where(coop_members: { id: @coop_members.ids }).order(:last_name)
-
+    
     @group_remit = GroupRemit.find(params[:group_remit_id])
     @batch = @group_remit.batches.new(batch_params)
 
@@ -52,8 +52,9 @@ class BatchesController < ApplicationController
     @coop_members = @cooperative.coop_members
     @coop_member = @batch.coop_member
     @member = @coop_member.member
-    @members = Member.joins(:coop_members).where(coop_members: { id: @coop_members.ids }).order(:last_name)
-
+    @members = Member.joins(:coop_members).where(
+      coop_members: { id: @coop_members.ids }).order(:last_name
+    )
   end
 
   def update

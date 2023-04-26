@@ -1,5 +1,4 @@
 <h1>Editing batch</h1>
-
-<%= render "edit_form", batch: @batch %>
-
-<br>
+<%= turbo_frame_tag @batch do%>
+    <%= render "edit_form", batch: @batch %>
+<% end %>
