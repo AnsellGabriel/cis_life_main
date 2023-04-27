@@ -1,7 +1,7 @@
 class GroupRemitsController < InheritedResources::Base
   before_action :authenticate_user!
   before_action :set_group_remit, only: %i[show edit update destroy]
-  before_action :set_cooperative, only: %i[new edit update]
+  before_action :set_cooperative, only: %i[new edit update show]
   before_action :set_members, only: %i[new create edit update]
 
   def index
@@ -10,7 +10,12 @@ class GroupRemitsController < InheritedResources::Base
   end
 
   def show
-    @batches = @group_remit.batches
+    @batches = @group_remit.batches.order(created_at: :desc)
+
+    # byebug
+    # filter members based on last name, first name, middle name
+    # @members = f_members.where("last_name LIKE ? AND first_name LIKE ? AND middle_name LIKE ?", "%#{params[:last_name_filter]}%", "%#{params[:first_name_filter]}%", "%#{params[:middle_name_filter]}%")
+
     @pagy, @batches = pagy(@batches, items: 10)
     @total_premium = @group_remit.batches.sum(:premium)
     @total_coop_commission = @group_remit.batches.sum(:coop_sf_amount)

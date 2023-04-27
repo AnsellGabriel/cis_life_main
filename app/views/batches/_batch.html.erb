@@ -1,55 +1,27 @@
-<div class="col-md-8">
-  <div class="card mb-3">
-    <div class="card-body">
-      <div class="row">
-        <div class="col-sm-3">
-          <h6 class="mb-0">Member:</h6>
-        </div>
-        <div class="col-sm-9">
-          <%= link_to "#{batch_member.member.last_name}, #{batch_member.member.first_name} #{batch_member.member.middle_name}", coop_member_path(batch_member.id) %>
-        </div>
-      </div>
-      <hr>
-      <div class="row">
-        <div class="col-sm">
-          <h6 class="mb-0">Effectivity date:</h6>
-        </div>
-        <div class="col-sm text-secondary">
-          <%= batch.effectivity_date.strftime('%B %d, %Y') %>
-        </div>
-        <div class="col-sm">
-          <h6 class="mb-0">Expiry date:</h6>
-        </div>
-        <div class="col-sm text-secondary">
-          <%= batch.expiry_date.strftime('%B %d, %Y') %>
-        </div>
-      </div>
-      <hr class="mb-3">
-      <div class="row">
-        <div class="col-sm-3">
-          <h6 class="mb-0">Coop Commission</h6>
-        </div>
-        <div class="col-sm-3 text-secondary">
-          <%= number_to_currency(((batch.coop_sf_amount / 100) * batch.premium), unit: "₱", precision: 2) %>        </div>
-        <div class="col-sm-3">
-          <h6 class="mb-0">Agent Commission</h6>
-        </div>
-        <div class="col-sm-3 text-secondary">
-          <%= number_to_currency(((batch.agent_sf_amount / 100) * batch.premium), unit: "₱", precision: 2) %>
-        </div>
-      </div>
-      <hr>
-      <div class="row">
-        <div class="col-sm-3">
-          <h6 class="mb-0">Active?</h6>
-        </div>
-        <div class="col-sm-3 text-secondary">
-          <%= batch.active ? "Active" : "Inactive" %>
-        </div>
-        <div class="col-sm-3">
-          <h6 class="mb-0">Status</h6>
-        </div>
-        <div class="col-sm-3 text-secondary">
-          <%= batch.status == 'recent' ? 'New' : batch.status.to_s.titleize %>
-        </div>
-      </div>
+<tr>
+    <% member = batch.coop_member.member %>
+    <td><%= batch.id %></td>
+    <td><%= "#{member.last_name}, #{member.first_name} #{member.middle_name}" %></td>
+    <td><%= batch.status == 'recent' ? 'New' : batch.status.to_s.titleize %></td>
+    <td><%= number_to_currency(batch.premium, unit: "₱", precision: 2) %></td>
+    <td><%= number_to_currency(((batch.coop_sf_amount / 100) * batch.premium), unit: "₱", precision: 2) %></td>
+    <td><%= number_to_currency(((batch.agent_sf_amount / 100) * batch.premium), unit: "₱", precision: 2) %></td>    
+
+    <td class="d-flex gap-1">
+    <%= link_to 'Show', group_remit_batch_path(group_remit, batch),
+        data: {turbo_frame: "_top"}, 
+        class: 'btn btn-sm btn-primary' %>
+
+    <%= link_to 'Edit', edit_group_remit_batch_path(group_remit, batch), 
+        data: {turbo_frame: "batch_form"},
+        class: 'btn btn-sm btn-primary' %>
+
+    <%= button_to "Delete", group_remit_batch_path(group_remit, batch), 
+        method: :delete,
+        form: { 
+        data: { turbo_frame: "_top", 
+        turbo_confirm: "Delete Batch: #{member.last_name}, #{member.first_name} #{member.middle_name}?" } 
+        }, 
+        class: 'btn btn-sm btn-danger' %>
+    </td>
+</tr>

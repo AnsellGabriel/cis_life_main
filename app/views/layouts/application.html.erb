@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width,initial-scale=1">
     <%= csrf_meta_tags %>
     <%= csp_meta_tag %>
-    <%= stylesheet_link_tag "active_admin", "data-turbo-track": "reload" %>
+    <%# <%= stylesheet_link_tag "active_admin", "data-turbo-track": "reload" %> 
     <%= stylesheet_link_tag "application", "data-turbo-track": "reload" %>
     <link href="https://cdn.jsdelivr.net/npm/tom-select@2.0.3/dist/css/tom-select.css" rel="stylesheet">
     <link href="https://unpkg.com/slim-select@latest/dist/slimselect.css" rel="stylesheet">
@@ -16,17 +16,7 @@
     <%= render "layouts/navbar" %>
     <div class="container">
       <div class="row d-flex justify-content-center">
-        <div>
-          <% if flash[:alert] %>
-            <div class="alert alert-danger text-center"><%= flash[:alert] %></div>
-          <% end %>
-          <% if flash[:error] %>
-            <div class="alert alert-danger text-center"><%= flash[:error] %></div>
-          <% end %>
-          <% if flash[:notice] %>
-            <div class="alert alert-success text-center"><%= flash[:notice] %></div>
-          <% end %>
-        </div>
+        <%= render "layouts/notification" %>
         <%= yield %>
       </div>
     </div>

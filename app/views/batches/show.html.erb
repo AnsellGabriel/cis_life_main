@@ -8,5 +8,5 @@
   <%= link_to "Delete", group_remit_batch_path, data: { turbo_method: :delete, turbo_confirm: 'Are you sure?' }, class: 'btn btn-danger' %>
 </div>
 
-<%= render partial: 'batch', locals: { batch: @batch, batch_member: @batch_member } %>
+<%= render partial: 'batch_display', locals: { batch: @batch, batch_member: @batch_member } %>
 

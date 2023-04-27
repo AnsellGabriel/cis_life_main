@@ -1,18 +1,17 @@
 class BatchesController < ApplicationController
   before_action :authenticate_user!
-  before_action :set_cooperative, only: [:index, :new, :create, :edit, :update, :show]
-  before_action :set_batch, only: [:show, :edit, :update, :destroy]
+  before_action :set_cooperative, only: %i[index new create edit update show]
+  before_action :set_batch, only: %i[show edit update destroy]
+  before_action :set_group_remit, only: %i[index new create edit update show]
 
   def index
     # get all batches of the cooperative
-    @group_remit = GroupRemit.find(params[:group_remit_id])
     @batches = @group_remit.batches
 
     @pagy, @batches = pagy(@batches, items: 10)
   end
 
   def show
-    @group_remit = GroupRemit.find(params[:group_remit_id])
     @batch_member = @batch.coop_member
   end
 
@@ -20,7 +19,6 @@ class BatchesController < ApplicationController
     @coop_members = @cooperative.coop_members
     @members = Member.joins(:coop_members).where(coop_members: { id: @coop_members.ids }).order(:last_name)
 
-    @group_remit = GroupRemit.find(params[:group_remit_id])
     @batch = @group_remit.batches.new(effectivity_date: FFaker::Time.date, expiry_date: FFaker::Time.date, active: true, status: :recent)
 
     
@@ -33,13 +31,13 @@ class BatchesController < ApplicationController
     @coop_members = @cooperative.coop_members
     @members = Member.joins(:coop_members).where(coop_members: { id: @coop_members.ids }).order(:last_name)
     
-    @group_remit = GroupRemit.find(params[:group_remit_id])
     @batch = @group_remit.batches.new(batch_params)
 
     respond_to do |format|
       if @batch.save!
+        # format.turbo_stream
         format.html { 
-          redirect_to group_remit_batch_path(@group_remit, @batch), notice: "Batch created"
+          redirect_to group_remit_path(@group_remit), notice: "Batch created"
         }
       else
         format.html { render :new, status: :unprocessable_entity }
@@ -58,13 +56,13 @@ class BatchesController < ApplicationController
   end
 
   def update
-    @group_remit = GroupRemit.find(params[:group_remit_id])
 
     respond_to do |format|
       if @batch.update(batch_params)
         format.html { 
-          redirect_to group_remit_batch_path(@group_remit, @batch), notice: "Batch updated"
+          redirect_to group_remit_path(@group_remit), notice: "Batch updated"
         }
+        # format.turbo_stream
       else
         format.html { render :edit, status: :unprocessable_entity }
       end
@@ -72,11 +70,19 @@ class BatchesController < ApplicationController
   end
 
   def destroy
-    if @batch.destroy
-      redirect_to group_remit_path, notice: 'Batch was successfully destroyed.'
-    else
-      redirect_to group_remit_batch_path(@group_remit, @batch), alert: 'Unable to destroy batch.'
-    end
+    
+    respond_to do |format|
+      if @batch.destroy
+        format.html {
+          redirect_to group_remit_path(@group_remit), notice: 'Batch was successfully destroyed.'
+        }
+        format.turbo_stream
+      else
+        format.html {
+          redirect_to group_remit_batch_path(@group_remit, @batch), alert: 'Unable to destroy batch.'
+        }
+      end
+    end  
   end
 
   private
@@ -84,6 +90,9 @@ class BatchesController < ApplicationController
       params.require(:batch).permit(:effectivity_date, :expiry_date, :active, :coop_sf_amount, :agent_sf_amount, :status, :premium, :coop_member_id, :agreement_benefit_id, batch_dependents_attributes: [:member_dependent_id, :beneficiary, :_destroy])
     end
 
+    def set_group_remit
+      @group_remit = GroupRemit.find(params[:group_remit_id])
+    end
     def set_cooperative
       @cooperative = current_user.userable.cooperative
     end
