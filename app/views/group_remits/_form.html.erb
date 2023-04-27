@@ -8,38 +8,17 @@
   <%= f.error_notification message: f.object.errors[:base].to_sentence if f.object.errors[:base].present? %>
 
   <div class="form-inputs mb-3">
-    <div class="d-flex">
-      <%= f.association :agreement %>
-      <%= f.association :anniversary %>
+    <div class="d-flex gap-3">
+      <%= f.association :agreement, 
+        input_html: {
+          data: {controller: "slim-select" }
+        } %>
+      <%= f.association :anniversary, input_html: { 
+        data: {controller: "slim-select" } 
+      }%>
     </div>
     <%= f.input :name %>
     <%= f.input :description %>
-    
-    
-
-    <template data-nested-form-target="template">
-      <%= f.fields_for :batches, Batch.new(
-        effectivity_date: FFaker::Time.date, 
-        expiry_date: FFaker::Time.date, 
-        active: true, 
-        coop_sf_amount: 10, 
-        agent_sf_amount: 5, 
-        status: :recent
-      ), child_index: 'NEW_RECORD' do |batches_fields| %>
-        <%= render "batch_fields", f: batches_fields %>
-      <% end %>
-    </template>
-
-    <%= f.fields_for :batches do |batches_fields| %>
-      <%= render "batch_fields", f: batches_fields %>
-    <% end %>
-
-    <!-- Inserted elements will be injected before that target. -->
-    <div data-nested-form-target="target"></div>
-    
-    <button type="button" data-action="nested-form#add" class="btn btn-primary">Add Batch</button>
-
-
   <div class="form-actions text-end">
     <%= link_to "Back", group_remits_path, class: 'btn btn-secondary' %>
     <%= f.button :submit, class: 'btn-success' %>

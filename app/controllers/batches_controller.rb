@@ -16,12 +16,14 @@ class BatchesController < ApplicationController
   end
 
   def new
-    @coop_members = @cooperative.coop_members
-    @members = Member.joins(:coop_members).where(coop_members: { id: @coop_members.ids }).order(:last_name)
+    @coop_members = @cooperative.coop_members.includes(:member).order('members.last_name')
 
     @batch = @group_remit.batches.new(effectivity_date: FFaker::Time.date, expiry_date: FFaker::Time.date, active: true, status: :recent)
 
-    
+    @premium = @group_remit.agreement.premium
+    @coop_sf = @group_remit.agreement.coop_service_fee
+    @agent_sf = @group_remit.agreement.agent_service_fee
+    # byebug
 
     # @member_dependent = @member.member_dependents.build
     # @batch_dependent = @batch.batch_dependents.build
@@ -87,7 +89,7 @@ class BatchesController < ApplicationController
 
   private
     def batch_params
-      params.require(:batch).permit(:effectivity_date, :expiry_date, :active, :coop_sf_amount, :agent_sf_amount, :status, :premium, :coop_member_id, :agreement_benefit_id, batch_dependents_attributes: [:member_dependent_id, :beneficiary, :_destroy])
+      params.require(:batch).permit(:effectivity_date, :expiry_date, :active, :coop_sf_amount, :agent_sf_amount, :status, :premium, :coop_member_id, batch_dependents_attributes: [:member_dependent_id, :beneficiary, :_destroy])
     end
 
     def set_group_remit
@@ -99,5 +101,9 @@ class BatchesController < ApplicationController
 
     def set_batch
       @batch = Batch.find(params[:id])
+    end
+
+    def set_coop_members_name(members)
+      
     end
 end

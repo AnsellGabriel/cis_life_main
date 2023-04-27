@@ -2,29 +2,33 @@
   <%= f.error_notification %>
   <%= f.error_notification message: f.object.errors[:base].to_sentence if f.object.errors[:base].present? %>
   <div class="form-inputs mb-3">
-        <%= f.hidden_field :status, value: "recent" %>
-        <%= f.hidden_field :coop_sf_amount, value: 12 %>
-        <%= f.hidden_field :agent_sf_amount, value: 5 %>
-        <%= f.hidden_field :premium, value: 350 %>
+    <%= f.hidden_field :coop_sf_amount, value: (@coop_sf/100) * @premium %>
+    <%= f.hidden_field :agent_sf_amount, value: (@agent_sf/100) * @premium %>
+    <%= f.hidden_field :premium, value: @premium %>
     <div class="row">
         <div class="row" data-controller="batch-calculator">
-          <div class="col-3">
-            <%= f.association :agreement_benefit, 
-              input_html: { 
-                id: "benefit_id", 
-                data: { 
-                  action: "change->batch-calculator#change", 
-                  controller: "slim-select" 
-                }  
-              } %>
-          </div>
           <div class="col-3 mb-3" data-controller="batch">
-          <%= f.association :coop_member, collection: @members.map { |member| ["#{member.last_name}, #{member.first_name} #{member.middle_name}", member.id] }, input_html: { id: "member_id", data: { action: "change->batch#change", controller: "slim-select" }  } %>
+
+          <%= f.association :coop_member, 
+          collection: @coop_members.map { |coop| 
+          ["#{coop.member.last_name}, #{coop.member.first_name} #{coop.member.middle_name}", coop.id] }, 
+          input_html: { 
+            id: "member_id", 
+            data: { 
+              action: "change->batch#change", 
+              controller: "slim-select" }  
+            } %>
+
           <%= f.fields_for :batch_dependents do |d| %>
             <%= d.label :member_dependent_id, label: "Beneficiary"%>
             <%= d.select :member_dependent_id, [], {prompt: "No Beneficiaries"}, { id: "dependent_id", data: { batch_target: "dependentSelect" }, class: "form-select" } %>
             <% d.hidden_field :beneficiary, value: true%>
+
           <% end %>
+      </div>
+      <div class="col-3">
+        <%= f.label :status, class: "form-label"%> 
+        <%= f.select :status, options_for_select(Batch.statuses.map { |k, v| [k.to_s.capitalize, k.to_s] }), {}, { class: 'form-control mb-3' } %>
       </div>
           <div class="col-3 d-flex align-items-end mb-3">
             <%= f.input :active, wrapper_html: {class: "ps-3"} %>
