@@ -15,13 +15,13 @@
           <h6 class="mb-0">Effectivity date:</h6>
         </div>
         <div class="col-sm text-secondary">
-          <%= batch.effectivity_date.strftime('%B %d, %Y') %>
+          <%= @effectivity_date.strftime('%B %d, %Y') %>
         </div>
         <div class="col-sm">
           <h6 class="mb-0">Expiry date:</h6>
         </div>
         <div class="col-sm text-secondary">
-          <%= batch.expiry_date.strftime('%B %d, %Y') %>
+          <%= @expiry_date.strftime('%B %d, %Y') %>
         </div>
       </div>
       <hr class="mb-3">
@@ -30,12 +30,12 @@
           <h6 class="mb-0">Coop Commission</h6>
         </div>
         <div class="col-sm-3 text-secondary">
-          <%= number_to_currency(((batch.coop_sf_amount / 100) * batch.premium), unit: "₱", precision: 2) %>        </div>
+          <%= number_to_currency(batch.coop_sf_amount, unit: "₱", precision: 2) %>        </div>
         <div class="col-sm-3">
           <h6 class="mb-0">Agent Commission</h6>
         </div>
         <div class="col-sm-3 text-secondary">
-          <%= number_to_currency(((batch.agent_sf_amount / 100) * batch.premium), unit: "₱", precision: 2) %>
+          <%= number_to_currency(batch.agent_sf_amount, unit: "₱", precision: 2) %>
         </div>
       </div>
       <hr>

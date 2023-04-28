@@ -3,8 +3,12 @@ class MembersController < InheritedResources::Base
 
   def import
     file = params[:file]
-    redirect_to coop_members_path, alert: "Only CSV file format please" unless file.content_type == "text/csv"
-
+    if file.nil?
+      return redirect_to coop_members_path, alert: "No file uploaded"
+    else
+      redirect_to coop_members_path, alert: "Only CSV file format please" unless file.content_type == "text/csv"
+    end
+    
     # ! Attributes with Date type should have a format of: yyyy-mm-dd
     file = File.open(file)
     csv = CSV.parse(file, headers: true)

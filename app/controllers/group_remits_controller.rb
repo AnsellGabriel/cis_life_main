@@ -10,16 +10,30 @@ class GroupRemitsController < InheritedResources::Base
   end
 
   def show
+    # ! test code
+    # b_active = mem_age <= proposal.old_max_age && mem_age >= proposal.old_min_age ? true : false
+    
+    @expiry_date = @group_remit.anniversary.anniversary_date.next_year
+    # terms = (expire.year * 12 + expire.month) - (effect.year * 12 + effect.month)
+    # pro_insured = proposal.proposal_insureds.where(insured_type: 1).sum(:total_prem)
+    # final_prem = (pro_insured / 12) * terms
+    # coop_sf = (final_prem * proposal.coop_sf)
+    # agent_sf = (final_prem * proposal.agent_sf)
+    # ! end test
+
+
     @batches = @group_remit.batches.order(created_at: :desc)
 
-    # byebug
     # filter members based on last name, first name, middle name
     # @members = f_members.where("last_name LIKE ? AND first_name LIKE ? AND middle_name LIKE ?", "%#{params[:last_name_filter]}%", "%#{params[:first_name_filter]}%", "%#{params[:middle_name_filter]}%")
 
     @pagy, @batches = pagy(@batches, items: 10)
-    @total_premium = @group_remit.batches.sum(:premium)
+
+    # premium and commission totals
+    @gross_premium = @group_remit.batches.sum(:premium)
     @total_coop_commission = @group_remit.batches.sum(:coop_sf_amount)
     @total_agent_commission = @group_remit.batches.sum(:agent_sf_amount)
+    @net_premium = @gross_premium - @total_coop_commission
 
   end
 
@@ -30,6 +44,8 @@ class GroupRemitsController < InheritedResources::Base
 
   def create
     @group_remit = GroupRemit.new(group_remit_params)
+    @group_remit.effectivity_date = Date.today
+    @group_remit.expiry_date = Anniversary.find_by(id: group_remit_params[:anniversary_id]).anniversary_date.next_year
 
     respond_to do |format|
       if @group_remit.save!

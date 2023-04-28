@@ -1,24 +1,46 @@
-<%= content_tag :h1, "#{@cooperative.name} Members" %>
-<div class="mb-3">
-  <%= link_to "Enroll Member", new_member_path, class: "btn btn-sm btn-primary"%>
+<!-- New Member form Modal -->
+<div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="staticBackdropLabel">Enroll New Member</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <%= render "members/form" %>
+      </div>
+    </div>
+  </div>
 </div>
 
+
+<%= content_tag :h1, "#{@cooperative.name} Members", class: "mb-3" %>
+<!-- Button trigger for New Member Enrollment -->
+<div class="mb-1">
+  <%= content_tag :button, "Enroll Member", 
+    class: "btn btn-sm btn-success", 
+    data: {bs_toggle: "modal",
+      bs_target: "#staticBackdrop"
+    }%>
+</div>
+
+<div class="d-flex justify-content-between align-items-end">
   <%= form_with url: import_members_path, method: :post do |form| %>
     <%= form.label :file, "For multiple enrollment upload your csv file.", class: "form-text" %>
-    <div class="mb-3 d-flex gap-3">
-      <%= form.file_field :file, accept: ".csv", class: "form-control", style: "width: 40%" %>
-      <%= submit_tag 'Upload', class: "btn btn-sm btn-primary"%>
+    <div class="d-flex gap-3">
+      <%= form.file_field :file, accept: ".csv", class: "form-control", style: "width: 80%" %>
+      <%= submit_tag 'Upload', class: "btn btn-sm btn-success"%>
     </div>
   <% end %>
 
-<%= form_with url: coop_members_path, method: :get do %>
-  <div class="form-group d-flex gap-3">
-    <%= text_field_tag 'last_name_filter', nil, placeholder: 'Last name', class: "form-control", style: "width: auto"%>
-    <%= text_field_tag 'first_name_filter', nil, placeholder: 'First name', class: "form-control", style: "width: auto"%>
-    <%= text_field_tag 'middle_name_filter', nil, placeholder: 'Middle name', class: "form-control", style: "width: auto"%>
-    <%= submit_tag 'Filter', class: "btn btn-sm btn-primary"%>
-  </div>
-<% end %>
+  <%= form_with url: coop_members_path, method: :get do %>
+    <div class="form-group d-flex gap-3">
+      <%= text_field_tag 'first_name_filter', nil, placeholder: 'First name', class: "form-control", style: "width: auto"%>
+      <%= text_field_tag 'last_name_filter', nil, placeholder: 'Last name', class: "form-control", style: "width: auto"%>
+      <%= submit_tag 'Filter', class: "btn btn-sm btn-success"%>
+    </div>
+  <% end %>
+</div>
 
 
 <div class="table-responsive mt-3">
@@ -54,7 +76,6 @@
           <td>
             <%= link_to 'View', coop_member_path(coop_member.id), class: 'btn btn-sm btn-primary' %>
             <%= link_to 'Edit', edit_member_path(member), class: 'btn btn-sm btn-secondary' %>
-            <%= link_to 'Delete', coop_member, data: { turbo_method: :delete, turbo_confirm: 'Are you sure?' }, class: 'btn btn-sm btn-danger' %>
           </td>
 
         </tr>

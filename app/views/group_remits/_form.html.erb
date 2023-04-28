@@ -8,14 +8,18 @@
   <%= f.error_notification message: f.object.errors[:base].to_sentence if f.object.errors[:base].present? %>
 
   <div class="form-inputs mb-3">
+
     <div class="d-flex gap-3">
       <%= f.association :agreement, 
         input_html: {
-          data: {controller: "slim-select" }
-        } %>
-      <%= f.association :anniversary, input_html: { 
-        data: {controller: "slim-select" } 
-      }%>
+          data: {controller: "slim-select" }, style: "width: 100px !important"
+        }%>
+
+      <%= f.association :anniversary, 
+        input_html: { 
+          data: {controller: "slim-select" }, style: "width: 100px !important" 
+        }%>
+
     </div>
     <%= f.input :name %>
     <%= f.input :description %>

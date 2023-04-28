@@ -1,11 +1,10 @@
-<tr>
+<tr id="<%= dom_id(batch) %>">
     <% member = batch.coop_member.member %>
     <td><%= batch.id %></td>
     <td><%= "#{member.last_name}, #{member.first_name} #{member.middle_name}" %></td>
     <td><%= batch.status == 'recent' ? 'New' : batch.status.to_s.titleize %></td>
     <td><%= number_to_currency(batch.premium, unit: "₱", precision: 2) %></td>
-    <td><%= number_to_currency(((batch.coop_sf_amount / 100) * batch.premium), unit: "₱", precision: 2) %></td>
-    <td><%= number_to_currency(((batch.agent_sf_amount / 100) * batch.premium), unit: "₱", precision: 2) %></td>    
+    <td><%= number_to_currency(batch.coop_sf_amount, unit: "₱", precision: 2) %></td>
 
     <td class="d-flex gap-1">
     <%= link_to 'Show', group_remit_batch_path(group_remit, batch),

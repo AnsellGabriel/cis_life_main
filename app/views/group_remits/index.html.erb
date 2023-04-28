@@ -13,8 +13,9 @@
       <tr> 
 
         <th>ID</th>
-        <th>Date</th>
         <th>Name</th>
+        <th>Effectivity Date</th>
+        <th>Expiry Date</th>
         <th>Total Premium</th>
         <th>Actions</th>
       </tr>
@@ -25,14 +26,14 @@
         <tr>
 
         <td><%= group_remit.id %></td>
-        <td><%= group_remit.updated_at.strftime('%B %d, %Y') %></td>
         <td><%= group_remit.name %></td>
+        <td><%= group_remit.effectivity_date.strftime('%B %d, %Y') %></td>
+        <td><%= group_remit.expiry_date.strftime('%B %d, %Y') %></td>
         <td><%= number_to_currency(group_remit.batches.sum(:premium), unit: "₱", precision: 2) %></td>
     
           <td>
             <%= link_to 'View', group_remit, class: 'btn btn-sm btn-primary' %>
             <%= link_to 'Edit', edit_group_remit_path(group_remit), class: 'btn btn-sm btn-secondary' %>
-            <%= link_to "Delete", group_remit, data: { turbo_method: :delete, turbo_confirm: 'Are you sure?' }, class: 'btn btn-sm btn-danger' %>
           </td>
 
         </tr>
