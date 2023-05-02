@@ -15,32 +15,14 @@
     </div>
     <%= turbo_frame_tag "batch_form" do %>
       <div>
-      <%= link_to new_group_remit_batch_path(@group_remit), data: {turbo_frame: "batch_form"}, class: 'btn btn-primary' do %>
-        Add Member
-      <% end %>
+      <%= render "group_remits/add_member" %>
     <% end %>
   </div>
   </div>
 
-  <div class="">
-    <div class="d-flex gap-3">
-      <%= content_tag :h6, "Gross Premium: ", style: "width: 200px" %>
-      <%= content_tag :h6, "#{number_to_currency(@gross_premium, unit: "₱", precision: 2)}", style: "color: green"%>
-    </div>
-    <div class="d-flex gap-3">
-      <%= content_tag :h6, "Total Coop Commission: ", style: "width: 200px" %>
-      <%= content_tag :h6, "(#{number_to_currency(@total_coop_commission, unit: "₱", precision: 2)})", style: "color: red"%>
-    </div>
-    <div class="d-flex gap-3">
-      <%= content_tag :h6, "Total Agent Commission: ", style: "width: 200px" %>
-      <%= content_tag :h6, "(#{number_to_currency(@total_agent_commission, unit: "₱", precision: 2)})", style: "color: red"%>
-    </div>
-    <div class="d-flex gap-3 mb-3">
-      <%= content_tag :h6, "Net Premium: ", style: "width: 200px" %>
-      <%= content_tag :h6, "#{number_to_currency(@net_premium, unit: "₱", precision: 2)}", style: "color: green"%>
-    </div>
-  </div>
-</div>
+<%= turbo_frame_tag "computation" do %>
+  <% render "group_remits/computation" %>
+<% end %>
 
 
 <div class="table-responsive">
@@ -66,5 +48,4 @@
   <% end %>
 
 </div>
-<% console %>
 <%== pagy_bootstrap_nav(@pagy) %>

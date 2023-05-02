@@ -43,8 +43,9 @@ class BatchesController < ApplicationController
       if @batch.save!
         # format.turbo_stream
         format.html { 
-          redirect_to group_remit_path(@group_remit), notice: "Batch created"
+          redirect_to group_remit_path(@group_remit), notice: "Member successfully added."
         }
+        format.turbo_stream { flash.now[:notice] = "Member successfully added." }
       else
         format.html { render :new, status: :unprocessable_entity }
       end
