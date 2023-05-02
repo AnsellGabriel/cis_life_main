@@ -1,19 +1,17 @@
 class GroupRemitsController < InheritedResources::Base
   before_action :authenticate_user!
   before_action :set_group_remit, only: %i[show edit update destroy]
-  before_action :set_cooperative, only: %i[new edit update show]
+  before_action :set_cooperative, only: %i[new edit update show index create]
   before_action :set_members, only: %i[new create edit update]
 
   def index
-    @group_remits = GroupRemit.all
-    # @batches = @group_remit.batches
+    @group_remits = @cooperative.group_remits
   end
 
   def show
     # ! test code
     # b_active = mem_age <= proposal.old_max_age && mem_age >= proposal.old_min_age ? true : false
     
-    @expiry_date = @group_remit.anniversary.anniversary_date.next_year
     # terms = (expire.year * 12 + expire.month) - (effect.year * 12 + effect.month)
     # pro_insured = proposal.proposal_insureds.where(insured_type: 1).sum(:total_prem)
     # final_prem = (pro_insured / 12) * terms
@@ -21,7 +19,7 @@ class GroupRemitsController < InheritedResources::Base
     # agent_sf = (final_prem * proposal.agent_sf)
     # ! end test
 
-
+    @expiry_date = @group_remit.anniversary.anniversary_date.next_year
     @batches = @group_remit.batches.order(created_at: :desc)
 
     # filter members based on last name, first name, middle name
@@ -38,14 +36,18 @@ class GroupRemitsController < InheritedResources::Base
   end
 
   def new
-    @group_remit = GroupRemit.new(name: FFaker::Company.name, description: FFaker::Lorem.paragraph, agreement_id: 1, anniversary_id: 1)
+    @agreements = @cooperative.agreements
+    @group_remit = @cooperative.group_remits.build(name: FFaker::Company.name, description: FFaker::Lorem.paragraph, agreement_id: 1, anniversary_id: 1)
     @batch = @group_remit.batches.build(effectivity_date: FFaker::Time.date, expiry_date: FFaker::Time.date, active: true, coop_sf_amount: 10, agent_sf_amount: 5, status: :recent)
   end
 
   def create
-    @group_remit = GroupRemit.new(group_remit_params)
+    @group_remit = @cooperative.group_remits.build(group_remit_params)
     @group_remit.effectivity_date = Date.today
     @group_remit.expiry_date = Anniversary.find_by(id: group_remit_params[:anniversary_id]).anniversary_date.next_year
+    # plan = agreement.plan
+    plan = @cooperative.agreements.find_by(id: group_remit_params[:agreement_id]).plan
+    @group_remit.name = "#{plan.acronym}-Remittance-#{GroupRemit.last.id + 1}"
 
     respond_to do |format|
       if @group_remit.save!
@@ -59,9 +61,6 @@ class GroupRemitsController < InheritedResources::Base
   end
 
   def update
-    @coop_members = @cooperative.coop_members
-    @members = Member.joins(:coop_members).where(coop_members: { id: @coop_members.ids }).order(:last_name)
-
     respond_to do |format|
       if @group_remit.update(group_remit_params)
         format.html { redirect_to @group_remit, notice: "Group remit was successfully updated." }
@@ -77,7 +76,8 @@ class GroupRemitsController < InheritedResources::Base
   private
 
     def set_group_remit
-      @group_remit = GroupRemit.find(params[:id])
+      @cooperative = current_user.userable.cooperative
+      @group_remit = @cooperative.group_remits.find_by(id: params[:id])
     end
 
     def set_cooperative

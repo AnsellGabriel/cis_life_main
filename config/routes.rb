@@ -1,4 +1,5 @@
 Rails.application.routes.draw do 
+  resources :plans
   resources :batch_dependents, :anniversaries, :agreements, :agent_groups, :departments, :agents, :coop_users, :employees
 
   resources :agreement_benefits do

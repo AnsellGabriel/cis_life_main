@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_04_28_055017) do
+ActiveRecord::Schema[7.0].define(version: 2023_05_02_034249) do
   create_table "active_admin_comments", force: :cascade do |t|
     t.string "namespace"
     t.text "body"
@@ -74,6 +74,10 @@ ActiveRecord::Schema[7.0].define(version: 2023_04_28_055017) do
     t.decimal "premium"
     t.decimal "agent_service_fee"
     t.decimal "coop_service_fee"
+    t.integer "plan_id", null: false
+    t.integer "cooperative_id", null: false
+    t.index ["cooperative_id"], name: "index_agreements_on_cooperative_id"
+    t.index ["plan_id"], name: "index_agreements_on_plan_id"
   end
 
   create_table "anniversaries", force: :cascade do |t|
@@ -207,8 +211,10 @@ ActiveRecord::Schema[7.0].define(version: 2023_04_28_055017) do
     t.datetime "updated_at", null: false
     t.date "effectivity_date"
     t.date "expiry_date"
+    t.integer "cooperative_id", null: false
     t.index ["agreement_id"], name: "index_group_remits_on_agreement_id"
     t.index ["anniversary_id"], name: "index_group_remits_on_anniversary_id"
+    t.index ["cooperative_id"], name: "index_group_remits_on_cooperative_id"
   end
 
   create_table "member_dependents", force: :cascade do |t|
@@ -254,6 +260,14 @@ ActiveRecord::Schema[7.0].define(version: 2023_04_28_055017) do
     t.string "street"
   end
 
+  create_table "plans", force: :cascade do |t|
+    t.string "name"
+    t.text "description"
+    t.string "acronym"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
   create_table "users", force: :cascade do |t|
     t.string "email", default: "", null: false
     t.string "encrypted_password", default: "", null: false
@@ -271,6 +285,8 @@ ActiveRecord::Schema[7.0].define(version: 2023_04_28_055017) do
   end
 
   add_foreign_key "agents", "agent_groups"
+  add_foreign_key "agreements", "cooperatives"
+  add_foreign_key "agreements", "plans"
   add_foreign_key "batch_dependents", "agreement_benefits"
   add_foreign_key "batch_dependents", "batches"
   add_foreign_key "batch_dependents", "member_dependents"
@@ -285,5 +301,6 @@ ActiveRecord::Schema[7.0].define(version: 2023_04_28_055017) do
   add_foreign_key "employees", "departments"
   add_foreign_key "group_remits", "agreements"
   add_foreign_key "group_remits", "anniversaries"
+  add_foreign_key "group_remits", "cooperatives"
   add_foreign_key "member_dependents", "members"
 end

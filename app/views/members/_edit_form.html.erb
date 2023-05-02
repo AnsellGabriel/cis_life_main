@@ -5,11 +5,8 @@
   <div class="form-inputs mb-3">
     <div class="row">
       <div class="col-4">
-          <%= f.simple_fields_for :coop_members do |member| %>
+          <%= f.simple_fields_for :coop_members, @coop_member do |member| %>
             <div class="form-group d-flex align-items-end coop-member-form">
-                <%= member.hidden_field :membership_date, value: Date.today%>
-                <%= member.hidden_field :cooperative_id, value: @cooperative.id %>
-
               <div class="">
                 <%= member.collection_select :coop_branch_id, @cooperative.coop_branches, :id, :name, { prompt: "Select a branch" }, style: "width: auto" ,class: "form-select mb-3"  %>
               </div>

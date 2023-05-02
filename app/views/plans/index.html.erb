@@ -1,0 +1,43 @@
+<%= content_tag :h1, "List of Plans" %>
+
+
+<div class="text-end mb-3">
+  <%= link_to new_plan_path, class: 'btn btn-sm btn-primary' do %>
+    New Plan
+  <% end %>
+</div>
+
+<div class="table-responsive">
+  <table class="table table-striped table-bordered table-hover">
+    <thead>
+      <tr>
+
+      <th>ID</th>
+        <th>Name</th>
+        <th>Description</th>
+        <th>Acronym</th>
+        <th></th>
+
+      </tr>
+    </thead>
+
+    <tbody>
+      <% @plans.each do |plan| %>
+        <tr>
+
+        <td><%= plan.id %></td>
+        <td><%= plan.name %></td>
+        <td><%= plan.description %></td>
+        <td><%= plan.acronym %></td>
+    
+          <td>
+            <%= link_to 'View', plan, class: 'btn' %>
+            <%= link_to 'Edit', edit_plan_path(plan), class: 'btn' %>
+            <%= link_to 'Delete', plan, method: :delete, data: { confirm: 'Are you sure?' }, class: 'btn' %>
+          </td>
+
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+</div>

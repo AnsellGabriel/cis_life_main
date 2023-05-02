@@ -1,0 +1,9 @@
+
+<%= render @plan %>
+
+<div>
+  <%= link_to "Edit", edit_plan_path(@plan), class: 'btn btn-primary' %> |
+  <%= link_to "Back", plans_path, class: 'btn btn-primary' %>
+
+  <%= button_to "Delete", @plan, method: :delete, class: 'btn btn-danger' %>
+</div>

@@ -14,6 +14,13 @@ class ApplicationController < ActionController::Base
     end
   end
 
+  private
+
+  def current_cooperative
+    @current_cooperative ||= current_user.userable.cooperative if user_signed_in?
+  end
+  helper_method :current_cooperative
+
   protected
   # Overwriting the sign_out redirect path method for unapproved users
   def after_sign_in_path_for(resource)

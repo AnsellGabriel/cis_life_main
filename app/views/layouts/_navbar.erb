@@ -2,8 +2,9 @@
   <div class="container">
     <a class="navbar-brand" href="#">
         <%= image_tag 'cis_logo.png', width: 150, class: 'mb-2 mb-lg-0 me-2' %>
-        Core Insurance System
-        <%= content_tag :span, " DEMO VERSION", class: 'fw-bold text-danger' if ["localhost:3000", "demo.1cisp.org"].include?(request.host_with_port) %>
+        <% if current_user && current_user.userable_type == "CoopUser" %>
+          <%= render "layouts/cooperative_name" %>
+        <% end %>
       </a>
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarTogglerDemo02" aria-controls="navbarTogglerDemo02" aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
@@ -16,7 +17,7 @@
           </li>
           <% if current_user.userable_type === "CoopUser" %>
             <li class="nav-item">
-              <%= link_to "Coop Members", coop_members_path, class: "nav-link" %>
+              <%= link_to "Members", coop_members_path, class: "nav-link" %>
             </li>
             <li class="nav-item">
                 <%= link_to "Remittance", group_remits_path, class: "nav-link" %>

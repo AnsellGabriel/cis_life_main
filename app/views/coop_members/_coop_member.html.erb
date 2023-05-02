@@ -3,6 +3,15 @@
     <div class="card-body">
       <div class="row">
         <div class="col-sm-3">
+          <h6 class="mb-0">Name</h6>
+        </div>
+        <div class="col-sm-9 text-secondary">
+          <%= "#{@member.last_name}, #{@member.first_name} #{@member.middle_name} #{@member.suffix}" %>
+        </div>
+      </div>
+      <hr class="mb-3">
+      <div class="row">
+        <div class="col-sm-3">
           <h6 class="mb-0">Cooperative</h6>
         </div>
         <div class="col-sm-9 text-secondary">

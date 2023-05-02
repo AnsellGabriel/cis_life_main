@@ -1,4 +1,4 @@
-<%= turbo_stream_from "batches" %>
+<%= turbo_stream_from current_cooperative, "batches" %>
 
 <%= content_tag :h1, @group_remit.name %>
 
@@ -66,5 +66,5 @@
   <% end %>
 
 </div>
-
+<% console %>
 <%== pagy_bootstrap_nav(@pagy) %>

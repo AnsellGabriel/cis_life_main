@@ -93,17 +93,20 @@ class BatchesController < ApplicationController
     end
 
     def set_group_remit
-      @group_remit = GroupRemit.find(params[:group_remit_id])
+      @cooperative = current_user.userable.cooperative
+      @group_remit = @cooperative.group_remits.find_by(id: params[:group_remit_id])
     end
+
     def set_cooperative
       @cooperative = current_user.userable.cooperative
     end
 
     def set_batch
-      @batch = Batch.find(params[:id])
+      @group_remit = @cooperative.group_remits.find_by(id: params[:group_remit_id])
+      @batch = @group_remit.batches.find_by(id: params[:id])
     end
 
-    def set_coop_members_name(members)
+    # def set_coop_members_name(members)
       
-    end
+    # end
 end

@@ -11,20 +11,22 @@
 
     <div class="d-flex gap-3">
       <%= f.association :agreement, 
+        collection: @agreements,
         input_html: {
-          data: {controller: "slim-select" }, style: "width: 100px !important"
+          data: {controller: "slim-select" }, style: "width: 250px !important"
         }%>
 
       <%= f.association :anniversary, 
         input_html: { 
-          data: {controller: "slim-select" }, style: "width: 100px !important" 
+          data: {controller: "slim-select" }, style: "width: 250px !important" 
         }%>
 
     </div>
-    <%= f.input :name %>
     <%= f.input :description %>
   <div class="form-actions text-end">
     <%= link_to "Back", group_remits_path, class: 'btn btn-secondary' %>
     <%= f.button :submit, class: 'btn-success' %>
   </div>
 <% end %>
+
+<% console %>

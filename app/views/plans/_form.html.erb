@@ -1,18 +1,16 @@
 
-<%= simple_form_for(@agreement) do |f| %>
+<%= simple_form_for(@plan) do |f| %>
   <%= f.error_notification %>
   <%= f.error_notification message: f.object.errors[:base].to_sentence if f.object.errors[:base].present? %>
 
   <div class="form-inputs mb-3">
-    <%= f.association :plan %>
+    <%= f.input :name %>
     <%= f.input :description %>
-    <%= f.input :premium %>
-    <%= f.input :coop_service_fee %>
-    <%= f.input :agent_service_fee %>
+    <%= f.input :acronym %>
   </div>
 
   <div class="form-actions text-end">
-    <%= link_to "Back", agreements_path, class: 'btn btn-secondary' %>
+    <%= link_to "Back", plans_path, class: 'btn btn-secondary' %>
     <%= f.button :submit, class: 'btn-success' %>
   </div>
 <% end %>
