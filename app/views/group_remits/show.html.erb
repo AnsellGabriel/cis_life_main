@@ -21,7 +21,7 @@
   </div>
 
 <%= turbo_frame_tag "computation" do %>
-  <% render "group_remits/computation" %>
+  <%= render partial: "group_remits/computation", locals: {gross_premium: @gross_premium, total_agent_commission: @total_agent_commission, total_coop_commission: @total_coop_commission, net_premium: @net_premium} %>
 <% end %>
 
 

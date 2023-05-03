@@ -41,6 +41,7 @@ class BatchesController < ApplicationController
 
     respond_to do |format|
       if @batch.save!
+        set_premiums
         # format.turbo_stream
         format.html { 
           redirect_to group_remit_path(@group_remit), notice: "Member successfully added."
@@ -76,10 +77,11 @@ class BatchesController < ApplicationController
     
     respond_to do |format|
       if @batch.destroy
+        set_premiums
         format.html {
           redirect_to group_remit_path(@group_remit), notice: 'Batch was successfully destroyed.'
         }
-        format.turbo_stream
+        format.turbo_stream { flash.now[:alert] = "Member removed" }
       else
         format.html {
           redirect_to group_remit_batch_path(@group_remit, @batch), alert: 'Unable to destroy batch.'
@@ -103,11 +105,16 @@ class BatchesController < ApplicationController
     end
 
     def set_batch
+      set_cooperative
       @group_remit = @cooperative.group_remits.find_by(id: params[:group_remit_id])
       @batch = @group_remit.batches.find_by(id: params[:id])
     end
 
-    # def set_coop_members_name(members)
-      
-    # end
+    def set_premiums
+      # premium and commission totals
+      @gross_premium = @group_remit.batches.sum(:premium)
+      @total_coop_commission = @group_remit.batches.sum(:coop_sf_amount)
+      @total_agent_commission = @group_remit.batches.sum(:agent_sf_amount)
+      @net_premium = @gross_premium - @total_coop_commission
+    end
 end

@@ -1,10 +1,3 @@
-<%= turbo_stream.update "batch_form" do %>
-  <%= turbo_frame_tag "batch_form" do %>
-    <%= render "group_remits/add_member" %>
-  <% end %>
-<% end %>
-
-
 <%= turbo_stream.update "computation" do %>
   <%= turbo_frame_tag "computation" do %>
     <%= render "group_remits/computation" %>
