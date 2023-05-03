@@ -7,7 +7,11 @@ Rails.application.routes.draw do
   end
 
   resources :group_remits do 
-    resources :batches
+    resources :batches do
+      collection do
+        post :import
+      end
+    end
   end
 
   resources :cooperatives do

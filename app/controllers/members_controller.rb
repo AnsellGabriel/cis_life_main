@@ -2,21 +2,34 @@ class MembersController < InheritedResources::Base
   before_action :set_cooperative, only: %i[import new create edit update]
 
   def import
+    # Check if a file has been uploaded
     file = params[:file]
     if file.nil?
       return redirect_to coop_members_path, alert: "No file uploaded"
     else
-      redirect_to coop_members_path, alert: "Only CSV file format please" unless file.content_type == "text/csv"
+      return redirect_to coop_members_path, alert: "Only CSV file format please" unless file.content_type == "text/csv"
     end
     
+    # Check if the file has the required headers
+    required_headers = ["Birth Place", "First Name", "Middle Name", "Last Name", "Suffix", "Status", "Birthdate", "Gender", "Address", "SSS #", "TIN #", "Mobile #", "Email", "Civil Status", "Height (cm)", "Weight (kg)", "Occupation", "Employer", "Work Address", "Spouse", "Work Phone #"]
+    headers = CSV.open(file.path, &:readline).map(&:strip)
+    missing_headers = required_headers - headers
+    if missing_headers.any?
+      return redirect_to coop_members_path, alert: "The following CSV headers are missing: #{missing_headers.join(', ')}"
+    end
+
     # ! Attributes with Date type should have a format of: yyyy-mm-dd
+    # Read CSV file and parse its contents
     file = File.open(file)
-    csv = CSV.parse(file, headers: true)
+    csv = CSV.parse(file, headers: true, skip_blanks: true).delete_if { |row| row.to_hash.values.all?(&:blank?) }
     
+    # Initialize variables to keep track of member imports
     created_members_counter = 0
     updated_members_counter = 0
 
+    # Iterate over each row in the CSV file
     csv.each do |row|
+      # Extract member data from CSV row
       member_hash = {
         last_name: row["Last Name"].upcase,
         first_name: row["First Name"].upcase,
@@ -40,6 +53,7 @@ class MembersController < InheritedResources::Base
         work_phone_number: row["Work Phone #"]
       }
 
+      # Extract cooperative member data from CSV row
       coop_member_hash = {
         cooperative_id: @cooperative.id,
         coop_branch_id: CoopBranch.find_by(name: row["Branch"]).id,
@@ -71,7 +85,7 @@ class MembersController < InheritedResources::Base
       else
         # If a member does not exist, create a new record
         new_member = Member.create(member_hash)
-        new_member.coop_members.create(coop_member_hash)
+        new_member.coop_members.create(coop_member_hash) if new_member.save
 
         created_members_counter += 1
       end

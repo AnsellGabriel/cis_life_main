@@ -1,6 +1,8 @@
 class ApplicationController < ActionController::Base
   include Pagy::Backend
 
+  
+
   def root
     case current_user.userable_type
     when "Agent"
@@ -17,7 +19,7 @@ class ApplicationController < ActionController::Base
   private
 
   def current_cooperative
-    @current_cooperative ||= current_user.userable.cooperative if user_signed_in?
+    @current_cooperative = current_user.userable.cooperative if user_signed_in?
   end
   helper_method :current_cooperative
 

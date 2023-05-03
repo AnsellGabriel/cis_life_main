@@ -3,7 +3,7 @@
 <%= content_tag :h1, @group_remit.name %>
 
 
-<div class="d-flex justify-content-between" style="height: 150px;">
+<div class="d-flex justify-content-between mb-4" style="height: 150px;">
   <div style="width: 100%">
     <div class="d-flex gap-3">
       <%= content_tag :h6, "Effectivity Date: ", style: "width: 150px" %>
@@ -14,11 +14,10 @@
       <%= content_tag :h6, @group_remit.expiry_date.strftime('%B %d, %Y') %>
     </div>
     <%= turbo_frame_tag "batch_form" do %>
-      <div>
       <%= render "group_remits/add_member" %>
     <% end %>
   </div>
-  </div>
+</div>
 
 <%= turbo_frame_tag "computation" do %>
   <%= render partial: "group_remits/computation", locals: {gross_premium: @gross_premium, total_agent_commission: @total_agent_commission, total_coop_commission: @total_coop_commission, net_premium: @net_premium} %>

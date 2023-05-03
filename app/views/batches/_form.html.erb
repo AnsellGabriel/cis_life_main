@@ -20,13 +20,13 @@
 
       </div>
       <div class="col-3 mb-3">
-        <%= f.select :status, options_for_select(Batch.statuses.map { |k, v| [k.to_s.capitalize, k.to_s] }), {include_blank: "Select status"}, { class: 'form-control' } %>
+        <%= f.select :status, options_for_select(Batch.statuses.map { |k, v| [k.to_s.capitalize, k.to_s] }), {include_blank: "Select status"}, { class: 'form-control', style: "height: 32px; border-radius: 4px; padding: 3px; padding-left: 6px" } %>
       </div>
      
       <div class="col-3 d-flex align-items-end mb-3">
         <div class="form-actions d-flex gap-1">
-          <%= f.button :submit, "Add", class: 'btn-success' %>
-          <%= link_to "Cancel", :back, class: 'btn btn-secondary' %>
+          <%= f.button :submit, "Add", class: 'btn btn-sm btn-success' %>
+          <%= link_to "Cancel", :back, class: 'btn btn-sm btn-secondary' %>
         </div>
       </div>
     </div>
