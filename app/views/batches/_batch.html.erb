@@ -1,26 +1,56 @@
 <tr id="<%= dom_id(batch) %>">
     <% member = batch.coop_member.member %>
-    <td><%= batch.id %></td>
-    <td><%= "#{member.last_name}, #{member.first_name} #{member.middle_name}" %></td>
-    <td><%= batch.status == 'recent' ? 'New' : batch.status.to_s.titleize %></td>
-    <td><%= number_to_currency(batch.premium, unit: "₱", precision: 2) %></td>
-    <td><%= number_to_currency(batch.coop_sf_amount, unit: "₱", precision: 2) %></td>
+    <% beneficiaries = batch.batch_dependents.where(is_beneficiary: true) %>
+    <% dependents = batch.batch_dependents.where(is_dependent: true) %>
 
-    <td class="d-flex gap-1">
-    <%= link_to 'Show', group_remit_batch_path(group_remit, batch),
-        data: {turbo_frame: "_top"}, 
-        class: 'btn btn-sm btn-primary' %>
+    <td class="text-center" ><%= batch.id %></td>
+    <td class="" ><%= "#{member.last_name}, #{member.first_name} #{member.middle_name}" %></td>
+    <td class="text-center" ><%= batch.status == 'recent' ? 'New' : batch.status.to_s.titleize %></td>
+    <td class="text-center" ><%= number_to_currency(batch.premium, unit: "₱", precision: 2) %></td>
+    <td class="text-center" ><%= number_to_currency(batch.coop_sf_amount, unit: "₱", precision: 2) %></td>
+    <td>
+        <ul>
+            <% if beneficiaries.count == 0 %>
+                <%= content_tag :li, "None", style: "color: red;" %>
+            <% else %>
+                <% beneficiaries.each do |b| %>
+                    <%= content_tag :li, "#{b.member_dependent.last_name}, #{b.member_dependent.first_name} #{b.member_dependent.middle_name}", class: "text-secondary" %>
+                <% end %>
+            <% end %>
+        </ul>
+    </td>
+    <td>
+        <ul>
+            <% if dependents.count == 0 %>
+                <%= content_tag :li, "None", style: "color: red;" %>
+            <% else %>
+                <% dependents.each do |d| %>
+                    <%= content_tag :li, "#{d.member_dependent.last_name}, #{d.member_dependent.first_name} #{d.member_dependent.middle_name}", class: "text-secondary" %>
+                    <ul>
+                        <%= content_tag :li, "Premium: #{number_to_currency(d.premium, unit: "₱", precision: 2) }", class: "text-secondary" %>
+                    </ul>
+                <% end %>
+            <% end %>
+        </ul>
+    </td>
 
-    <%= link_to 'Edit', edit_group_remit_batch_path(group_remit, batch), 
-        data: {turbo_frame: "batch_form"},
-        class: 'btn btn-sm btn-primary' %>
+    <td>
+        <div  class="d-flex gap-1" >
+            <%= link_to 'Show', group_remit_batch_path(group_remit, batch),
+                data: {turbo_frame: "_top"}, 
+                class: 'btn btn-sm btn-primary' %>
 
-    <%= button_to "Delete", group_remit_batch_path(group_remit, batch), 
-        method: :delete,
-        form: { 
-        data: { turbo_frame: "_top", 
-        turbo_confirm: "Delete Batch: #{member.last_name}, #{member.first_name} #{member.middle_name}?" } 
-        }, 
-        class: 'btn btn-sm btn-danger' %>
+            <%= link_to 'Edit', edit_group_remit_batch_path(group_remit, batch), 
+                data: {turbo_frame: "batch_form"},
+                class: 'btn btn-sm btn-primary' %>
+
+            <%= button_to "Delete", group_remit_batch_path(group_remit, batch), 
+                method: :delete,
+                form: { 
+                data: { turbo_frame: "_top", 
+                turbo_confirm: "Delete Batch: #{member.last_name}, #{member.first_name} #{member.middle_name}?" } 
+                }, 
+                class: 'btn btn-sm btn-danger' %>
+        </div>
     </td>
 </tr>

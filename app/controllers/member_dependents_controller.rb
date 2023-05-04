@@ -12,10 +12,10 @@ class MemberDependentsController < InheritedResources::Base
 
   def create
     @member_dependent = @member.member_dependents.build(member_dependent_params)
-
+    
     respond_to do |format|
       if @member_dependent.save
-        format.html { redirect_to member_dependents_path(@member), notice: "Member dependent was successfully created." }
+        format.html { redirect_to new_group_remit_batch_dependent_path(@group_remit, @batch), notice: "Member dependent was successfully created." }
       else
         format.html { render :new, status: :unprocessable_entity }
       end
@@ -44,8 +44,16 @@ class MemberDependentsController < InheritedResources::Base
 
   private
 
+    def set_group_remit_batch
+      @cooperative = current_user.userable.cooperative
+      @group_remit = @cooperative.group_remits.find(params[:group_remit_id])
+      @batch = @group_remit.batches.find(params[:batch_id])
+    end
+
     def set_member
-      @member = Member.find(params[:member_id])
+      set_group_remit_batch
+      @coop_member = @batch.coop_member
+      @member = @coop_member.member
     end
 
     def set_member_dependent

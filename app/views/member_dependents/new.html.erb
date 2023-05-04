@@ -1,5 +1,10 @@
-<h1>New member dependent</h1>
-
-<%= render "form", member_dependent: @member_dependent %>
-
-<br>
+<%= turbo_frame_tag "modal" do %>
+  <div class="modal-header">
+    <%= content_tag :h5, 'Beneficiary/Dependent Enrollment', class: "modal-title text-center", id: "staticBackdropLabel" %>
+    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+  </div>
+  
+  <div class="modal-body">
+    <%= render "form", member_dependent: @member_dependent %>
+  </div>
+<% end %>

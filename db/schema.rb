@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_05_02_034249) do
+ActiveRecord::Schema[7.0].define(version: 2023_05_04_024434) do
   create_table "active_admin_comments", force: :cascade do |t|
     t.string "namespace"
     t.text "body"
@@ -89,14 +89,12 @@ ActiveRecord::Schema[7.0].define(version: 2023_05_02_034249) do
 
   create_table "batch_dependents", force: :cascade do |t|
     t.integer "batch_id", null: false
-    t.integer "agreement_benefit_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.integer "member_dependent_id", null: false
     t.decimal "premium"
-    t.boolean "beneficiary"
-    t.boolean "dependent"
-    t.index ["agreement_benefit_id"], name: "index_batch_dependents_on_agreement_benefit_id"
+    t.boolean "is_beneficiary"
+    t.boolean "is_dependent"
     t.index ["batch_id"], name: "index_batch_dependents_on_batch_id"
     t.index ["member_dependent_id"], name: "index_batch_dependents_on_member_dependent_id"
   end
@@ -287,7 +285,6 @@ ActiveRecord::Schema[7.0].define(version: 2023_05_02_034249) do
   add_foreign_key "agents", "agent_groups"
   add_foreign_key "agreements", "cooperatives"
   add_foreign_key "agreements", "plans"
-  add_foreign_key "batch_dependents", "agreement_benefits"
   add_foreign_key "batch_dependents", "batches"
   add_foreign_key "batch_dependents", "member_dependents"
   add_foreign_key "batches", "coop_members"

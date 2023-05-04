@@ -1,4 +1,5 @@
-<div class="col-md-8">
+<div class="row d-flex fustify-content-center" >
+<div class="col-md-8" style="margin: auto;">
   <div class="card mb-3">
     <div class="card-body">
       <div class="row">
@@ -27,20 +28,26 @@
       <hr class="mb-3">
       <div class="row">
         <div class="col-sm-3">
+          <h6 class="mb-0">Premium</h6>
+        </div>
+        <div class="col-sm-3 text-secondary">
+          <%= number_to_currency(batch.premium, unit: "₱", precision: 2) %>
+        </div>
+        <div class="col-sm-3">
           <h6 class="mb-0">Coop Commission</h6>
         </div>
         <div class="col-sm-3 text-secondary">
           <%= number_to_currency(batch.coop_sf_amount, unit: "₱", precision: 2) %>
         </div>
+      </div>
+      <hr>
+      <div class="row">
         <div class="col-sm-3">
           <h6 class="mb-0">Status</h6>
         </div>
         <div class="col-sm-3 text-secondary">
           <%= batch.status == 'recent' ? 'New' : batch.status.to_s.titleize %>
         </div>
-      </div>
-      <hr>
-      <div class="row">
         <div class="col-sm-3">
           <h6 class="mb-0">Active?</h6>
         </div>
@@ -48,3 +55,75 @@
           <%= batch.active ? "Active" : "Inactive" %>
         </div>
       </div>
+    </div>
+  </div>
+</div>
+</div>
+
+<div class="row ">
+<div class="col-md-3" style="margin-left: auto;">
+  <div class="card mb-3">
+    <div class="card-body">
+      <div class="row"> 
+        <div class="col-sm-12 d-flex justify-content-center align-items-center gap-2">
+          <div class="d-flex gap-1 align-items-center">
+              <h6 class="mb-0">Beneficiaries</h6>
+              <%= link_to "+", new_group_remit_batch_dependent_path(@group_remit, @batch),
+                  class: "btn btn-sm btn-success", 
+                  data: {
+                      turbo_frame: "modal"
+                      } 
+              %>        
+          </div>
+        </div>
+      </div>
+      <hr>
+        <% @beneficiaries.each do |b| %>
+          <div class="row">
+            <div class="col-sm-12 text-secondary">
+              <%= content_tag :h6, "#{b.member_dependent.last_name}, #{b.member_dependent.first_name} #{b.member_dependent.middle_name}", class: "mb-0 text-center" %>
+            </div>
+          </div>
+          <hr>
+        <% end %>
+      
+
+    </div>
+  </div>
+</div>
+
+<div class="col-md-5" style="margin-right: auto;">
+  <div class="card mb-3">
+    <div class="card-body">
+      <div class="row">
+        <div class="col-sm-12 d-flex justify-content-center">
+          <div class="d-flex gap-1 align-items-center">
+              <h6 class="mb-0">Dependents</h6>
+              <%= link_to "+", new_group_remit_batch_dependent_path(@group_remit, @batch),
+                  class: "btn btn-sm btn-success", 
+                  data: {
+                      turbo_frame: "modal"
+                      } 
+              %>        
+          </div>     
+        </div>
+      </div>
+      <hr>
+      <% @dependents.each do |d| %>
+            <div class="row">
+              <div class="col-sm-6 text-secondary">
+                <%= content_tag :h6, "#{d.member_dependent.last_name}, #{d.member_dependent.first_name} #{d.member_dependent.middle_name}", class: "mb-0 text-center" %>
+              </div>
+              <div class="col-sm-3">
+                <%= content_tag :h6, "Premium: ", class: "mb-0 text-center" %>
+              </div>
+              <div class="col-sm-3 text-secondary">
+                <%= content_tag :h6, "#{number_to_currency(d.premium, unit: "₱", precision: 2) }", class: "mb-0 text-center" %>
+              </div>
+            </div>
+            <hr>
+          <% end %>   
+    </div>
+  </div>
+</div>
+</div>

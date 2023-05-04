@@ -77,7 +77,7 @@ class BatchesController < ApplicationController
         new_batch.agent_sf_amount = (agent_sf / 100) * premium
         new_batch.premium = premium
   
-        added_members_counter += 1
+        added_members_counter += 1 if new_batch.save
       else
         # Member data is invalid or incomplete
         @denied_members_array << batch_hash
@@ -102,6 +102,9 @@ class BatchesController < ApplicationController
     @batch_member = @batch.coop_member
     @effectivity_date = @batch.group_remit.effectivity_date
     @expiry_date = @batch.group_remit.expiry_date
+    @beneficiaries = @batch.batch_dependents.where(is_beneficiary: true)
+    @dependents = @batch.batch_dependents.where(is_dependent: true)
+
   end
 
   def new
@@ -125,6 +128,8 @@ class BatchesController < ApplicationController
     @batch.coop_sf_amount = (coop_sf/100) * premium 
     @batch.agent_sf_amount = (agent_sf/100) * premium 
     @batch.premium = premium 
+
+    
 
     respond_to do |format|
       if @batch.save!

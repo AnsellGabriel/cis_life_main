@@ -1,4 +1,5 @@
 class MembersController < InheritedResources::Base
+  # before_action :authenticate_user!
   before_action :set_cooperative, only: %i[import new create edit update]
 
   def import

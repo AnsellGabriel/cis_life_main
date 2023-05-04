@@ -1,17 +1,25 @@
-
-<%= simple_form_for(@batch_dependent) do |f| %>
+<%= simple_form_for(@batch_dependent, url: group_remit_batch_dependents_path) do |f| %>
   <%= f.error_notification %>
   <%= f.error_notification message: f.object.errors[:base].to_sentence if f.object.errors[:base].present? %>
 
   <div class="form-inputs mb-3">
-    <%= f.association :batch %>
-    <%= f.association :coop_dependent %>
-    <%= f.input :premium %>
-    <%= f.association :agreement_benefit %>
-  </div>
-
-  <div class="form-actions text-end">
-    <%= link_to "Back", batch_dependents_path, class: 'btn btn-secondary' %>
-    <%= f.button :submit, class: 'btn-success' %>
+    <div class="d-flex align-items-center gap-2">
+      <%= content_tag :p, 'Beneficiary/Member not on the list?', class: "text-muted" %>
+      <%= link_to 'Enroll Beneficiary/Dependent', new_group_remit_batch_member_dependent_path(@group_remit, @batch), class: "mb-3 btn btn-sm btn-primary", data: {turbo_frame: "modal"} %>
+    </div>
+    <% if @dependents.count == 0%> 
+      <p class="text-danger">No dependents enrolled.</p>
+    <% else %>
+      <%= f.association :member_dependent, 
+        collection: @dependents.map { |d| ["#{d.last_name}, #{d.first_name} #{d.middle_name}", d.id]} 
+      %>
+      <div class="d-flex justify-content-around">
+        <%= f.input :is_beneficiary, as: :boolean, label: 'Beneficiary' %>
+        <%= f.input :is_dependent, as: :boolean, label: 'Dependent' %>
+      </div>
+      <div class="form-actions">
+        <%= f.button :submit, "Add", class: 'btn-success', data: {turbo: false} %>
+      </div>
+    <% end %>
   </div>
 <% end %>

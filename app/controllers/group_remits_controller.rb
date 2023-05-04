@@ -28,7 +28,8 @@ class GroupRemitsController < InheritedResources::Base
     @pagy, @batches = pagy(@batches, items: 10)
 
     # premium and commission totals
-    @gross_premium = @group_remit.batches.sum(:premium)
+    batch_dependent_premiums = @group_remit.batches.joins(:batch_dependents).sum('batch_dependents.premium')
+    @gross_premium = @group_remit.batches.sum(:premium) + batch_dependent_premiums
     @total_coop_commission = @group_remit.batches.sum(:coop_sf_amount)
     @total_agent_commission = @group_remit.batches.sum(:agent_sf_amount)
     @net_premium = @gross_premium - @total_coop_commission

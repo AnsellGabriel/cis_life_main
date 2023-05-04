@@ -1,12 +1,6 @@
 <div>
   <%= link_to "#{@group_remit.name}", group_remit_path(@group_remit), class: 'btn btn-secondary mb-3' %>
 </div>
-<%= content_tag :h1, "Batch #{@batch.id}" %>
-
-<div class="mb-4">
-  <%= link_to "Edit", edit_group_remit_batch_path(@group_remit, @batch), class: 'btn btn-primary' %>
-  <%= link_to "Delete", group_remit_batch_path, data: { turbo_method: :delete, turbo_confirm: 'Are you sure?' }, class: 'btn btn-danger' %>
-</div>
 
 <%= render partial: 'batch_display', locals: { batch: @batch, batch_member: @batch_member } %>
 

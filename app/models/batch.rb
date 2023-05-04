@@ -26,5 +26,5 @@ class Batch < ApplicationRecord
   belongs_to :group_remit
   
   has_many :batch_dependents, dependent: :destroy
-  accepts_nested_attributes_for :batch_dependents
+  has_many :member_dependents, through: :batch_dependents
 end

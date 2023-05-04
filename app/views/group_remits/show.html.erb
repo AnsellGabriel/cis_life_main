@@ -2,7 +2,6 @@
 
 <%= content_tag :h1, @group_remit.name %>
 
-
 <div class="d-flex justify-content-between mb-4" style="height: 150px;">
   <div style="width: 100%">
     <div class="d-flex gap-3">
@@ -30,12 +29,14 @@
     <thead>
       <tr>
 
-        <th>ID</th>
-        <th>Member</th>
-        <th>Status</th>
-        <th>Premium</th>
-        <th>Coop Commission</th>
-        <th>Actions</th>
+        <th class="text-center" scope="col">ID</th>
+        <th class="text-center" scope="col">Members</th>
+        <th class="text-center" scope="col">Status</th>
+        <th class="text-center" scope="col">Premium</th>
+        <th class="text-center" scope="col">Coop Commission</th>
+        <th class="text-center" scope="col">Beneficiaries</th>
+        <th class="text-center" scope="col">Dependents</th>
+        <th class="text-center" scope="col">Actions</th>
 
       </tr>
     </thead>
@@ -47,4 +48,5 @@
   <% end %>
 
 </div>
+
 <%== pagy_bootstrap_nav(@pagy) %>

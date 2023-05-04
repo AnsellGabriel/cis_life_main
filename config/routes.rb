@@ -1,6 +1,6 @@
 Rails.application.routes.draw do 
   resources :plans
-  resources :batch_dependents, :anniversaries, :agreements, :agent_groups, :departments, :agents, :coop_users, :employees
+  resources :anniversaries, :agreements, :agent_groups, :departments, :agents, :coop_users, :employees
 
   resources :agreement_benefits do
     get :selected, on: :member
@@ -11,6 +11,8 @@ Rails.application.routes.draw do
       collection do
         post :import
       end
+      resources :batch_dependents, as: 'dependents'
+      resources :member_dependents
     end
   end
 
@@ -20,7 +22,7 @@ Rails.application.routes.draw do
   end
 
   resources :members do
-    resources :member_dependents, path: 'dependents', as: 'dependents'
+    
     collection do
       post :import
     end

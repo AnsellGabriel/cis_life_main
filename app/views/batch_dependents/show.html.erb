@@ -1,9 +1,7 @@
+<div>
+  <%= link_to "#{@group_remit.name}", group_remit_path, class: "btn btn-secondary" %>
+</div>
 
 <%= render @batch_dependent %>
 
-<div>
-  <%= link_to "Edit", edit_batch_dependent_path(@batch_dependent), class: 'btn btn-primary' %> |
-  <%= link_to "Back", batch_dependents_path, class: 'btn btn-primary' %>
 
-  <%= button_to "Delete", @batch_dependent, method: :delete, class: 'btn btn-danger' %>
-</div>
