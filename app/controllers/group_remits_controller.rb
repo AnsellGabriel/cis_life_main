@@ -5,7 +5,7 @@ class GroupRemitsController < InheritedResources::Base
   before_action :set_members, only: %i[new create edit update]
 
   def index
-    @group_remits = @cooperative.group_remits
+    @group_remits = @cooperative.group_remits.order(id: :desc)
   end
 
   def show
@@ -19,16 +19,15 @@ class GroupRemitsController < InheritedResources::Base
     # agent_sf = (final_prem * proposal.agent_sf)
     # ! end test
 
-    @expiry_date = @group_remit.anniversary.anniversary_date.next_year
-    @batches = @group_remit.batches.order(created_at: :desc)
-
     # filter members based on last name, first name, middle name
     # @members = f_members.where("last_name LIKE ? AND first_name LIKE ? AND middle_name LIKE ?", "%#{params[:last_name_filter]}%", "%#{params[:first_name_filter]}%", "%#{params[:middle_name_filter]}%")
 
+    @batches = @group_remit.batches.order(created_at: :desc)
     @pagy, @batches = pagy(@batches, items: 10)
 
     # premium and commission totals
-    batch_dependent_premiums = @group_remit.batches.joins(:batch_dependents).sum('batch_dependents.premium')
+    # byebug
+    batch_dependent_premiums = @group_remit.batches.joins(:batch_dependents).where(batch_dependents: {is_dependent: true}).sum('batch_dependents.premium')
     @gross_premium = @group_remit.batches.sum(:premium) + batch_dependent_premiums
     @total_coop_commission = @group_remit.batches.sum(:coop_sf_amount)
     @total_agent_commission = @group_remit.batches.sum(:agent_sf_amount)
@@ -45,7 +44,14 @@ class GroupRemitsController < InheritedResources::Base
   def create
     @group_remit = @cooperative.group_remits.build(group_remit_params)
     @group_remit.effectivity_date = Date.today
-    @group_remit.expiry_date = Anniversary.find_by(id: group_remit_params[:anniversary_id]).anniversary_date.next_year
+
+    anniversary = Anniversary.find_by(id: group_remit_params[:anniversary_id]).anniversary_date
+    today = Date.today
+    terms = (anniversary.year * 12 + anniversary.month) - (today.year * 12 + today.month)
+
+    @group_remit.terms = terms <= 0 ? terms + 12 : terms
+    @group_remit.expiry_date = terms <= 0 ? anniversary.next_year : anniversary
+
     # plan = agreement.plan
     plan = @cooperative.agreements.find_by(id: group_remit_params[:agreement_id]).plan
     @group_remit.name = "#{plan.acronym}-Remittance-#{GroupRemit.last.id + 1}"

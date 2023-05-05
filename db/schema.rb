@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_05_04_024434) do
+ActiveRecord::Schema[7.0].define(version: 2023_05_05_063810) do
   create_table "active_admin_comments", force: :cascade do |t|
     t.string "namespace"
     t.text "body"
@@ -210,6 +210,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_05_04_024434) do
     t.date "effectivity_date"
     t.date "expiry_date"
     t.integer "cooperative_id", null: false
+    t.integer "terms"
     t.index ["agreement_id"], name: "index_group_remits_on_agreement_id"
     t.index ["anniversary_id"], name: "index_group_remits_on_anniversary_id"
     t.index ["cooperative_id"], name: "index_group_remits_on_cooperative_id"

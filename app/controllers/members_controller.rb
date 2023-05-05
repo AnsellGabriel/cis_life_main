@@ -63,32 +63,30 @@ class MembersController < InheritedResources::Base
       } 
 
       # Check if a member with the same first name, last name, and birth date already exists
-      existing_member = Member.find_by(
+      member = Member.find_or_initialize_by(
         first_name: member_hash[:first_name],
         last_name: member_hash[:last_name],
         birth_date: member_hash[:birth_date]
       )
-      
-      if existing_member
-        # If a member already exists, update the record with the new data
-        existing_member.update(member_hash)
-        existing_coop_member = existing_member.coop_members.find_by(cooperative_id: @cooperative.id) 
+            
+      if member.persisted?
+        # check if member is already a coop member
+        coop_member = member.coop_members.find_or_initialize_by(cooperative_id: @cooperative.id) 
 
-        # check if the member is already a coop member
-        if existing_coop_member
-          existing_coop_member.update(coop_member_hash)
+        if coop_member.persisted?
+          member.update(member_hash)
+          coop_member.update(coop_member_hash)
           updated_members_counter += 1
         else
-          existing_member.coop_members.create(coop_member_hash)
-          created_members_counter += 1
+          coop_member.create(coop_member_hash)
+          created_members_ounter += 1 if coop_member.save!
         end
-
       else
         # If a member does not exist, create a new record
         new_member = Member.create(member_hash)
-        new_member.coop_members.create(coop_member_hash) if new_member.save
+        new_coop_member = new_member.coop_members.create(coop_member_hash) if new_member.save!
 
-        created_members_counter += 1
+        created_members_counter += 1 if new_coop_member.save!
       end
     end
 

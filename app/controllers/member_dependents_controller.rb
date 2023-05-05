@@ -7,7 +7,14 @@ class MemberDependentsController < InheritedResources::Base
   end
 
   def new
-    @member_dependent = @member.member_dependents.build
+    @member_dependent = @member.member_dependents.build(
+      first_name: FFaker::Name.first_name,
+      middle_name: FFaker::Name.first_name,
+      last_name: FFaker::Name.last_name,
+      suffix: FFaker::Name.suffix,
+      birth_date: FFaker::Time.between(50.years.ago, 1.year.ago),
+      relationship: "Family"
+    )
   end
 
   def create

@@ -10,19 +10,16 @@ class Member < ApplicationRecord
   validates_presence_of :last_name, :first_name, :middle_name, :birth_date, :address, :civil_status, :gender
   validates :email, format: { with: URI::MailTo::EMAIL_REGEXP }
 
-  # belongs_to :cooperative
   # belongs_to :coop_branch
-  # has_many :coop_member_dependents, dependent: :destroy
-  # has_many :coop_member_beneficiaries, dependent: :destroy
+
   has_many :coop_members, dependent: :destroy
+  has_many :cooperatives, through: :coop_members
+
   has_many :member_dependents, dependent: :destroy
   accepts_nested_attributes_for :coop_members
 
-  # accepts_nested_attributes_for :coop_member_beneficiaries, allow_destroy: true, reject_if: :all_blank  
-  # validates_associated :coop_member_beneficiaries
-
-
-
+  private
+  
   def format_phone_numbers
     self.mobile_number = format_phone_number(self.mobile_number)
     self.work_phone_number = format_phone_number(self.work_phone_number)

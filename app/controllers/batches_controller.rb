@@ -24,6 +24,10 @@ class BatchesController < ApplicationController
     # Read CSV file and parse its contents
     file = File.open(file)
     csv = CSV.parse(file, headers: true, skip_blanks: true).delete_if { |row| row.to_hash.values.all?(&:blank?) }
+
+    if csv.count < 100
+      return redirect_to group_remit_path(@group_remit), alert: "Imported members must be at least 100 for GYRT plan. Current count: #{csv.count}"
+    end
   
     # Initialize variables to keep track of member imports
     added_members_counter = 0
@@ -69,13 +73,14 @@ class BatchesController < ApplicationController
         premium = @group_remit.agreement.premium
         coop_sf = @group_remit.agreement.coop_service_fee
         agent_sf = @group_remit.agreement.agent_service_fee
-  
+        terms = new_batch.group_remit.terms
+
         new_batch.active = batch_hash[:active]
         new_batch.status = batch_hash[:status] == "new" ? "recent" : batch_hash[:status]
         new_batch.coop_member_id = coop_member_id
-        new_batch.coop_sf_amount = (coop_sf / 100) * premium
-        new_batch.agent_sf_amount = (agent_sf / 100) * premium
-        new_batch.premium = premium
+        new_batch.premium = ((premium / 12) * terms)
+        new_batch.coop_sf_amount = (coop_sf / 100) * new_batch.premium
+        new_batch.agent_sf_amount = (agent_sf / 100) * new_batch.premium
   
         added_members_counter += 1 if new_batch.save
       else
@@ -124,19 +129,18 @@ class BatchesController < ApplicationController
     premium = @group_remit.agreement.premium
     coop_sf = @group_remit.agreement.coop_service_fee
     agent_sf = @group_remit.agreement.agent_service_fee
+    terms = @batch.group_remit.terms
 
-    @batch.coop_sf_amount = (coop_sf/100) * premium 
-    @batch.agent_sf_amount = (agent_sf/100) * premium 
-    @batch.premium = premium 
-
-    
+    @batch.premium = ((premium / 12) * terms) 
+    @batch.coop_sf_amount = (coop_sf/100) * @batch.premium
+    @batch.agent_sf_amount = (agent_sf/100) * @batch.preium
 
     respond_to do |format|
       if @batch.save!
         set_premiums
         # format.turbo_stream
         format.html { 
-          redirect_to group_remit_path(@group_remit), notice: "Member successfully added."
+          redirect_to group_remit_path(@group_remit)
         }
         format.turbo_stream { flash.now[:notice] = "Member successfully added." }
       else
@@ -171,9 +175,9 @@ class BatchesController < ApplicationController
       if @batch.destroy
         set_premiums
         format.html {
-          redirect_to group_remit_path(@group_remit), notice: 'Batch was successfully destroyed.'
+          redirect_to group_remit_path(@group_remit), alert: 'Batch was successfully destroyed.'
         }
-        format.turbo_stream { flash.now[:alert] = "Member removed" }
+        # format.turbo_stream { flash.now[:alert] = "Member removed" }
       else
         format.html {
           redirect_to group_remit_batch_path(@group_remit, @batch), alert: 'Unable to destroy batch.'
@@ -204,7 +208,8 @@ class BatchesController < ApplicationController
 
     def set_premiums
       # premium and commission totals
-      @gross_premium = @group_remit.batches.sum(:premium)
+      batch_dependent_premiums = @group_remit.batches.joins(:batch_dependents).where(batch_dependents: {is_dependent: true}).sum('batch_dependents.premium')
+      @gross_premium = @group_remit.batches.sum(:premium) + batch_dependent_premiums
       @total_coop_commission = @group_remit.batches.sum(:coop_sf_amount)
       @total_agent_commission = @group_remit.batches.sum(:agent_sf_amount)
       @net_premium = @gross_premium - @total_coop_commission

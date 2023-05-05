@@ -5,7 +5,7 @@
 <% end %>
 
 
-<%= turbo_stream.update "computation" do %>
+<%= turbo_stream.replace "computation" do %>
   <%= turbo_frame_tag "computation" do %>
     <%= render "group_remits/computation" %>
   <% end %>

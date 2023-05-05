@@ -7,8 +7,9 @@
       <%= content_tag :p, 'Beneficiary/Member not on the list?', class: "text-muted" %>
       <%= link_to 'Enroll Beneficiary/Dependent', new_group_remit_batch_member_dependent_path(@group_remit, @batch), class: "mb-3 btn btn-sm btn-primary", data: {turbo_frame: "modal"} %>
     </div>
+    <hr>
     <% if @dependents.count == 0%> 
-      <p class="text-danger">No dependents enrolled.</p>
+      <p class="text-danger text-center">No dependents enrolled.</p>
     <% else %>
       <%= f.association :member_dependent, 
         collection: @dependents.map { |d| ["#{d.last_name}, #{d.first_name} #{d.middle_name}", d.id]} 
@@ -17,8 +18,8 @@
         <%= f.input :is_beneficiary, as: :boolean, label: 'Beneficiary' %>
         <%= f.input :is_dependent, as: :boolean, label: 'Dependent' %>
       </div>
-      <div class="form-actions">
-        <%= f.button :submit, "Add", class: 'btn-success', data: {turbo: false} %>
+      <div class="form-actions d-flex justify-content-center">
+        <%= f.button :submit, "Add", class: 'btn-success', style: "width: 100%", data: {turbo: false} %>
       </div>
     <% end %>
   </div>

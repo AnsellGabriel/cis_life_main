@@ -1,6 +1,10 @@
 class AgreementsController < InheritedResources::Base
   before_action :set_cooperative, only: %i[index new create show]
 
+  def index 
+    @agreements = @cooperative.agreements
+  end
+
   def new
     @agreement = @cooperative.agreements.build(description: FFaker::Lorem.paragraph, premium: 1000, coop_service_fee: 10, agent_service_fee: 5, plan_id: 1)
   end
