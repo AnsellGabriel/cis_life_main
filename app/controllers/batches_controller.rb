@@ -10,7 +10,7 @@ class BatchesController < ApplicationController
     if file.nil?
       return redirect_to group_remit_path(@group_remit), alert: "No file uploaded"
     else
-      return redirect_to group_remit_path(@group_remit), alert: "Only CSV file format please" unless file.content_type == "text/csv"
+      return redirect_to group_remit_path(@group_remit), alert: "Only CSV file format please" unless file.content_type.end_with?("csv")
     end
 
     # Check if the file has the required headers
@@ -33,6 +33,8 @@ class BatchesController < ApplicationController
     added_members_counter = 0
     denied_members_counter = 0
     duplicate_members_counter = 0
+    unenrolled_members_counter = 0
+    @unenrolled_members_array = []
     @denied_members_array = []
     @duplicate_members_array = []
   
@@ -49,11 +51,17 @@ class BatchesController < ApplicationController
       }
   
       # Find member in the database using their name
-      member = Member.find_by(
+      member = Member.find_or_initialize_by(
         first_name: batch_hash[:first_name],
         last_name: batch_hash[:last_name],
         middle_name: batch_hash[:middle_name]
       )
+
+      unless member.persisted?
+        @unenrolled_members_array << member
+        unenrolled_members_counter += 1
+        next
+      end
   
       # Get the ID of the member's cooperative membership
       coop_member_id = member.coop_members.find_by(cooperative_id: @cooperative.id).id
@@ -81,6 +89,56 @@ class BatchesController < ApplicationController
         new_batch.premium = ((premium / 12) * terms)
         new_batch.coop_sf_amount = (coop_sf / 100) * new_batch.premium
         new_batch.agent_sf_amount = (agent_sf / 100) * new_batch.premium
+
+        agreement = @group_remit.agreement
+        coop_member = new_batch.coop_member
+        renewal_member = agreement.coop_members.find_by(id: coop_member.id)
+        
+        if renewal_member.present?
+          new_batch.status = :renewal
+        else
+          new_batch.status = :recent
+          agreement.coop_members << coop_member
+        end
+
+        if row["Beneficiary"].present?
+          # assuming the string is stored in a variable named 'relationship_string'
+          dependents = row["Beneficiary"].split(",") # split the string by comma
+          formatted_dependents = dependents.map do |dependent|
+            name, relation = dependent.split(" - ").map(&:strip) # split each relationship by " - "
+            first_name, last_name = name.split(" ").map(&:strip)
+            
+            member_dependent = MemberDependent.find_by(first_name: first_name, last_name: last_name)
+
+            if member_dependent.persisted?
+              batch_dependent = new_batch.batch_dependents.build
+              batch_dependent.member_dependent_id = member_dependent.id
+              batch_dependent.beneficiary = true
+              batch_dependent.save
+            end
+
+          end
+        end
+
+        if row["Dependents"].present?
+          # assuming the string is stored in a variable named 'relationship_string'
+          dependents = row["Dependents"].split(",") # split the string by comma
+          formatted_dependents = dependents.map do |dependent|
+            name, relation = dependent.split(" - ").map(&:strip) # split each relationship by " - "
+            first_name, last_name = name.split(" ").map(&:strip)
+            
+            member_dependent = MemberDependent.find_by(first_name: first_name, last_name: last_name)
+
+            if member_dependent.present?
+              batch_dependent = new_batch.batch_dependents.build
+              batch_dependent.member_dependent_id = member_dependent.id
+              batch_dependent.dependent = true
+              batch_dependent.premium = ((premium / 12) * terms)
+              batch_dependent.save
+            end
+
+          end
+        end
   
         added_members_counter += 1 if new_batch.save
       else
@@ -91,7 +149,7 @@ class BatchesController < ApplicationController
     end
   
     # Redirect user to remittance page with import status message
-    import_message = "#{added_members_counter} member(s) added, #{duplicate_members_counter} duplicate members, #{denied_members_counter} member(s) denied."
+    import_message = "#{added_members_counter} member(s) added, #{duplicate_members_counter} duplicate members, #{denied_members_counter} member(s) denied. #{unenrolled_members_counter} unenrolled members"
     redirect_to group_remit_path(@group_remit), notice: import_message
   end
   
@@ -107,8 +165,8 @@ class BatchesController < ApplicationController
     @batch_member = @batch.coop_member
     @effectivity_date = @batch.group_remit.effectivity_date
     @expiry_date = @batch.group_remit.expiry_date
-    @beneficiaries = @batch.batch_dependents.where(is_beneficiary: true)
-    @dependents = @batch.batch_dependents.where(is_dependent: true)
+    @beneficiaries = @batch.batch_beneficiaries
+    @dependents = @batch.batch_dependents
 
   end
 
@@ -126,6 +184,17 @@ class BatchesController < ApplicationController
     @coop_members = @cooperative.coop_members.includes(:member).order('members.last_name')
     @batch = @group_remit.batches.new(batch_params)
 
+    agreement = @group_remit.agreement
+    coop_member = @batch.coop_member
+    renewal_member = agreement.coop_members.find_by(id: coop_member.id)
+
+    if renewal_member.present?
+      @batch.status = :renewal
+    else
+      @batch.status = :recent
+      agreement.coop_members << coop_member
+    end
+
     premium = @group_remit.agreement.premium
     coop_sf = @group_remit.agreement.coop_service_fee
     agent_sf = @group_remit.agreement.agent_service_fee
@@ -133,7 +202,7 @@ class BatchesController < ApplicationController
 
     @batch.premium = ((premium / 12) * terms) 
     @batch.coop_sf_amount = (coop_sf/100) * @batch.premium
-    @batch.agent_sf_amount = (agent_sf/100) * @batch.preium
+    @batch.agent_sf_amount = (agent_sf/100) * @batch.premium
 
     respond_to do |format|
       if @batch.save!
@@ -208,7 +277,7 @@ class BatchesController < ApplicationController
 
     def set_premiums
       # premium and commission totals
-      batch_dependent_premiums = @group_remit.batches.joins(:batch_dependents).where(batch_dependents: {is_dependent: true}).sum('batch_dependents.premium')
+      batch_dependent_premiums = @group_remit.batches.joins(:batch_dependents).sum('batch_dependents.premium')
       @gross_premium = @group_remit.batches.sum(:premium) + batch_dependent_premiums
       @total_coop_commission = @group_remit.batches.sum(:coop_sf_amount)
       @total_agent_commission = @group_remit.batches.sum(:agent_sf_amount)

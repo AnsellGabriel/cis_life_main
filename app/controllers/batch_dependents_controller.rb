@@ -15,6 +15,15 @@ class BatchDependentsController < InheritedResources::Base
   def create
     @batch_dependent = @batch.batch_dependents.new(batch_dependent_params)
     
+    premium = @group_remit.agreement.premium
+    coop_sf = @group_remit.agreement.coop_service_fee
+    agent_sf = @group_remit.agreement.agent_service_fee
+    terms = @batch.group_remit.terms
+
+    @batch_dependent.premium = ((premium / 12) * terms) 
+    @batch_dependent.coop_sf_amount = (coop_sf/100) * @batch_dependent.premium
+    @batch_dependent.agent_sf_amount = (agent_sf/100) * @batch_dependent.premium
+
     respond_to do |format|
       if @batch_dependent.save
         format.html { redirect_to group_remit_batch_path(@group_remit, @batch), notice: "Batch dependent was successfully created." }
@@ -24,18 +33,13 @@ class BatchDependentsController < InheritedResources::Base
     end
   end
 
-  # member dependent enrollment action
-  # def enroll_dependent
-  #   @member_dependent = @member.member_dependents.build(member_dependent_params)
-
-  #   respond_to do |format|
-  #     if @member_dependent.save
-  #       format.html { redirect_to member_dependents_path(@member), notice: "Member dependent was successfully created." }
-  #     else
-  #       format.html { render :new, status: :unprocessable_entity }
-  #     end
-  #   end
-  # end
+  def destroy    
+    respond_to do |format|
+      if @batch_dependent.destroy
+        format.html { redirect_to group_remit_batch_path(@group_remit, @batch), notice: "Batch beneficiary was successfully destroyed." }
+      end
+    end
+  end
 
   private
     def set_group_remit_batch

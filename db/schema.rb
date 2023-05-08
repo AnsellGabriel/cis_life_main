@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_05_05_063810) do
+ActiveRecord::Schema[7.0].define(version: 2023_05_08_082513) do
   create_table "active_admin_comments", force: :cascade do |t|
     t.string "namespace"
     t.text "body"
@@ -76,8 +76,16 @@ ActiveRecord::Schema[7.0].define(version: 2023_05_05_063810) do
     t.decimal "coop_service_fee"
     t.integer "plan_id", null: false
     t.integer "cooperative_id", null: false
+    t.string "anniversary_type"
     t.index ["cooperative_id"], name: "index_agreements_on_cooperative_id"
     t.index ["plan_id"], name: "index_agreements_on_plan_id"
+  end
+
+  create_table "agreements_coop_members", id: false, force: :cascade do |t|
+    t.integer "agreement_id", null: false
+    t.integer "coop_member_id", null: false
+    t.index ["agreement_id", "coop_member_id"], name: "index_agreements_coop_members_on_agreement_id_and_coop_member_id"
+    t.index ["coop_member_id", "agreement_id"], name: "index_agreements_coop_members_on_coop_member_id_and_agreement_id"
   end
 
   create_table "anniversaries", force: :cascade do |t|
@@ -87,14 +95,23 @@ ActiveRecord::Schema[7.0].define(version: 2023_05_05_063810) do
     t.datetime "updated_at", null: false
   end
 
+  create_table "batch_beneficiaries", force: :cascade do |t|
+    t.integer "batch_id", null: false
+    t.integer "member_dependent_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["batch_id"], name: "index_batch_beneficiaries_on_batch_id"
+    t.index ["member_dependent_id"], name: "index_batch_beneficiaries_on_member_dependent_id"
+  end
+
   create_table "batch_dependents", force: :cascade do |t|
     t.integer "batch_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.integer "member_dependent_id", null: false
     t.decimal "premium"
-    t.boolean "is_beneficiary"
-    t.boolean "is_dependent"
+    t.decimal "coop_sf_amount"
+    t.decimal "agent_sf_amount"
     t.index ["batch_id"], name: "index_batch_dependents_on_batch_id"
     t.index ["member_dependent_id"], name: "index_batch_dependents_on_member_dependent_id"
   end
@@ -286,6 +303,8 @@ ActiveRecord::Schema[7.0].define(version: 2023_05_05_063810) do
   add_foreign_key "agents", "agent_groups"
   add_foreign_key "agreements", "cooperatives"
   add_foreign_key "agreements", "plans"
+  add_foreign_key "batch_beneficiaries", "batches"
+  add_foreign_key "batch_beneficiaries", "member_dependents"
   add_foreign_key "batch_dependents", "batches"
   add_foreign_key "batch_dependents", "member_dependents"
   add_foreign_key "batches", "coop_members"

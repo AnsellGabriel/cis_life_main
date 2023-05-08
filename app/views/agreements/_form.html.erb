@@ -9,6 +9,7 @@
     <%= f.input :premium %>
     <%= f.input :coop_service_fee %>
     <%= f.input :agent_service_fee %>
+    <%= f.input :anniversary_type, collection: [["Single", "single"], ["Multiple", "multiple"], ["None", "none"]] %>
   </div>
 
   <div class="form-actions text-end">

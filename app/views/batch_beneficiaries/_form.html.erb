@@ -1,0 +1,22 @@
+<%= simple_form_for(@batch_beneficiary, url: group_remit_batch_beneficiaries_path) do |f| %>
+  <%= f.error_notification %>
+  <%= f.error_notification message: f.object.errors[:base].to_sentence if f.object.errors[:base].present? %>
+
+  <div class="form-inputs mb-3">
+    <div class="d-flex align-items-center gap-2">
+      <%= content_tag :p, 'Beneficiary not on the list?', class: "text-muted" %>
+      <%= link_to 'Enroll Beneficiary', new_beneficiary_group_remit_batch_member_dependents_path(@group_remit, @batch), class: "mb-3 btn btn-sm btn-primary", data: {turbo_frame: "modal"} %>
+    </div>
+    <% if @beneficiaries.count == 0%> 
+      <p class="text-danger text-center">No beneficiary enrolled.</p>
+    <% else %>
+      <%= f.association :member_dependent, 
+        collection: @beneficiaries.map { |d| ["#{d.last_name}, #{d.first_name} #{d.middle_name}", d.id]},
+        label: false
+      %>
+      <div class="form-actions d-flex justify-content-center">
+        <%= f.button :submit, "Add", class: 'btn-success', style: "width: 100%", data: {turbo: false} %>
+      </div>
+    <% end %>
+  </div>
+<% end %>

@@ -17,6 +17,29 @@ class MemberDependentsController < InheritedResources::Base
     )
   end
 
+  def new_beneficiary
+    @member_dependent = @member.member_dependents.build(
+      first_name: FFaker::Name.first_name,
+      middle_name: FFaker::Name.first_name,
+      last_name: FFaker::Name.last_name,
+      suffix: FFaker::Name.suffix,
+      birth_date: FFaker::Time.between(50.years.ago, 1.year.ago),
+      relationship: "Family"
+    )
+  end
+
+  def create_beneficiary
+    @member_dependent = @member.member_dependents.build(member_dependent_params)
+    
+    respond_to do |format|
+      if @member_dependent.save
+        format.html { redirect_to new_group_remit_batch_beneficiary_path(@group_remit, @batch), notice: "Member dependent was successfully created." }
+      else
+        format.html { render :new_beneficiary, status: :unprocessable_entity }
+      end
+    end
+  end
+
   def create
     @member_dependent = @member.member_dependents.build(member_dependent_params)
     

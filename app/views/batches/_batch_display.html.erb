@@ -68,7 +68,8 @@
         <div class="col-sm-12 d-flex justify-content-center align-items-center gap-2">
           <div class="d-flex gap-1 align-items-center">
               <h6 class="mb-0">Beneficiaries</h6>
-              <%= link_to "+", new_group_remit_batch_dependent_path(@group_remit, @batch),
+              <!-- button to open turbo-frame "modal"  -->
+              <%= link_to "+", new_group_remit_batch_beneficiary_path(@group_remit, @batch),
                   class: "btn btn-sm btn-success", 
                   data: {
                       turbo_frame: "modal"
@@ -78,13 +79,33 @@
         </div>
       </div>
       <hr>
-        <% @beneficiaries.each do |b| %>
+       <% if @beneficiaries.present? %>
           <div class="row">
-            <div class="col-sm-12 text-secondary">
-              <%= content_tag :h6, "#{b.member_dependent.last_name}, #{b.member_dependent.first_name} #{b.member_dependent.middle_name}", class: "mb-0 text-center" %>
-            </div>
+            <div class="col-sm-1"></div>
+            <div class="col-sm-10">
+              <%= content_tag :h6, 'Name', class: 'text-center', style: 'font-size: .8rem' %>  
+           </div>
           </div>
           <hr>
+          <% end %>
+        <% @beneficiaries.each do |b| %>
+          <div class="row mb-1">
+            <div class="d-flex align-items-center">
+                <div class="col-sm-1">
+                  <%= button_to "x", group_remit_batch_beneficiary_path(@group_remit, @batch, b), 
+                  method: :delete,
+                  form: { 
+                  data: { turbo_frame: "_top", 
+                  turbo_confirm: "Delete beneficiary?" } 
+                  }, 
+                  class: 'btn btn-sm btn-danger' %>
+                </div>
+              <div class="col-sm-10 text-secondary">
+                <%= content_tag :h6, "#{b.member_dependent.last_name}, #{b.member_dependent.first_name} #{b.member_dependent.middle_name}", class: "mb-0 text-center", style: "font-size: .8rem" %>
+              </div>
+             
+              </div>
+          </div>
         <% end %>
       
 
@@ -99,6 +120,7 @@
         <div class="col-sm-12 d-flex justify-content-center">
           <div class="d-flex gap-1 align-items-center">
               <h6 class="mb-0">Dependents</h6>
+              <!-- button to open turbo-frame "modal"  -->
               <%= link_to "+", new_group_remit_batch_dependent_path(@group_remit, @batch),
                   class: "btn btn-sm btn-success", 
                   data: {
@@ -109,19 +131,39 @@
         </div>
       </div>
       <hr>
+        <% if @dependents.present? %>
+          <div class="row">
+            <div class="col-sm-1"></div>
+            <div class="col-sm-5">
+              <%= content_tag :h6, 'Name', class: 'text-center', style: 'font-size: .8rem' %>
+            </div>
+            <div class="col-sm-5">
+              <%= content_tag :h6, 'Premium', class: 'text-center', style: 'font-size: .8rem' %>
+            </div>
+          </div>
+          <hr>
+          <% end %>
       <% @dependents.each do |d| %>
-            <div class="row">
-              <div class="col-sm-6 text-secondary">
-                <%= content_tag :h6, "#{d.member_dependent.last_name}, #{d.member_dependent.first_name} #{d.member_dependent.middle_name}", class: "mb-0 text-center" %>
+            <div class="row mb-1">
+            <div class="d-flex align-items-center">
+            <div class="col-sm-1">
+                <%= button_to "x", group_remit_batch_dependent_path(@group_remit, @batch, d), 
+                  method: :delete,
+                  form: { 
+                  data: { turbo_frame: "_top", 
+                  turbo_confirm: "Delete dependent?" } 
+                  }, 
+                  class: 'btn btn-sm btn-danger',
+                  style: "font-size: .8rem" %>
               </div>
-              <div class="col-sm-3">
-                <%= content_tag :h6, "Premium: ", class: "mb-0 text-center" %>
+              <div class="col-sm-5 text-secondary">
+                <%= content_tag :h6, "#{d.member_dependent.last_name}, #{d.member_dependent.first_name} #{d.member_dependent.middle_name}", class: "mb-0 text-center", style: "font-size: .8rem" %>
               </div>
-              <div class="col-sm-3 text-secondary">
-                <%= content_tag :h6, "#{number_to_currency(d.premium, unit: "₱", precision: 2) }", class: "mb-0 text-center" %>
+              <div class="col-sm-5 text-secondary">
+                <%= content_tag :h6, "#{number_to_currency(d.premium, unit: "₱", precision: 2) }", class: "mb-0 text-center", style: "font-size: .8rem" %>
+              </div>
               </div>
             </div>
-            <hr>
           <% end %>   
     </div>
   </div>

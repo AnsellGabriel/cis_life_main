@@ -6,6 +6,9 @@ class MemberDependent < ApplicationRecord
   has_many :batch_dependents, dependent: :destroy
   has_many :batches, through: :batch_dependents
 
+  has_many :batch_beneficiaries, dependent: :destroy
+  has_many :batches, through: :batch_beneficiaries
+
   def uppercase_fields
     self.last_name = self.last_name.upcase
     self.first_name = self.first_name.upcase

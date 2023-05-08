@@ -1,7 +1,7 @@
 <tr id="<%= dom_id(batch) %>">
     <% member = batch.coop_member.member %>
-    <% beneficiaries = batch.batch_dependents.where(is_beneficiary: true) %>
-    <% dependents = batch.batch_dependents.where(is_dependent: true) %>
+    <% beneficiaries = batch.batch_beneficiaries %>
+    <% dependents = batch.batch_dependents %>
 
     <td class="text-center" ><%= batch.id %></td>
     <td class="" ><%= "#{member.last_name}, #{member.first_name} #{member.middle_name}" %></td>

@@ -1,4 +1,5 @@
 Rails.application.routes.draw do 
+  resources :batch_beneficiaries
   resources :plans
   resources :anniversaries, :agreements, :agent_groups, :departments, :agents, :coop_users, :employees
 
@@ -12,7 +13,13 @@ Rails.application.routes.draw do
         post :import
       end
       resources :batch_dependents, as: 'dependents'
-      resources :member_dependents
+      resources :batch_beneficiaries, as: 'beneficiaries'
+      resources :member_dependents do
+        collection do
+          post :create_beneficiary
+          get :new_beneficiary
+        end
+      end
     end
   end
 

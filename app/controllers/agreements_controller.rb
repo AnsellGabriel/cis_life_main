@@ -27,7 +27,7 @@ class AgreementsController < InheritedResources::Base
   private
 
     def agreement_params
-      params.require(:agreement).permit(:description, :premium, :coop_service_fee, :agent_service_fee, :plan_id)
+      params.require(:agreement).permit(:description, :premium, :coop_service_fee, :agent_service_fee, :plan_id, :anniversary_type)
     end
 
     def set_cooperative

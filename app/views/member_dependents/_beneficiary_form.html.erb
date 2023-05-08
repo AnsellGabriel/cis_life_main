@@ -1,5 +1,4 @@
-
-<%= simple_form_for(@member_dependent, url: group_remit_batch_member_dependents_path) do |f| %>
+<%= simple_form_for(@member_dependent, url: create_beneficiary_group_remit_batch_member_dependents_path) do |f| %>
   <%= f.error_notification %>
   <%= f.error_notification message: f.object.errors[:base].to_sentence if f.object.errors[:base].present? %>
 
@@ -13,7 +12,7 @@
   </div>
 
   <div class="form-actions text-end">
-    <%= link_to "Back", new_group_remit_batch_dependent_path(@group_remit, @batch), class: 'btn btn-secondary', data: {turbo_frame: "modal"} %>
-    <%= f.button :submit, 'Enroll Dependent', class: 'btn-success' %>
+    <%= link_to "Back", new_group_remit_batch_beneficiary_path(@group_remit, @batch), class: 'btn btn-secondary', data: {turbo_frame: "modal"} %>
+    <%= f.button :submit, 'Enroll Beneficiary', class: 'btn-success' %>
   </div>
 <% end %>

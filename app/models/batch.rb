@@ -27,4 +27,7 @@ class Batch < ApplicationRecord
   
   has_many :batch_dependents, dependent: :destroy
   has_many :member_dependents, through: :batch_dependents
+
+  has_many :batch_beneficiaries, dependent: :destroy
+  has_many :member_dependents, through: :batch_beneficiaries
 end

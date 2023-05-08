@@ -72,15 +72,9 @@ class MembersController < InheritedResources::Base
       if member.persisted?
         # check if member is already a coop member
         coop_member = member.coop_members.find_or_initialize_by(cooperative_id: @cooperative.id) 
-
-        if coop_member.persisted?
-          member.update(member_hash)
-          coop_member.update(coop_member_hash)
-          updated_members_counter += 1
-        else
-          coop_member.create(coop_member_hash)
-          created_members_ounter += 1 if coop_member.save!
-        end
+        member.update(member_hash)
+        coop_member.update(coop_member_hash)
+        updated_members_counter += 1
       else
         # If a member does not exist, create a new record
         new_member = Member.create(member_hash)

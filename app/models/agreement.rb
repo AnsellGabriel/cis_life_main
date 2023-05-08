@@ -4,4 +4,6 @@ class Agreement < ApplicationRecord
     belongs_to :plan
     belongs_to :cooperative
     has_many :group_remits
+    has_and_belongs_to_many :coop_members
+
 end
