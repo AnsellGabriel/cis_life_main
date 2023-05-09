@@ -1,6 +1,7 @@
 class Member < ApplicationRecord
   before_validation :uppercase_fields
   before_validation :format_phone_numbers
+  before_save :capitalize_status
 
   VALID_PH_MOBILE_NUMBER_REGEX = /\A(09|\+639)\d{9}\z/
   VALID_PH_LANDLINE_NUMBER_REGEX = /\A(02|03[2-9]|042|043|044|045|046|047|048|049|052|053|054|055|056|057|058|072|074|075|076|077|078)\d{7}\z/
@@ -19,6 +20,10 @@ class Member < ApplicationRecord
   accepts_nested_attributes_for :coop_members
 
   private
+  def capitalize_status
+    self.civil_status = self.civil_status.titleize
+  end
+
   
   def format_phone_numbers
     self.mobile_number = format_phone_number(self.mobile_number)

@@ -10,6 +10,7 @@ class GroupRemitsController < InheritedResources::Base
   end
 
   def show
+    
     # ! test code
     # b_active = mem_age <= proposal.old_max_age && mem_age >= proposal.old_min_age ? true : false
     
@@ -76,7 +77,8 @@ class GroupRemitsController < InheritedResources::Base
 
     # plan = agreement.plan
     plan = @cooperative.agreements.find_by(id: group_remit_params[:agreement_id]).plan
-    @group_remit.name = "#{plan.acronym}-Remittance-#{GroupRemit.last.id + 1}"
+    agreement = @group_remit.agreement
+    @group_remit.name = "#{agreement.name}(Batch-#{agreement.group_remits.count})"
 
     respond_to do |format|
       if @group_remit.save!

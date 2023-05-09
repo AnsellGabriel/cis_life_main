@@ -57,6 +57,15 @@ class BatchesController < ApplicationController
         middle_name: batch_hash[:middle_name]
       )
 
+      birth_date = member.birth_date
+      member_age = Date.today.year - birth_date.year - ((Date.today.month > birth_date.month || (Date.today.month == birth_date.month && Date.today.day >= birth_date.day)) ? 0 : 1)
+
+      if member_age < 18 or member_age > 65
+        @denied_members_array << row
+        denied_members_counter += 1
+        next
+      end
+
       unless member.persisted?
         @unenrolled_members_array << member
         unenrolled_members_counter += 1
@@ -186,6 +195,14 @@ class BatchesController < ApplicationController
 
     agreement = @group_remit.agreement
     coop_member = @batch.coop_member
+    member_details = coop_member.member
+    birth_date = member_details.birth_date
+    member_age = Date.today.year - birth_date.year - ((Date.today.month > birth_date.month || (Date.today.month == birth_date.month && Date.today.day >= birth_date.day)) ? 0 : 1)
+
+    if member_age < 18 or member_age > 65
+      return redirect_to new_group_remit_batch_path(@group_remit), alert: "Member age must be between 18 and 65 years old."
+    end
+
     renewal_member = agreement.coop_members.find_by(id: coop_member.id)
 
     if renewal_member.present?
@@ -204,7 +221,7 @@ class BatchesController < ApplicationController
     coop_sf = @group_remit.agreement.coop_service_fee
     agent_sf = @group_remit.agreement.agent_service_fee
     terms = @batch.group_remit.terms
-
+    
     @batch.premium = ((premium / 12) * terms) 
     @batch.coop_sf_amount = (coop_sf/100) * @batch.premium
     @batch.agent_sf_amount = (agent_sf/100) * @batch.premium
