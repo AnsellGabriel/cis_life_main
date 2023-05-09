@@ -24,12 +24,17 @@
     <tbody>
       <% @group_remits.each do |group_remit| %>
         <tr>
-
+        <% batches = group_remit.batches %>
+        <% batches_dependents= BatchDependent.joins(batch: :group_remit)
+                                 .where(group_remits: {id: group_remit.id}) %>
+        <% batches_premium = batches.sum(:premium) %>
+        <% batch_dependent_premiums = batches_dependents.sum('batch_dependents.premium') %>
+        <% gross_premium = batches_premium + batch_dependent_premiums %>
         <td><%= group_remit.id %></td>
         <td><%= group_remit.name %></td>
         <td><%= group_remit.effectivity_date.strftime('%B %d, %Y') %></td>
         <td><%= group_remit.expiry_date.strftime('%B %d, %Y') %></td>
-        <td><%= number_to_currency(group_remit.batches.sum(:premium), unit: "₱", precision: 2) %></td>
+        <td><%= number_to_currency(gross_premium , unit: "₱", precision: 2) %></td>
     
           <td>
             <%= link_to 'View', group_remit, class: 'btn btn-sm btn-primary' %>

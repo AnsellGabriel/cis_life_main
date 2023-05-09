@@ -1,16 +1,17 @@
 <div class="">
+    <div class="text-secondary text-end">
+      <%= content_tag :h6, "(#{@principal_count} Principal x #{number_to_currency(@single_premium, unit: "₱", precision: 2)} = #{number_to_currency(@batches_premium, unit: "₱", precision: 2)})", style: "font-size: .8rem" %>
+    </div>
+    <% unless @dependent_count == 0 %>
+      <div class="text-secondary text-end">
+        <%= content_tag :h6, "(#{@dependent_count} Dependent x #{number_to_currency(@single_dependent_premium, unit: "₱", precision: 2)} = #{number_to_currency(@batch_dependent_premiums, unit: "₱", precision: 2)})", style: "font-size: .8rem" %>
+      </div>
+    <% end %>
     <div class="d-flex gap-3">
       <%= content_tag :h6, "Gross Premium: ", style: "width: 200px" %>
       <%= content_tag :h6, "#{number_to_currency(@gross_premium, unit: "₱", precision: 2)}", style: "color: green"%>
     </div>
-    <div class="text-secondary">
-      <%= content_tag :h6, "(#{@principal_count} Principal x #{number_to_currency(@single_premium, unit: "₱", precision: 2)} = #{number_to_currency(@batches_premium, unit: "₱", precision: 2)})", style: "font-size: .8rem" %>
-    </div>
-    <% if @dependent_count.present? %>
-      <div class="text-secondary">
-        <%= content_tag :h6, "(#{@dependent_count} Principal x #{number_to_currency(@single_premium, unit: "₱", precision: 2)} = #{number_to_currency(@batches_premium, unit: "₱", precision: 2)})", style: "font-size: .8rem" %>
-      </div>
-    <% end %>
+    
     <div class="d-flex gap-3">
       <%= content_tag :h6, "Total Coop Commission: ", style: "width: 200px" %>
       <%= content_tag :h6, "(#{number_to_currency(@total_coop_commission, unit: "₱", precision: 2)})", style: "color: red"%>
@@ -25,4 +26,3 @@
     </div>
   </div>
 </div>
-<% console %>

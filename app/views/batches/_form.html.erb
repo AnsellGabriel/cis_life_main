@@ -3,9 +3,9 @@
   <%= f.error_notification message: f.object.errors[:base].to_sentence if f.object.errors[:base].present? %>
   <div class="form-inputs">
     
-    <div class="row d-flex align-items-end">
+    <div class="row d-flex align-items-start gap-1">
       
-      <div class="col-3" data-controller="batch">
+      <div class="col-3" data-controller="batch" >
 
         <%= f.association :coop_member, 
         collection: @coop_members.map { |coop| 
@@ -17,7 +17,7 @@
           data: {  
             controller: "slim-select" }  
           }, label: false %>
-
+        <%= f.input  :transferred, as: :boolean, label: "Transferred?" %>
       </div>
      
       <div class="col-3 d-flex align-items-end mb-3">

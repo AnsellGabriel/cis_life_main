@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_05_08_082513) do
+ActiveRecord::Schema[7.0].define(version: 2023_05_09_012507) do
   create_table "active_admin_comments", force: :cascade do |t|
     t.string "namespace"
     t.text "body"
@@ -130,6 +130,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_05_08_082513) do
     t.string "insurance_status"
     t.integer "coop_member_id", null: false
     t.integer "group_remit_id", null: false
+    t.boolean "transferred"
     t.index ["coop_member_id"], name: "index_batches_on_coop_member_id"
     t.index ["group_remit_id"], name: "index_batches_on_group_remit_id"
   end

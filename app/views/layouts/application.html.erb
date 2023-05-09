@@ -16,31 +16,22 @@
     <%= render "layouts/navbar" %>
 
     <div class="container">
-
       <div class="row d-flex justify-content-center">
-
         <div id="flash">
           <%= render "layouts/notification" %>
         </div>
-
         <%= yield %>
       </div>
 
-  
-
-        <!-- New form Modal -->
-        <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true" data-controller="modal"
-        data-action="turbo:frame-load->modal#open turbo:submit-end->modal#close">
-          <div class="modal-dialog">
-            <div class="modal-content">
-              <%= turbo_frame_tag "modal" %>
-
-            </div>
+      <!-- New form Modal -->
+      <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true" data-controller="modal"
+      data-action="turbo:frame-load->modal#open turbo:submit-end->modal#close">
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <%= turbo_frame_tag "modal" %>
           </div>
         </div>
-
       </div>
-
     </div>
 
   </body>
