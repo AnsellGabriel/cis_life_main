@@ -29,7 +29,7 @@ class BatchBeneficiariesController < InheritedResources::Base
   def destroy    
     respond_to do |format|
       if @batch_beneficiary.destroy
-        format.html { redirect_to group_remit_batch_path(@group_remit, @batch), notice: "Batch beneficiary was successfully destroyed." }
+        format.html { redirect_to group_remit_batch_path(@group_remit, @batch), alert: "Batch beneficiary was successfully destroyed." }
       end
     end
   end

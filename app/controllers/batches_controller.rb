@@ -177,6 +177,7 @@ class BatchesController < ApplicationController
     @expiry_date = @batch.group_remit.expiry_date
     @beneficiaries = @batch.batch_beneficiaries
     @dependents = @batch.batch_dependents
+    @agreement = @group_remit.agreement
 
   end
 

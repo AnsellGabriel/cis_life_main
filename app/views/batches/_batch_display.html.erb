@@ -1,93 +1,116 @@
 <div class="row d-flex fustify-content-center" >
-<div class="col-md-8" style="margin: auto;">
-  <div class="card mb-3">
-    <div class="card-body">
-      <div class="row">
-        <div class="col-sm-3">
-          <h6 class="mb-0">Member:</h6>
+  <div class="col-md-10" style="margin: auto;">
+    <div class="card mb-3">
+      <div class="card-body">
+        <div class="row">
+          <div class="col-sm-2">
+            <h6 class="mb-0">First name:</h6>
+          </div>
+          <div class="col-sm-2 text-secondary">
+            <%= "#{batch_member.member.first_name}" %>
+          </div>
+          <div class="col-sm-2">
+            <h6 class="mb-0">Middle name:</h6>
+          </div>
+          <div class="col-sm-2 text-secondary">
+            <%= "#{batch_member.member.middle_name}" %>
+          </div>
+          <div class="col-sm-2">
+            <h6 class="mb-0">Last name:</h6>
+          </div>
+          <div class="col-sm-2 text-secondary">
+            <%= "#{batch_member.member.last_name}, #{batch_member.member.suffix}" %>
+          </div>
         </div>
-        <div class="col-sm-9">
-          <%= link_to "#{batch_member.member.last_name}, #{batch_member.member.first_name} #{batch_member.member.middle_name}", coop_member_path(batch_member.id) %>
+        <hr>
+        <div class="row">
+          <div class="col-sm">
+            <h6 class="mb-0">Effectivity date:</h6>
+          </div>
+          <div class="col-sm text-secondary">
+            <%= @effectivity_date.strftime('%B %d, %Y') %>
+          </div>
+          <div class="col-sm">
+            <h6 class="mb-0">Expiry date:</h6>
+          </div>
+          <div class="col-sm text-secondary">
+            <%= @expiry_date.strftime('%B %d, %Y') %>
+          </div>
         </div>
-      </div>
-      <hr>
-      <div class="row">
-        <div class="col-sm">
-          <h6 class="mb-0">Effectivity date:</h6>
+        <hr class="mb-3">
+        <div class="row">
+          <div class="col-sm-3">
+            <h6 class="mb-0">Premium</h6>
+          </div>
+          <div class="col-sm-3 text-secondary">
+            <%= number_to_currency(batch.premium, unit: "₱", precision: 2) %>
+          </div>
+          <div class="col-sm-3">
+            <h6 class="mb-0">Coop Commission</h6>
+          </div>
+          <div class="col-sm-3 text-secondary">
+            <%= number_to_currency(batch.coop_sf_amount, unit: "₱", precision: 2) %>
+          </div>
         </div>
-        <div class="col-sm text-secondary">
-          <%= @effectivity_date.strftime('%B %d, %Y') %>
-        </div>
-        <div class="col-sm">
-          <h6 class="mb-0">Expiry date:</h6>
-        </div>
-        <div class="col-sm text-secondary">
-          <%= @expiry_date.strftime('%B %d, %Y') %>
-        </div>
-      </div>
-      <hr class="mb-3">
-      <div class="row">
-        <div class="col-sm-3">
-          <h6 class="mb-0">Premium</h6>
-        </div>
-        <div class="col-sm-3 text-secondary">
-          <%= number_to_currency(batch.premium, unit: "₱", precision: 2) %>
-        </div>
-        <div class="col-sm-3">
-          <h6 class="mb-0">Coop Commission</h6>
-        </div>
-        <div class="col-sm-3 text-secondary">
-          <%= number_to_currency(batch.coop_sf_amount, unit: "₱", precision: 2) %>
-        </div>
-      </div>
-      <hr>
-      <div class="row">
-        <div class="col-sm-3">
-          <h6 class="mb-0">Status</h6>
-        </div>
-        <div class="col-sm-3 text-secondary">
-          <%= batch.status == 'recent' ? 'New' : batch.status.to_s.titleize %>
-        </div>
-        <div class="col-sm-3">
-          <h6 class="mb-0">Active?</h6>
-        </div>
-        <div class="col-sm-3 text-secondary">
-          <%= batch.active ? "Active" : "Inactive" %>
+        <hr>
+        <div class="row">
+          <div class="col-sm-3">
+            <h6 class="mb-0">Status</h6>
+          </div>
+          <div class="col-sm-3 text-secondary">
+            <%= batch.status == 'recent' ? 'New' : batch.status.to_s.titleize %>
+          </div>
+          <div class="col-sm-3">
+            <h6 class="mb-0">Active?</h6>
+          </div>
+          <div class="col-sm-3 text-secondary">
+            <%= batch.active ? "Active" : "Inactive" %>
+          </div>
         </div>
       </div>
     </div>
   </div>
 </div>
-</div>
 
-<div class="row ">
-<div class="col-md-3" style="margin-left: auto;">
-  <div class="card mb-3">
-    <div class="card-body">
-      <div class="row"> 
-        <div class="col-sm-12 d-flex justify-content-center align-items-center gap-2">
-          <div class="d-flex gap-1 align-items-center">
-              <h6 class="mb-0">Beneficiaries</h6>
-              <!-- button to open turbo-frame "modal"  -->
-              <%= link_to "+", new_group_remit_batch_beneficiary_path(@group_remit, @batch),
-                  class: "btn btn-sm btn-success", 
-                  data: {
-                      turbo_frame: "modal"
-                      } 
-              %>        
+<div class="row d-flex fustify-content-center">
+  <% if @agreement.agreement_type == 'basic' %>
+    <div class="col-md-10" style="margin: auto;">
+  <% else %>
+    <div class="col-md-5" style="margin-left: auto;">
+  <% end %>
+    <div class="card mb-3">
+      <div class="card-body">
+        <div class="row"> 
+          <% if @agreement.agreement_type == 'basic' %>
+            <div class="col-sm-12 d-flex align-items-center gap-2">
+          <% else %>
+            <div class="col-sm-12 d-flex justify-content-center align-items-center gap-2">
+          <% end %>
+            <div class="d-flex gap-1 align-items-center">
+                <h6 class="mb-0">Beneficiaries</h6>
+                <!-- button to open turbo-frame "modal"  -->
+                <%= link_to "+", new_group_remit_batch_beneficiary_path(@group_remit, @batch),
+                    class: "btn btn-sm btn-success", 
+                    data: {
+                        turbo_frame: "modal"
+                        } 
+                %>        
+            </div>
           </div>
         </div>
-      </div>
-      <hr>
-       <% if @beneficiaries.present? %>
+        <hr>
+        <% if @beneficiaries.present? %>
           <div class="row">
             <div class="col-sm-1"></div>
-            <div class="col-sm-10">
+            <div class="col-sm-6">
               <%= content_tag :h6, 'Name', class: 'text-center', style: 'font-size: .8rem' %>  
-           </div>
+            </div>
+            <div class="col-sm-5">
+              <%= content_tag :h6, 'Relationship', class: 'text-center', style: 'font-size: .8rem' %>  
+            </div>
           </div>
           <hr>
-          <% end %>
+        <% end %>
         <% @beneficiaries.each do |b| %>
           <div class="row mb-1">
             <div class="d-flex align-items-center">
@@ -100,72 +123,81 @@
                   }, 
                   class: 'btn btn-sm btn-danger' %>
                 </div>
-              <div class="col-sm-10 text-secondary">
+              <div class="col-sm-6 text-secondary">
                 <%= content_tag :h6, "#{b.member_dependent.last_name}, #{b.member_dependent.first_name} #{b.member_dependent.middle_name}", class: "mb-0 text-center", style: "font-size: .8rem" %>
               </div>
-             
+              <div class="col-sm-5 text-secondary">
+                <%= content_tag :h6, "#{b.member_dependent.relationship}", class: "mb-0 text-center", style: "font-size: .8rem" %>
               </div>
+            </div>
           </div>
         <% end %>
-      
-
+      </div>
     </div>
   </div>
-</div>
 
-<div class="col-md-5" style="margin-right: auto;">
-  <div class="card mb-3">
-    <div class="card-body">
-      <div class="row">
-        <div class="col-sm-12 d-flex justify-content-center">
-          <div class="d-flex gap-1 align-items-center">
-              <h6 class="mb-0">Dependents</h6>
-              <!-- button to open turbo-frame "modal"  -->
-              <%= link_to "+", new_group_remit_batch_dependent_path(@group_remit, @batch),
-                  class: "btn btn-sm btn-success", 
-                  data: {
-                      turbo_frame: "modal"
-                      } 
-              %>        
-          </div>     
-        </div>
-      </div>
-      <hr>
-        <% if @dependents.present? %>
+  <% if @agreement.agreement_type == 'family'%>
+    <div class="col-md-5" style="margin-right: auto;">
+      <div class="card mb-3">
+        <div class="card-body">
           <div class="row">
-            <div class="col-sm-1"></div>
-            <div class="col-sm-5">
-              <%= content_tag :h6, 'Name', class: 'text-center', style: 'font-size: .8rem' %>
-            </div>
-            <div class="col-sm-5">
-              <%= content_tag :h6, 'Premium', class: 'text-center', style: 'font-size: .8rem' %>
+            <div class="col-sm-12 d-flex justify-content-center">
+              <div class="d-flex gap-1 align-items-center">
+                  <h6 class="mb-0">Dependents</h6>
+                  <!-- button to open turbo-frame "modal"  -->
+                  <%= link_to "+", new_group_remit_batch_dependent_path(@group_remit, @batch),
+                      class: "btn btn-sm btn-success", 
+                      data: {
+                          turbo_frame: "modal"
+                          } 
+                  %>        
+              </div>     
             </div>
           </div>
           <hr>
-          <% end %>
-      <% @dependents.each do |d| %>
-            <div class="row mb-1">
-            <div class="d-flex align-items-center">
-            <div class="col-sm-1">
-                <%= button_to "x", group_remit_batch_dependent_path(@group_remit, @batch, d), 
-                  method: :delete,
-                  form: { 
-                  data: { turbo_frame: "_top", 
-                  turbo_confirm: "Delete dependent?" } 
-                  }, 
-                  class: 'btn btn-sm btn-danger',
-                  style: "font-size: .8rem" %>
+          <% if @dependents.present? %>
+            <div class="row">
+              <div class="col-sm-1"></div>
+              <div class="col-sm-5">
+                <%= content_tag :h6, 'Name', class: 'text-center', style: 'font-size: .8rem' %>
               </div>
-              <div class="col-sm-5 text-secondary">
-                <%= content_tag :h6, "#{d.member_dependent.last_name}, #{d.member_dependent.first_name} #{d.member_dependent.middle_name}", class: "mb-0 text-center", style: "font-size: .8rem" %>
+              <div class="col-sm-3">
+                <%= content_tag :h6, 'Relationship', class: 'text-center', style: 'font-size: .8rem' %>
               </div>
-              <div class="col-sm-5 text-secondary">
-                <%= content_tag :h6, "#{number_to_currency(d.premium, unit: "₱", precision: 2) }", class: "mb-0 text-center", style: "font-size: .8rem" %>
-              </div>
+              <div class="col-sm-3">
+                <%= content_tag :h6, 'Premium', class: 'text-center', style: 'font-size: .8rem' %>
               </div>
             </div>
-          <% end %>   
+            <hr>
+          <% end %>
+          <% @dependents.each do |d| %>
+            <div class="row mb-1">
+              <div class="d-flex align-items-center">
+                <div class="col-sm-1">
+                  <%= button_to "x", group_remit_batch_dependent_path(@group_remit, @batch, d), 
+                    method: :delete,
+                    form: { 
+                    data: { turbo_frame: "_top", 
+                    turbo_confirm: "Delete dependent?" } 
+                    }, 
+                    class: 'btn btn-sm btn-danger',
+                    style: "font-size: .8rem" %>
+                </div>
+                <div class="col-sm-5 text-secondary">
+                  <%= content_tag :h6, "#{d.member_dependent.last_name}, #{d.member_dependent.first_name} #{d.member_dependent.middle_name}", class: "mb-0 text-center", style: "font-size: .8rem" %>
+                </div>
+                <div class="col-sm-3 text-secondary">
+                  <%= content_tag :h6, "#{d.member_dependent.relationship}", class: "mb-0 text-center", style: "font-size: .8rem" %>
+                </div>
+                <div class="col-sm-3 text-secondary">
+                  <%= content_tag :h6, "#{number_to_currency(d.premium, unit: "₱", precision: 2) }", class: "mb-0 text-center", style: "font-size: .8rem" %>
+                </div>
+              </div>
+            </div>
+          <% end %>  
+        </div>
+      </div>
     </div>
-  </div>
+  <% end %>
 </div>
-</div>
+<% console %>

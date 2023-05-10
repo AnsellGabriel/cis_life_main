@@ -24,7 +24,7 @@ class GroupRemitsController < InheritedResources::Base
 
     # filter members based on last name, first name, middle name
     # @members = f_members.where("last_name LIKE ? AND first_name LIKE ? AND middle_name LIKE ?", "%#{params[:last_name_filter]}%", "%#{params[:first_name_filter]}%", "%#{params[:middle_name_filter]}%")
-
+    @agreement = @group_remit.agreement
     @batches_container = @group_remit.batches.order(created_at: :desc)
     @pagy, @batches = pagy(@batches_container, items: 10)
     @batches_dependents= BatchDependent.joins(batch: :group_remit)

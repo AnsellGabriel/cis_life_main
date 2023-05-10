@@ -1,12 +1,24 @@
-<div class="col-md-8">
+<div class="col-md-10">
   <div class="card mb-3">
     <div class="card-body">
       <div class="row">
-        <div class="col-sm-3">
-          <h6 class="mb-0">Name</h6>
+        <div class="col-sm-2">
+          <h6 class="mb-0">First name</h6>
         </div>
-        <div class="col-sm-9 text-secondary">
-          <%= "#{@member.last_name}, #{@member.first_name} #{@member.middle_name} #{@member.suffix}" %>
+        <div class="col-sm-2 text-secondary">
+          <%= "#{@member.first_name}" %>
+        </div>
+        <div class="col-sm-2">
+          <h6 class="mb-0">Middle name</h6>
+        </div>
+        <div class="col-sm-2 text-secondary">
+          <%= "#{@member.middle_name}" %>
+        </div>
+        <div class="col-sm-2">
+          <h6 class="mb-0">Last name</h6>
+        </div>
+        <div class="col-sm-2 text-secondary">
+          <%= "#{@member.last_name}, #{@member.suffix}" %>
         </div>
       </div>
       <hr class="mb-3">
