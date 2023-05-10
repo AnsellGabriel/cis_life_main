@@ -1,4 +1,6 @@
 class AgreementsController < InheritedResources::Base
+  before_action :authenticate_user!
+  before_action :check_userable_type
   before_action :set_cooperative, only: %i[index new create show]
 
   def index 
@@ -32,5 +34,11 @@ class AgreementsController < InheritedResources::Base
 
     def set_cooperative
       @cooperative = current_user.userable.cooperative
+    end
+
+    def check_userable_type
+      unless current_user.userable_type == 'CoopUser'
+        redirect_to :authenticated_root, alert: "You don't have access to this page"
+      end
     end
 end

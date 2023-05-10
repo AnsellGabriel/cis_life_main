@@ -119,7 +119,7 @@ class MemberDependentsController < InheritedResources::Base
 
     def check_userable_type
       unless current_user.userable_type == 'CoopUser'
-        redirect_to root_path, alert: "You don't have access to this page"
+        redirect_to :authenticated_root, alert: "You don't have access to this page"
       end
     end
 end

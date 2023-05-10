@@ -1,4 +1,6 @@
 class AgreementBenefitsController < InheritedResources::Base
+  before_action :authenticate_user!
+  before_action :check_userable_type
 
   def selected
     # @target = params[:target]
@@ -16,6 +18,12 @@ class AgreementBenefitsController < InheritedResources::Base
 
     def agreement_benefit_params
       params.require(:agreement_benefit).permit(:name, :description, :premium, :coop_sf, :agent_sf)
+    end
+
+    def check_userable_type
+      unless current_user.userable_type == 'CoopUser'
+        redirect_to :authenticated_root, alert: "You don't have access to this page"
+      end
     end
 
 end
