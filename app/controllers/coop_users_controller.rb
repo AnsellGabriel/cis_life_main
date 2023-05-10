@@ -78,7 +78,7 @@ class CoopUsersController < ApplicationController
 
     def check_userable_type
       unless current_user.userable_type == 'CoopUser'
-        redirect_to :authenticated_root, alert: "You don't have access to this page"
+        render file: "#{Rails.root}/public/404.html", status: :not_found
       end
     end
 end
