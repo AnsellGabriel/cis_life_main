@@ -1,4 +1,6 @@
 class MemberDependentsController < InheritedResources::Base
+  before_action :authenticate_user!
+  before_action :check_userable_type
   before_action :set_member
   before_action :set_member_dependent, only: [:show, :edit, :update, :destroy]
 
@@ -115,4 +117,9 @@ class MemberDependentsController < InheritedResources::Base
       params.require(:member_dependent).permit(:last_name, :first_name, :middle_name, :suffix, :birth_date, :relationship, :member_id)
     end
 
+    def check_userable_type
+      unless current_user.userable_type == 'CoopUser'
+        redirect_to root_path, alert: "You don't have access to this page"
+      end
+    end
 end

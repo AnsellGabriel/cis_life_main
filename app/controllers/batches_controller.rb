@@ -1,5 +1,6 @@
 class BatchesController < ApplicationController
   before_action :authenticate_user!
+  before_action :check_userable_type
   before_action :set_cooperative, only: %i[index new create edit update show import]
   before_action :set_batch, only: %i[show edit update destroy]
   before_action :set_group_remit, only: %i[index new create edit update show import]
@@ -313,5 +314,11 @@ class BatchesController < ApplicationController
       @dependent_count = @batches_dependents.count
       @single_premium = @batches_container[0].premium if @batches_container[0].present?
       @single_dependent_premium = @batches_dependents[0].premium if @batches_dependents[0].present?
+    end
+
+    def check_userable_type
+      unless current_user.userable_type == 'CoopUser'
+        redirect_to root_path, alert: "You don't have access to this page"
+      end
     end
 end

@@ -1,5 +1,6 @@
 class GroupRemitsController < InheritedResources::Base
   before_action :authenticate_user!
+  before_action :check_userable_type
   before_action :set_group_remit, only: %i[show edit update destroy]
   before_action :set_cooperative, only: %i[new edit update show index create]
   before_action :set_members, only: %i[new create edit update]
@@ -121,4 +122,9 @@ class GroupRemitsController < InheritedResources::Base
       params.require(:group_remit).permit(:name, :description, :agreement_id, :anniversary_id, batches_attributes: [:id, :effectivity_date, :expiry_date, :active, :coop_sf_amount, :agent_sf_amount, :status, :premium, :coop_member_id, :_destroy, batch_dependents_attributes: [:member_dependent_id, :beneficiary, :_destroy]])
     end
 
+    def check_userable_type
+      unless current_user.userable_type == 'CoopUser'
+        redirect_to root_path, alert: "You don't have access to this page"
+      end
+    end
 end

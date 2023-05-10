@@ -1,5 +1,6 @@
 class CoopMembersController < InheritedResources::Base
   before_action :authenticate_user!
+  before_action :check_userable_type
   before_action :set_cooperative, only: [:index, :new, :create, :edit, :update, :show]
 
   def index
@@ -84,4 +85,9 @@ class CoopMembersController < InheritedResources::Base
       params.require(:coop_member).permit(:cooperative_id, :coop_branch_id, :last_name, :first_name, :middle_name, :suffix, :birthdate, :mobile_number, :email, :birth_place, :address, :sss_no, :tin_no, :civil_status, :legal_spouse, :height, :weight, :occupation, :employer, :work_address, :work_phone_number)
     end
 
+    def check_userable_type
+      unless current_user.userable_type == 'CoopUser'
+        redirect_to root_path, alert: "You don't have access to this page"
+      end
+    end
 end

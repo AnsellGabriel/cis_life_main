@@ -1,4 +1,6 @@
 class CooperativesController < ApplicationController
+  before_action :authenticate_user!
+  before_action :check_userable_type
   before_action :set_cooperative, only: %i[ show edit update destroy ]
   before_action :authenticate_user!, only: %i[ index show edit update destroy ]
 
@@ -81,5 +83,11 @@ class CooperativesController < ApplicationController
     # Only allow a list of trusted parameters through.
     def cooperative_params
       params.require(:cooperative).permit(:name, :region, :province, :municipality, :barangay, :contact_details)
+    end
+
+    def check_userable_type
+      unless current_user.userable_type == 'CoopUser'
+        redirect_to root_path, alert: "You don't have access to this page"
+      end
     end
 end

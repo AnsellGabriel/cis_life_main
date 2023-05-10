@@ -1,4 +1,6 @@
 class BatchBeneficiariesController < InheritedResources::Base
+  before_action :authenticate_user!
+  before_action :check_userable_type
   before_action :set_group_remit_batch, only: %i[new create]
   before_action :set_beneficiary, only: %i[show edit update destroy]
 
@@ -47,5 +49,11 @@ class BatchBeneficiariesController < InheritedResources::Base
 
     def batch_beneficiary_params
       params.require(:batch_beneficiary).permit(:batch_id, :member_dependent_id)
+    end
+
+    def check_userable_type
+      unless current_user.userable_type == 'CoopUser'
+        redirect_to root_path, alert: "You don't have access to this page"
+      end
     end
 end

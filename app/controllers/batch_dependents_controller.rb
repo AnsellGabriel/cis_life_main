@@ -1,4 +1,6 @@
 class BatchDependentsController < InheritedResources::Base
+  before_action :authenticate_user!
+  before_action :check_userable_type
   before_action :set_group_remit_batch, only: %i[new create]
   before_action :set_dependent, only: %i[show edit update destroy]
 
@@ -55,6 +57,12 @@ class BatchDependentsController < InheritedResources::Base
 
     def batch_dependent_params
       params.require(:batch_dependent).permit(:batch_id, :premium, :member_dependent_id, :is_beneficiary, :is_dependent)
+    end
+
+    def check_userable_type
+      unless current_user.userable_type == 'CoopUser'
+        redirect_to root_path, alert: "You don't have access to this page"
+      end
     end
 
 end

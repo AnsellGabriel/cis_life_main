@@ -1,4 +1,6 @@
 class CoopBranchesController < ApplicationController
+  before_action :authenticate_user!
+  before_action :check_userable_type
   before_action :set_coop_branch, only: %i[ show edit update destroy ]
 
   # GET /coop_branches or /coop_branches.json
@@ -74,5 +76,11 @@ class CoopBranchesController < ApplicationController
     # Only allow a list of trusted parameters through.
     def coop_branch_params
       params.require(:coop_branch).permit(:name, :region, :province, :municipality, :barangay, :contact_details, :cooperative_id)
+    end
+
+    def check_userable_type
+      unless current_user.userable_type == 'CoopUser'
+        redirect_to root_path, alert: "You don't have access to this page"
+      end
     end
 end

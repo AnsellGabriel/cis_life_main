@@ -1,5 +1,6 @@
 class MembersController < InheritedResources::Base
-  # before_action :authenticate_user!
+  before_action :authenticate_user!
+  before_action :check_userable_type 
   before_action :set_cooperative, only: %i[import new create edit update]
 
   def import
@@ -156,4 +157,9 @@ class MembersController < InheritedResources::Base
       @cooperative = current_user.userable.cooperative
     end
 
+    def check_userable_type
+      unless current_user.userable_type == 'CoopUser'
+        redirect_to root_path, alert: "You don't have access to this page"
+      end
+    end
 end
