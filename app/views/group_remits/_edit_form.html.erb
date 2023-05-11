@@ -1,5 +1,5 @@
 
-<%= simple_form_for(@group_remit, url: agreement_group_remits_path) do |f| %>
+<%= simple_form_for(@group_remit, url: agreement_group_remit_path(@group_remit)) do |f| %>
   <%= f.error_notification %>
   <%= f.error_notification message: f.object.errors[:base].to_sentence if f.object.errors[:base].present? %>
 

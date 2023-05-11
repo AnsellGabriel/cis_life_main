@@ -1,41 +1,44 @@
-<%= content_tag :h1, "List of Agreements" %>
 
+<div class="d-flex justify-content-between">
+  <div class="d-flex gap-3 align-items-center">
+    <%= content_tag :h1, "Agreements" %>
 
-<div class="text-end mb-3">
-  <%= link_to new_agreement_path, class: 'btn btn-primary' do %>
-    New Agreement
+    <%= link_to 'Create', new_agreement_path, class: 'btn btn-sm btn-dark' %>
+  </div>
+    
+  <%= form_with url: agreements_path, method: :get do %>
+    <div class="form-group d-flex gap-3">
+      <%= text_field_tag 'agreement_filter', nil, placeholder: 'Search', class: "form-control", style: "width: auto"%>
+      <%= submit_tag 'Search', class: "btn btn-sm btn-warning" %>
+    </div>
   <% end %>
 </div>
 
-<div class="table-responsive">
-  <table class="table table-striped table-bordered table-hover">
-    <thead>
-      <tr>
-
-      <th>ID</th>
-        <th>Name</th>
-        <th>Description</th>
-        <th></th>
-
-      </tr>
-    </thead>
-
-    <tbody>
-      <% @agreements.each do |agreement| %>
-        <tr>
-
-        <td><%= agreement.id %></td>
-        <td><%= agreement.name %></td>
-        <td><%= agreement.description %></td>
-    
-          <td>
-            <%= link_to 'View', agreement, class: 'btn' %>
-            <%= link_to 'Edit', edit_agreement_path(agreement), class: 'btn' %>
-            <%= link_to 'Delete', agreement, method: :delete, data: { confirm: 'Are you sure?' }, class: 'btn' %>
-          </td>
-
-        </tr>
-      <% end %>
-    </tbody>
-  </table>
+<div class="row row-cols-2 row-cols-md-4 g-4 mb-3">
+  <% @agreements.each do |agreement| %>
+    <div class="col">
+      <div class="card">
+        <div class="card-body">
+          <div class="d-flex justify-content-between">
+            <h5 class="card-title"><%= agreement.name %></h5>
+            <%= link_to 'View', agreement_path(agreement) ,class: 'btn btn-sm btn-outline-warning', data: {turbo_frame: 'modal'} %>
+          </div>
+          <hr>
+          <p class="card-text">Plan: <%= content_tag :span, agreement.plan.name, class: 'text-secondary' %></p>
+          <p class="card-text">Anniversary type: <%= content_tag :span, agreement.anniversary_type.titleize, class: 'text-secondary' %></p>
+          <p class="card-text">Premium: <%= content_tag :span, number_to_currency(agreement.premium, unit: "₱", precision: 2), class: 'text-secondary' %></p>
+        </div>
+        <div class="card-footer">
+          <small class="text-muted">Agent: Rullian Rong</small>
+        </div>
+      </div>
+    </div>
+  <% end %>
 </div>
+
+<% if @agreements.exists? %>
+  <%== pagy_bootstrap_nav(@pagy) %>
+<% else %>
+  <p class="text-danger text-center">No agreements found.</p>
+<% end %>
+

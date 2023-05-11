@@ -6,12 +6,14 @@
     <td class="text-center" ><%= batch.id %></td>
     <td class="" >
         <div>
-            <%= content_tag :p, "#{member.last_name}, #{member.first_name} #{member.middle_name}" %>
-            <% if batch.status == 'recent' %>
-                <span class="badge bg-success">New</span>
-            <% else %>
-                <span class="badge bg-warning text-dark"><%= batch.status.to_s.titleize %></span>
-            <% end %>
+            <div class="d-flex align-items-center gap-1">
+                <%= content_tag :span, "#{member.last_name}, #{member.first_name} #{member.middle_name}" %>
+                <% if batch.status == 'recent' %>
+                    <span class="badge bg-success">New</span>
+                <% else %>
+                    <span class="badge bg-warning text-dark"><%= batch.status.to_s.titleize %></span>
+                <% end %>
+            </div>
             <% if batch.batch_beneficiaries.count == 0 %>
                 <span class="badge bg-danger">No beneficiary</span>
             <% end %>

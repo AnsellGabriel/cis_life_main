@@ -77,8 +77,8 @@ class MemberDependentsController < InheritedResources::Base
   private
 
     def set_group_remit_batch
-      @cooperative = current_user.userable.cooperative
-      @group_remit = @cooperative.group_remits.find(params[:group_remit_id])
+      # @cooperative = current_user.userable.cooperative
+      @group_remit = GroupRemit.find(params[:group_remit_id])
       @batch = @group_remit.batches.find(params[:batch_id])
     end
 

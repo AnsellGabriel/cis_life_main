@@ -7,6 +7,11 @@ Rails.application.routes.draw do
     get :selected, on: :member
   end
 
+  resources :agreements do
+    resources :group_remits
+  end
+
+
   resources :group_remits do 
     resources :batches do
       collection do

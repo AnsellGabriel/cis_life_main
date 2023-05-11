@@ -4,7 +4,11 @@ class AgreementsController < InheritedResources::Base
   before_action :set_cooperative, only: %i[index new create show]
 
   def index 
-    @agreements = @cooperative.agreements
+    @agreements = @cooperative.agreements.order(created_at: :desc)
+
+    # filter members based on last name, first name
+    @f_agreements = @agreements.where("name LIKE ?", "%#{params[:agreement_filter]}%")
+    @pagy, @agreements = pagy(@f_agreements, items: 8)
   end
 
   def new
@@ -14,9 +18,8 @@ class AgreementsController < InheritedResources::Base
   def create
     @agreement = @cooperative.agreements.build(agreement_params)
     plan = Plan.find_by(id: agreement_params[:plan_id])
-    # byebug
-    @agreement.name = "#{plan.acronym}-Agreement-#{Agreement.last.id + 1}"
-
+    @agreement.name = Agreement.exists? ? "#{plan.acronym}-Agreement-#{Agreement.last.id + 1}" : "#{plan.acronym}-Agreement-1"
+    
     respond_to do |format|
       if @agreement.save!
         format.html { redirect_to @agreement, notice: 'Agreement was successfully created.' }

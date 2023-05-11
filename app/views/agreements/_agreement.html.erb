@@ -1,12 +1,45 @@
 <div id="<%= dom_id agreement %>">
-  <p>
-    <strong>Name:</strong>
-    <%= agreement.name %>
-  </p>
-
-  <p>
-    <strong>Description:</strong>
-    <%= agreement.description %>
-  </p>
-
+  <div class="d-flex gap-1">
+    <div class="d-flex justify-content-between" style='width: 200px'>
+      <%= content_tag :p, 'Plan'  %>
+      <%= content_tag :p, ':' %>
+    </div>
+    <%= content_tag :span, "#{agreement.plan.name}", class: 'text-secondary' %>
+  </div>
+  <div class="d-flex gap-1">
+    <div class="d-flex justify-content-between" style='width: 200px'>
+      <%= content_tag :p, 'Anniversary type' %>
+      <%= content_tag :p, ':' %>
+    </div>
+    <%= content_tag :span, "#{agreement.anniversary_type.titleize}", class: 'text-secondary' %>
+  </div>
+  <div class="d-flex gap-1">
+    <div class="d-flex justify-content-between" style='width: 200px'>
+      <%= content_tag :p, 'Premium' %>
+      <%= content_tag :p, ':' %>
+    </div>
+    <%= content_tag :span, number_to_currency(agreement.premium, unit: "₱", precision: 2), class: 'text-secondary' %>
+  </div>
+  <div class="d-flex gap-1">
+    <div class="d-flex justify-content-between" style='width: 200px'>
+      <%= content_tag :p, 'Cooperative Service Fee'%>
+      <%= content_tag :p, ':' %>
+    </div>
+    <%= content_tag :span, "#{agreement.coop_service_fee.to_i}%", class: 'text-secondary' %>
+  </div>
+  
+  <div class="d-flex gap-1">
+    <div class="d-flex justify-content-between" style='width: 200px'>
+      <%= content_tag :span, 'Notarized date:' %>
+      <%= content_tag :p, ':' %>
+    </div>
+    <%= content_tag :p, "Pending", class: 'text-secondary' %>
+  </div>
+  <div class="d-flex justify-content-center gap-1">
+    <%= content_tag :button, "Pending MOA", class: 'btn btn-sm btn-secondary', disabled: true%>
+    <% if agreement.group_remits.exists? %>
+      <%= link_to 'View Group Remits', agreement_group_remits_path(agreement)	, class: 'btn btn-sm btn-success', data: {turbo: false} %>
+    <% end %>
+    <%= link_to 'New Group Remit', new_agreement_group_remit_path(agreement)	, class: 'btn btn-sm btn-success', data: {turbo_frame: 'modal'} %>
+  </div>
 </div>

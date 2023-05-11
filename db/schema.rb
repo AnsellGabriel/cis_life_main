@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_05_10_073737) do
+ActiveRecord::Schema[7.0].define(version: 2023_05_11_025408) do
   create_table "active_admin_comments", force: :cascade do |t|
     t.string "namespace"
     t.text "body"
@@ -228,11 +228,9 @@ ActiveRecord::Schema[7.0].define(version: 2023_05_10_073737) do
     t.datetime "updated_at", null: false
     t.date "effectivity_date"
     t.date "expiry_date"
-    t.integer "cooperative_id", null: false
     t.integer "terms"
     t.index ["agreement_id"], name: "index_group_remits_on_agreement_id"
     t.index ["anniversary_id"], name: "index_group_remits_on_anniversary_id"
-    t.index ["cooperative_id"], name: "index_group_remits_on_cooperative_id"
   end
 
   create_table "member_dependents", force: :cascade do |t|
@@ -320,6 +318,5 @@ ActiveRecord::Schema[7.0].define(version: 2023_05_10_073737) do
   add_foreign_key "employees", "departments"
   add_foreign_key "group_remits", "agreements"
   add_foreign_key "group_remits", "anniversaries"
-  add_foreign_key "group_remits", "cooperatives"
   add_foreign_key "member_dependents", "members"
 end

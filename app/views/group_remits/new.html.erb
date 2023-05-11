@@ -1,3 +1,11 @@
-<%= content_tag :h3, "New Group Remit" %>
-<%= render "form" %>
+<%= turbo_frame_tag "modal" do %>
+  <div class="modal-header">
+    <%= content_tag :h5, "New #{@agreement.name} Group Remit", class: "modal-title", id: "staticBackdropLabel" %>
+    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+  </div>
+  
+  <div class="modal-body d-flex justify-content-center">
+    <%= render "form" %>
+  </div>
 
+<% end %>

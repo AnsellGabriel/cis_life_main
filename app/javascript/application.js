@@ -14,7 +14,3 @@ import "@popperjs/core"
 import "bootstrap"
 
 // import 'cocoon-js'
-
-$(document).ready(function() {
-    console.log('jQuery is working!');
-  });

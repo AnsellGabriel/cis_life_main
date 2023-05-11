@@ -1,9 +1,19 @@
 
-<%= render @agreement %>
+
+<%= turbo_frame_tag "modal" do %>
+  <div class="modal-header">
+    <%= content_tag :h5, "#{@agreement.name} details", class: "modal-title", id: "staticBackdropLabel" %>
+    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+  </div>
+  
+  <div class="modal-body d-flex justify-content-center">
+    <%= render @agreement %>
+  </div>
+
+<% end %>
 
 <div>
   <%= link_to "Edit", edit_agreement_path(@agreement), class: 'btn btn-primary' %> |
   <%= link_to "Back", agreements_path, class: 'btn btn-primary' %>
 
-  <%= button_to "Delete", @agreement, method: :delete, class: 'btn btn-danger' %>
 </div>

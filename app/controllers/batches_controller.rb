@@ -286,7 +286,7 @@ class BatchesController < ApplicationController
 
     def set_group_remit
       @cooperative = current_user.userable.cooperative
-      @group_remit = @cooperative.group_remits.find_by(id: params[:group_remit_id])
+      @group_remit = GroupRemit.find_by(id: params[:group_remit_id])
     end
 
     def set_cooperative
@@ -295,11 +295,12 @@ class BatchesController < ApplicationController
 
     def set_batch
       set_cooperative
-      @group_remit = @cooperative.group_remits.find_by(id: params[:group_remit_id])
+      @group_remit = GroupRemit.find_by(id: params[:group_remit_id])
       @batch = @group_remit.batches.find_by(id: params[:id])
     end
 
     def set_premiums
+      @agreement = @group_remit.agreement
       @batches_container = @group_remit.batches.order(created_at: :desc)
       @batches_dependents= BatchDependent.joins(batch: :group_remit)
         .where(group_remits: {id: @group_remit.id})
