@@ -12,31 +12,35 @@
   <% end %>
 </div>
 
-<div class="row row-cols-2 row-cols-md-4 g-4 mb-3">
-  <% @agreements.each do |agreement| %>
+<div class="row row-cols-2 row-cols-md-2 g-4 mb-3">
+  <% @f_agreements.each do |agreement| %>
+  <%= turbo_frame_tag agreement.id do %>
     <div class="col">
       <div class="card">
         <div class="card-body">
           <div class="d-flex justify-content-between">
-            <h5 class="card-title"><%= agreement.name %></h5>
-            <%= link_to 'View', agreement_path(agreement) ,class: 'btn btn-sm btn-outline-warning', data: {turbo_frame: 'modal'} %>
+            <div class="d-flex align-items-center gap-1">
+              <h5 class="card-title mb-0"><%= agreement.name %></h5>
+              <% if agreement.notarized_date.present? %>
+                <span class="badge bg-success">Notarized</span>
+              <% else %>
+                <span class="badge bg-warning text-dark">Unnotarized</span>
+              <% end %>
+            </div>
+            <%= link_to 'View', agreement_path(agreement) ,class: 'btn btn-sm btn-outline-warning' %>
           </div>
-          <hr>
-          <p class="card-text">Plan: <%= content_tag :span, agreement.plan.name, class: 'text-secondary' %></p>
-          <p class="card-text">Anniversary type: <%= content_tag :span, agreement.anniversary_type.titleize, class: 'text-secondary' %></p>
-          <p class="card-text">Premium: <%= content_tag :span, number_to_currency(agreement.premium, unit: "₱", precision: 2), class: 'text-secondary' %></p>
+
         </div>
-        <div class="card-footer">
-          <small class="text-muted">Agent: Rullian Rong</small>
+        <div class="card-footer d-flex justify-content-between">
+          <small class="text-muted">Agent: <%= agreement.agent.full_name %></small>
+          <small class="text-muted">Updated: <%= time_ago_in_words(agreement.updated_at) %></small>
         </div>
       </div>
     </div>
   <% end %>
+  <% end %>
 </div>
 
-<% if @agreements.exists? %>
-  <%== pagy_bootstrap_nav(@pagy) %>
-<% else %>
+<% unless @agreements.exists? %>
   <p class="text-danger text-center">No agreements found.</p>
 <% end %>
-

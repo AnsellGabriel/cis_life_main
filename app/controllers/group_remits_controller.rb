@@ -23,20 +23,17 @@ class GroupRemitsController < InheritedResources::Base
       .where(group_remits: {id: @group_remit.id})
 
     # premium and commission totals
-    @batch_dependent_premiums = @batches_dependents.sum('batch_dependents.premium')
-    batch_dependent_coop_commissions = @batches_dependents.sum('batch_dependents.coop_sf_amount')
-    batch_dependent_agent_commissions = @batches_dependents.sum('batch_dependents.agent_sf_amount')
+    @batch_dependent_premiums = @batches_dependents.sum(:premium)
+    batch_dependent_coop_commissions = @batches_dependents.sum(:coop_sf_amount)
+    batch_dependent_agent_commissions = @batches_dependents.sum(:agent_sf_amount)
 
     @batches_premium = @batches_container.sum(:premium)
-  
     @gross_premium = @batches_premium + @batch_dependent_premiums
-
     @total_coop_commission = @batches_container.sum(:coop_sf_amount) + batch_dependent_coop_commissions
 
     @total_agent_commission = @batches_container.sum(:agent_sf_amount) + batch_dependent_agent_commissions
-
     @net_premium = @gross_premium - @total_coop_commission
-
+    # byebug
     @principal_count = @batches_container.count
     @dependent_count = @batches_dependents.count
     @single_premium = @batches[0].premium if @batches[0].present?

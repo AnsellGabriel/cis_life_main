@@ -96,10 +96,10 @@ class BatchesController < ApplicationController
         new_batch.active = batch_hash[:active]
         new_batch.status = batch_hash[:status] == "new" ? "recent" : batch_hash[:status]
         new_batch.coop_member_id = coop_member_id
-        new_batch.premium = ((premium / 12) * terms)
-        new_batch.coop_sf_amount = (coop_sf / 100) * new_batch.premium
-        new_batch.agent_sf_amount = (agent_sf / 100) * new_batch.premium
-
+        new_batch.premium = ((premium / 12.to_d) * terms)
+        new_batch.coop_sf_amount = (coop_sf / 100.to_d) * new_batch.premium
+        new_batch.agent_sf_amount = (agent_sf / 100.to_d) * new_batch.premium
+        
         agreement = @group_remit.agreement
         coop_member = new_batch.coop_member
         renewal_member = agreement.coop_members.find_by(id: coop_member.id)
@@ -224,9 +224,9 @@ class BatchesController < ApplicationController
     agent_sf = @group_remit.agreement.agent_service_fee
     terms = @batch.group_remit.terms
     
-    @batch.premium = ((premium / 12) * terms) 
-    @batch.coop_sf_amount = (coop_sf/100) * @batch.premium
-    @batch.agent_sf_amount = (agent_sf/100) * @batch.premium
+    @batch.premium = ((premium / 12.to_d) * terms) 
+    @batch.coop_sf_amount = (coop_sf/100.to_d) * @batch.premium
+    @batch.agent_sf_amount = (agent_sf/100.to_d) * @batch.premium
 
     respond_to do |format|
       if @batch.save!

@@ -1,19 +1,23 @@
 
 
-<%= turbo_frame_tag "modal" do %>
-  <div class="modal-header">
-    <%= content_tag :h5, "#{@agreement.name} details", class: "modal-title", id: "staticBackdropLabel" %>
-    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-  </div>
-  
-  <div class="modal-body d-flex justify-content-center">
-    <%= render @agreement %>
+<%= turbo_frame_tag @agreement.id do %>
+  <div class="col">
+    <div class="card">
+      <div class="card-body">
+        <div class="d-flex justify-content-between">
+          <h5 class="card-title"><%= @agreement.name %></h5>
+          <%= link_to 'Close', agreements_path ,class: 'btn btn-sm btn-outline-danger', data: {turbo_frame: dom_id(@agreement)} %>
+        </div>
+        <hr>
+        <div class="d-flex justify-content-center">
+          <%= render @agreement%>
+        </div>
+        
+    </div>
+    <div class="card-footer d-flex justify-content-between">
+          <small class="text-muted">Agent: <%= @agreement.agent.full_name %></small>
+          <small class="text-muted">Updated: <%= time_ago_in_words(@agreement.updated_at) %></small>
+        </div>
   </div>
 
 <% end %>
-
-<div>
-  <%= link_to "Edit", edit_agreement_path(@agreement), class: 'btn btn-primary' %> |
-  <%= link_to "Back", agreements_path, class: 'btn btn-primary' %>
-
-</div>

@@ -6,7 +6,7 @@ class PlansController < InheritedResources::Base
   private
 
     def plan_params
-      params.require(:plan).permit(:name, :description, :acronym)
+      params.require(:plan).permit(:name, :description, :acronym, :gyrt_type)
     end
 
     def set_cooperative

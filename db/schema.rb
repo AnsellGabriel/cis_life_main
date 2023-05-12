@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_05_12_012535) do
+ActiveRecord::Schema[7.0].define(version: 2023_05_12_084950) do
   create_table "active_admin_comments", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.string "namespace"
     t.text "body"
@@ -61,9 +61,9 @@ ActiveRecord::Schema[7.0].define(version: 2023_05_12_012535) do
     t.text "description"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.decimal "coop_sf", precision: 10
-    t.decimal "agent_sf", precision: 10
-    t.decimal "premium", precision: 10
+    t.decimal "coop_sf", precision: 10, scale: 2
+    t.decimal "agent_sf", precision: 10, scale: 2
+    t.decimal "premium", precision: 10, scale: 2
   end
 
   create_table "agreements", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
@@ -71,13 +71,18 @@ ActiveRecord::Schema[7.0].define(version: 2023_05_12_012535) do
     t.text "description"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.decimal "premium", precision: 10
-    t.decimal "agent_service_fee", precision: 10
-    t.decimal "coop_service_fee", precision: 10
     t.bigint "plan_id", null: false
     t.bigint "cooperative_id", null: false
     t.string "anniversary_type"
-    t.string "agreement_type"
+    t.date "notarized_date"
+    t.date "moa_signed_date"
+    t.date "contestability_period"
+    t.string "nel"
+    t.decimal "premium", precision: 10, scale: 2
+    t.decimal "coop_service_fee", precision: 10, scale: 2
+    t.decimal "agent_service_fee", precision: 10, scale: 2
+    t.bigint "agent_id", null: false
+    t.index ["agent_id"], name: "index_agreements_on_agent_id"
     t.index ["cooperative_id"], name: "index_agreements_on_cooperative_id"
     t.index ["plan_id"], name: "index_agreements_on_plan_id"
   end
@@ -110,9 +115,9 @@ ActiveRecord::Schema[7.0].define(version: 2023_05_12_012535) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.bigint "member_dependent_id", null: false
-    t.decimal "premium", precision: 10
-    t.decimal "coop_sf_amount", precision: 10
-    t.decimal "agent_sf_amount", precision: 10
+    t.decimal "premium", precision: 10, scale: 2
+    t.decimal "coop_sf_amount", precision: 10, scale: 2
+    t.decimal "agent_sf_amount", precision: 10, scale: 2
     t.index ["batch_id"], name: "index_batch_dependents_on_batch_id"
     t.index ["member_dependent_id"], name: "index_batch_dependents_on_member_dependent_id"
   end
@@ -126,7 +131,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_05_12_012535) do
     t.integer "status"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.decimal "premium", precision: 10
+    t.decimal "premium", precision: 10, scale: 2
     t.integer "age"
     t.integer "insurance_status"
     t.bigint "coop_member_id", null: false
@@ -282,6 +287,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_05_12_012535) do
     t.string "acronym"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.string "gyrt_type"
   end
 
   create_table "users", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
@@ -301,6 +307,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_05_12_012535) do
   end
 
   add_foreign_key "agents", "agent_groups"
+  add_foreign_key "agreements", "agents"
   add_foreign_key "agreements", "cooperatives"
   add_foreign_key "agreements", "plans"
   add_foreign_key "batch_beneficiaries", "batches"

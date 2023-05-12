@@ -73,7 +73,7 @@
 </div>
 
 <div class="row d-flex fustify-content-center">
-  <% if @agreement.agreement_type == 'basic' %>
+  <% if @agreement.plan.gyrt_type.present? && @agreement.plan.gyrt_type == 'basic' %>
     <div class="col-md-10" style="margin: auto;">
   <% else %>
     <div class="col-md-5" style="margin-left: auto;">
@@ -81,7 +81,7 @@
     <div class="card mb-3">
       <div class="card-body">
         <div class="row"> 
-          <% if @agreement.agreement_type == 'basic' %>
+          <% if @agreement.plan.gyrt_type.present? && @agreement.plan.gyrt_type == 'basic' %>
             <div class="col-sm-12 d-flex align-items-center gap-2">
           <% else %>
             <div class="col-sm-12 d-flex justify-content-center align-items-center gap-2">
@@ -136,7 +136,7 @@
     </div>
   </div>
 
-  <% if @agreement.agreement_type == 'family'%>
+  <% if @agreement.plan.gyrt_type.present? && @agreement.plan.gyrt_type == 'family' %>
     <div class="col-md-5" style="margin-right: auto;">
       <div class="card mb-3">
         <div class="card-body">

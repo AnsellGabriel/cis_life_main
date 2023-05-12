@@ -19,7 +19,7 @@
       <div>
         <%= content_tag :h6, "Total Coop Commission", style: "width: 200px" %>
         <div class="text-secondary">
-          <%= content_tag :h6, "(Gross Premium x #{@agreement.coop_service_fee.to_i}%)", style: "font-size: .8rem" %>
+          <%= content_tag :h6, "(Gross Premium x #{@agreement.coop_service_fee}%)", style: "font-size: .8rem" %>
         </div>
       </div>
       <%= content_tag :h6, "(#{number_to_currency(@total_coop_commission, unit: "₱", precision: 2)})", style: "color: red"%>
@@ -29,7 +29,7 @@
       <div class="">
         <%= content_tag :h6, "Total Agent Commission", style: "width: 200px" %>
         <div class="text-secondary">
-          <%= content_tag :h6, "(Gross Premium x #{@agreement.agent_service_fee.to_i}%)", style: "font-size: .8rem" %>
+          <%= content_tag :h6, "(Gross Premium x #{@agreement.agent_service_fee}%)", style: "font-size: .8rem" %>
         </div>
       </div>
       <%= content_tag :h6, "(#{number_to_currency(@total_agent_commission, unit: "₱", precision: 2)})", style: "color: red"%>

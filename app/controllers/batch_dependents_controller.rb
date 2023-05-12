@@ -22,9 +22,9 @@ class BatchDependentsController < InheritedResources::Base
     agent_sf = @group_remit.agreement.agent_service_fee
     terms = @batch.group_remit.terms
 
-    @batch_dependent.premium = ((premium / 12) * terms) 
-    @batch_dependent.coop_sf_amount = (coop_sf/100) * @batch_dependent.premium
-    @batch_dependent.agent_sf_amount = (agent_sf/100) * @batch_dependent.premium
+    @batch_dependent.premium = ((premium / 12.to_d) * terms) 
+    @batch_dependent.coop_sf_amount = (coop_sf/100.to_d) * @batch_dependent.premium
+    @batch_dependent.agent_sf_amount = (agent_sf/100.to_d) * @batch_dependent.premium
 
     respond_to do |format|
       if @batch_dependent.save

@@ -5,12 +5,13 @@
 
   <div class="form-inputs mb-3">
     <%= f.association :plan %>
+    <%= f.association :agent, collection: Agent.all, label_method: :full_name %>
     <%= f.input :description %>
+    <%= f.input :anniversary_type, collection: [["Single", "single"], ["Multiple", "multiple"], ["None", "none"]] %>
     <%= f.input :premium %>
     <%= f.input :coop_service_fee %>
     <%= f.input :agent_service_fee %>
-    <%= f.input :anniversary_type, collection: [["Single", "single"], ["Multiple", "multiple"], ["None", "none"]] %>
-    <%= f.input :agreement_type, collection: [["GYRT Basic", "basic"], ["GYRT Family", "family"]] %>
+
   </div>
 
   <div class="form-actions text-end">
