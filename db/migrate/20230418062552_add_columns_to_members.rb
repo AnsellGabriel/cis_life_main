@@ -6,3 +6,4 @@ class AddColumnsToMembers < ActiveRecord::Migration[7.0]
     add_column :members, :barangay, :string
     add_column :members, :street, :string
   end
+end

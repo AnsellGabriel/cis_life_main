@@ -2,8 +2,6 @@
 <div class="d-flex justify-content-between">
   <div class="d-flex gap-3 align-items-center">
     <%= content_tag :h1, "Agreements" %>
-
-    <%= link_to 'Create', new_agreement_path, class: 'btn btn-sm btn-dark' %>
   </div>
     
   <%= form_with url: agreements_path, method: :get do %>
