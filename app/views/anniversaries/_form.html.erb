@@ -6,6 +6,7 @@
   <div class="form-inputs mb-3">
     <%= f.input :name %>
     <%= f.input :anniversary_date, discard_year: true %>
+    <%= f.association :agreement %>
   </div>
 
   <div class="form-actions text-end">

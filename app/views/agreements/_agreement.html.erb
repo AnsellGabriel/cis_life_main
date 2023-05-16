@@ -21,14 +21,14 @@
       <%= content_tag :p, 'Premium' %>
       <%= content_tag :p, ':' %>
     </div>
-    <%= content_tag :span, "#{number_to_currency(agreement.premium, unit: "₱", precision: 2)}", class: 'text-secondary' %>
+    <%= content_tag :span, "#{number_to_currency(@principal_premium, unit: "₱", precision: 2)}", class: 'text-secondary' %>
   </div>
   <div class="d-flex gap-3">
     <div class="d-flex justify-content-between" style='width: 200px'>
       <%= content_tag :p, 'Cooperative Service Fee' %>
       <%= content_tag :p, ':' %>
     </div>
-    <%= content_tag :span, "#{agreement.coop_service_fee}%", class: 'text-secondary' %>
+    <%= content_tag :span, "#{@coop_sf}%", class: 'text-secondary' %>
   </div> 
   <div class="d-flex gap-3">
     <div class="d-flex justify-content-between" style='width: 200px'>
@@ -52,12 +52,4 @@
       <%= content_tag :p, "Pending", style: "color: #ffc107" %>
     <% end %>
   </div>
-  <div class="d-flex justify-content-center gap-3">
-    <%= content_tag :button, "Pending MOA", class: 'btn btn-sm btn-secondary', disabled: true%>
-    <% if agreement.group_remits.exists? %>
-      <%= link_to 'View Group Remits', agreement_group_remits_path(agreement)	, class: 'btn btn-sm btn-success', data: {turbo: false} %>
-    <% end %>
-    <%= link_to 'New Group Remit', new_agreement_group_remit_path(agreement)	, class: 'btn btn-sm btn-success', data: {turbo_frame: 'modal'} %>
-  </div>
-  
 </div>

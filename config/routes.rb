@@ -1,4 +1,6 @@
 Rails.application.routes.draw do 
+  resources :proposals
+  resources :product_benefits
   resources :batch_beneficiaries
   resources :plans
   resources :anniversaries, :agreements, :agent_groups, :departments, :agents, :coop_users, :employees
@@ -17,6 +19,7 @@ Rails.application.routes.draw do
       collection do
         post :import
       end
+      resources :batch_health_decs, as: 'health_declaration'
       resources :batch_dependents, as: 'dependents'
       resources :batch_beneficiaries, as: 'beneficiaries'
       resources :member_dependents do

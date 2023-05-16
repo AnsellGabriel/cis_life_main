@@ -5,7 +5,7 @@ class AnniversariesController < InheritedResources::Base
   private
 
     def anniversary_params
-      params.require(:anniversary).permit(:name, :anniversary_date)
+      params.require(:anniversary).permit(:name, :anniversary_date, :agreement_id)
     end
 
     def check_userable_type

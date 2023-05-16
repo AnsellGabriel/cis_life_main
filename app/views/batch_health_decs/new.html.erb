@@ -1,0 +1,10 @@
+<%= turbo_frame_tag "modal" do %>
+  <div class="modal-header">
+    <%= content_tag :h5, "Health Declaration - #{@member.last_name}, #{@member.first_name} #{@member.middle_name}", class: "modal-title", id: "staticBackdropLabel" %>
+    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+  </div>
+  
+  <div class="modal-body">
+    <%= render "form", batch_health_dec: @batch_health_dec %>
+  </div>
+<% end %>

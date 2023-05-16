@@ -11,6 +11,14 @@ class AgreementsController < InheritedResources::Base
     # @pagy, @agreements = pagy(@f_agreements, items: 8)
   end
 
+  def show
+    @agreement = Agreement.find(params[:id])
+    @principal_premium = @agreement.agreement_benefits.find_by(insured_type: 1).product_benefit.premium
+    @dependent_premium = @agreement.agreement_benefits.find_by(insured_type: 2).product_benefit.premium
+
+    @coop_sf = @agreement.agreement_benefits[0].proposal.coop_sf
+  end
+
   def new
     @agreement = @cooperative.agreements.build(description: FFaker::Lorem.paragraph, plan_id: 1)
   end

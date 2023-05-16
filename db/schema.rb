@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_05_12_084950) do
+ActiveRecord::Schema[7.0].define(version: 2023_05_16_024547) do
   create_table "active_admin_comments", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.string "namespace"
     t.text "body"
@@ -61,9 +61,13 @@ ActiveRecord::Schema[7.0].define(version: 2023_05_12_084950) do
     t.text "description"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.decimal "coop_sf", precision: 10, scale: 2
-    t.decimal "agent_sf", precision: 10, scale: 2
-    t.decimal "premium", precision: 10, scale: 2
+    t.integer "min_age"
+    t.integer "max_age"
+    t.bigint "agreement_id", null: false
+    t.bigint "proposal_id", null: false
+    t.integer "insured_type"
+    t.index ["agreement_id"], name: "index_agreement_benefits_on_agreement_id"
+    t.index ["proposal_id"], name: "index_agreement_benefits_on_proposal_id"
   end
 
   create_table "agreements", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
@@ -78,9 +82,6 @@ ActiveRecord::Schema[7.0].define(version: 2023_05_12_084950) do
     t.date "moa_signed_date"
     t.date "contestability_period"
     t.string "nel"
-    t.decimal "premium", precision: 10, scale: 2
-    t.decimal "coop_service_fee", precision: 10, scale: 2
-    t.decimal "agent_service_fee", precision: 10, scale: 2
     t.bigint "agent_id", null: false
     t.index ["agent_id"], name: "index_agreements_on_agent_id"
     t.index ["cooperative_id"], name: "index_agreements_on_cooperative_id"
@@ -99,6 +100,8 @@ ActiveRecord::Schema[7.0].define(version: 2023_05_12_084950) do
     t.date "anniversary_date"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.bigint "agreement_id", null: false
+    t.index ["agreement_id"], name: "index_anniversaries_on_agreement_id"
   end
 
   create_table "batch_beneficiaries", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
@@ -122,6 +125,23 @@ ActiveRecord::Schema[7.0].define(version: 2023_05_12_084950) do
     t.index ["member_dependent_id"], name: "index_batch_dependents_on_member_dependent_id"
   end
 
+  create_table "batch_health_decs", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+    t.boolean "ans_q1"
+    t.boolean "ans_q2"
+    t.boolean "ans_q3"
+    t.string "ans_q3_desc"
+    t.boolean "ans_q4"
+    t.string "ans_q4_desc"
+    t.boolean "ans_q5_a"
+    t.string "ans_q5_a_desc"
+    t.boolean "ans_q5_b"
+    t.string "ans_q5_b_desc"
+    t.bigint "batch_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["batch_id"], name: "index_batch_health_decs_on_batch_id"
+  end
+
   create_table "batches", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.date "effectivity_date"
     t.date "expiry_date"
@@ -137,6 +157,8 @@ ActiveRecord::Schema[7.0].define(version: 2023_05_12_084950) do
     t.bigint "coop_member_id", null: false
     t.bigint "group_remit_id", null: false
     t.boolean "transferred"
+    t.bigint "agreement_benefit_id", null: false
+    t.index ["agreement_benefit_id"], name: "index_batches_on_agreement_benefit_id"
     t.index ["coop_member_id"], name: "index_batches_on_coop_member_id"
     t.index ["group_remit_id"], name: "index_batches_on_group_remit_id"
   end
@@ -290,6 +312,26 @@ ActiveRecord::Schema[7.0].define(version: 2023_05_12_084950) do
     t.string "gyrt_type"
   end
 
+  create_table "product_benefits", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+    t.decimal "coverage_amount", precision: 10, scale: 2
+    t.decimal "premium", precision: 10, scale: 2
+    t.bigint "agreement_benefit_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["agreement_benefit_id"], name: "index_product_benefits_on_agreement_benefit_id"
+  end
+
+  create_table "proposals", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+    t.bigint "cooperative_id", null: false
+    t.integer "ave_age"
+    t.decimal "total_premium", precision: 10, scale: 2
+    t.decimal "coop_sf", precision: 10, scale: 2
+    t.decimal "agent_sf", precision: 10, scale: 2
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["cooperative_id"], name: "index_proposals_on_cooperative_id"
+  end
+
   create_table "users", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.string "email", default: "", null: false
     t.string "encrypted_password", default: "", null: false
@@ -307,13 +349,18 @@ ActiveRecord::Schema[7.0].define(version: 2023_05_12_084950) do
   end
 
   add_foreign_key "agents", "agent_groups"
+  add_foreign_key "agreement_benefits", "agreements"
+  add_foreign_key "agreement_benefits", "proposals"
   add_foreign_key "agreements", "agents"
   add_foreign_key "agreements", "cooperatives"
   add_foreign_key "agreements", "plans"
+  add_foreign_key "anniversaries", "agreements"
   add_foreign_key "batch_beneficiaries", "batches"
   add_foreign_key "batch_beneficiaries", "member_dependents"
   add_foreign_key "batch_dependents", "batches"
   add_foreign_key "batch_dependents", "member_dependents"
+  add_foreign_key "batch_health_decs", "batches"
+  add_foreign_key "batches", "agreement_benefits"
   add_foreign_key "batches", "coop_members"
   add_foreign_key "batches", "group_remits"
   add_foreign_key "coop_branches", "cooperatives"
@@ -326,4 +373,6 @@ ActiveRecord::Schema[7.0].define(version: 2023_05_12_084950) do
   add_foreign_key "group_remits", "agreements"
   add_foreign_key "group_remits", "anniversaries"
   add_foreign_key "member_dependents", "members"
+  add_foreign_key "product_benefits", "agreement_benefits"
+  add_foreign_key "proposals", "cooperatives"
 end

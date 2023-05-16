@@ -17,9 +17,9 @@ class BatchDependentsController < InheritedResources::Base
   def create
     @batch_dependent = @batch.batch_dependents.new(batch_dependent_params)
     
-    premium = @group_remit.agreement.premium
-    coop_sf = @group_remit.agreement.coop_service_fee
-    agent_sf = @group_remit.agreement.agent_service_fee
+    premium = @group_remit.agreement.agreement_benefits.find_by(insured_type: 2).product_benefit.premium
+    coop_sf = @group_remit.agreement.agreement_benefits[0].proposal.coop_sf
+    agent_sf = @group_remit.agreement.agreement_benefits[0].proposal.coop_sf
     terms = @batch.group_remit.terms
 
     @batch_dependent.premium = ((premium / 12.to_d) * terms) 

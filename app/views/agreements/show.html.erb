@@ -5,7 +5,15 @@
     <div class="card">
       <div class="card-body">
         <div class="d-flex justify-content-between">
-          <h5 class="card-title"><%= @agreement.name %></h5>
+          <div class="d-flex gap-2 align-items-center">
+            <h5 class="card-title"><%= @agreement.name %></h5>
+            <div class="d-flex justify-content-center gap-3">
+              <% if @agreement.group_remits.exists? %>
+                <%= link_to 'View Group Remits', agreement_group_remits_path(@agreement)	, class: 'btn btn-sm btn-success mb-1', data: {turbo: false} %>
+              <% end %>
+              <%= link_to 'New Group Remit', new_agreement_group_remit_path(@agreement)	, class: 'btn btn-sm btn-success mb-1', data: {turbo_frame: 'modal'} %>
+            </div>
+          </div>
           <%= link_to 'Close', agreements_path ,class: 'btn btn-sm btn-outline-danger', data: {turbo_frame: dom_id(@agreement)} %>
         </div>
         <hr>

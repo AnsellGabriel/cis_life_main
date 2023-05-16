@@ -6,9 +6,10 @@
   <div class="form-inputs mb-3">
     <%= f.input :name %>
     <%= f.input :description %>
-    <%= f.input :premium %>
-    <%= f.input :coop_sf %>
-    <%= f.input :agent_sf %>
+    <%= f.input :min_age %>
+    <%= f.input :max_age %>
+    <%= f.association :agreement %>
+    <%= f.association :proposal %>
   </div>
 
   <div class="form-actions text-end">

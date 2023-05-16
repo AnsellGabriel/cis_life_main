@@ -17,7 +17,7 @@ class AgreementBenefitsController < InheritedResources::Base
   private
 
     def agreement_benefit_params
-      params.require(:agreement_benefit).permit(:name, :description, :premium, :coop_sf, :agent_sf)
+      params.require(:agreement_benefit).permit(:name, :description, :min_age, :max_age, :agreement_id, :proposal_id)
     end
 
     def check_userable_type

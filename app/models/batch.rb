@@ -25,6 +25,8 @@ class Batch < ApplicationRecord
   belongs_to :coop_member
   belongs_to :group_remit
   
+  has_one :batch_health_dec, dependent: :destroy
+  
   has_many :batch_dependents, dependent: :destroy
   has_many :member_dependents, through: :batch_dependents
 

@@ -88,12 +88,13 @@ class BatchesController < ApplicationController
         new_batch = @group_remit.batches.build
   
         # Set batch attributes
-        premium = @group_remit.agreement.premium
-        coop_sf = @group_remit.agreement.coop_service_fee
-        agent_sf = @group_remit.agreement.agent_service_fee
+        premium = @group_remit.agreement.agreement_benefits.find_by(insured_type: 1).product_benefit.premium
+        coop_sf = @group_remit.agreement.agreement_benefits[0].proposal.coop_sf
+        agent_sf = @group_remit.agreement.agreement_benefits[0].proposal.agent_sf
         terms = new_batch.group_remit.terms
 
         new_batch.active = batch_hash[:active]
+        new_batch.agreement_benefit_id = @group_remit.agreement.agreement_benefits.find_by(insured_type: 1).id
         new_batch.status = batch_hash[:status] == "new" ? "recent" : batch_hash[:status]
         new_batch.coop_member_id = coop_member_id
         new_batch.premium = ((premium / 12.to_d) * terms)
