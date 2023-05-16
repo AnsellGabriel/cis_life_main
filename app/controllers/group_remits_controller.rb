@@ -1,9 +1,20 @@
 class GroupRemitsController < InheritedResources::Base
   before_action :authenticate_user!
   before_action :check_userable_type
-  before_action :set_group_remit, only: %i[show edit update destroy]
+  before_action :set_group_remit, only: %i[show edit update destroy submit]
   before_action :set_cooperative, only: %i[new edit update show index create]
   before_action :set_members, only: %i[new create edit update]
+
+  def submit
+    respond_to do |format|
+      if @group_remit.update(submitted: true)
+        format.html { redirect_to agreement_group_remits_path(@group_remit.agreement), notice: "Batch submitted" }
+      else
+        format.html { redirect_to @group_remit, alert: "Please see members below and complete the necessary details." }
+      end
+    end
+
+  end
 
   def index
     @agreement = Agreement.find_by(id: params[:agreement_id])
@@ -39,6 +50,8 @@ class GroupRemitsController < InheritedResources::Base
     @single_premium = @batches[0].premium if @batches[0].present?
     @single_dependent_premium = @batches_dependents[0].premium if @batches_dependents[0].present?
 
+    @all_batches_have_beneficiaries = @group_remit.batches.all? { |batch| batch.batch_beneficiaries.exists? }
+    @batch_count = @group_remit.batches.count
   end
 
   def new

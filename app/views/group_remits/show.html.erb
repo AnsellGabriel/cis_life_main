@@ -1,9 +1,19 @@
 <%= turbo_stream_from current_cooperative, "batches" %>
+
 <div class="mb-3">
   <%= link_to 'Group Remits', agreement_group_remits_path(@agreement), class: 'btn btn-secondary' %>
 </div>
 
-<%= content_tag :h1, "#{@agreement.name}(#{@group_remit.name})" %>
+<div class="d-flex align-items-center gap-1">
+  <%= content_tag :h1, "#{@agreement.name}(#{@group_remit.name})" %>
+    <% unless @group_remit.submitted? %>
+      <% if @all_batches_have_beneficiaries && @batch_count > 4 %>
+        <%= link_to 'Submit Batch', submit_group_remit_path(@group_remit),class: 'btn btn-md btn-warning' %>
+      <% else %>
+        <%= content_tag :button, 'Submit Batch' ,class: 'btn btn-md btn-secondary', disabled: true %>
+      <% end %>
+    <% end %>
+</div>
 
 <div class="d-flex justify-content-between" style="height: auto;">
   <div style="width: 100%">
@@ -15,17 +25,19 @@
       <%= content_tag :h6, "Expiry Date: ", style: "width: 150px" %>
       <%= content_tag :h6, @group_remit.expiry_date.strftime('%B %d, %Y') %>
     </div>
-    <%= turbo_frame_tag "batch_form" do %>
-      <%= render "group_remits/add_member" %>
-    <% end %>
+    <% unless @group_remit.submitted? %>
+      <%= turbo_frame_tag "batch_form" do %>
+        <%= render "group_remits/add_member" %>
+      <% end %>
+    <% end%>
   </div>
+  <%= turbo_frame_tag "computation" do %>
+    <%= render "group_remits/computation" %>
+  <% end %>
 </div>
 
-<%= turbo_frame_tag "computation" do %>
-  <%= render "group_remits/computation" %>
-<% end %>
 
-<% if @group_remit.batches.exists? %>
+
 <div class="table-responsive">
   <%= turbo_frame_tag "batches" do %>
   <table class="table table-striped table-bordered table-hover">
@@ -43,10 +55,11 @@
     </thead>
 
     <tbody id="batches_body">
+      <% if @group_remit.batches.exists? %>
         <%= render @batches, group_remit: @group_remit %>
+      <% end %>
     </tbody>
   </table>
-  <% end %>
 
 </div>
 

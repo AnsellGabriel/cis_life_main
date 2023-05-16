@@ -63,18 +63,19 @@
             <%= link_to 'Show', group_remit_batch_path(group_remit, batch),
                 data: {turbo_frame: "_top"}, 
                 class: 'btn btn-sm btn-primary' %>
-            
-            <%= link_to 'Edit', edit_group_remit_batch_path(group_remit, batch), 
-                data: {turbo_frame: "batch_form"},
-                class: 'btn btn-sm btn-primary' %>
+            <% unless @group_remit.submitted? %>
+                <%= link_to 'Edit', edit_group_remit_batch_path(group_remit, batch), 
+                    data: {turbo_frame: "batch_form"},
+                    class: 'btn btn-sm btn-primary' %>
 
-            <%= button_to "Delete", group_remit_batch_path(group_remit, batch), 
-                method: :delete,
-                form: { 
-                data: { turbo_frame: "_top", 
-                turbo_confirm: "Delete Batch: #{member.last_name}, #{member.first_name} #{member.middle_name}?" } 
-                }, 
-                class: 'btn btn-sm btn-danger' %>
+                <%= button_to "Delete", group_remit_batch_path(group_remit, batch), 
+                    method: :delete,
+                    form: { 
+                    data: { turbo_frame: "_top", 
+                    turbo_confirm: "Delete Batch: #{member.last_name}, #{member.first_name} #{member.middle_name}?" } 
+                    }, 
+                    class: 'btn btn-sm btn-danger' %>
+            <% end %>
         </div>
     </td>
 </tr>

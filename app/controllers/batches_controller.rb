@@ -220,9 +220,10 @@ class BatchesController < ApplicationController
       agreement.coop_members << coop_member
     end
     
-    premium = @group_remit.agreement.premium
-    coop_sf = @group_remit.agreement.coop_service_fee
-    agent_sf = @group_remit.agreement.agent_service_fee
+    @batch.agreement_benefit_id = @group_remit.agreement.agreement_benefits.find_by(insured_type: 1).id
+    premium = @group_remit.agreement.agreement_benefits.find_by(insured_type: 1).product_benefit.premium
+    coop_sf = @group_remit.agreement.agreement_benefits[0].proposal.coop_sf
+    agent_sf = @group_remit.agreement.agreement_benefits[0].proposal.agent_sf
     terms = @batch.group_remit.terms
     
     @batch.premium = ((premium / 12.to_d) * terms) 

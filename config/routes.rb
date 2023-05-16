@@ -15,6 +15,8 @@ Rails.application.routes.draw do
 
 
   resources :group_remits do 
+    get :submit, on: :member
+
     resources :batches do
       collection do
         post :import
