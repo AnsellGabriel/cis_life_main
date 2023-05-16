@@ -11,7 +11,8 @@ class BatchDependentsController < InheritedResources::Base
   def new
     @batch_dependent = @batch.batch_dependents.new
     @member = @batch.coop_member.member
-    @dependents = @member.member_dependents
+    existing_dependent_ids = @batch.batch_dependents.pluck(:member_dependent_id)
+    @dependents = @member.member_dependents.where.not(id: existing_dependent_ids)
   end
 
   def create

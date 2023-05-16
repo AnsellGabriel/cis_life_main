@@ -63,7 +63,7 @@
             <%= link_to 'Show', group_remit_batch_path(group_remit, batch),
                 data: {turbo_frame: "_top"}, 
                 class: 'btn btn-sm btn-primary' %>
-            <% unless @group_remit.submitted? %>
+            <% unless group_remit.submitted? %>
                 <%= link_to 'Edit', edit_group_remit_batch_path(group_remit, batch), 
                     data: {turbo_frame: "batch_form"},
                     class: 'btn btn-sm btn-primary' %>

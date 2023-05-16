@@ -8,10 +8,10 @@
       <%= link_to 'Enroll Beneficiary', new_beneficiary_group_remit_batch_member_dependents_path(@group_remit, @batch), class: "mb-3 btn btn-sm btn-primary", data: {turbo_frame: "modal"} %>
     </div>
     <% if @beneficiaries.count == 0%> 
-      <p class="text-danger text-center">No beneficiary enrolled.</p>
+      <p class="text-danger text-center">Enroll a beneficiary.</p>
     <% else %>
       <%= f.association :member_dependent, 
-        collection: @beneficiaries.map { |d| ["#{d.last_name}, #{d.first_name} #{d.middle_name}", d.id]},
+        collection: @beneficiaries.map { |d| ["#{d.last_name}, #{d.first_name} #{d.middle_name} - #{d.relationship}", d.id]},
         label: false
       %>
       <div class="form-actions d-flex justify-content-center">

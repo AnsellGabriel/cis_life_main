@@ -183,7 +183,8 @@ class BatchesController < ApplicationController
   end
 
   def new
-    @coop_members = @cooperative.coop_members.includes(:member).order('members.last_name')
+    existing_member_ids = @group_remit.batches.pluck(:coop_member_id)
+    @coop_members = @cooperative.coop_members.where.not(id: existing_member_ids).includes(:member).order('members.last_name')
 
     @batch = @group_remit.batches.new(effectivity_date: FFaker::Time.date, expiry_date: FFaker::Time.date, active: true, status: :recent)
 
