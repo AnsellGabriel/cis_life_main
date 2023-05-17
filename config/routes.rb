@@ -1,9 +1,5 @@
 Rails.application.routes.draw do 
-  resources :proposals
-  resources :product_benefits
-  resources :batch_beneficiaries
-  resources :plans
-  resources :anniversaries, :agreements, :agent_groups, :departments, :agents, :coop_users, :employees
+  resources :anniversaries, :agent_groups, :departments, :agents, :coop_users, :employees, :plans, :product_benefits, :proposals
 
   resources :agreement_benefits do
     get :selected, on: :member
@@ -13,10 +9,8 @@ Rails.application.routes.draw do
     resources :group_remits
   end
 
-
   resources :group_remits do 
     get :submit, on: :member
-
     resources :batches do
       collection do
         post :import

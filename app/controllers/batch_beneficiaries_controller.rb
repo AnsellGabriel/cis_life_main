@@ -10,9 +10,8 @@ class BatchBeneficiariesController < InheritedResources::Base
 
   def new
     @batch_beneficiary = @batch.batch_beneficiaries.new
-    @member = @batch.coop_member.member
-    existing_dependent_ids = @batch.batch_beneficiaries.pluck(:member_dependent_id)
-    @beneficiaries = @member.member_dependents.where.not(id: existing_dependent_ids)
+    @member = @batch.member_details
+    @beneficiaries = @member.unselected_dependents(@batch.beneficiary_ids)
   end
 
   def create
@@ -38,7 +37,7 @@ class BatchBeneficiariesController < InheritedResources::Base
 
   private
     def set_group_remit_batch
-      @cooperative = current_user.userable.cooperative
+      # @cooperative = current_user.userable.cooperative
       @group_remit = GroupRemit.find(params[:group_remit_id])
       @batch = @group_remit.batches.find(params[:batch_id])
     end

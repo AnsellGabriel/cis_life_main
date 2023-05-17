@@ -19,5 +19,7 @@ module CisLifeLogin
     # config.time_zone = "Central Time (US & Canada)"
     # config.eager_load_paths << Rails.root.join("extras")
     config.app_generators.scaffold_controller = :scaffold_controller
+    config.autoload_paths += %W(#{config.root}/app/services)
+
   end
 end

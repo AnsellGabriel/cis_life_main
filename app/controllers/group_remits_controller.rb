@@ -19,32 +19,20 @@ class GroupRemitsController < InheritedResources::Base
   def index
     @agreement = Agreement.find_by(id: params[:agreement_id])
     @group_remits = @agreement.group_remits
-    
   end
 
   def show
-    # filter members based on last name, first name, middle name
-    # @members = f_members.where("last_name LIKE ? AND first_name LIKE ? AND middle_name LIKE ?", "%#{params[:last_name_filter]}%", "%#{params[:first_name_filter]}%", "%#{params[:middle_name_filter]}%")
     @agreement = @group_remit.agreement
     @batches_container = @group_remit.batches.order(created_at: :desc)
-    # f_members = Member.joins(:coop_members).where(coop_members: { id: @coop_members.ids }).order(:first_name)
-
     @pagy, @batches = pagy(@batches_container, items: 10)
-    @batches_dependents= BatchDependent.joins(batch: :group_remit)
-      .where(group_remits: {id: @group_remit.id})
+    @batches_dependents= @group_remit.batches_dependents
 
     # premium and commission totals
-    @batch_dependent_premiums = @batches_dependents.sum(:premium)
-    batch_dependent_coop_commissions = @batches_dependents.sum(:coop_sf_amount)
-    batch_dependent_agent_commissions = @batches_dependents.sum(:agent_sf_amount)
-
-    @batches_premium = @batches_container.sum(:premium)
-    @gross_premium = @batches_premium + @batch_dependent_premiums
-    @total_coop_commission = @batches_container.sum(:coop_sf_amount) + batch_dependent_coop_commissions
-
-    @total_agent_commission = @batches_container.sum(:agent_sf_amount) + batch_dependent_agent_commissions
+    @gross_premium = @group_remit.total_principal_premium + @group_remit.total_dependent_premiums
+    @total_coop_commission = @group_remit.total_coop_commission + @group_remit.total_dependent_coop_commissions
+    @total_agent_commission = @group_remit.total_agent_commission + @group_remit.total_dependent_agent_commissions
     @net_premium = @gross_premium - @total_coop_commission
-    # byebug
+    
     @principal_count = @batches_container.count
     @dependent_count = @batches_dependents.count
     @single_premium = @batches[0].premium if @batches[0].present?

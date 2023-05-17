@@ -19,6 +19,18 @@ class Member < ApplicationRecord
   has_many :member_dependents, dependent: :destroy
   accepts_nested_attributes_for :coop_members
 
+  def unselected_dependents(selected_dependent_ids)
+    self.member_dependents.where.not(id: selected_dependent_ids)
+  end
+
+  def age
+    Date.today.year - self.birth_date.year - ((Date.today.month > self.birth_date.month || (Date.today.month == self.birth_date.month && Date.today.day >= self.birth_date.day)) ? 0 : 1)
+  end
+
+  def coop_member_id(coop)
+    self.coop_members.find_by(cooperative_id: coop.id).id
+  end
+
   private
   def capitalize_status
     self.civil_status = self.civil_status.titleize

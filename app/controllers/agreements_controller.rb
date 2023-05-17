@@ -2,6 +2,7 @@ class AgreementsController < InheritedResources::Base
   before_action :authenticate_user!
   before_action :check_userable_type
   before_action :set_cooperative, only: %i[index new create show]
+  before_action :set_agreement, only: %i[show edit update destroy]
 
   def index 
     @agreements = @cooperative.agreements.order(updated_at: :desc)
@@ -12,11 +13,9 @@ class AgreementsController < InheritedResources::Base
   end
 
   def show
-    @agreement = Agreement.find(params[:id])
-    @principal_premium = @agreement.agreement_benefits.find_by(insured_type: 1).product_benefit.premium
-    @dependent_premium = @agreement.agreement_benefits.find_by(insured_type: 2).product_benefit.premium
-
-    @coop_sf = @agreement.agreement_benefits[0].proposal.coop_sf
+    @principal_premium = @agreement.get_principal_premium
+    @dependent_premium = @agreement.get_dependent_premium if @agreement.plan.gyrt_type == 'family'
+    @coop_sf = @agreement.get_coop_sf
   end
 
   def new
@@ -24,12 +23,9 @@ class AgreementsController < InheritedResources::Base
   end
 
   def create
-    @agreement = @cooperative.agreements.build(agreement_params)
     plan = Plan.find_by(id: agreement_params[:plan_id])
+    @agreement = @cooperative.agreements.build(agreement_params)
     @agreement.name = "#{plan.acronym}-Agreement-#{Agreement.count + 1}"
-    @agreement.premium = agreement_params[:premium]
-    @agreement.coop_service_fee = agreement_params[:coop_service_fee]
-    @agreement.agent_service_fee = agreement_params[:agent_service_fee]
 
     respond_to do |format|
       if @agreement.save!
@@ -48,6 +44,10 @@ class AgreementsController < InheritedResources::Base
 
     def set_cooperative
       @cooperative = current_user.userable.cooperative
+    end
+
+    def set_agreement
+      @agreement = Agreement.find(params[:id])
     end
 
     def check_userable_type

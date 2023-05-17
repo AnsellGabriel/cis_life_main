@@ -42,10 +42,8 @@ class AgentsController < ApplicationController
     respond_to do |format|
       if @agent.update(agent_params)
         format.html { redirect_to agent_url(@agent), notice: "Agent was successfully updated." }
-        format.json { render :show, status: :ok, location: @agent }
       else
         format.html { render :edit, status: :unprocessable_entity }
-        format.json { render json: @agent.errors, status: :unprocessable_entity }
       end
     end
   end
@@ -56,7 +54,6 @@ class AgentsController < ApplicationController
 
     respond_to do |format|
       format.html { redirect_to agents_url, notice: "Agent was successfully destroyed." }
-      format.json { head :no_content }
     end
   end
 

@@ -49,7 +49,6 @@ class AgentGroupsController < ApplicationController
 
     respond_to do |format|
       format.html { redirect_to agent_groups_url, notice: "Agent group was successfully destroyed." }
-      format.json { head :no_content }
     end
   end
 

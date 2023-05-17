@@ -10,22 +10,18 @@ class BatchDependentsController < InheritedResources::Base
 
   def new
     @batch_dependent = @batch.batch_dependents.new
-    @member = @batch.coop_member.member
-    existing_dependent_ids = @batch.batch_dependents.pluck(:member_dependent_id)
-    @dependents = @member.member_dependents.where.not(id: existing_dependent_ids)
+    @member = @batch.member_details
+    @dependents = @member.unselected_dependents(@batch.dependent_ids)
   end
 
   def create
-    @batch_dependent = @batch.batch_dependents.new(batch_dependent_params)
-    
-    premium = @group_remit.agreement.agreement_benefits.find_by(insured_type: 2).product_benefit.premium
-    coop_sf = @group_remit.agreement.agreement_benefits[0].proposal.coop_sf
-    agent_sf = @group_remit.agreement.agreement_benefits[0].proposal.coop_sf
     terms = @batch.group_remit.terms
+    @batch_dependent = @batch.batch_dependents.new(batch_dependent_params)
+    @batch_dependent.premium = ((@group_remit.dependent_premium / 12.to_d) * terms)
 
-    @batch_dependent.premium = ((premium / 12.to_d) * terms) 
-    @batch_dependent.coop_sf_amount = (coop_sf/100.to_d) * @batch_dependent.premium
-    @batch_dependent.agent_sf_amount = (agent_sf/100.to_d) * @batch_dependent.premium
+    @batch_dependent.coop_sf_amount = (@group_remit.get_coop_sf/100.to_d) * @batch_dependent.premium
+    
+    @batch_dependent.agent_sf_amount = (@group_remit.get_agent_sf/100.to_d) * @batch_dependent.premium
 
     respond_to do |format|
       if @batch_dependent.save

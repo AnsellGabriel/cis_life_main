@@ -1,4 +1,5 @@
 class Batch < ApplicationRecord
+  before_save :set_premium_and_service_fees
   # validates_presence_of :effectivity_date, :expiry_date, :coop_sf_amount, :agent_sf_amount, :status, :premium, :coop_member_id
 
   # updates the batches table realtime when a new batch is created
@@ -32,4 +33,26 @@ class Batch < ApplicationRecord
 
   has_many :batch_beneficiaries, dependent: :destroy
   has_many :member_dependents, through: :batch_beneficiaries
+
+  def member_details
+    self.coop_member.member
+  end
+
+  def dependent_ids
+    self.batch_dependents.pluck(:member_dependent_id)
+  end
+
+  def beneficiary_ids
+    self.batch_beneficiaries.pluck(:member_dependent_id)
+  end
+
+  def set_premium_and_service_fees
+    gr = self.group_remit
+    terms = self.group_remit.terms
+
+    self.agreement_benefit_id = gr.agreement.agreement_benefits.find_by(insured_type: 1).id
+    self.premium = ((gr.principal_premium / 12.to_d) * terms) 
+    self.coop_sf_amount = (gr.get_coop_sf/100.to_d) * self.premium
+    self.agent_sf_amount = (gr.get_agent_sf/100.to_d) * self.premium
+  end
 end
