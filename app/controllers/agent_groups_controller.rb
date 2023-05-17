@@ -26,10 +26,8 @@ class AgentGroupsController < ApplicationController
     respond_to do |format|
       if @agent_group.save
         format.html { redirect_to agent_group_url(@agent_group), notice: "Agent group was successfully created." }
-        format.json { render :show, status: :created, location: @agent_group }
       else
         format.html { render :new, status: :unprocessable_entity }
-        format.json { render json: @agent_group.errors, status: :unprocessable_entity }
       end
     end
   end
@@ -39,10 +37,8 @@ class AgentGroupsController < ApplicationController
     respond_to do |format|
       if @agent_group.update(agent_group_params)
         format.html { redirect_to agent_group_url(@agent_group), notice: "Agent group was successfully updated." }
-        format.json { render :show, status: :ok, location: @agent_group }
       else
         format.html { render :edit, status: :unprocessable_entity }
-        format.json { render json: @agent_group.errors, status: :unprocessable_entity }
       end
     end
   end

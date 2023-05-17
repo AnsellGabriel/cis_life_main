@@ -66,8 +66,6 @@ class GroupRemitsController < InheritedResources::Base
     @group_remit = agreement.group_remits.build(group_remit_params)
     @group_remit.effectivity_date = Date.today
 
-    
-
     if agreement.anniversary_type == "single" or agreement.anniversary_type == "multiple"
       anniversary_date = Anniversary.find_by(id: group_remit_params[:anniversary_id]).anniversary_date
     else
@@ -95,9 +93,6 @@ class GroupRemitsController < InheritedResources::Base
 
   def edit
     @agreement = @group_remit.agreement
-
-    
-
   end
 
   def update

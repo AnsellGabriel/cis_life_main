@@ -3,16 +3,13 @@
   <%= f.error_notification %>
   <%= f.error_notification message: f.object.errors[:base].to_sentence if f.object.errors[:base].present? %>
 
-  <div class="form-inputs mb-3">
-    <div class="d-flex gap-3">
+  <div class="form-inputs">
+    <div class="d-flex gap-3 ">
+      
       <%= f.association :anniversary, 
         input_html: { 
           data: {controller: "slim-select" }, style: "width: 250px !important" 
-        }%>
-
+        }, wrapper_html: {style: 'margin-bottom: 0 !important;'}, label: false %>
+      <%= f.button :submit, class: 'btn-success', data: {turbo: false} %>
     </div>
-  <div class="form-actions text-end">
-    <%= link_to "Back", agreement_path(@agreement), class: 'btn btn-secondary' %>
-    <%= f.button :submit, class: 'btn-success', data: {turbo: false} %>
-  </div>
 <% end %>

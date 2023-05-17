@@ -1,6 +1,13 @@
-<div class="mb-1 col-md-10">
-  <%= link_to "Edit member details", edit_member_path(@member), class: 'btn btn-sm btn-primary' %> 
-</div>
-
-<%= render partial: 'coop_member', locals: { member: @member, coop_member: @coop_member } %>
+<%= turbo_frame_tag "modal-xl" do %>
+    <div class="modal-header">
+        <div class="d-flex gap-2">
+          <h5 class="modal-title" id="memberEnrollment">New Member Enrolled</h5>
+          <%= link_to "Edit member details", edit_member_path(@member), class: 'btn btn-sm btn-primary' %> 
+        </div>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+    </div>
+    <div class="modal-body d-flex justify-content-center">
+      <%= render partial: 'coop_member', locals: { member: @member, coop_member: @coop_member } %>
+    </div>
+<% end %>
 

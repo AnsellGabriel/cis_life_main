@@ -32,17 +32,18 @@
           </div>
         </div>
       </div>
-    </div>
 
-    <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true" data-controller="modal"
-      data-action="turbo:frame-load->modal#open turbo:submit-end->modal#close">
-        <div class="modal-dialog">
+      <div class="modal fade" id="memberEnrollment" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true" data-controller="modal" data-action="turbo:frame-load->modal#open turbo:submit-end->modal#close">
+        <div class="modal-dialog modal-xl">
           <div class="modal-content">
-            <%= turbo_frame_tag "modal" %>
+            <%= turbo_frame_tag "modal-xl" %>
           </div>
         </div>
       </div>
     </div>
+
+    <!-- New Member form Modal -->
+
 
   </body>
 </html>

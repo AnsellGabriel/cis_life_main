@@ -1,17 +1,4 @@
-<!-- New Member form Modal -->
-<div class="modal fade" id="memberEnrollment" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
-  <div class="modal-dialog modal-xl">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="staticBackdropLabel">Enroll New Member</h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-      </div>
-      <div class="modal-body">
-        <%= render "members/form", member: @member%>
-      </div>
-    </div>
-  </div>
-</div>
+
 
 <!-- New Member form Modal -->
 <div class="modal fade" id="batchEnrollment" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
@@ -41,11 +28,11 @@
 <div class="d-flex justify-content-between align-items-end">
   <div class="d-flex gap-1">
     <div class="mb-1">
-      <%= content_tag :button, "Enroll Member", 
+      <%= link_to "Enroll Member", new_member_path, 
         class: "btn btn-sm btn-warning", 
-        data: {bs_toggle: "modal",
-          bs_target: "#memberEnrollment"
-        }%>
+        data: {
+          turbo_frame: "modal-xl"
+        } %>
     </div>
 
     <div class="mb-1">

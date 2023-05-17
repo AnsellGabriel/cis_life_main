@@ -1,5 +1,14 @@
 <h1 class="mb-3">New <%= "#{@cooperative.name}" %> member</h1>
 
-<%= render "form", member: @member %>
+
+<%= turbo_frame_tag "modal-xl" do %>
+    <div class="modal-header">
+        <h5 class="modal-title" id="memberEnrollment">Enroll New Member</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+    </div>
+    <div class="modal-body">
+        <%= render "form", member: @member%>
+    </div>
+<% end %>
 
 <br>
