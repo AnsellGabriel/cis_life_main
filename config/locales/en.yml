@@ -31,3 +31,17 @@
 
 en:
   hello: "Hello world"
+en:
+  activerecord:
+    attributes:
+      batch_health_dec:
+        ans_q3_desc: "Details"
+        ans_q4_desc: "Details"
+        ans_q5_a_desc: "Details"
+        ans_q5_b_desc: "Details"
+    errors:
+      models:
+        user:
+          attributes:
+            email:
+              blank: "can't be empty."

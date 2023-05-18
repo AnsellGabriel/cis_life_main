@@ -6,8 +6,9 @@ class GroupRemitsController < InheritedResources::Base
   before_action :set_members, only: %i[new create edit update]
 
   def submit
+    @group_remit.compute_save_premium_commissions
     respond_to do |format|
-      if @group_remit.update(submitted: true)
+      if @group_remit.save
         format.html { redirect_to agreement_group_remits_path(@group_remit.agreement), notice: "Batch submitted" }
       else
         format.html { redirect_to @group_remit, alert: "Please see members below and complete the necessary details." }

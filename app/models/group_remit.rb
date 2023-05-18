@@ -4,6 +4,14 @@ class GroupRemit < ApplicationRecord
   
   has_many :batches, dependent: :destroy
 
+  def compute_save_premium_commissions
+    self.gross_premium = self.gross_premium
+    self.coop_commission = self.total_coop_commissions
+    self.agent_commission = self.total_agent_commissions
+    self.net_premium = self.net_premium - self.total_agent_commissions
+    self.submitted = true
+  end
+
   def coop_member_ids
     self.batches.pluck(:coop_member_id)
   end

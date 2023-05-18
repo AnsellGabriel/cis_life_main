@@ -1,5 +1,5 @@
 
-<%= simple_form_for(@batch_health_dec, url: group_remit_batch_health_declaration_index_path) do |f| %>
+<%= simple_form_for(@batch_health_dec, url: group_remit_batch_health_declarations_path) do |f| %>
   <%= f.error_notification %>
   <%= f.error_notification message: f.object.errors[:base].to_sentence if f.object.errors[:base].present? %>
 
@@ -20,6 +20,7 @@
               Are you now in good health and free from any kind of disease?
               <%= content_tag :span, '(Ikaw ba ay nasa mabuting kalusugan at walang anumang karamdaman?)', class: 'text-secondary fst-italic' %>
             </p>
+            <%= f.error :ans_q1, style: "color: #dc3545" %>
           </td>
           <td style="vertical-align: middle">
             <div class="d-flex gap-1">
@@ -34,6 +35,7 @@
               Can you perform the activities of daily living such as feeding, toileting, mobility, bathing, dressing etc.?
               <%= content_tag :span, '(Kaya mo bang kumain, magbanyo, maglakad, maligo, magbihis, atbp?)', class: 'text-secondary fst-italic' %>
             </p>
+            <%= f.error :ans_q2, style: "color: #dc3545" %>
           </td>
           <td style="vertical-align: middle"> 
             <div class="d-flex gap-1">
@@ -48,7 +50,8 @@
               Have you ever consulted a physician for a health condition such as high blood pressure, diabetes malignancies, lung ailments, heart ailments, etc? If "Yes", kindly give details on the space provided such as kind of illness/disease(diagnosis), name of doctor & hospital, medicine taken, date of operation, results, doctor's recommendation, etc.
               <%= content_tag :span, '(Ikaw ba ay kumunsulta na sa isang doktor ukol sa kalagayan ng iyong kalusugan tulad ng pagtaas ng presyon, diabetes, tumor, sakit sa baga, sakit sa puso atbp? Kung "Oo", magbigay ng impormasyon tulad ng uri/panglan ng sakit, pangalan ng doktor at ospital, petsa ng operasyon, resulta, rekomendasyon ng doktor at iba pa.)', class: 'text-secondary fst-italic' %>
             </p>
-            <%= f.input :ans_q3_desc, label: 'Details:', wrapper_html: {class: 'd-none', data: {questionaire_target: 'container'}} %>
+            <%= f.error :ans_q3, style: "color: #dc3545" %>
+            <%= f.input :ans_q3_desc, label: 'Details:', wrapper_html: {class: 'd-none', data: {questionaire_target: 'container'}}, input_html: {data: {questionaire_target: 'input'}} %>
           </td>
           <td style="vertical-align: middle">
             <div class="d-flex gap-1">
@@ -67,7 +70,8 @@
               Have you ever  been hospitalized or had any minor/major surgery in the last five years? If "Yes", kindly give details on the space provided such as name of doctor and hospital, date of operation or hospitalization, medicine taken, doctor's recommendations, results, etc.
               <%= content_tag :span, '(Ikaw ba ay naospital o naoperahan sa loob ng nakaraang limang taon? Kung "Oo", magbigay ng impormasyon tulad ng dahilan ng pagkaospital, klase ng operasyon, pangalan ng doktor at ospital, petsa ng operasyon o paglaospital, gamot na iniinom, rekomendasyon ng doktor, resulta at iba pa.)', class: 'text-secondary fst-italic' %>
             </p>
-            <%= f.input :ans_q4_desc, label: 'Details:', wrapper_html: {class: 'd-none', data: {questionaire_target: 'container'}} %>
+            <%= f.error :ans_q4, style: "color: #dc3545" %>
+            <%= f.input :ans_q4_desc, label: 'Details:', wrapper_html: {class: 'd-none', data: {questionaire_target: 'container'}}, input_html: {data: {questionaire_target: 'input'}} %>
           </td>
           <td style="vertical-align: middle">
             <div class="d-flex gap-1">
@@ -83,7 +87,8 @@
           <th scope='row'>5.a</th>
           <td>
             <%= content_tag :p, 'Have you smoked any cigerettes in the past 12 months? If "Yes", please state your average daily consumption' %>
-            <%= f.input :ans_q5_a_desc, label: 'Details:', wrapper_html: {class: 'd-none', data: {questionaire_target: 'container'}} %>
+            <%= f.error :ans_q5_a, style: "color: #dc3545" %>
+            <%= f.input :ans_q5_a_desc, label: 'Details:', wrapper_html: {class: 'd-none', data: {questionaire_target: 'container'}}, input_html: {data: {questionaire_target: 'input'}} %>
           </td>
           <td style="vertical-align: middle">
             <div class="d-flex gap-1">
@@ -99,7 +104,8 @@
           <th scope='row'>5.b</th>
           <td>
             <%= content_tag :p, 'Do you drink alcohol? If "Yes", please state whether beer, wine, or spirits; and your average daily consumption' %>
-            <%= f.input :ans_q5_b_desc, label: 'Details:', wrapper_html: {class: 'd-none', data: {questionaire_target: 'container'}} %>
+            <%= f.error :ans_q5_b, style: "color: #dc3545" %>
+            <%= f.input :ans_q5_b_desc, label: 'Details:', wrapper_html: {class: 'd-none', data: {questionaire_target: 'container'}}, input_html: {data: {questionaire_target: 'input'}} %>
           </td>
           <td style="vertical-align: middle">
             <div class="d-flex gap-1 ">
@@ -113,7 +119,7 @@
         </tr>
       </tbody>
       <div class="form-actions text-center">
-        <%= f.button :submit, 'Submit', class: 'btn-success', data: {turbo: false} %>
+        <%= f.button :submit, 'Submit', class: 'btn-success' %>
       </div>
   </div>
 

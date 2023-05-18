@@ -15,7 +15,7 @@ Rails.application.routes.draw do
       collection do
         post :import
       end
-      resources :batch_health_decs, as: 'health_declaration'
+      resources :batch_health_decs, as: 'health_declarations'
       resources :batch_dependents, as: 'dependents'
       resources :batch_beneficiaries, as: 'beneficiaries'
       resources :member_dependents do

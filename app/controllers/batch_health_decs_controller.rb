@@ -1,6 +1,11 @@
 class BatchHealthDecsController < InheritedResources::Base
   before_action :authenticate_user!
-  before_action :set_batch, only: %i[new create]
+  before_action :set_batch, only: %i[new create show]
+
+  def show 
+    @member = @batch.member_details
+    @batch_health_dec = @batch.batch_health_dec
+  end
 
   def new
     @batch_health_dec = @batch.build_batch_health_dec
@@ -8,11 +13,12 @@ class BatchHealthDecsController < InheritedResources::Base
   end
 
   def create
+    @member = @batch.member_details
     @batch_health_dec = @batch.create_batch_health_dec(batch_health_dec_params)
 
     respond_to do |format|
-      if @batch_health_dec.save!
-        format.html { redirect_to group_remit_path(@batch.group_remit), notice: "Health declaration saved!"}
+      if @batch_health_dec.save
+        format.html { redirect_to group_remit_batch_health_declaration_path(@batch.group_remit,@batch, @batch_health_dec), notice: "Health declaration saved!"}
       else
         format.html { render :new, status: :unprocessable_entity }
       end

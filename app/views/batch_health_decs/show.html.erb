@@ -1,9 +1,12 @@
 
-<%= render @batch_health_dec %>
 
-<div>
-  <%= link_to "Edit", edit_batch_health_dec_path(@batch_health_dec), class: 'btn btn-primary' %> |
-  <%= link_to "Back", batch_health_decs_path, class: 'btn btn-primary' %>
-
-  <%= button_to "Delete", @batch_health_dec, method: :delete, class: 'btn btn-danger' %>
-</div>
+<%= turbo_frame_tag "modal-xl" do %>
+  <div class="modal-header">
+    <%= content_tag :h5, "Health Declaration - #{@member.last_name}, #{@member.first_name} #{@member.middle_name}", class: "modal-title", id: "staticBackdropLabel" %>
+    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+  </div>
+  
+  <div class="modal-body">
+    <%= render @batch_health_dec %>
+  </div>
+<% end %>

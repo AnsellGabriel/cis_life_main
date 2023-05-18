@@ -1,6 +1,8 @@
 class MemberDependent < ApplicationRecord
   before_validation :uppercase_fields
 
+  validates_presence_of :first_name, :last_name, :birth_date, :relationship
+
   belongs_to :member
 
   has_many :batch_dependents, dependent: :destroy
