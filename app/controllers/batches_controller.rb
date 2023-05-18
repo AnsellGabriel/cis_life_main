@@ -32,8 +32,8 @@ class BatchesController < ApplicationController
       return redirect_to group_remit_path(@group_remit), alert: "Imported members must be at least 100 for GYRT plan. Current count: #{csv.count}"
     end
 
-    import_service = BatchMemberImportService.new(csv, @group_remit, @cooperative)
-    import_message = import_service.import_members
+    import_service = BatchImportService.new(csv, @group_remit, @cooperative)
+    import_message = import_service.import_batches
 
     redirect_to group_remit_path(@group_remit), notice: import_message
   end
@@ -149,7 +149,7 @@ class BatchesController < ApplicationController
     end
 
     def set_batch
-      @group_remit = GroupRemit.find_by(id: params[:group_remit_id])
+      set_group_remit
       @batch = @group_remit.batches.find_by(id: params[:id])
     end
 
@@ -161,8 +161,8 @@ class BatchesController < ApplicationController
 
       # premium and commission totals
       @gross_premium = @group_remit.gross_premium
-      @total_coop_commission = @group_remit.total_coop_commission
-      @total_agent_commission = @group_remit.total_agent_commission
+      @total_coop_commission = @group_remit.total_coop_commissions
+      @total_agent_commission = @group_remit.total_agent_commissions
       @net_premium = @group_remit.net_premium
 
       @principal_count = @batches_container.count

@@ -23,16 +23,10 @@ class GroupRemitsController < InheritedResources::Base
 
   def show
     @agreement = @group_remit.agreement
+    @batches_dependents= @group_remit.batches_dependents
     @batches_container = @group_remit.batches.order(created_at: :desc)
     @pagy, @batches = pagy(@batches_container, items: 10)
-    @batches_dependents= @group_remit.batches_dependents
 
-    # premium and commission totals
-    @gross_premium = @group_remit.total_principal_premium + @group_remit.total_dependent_premiums
-    @total_coop_commission = @group_remit.total_coop_commission + @group_remit.total_dependent_coop_commissions
-    @total_agent_commission = @group_remit.total_agent_commission + @group_remit.total_dependent_agent_commissions
-    @net_premium = @gross_premium - @total_coop_commission
-    
     @principal_count = @batches_container.count
     @dependent_count = @batches_dependents.count
     @single_premium = @batches[0].premium if @batches[0].present?
@@ -52,7 +46,7 @@ class GroupRemitsController < InheritedResources::Base
     today = Date.today
 
     @group_remit = agreement.group_remits.build(group_remit_params)
-    @group_remit.effectivity_date = Date.today
+    @group_remit.effectivity_date = today
 
     if agreement.anniversary_type == "single" or agreement.anniversary_type == "multiple"
       anniversary_date = Anniversary.find_by(id: group_remit_params[:anniversary_id]).anniversary_date
@@ -64,10 +58,6 @@ class GroupRemitsController < InheritedResources::Base
 
     @group_remit.terms = terms <= 0 ? terms + 12 : terms
     @group_remit.expiry_date = terms <= 0 ? anniversary_date.next_year : anniversary_date
-
-    # plan = agreement.plan
-    plan = agreement.plan
-    agreement = @group_remit.agreement
     @group_remit.name = "Batch #{agreement.group_remits.count + 1}"
 
     respond_to do |format|
@@ -120,7 +110,7 @@ class GroupRemitsController < InheritedResources::Base
     end
 
     def set_members
-      @cooperative = current_user.userable.cooperative
+      set_cooperative
       @coop_members = @cooperative.coop_members
       @members = Member.joins(:coop_members).where(coop_members: { id: @coop_members.ids }).order(:last_name)
     end

@@ -6,6 +6,7 @@ class MembersController < InheritedResources::Base
   def import
     # Check if a file has been uploaded
     file = params[:file]
+    
     if file.nil?
       return redirect_to coop_members_path, alert: "No file uploaded"
     else
@@ -16,6 +17,7 @@ class MembersController < InheritedResources::Base
     required_headers = ["Birth Place", "First Name", "Middle Name", "Last Name", "Suffix", "Status", "Birthdate", "Gender", "Address", "SSS #", "TIN #", "Mobile #", "Email", "Civil Status", "Height (cm)", "Weight (kg)", "Occupation", "Employer", "Work Address", "Spouse", "Work Phone #"]
     headers = CSV.open(file.path, &:readline).map(&:strip)
     missing_headers = required_headers - headers
+
     if missing_headers.any?
       return redirect_to coop_members_path, alert: "The following CSV headers are missing: #{missing_headers.join(', ')}"
     end
@@ -25,67 +27,10 @@ class MembersController < InheritedResources::Base
     file = File.open(file)
     csv = CSV.parse(file, headers: true, skip_blanks: true).delete_if { |row| row.to_hash.values.all?(&:blank?) }
     
-    # Initialize variables to keep track of member imports
-    created_members_counter = 0
-    updated_members_counter = 0
+    import_service = MemberImportService.new(csv, @cooperative)
+    counter = import_service.import_members
 
-    # Iterate over each row in the CSV file
-    csv.each do |row|
-      # Extract member data from CSV row
-      member_hash = {
-        last_name: row["Last Name"].upcase,
-        first_name: row["First Name"].upcase,
-        middle_name: row["Middle Name"].upcase,
-        suffix: row["Suffix"].upcase,
-        birth_place: row["Birth Place"],
-        birth_date: row["Birthdate"],
-        gender: row["Gender"],
-        address: row["Address"],
-        sss_no: row["SSS #"],
-        tin_no: row["TIN #"],
-        mobile_number: row["Mobile #"],
-        email: row["Email"],
-        civil_status: row["Civil Status"],
-        height: row["Height (cm)"],
-        weight: row["Weight (kg)"],
-        occupation: row["Occupation"],
-        employer: row["Employer"],
-        work_address: row["Work Address"],
-        legal_spouse: row["Spouse"],
-        work_phone_number: row["Work Phone #"]
-      }
-
-      # Extract cooperative member data from CSV row
-      coop_member_hash = {
-        cooperative_id: @cooperative.id,
-        coop_branch_id: CoopBranch.find_by(name: row["Branch"]).id,
-        membership_date: row["Membership Date"],
-        transferred: row["Transferred?"].downcase == "yes"
-      } 
-
-      # Check if a member with the same first name, last name, and birth date already exists
-      member = Member.find_or_initialize_by(
-        first_name: member_hash[:first_name],
-        last_name: member_hash[:last_name],
-        birth_date: member_hash[:birth_date]
-      )
-            
-      if member.persisted?
-        # check if member is already a coop member
-        coop_member = member.coop_members.find_or_initialize_by(cooperative_id: @cooperative.id) 
-        member.update(member_hash)
-        coop_member.update(coop_member_hash)
-        updated_members_counter += 1
-      else
-        # If a member does not exist, create a new record
-        new_member = Member.create(member_hash)
-        new_coop_member = new_member.coop_members.create(coop_member_hash) if new_member.save!
-
-        created_members_counter += 1 if new_coop_member.save!
-      end
-    end
-
-    redirect_to coop_members_path, notice: "#{created_members_counter} member(s) enrolled, #{updated_members_counter} member(s) updated."
+    redirect_to coop_members_path, notice: "#{counter[:created_members_counter]} member(s) enrolled, #{counter[:updated_members_counter]} member(s) updated."
   end
 
   def new

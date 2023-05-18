@@ -1,11 +1,10 @@
 class CoopMembersController < InheritedResources::Base
   before_action :authenticate_user!
   before_action :check_userable_type
-  before_action :set_cooperative, only: [:index, :new, :create, :edit, :update, :show]
+  before_action :set_cooperative, only: %i[index new create edit update show]
+  before_action :set_coop_member, only: %i[show edit :update destroy selected]
 
   def index
-    # ransack gem for search
-    # coop member id
     @member = Member.new
     @member.coop_members.build
     # get all coop members of the cooperative
@@ -20,8 +19,6 @@ class CoopMembersController < InheritedResources::Base
   end
 
   def new
-    # @coop_member = CoopMember.new(coop_branch_id: 1, last_name: FFaker::Name.last_name, first_name: FFaker::Name.first_name, middle_name: FFaker::Name.last_name, suffix: 'Jr', birthdate: Date.today, mobile_number: '09123456789', email: FFaker::Internet.email)
-    # @beneficiary = @coop_member.coop_member_beneficiaries.build(last_name: FFaker::Name.last_name, first_name: FFaker::Name.first_name, middle_name: FFaker::Name.last_name, suffix: 'Jr', relationship: 'Brother')
     @beneficiary = @coop_member.coop_member_beneficiaries.build
     super
   end
@@ -44,8 +41,6 @@ class CoopMembersController < InheritedResources::Base
   end
 
   def update
-    @coop_member = CoopMember.find(params[:id])
-
     respond_to do |format|
       if @coop_member.update!(coop_member_params)
         format.html { redirect_to @coop_member, notice: "Coop member updated."}
@@ -56,19 +51,14 @@ class CoopMembersController < InheritedResources::Base
   end
   
   def show
-    @coop_member = CoopMember.find(params[:id])
     @member = @coop_member.member
-    # @beneficiaries = @coop_member.coop_member_beneficiaries
-
-    # compute coop_member age
-    birth_date = @member.birth_date
-    @age = Date.today.year - birth_date.year - ((Date.today.month > birth_date.month || (Date.today.month == birth_date.month && Date.today.day >= birth_date.day)) ? 0 : 1)
+    @age = @member.age
     super
   end
 
   def selected
     @target = params[:target]
-    @member = CoopMember.find(params[:id]).member
+    @member = @coop_member.member
     @member_dependents = MemberDependent.where(member_id: @member.id)
     
     respond_to do |format|
@@ -79,6 +69,10 @@ class CoopMembersController < InheritedResources::Base
   private
     def set_cooperative
       @cooperative = current_user.userable.cooperative
+    end
+
+    def set_coop_member
+      @coop_member = CoopMember.find(params[:id])
     end
 
     def coop_member_params

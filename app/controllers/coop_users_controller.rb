@@ -34,10 +34,8 @@ class CoopUsersController < ApplicationController
     respond_to do |format|
       if @coop_user.save
         format.html { redirect_to unauthenticated_root_path, notice: "Account was successfully created. Please contact the administrator to activate your account." }
-        format.json { render :show, status: :created, location: @coop_user }
       else
         format.html { render :new, status: :unprocessable_entity }
-        format.json { render json: @coop_user.errors, status: :unprocessable_entity }
       end
     end
   end
@@ -47,10 +45,8 @@ class CoopUsersController < ApplicationController
     respond_to do |format|
       if @coop_user.update(coop_user_params)
         format.html { redirect_to coop_user_url(@coop_user), notice: "Account was successfully updated." }
-        format.json { render :show, status: :ok, location: @coop_user }
       else
         format.html { render :edit, status: :unprocessable_entity }
-        format.json { render json: @coop_user.errors, status: :unprocessable_entity }
       end
     end
   end
@@ -61,7 +57,6 @@ class CoopUsersController < ApplicationController
 
     respond_to do |format|
       format.html { redirect_to coop_users_url, notice: "Coop User was successfully destroyed." }
-      format.json { head :no_content }
     end
   end
 

@@ -29,10 +29,8 @@ class CooperativesController < ApplicationController
     respond_to do |format|
       if @cooperative.save
         format.html { redirect_to cooperative_url(@cooperative), notice: "Account created successfully. Please wait for the admin to approve your account." }
-        format.json { render :show, status: :created, location: @cooperative }
       else
         format.html { render :new, status: :unprocessable_entity }
-        format.json { render json: @cooperative.errors, status: :unprocessable_entity }
       end
     end
   end
@@ -42,10 +40,8 @@ class CooperativesController < ApplicationController
     respond_to do |format|
       if @cooperative.update(cooperative_params)
         format.html { redirect_to cooperative_url(@cooperative), notice: "Cooperative was successfully updated." }
-        format.json { render :show, status: :ok, location: @cooperative }
       else
         format.html { render :edit, status: :unprocessable_entity }
-        format.json { render json: @cooperative.errors, status: :unprocessable_entity }
       end
     end
   end

@@ -11,7 +11,7 @@
                 <%= member.hidden_field :cooperative_id, value: @cooperative.id %>
 
               <div class="">
-                <%= member.collection_select :coop_branch_id, @cooperative.coop_branches, :id, :name, { prompt: "Select a branch" }, style: "width: auto" ,class: "form-select mb-3"  %>
+                <%= member.input :coop_branch_id, collection: @cooperative.coop_branches.map {|branch| [branch.name, branch.id]}, style: "width: auto" ,class: "form-select mb-3"  %>
               </div>
               <div class="">
                 <%= member.input :transferred, as: :boolean, label: "Transferred?" %>
@@ -34,8 +34,7 @@
         <%= f.input :suffix %>
       </div>
       <div class="col-2">
-        <%= f.label :gender, class: "form-label" %>
-        <%= f.collection_select :gender, [['Male', 'male'], ['Female', 'female']], :last, :first, { prompt: "Select Gender" }, class: 'form-select mb-3' %>
+        <%= f.input :gender, collection: [['Male', 'male'], ['Female', 'female']] ,class: 'form-select mb-3' %>
       </div>
     </div>
     <div class="row">
@@ -65,9 +64,7 @@
     </div>
     <div class="row">
     <div class="col-3">
-        <%= f.label :civil_status, "Civil Status ", class: "form-label" %>
-        <abbr title="required">*</abbr>
-        <%= f.collection_select :civil_status, ["Single", "Married", "Divorced", "Separated", "Widowed"], :to_s, :to_s, { prompt: "Select Status" }, class: "form-select" %>
+        <%= f.input :civil_status, collection: [["Single", "single"], ["Married", "married"], ["Divorced", "divorced"], ["Separated", "separated"], ["Widowed", "widowed"]], class: "form-select" %>
       </div>
       <div class="col-3">
         <%= f.input :legal_spouse %>

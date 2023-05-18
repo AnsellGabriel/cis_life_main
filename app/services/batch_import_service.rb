@@ -1,11 +1,11 @@
-class BatchMemberImportService
+class BatchImportService
     def initialize(csv, group_remit, cooperative)
       @csv = csv
       @group_remit = group_remit
       @cooperative = cooperative
     end
   
-    def import_members
+    def import_batches
       # Initialize variables to keep track of member imports
       added_members_counter = 0
       denied_members_counter = 0
