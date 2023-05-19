@@ -63,7 +63,7 @@ class MembersController < InheritedResources::Base
     respond_to do |format|  
       if @member.save
         format.html { 
-          coop_member = @member.coop_members.last
+          coop_member = @member.coop_members.find_by(cooperative_id: @cooperative.id)
           redirect_to coop_member_path(coop_member),
           notice: "Member was successfully created." }
       else

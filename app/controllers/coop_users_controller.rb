@@ -1,6 +1,4 @@
 class CoopUsersController < ApplicationController
-  before_action :authenticate_user!
-  before_action :check_userable_type
   before_action :set_coop_user, only: %i[ show edit update destroy ]
 
   def home

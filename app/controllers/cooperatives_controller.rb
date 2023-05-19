@@ -1,6 +1,5 @@
 class CooperativesController < ApplicationController
-  before_action :authenticate_user!
-  before_action :check_userable_type
+  before_action :check_userable_type, except: %i[ selected ]
   before_action :set_cooperative, only: %i[ show edit update destroy ]
   before_action :authenticate_user!, only: %i[ index show edit update destroy ]
 

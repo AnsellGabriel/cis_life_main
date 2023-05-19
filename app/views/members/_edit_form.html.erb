@@ -4,11 +4,14 @@
   <%= f.error_notification message: f.object.errors[:base].to_sentence if f.object.errors[:base].present? %>
   <div class="form-inputs mb-3">
     <div class="row">
-      <div class="col-4">
-          <%= f.simple_fields_for :coop_members, @coop_member do |member| %>
+      <div class="col-12">
+          <%= f.simple_fields_for :coop_members do |member| %>
             <div class="form-group d-flex align-items-end coop-member-form">
-              <div class="">
-                <%= member.collection_select :coop_branch_id, @cooperative.coop_branches, :id, :name, { prompt: "Select a branch" }, style: "width: auto" ,class: "form-select mb-3"  %>
+                <%= member.hidden_field :membership_date, value: Date.today%>
+                <%= member.hidden_field :cooperative_id, value: @cooperative.id %>
+
+              <div class="col-md-6">
+                <%= member.input :coop_branch_id, collection: @cooperative.coop_branches.map {|branch| [branch.name, branch.id]}, style: "width: auto" ,class: "form-select mb-3"  %>
               </div>
               <div class="">
                 <%= member.input :transferred, as: :boolean, label: "Transferred?" %>
@@ -27,32 +30,39 @@
       <div class="col-3">
        <%= f.input :last_name%>
       </div>
-      <div class="col-1">
+      <div class="col-3">
         <%= f.input :suffix %>
-      </div>
-      <div class="col-2">
-        <%= f.label :gender, class: "form-label" %>
-        <%= f.collection_select :gender, [['Male', 'male'], ['Female', 'female']], :last, :first, { prompt: "Select Gender" }, class: 'form-select mb-3' %>
       </div>
     </div>
     <div class="row">
       <div class="col-3">
-        <%= f.input :birth_date, as: :date, html5: true %>
+        <%= f.input :gender, collection: [['Male', 'male'], ['Female', 'female']] ,class: 'form-select mb-3' %>
+      </div>
+      <div class="col-3">
+        <%= f.input :birth_date, as: :string, input_html: {data: {
+            controller: "flatpickr",
+            flatpickr_max_date: Time.zone.now,
+            flatpickr_next_arrow: "Next",
+            flatpickr_prev_arrow: "Prev"}} %>
       </div>
       <div class="col-3">
         <%= f.input :birth_place %>
       </div>
+    
+    </div>
+    <div class="row">
+      <div class="col-12">
+        <%= f.input :address %>
+      </div>
+    </div>
+    <div class="row">
       <div class="col-3">
         <%= f.input :email %>
       </div>
       <div class="col-3">
         <%= f.input :mobile_number %>
       </div>
-    </div>
-    <div class="row">
-      <div class="col">
-        <%= f.input :address %>
-      </div>
+   
       <div class="col-3">
         <%= f.input :sss_no, label: "SSS #" %>
       </div>
@@ -62,9 +72,7 @@
     </div>
     <div class="row">
     <div class="col-3">
-        <%= f.label :civil_status, "Civil Status ", class: "form-label" %>
-        <abbr title="required">*</abbr>
-        <%= f.collection_select :civil_status, ["Single", "Married", "Divorced", "Separated", "Widowed"], :to_s, :to_s, { prompt: "Select Status" }, class: "form-select" %>
+        <%= f.input :civil_status, collection: [["Single", "single"], ["Married", "married"], ["Divorced", "divorced"], ["Separated", "separated"], ["Widowed", "widowed"]], class: "form-select" %>
       </div>
       <div class="col-3">
         <%= f.input :legal_spouse %>
