@@ -42,13 +42,13 @@ class GroupRemitsController < InheritedResources::Base
   end
 
   def create
-    agreement = Agreement.find_by(id: params[:agreement_id])
+    @agreement = Agreement.find_by(id: params[:agreement_id])
     today = Date.today
 
-    @group_remit = agreement.group_remits.build(group_remit_params)
-    @group_remit.effectivity_date = today
+    @group_remit = @agreement.group_remits.build(group_remit_params)
+    @group_remit.effectivity_date = @agreement.group_remit.last.exists? ? @agreement.group_remit.last.effectivity_date : today
 
-    if agreement.anniversary_type == "single" or agreement.anniversary_type == "multiple"
+    if @agreement.anniversary_type == "single" or @agreement.anniversary_type == "multiple"
       anniversary_date = Anniversary.find_by(id: group_remit_params[:anniversary_id]).anniversary_date
     else
       anniversary_date = today
@@ -58,7 +58,7 @@ class GroupRemitsController < InheritedResources::Base
 
     @group_remit.terms = terms <= 0 ? terms + 12 : terms
     @group_remit.expiry_date = terms <= 0 ? anniversary_date.next_year : anniversary_date
-    @group_remit.name = "Batch #{agreement.group_remits.count + 1}"
+    @group_remit.name = "Batch #{@agreement.group_remits.count + 1}"
 
     respond_to do |format|
       if @group_remit.save!

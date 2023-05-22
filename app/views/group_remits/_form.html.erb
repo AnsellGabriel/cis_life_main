@@ -6,10 +6,19 @@
   <div class="form-inputs">
     <div class="d-flex gap-3 ">
       
-      <%= f.association :anniversary, 
-        input_html: { 
-          data: {controller: "slim-select" }, style: "width: 250px !important" 
-        }, wrapper_html: {style: 'margin-bottom: 0 !important;'}, label: false %>
-      <%= f.button :submit, class: 'btn-success', data: {turbo: false} %>
+      <% if @agreement.anniversary_type == 'multiple' %>
+        <%= f.association :anniversary, collection: @agreement.anniversaries,
+          input_html: { 
+            data: {controller: "slim-select" }, style: "width: 250px !important" 
+          }, wrapper_html: {style: 'margin-bottom: 0 !important;'}, label: false %>
+      <% elsif @agreement.anniversary_type == 'single' %>
+        <%= f.input :anniversary,
+          input_html: { 
+            value: @agreement.anniversaries[0].anniversary_date.strftime('%B %d'), style: "width: 250px !important", readonly: true
+          }, wrapper_html: {style: 'margin-bottom: 0 !important;'}, label: false %>
+      <% end %>
+      <%= f.button :submit, 'Confirm', class: 'btn-success', data: {turbo: false} %>
     </div>
 <% end %>
+
+<% console %>
