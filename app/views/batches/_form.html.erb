@@ -3,10 +3,8 @@
   <%= f.error_notification message: f.object.errors[:base].to_sentence if f.object.errors[:base].present? %>
   <div class="form-inputs">
     
-    <div class="row d-flex align-items-start gap-1">
-      
-      <div class="col-3" data-controller="batch" >
-
+    <div class="row d-flex align-items-start">
+      <div class="d-flex align-items-center gap-1" data-controller="batch" >
         <%= f.association :coop_member, 
         collection: @coop_members.map { |coop| 
         ["#{coop.member.last_name}, #{coop.member.first_name} #{coop.member.middle_name}", coop.id] }, 
@@ -17,14 +15,11 @@
           data: {  
             controller: "slim-select" }  
           }, label: false %>
-        <%= f.input  :transferred, as: :boolean, label: "Transferred?" %>
+          <%= f.input  :transferred, as: :boolean, label: "Transferred?" %>
       </div>
-     
-      <div class="col-3 d-flex align-items-end mb-3">
-        <div class="form-actions d-flex gap-1">
-          <%= f.button :submit, "Add", class: 'btn btn-sm btn-success' %>
-          <%= link_to "Cancel", :back, class: 'btn btn-sm btn-secondary' %>
-        </div>
+      <div class="d-flex gap-1">
+        <%= f.button :submit, "Add", class: 'btn btn-sm btn-outline-success' %>
+        <%= link_to "Cancel", :back, class: 'btn btn-sm btn-outline-danger' %>
       </div>
     </div>
   </div>

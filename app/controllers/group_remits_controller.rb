@@ -14,7 +14,6 @@ class GroupRemitsController < InheritedResources::Base
         format.html { redirect_to @group_remit, alert: "Please see members below and complete the necessary details." }
       end
     end
-
   end
 
   def index

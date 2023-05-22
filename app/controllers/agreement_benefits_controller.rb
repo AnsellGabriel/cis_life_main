@@ -2,7 +2,7 @@ class AgreementBenefitsController < InheritedResources::Base
   before_action :authenticate_user!
   before_action :check_userable_type
 
-  def selectedx
+  def selected
     # @target = params[:target]
     @agreement_benefit = AgreementBenefit.find(params[:id])
     @premium = @agreement_benefit.premium

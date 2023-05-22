@@ -6,6 +6,7 @@ class BatchesController < ApplicationController
   before_action :set_group_remit, only: %i[index new create edit update show import]
 
   def import
+    #! Progress bar error, tracking session #
     # Check if a file has been uploaded
     file = params[:file]
 

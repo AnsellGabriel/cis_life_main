@@ -15,6 +15,7 @@ class AgreementsController < InheritedResources::Base
   def show
     @principal_premium = @agreement.get_principal_premium
     @dependent_premium = @agreement.get_dependent_premium if @agreement.plan.gyrt_type == 'family'
+    @group_remit = @agreement.group_remits[0]
     @coop_sf = @agreement.get_coop_sf
   end
 

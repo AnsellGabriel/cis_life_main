@@ -46,6 +46,10 @@ class Batch < ApplicationRecord
     self.batch_beneficiaries.pluck(:member_dependent_id)
   end
 
+  def dependents_premium
+    self.batch_dependents.sum(:premium)
+  end
+
   def set_premium_and_service_fees
     gr = self.group_remit
     terms = self.group_remit.terms

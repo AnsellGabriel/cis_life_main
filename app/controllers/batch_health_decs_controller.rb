@@ -5,6 +5,7 @@ class BatchHealthDecsController < InheritedResources::Base
   def show 
     @member = @batch.member_details
     @batch_health_dec = @batch.batch_health_dec
+    @group_remit = @batch.group_remit
   end
 
   def new
