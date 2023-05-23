@@ -46,7 +46,7 @@ class GroupRemitsController < InheritedResources::Base
     today = Date.today
 
     @group_remit = @agreement.group_remits.build(group_remit_params)
-    @group_remit.effectivity_date = @agreement.group_remit.last.exists? ? @agreement.group_remit.last.effectivity_date : today
+    @group_remit.effectivity_date = today
 
     if @agreement.anniversary_type == "single" or @agreement.anniversary_type == "multiple"
       anniversary_date = Anniversary.find_by(id: group_remit_params[:anniversary_id]).anniversary_date
@@ -67,6 +67,27 @@ class GroupRemitsController < InheritedResources::Base
         format.html { render :new, status: :unprocessable_entity }
       end
     end
+  end
+
+  # custom action for creating single and non-anniversary group remit
+  def create_single
+    agreement = Agreement.find_by(id: params[:agreement_id])
+    anniversary = params[:anniv_type] == "single" ? agreement.anniversaries.first : nil
+    group_remit = agreement.group_remits.build(description: FFaker::Lorem.paragraph, agreement_id: agreement.id)
+    today = Date.today
+    group_remit.effectivity_date = today
+    anniversary_date = params[:anniv_type] == "single" ? anniversary.anniversary_date : today
+    terms = (anniversary_date.year * 12 + anniversary_date.month) - (today.year * 12 + today.month)
+    group_remit.terms = terms <= 0 ? terms + 12 : terms
+    group_remit.expiry_date = terms <= 0 ? anniversary_date.next_year : anniversary_date
+    group_remit.name = "Batch #{agreement.group_remits.count + 1}"
+    group_remit.anniversary_id = params[:anniv_type] == "single" ? anniversary.id : nil
+    respond_to do |format|
+      if group_remit.save!
+        format.html { redirect_to group_remit, notice: "Group remit was successfully created." }
+      end
+    end
+
   end
 
   def edit

@@ -12,7 +12,7 @@
   <% end %>
 </div>
 
-<div class="row row-cols-2 row-cols-md-1 g-4 mb-3">
+<div class="row row-cols-2 row-cols-md-2 g-4 mb-3">
   <% @f_agreements.each do |agreement| %>
   <%= turbo_frame_tag agreement.id do %>
     <div class="col">
@@ -20,7 +20,7 @@
         <div class="card-body">
           <div class="d-flex justify-content-between">
             <div class="d-flex align-items-center gap-1">
-              <h5 class="card-title mb-0"><%= agreement.name %></h5>
+              <h6 class="card-title mb-0"><%= agreement.name %></h6>
               <% if agreement.notarized_date.present? %>
                 <span class="badge bg-success">Notarized</span>
               <% else %>
@@ -32,7 +32,7 @@
 
         </div>
         <div class="card-footer d-flex justify-content-between">
-          <small class="text-muted">Agent: <%= agreement.agent.full_name %></small>
+          <small class="text-muted">Created by: <%= agreement.agent.full_name %></small>
           <small class="text-muted">Updated: <%= time_ago_in_words(agreement.updated_at) %></small>
         </div>
       </div>

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_05_18_014941) do
+ActiveRecord::Schema[7.0].define(version: 2023_05_23_054533) do
   create_table "active_admin_comments", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.string "namespace"
     t.text "body"
@@ -163,6 +163,14 @@ ActiveRecord::Schema[7.0].define(version: 2023_05_18_014941) do
     t.index ["group_remit_id"], name: "index_batches_on_group_remit_id"
   end
 
+  create_table "benefits", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+    t.string "name"
+    t.text "description"
+    t.string "abbreviation"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
   create_table "coop_branches", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.string "name"
     t.string "region"
@@ -250,7 +258,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_05_18_014941) do
     t.string "name"
     t.text "description"
     t.bigint "agreement_id", null: false
-    t.bigint "anniversary_id", null: false
+    t.integer "anniversary_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.date "effectivity_date"
@@ -323,7 +331,9 @@ ActiveRecord::Schema[7.0].define(version: 2023_05_18_014941) do
     t.bigint "agreement_benefit_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.bigint "benefit_id", null: false
     t.index ["agreement_benefit_id"], name: "index_product_benefits_on_agreement_benefit_id"
+    t.index ["benefit_id"], name: "index_product_benefits_on_benefit_id"
   end
 
   create_table "proposals", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
@@ -376,8 +386,8 @@ ActiveRecord::Schema[7.0].define(version: 2023_05_18_014941) do
   add_foreign_key "coop_users", "cooperatives"
   add_foreign_key "employees", "departments"
   add_foreign_key "group_remits", "agreements"
-  add_foreign_key "group_remits", "anniversaries"
   add_foreign_key "member_dependents", "members"
   add_foreign_key "product_benefits", "agreement_benefits"
+  add_foreign_key "product_benefits", "benefits"
   add_foreign_key "proposals", "cooperatives"
 end

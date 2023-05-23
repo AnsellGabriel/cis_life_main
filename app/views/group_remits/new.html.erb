@@ -1,11 +1,3 @@
-<%= turbo_frame_tag "modal" do %>
-  <div class="modal-header">
-    <%= content_tag :h5, "Choose anniversary date", class: "modal-title", id: "staticBackdropLabel" %>
-    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-  </div>
-  
-  <div class="modal-body d-flex justify-content-center">
-    <%= render "form" %>
-  </div>
-
+<%= turbo_frame_tag "anniversary_date" do %>
+  <%= render "form" %>
 <% end %>

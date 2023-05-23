@@ -1,6 +1,6 @@
 class GroupRemit < ApplicationRecord
   belongs_to :agreement
-  belongs_to :anniversary
+  belongs_to :anniversary, optional: true
   
   has_many :batches, dependent: :destroy
 

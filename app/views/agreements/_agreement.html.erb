@@ -1,27 +1,28 @@
-<div id="<%= dom_id agreement %>" class="row d-flex justify-content-around">
-<div class="col-md-6">
-  <div class="d-flex gap-3 justify-content-between ps-5 pe-5">
+<div id="<%= dom_id agreement %>" class="row d-flex justify-content-between">
+<div class="col-md-12">
+  <div class="d-flex gap-3 justify-content-between">
       <%= content_tag :p, 'Plan', class: 'text-secondary'  %>
     <div class="d-flex">
       <%= content_tag :span, "#{agreement.plan.name}" %>
       <%= content_tag :span, "(#{agreement.plan.acronym})" %>
     </div>
   </div>
-  <div class="d-flex gap-3 justify-content-between ps-5 pe-5">
+  <div class="d-flex gap-3 justify-content-between">
     <div class="d-flex justify-content-between" style='width: 200px'>
-      <%= content_tag :p, 'Anniversary type', class: 'text-secondary' %>
+      <%= content_tag :p, 'Anniversary Date', class: 'text-secondary' %>
     </div>
-    <%= content_tag :span, "#{agreement.anniversary_type.titleize}" %>
+    <% if agreement.anniversary_type == 'multiple'%>
+      <%= content_tag :span, "Multiple" %>
+    <% elsif agreement.anniversary_type == 'single'%>
+      <%= content_tag :span, "#{agreement.anniversaries[0].anniversary_date.strftime("%B %d")}" %>
+    <% else %>
+      <%= content_tag :span, "Tentative" %>
+    <% end %>
   </div>
-  <div class="d-flex gap-3 justify-content-between ps-5 pe-5">
-    <div class="d-flex justify-content-between" style='width: 200px'>
-      <%= content_tag :p, 'Premium', class: 'text-secondary' %>
-    </div>
-    <%= content_tag :span, "#{number_to_currency(@principal_premium, unit: "₱", precision: 2)}" %>
+  
   </div>
-  </div>
-  <div class="col-md-6">
-  <div class="d-flex gap-3 justify-content-between ps-5 pe-5">
+  <div class="col-md-12">
+  <div class="d-flex gap-3 justify-content-between">
     <div class="d-flex justify-content-between" style='width: 200px'>
       <%= content_tag :span, 'Notarized date', class: 'text-secondary' %>
     </div>
@@ -31,7 +32,7 @@
       <%= content_tag :p, "Pending", style: "color: #ffc107" %>
     <% end %>
   </div>
-  <div class="d-flex gap-3 justify-content-between ps-5 pe-5">
+  <div class="d-flex gap-3 justify-content-between">
     <div class="d-flex justify-content-between" style='width: 200px'>
       <%= content_tag :span, 'MOA signed date', class: 'text-secondary' %>
     </div>
@@ -41,11 +42,17 @@
       <%= content_tag :p, "Pending", style: "color: #ffc107" %>
     <% end %>
   </div>
-  <div class="d-flex gap-3 justify-content-between ps-5 pe-5">
+  <div class="d-flex gap-3 justify-content-between">
     <div class="d-flex justify-content-between" style='width: 200px'>
       <%= content_tag :p, 'Cooperative Service Fee', class: 'text-secondary' %>
     </div>
     <%= content_tag :span, "#{@coop_sf}%" %>
   </div> 
+  <div class="d-flex gap-3 justify-content-between">
+    <div class="d-flex justify-content-between" style='width: 200px'>
+      <%= content_tag :p, 'Premium', class: 'text-secondary' %>
+    </div>
+    <%= content_tag :span, "#{number_to_currency(@principal_premium, unit: "₱", precision: 2)}" %>
+  </div>
   </div>
 </div>

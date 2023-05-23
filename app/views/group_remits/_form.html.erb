@@ -3,22 +3,14 @@
   <%= f.error_notification %>
   <%= f.error_notification message: f.object.errors[:base].to_sentence if f.object.errors[:base].present? %>
 
-  <div class="form-inputs">
+  <div class="form-inputs d-flex align-items-center gap-1">
     <div class="d-flex gap-3 ">
-      
-      <% if @agreement.anniversary_type == 'multiple' %>
-        <%= f.association :anniversary, collection: @agreement.anniversaries,
+        <%= f.association :anniversary, collection: @agreement.anniversaries,           include_blank: 'Select Anniversary',
           input_html: { 
-            data: {controller: "slim-select" }, style: "width: 250px !important" 
+            style: "width: 250px !important; height: 31px !important; padding: 0 20px;"
           }, wrapper_html: {style: 'margin-bottom: 0 !important;'}, label: false %>
-      <% elsif @agreement.anniversary_type == 'single' %>
-        <%= f.input :anniversary,
-          input_html: { 
-            value: @agreement.anniversaries[0].anniversary_date.strftime('%B %d'), style: "width: 250px !important", readonly: true
-          }, wrapper_html: {style: 'margin-bottom: 0 !important;'}, label: false %>
-      <% end %>
-      <%= f.button :submit, 'Confirm', class: 'btn-success', data: {turbo: false} %>
     </div>
+    <%= f.button :submit, 'Confirm', class: 'btn btn-sm btn-outline-success', data: {turbo: false} %>
+    <%= link_to 'Cancel', agreement_path(@agreement), class: 'btn btn-sm btn-outline-secondary' %>
+  </div>
 <% end %>
-
-<% console %>

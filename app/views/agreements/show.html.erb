@@ -4,17 +4,26 @@
   <div class="col">
     <div class="card">
       <div class="card-body">
-        <div class="d-flex justify-content-between">
-          <div class="d-flex gap-2 align-items-center">
-            <h5 class="card-title"><%= @agreement.name %></h5>
-            <div class="d-flex justify-content-center gap-3">
+        <div class="d-flex justify-content-between align-items-center">
+            <h6 class="card-title mb-0"><%= @agreement.name %></h6>
+            <div class="d-flex justify-content-center align-items-center gap-1">
               <% if @agreement.group_remits.exists? %>
-                <%= link_to 'View Group Remits', agreement_group_remit_path(@agreement, @group_remit)	, class: 'btn btn-sm btn-outline-success mb-1', data: {turbo: false} %>
+                <%= link_to 'View Group Remit', agreement_group_remit_path(@agreement, @group_remit)	, class: 'btn btn-sm btn-outline-success', data: {turbo: false} %>
+              <% else %>
+                <% if @agreement.anniversary_type == 'multiple'%>
+                  <%= turbo_frame_tag 'anniversary_date' do %>
+                    <%= link_to 'New Group Remit', new_agreement_group_remit_path(@agreement)	, class: 'btn btn-sm btn-outline-success' %>
+                  <% end %>
+                <% elsif @agreement.anniversary_type == 'single' %>
+                  <!-- custom button for /group_remits/create_single -->
+                  <%= button_to "New Group Remit", create_single_group_remits_path, method: :post, params: {agreement_id: @agreement.id, anniv_type: 'single'}, class:'btn btn-sm btn-outline-success', data: {turbo: false} %>
+                <% else %>
+                  <!-- custom button for /group_remits/create_single -->
+                  <%= button_to "New Group Remit", create_single_group_remits_path, method: :post, params: {agreement_id: @agreement.id, anniv_type: 'none'}, class:'btn btn-sm btn-outline-success', data: {turbo: false} %>
+                <% end %>
               <% end %>
-              <%= link_to 'New Group Remit', new_agreement_group_remit_path(@agreement)	, class: 'btn btn-sm btn-outline-success mb-1', data: {turbo_frame: 'modal'} %>
+              <%= link_to 'Close', agreements_path ,class: 'btn btn-sm btn-outline-danger', data: {turbo_frame: dom_id(@agreement)} %>
             </div>
-          </div>
-          <%= link_to 'Close', agreements_path ,class: 'btn btn-sm btn-outline-danger', data: {turbo_frame: dom_id(@agreement)} %>
         </div>
         <hr>
         <div class="">

@@ -4,36 +4,49 @@
   <%= link_to 'Group Remits', agreement_group_remits_path(@agreement), class: 'btn btn-sm btn-secondary' %>
   <div class="d-flex align-items-center gap-1">
     <% unless @group_remit.submitted? %>
-      <% if @all_batches_have_beneficiaries && @batch_count > 4 %>
+      <% if @all_batches_have_beneficiaries && @batch_count > 100 %>
         <%= link_to 'Submit Batch', submit_group_remit_path(@group_remit),class: 'btn btn-sm btn-warning' %>
       <% else %>
-        <%= content_tag :button, 'Submit Batch' ,class: 'btn btn-sm btn-secondary', disabled: true %>
+        <%= link_to 'Submit Batch', submit_group_remit_path(@group_remit),class: 'btn btn-sm btn-warning' %>
       <% end %>
     <% end %>
   </div>
 </div>
 <%= content_tag :h3, "#{@agreement.name}(#{@group_remit.name})" %>
 
-<div class="d-flex justify-content-start align-items-center mb-3 gap-3">
-
-  <%= turbo_frame_tag "computation" do %>
-    <%= render "group_remits/computation" %>
-  <% end %> 
-
-<div class="d-flex flex-column " style="height: 100%">
-  <div class="d-flex justify-content-between mb-2" style="height: 100%; width: 460px;">
-    <div style="width: 100%">
-      <% unless @group_remit.submitted? %>
-          <%= turbo_frame_tag "batch_import_form" do %>
-            <%= turbo_frame_tag "batch_form" do %>     
-              <%= render 'group_remits/add_member' %>  
+<div class="d-flex justify-content-between align-items-center mb-3 gap-3">
+  <div class="d-flex flex-column " style="height: 100%; width: 100%">
+    <div class="d-flex justify-content-between mb-2" style="height: 100%; width: 460px;">
+      <div style="width: 100%">
+        <% unless @group_remit.submitted? %>
+            <%= turbo_frame_tag "batch_import_form" do %>
+              <%= turbo_frame_tag "batch_form" do %>     
+                <%= render 'group_remits/add_member' %>  
+              <% end %>
             <% end %>
-          <% end %>
-      <% end%>
+        <% end%>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-body">
+        <div class="d-flex justify-content-center">
+          <%= content_tag :h6, "Effectivity Date ", style: "width: 150px" %>
+          <%= content_tag :h6, ": #{@group_remit.effectivity_date.strftime('%B %d, %Y')}", style: "width: 150px" %>
+        </div>
+        <div class="d-flex justify-content-center">
+          <%= content_tag :h6, "Expiry Date", style: "width: 150px" %>
+          <%= content_tag :h6, ": #{@group_remit.expiry_date.strftime('%B %d, %Y')}", style: "width: 150px" %>
+        </div>
+        <div class="d-flex justify-content-center">
+          <%= content_tag :h6, "Terms", style: "width: 150px" %>
+          <%= content_tag :h6, ": #{@group_remit.terms}", style: "width: 150px"%>
+        </div>
+      </div>
     </div>
   </div>
 
-  <div class="card">
+  <div class="card" style="height: 100%; width: 100%">
     <div class="card-body">
       <div class="d-flex gap-3">
         <%= content_tag :h6, "Effectivity Date ", style: "width: 150px" %>
@@ -48,14 +61,11 @@
         <%= content_tag :h6, ": #{@group_remit.terms}"%>
       </div>
     </div>
-  </div>
-  
-    
-</div>
+  </div> 
 
-  
-  
-
+  <%= turbo_frame_tag "computation" do %>
+    <%= render "group_remits/computation" %>
+  <% end %>  
 </div>
 
 
