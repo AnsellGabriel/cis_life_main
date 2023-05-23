@@ -10,8 +10,8 @@
         <%= content_tag :span, " DEMO VERSION", class: 'fw-bold text-danger' if ["localhost:3000"].include?(request.host_with_port) %>
       </a>
       <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
-        <%# if current_user %>
-          <%= link_to "Home", root_path, class: "nav-link" %>
+        <% if current_user %>
+          <%= link_to "Home", authenticated_root, class: "nav-link" %>
           <li class="nav-item dropdown"> 
             <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button" data-bs-toggle="dropdown" aria-expanded="false">
               Claim Process
@@ -61,10 +61,10 @@
               <li class="nav-item"> <%#= button_to "Sign Out", destroy_user_session_path, method: :delete, class: "btn btn-sm btn-primary mx-2" %></li>
             </ul>
           </li>
-        <%# else %>
+        <% else %>
           <li class="nav-item"> <%#= link_to "Sign Up", new_user_registration_path, class: "nav-link"  %></li>
           <li class="nav-item"> <%#= link_to "Sign In", new_user_session_path, class: "nav-link"  %></li>
-        <%# end %>
+        <% end %>
       </ul>
     </div>
   </div>

@@ -1,0 +1,33 @@
+<div class="card col-md-6 ps-0 pe-0">
+  <h5 class="card-header text-center">Register</h5>
+  <div class="card-body"> 
+    <div class="d-flex justify-content-center">
+			<div class="form-group col-md-4">
+					<%= select_tag :category, options_for_select([['Select a role', '', {disabled: true, selected: true}],'Agent', 'Coop', 'Employee']), id: "formCategory", class: "form-select mb-3" %>
+			</div>
+		</div>
+
+		<div class="hidden" id="agentForm">
+				<%= render "agents/form", agent: @agent %>
+		</div>
+
+		<div class="hidden" id="coopForm">
+				<%= render "coop_users/form", coop_user: @coop_user %>
+		</div>
+
+		<div class="hidden" id="employeeForm">
+				<%= render "employees/form", employee: @employee %>
+		</div>
+
+	</div>
+</div>
+
+<%= javascript_include_tag 'toggleForms' %>
+<script type="module">
+    toggleForms();
+</script>
+
+
+
+
+

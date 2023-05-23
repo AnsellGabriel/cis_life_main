@@ -1,0 +1,2 @@
+class AgentGroup < ApplicationRecord
+end
