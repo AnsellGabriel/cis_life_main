@@ -1,0 +1,10 @@
+@import "bootstrap";
+body {
+    font-family: 'Roboto', sans-serif;
+}
+
+.bg_gradient {
+    background: linear-gradient(60deg, rgb(181, 178, 192) 0%, rgb(230, 233, 223) 0%, rgb(252, 255, 255) 100%);
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+}
