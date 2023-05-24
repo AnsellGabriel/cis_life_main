@@ -1,5 +1,4 @@
 class Batch < ApplicationRecord
-  before_save :set_premium_and_service_fees
   # validates_presence_of :effectivity_date, :expiry_date, :coop_sf_amount, :agent_sf_amount, :status, :premium, :coop_member_id
 
   # updates the batches table realtime when a new batch is created
@@ -50,12 +49,12 @@ class Batch < ApplicationRecord
     self.batch_dependents.sum(:premium)
   end
 
-  def set_premium_and_service_fees
+  def set_premium_and_service_fees(insured_type)
     gr = self.group_remit
     terms = self.group_remit.terms
 
-    self.agreement_benefit_id = gr.agreement.agreement_benefits.find_by(insured_type: 1).id
-    self.premium = ((gr.principal_premium / 12.to_d) * terms) 
+    self.agreement_benefit_id = gr.agreement.agreement_benefits.find_by(insured_type: insured_type).id
+    self.premium = ((gr.set_premium(insured_type) / 12.to_d) * terms) 
     self.coop_sf_amount = (gr.get_coop_sf/100.to_d) * self.premium
     self.agent_sf_amount = (gr.get_agent_sf/100.to_d) * self.premium
   end

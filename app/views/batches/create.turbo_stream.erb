@@ -2,6 +2,22 @@
   <%= turbo_frame_tag "batch_form" do %>
     <%= render "group_remits/add_member" %>
   <% end %>
+  <% if @batch_without_beneficiaries_count > 0 || @batch_without_batch_health_dec_count > 0 %>
+    <div class="d-flex flex-column mt-1">
+      <%= content_tag :span, "Unable to submit group remit due to: ", class: 'mb-1',  style: "font-size: .7rem; color: red !important; font-weight: 700;"  %>
+      <div class="">
+        <% if @batch_count < @agreement.proposal.minimum_participation %>
+          <%= content_tag :span, "Members are below minimum participation: #{@agreement.proposal.minimum_participation}", class: 'badge bg-danger' %>
+        <% end %>
+        <% if @batch_without_beneficiaries_count > 0 %>
+          <%= content_tag :span, "#{@batch_without_beneficiaries_count} member(s) without beneficiary!", class: 'badge bg-danger' %>
+        <% end %>
+        <% if @batch_without_batch_health_dec_count > 0 %>
+          <%= content_tag :span, "#{@batch_without_batch_health_dec_count} member(s) without batch health declaration!", class: 'badge bg-danger' %>
+        <% end %>
+      </div>
+    </div>
+  <% end %>
 <% end %>
 
 

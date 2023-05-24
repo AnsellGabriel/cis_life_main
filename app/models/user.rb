@@ -5,6 +5,8 @@ class User < ApplicationRecord
          :recoverable, :rememberable, :validatable
 
   belongs_to :userable, polymorphic: true
+
+  
   attribute :admin, :boolean, default: false
   attribute :approved, :boolean, default: false
 

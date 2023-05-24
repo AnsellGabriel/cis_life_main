@@ -86,6 +86,14 @@ class BatchesController < ApplicationController
       agreement.coop_members << coop_member
     end
 
+    if agreement.plan.acronym == 'GYRTBR'
+      insured_type = 3
+    elsif agreement.plan.acronym == 'GYRT' || agreement.plan.acronym == 'GYRTF'
+      insured_type = 1
+    end
+
+    @batch.set_premium_and_service_fees(insured_type)
+    
     respond_to do |format|
       if @batch.save!
         set_premiums
@@ -156,6 +164,7 @@ class BatchesController < ApplicationController
 
     def set_premiums
       @agreement = @group_remit.agreement
+      @batch_count = @group_remit.batches.count
       @batches_container = @group_remit.batches.order(created_at: :desc)
       @batches_dependents= BatchDependent.joins(batch: :group_remit)
         .where(group_remits: {id: @group_remit.id})
@@ -170,6 +179,8 @@ class BatchesController < ApplicationController
       @dependent_count = @batches_dependents.count
       @single_premium = @batches_container[0].premium if @batches_container[0].present?
       @single_dependent_premium = @batches_dependents[0].premium if @batches_dependents[0].present?
+      @batch_without_beneficiaries_count = @group_remit.batches.where.not(id: @group_remit.batches.joins(:batch_beneficiaries).select(:id)).count
+      @batch_without_batch_health_dec_count = @group_remit.batches.where(status: :recent).where.not(id: @group_remit.batches.joins(:batch_health_dec).select(:id)).count
     end
 
     def check_userable_type

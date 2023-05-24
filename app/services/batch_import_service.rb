@@ -111,7 +111,8 @@ class BatchImportService
   
             end
           end
-    
+          
+          new_batch.set_premium_and_service_fees(agreement.agreement_benefits.first.insured_type)
           added_members_counter += 1 if new_batch.save
         else
           # Member data is invalid or incomplete

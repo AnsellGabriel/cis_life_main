@@ -8,13 +8,22 @@ class AgreementsController < InheritedResources::Base
     @agreements = @cooperative.agreements.order(updated_at: :desc)
 
     # filter members based on last name, first name
-    @f_agreements = @agreements.where("name LIKE ?", "%#{params[:agreement_filter]}%")
+    @f_agreements = @agreements.where("moa_no LIKE ?", "%#{params[:agreement_filter]}%")
     # @pagy, @agreements = pagy(@f_agreements, items: 8)
   end
 
   def show
-    @principal_premium = @agreement.get_principal_premium
-    @dependent_premium = @agreement.get_dependent_premium if @agreement.plan.gyrt_type == 'family'
+    if @agreement.plan.acronym == 'GYRTBR'
+      insured_type = 3
+    elsif @agreement.plan.acronym == 'GYRT'
+      insured_type = 1
+    elsif @agreement.plan.acronym == 'GYRTF'
+      insured_type = 1
+      dependent_type = 2
+    end
+      
+    @principal_premium = @agreement.get_premium(insured_type)
+    @dependent_premium = @agreement.get_premium(dependent_type) if @agreement.plan.acronym == 'GYRTF'
     @group_remit = @agreement.group_remits[0]
     @coop_sf = @agreement.get_coop_sf
   end
@@ -26,7 +35,7 @@ class AgreementsController < InheritedResources::Base
   def create
     plan = Plan.find_by(id: agreement_params[:plan_id])
     @agreement = @cooperative.agreements.build(agreement_params)
-    @agreement.name = "#{plan.acronym}-Agreement-#{Agreement.count + 1}"
+    @agreement.moa_no = "#{plan.acronym}-Agreement-#{Agreement.count + 1}"
 
     respond_to do |format|
       if @agreement.save!

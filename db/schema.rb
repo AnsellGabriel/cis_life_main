@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_05_23_054533) do
+ActiveRecord::Schema[7.0].define(version: 2023_05_24_082304) do
   create_table "active_admin_comments", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.string "namespace"
     t.text "body"
@@ -71,7 +71,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_05_23_054533) do
   end
 
   create_table "agreements", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
-    t.string "name"
+    t.string "moa_no"
     t.text "description"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
@@ -83,9 +83,11 @@ ActiveRecord::Schema[7.0].define(version: 2023_05_23_054533) do
     t.date "contestability_period"
     t.string "nel"
     t.bigint "agent_id", null: false
+    t.bigint "proposal_id", null: false
     t.index ["agent_id"], name: "index_agreements_on_agent_id"
     t.index ["cooperative_id"], name: "index_agreements_on_cooperative_id"
     t.index ["plan_id"], name: "index_agreements_on_plan_id"
+    t.index ["proposal_id"], name: "index_agreements_on_proposal_id"
   end
 
   create_table "agreements_coop_members", id: false, charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
@@ -344,6 +346,8 @@ ActiveRecord::Schema[7.0].define(version: 2023_05_23_054533) do
     t.decimal "agent_sf", precision: 10, scale: 2
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.integer "minimum_participation"
+    t.string "proposal_no"
     t.index ["cooperative_id"], name: "index_proposals_on_cooperative_id"
   end
 
@@ -369,6 +373,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_05_23_054533) do
   add_foreign_key "agreements", "agents"
   add_foreign_key "agreements", "cooperatives"
   add_foreign_key "agreements", "plans"
+  add_foreign_key "agreements", "proposals"
   add_foreign_key "anniversaries", "agreements"
   add_foreign_key "batch_beneficiaries", "batches"
   add_foreign_key "batch_beneficiaries", "member_dependents"

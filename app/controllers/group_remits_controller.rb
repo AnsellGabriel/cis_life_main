@@ -34,6 +34,8 @@ class GroupRemitsController < InheritedResources::Base
 
     @all_batches_have_beneficiaries = @group_remit.batches.all? { |batch| batch.batch_beneficiaries.exists? }
     @batch_count = @group_remit.batches.count
+    @batch_without_beneficiaries_count = @group_remit.batches.where.not(id: @group_remit.batches.joins(:batch_beneficiaries).select(:id)).count
+    @batch_without_batch_health_dec_count = @group_remit.batches.where(status: :recent).where.not(id: @group_remit.batches.joins(:batch_health_dec).select(:id)).count
   end
 
   def new

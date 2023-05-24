@@ -21,12 +21,8 @@ class GroupRemit < ApplicationRecord
       .where(group_remits: {id: self.id})
   end
 
-  def principal_premium
-    self.agreement.agreement_benefits.find_by(insured_type: 1).product_benefit.premium
-  end
-
-  def dependent_premium
-    self.agreement.agreement_benefits.find_by(insured_type: 2).product_benefit.premium
+  def set_premium(insured_type)
+    self.agreement.agreement_benefits.find_by(insured_type: insured_type).product_benefits[0].premium
   end
 
   def get_coop_sf

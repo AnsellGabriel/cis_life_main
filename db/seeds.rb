@@ -27,7 +27,7 @@ cooperatives_spreadsheet = Roo::Spreadsheet.open("/Users/macbookair/Desktop/cis_
 end
 
 # Proposal
-Proposal.create!(cooperative_id: 1, coop_sf: 12.5, agent_sf: 4.5, ave_age: 50)
+Proposal.create!(cooperative_id: 1, coop_sf: 12.5, agent_sf: 4.5, ave_age: 50, minimum_participation: 3)
 
 # AgentGroup
 AgentGroup.create!(name: 'Marketing', description: 'Marketing Group')
@@ -36,38 +36,51 @@ AgentGroup.create!(name: 'Marketing', description: 'Marketing Group')
 Agent.create!(first_name: 'Rullian', middle_name: 'Postrano', last_name: 'Rong', agent_group_id: 1)
 
 # Plan
-Plan.create!(name: 'GYRT-Basic', description: 'Plan 1 description', gyrt_type: 'basic')
-Plan.create!(name: 'GYRT-Family', description: 'Plan 2 description', gyrt_type: 'family')
+Plan.create!(name: 'GYRT-Basic', description: 'Plan 1 description', gyrt_type: 'basic', acronym: 'GYRT')
+Plan.create!(name: 'GYRT-Family', description: 'Plan 2 description', gyrt_type: 'family', acronym: 'GYRTF')
+Plan.create!(name: 'GYRT-Basic Ranking', description: 'Plan 3 description', gyrt_type: 'basic', acronym: 'GYRTBR')
+Plan.create!(name: 'GYRT-Family Ranking', description: 'Plan 4 description', gyrt_type: 'family', acronym: 'GYRTFR')
+
 
 # Benefit
 Benefit.create!(name: 'Life', description: 'Benefit 1 description', abbreviation: 'LIFE')
-Benefit.create!(name: 'Accidental Death & Dismemberment', description: 'Benefit 1 description', abbreviation: 'ADD')
+Benefit.create!(name: 'Accidental Death & Dismemberment', description: 'Benefit 2 description', abbreviation: 'ADD')
 
 
 # GYRT Basic Single Anniversary  
-Agreement.create!(name: 'Basic Single Anniv', description: 'Agreement with a single anniversary type', plan_id: 1, agent_id: 1, cooperative_id: 1, anniversary_type: 'single')
+Agreement.create!(proposal_id: 1, name: 'Basic Single Anniv', description: 'Agreement with a single anniversary type', plan_id: 1, agent_id: 1, cooperative_id: 1, anniversary_type: 'single')
 AgreementBenefit.create!(agreement_id: 1, proposal_id: 1, name: 'Agreement Benefit principal', min_age: 18, max_age: 65, insured_type: 1)
 ProductBenefit.create!(coverage_amount: 150000,benefit_id: 1, agreement_benefit_id: 1, premium: 1000)
 ProductBenefit.create!(coverage_amount: 100000,benefit_id: 2, agreement_benefit_id: 1, premium: 1000)
 Anniversary.create!(agreement_id: 1, name: 'Today', anniversary_date: Date.today)
 
 # GYRT Family Multiple Anniversary
-Agreement.create!(name: 'Family Multiple Anniv', description: 'Agreement with a mutiple anniversary type', plan_id: 2, agent_id: 1, cooperative_id: 1, anniversary_type: 'multiple')
+Agreement.create!(proposal_id: 1, name: 'Family Multiple Anniv', description: 'Agreement with a mutiple anniversary type', plan_id: 2, agent_id: 1, cooperative_id: 1, anniversary_type: 'multiple')
 AgreementBenefit.create!(agreement_id: 2, proposal_id: 1, name: 'Agreement Benefit principal', min_age: 18, max_age: 65, insured_type: 1)
 ProductBenefit.create!(coverage_amount: 150000,benefit_id: 1, agreement_benefit_id: 2, premium: 1000)
 AgreementBenefit.create!(agreement_id: 2, proposal_id: 1, name: 'Agreement Benefit dependent', min_age: 18, max_age: 65, insured_type: 2)
 ProductBenefit.create!(coverage_amount: 100000,benefit_id: 2, agreement_benefit_id: 3, premium: 500)
 
 
-Anniversary.create!(agreement_id: 2, name: 'April 18', anniversary_date: '2023/04/18')
-Anniversary.create!(agreement_id: 2, name: 'May 31', anniversary_date: '2023/05/31')
-Anniversary.create!(agreement_id: 2, name: 'June 30', anniversary_date: '2023/06/30')
+Anniversary.create!(agreement_id: 2, name: 'April 18', anniversary_date: '2023/03/18')
+Anniversary.create!(agreement_id: 2, name: 'May 31', anniversary_date: '2023/02/31')
+Anniversary.create!(agreement_id: 2, name: 'June 30', anniversary_date: '2023/01/30')
 
 # GYRT Basic No Anniversary
-Agreement.create!(name: 'Basic No Anniv', description: 'Agreement with no anniversary type', plan_id: 1, agent_id: 1, cooperative_id: 1, anniversary_type: 'none')
+Agreement.create!(proposal_id: 1, name: 'Basic No Anniv', description: 'Agreement with no anniversary type', plan_id: 1, agent_id: 1, cooperative_id: 1, anniversary_type: 'none')
 AgreementBenefit.create!(agreement_id: 3, proposal_id: 1, name: 'Agreement Benefit principal', min_age: 18, max_age: 65, insured_type: 1)
 ProductBenefit.create!(coverage_amount: 150000,benefit_id: 1, agreement_benefit_id: 4, premium: 1000)
 ProductBenefit.create!(coverage_amount: 100000,benefit_id: 2, agreement_benefit_id: 4, premium: 1000)
+
+# GYRT Ranking - Basic
+Agreement.create!(proposal_id: 1, name: 'GYRT - Basic Ranking', description: 'Agreement with ranking type', plan_id: 3, agent_id: 1, cooperative_id: 1, anniversary_type: 'single')
+AgreementBenefit.create!(agreement_id: 4, proposal_id: 1, name: 'Agreement Benefit principal', min_age: 18, max_age: 65, insured_type: 3)
+AgreementBenefit.create!(agreement_id: 4, proposal_id: 1, name: 'Agreement Benefit principal', min_age: 18, max_age: 65, insured_type: 4)
+
+ProductBenefit.create!(coverage_amount: 100000,benefit_id: 1, agreement_benefit_id: 5, premium: 500)
+ProductBenefit.create!(coverage_amount: 150000,benefit_id: 1, agreement_benefit_id: 6, premium: 1000)
+Anniversary.create!(agreement_id: 4, name: 'April 18', anniversary_date: '2023/03/18')
+
 
 
 # CoopBranch of Coop 1

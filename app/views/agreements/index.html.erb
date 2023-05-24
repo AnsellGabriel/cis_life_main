@@ -20,11 +20,11 @@
         <div class="card-body">
           <div class="d-flex justify-content-between">
             <div class="d-flex align-items-center gap-1">
-              <h6 class="card-title mb-0"><%= agreement.name %></h6>
-              <% if agreement.notarized_date.present? %>
-                <span class="badge bg-success">Notarized</span>
+              <h6 class="card-title mb-0"><%= agreement.moa_no %></h6>
+              <% if agreement.group_remits.present? %>
+                <span class="badge bg-success">Active</span>
               <% else %>
-                <span class="badge bg-warning text-dark">Unnotarized</span>
+                <span class="badge bg-warning text-dark">New</span>
               <% end %>
             </div>
             <%= link_to 'View', agreement_path(agreement) ,class: 'btn btn-sm btn-outline-warning' %>
