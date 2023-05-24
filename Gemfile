@@ -79,3 +79,8 @@ gem 'bootstrap', '~> 5.2.3'
 gem 'simple_form'
 gem "roo", "~> 2.9.0"
 gem 'devise'
+gem 'csv'
+gem 'requestjs-rails'
+gem 'pagy'
+gem 'ransack'
+gem 'jquery-rails'

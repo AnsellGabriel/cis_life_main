@@ -1,7 +1,5 @@
 Rails.application.routes.draw do
   resources :agent_groups
-  resources :coop_branches
-  resources :cooperatives
   resources :departments
   resources :agents
   resources :coop_users
@@ -11,6 +9,10 @@ Rails.application.routes.draw do
   get 'pages/home'
   # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
 
+  resources :cooperatives do
+    get :selected, on: :member
+    resources :coop_branches
+  end
 
   devise_for :users, controllers: {
     registrations: 'users/registrations'

@@ -4,7 +4,7 @@ class ApplicationController < ActionController::Base
         when "Agent"
           redirect_to agents_path
         when "CoopUser"
-          redirect_to coop_members_path	
+          redirect_to pages_home_path
         when "Employee"
           redirect_to employees_path
         else
