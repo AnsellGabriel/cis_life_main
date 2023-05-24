@@ -1,0 +1,16 @@
+
+
+<div class="card">
+  <div class="card-header">
+    <h1>Agent group</h1>
+    <%= link_to "Delete", @agent_group, class: "btn btn-danger btn-sm", method: :delete, data: { "turbo-method": :delete, turbo_confirm: "Are you sure?" } %>
+  </div>
+  <div class="card-body">
+    <%= render @agent_group %>
+  </div>
+  <div class="card-footer">
+    <%= link_to "Edit", edit_agent_group_path(@agent_group), class: "btn btn-secondary btn-sm" %> |
+    <%= link_to "Back", agent_groups_path, class: "btn btn-secondary btn-sm" %>
+  </div>
+
+</div>

@@ -1,0 +1,39 @@
+
+<%= simple_form_for @agent do |f| %>
+  <%= f.error_notification %>
+  <%= f.error_notification message: f.object.errors[:base].to_sentence if f.object.errors[:base].present? %>
+
+  <div class="form-inputs mb-3">
+    <%# fields for User model associated with Agent %>
+    <% unless current_user %>
+      <%= f.fields_for :user do |u| %>
+        <%= u.input :email,
+                  required: true,
+                  autofocus: true,
+                  input_html: { autocomplete: "email" }%>
+      <%= u.input :password,
+                  required: true,
+                  hint: ("#{@minimum_password_length} characters minimum" if @minimum_password_length),
+                  input_html: { autocomplete: "new-password" } %>
+      <%= u.input :password_confirmation,
+                  required: true,
+                  input_html: { autocomplete: "new-password" } %>
+
+        <%= u.hidden_field :userable_type, value: "Agent" %>
+        <%= u.hidden_field :userable_id, value: @agent.id %>
+      <% end %>
+    <% end %>
+
+    <%= f.association :agent_group %>
+    <%= f.input :first_name %>
+    <%= f.input :middle_name %>
+    <%= f.input :last_name %>
+    <%= f.input :birthdate, as: :date, html5: true  %>
+    <%= f.input :mobile_number %>
+  </div>
+
+  <div class="form-actions text-end">
+    <%= link_to "Back", agents_path, class: 'btn btn-secondary' %>
+    <%= f.button :submit, class: 'btn-success' %>
+  </div>
+<% end %>
