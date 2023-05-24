@@ -1,0 +1,2 @@
+module CoopUsersHelper
+end

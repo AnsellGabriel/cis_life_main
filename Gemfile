@@ -25,7 +25,7 @@ gem "turbo-rails"
 gem "stimulus-rails"
 
 # Build JSON APIs with ease [https://github.com/rails/jbuilder]
-gem "jbuilder"
+# gem "jbuilder"
 
 # Use Redis adapter to run Action Cable in production
 # gem "redis", "~> 4.0"
@@ -56,6 +56,8 @@ end
 group :development do
   # Use console on exceptions pages [https://github.com/rails/web-console]
   gem "web-console"
+  gem 'ffaker'
+  gem 'byebug'
 
   # Add speed badges [https://github.com/MiniProfiler/rack-mini-profiler]
   # gem "rack-mini-profiler"
@@ -69,10 +71,16 @@ group :test do
   gem "capybara"
   gem "selenium-webdriver"
   gem "webdrivers"
+  
 end
+
 gem "sassc-rails"
 gem 'bootstrap', '~> 5.2.3'
 gem 'simple_form'
 gem "roo", "~> 2.9.0"
-gem 'ffaker'
 gem 'devise'
+gem 'csv'
+gem 'requestjs-rails'
+gem 'pagy'
+gem 'ransack'
+gem 'jquery-rails'
