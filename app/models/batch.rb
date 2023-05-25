@@ -24,6 +24,7 @@ class Batch < ApplicationRecord
 
   belongs_to :coop_member
   belongs_to :group_remit
+  belongs_to :agreement_benefit
   
   has_one :batch_health_dec, dependent: :destroy
   
@@ -49,12 +50,17 @@ class Batch < ApplicationRecord
     self.batch_dependents.sum(:premium)
   end
 
+  def get_premium
+    self.agreement_benefit.product_benefits.sum(:premium)
+  end
+
   def set_premium_and_service_fees(insured_type)
     gr = self.group_remit
     terms = self.group_remit.terms
+    agreement_benefit = gr.agreement.agreement_benefits.find_by(insured_type: insured_type)
 
-    self.agreement_benefit_id = gr.agreement.agreement_benefits.find_by(insured_type: insured_type).id
-    self.premium = ((gr.set_premium(insured_type) / 12.to_d) * terms) 
+    self.agreement_benefit_id = agreement_benefit.id
+    self.premium = ((self.get_premium / 12.to_d) * terms) 
     self.coop_sf_amount = (gr.get_coop_sf/100.to_d) * self.premium
     self.agent_sf_amount = (gr.get_agent_sf/100.to_d) * self.premium
   end

@@ -26,6 +26,14 @@ class AgreementsController < InheritedResources::Base
     @dependent_premium = @agreement.get_premium(dependent_type) if @agreement.plan.acronym == 'GYRTF'
     @group_remit = @agreement.group_remits[0]
     @coop_sf = @agreement.get_coop_sf
+    @group_remits = @agreement.group_remits
+
+    expiry_dates = @group_remits.map { |group_remit| group_remit.expiry_date.strftime("%m-%d") }
+    @anniversaries = @agreement.anniversaries.reject do |anniv|
+      expiry_dates.include?(anniv.anniversary_date.strftime("%m-%d"))
+    end
+
+    
   end
 
   def new

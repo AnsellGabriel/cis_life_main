@@ -21,10 +21,12 @@
           <div class="d-flex justify-content-between">
             <div class="d-flex align-items-center gap-1">
               <h6 class="card-title mb-0"><%= agreement.moa_no %></h6>
-              <% if agreement.group_remits.present? %>
-                <span class="badge bg-success">Active</span>
+              <% if agreement.group_remits.where(submitted: true).present? %>
+                <span class="badge bg-warning text-dark">Active</span>
+              <% elsif agreement.group_remits.present? %>
+                <span class="badge bg-danger">Pending</span>
               <% else %>
-                <span class="badge bg-warning text-dark">New</span>
+                <span class="badge bg-success">New</span>
               <% end %>
             </div>
             <%= link_to 'View', agreement_path(agreement) ,class: 'btn btn-sm btn-outline-warning' %>

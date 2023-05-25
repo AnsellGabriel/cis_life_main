@@ -86,13 +86,9 @@ class BatchesController < ApplicationController
       agreement.coop_members << coop_member
     end
 
-    if agreement.plan.acronym == 'GYRTBR'
-      insured_type = 3
-    elsif agreement.plan.acronym == 'GYRT' || agreement.plan.acronym == 'GYRTF'
-      insured_type = 1
+    if agreement.plan.acronym == 'GYRT' || agreement.plan.acronym == 'GYRTF'
+      @batch.set_premium_and_service_fees(1)
     end
-
-    @batch.set_premium_and_service_fees(insured_type)
     
     respond_to do |format|
       if @batch.save!

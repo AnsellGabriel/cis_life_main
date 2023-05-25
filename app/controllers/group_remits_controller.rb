@@ -9,7 +9,7 @@ class GroupRemitsController < InheritedResources::Base
     @group_remit.compute_save_premium_commissions
     respond_to do |format|
       if @group_remit.save
-        format.html { redirect_to agreement_group_remits_path(@group_remit.agreement), notice: "Batch submitted" }
+        format.html { redirect_to agreements_path, notice: "Group remit submitted" }
       else
         format.html { redirect_to @group_remit, alert: "Please see members below and complete the necessary details." }
       end
@@ -117,6 +117,14 @@ class GroupRemitsController < InheritedResources::Base
         format.html { redirect_to @group_remit, notice: "Group remit was successfully updated." }
       else
         format.html { render :edit, status: :unprocessable_entity }
+      end
+    end
+  end
+
+  def destroy
+    respond_to do |format|
+      if @group_remit.destroy
+        format.html { redirect_to agreements_path, alert: "Group remit was successfully deleted." }
       end
     end
   end

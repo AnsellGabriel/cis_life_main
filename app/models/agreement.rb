@@ -1,6 +1,4 @@
-class Agreement < ApplicationRecord
-    validates_presence_of :name
-    
+class Agreement < ApplicationRecord    
     belongs_to :plan
     belongs_to :proposal
     belongs_to :agent

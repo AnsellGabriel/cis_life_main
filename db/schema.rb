@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_05_24_082304) do
+ActiveRecord::Schema[7.0].define(version: 2023_05_25_054127) do
   create_table "active_admin_comments", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.string "namespace"
     t.text "body"
@@ -123,6 +123,8 @@ ActiveRecord::Schema[7.0].define(version: 2023_05_24_082304) do
     t.decimal "premium", precision: 10, scale: 2
     t.decimal "coop_sf_amount", precision: 10, scale: 2
     t.decimal "agent_sf_amount", precision: 10, scale: 2
+    t.bigint "agreement_benefit_id", null: false
+    t.index ["agreement_benefit_id"], name: "index_batch_dependents_on_agreement_benefit_id"
     t.index ["batch_id"], name: "index_batch_dependents_on_batch_id"
     t.index ["member_dependent_id"], name: "index_batch_dependents_on_member_dependent_id"
   end
@@ -377,6 +379,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_05_24_082304) do
   add_foreign_key "anniversaries", "agreements"
   add_foreign_key "batch_beneficiaries", "batches"
   add_foreign_key "batch_beneficiaries", "member_dependents"
+  add_foreign_key "batch_dependents", "agreement_benefits"
   add_foreign_key "batch_dependents", "batches"
   add_foreign_key "batch_dependents", "member_dependents"
   add_foreign_key "batch_health_decs", "batches"

@@ -8,27 +8,15 @@
           <div class="d-flex gap-1">
             <h6 class="card-title mb-0"><%= @agreement.moa_no %></h6>
             <% if @agreement.group_remits.where(submitted: true).present? %>
-              <span class="badge bg-success">Active</span>
+              <span class="badge bg-warning text-dark">Active</span>
+            <% elsif @agreement.group_remits.present? %>
+              <span class="badge bg-danger">Pending</span>
             <% else %>
-              <span class="badge bg-warning text-dark">New</span>
+              <span class="badge bg-success">New</span>
             <% end %>
           </div>
           <div class="d-flex justify-content-center align-items-center gap-1">
-            <% if @agreement.group_remits.exists? %>
-              <%= link_to 'View Group Remit', agreement_group_remit_path(@agreement, @group_remit)	, class: 'btn btn-sm btn-outline-warning', data: {turbo: false} %>
-            <% else %>
-              <% if @agreement.anniversary_type == 'multiple'%>
-                <%= turbo_frame_tag 'anniversary_date' do %>
-                  <%= link_to 'New Group Remit', new_agreement_group_remit_path(@agreement)	, class: 'btn btn-sm btn-outline-success' %>
-                <% end %>
-              <% elsif @agreement.anniversary_type == 'single' %>
-                <!-- custom button for /group_remits/create_single -->
-                <%= button_to "New Group Remit", create_single_group_remits_path, method: :post, params: {agreement_id: @agreement.id, anniv_type: 'single'}, class:'btn btn-sm btn-outline-success', data: {turbo: false} %>
-              <% else %>
-                <!-- custom button for /group_remits/create_single -->
-                <%= button_to "New Group Remit", create_single_group_remits_path, method: :post, params: {agreement_id: @agreement.id, anniv_type: 'none'}, class:'btn btn-sm btn-outline-success', data: {turbo: false} %>
-              <% end %>
-            <% end %>
+            
             <%= link_to 'Close', agreements_path ,class: 'btn btn-sm btn-outline-danger', data: {turbo_frame: dom_id(@agreement)} %>
           </div>
         </div>

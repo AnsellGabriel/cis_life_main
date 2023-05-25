@@ -17,11 +17,18 @@ class BatchDependentsController < InheritedResources::Base
   def create
     terms = @batch.group_remit.terms
     @batch_dependent = @batch.batch_dependents.new(batch_dependent_params)
-    @batch_dependent.premium = ((@group_remit.dependent_premium / 12.to_d) * terms)
+    relationship = @batch_dependent.member_dependent.relationship
 
-    @batch_dependent.coop_sf_amount = (@group_remit.get_coop_sf/100.to_d) * @batch_dependent.premium
-    
-    @batch_dependent.agent_sf_amount = (@group_remit.get_agent_sf/100.to_d) * @batch_dependent.premium
+    case relationship
+    when 'Spouse'
+      @batch_dependent.set_premium_and_service_fees(2)
+    when 'Parent'
+      @batch_dependent.set_premium_and_service_fees(3)
+    when 'Children'
+      @batch_dependent.set_premium_and_service_fees(4)
+    when 'Sibling'
+      @batch_dependent.set_premium_and_service_fees(5)
+    end
 
     respond_to do |format|
       if @batch_dependent.save

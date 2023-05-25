@@ -1,99 +1,153 @@
 <div id="<%= dom_id agreement %>" class="row d-flex justify-content-between">
-<div class="d-flex justify-content-center">
-  <div class="card">
-    <div class="card-body d-flex flex-column" style="width: 400px">
-      <div class="text-secondary d-flex justify-content-between small">
-        <%= content_tag :span, 'Proposal'%>
-        <%= content_tag :span, "#{agreement.proposal.proposal_no}" %>
-      </div>
-      <div class="text-secondary d-flex justify-content-between small mb-2">
+<div class="d-flex flex-column align-items-center gap-3">
+  <% if agreement.anniversary_type != 'multiple' %>
+    <div class="card">
+      <div class="card-body d-flex flex-column" style="width: 400px">
+        <div class="text-secondary d-flex justify-content-between small">
+          <%= content_tag :span, 'Proposal'%>
+          <%= content_tag :span, "#{agreement.proposal.proposal_no}" %>
+        </div>
+        
         <% if agreement.group_remits.where(submitted: true).exists? %>
-          <%= content_tag :span, "Participants" %>
-          <%= content_tag :span, "#{agreement.group_remits.where(submitted: true).last.batches.count}" %>
+          <div class="text-secondary d-flex justify-content-between small mb-2">
+            <%= content_tag :span, "Participants" %>
+            <%= content_tag :span, "#{agreement.group_remits.where(submitted: true).last.batches.count}" %>
+          </div>
+          <div class="text-secondary d-flex justify-content-between small">
+            <%= content_tag :span, 'Effectivity Date'%>
+            <%= content_tag :span, "#{agreement.group_remits.where(submitted: true).last.effectivity_date.strftime('%B %d, %Y')}" %>
+          </div>
+          <div class="text-secondary d-flex justify-content-between small mb-2">
+            <%= content_tag :span, 'Expiry Date'%>
+            <%= content_tag :span, "#{agreement.group_remits.where(submitted: true).last.expiry_date.strftime('%B %d, %Y')}" %>
+          </div>
+          <div class="text-secondary d-flex justify-content-between small">
+            <%= content_tag :span, 'Net Premium', class: 'text-secondary' %>
+            <%= content_tag :span, "#{number_to_currency(agreement.group_remits.where(submitted: true).last.net_premium, unit: '₱', precision: 2)}" %>
+          </div> 
+          <div class="text-secondary d-flex justify-content-between small">
+            <%= content_tag :span, 'Cooperative Service Fee', class: 'text-secondary' %>
+            <%= content_tag :span, "#{number_to_currency(agreement.group_remits.where(submitted: true).last.coop_commission, unit: '₱', precision: 2)}" %>
+          </div> 
         <% else %>
-          <%= content_tag :span, "Min. Participants" %>
-          <%= content_tag :span, "#{agreement.proposal.minimum_participation}" %>
+          <div class="text-secondary d-flex justify-content-between small mb-2">
+            <%= content_tag :span, "Min. Participants" %>
+            <%= content_tag :span, "#{agreement.proposal.minimum_participation}" %>
+          </div>
+          <div class="text-secondary d-flex justify-content-between small">
+            <%= content_tag :span, 'Anniversary Date'%>
+            <% if agreement.anniversary_type == 'multiple'%>
+              <%= content_tag :span, "Multiple" %>
+            <% elsif agreement.anniversary_type == 'single'%>
+              <%= content_tag :span, "#{agreement.anniversaries[0].anniversary_date.strftime("%B %d")}" %>
+            <% else %>
+              <%= content_tag :span, "Tentative" %>
+            <% end %>
+          </div>
+          <div class="text-secondary d-flex justify-content-between small">
+            <%= content_tag :span, 'Cooperative Service Fee', class: 'text-secondary' %>
+            <%= content_tag :span, "#{@coop_sf}%" %>
+          </div> 
         <% end %>
-      </div>
-      
-      <% if agreement.group_remits.where(submitted: true).exists? %>
-        <div class="text-secondary d-flex justify-content-between small">
-          <%= content_tag :span, 'Effectivity Date'%>
-          <%= content_tag :span, "#{agreement.group_remits.where(submitted: true).last.effectivity_date.strftime('%B %d, %Y')}" %>
-        </div>
-        <div class="text-secondary d-flex justify-content-between small mb-2">
-          <%= content_tag :span, 'Expiry Date'%>
-          <%= content_tag :span, "#{agreement.group_remits.where(submitted: true).last.expiry_date.strftime('%B %d, %Y')}" %>
-        </div>
-      <% else %>
-        <div class="text-secondary d-flex justify-content-between small">
-          <%= content_tag :span, 'Anniversary Date'%>
-          <% if agreement.anniversary_type == 'multiple'%>
-            <%= content_tag :span, "Multiple" %>
-          <% elsif agreement.anniversary_type == 'single'%>
-            <%= content_tag :span, "#{agreement.anniversaries[0].anniversary_date.strftime("%B %d")}" %>
+
+        <div class="mt-4 text-center">
+          <% if agreement.group_remits.where(submitted: true).exists? %>
+            <%= link_to 'View Group Remit', agreement_group_remit_path(@agreement, @group_remit)	, class: 'btn btn-sm btn-outline-warning', data: {turbo: false} %>
+          <% elsif agreement.group_remits.exists? %>
+            <%= link_to 'Finish Group Remit', agreement_group_remit_path(@agreement, @group_remit)	, class: 'btn btn-sm btn-outline-warning', data: {turbo: false} %>
           <% else %>
-            <%= content_tag :span, "Tentative" %>
+            <% if @agreement.anniversary_type == 'multiple'%>
+              <%= turbo_frame_tag 'anniversary_date' do %>
+                <%= link_to 'New Group Remit', new_agreement_group_remit_path(@agreement)	, class: 'btn btn-sm btn-outline-success' %>
+              <% end %>
+            <% elsif @agreement.anniversary_type == 'single' %>
+              <!-- custom button for /group_remits/create_single -->
+              <%= button_to "New Group Remit", create_single_group_remits_path, method: :post, params: {agreement_id: @agreement.id, anniv_type: 'single'}, class:'btn btn-sm btn-outline-success', data: {turbo: false} %>
+            <% else %>
+              <!-- custom button for /group_remits/create_single -->
+              <%= button_to "New Group Remit", create_single_group_remits_path, method: :post, params: {agreement_id: @agreement.id, anniv_type: 'none'}, class:'btn btn-sm btn-outline-success', data: {turbo: false} %>
+            <% end %>
           <% end %>
         </div>
-      <% end %>
-      
-      <% if agreement.group_remits.where(submitted: true).exists? %>
-        <div class="text-secondary d-flex justify-content-between small">
-          <%= content_tag :span, 'Net Premium', class: 'text-secondary' %>
-          <%= content_tag :span, "#{number_to_currency(agreement.group_remits.where(submitted: true).last.net_premium, unit: '₱', precision: 2)}" %>
-        </div> 
-        <div class="text-secondary d-flex justify-content-between small">
-          <%= content_tag :span, 'Cooperative Service Fee', class: 'text-secondary' %>
-          <%= content_tag :span, "#{number_to_currency(agreement.group_remits.where(submitted: true).last.coop_commission, unit: '₱', precision: 2)}" %>
-        </div> 
-      <% else %>
-        <div class="text-secondary d-flex justify-content-between small">
-          <%= content_tag :span, 'Cooperative Service Fee', class: 'text-secondary' %>
-          <%= content_tag :span, "#{@coop_sf}%" %>
-        </div> 
-      <% end %>
-      
+      </div>
     </div>
-  </div>
-</div>
-<!--
-  <div class="card">
-    <div class="card-body">    
-      
-    
-  
-  </div>
-  <div class="col-md-12">
-  <div class="d-flex gap-3 justify-content-between">
-    <div class="d-flex justify-content-between" style='width: 200px'>
-      <%= content_tag :span, 'Notarized date', class: 'text-secondary' %>
+  <% else %>
+    <% @group_remits.each do |gr| %>
+    <div class="card">
+        <div class="card-body d-flex flex-column" style="width: 400px">
+          <div class="text-secondary d-flex justify-content-between small">
+            <%= content_tag :span, 'Proposal'%>
+            <%= content_tag :span, "#{agreement.proposal.proposal_no}" %>
+          </div>
+      <div class="text-secondary d-flex justify-content-between small mb-2">
+        <%= content_tag :span, "Participants" %>
+        <%= content_tag :span, "#{agreement.group_remits.where(submitted: true).last.batches.count}" %>
+      </div>
+      <div class="text-secondary d-flex justify-content-between small">
+        <%= content_tag :span, 'Effectivity Date'%>
+        <%= content_tag :span, "#{agreement.group_remits.where(submitted: true).last.effectivity_date.strftime('%B %d, %Y')}" %>
+      </div>
+      <div class="text-secondary d-flex justify-content-between small mb-2">
+        <%= content_tag :span, 'Expiry Date'%>
+        <%= content_tag :span, "#{agreement.group_remits.where(submitted: true).last.expiry_date.strftime('%B %d, %Y')}" %>
+      </div>
+      <div class="text-secondary d-flex justify-content-between small">
+        <%= content_tag :span, 'Net Premium', class: 'text-secondary' %>
+        <%= content_tag :span, "#{number_to_currency(agreement.group_remits.where(submitted: true).last.net_premium, unit: '₱', precision: 2)}" %>
+      </div> 
+      <div class="text-secondary d-flex justify-content-between small">
+        <%= content_tag :span, 'Cooperative Service Fee', class: 'text-secondary' %>
+        <%= content_tag :span, "#{number_to_currency(agreement.group_remits.where(submitted: true).last.coop_commission, unit: '₱', precision: 2)}" %>
+      </div> 
+      <div class="mt-4 text-center">
+              <%= link_to 'View Group Remit', agreement_group_remit_path(@agreement, gr)	, class: 'btn btn-sm btn-outline-warning', data: {turbo: false} %>
+      </div>
+      </div>
     </div>
-    <% if agreement.notarized_date.present? %>
-      <%= content_tag :p, "#{agreement.notarized_date.strftime("%B %d, %Y")}" %>
-    <% else %>
-      <%= content_tag :p, "Pending", style: "color: #ffc107" %>
     <% end %>
-  </div>
-  <div class="d-flex gap-3 justify-content-between">
-    <div class="d-flex justify-content-between" style='width: 200px'>
-      <%= content_tag :span, 'MOA signed date', class: 'text-secondary' %>
-    </div>
-    <% if agreement.moa_signed_date.present? %>
-      <%= content_tag :p, "#{agreement.moa_signed.strftime("%B %d, %Y")}" %>
-    <% else %>
-      <%= content_tag :p, "Pending", style: "color: #ffc107" %>
+
+    <% @anniversaries.each do |anniv|%>
+      <div class="card">
+        <div class="card-body d-flex flex-column" style="width: 400px">
+          <div class="text-secondary d-flex justify-content-between small">
+            <%= content_tag :span, 'Proposal'%>
+            <%= content_tag :span, "#{agreement.proposal.proposal_no}" %>
+          </div>
+        
+            <div class="text-secondary d-flex justify-content-between small mb-2">
+              <%= content_tag :span, "Min. Participants" %>
+              <%= content_tag :span, "#{agreement.proposal.minimum_participation}" %>
+            </div>
+            <div class="text-secondary d-flex justify-content-between small">
+              <%= content_tag :span, 'Anniversary Date'%>
+              <%= content_tag :span, "#{anniv.anniversary_date.strftime("%B %d")}" %>
+            </div>
+            <div class="text-secondary d-flex justify-content-between small">
+              <%= content_tag :span, 'Cooperative Service Fee', class: 'text-secondary' %>
+              <%= content_tag :span, "#{@coop_sf}%" %>
+            </div> 
+
+          <div class="mt-4 text-center">
+            <% if agreement.group_remits.where(submitted: true).exists? %>
+              <%= link_to 'View Group Remit', agreement_group_remit_path(@agreement, @group_remit)	, class: 'btn btn-sm btn-outline-warning', data: {turbo: false} %>
+            <% elsif agreement.group_remits.exists? %>
+              <%= link_to 'Finish Group Remit', agreement_group_remit_path(@agreement, @group_remit)	, class: 'btn btn-sm btn-outline-warning', data: {turbo: false} %>
+            <% else %>
+              <% if @agreement.anniversary_type == 'multiple'%>
+                <%= turbo_frame_tag 'anniversary_date' do %>
+                  <%= link_to 'New Group Remit', new_agreement_group_remit_path(@agreement)	, class: 'btn btn-sm btn-outline-success' %>
+                <% end %>
+              <% elsif @agreement.anniversary_type == 'single' %>
+                <!-- custom button for /group_remits/create_single -->
+                <%= button_to "New Group Remit", create_single_group_remits_path, method: :post, params: {agreement_id: @agreement.id, anniv_type: 'single'}, class:'btn btn-sm btn-outline-success', data: {turbo: false} %>
+              <% else %>
+                <!-- custom button for /group_remits/create_single -->
+                <%= button_to "New Group Remit", create_single_group_remits_path, method: :post, params: {agreement_id: @agreement.id, anniv_type: 'none'}, class:'btn btn-sm btn-outline-success', data: {turbo: false} %>
+              <% end %>
+            <% end %>
+          </div>
+        </div>
+      </div>
     <% end %>
-  </div>
-  
-  <div class="d-flex gap-3 justify-content-between">
-    <div class="d-flex justify-content-between" style='width: 200px'>
-      <%= content_tag :p, 'Premium', class: 'text-secondary' %>
-    </div>
-    <%= content_tag :span, "#{number_to_currency(@principal_premium, unit: "₱", precision: 2)}" %>
-  </div>
-  </div>
-  </div>
-  </div>
+  <% end %>
 </div>
--->
