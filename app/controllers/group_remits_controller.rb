@@ -9,7 +9,7 @@ class GroupRemitsController < InheritedResources::Base
     @group_remit.compute_save_premium_commissions
     respond_to do |format|
       if @group_remit.save
-        format.html { redirect_to agreements_path, notice: "Group remit submitted" }
+        format.html { redirect_to @group_remit, notice: "Group remit submitted" }
       else
         format.html { redirect_to @group_remit, alert: "Please see members below and complete the necessary details." }
       end

@@ -5,14 +5,11 @@
   <% unless @group_remit.submitted? %>
     <div class="d-flex gap-1">
       <% unless @batch_without_beneficiaries_count > 0 || @batch_without_batch_health_dec_count > 0 || @batch_count < @agreement.proposal.minimum_participation %>
-        <%= link_to 'Submit Remittance', submit_group_remit_path(@group_remit),class: 'btn btn-sm btn-warning', data: {turbo: false, confirm: 'Delete group remit?' } %>
+        <%= link_to 'Submit Remittance', submit_group_remit_path(@group_remit),class: 'btn btn-sm btn-warning', data: {confirm: 'Submit group remit?' } %>
       <% end %>
       <%= button_to "Delete", group_remit_path(@group_remit), 
           method: :delete,
-          form: { 
-          data: { turbo: false},
-          confirm: "Delete this group remit?"
-          }, 
+          data: { turbo_confirm: 'Delete group remit?'},
           class: 'btn btn-sm btn-danger' %>
     </div>
   <% end %>
