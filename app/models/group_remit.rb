@@ -9,6 +9,7 @@ class GroupRemit < ApplicationRecord
     self.coop_commission = self.total_coop_commissions
     self.agent_commission = self.total_agent_commissions
     self.net_premium = self.net_premium - self.total_agent_commissions
+    self.effectivity_date = Date.today
     self.submitted = true
   end
 

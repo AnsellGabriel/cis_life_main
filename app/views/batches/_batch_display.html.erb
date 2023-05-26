@@ -28,7 +28,7 @@
             <h6 class="mb-0">Effectivity date:</h6>
           </div>
           <div class="col-sm text-secondary">
-            <%= @effectivity_date.strftime('%B %d, %Y') %>
+            <%= @effectivity_date.present? ? @effectivity_date.strftime('%B %d, %Y') : 'Tentative' %>
           </div>
           <div class="col-sm">
             <h6 class="mb-0">Expiry date:</h6>

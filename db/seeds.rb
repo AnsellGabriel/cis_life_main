@@ -73,9 +73,9 @@ AgreementBenefit.create!(agreement_id: 2, proposal_id: 1, name: 'Agreement Benef
 ProductBenefit.create!(coverage_amount: 75000,benefit_id: 1, agreement_benefit_id: 6, premium: 100)
 
 
-Anniversary.create!(agreement_id: 2, name: 'April 18', anniversary_date: '2023/03/18')
-Anniversary.create!(agreement_id: 2, name: 'May 31', anniversary_date: '2023/02/31')
-Anniversary.create!(agreement_id: 2, name: 'June 30', anniversary_date: '2023/01/30')
+Anniversary.create!(agreement_id: 2, name: 'March 18', anniversary_date: '2023/03/18')
+Anniversary.create!(agreement_id: 2, name: 'February 25', anniversary_date: '2023/02/25')
+Anniversary.create!(agreement_id: 2, name: 'January 30', anniversary_date: '2023/01/30')
 
 # GYRT Basic No Anniversary
 Agreement.create!(proposal_id: 1, moa_no: 'GYRT-MOA-0002', description: 'Agreement with no anniversary type', plan_id: 1, agent_id: 1, cooperative_id: 1, anniversary_type: 'none')

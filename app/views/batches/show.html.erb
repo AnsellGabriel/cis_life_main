@@ -1,5 +1,5 @@
 <div>
-  <%= link_to "#{@group_remit.name}", group_remit_path(@group_remit), class: 'btn btn-secondary mb-3' %>
+  <%= link_to "#{@agreement.moa_no}", group_remit_path(@group_remit), class: 'btn btn-secondary mb-3' %>
 </div>
 
 <%= render partial: 'batch_display', locals: { batch: @batch, batch_member: @batch_member } %>

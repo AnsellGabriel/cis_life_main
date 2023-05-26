@@ -1,9 +1,26 @@
 <%= turbo_stream_from current_cooperative, "batches" %>
 
-<div class="mb-3 d-flex gap-1 align-items-center">
+<div class="mb-3 d-flex gap-3 align-items-center">
   <%= link_to 'MOAs', agreements_path, class: 'btn btn-sm btn-secondary' %>
+  <% unless @group_remit.submitted? %>
+    <div class="d-flex gap-1">
+      <% unless @batch_without_beneficiaries_count > 0 || @batch_without_batch_health_dec_count > 0 || @batch_count < @agreement.proposal.minimum_participation %>
+        <%= link_to 'Submit Remittance', submit_group_remit_path(@group_remit),class: 'btn btn-sm btn-warning', data: {turbo: false } %>
+      <% end %>
+      <%= button_to "Delete", group_remit_path(@group_remit), 
+          method: :delete,
+          form: { 
+          data: { turbo: false},
+          confirm: "Delete this group remit?"
+          }, 
+          class: 'btn btn-sm btn-danger' %>
+    </div>
+  <% end %>
 </div>
-<%= content_tag :h3, "#{@agreement.moa_no}(#{@group_remit.name})" %>
+<div class="d-flex align-items-center gap-1 mb-3">
+  <%= content_tag :span, "#{@group_remit.submitted ? 'Active' : 'New'}", style: "color: #{@group_remit.submitted ? '#ffc107' : 'green'}; font-weight: 700;" %>
+  <%= content_tag :h3, "#{@agreement.moa_no}", class: 'mb-0' %>
+</div>
 
 <div class="d-flex justify-content-between align-items-center mb-3 gap-3">
   <div class="d-flex flex-column " style="height: 100%; width: 100%">
@@ -12,18 +29,8 @@
         <% unless @group_remit.submitted? %>
             <%= turbo_frame_tag "batch_import_form" do %>
               <%= turbo_frame_tag "batch_form" do %>     
-                <div class="d-flex gap-1 mb-2">
+                <div class="d-flex gap-3 mb-2">
                   <%= render 'group_remits/add_member' %>
-                  <% unless @batch_without_beneficiaries_count > 0 || @batch_without_batch_health_dec_count > 0 || @batch_count < @agreement.proposal.minimum_participation %>
-                    <%= link_to 'Submit', submit_group_remit_path(@group_remit),class: 'btn btn-sm btn-warning', data: {turbo: false } %>
-                  <% end %>
-                  <%= button_to "Delete", group_remit_path(@group_remit), 
-                      method: :delete,
-                      form: { 
-                      data: { turbo: false},
-                      confirm: "Delete this group remit?"
-                      }, 
-                      class: 'btn btn-sm btn-danger' %>
                 </div>
                 <% if @batch_without_beneficiaries_count > 0 || @batch_without_batch_health_dec_count > 0 || @batch_count < @agreement.proposal.minimum_participation %>
                   <div class="d-flex flex-column">
@@ -51,7 +58,7 @@
       <div class="card-body text-secondary">
         <div class="d-flex justify-content-center">
           <%= content_tag :h6, "Effectivity Date ", style: "width: 150px; font-size: .8rem" %>
-          <%= content_tag :h6, "#{@group_remit.effectivity_date.strftime('%B %d, %Y')}", style: "width: 150px; font-size: .8rem" %>
+          <%= content_tag :h6, "#{@group_remit.effectivity_date.present? ? @group_remit.effectivity_date.strftime('%B %d, %Y') : 'Tentative'}", style: "width: 150px; font-size: .8rem" %>
         </div>
         <div class="d-flex justify-content-center">
           <%= content_tag :h6, "Expiry Date", style: "width: 150px; font-size: .8rem" %>

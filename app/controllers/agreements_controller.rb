@@ -30,8 +30,9 @@ class AgreementsController < InheritedResources::Base
 
     expiry_dates = @group_remits.map { |group_remit| group_remit.expiry_date.strftime("%m-%d") }
     @anniversaries = @agreement.anniversaries.reject do |anniv|
-      expiry_dates.include?(anniv.anniversary_date.strftime("%m-%d"))
+      expiry_dates.present? ? expiry_dates.include?(anniv.anniversary_date.strftime("%m-%d")) : next
     end
+    # byebug
 
     
   end
