@@ -4,13 +4,13 @@
         <div style="width: 100%">
           <% unless @principal_count == 0 %>
             <div class="text-secondary d-flex justify-content-between">
-              <%= content_tag :span, "#{@principal_count} Principal x #{number_to_currency(@single_premium, unit: "₱", precision: 2)}", style: "font-size: .8rem" %>
-              <%= content_tag :span, "#{number_to_currency((@single_premium * @principal_count), unit: "₱", precision: 2)}", style: "font-size: .8rem; color: #ffc107;" %>
+              <%= content_tag :span, "Principal Premiums", style: "font-size: .8rem" %>
+              <%= content_tag :span, "#{number_to_currency((@group_remit.total_principal_premium), unit: "₱", precision: 2)}", style: "font-size: .8rem; color: #ffc107;" %>
             </div>
             <% unless @dependent_count == 0 %>
               <div class="text-secondary d-flex justify-content-between">
-                <%= content_tag :span, "#{@dependent_count} Dependent x #{number_to_currency(@single_dependent_premium, unit: "₱", precision: 2)}", style: "font-size: .8rem" %>
-                <%= content_tag :span, "#{number_to_currency((@single_dependent_premium * @dependent_count), unit: "₱", precision: 2)}", style: "font-size: .8rem; color: #ffc107;" %>
+                <%= content_tag :span, "Dependent Premiums", style: "font-size: .8rem" %>
+                <%= content_tag :span, "#{number_to_currency((@group_remit.total_dependent_premiums), unit: "₱", precision: 2)}", style: "font-size: .8rem; color: #ffc107;" %>
               </div>
             <% end %>
           <% end %>

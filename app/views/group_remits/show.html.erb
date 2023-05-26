@@ -5,7 +5,7 @@
   <% unless @group_remit.submitted? %>
     <div class="d-flex gap-1">
       <% unless @batch_without_beneficiaries_count > 0 || @batch_without_batch_health_dec_count > 0 || @batch_count < @agreement.proposal.minimum_participation %>
-        <%= link_to 'Submit Remittance', submit_group_remit_path(@group_remit),class: 'btn btn-sm btn-warning', data: {turbo: false } %>
+        <%= link_to 'Submit Remittance', submit_group_remit_path(@group_remit),class: 'btn btn-sm btn-warning', data: {turbo: false, confirm: 'Delete group remit?' } %>
       <% end %>
       <%= button_to "Delete", group_remit_path(@group_remit), 
           method: :delete,
@@ -77,16 +77,24 @@
       <div class="d-flex justify-content-center">
         <%= content_tag :h6, "#{@agreement.plan.name}"%>
       </div>
-      <div class="d-flex justify-content-around align-items-center">
-        <%= content_tag :h6, "Benefit", class: 'text-center', style: "width: 150px;" %>
-        <%= content_tag :h6, "Coverage Amount", class: 'text-center', style: "width: 150px;"%>
+      <div class="d-flex justify-content-between align-items-center">
+        <%= content_tag :h6, "Insured", style: "width: 150px;" %>
+        <%= content_tag :h6, "Benefit", style: "width: 150px;", class: 'text-center' %>
+        <%= content_tag :h6, "Coverage Amount", style: "width: 150px;", class: 'text-center'%>
       </div>
-      <% @agreement.agreement_benefits[0].product_benefits.each do |product| %>
-          <div class="d-flex justify-content-around align-items-center text-secondary">
-            <%= content_tag :span, "#{product.benefit.name}", style: "width: 150px; font-size: .8rem", class: 'text-center' %>
-            <%= content_tag :span, "#{number_to_currency(product.coverage_amount, unit: '₱', precision: 2)}", style: "width: 150px; font-size: .8rem", class: 'text-center'  %>
+      <% @agreement.agreement_benefits.each do |ab| %>
+        <div class="d-flex justify-content-between align-items-center text-secondary">
+          <%= content_tag :span, "#{ab.insured_type == 'principal' ? ab.insured_type.upcase : ab.insured_type.gsub('_', ' ').split(' ').drop(1).join(' ').upcase}", class: 'text-secondary', style: 'font-size: .8rem' %>
+          <div class="d-flex flex-column justify-content-between align-items-center">
+            <% ab.product_benefits.each do |product| %>
+              <div class="d-flex justify-content-around text-secondary mb-1">
+                <%= content_tag :span, "#{product.benefit.name}", style: "width: 150px; font-size: .8rem", class: 'text-center'%>
+                <%= content_tag :span, "#{number_to_currency(product.coverage_amount, unit: '₱', precision: 2)}", style: "width: 150px; font-size: .8rem",  class: 'text-center' %>
+              </div>
+            <% end %>
           </div>
-        <% end %>
+        </div>
+      <% end %>
     </div>
   </div> 
 
@@ -116,7 +124,7 @@
 
     <tbody id="batches_body">
       <% if @group_remit.batches.exists? %>
-        <%= render @batches, group_remit: @group_remit %>
+        <%= render @batches, group_remit: @group_remit, agreement: @agreement %>
       <% end %>
     </tbody>
   </table>

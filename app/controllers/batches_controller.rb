@@ -56,6 +56,7 @@ class BatchesController < ApplicationController
   end
 
   def new
+    @agreement = @group_remit.agreement
     @coop_members = @cooperative.unselected_coop_members(@group_remit.coop_member_ids)
     @batch = @group_remit.batches.new(effectivity_date: FFaker::Time.date, expiry_date: FFaker::Time.date, active: true, status: :recent)
   end
@@ -64,7 +65,7 @@ class BatchesController < ApplicationController
     @coop_members = @cooperative.coop_member_details
     @batch = @group_remit.batches.new(batch_params)
 
-    agreement = @group_remit.agreement
+    @agreement = @group_remit.agreement
     coop_member = @batch.coop_member
     member = coop_member.member
 
@@ -72,7 +73,7 @@ class BatchesController < ApplicationController
       return redirect_to new_group_remit_batch_path(@group_remit), alert: "Member age must be between 18 and 65 years old."
     end
 
-    renewal_member = agreement.coop_members.find_by(id: coop_member.id)
+    renewal_member = @agreement.coop_members.find_by(id: coop_member.id)
 
     if renewal_member.present?
         @batch.status = :renewal
@@ -83,11 +84,22 @@ class BatchesController < ApplicationController
       else
         @batch.status = :recent
       end
-      agreement.coop_members << coop_member
+      @agreement.coop_members << coop_member
     end
-
-    if agreement.plan.acronym == 'GYRT' || agreement.plan.acronym == 'GYRTF'
-      @batch.set_premium_and_service_fees(1)
+    # byebug
+    if @agreement.plan.acronym == 'GYRT' || @agreement.plan.acronym == 'GYRTF'
+      @batch.set_premium_and_service_fees(:principal)
+    else
+      case batch_params[:rank]
+      when 'BOD'
+        @batch.set_premium_and_service_fees(:ranking_bod)
+      when 'SO'
+        @batch.set_premium_and_service_fees(:ranking_senior_officer)
+      when 'JO'
+        @batch.set_premium_and_service_fees(:ranking_junior_officer)
+      when 'RF'
+        @batch.set_premium_and_service_fees(:ranking_rank_and_file)
+      end
     end
     
     respond_to do |format|
@@ -142,7 +154,7 @@ class BatchesController < ApplicationController
 
   private
     def batch_params
-      params.require(:batch).permit(:active, :coop_sf_amount, :agent_sf_amount, :status, :premium, :coop_member_id, :transferred, batch_dependents_attributes: [:member_dependent_id, :beneficiary, :_destroy])
+      params.require(:batch).permit(:rank, :active, :coop_sf_amount, :agent_sf_amount, :status, :premium, :coop_member_id, :transferred, batch_dependents_attributes: [:member_dependent_id, :beneficiary, :_destroy])
     end
 
     def set_group_remit

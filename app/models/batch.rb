@@ -1,8 +1,9 @@
 class Batch < ApplicationRecord
+  attr_accessor :rank
   # validates_presence_of :effectivity_date, :expiry_date, :coop_sf_amount, :agent_sf_amount, :status, :premium, :coop_member_id
 
   # updates the batches table realtime when a new batch is created
-  after_create_commit -> { broadcast_prepend_to [ coop_member.cooperative, "batches" ], locals: { group_remit: self.group_remit }, target: "batches_body" }
+  after_create_commit -> { broadcast_prepend_to [ coop_member.cooperative, "batches" ], locals: { group_remit: self.group_remit, agreement: self.group_remit.agreement }, target: "batches_body" }
   # updates the batches table realtime when a batch is updated
   after_update_commit -> { broadcast_replace_to [ coop_member.cooperative, "batches" ], locals: { group_remit: self.group_remit }, target: self }
   # updates the batches table realtime when a batch is destroyed

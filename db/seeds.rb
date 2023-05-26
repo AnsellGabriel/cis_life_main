@@ -85,11 +85,17 @@ ProductBenefit.create!(coverage_amount: 100000,benefit_id: 2, agreement_benefit_
 
 # GYRT Ranking - Basic
 Agreement.create!(proposal_id: 1, moa_no: 'GYRTR-MOA-0001', description: 'Agreement with ranking type', plan_id: 3, agent_id: 1, cooperative_id: 1, anniversary_type: 'single')
-AgreementBenefit.create!(agreement_id: 4, proposal_id: 1, name: 'Agreement Benefit principal', min_age: 18, max_age: 65, insured_type: 3)
-AgreementBenefit.create!(agreement_id: 4, proposal_id: 1, name: 'Agreement Benefit principal', min_age: 18, max_age: 65, insured_type: 4)
+AgreementBenefit.create!(agreement_id: 4, proposal_id: 1, name: 'Agreement Benefit BOD', min_age: 18, max_age: 65, insured_type: 6)
+AgreementBenefit.create!(agreement_id: 4, proposal_id: 1, name: 'Agreement Benefit SO', min_age: 18, max_age: 65, insured_type: 7)
+AgreementBenefit.create!(agreement_id: 4, proposal_id: 1, name: 'Agreement Benefit JO', min_age: 18, max_age: 65, insured_type: 8)
+AgreementBenefit.create!(agreement_id: 4, proposal_id: 1, name: 'Agreement Benefit Rank & File', min_age: 18, max_age: 65, insured_type: 9)
 
-ProductBenefit.create!(coverage_amount: 100000,benefit_id: 1, agreement_benefit_id: 8, premium: 150)
-ProductBenefit.create!(coverage_amount: 150000,benefit_id: 1, agreement_benefit_id: 8, premium: 200)
+
+ProductBenefit.create!(coverage_amount: 500000,benefit_id: 1, agreement_benefit_id: 8, premium: 500)
+ProductBenefit.create!(coverage_amount: 350000,benefit_id: 1, agreement_benefit_id: 9, premium: 350)
+ProductBenefit.create!(coverage_amount: 250000,benefit_id: 1, agreement_benefit_id: 10, premium: 250)
+ProductBenefit.create!(coverage_amount: 150000,benefit_id: 1, agreement_benefit_id: 11, premium: 150)
+
 Anniversary.create!(agreement_id: 4, name: 'April 18', anniversary_date: '2023/03/18')
 
 # CoopBranch of Coop 1

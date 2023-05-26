@@ -22,8 +22,8 @@ class AgreementsController < InheritedResources::Base
       dependent_type = 2
     end
       
-    @principal_premium = @agreement.get_premium(insured_type)
-    @dependent_premium = @agreement.get_premium(dependent_type) if @agreement.plan.acronym == 'GYRTF'
+    # @principal_premium = @agreement.get_premium(insured_type)
+    # @dependent_premium = @agreement.get_premium(dependent_type) if @agreement.plan.acronym == 'GYRTF'
     @group_remit = @agreement.group_remits[0]
     @coop_sf = @agreement.get_coop_sf
     @group_remits = @agreement.group_remits

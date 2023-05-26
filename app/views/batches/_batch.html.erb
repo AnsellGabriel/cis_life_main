@@ -13,7 +13,11 @@
                     <% else %>
                         <span class="badge bg-warning text-dark"><%= batch.status.to_s.titleize %></span>
                     <% end %>
+                    
                     <%= content_tag :span, "#{member.last_name}, #{member.first_name} #{member.middle_name}" %>
+                    <% if agreement.plan.acronym == 'GYRTBR' || agreement.plan.acronym == 'GYRTFR'%>
+                        <span class="badge bg-info text-dark"><%= batch.agreement_benefit.insured_type.gsub('_', ' ').split(' ').drop(1).join(' ').upcase %></span>
+                    <% end %>
                 </div>
                 <div class="">
                     <% if batch.batch_beneficiaries.count == 0 %>

@@ -9,13 +9,13 @@ class Agreement < ApplicationRecord
     has_many :anniversaries
     has_and_belongs_to_many :coop_members
 
-    def get_premium(insured_type)
-        self.agreement_benefits.find_by(insured_type: insured_type).product_benefits[0].premium
-    end
+    # def get_premium(insured_type)
+    #     self.agreement_benefits.find_by(insured_type: insured_type).product_benefits.sum(:premium)
+    # end
     
-    def get_dependent_premium
-        self.agreement_benefits.find_by(insured_type: 2).product_benefits[0].premium
-    end
+    # def get_dependent_premium
+    #     self.agreement_benefits.find_by(insured_type: 2).product_benefits[0].premium
+    # end
 
     def get_coop_sf
         self.agreement_benefits[0].proposal.coop_sf

@@ -29,8 +29,8 @@ class GroupRemitsController < InheritedResources::Base
 
     @principal_count = @batches_container.count
     @dependent_count = @batches_dependents.count
-    @single_premium = @batches[0].premium if @batches[0].present?
-    @single_dependent_premium = @batches_dependents[0].premium if @batches_dependents[0].present?
+    # @single_premium = @batches[0].premium if @batches[0].present?
+    # @single_dependent_premium = @batches_dependents[0].premium if @batches_dependents[0].present?
 
     @all_batches_have_beneficiaries = @group_remit.batches.all? { |batch| batch.batch_beneficiaries.exists? }
     @batch_count = @group_remit.batches.count
