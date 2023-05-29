@@ -5,21 +5,21 @@
 %>
 <%= render 'agreement_field', 
 	name: 'Effectivity Date', 
-	value: group_remit.effectivity_date.strftime('%B %d, %Y'), 
+	value: month_day_year(group_remit.effectivity_date), 
 	margin: ''
 %>
 <%= render 'agreement_field', 
 	name: 'Expiry Date', 
-	value: group_remit.expiry_date.strftime('%B %d, %Y'), 
+	value: month_day_year(group_remit.expiry_date), 
 	margin: 'mb-2'
 %>
 <%= render 'agreement_field', 
 	name: 'Net Premium', 
-	value: number_to_currency(group_remit.net_premium, unit: '₱', precision: 2), 
+	value: peso_currency(group_remit.net_premium), 
 	margin: ''
 %>
 <%= render 'agreement_field', 
 	name: 'Cooperative Service Fee', 
-	value: number_to_currency(group_remit.coop_commission, unit: '₱', precision: 2), 
+	value: peso_currency(group_remit.coop_commission), 
 	margin: ''
 %>

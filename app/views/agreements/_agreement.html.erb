@@ -21,7 +21,7 @@
             %>
             <%= render 'agreement_field', 
               name: 'Anniversary Date', 
-              value: agreement.anniversaries.first.present? ? agreement.anniversaries[0].anniversary_date.strftime('%B %d') : 'Tentative', 
+              value: agreement.anniversaries.first.present? ? agreement.anniversaries.first.anniversary_date.strftime('%B %d') : 'Tentative', 
               margin: ''
             %>
             <%= render 'agreement_field', 

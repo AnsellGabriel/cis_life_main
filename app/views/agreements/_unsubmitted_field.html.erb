@@ -5,7 +5,7 @@
 %>
 <%= render 'agreement_field', 
 	name: 'Anniversary Date', 
-	value: anniv.anniversary_date.strftime('%B %d'), 
+	value: month_day(anniv.anniversary_date), 
 	margin: ''
 %>
 <%= render 'agreement_field', 
