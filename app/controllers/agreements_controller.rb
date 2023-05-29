@@ -1,40 +1,19 @@
 class AgreementsController < InheritedResources::Base
   before_action :authenticate_user!
   before_action :check_userable_type
-  before_action :set_cooperative, only: %i[index new create show]
   before_action :set_agreement, only: %i[show edit update destroy]
 
   def index 
-    @agreements = @cooperative.agreements.order(updated_at: :desc)
-
-    # filter members based on last name, first name
-    @f_agreements = @agreements.where("moa_no LIKE ?", "%#{params[:agreement_filter]}%")
-    # @pagy, @agreements = pagy(@f_agreements, items: 8)
+    # filtered @cooperative.agreements
+    @f_agreements = @cooperative.filtered_agreements(params[:agreement_filter])
   end
 
   def show
-    if @agreement.plan.acronym == 'GYRTBR'
-      insured_type = 3
-    elsif @agreement.plan.acronym == 'GYRT'
-      insured_type = 1
-    elsif @agreement.plan.acronym == 'GYRTF'
-      insured_type = 1
-      dependent_type = 2
-    end
-      
-    # @principal_premium = @agreement.get_premium(insured_type)
-    # @dependent_premium = @agreement.get_premium(dependent_type) if @agreement.plan.acronym == 'GYRTF'
-    @group_remit = @agreement.group_remits[0]
-    @coop_sf = @agreement.get_coop_sf
     @group_remits = @agreement.group_remits
+    @coop_sf = @agreement.get_coop_sf
 
-    expiry_dates = @group_remits.map { |group_remit| group_remit.expiry_date.strftime("%m-%d") }
-    @anniversaries = @agreement.anniversaries.reject do |anniv|
-      expiry_dates.present? ? expiry_dates.include?(anniv.anniversary_date.strftime("%m-%d")) : next
-    end
-    # byebug
-
-    
+    expiry_dates = @group_remits.pluck(:expiry_date).map { |date| date.strftime("%m-%d") }
+    @anniversaries = @agreement.get_filtered_anniversaries(expiry_dates)
   end
 
   def new
@@ -59,10 +38,6 @@ class AgreementsController < InheritedResources::Base
 
     def agreement_params
       params.require(:agreement).permit(:description, :coop_service_fee, :agent_service_fee, :plan_id, :agent_id, :anniversary_type, :agreement_type, :premium, :coop_service_fee, :agent_service_fee)
-    end
-
-    def set_cooperative
-      @cooperative = current_user.userable.cooperative
     end
 
     def set_agreement

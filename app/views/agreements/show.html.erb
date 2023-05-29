@@ -1,35 +1,41 @@
-
-
 <%= turbo_frame_tag @agreement.id do %>
+
   <div class="col">
     <div class="card">
       <div class="card-body">
-        <div class="d-flex justify-content-between align-items-center">
+        <div class="<%= flex_justify_align('between', 'center') %>">
           <div class="d-flex gap-1">
             <h6 class="card-title mb-0"><%= @agreement.moa_no %></h6>
-            <% if @agreement.group_remits.where(submitted: true).present? %>
-              <span class="badge bg-warning text-dark">Active</span>
+
+            <% if @agreement.submitted_group_remits.present? %>
+              <span class="<%= badge('warning') %> text-dark">Active</span>
             <% elsif @agreement.group_remits.present? %>
-              <span class="badge bg-danger">Pending</span>
+              <span class="<%= badge('danger') %>">Pending</span>
             <% else %>
-              <span class="badge bg-success">New</span>
+              <span class="<%= badge('success') %>">New</span>
             <% end %>
+
           </div>
-          <div class="d-flex justify-content-center align-items-center gap-1">
+          <div class="<%= flex_justify_align('center', 'center') %> gap-1">
             
-            <%= link_to 'Close', agreements_path ,class: 'btn btn-sm btn-outline-danger', data: {turbo_frame: dom_id(@agreement)} %>
+            <%= link_to 'Close', agreements_path,
+              class: "#{small_btn('outline-danger')}", 
+              data: {turbo_frame: dom_id(@agreement)} 
+            %>
+
           </div>
         </div>
         <hr>
         <div class="">
+
           <%= render @agreement%>
+
         </div>
       </div>
+      <div class="card-footer <%= flex_justify_align('between') %>">
+        <small class="text-muted">Agent: <%= @agreement.agent.full_name %></small>
+        <small class="text-muted">Updated: <%= time_ago_in_words(@agreement.updated_at) %></small>
+      </div>
     </div>
-    <div class="card-footer d-flex justify-content-between">
-          <small class="text-muted">Agent: <%= @agreement.agent.full_name %></small>
-          <small class="text-muted">Updated: <%= time_ago_in_words(@agreement.updated_at) %></small>
-        </div>
   </div>
-
 <% end %>

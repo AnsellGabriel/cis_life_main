@@ -1,4 +1,6 @@
 class Agreement < ApplicationRecord    
+    scope :filtered_by_moa_no, -> (filter) { where("moa_no LIKE ?", "%#{filter}%") }
+
     belongs_to :plan
     belongs_to :proposal
     belongs_to :agent
@@ -9,16 +11,17 @@ class Agreement < ApplicationRecord
     has_many :anniversaries
     has_and_belongs_to_many :coop_members
 
-    # def get_premium(insured_type)
-    #     self.agreement_benefits.find_by(insured_type: insured_type).product_benefits.sum(:premium)
-    # end
-    
-    # def get_dependent_premium
-    #     self.agreement_benefits.find_by(insured_type: 2).product_benefits[0].premium
-    # end
-
     def get_coop_sf
-        self.agreement_benefits[0].proposal.coop_sf
+      agreement_benefits.first.proposal.coop_sf
     end
 
+    def get_filtered_anniversaries(expiry_dates)
+			anniversaries.reject do |anniv|
+				expiry_dates.include?(anniv.anniversary_date.strftime("%m-%d"))
+			end
+		end
+
+    def submitted_group_remits
+      group_remits.where(submitted: true)
+    end
 end
