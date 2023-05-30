@@ -28,10 +28,8 @@ class Batch < ApplicationRecord
   belongs_to :agreement_benefit
   
   has_one :batch_health_dec, dependent: :destroy
-  
   has_many :batch_dependents, dependent: :destroy
   has_many :member_dependents, through: :batch_dependents
-
   has_many :batch_beneficiaries, dependent: :destroy
   has_many :member_dependents, through: :batch_beneficiaries
 
@@ -69,11 +67,6 @@ class Batch < ApplicationRecord
   def self.process_batch(batch, member, group_remit, rank = nil, transferred = false)
     agreement = group_remit.agreement
     coop_member = batch.coop_member
-
-    if member.age < 18 or member.age > 65
-      return redirect_to new_group_remit_batch_path(group_remit), alert: "Member age must be between 18 and 65 years old."
-    end
-
     renewal_member = agreement.coop_members.find_by(id: coop_member.id)
     
     if renewal_member.present?
@@ -86,24 +79,28 @@ class Batch < ApplicationRecord
       end
       agreement.coop_members << coop_member
     end
-    # byebug
+
+    check_plan(agreement, batch, rank)
+  end
+
+  def self.check_plan(agreement, batch, rank)
     if agreement.plan.acronym == 'GYRT' || agreement.plan.acronym == 'GYRTF'
       batch.set_premium_and_service_fees(:principal)
     elsif agreement.plan.acronym == 'GYRTBR' || agreement.plan.acronym == 'GYRTFR'
-      unless rank
-        return "No Rank!"
-      end
+      self.determine_premium(rank, batch)
+    end
+  end
 
-      case rank
-      when 'BOD'
-        batch.set_premium_and_service_fees(:ranking_bod)
-      when 'SO'
-        batch.set_premium_and_service_fees(:ranking_senior_officer)
-      when 'JO'
-        batch.set_premium_and_service_fees(:ranking_junior_officer)
-      when 'RF'
-        batch.set_premium_and_service_fees(:ranking_rank_and_file)
-      end
+  def self.determine_premium(rank, batch)
+    case rank
+    when 'BOD'
+      batch.set_premium_and_service_fees(:ranking_bod)
+    when 'SO'
+      batch.set_premium_and_service_fees(:ranking_senior_officer)
+    when 'JO'
+      batch.set_premium_and_service_fees(:ranking_junior_officer)
+    when 'RF'
+      batch.set_premium_and_service_fees(:ranking_rank_and_file)
     end
   end
 end

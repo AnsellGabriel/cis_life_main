@@ -40,6 +40,10 @@ class BatchesController < ApplicationController
     @agreement = @group_remit.agreement
     member = coop_member.member
     
+    if member.age < 18 or member.age > 65
+      return redirect_to new_group_remit_batch_path(group_remit), alert: "Member age must be between 18 and 65 years old."
+    end
+    
     Batch.process_batch(@batch, member, @group_remit, batch_params[:rank], batch_params[:transferred])
     
     respond_to do |format|
