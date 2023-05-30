@@ -7,15 +7,12 @@ class BatchesController < ApplicationController
   def import
     import_service = CsvImportService.new(params[:file], @group_remit, @cooperative)
     import_message = import_service.import
-
     redirect_to group_remit_path(@group_remit), notice: import_message
   end
   
 
   def index
-    # get all batches of the cooperative
-    @batches = @group_remit.batches
-    @pagy, @batches = pagy(@batches, items: 10)
+    @pagy, @batches = pagy(@group_remit.batches, items: 10)
   end
 
   def show
@@ -41,7 +38,7 @@ class BatchesController < ApplicationController
     member = coop_member.member
     
     if member.age < 18 or member.age > 65
-      return redirect_to new_group_remit_batch_path(group_remit), alert: "Member age must be between 18 and 65 years old."
+      return redirect_to new_group_remit_batch_path(@group_remit), alert: "Member age must be between 18 and 65 years old."
     end
     
     Batch.process_batch(@batch, member, @group_remit, batch_params[:rank], batch_params[:transferred])
@@ -114,8 +111,7 @@ class BatchesController < ApplicationController
       @agreement = @group_remit.agreement
       @batch_count = @group_remit.batches.count
       @batches_container = @group_remit.batches.order(created_at: :desc)
-      @batches_dependents= BatchDependent.joins(batch: :group_remit)
-        .where(group_remits: {id: @group_remit.id})
+      @batches_dependents= @group_remit.batches_dependents
 
       # premium and commission totals
       @gross_premium = @group_remit.gross_premium
@@ -127,8 +123,8 @@ class BatchesController < ApplicationController
       @dependent_count = @batches_dependents.count
       @single_premium = @batches_container[0].premium if @batches_container[0].present?
       @single_dependent_premium = @batches_dependents[0].premium if @batches_dependents[0].present?
-      @batch_without_beneficiaries_count = @group_remit.batches.where.not(id: @group_remit.batches.joins(:batch_beneficiaries).select(:id)).count
-      @batch_without_batch_health_dec_count = @group_remit.batches.where(status: :recent).where.not(id: @group_remit.batches.joins(:batch_health_dec).select(:id)).count
+      @batch_without_beneficiaries_count = @group_remit.batches_without_beneficiaries.count
+      @batch_without_batch_health_dec_count = @group_remit.batches_without_health_dec.count
     end
 
     def check_userable_type
@@ -136,31 +132,4 @@ class BatchesController < ApplicationController
         render file: "#{Rails.root}/public/404.html", status: :not_found
       end
     end
-
-    # def file
-    #   params[:file]
-    # end
-  
-    # def redirect_with_alert(alert_message)
-    #   redirect_to group_remit_path(@group_remit), alert: alert_message
-    # end
-  
-    # def valid_csv_file?(file)
-    #   file&.content_type&.end_with?("csv")
-    # end
-  
-    # def missing_headers(file)
-    #   required_headers - csv_headers(file)
-    # end
-  
-    # def required_headers
-    #   ["Active", "First Name", "Middle Name", "Last Name", "Suffix", "Status"]
-    # end
-  
-    # def csv_headers(file)
-    #   CSV.open(file.path, &:readline).map(&:strip)
-    # end
-
-
-
 end

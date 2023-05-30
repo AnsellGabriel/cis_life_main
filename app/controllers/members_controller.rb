@@ -14,7 +14,7 @@ class MembersController < InheritedResources::Base
     end
     
     # Check if the file has the required headers
-    required_headers = ["Birth Place", "First Name", "Middle Name", "Last Name", "Suffix", "Status", "Birthdate", "Gender", "Address", "SSS #", "TIN #", "Mobile #", "Email", "Civil Status", "Height (cm)", "Weight (kg)", "Occupation", "Employer", "Work Address", "Spouse", "Work Phone #"]
+    required_headers = ["Birth Place", "First Name", "Middle Name", "Last Name", "Suffix", "Birthdate", "Gender", "Address", "SSS #", "TIN #", "Mobile #", "Email", "Civil Status", "Height (cm)", "Weight (kg)", "Occupation", "Employer", "Work Address", "Spouse", "Work Phone #"]
     headers = CSV.open(file.path, &:readline).map(&:strip)
     missing_headers = required_headers - headers
 

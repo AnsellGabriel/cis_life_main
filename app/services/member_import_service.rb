@@ -41,8 +41,7 @@ class MemberImportService
       coop_member_hash = {
         cooperative_id: @cooperative.id,
         coop_branch_id: CoopBranch.find_by(name: row["Branch"]).id,
-        membership_date: row["Membership Date"],
-        transferred: row["Transferred?"].downcase == "yes"
+        membership_date: row["Membership Date"]
       } 
 
       # Check if a member with the same first name, last name, and birth date already exists
