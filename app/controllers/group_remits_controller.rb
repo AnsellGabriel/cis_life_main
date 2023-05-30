@@ -2,7 +2,6 @@ class GroupRemitsController < InheritedResources::Base
   before_action :authenticate_user!
   before_action :check_userable_type
   before_action :set_group_remit, only: %i[show edit update destroy submit]
-  before_action :set_cooperative, only: %i[new edit update show index create]
   before_action :set_members, only: %i[new create edit update]
 
   def submit
@@ -66,20 +65,20 @@ class GroupRemitsController < InheritedResources::Base
   end
 
   def update
-    agreement = @group_remit.agreement
+    # agreement = @group_remit.agreement
 
-    today = Date.today
+    # today = Date.today
 
-    if agreement.anniversary_type == "single" or agreement.anniversary_type == "multiple"
-      anniversary_date = Anniversary.find_by(id: group_remit_params[:anniversary_id]).anniversary_date
-    else
-      anniversary_date = today
-    end
+    # if agreement.anniversary_type == "single" or agreement.anniversary_type == "multiple"
+    #   anniversary_date = Anniversary.find_by(id: group_remit_params[:anniversary_id]).anniversary_date
+    # else
+    #   anniversary_date = today
+    # end
 
-    terms = (anniversary_date.year * 12 + anniversary_date.month) - (today.year * 12 + today.month)
+    # terms = (anniversary_date.year * 12 + anniversary_date.month) - (today.year * 12 + today.month)
 
-    @group_remit.terms = terms <= 0 ? terms + 12 : terms
-    @group_remit.expiry_date = terms <= 0 ? anniversary_date.next_year : anniversary_date
+    # @group_remit.terms = terms <= 0 ? terms + 12 : terms
+    # @group_remit.expiry_date = terms <= 0 ? anniversary_date.next_year : anniversary_date
 
     respond_to do |format|
       if @group_remit.update(group_remit_params)
@@ -103,10 +102,6 @@ class GroupRemitsController < InheritedResources::Base
 
     def set_group_remit
       @group_remit = GroupRemit.find_by(id: params[:id])
-    end
-
-    def set_cooperative
-      @cooperative = current_user.userable.cooperative
     end
 
     def set_members

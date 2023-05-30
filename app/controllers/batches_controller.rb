@@ -5,7 +5,8 @@ class BatchesController < ApplicationController
   before_action :set_group_remit, only: %i[index new create edit update show import]
   
   def import
-    import_service = CsvImportService.new(params[:file], @group_remit, @cooperative)
+    required_headers = ["First Name", "Middle Name", "Last Name", "Suffix"]
+    import_service = CsvImportService.new(:batch, params[:file], required_headers, @cooperative, @group_remit)
     import_message = import_service.import
     redirect_to group_remit_path(@group_remit), notice: import_message
   end

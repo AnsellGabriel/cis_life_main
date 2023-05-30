@@ -1,9 +1,11 @@
 # app/services/csv_import_service.rb
 class CsvImportService
-    def initialize(file, group_remit, cooperative)
+    def initialize(type, file, required_headers, cooperative, group_remit=nil)
+      @type = type
       @file = file
-      @group_remit = group_remit
+      @required_headers = required_headers
       @cooperative = cooperative
+      @group_remit = group_remit
     end
   
     def import
@@ -21,14 +23,18 @@ class CsvImportService
       end
   
       csv = parse_csv_file
-  
-      if csv.count < @group_remit.agreement.proposal.minimum_participation
-        return "Imported members must be at least 100 for GYRT plan. Current count: #{csv.count}"
+
+      if @type == :batch
+        if csv.count < @group_remit.agreement.proposal.minimum_participation
+          return "Imported members must be at least 100 for GYRT plan. Current count: #{csv.count}"
+        end
+        import_service = BatchImportService.new(csv, @group_remit, @cooperative)
+        import_message = import_service.import_batches
+      elsif @type == :member
+        import_service = MemberImportService.new(csv, @cooperative)
+        import_message = import_service.import_members
       end
-  
-      import_service = BatchImportService.new(csv, @group_remit, @cooperative)
-      import_message = import_service.import_batches
-  
+
       import_message
     end
   
@@ -45,7 +51,7 @@ class CsvImportService
     end
   
     def find_missing_headers(headers)
-      required_headers = ["First Name", "Middle Name", "Last Name", "Suffix"]
+      required_headers = @required_headers
       required_headers - headers
     end
   

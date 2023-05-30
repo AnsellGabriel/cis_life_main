@@ -95,27 +95,6 @@ class MemberDependentsController < InheritedResources::Base
       params.require(:member_dependent).permit(:last_name, :first_name, :middle_name, :suffix, :birth_date, :relationship)
     end
 
-# Path: app/controllers/members_controller.rb
-# Compare this snippet from app/controllers/member_dependents_controller.rb:
-# class MemberDependentsController < InheritedResources::Base
-#   before_action :set_member
-#   before_action :set_member_dependent, only: [:show, :edit, :update, :destroy]
-# 
-#   def index
-#     @member_dependents = @member.member_dependents
-#   end
-# 
-#   def new
-#     @member_dependent = @member.member_dependents.build
-#   end
-# 
-#   def create
-  private
-
-    def member_dependent_params
-      params.require(:member_dependent).permit(:last_name, :first_name, :middle_name, :suffix, :birth_date, :relationship, :member_id)
-    end
-
     def check_userable_type
       unless current_user.userable_type == 'CoopUser'
         render file: "#{Rails.root}/public/404.html", status: :not_found
