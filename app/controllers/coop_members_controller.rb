@@ -1,21 +1,16 @@
 class CoopMembersController < InheritedResources::Base
   before_action :authenticate_user!
   before_action :check_userable_type
-  before_action :set_cooperative, only: %i[index new create edit update show]
-  before_action :set_coop_member, only: %i[show edit :update destroy selected]
+  before_action :set_coop_member, only: %i[show edit update destroy selected]
 
   def index
+    # initalize new member for coop member modal form
     @member = Member.new
     @member.coop_members.build
-    # get all coop members of the cooperative
-    @coop_members = CoopMember.where(cooperative_id: @cooperative.id)
-    # get all members data of the cooperative
-    f_members = Member.joins(:coop_members).where(coop_members: { id: @coop_members.ids }).order(:first_name)
-    # filter members based on last name, first name
-    @members = f_members.where("last_name LIKE ? AND first_name LIKE ?", "%#{params[:last_name_filter]}%", "%#{params[:first_name_filter]}%")
+    # get all members data of the cooperative and filter it by last name, first name
+    f_members = Member.coop_member_details(@cooperative.coop_members).filter_by_name(params[:last_name_filter], params[:first_name_filter])
     # paginate members
-    @pagy, @filtered_members = pagy(@members, items: 10)
-    super
+    @pagy, @filtered_members = pagy(f_members, items: 10)
   end
 
   def new
@@ -67,9 +62,6 @@ class CoopMembersController < InheritedResources::Base
   end
 
   private
-    def set_cooperative
-      @cooperative = current_user.userable.cooperative
-    end
 
     def set_coop_member
       @coop_member = CoopMember.find(params[:id])

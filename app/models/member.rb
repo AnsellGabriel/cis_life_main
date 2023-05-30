@@ -68,4 +68,12 @@ class Member < ApplicationRecord
     self.suffix = self.suffix == nil ? '' : self.suffix.upcase
     # repeat the above line for each field you want to make all caps
   end
+
+  def self.coop_member_details(coop_members)
+    joins(:coop_members).where(coop_members: { id: coop_members.ids }).order(:first_name)
+  end
+
+  def self.filter_by_name(last_name_filter, first_name_filter)
+    where("last_name LIKE ? AND first_name LIKE ?", "%#{last_name_filter}%", "%#{first_name_filter}%")
+  end
 end

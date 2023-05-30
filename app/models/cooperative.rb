@@ -9,7 +9,7 @@ class Cooperative < ApplicationRecord
     has_many :group_remits
 
     def unselected_coop_members(ids)
-		coop_members.where.not(id: ids).includes(:member).order('members.last_name')
+		coop_members.where.not(id: ids).includes(:member).order('members.first_name')
     end
 
     def coop_member_details
