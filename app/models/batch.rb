@@ -75,13 +75,12 @@ class Batch < ApplicationRecord
     end
 
     renewal_member = agreement.coop_members.find_by(id: coop_member.id)
-
+    
     if renewal_member.present?
         batch.status = :renewal
     else
-      if transferred == true 
+      if transferred == true || transferred == "1"
         batch.status = :renewal
-        
       else
         batch.status = :recent
       end

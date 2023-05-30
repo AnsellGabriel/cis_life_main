@@ -39,9 +39,8 @@ class BatchesController < ApplicationController
     coop_member = @batch.coop_member
     @agreement = @group_remit.agreement
     member = coop_member.member
-
-    Batch.process_batch(@batch, member, @group_remit, batch_params[:rank], batch_params[:transferred])
     
+    Batch.process_batch(@batch, member, @group_remit, batch_params[:rank], batch_params[:transferred])
     
     respond_to do |format|
       if @batch.save!
