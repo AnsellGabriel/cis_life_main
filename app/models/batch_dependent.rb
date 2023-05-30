@@ -7,7 +7,18 @@ class BatchDependent < ApplicationRecord
     self.agreement_benefit.product_benefits.sum(:premium)
   end
 
-  def set_premium_and_service_fees(insured_type)
+  def set_premium_and_service_fees(relationship)
+    insured_type =  case relationship
+      when 'Spouse'
+        2
+      when 'Parent'
+        3
+      when 'Children'
+        4
+      when 'Sibling'
+        5
+    end
+
     gr = self.batch.group_remit
     terms = self.batch.group_remit.terms
     agreement_benefit = gr.agreement.agreement_benefits.find_by(insured_type: insured_type)

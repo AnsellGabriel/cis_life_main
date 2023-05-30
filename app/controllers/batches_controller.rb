@@ -1,40 +1,12 @@
 class BatchesController < ApplicationController
   before_action :authenticate_user!
   before_action :check_userable_type
-  before_action :set_cooperative, only: %i[index new create edit update show import]
   before_action :set_batch, only: %i[show edit update destroy]
   before_action :set_group_remit, only: %i[index new create edit update show import]
-
+  
   def import
-    #! Progress bar error, tracking session #
-    # Check if a file has been uploaded
-    file = params[:file]
-
-    if file.nil?
-      return redirect_to group_remit_path(@group_remit), alert: "No file uploaded"
-    else
-      return redirect_to group_remit_path(@group_remit), alert: "Only CSV file format please" unless file.content_type.end_with?("csv")
-    end
-
-    # Check if the file has the required headers
-    required_headers = ["Active", "First Name", "Middle Name", "Last Name", "Suffix", "Status"]
-    headers = CSV.open(file.path, &:readline).map(&:strip)
-    missing_headers = required_headers - headers
-
-    if missing_headers.any?
-      return redirect_to group_remit_path(@group_remit), alert: "The following CSV headers are missing: #{missing_headers.join(', ')}"
-    end
-
-    # Read CSV file and parse its contents
-    file = File.open(file)
-    csv = CSV.parse(file, headers: true, skip_blanks: true).delete_if { |row| row.to_hash.values.all?(&:blank?) }
-
-    if csv.count < 100
-      return redirect_to group_remit_path(@group_remit), alert: "Imported members must be at least 100 for GYRT plan. Current count: #{csv.count}"
-    end
-
-    import_service = BatchImportService.new(csv, @group_remit, @cooperative)
-    import_message = import_service.import_batches
+    import_service = CsvImportService.new(params[:file], @group_remit, @cooperative)
+    import_message = import_service.import
 
     redirect_to group_remit_path(@group_remit), notice: import_message
   end
@@ -64,43 +36,12 @@ class BatchesController < ApplicationController
   def create
     @coop_members = @cooperative.coop_member_details
     @batch = @group_remit.batches.new(batch_params)
-
-    @agreement = @group_remit.agreement
     coop_member = @batch.coop_member
+    @agreement = @group_remit.agreement
     member = coop_member.member
 
-    if member.age < 18 or member.age > 65
-      return redirect_to new_group_remit_batch_path(@group_remit), alert: "Member age must be between 18 and 65 years old."
-    end
-
-    renewal_member = @agreement.coop_members.find_by(id: coop_member.id)
-
-    if renewal_member.present?
-        @batch.status = :renewal
-    else
-      if batch_params[:transferred].to_i == 1 # temporary checker for transferred members
-        @batch.status = :renewal
-        
-      else
-        @batch.status = :recent
-      end
-      @agreement.coop_members << coop_member
-    end
-    # byebug
-    if @agreement.plan.acronym == 'GYRT' || @agreement.plan.acronym == 'GYRTF'
-      @batch.set_premium_and_service_fees(:principal)
-    else
-      case batch_params[:rank]
-      when 'BOD'
-        @batch.set_premium_and_service_fees(:ranking_bod)
-      when 'SO'
-        @batch.set_premium_and_service_fees(:ranking_senior_officer)
-      when 'JO'
-        @batch.set_premium_and_service_fees(:ranking_junior_officer)
-      when 'RF'
-        @batch.set_premium_and_service_fees(:ranking_rank_and_file)
-      end
-    end
+    Batch.process_batch(@batch, member, @group_remit, batch_params[:rank], batch_params[:transferred])
+    
     
     respond_to do |format|
       if @batch.save!
@@ -161,10 +102,6 @@ class BatchesController < ApplicationController
       @group_remit = GroupRemit.find_by(id: params[:group_remit_id])
     end
 
-    def set_cooperative
-      @cooperative = current_user.userable.cooperative
-    end
-
     def set_batch
       set_group_remit
       @batch = @group_remit.batches.find_by(id: params[:id])
@@ -196,4 +133,31 @@ class BatchesController < ApplicationController
         render file: "#{Rails.root}/public/404.html", status: :not_found
       end
     end
+
+    # def file
+    #   params[:file]
+    # end
+  
+    # def redirect_with_alert(alert_message)
+    #   redirect_to group_remit_path(@group_remit), alert: alert_message
+    # end
+  
+    # def valid_csv_file?(file)
+    #   file&.content_type&.end_with?("csv")
+    # end
+  
+    # def missing_headers(file)
+    #   required_headers - csv_headers(file)
+    # end
+  
+    # def required_headers
+    #   ["Active", "First Name", "Middle Name", "Last Name", "Suffix", "Status"]
+    # end
+  
+    # def csv_headers(file)
+    #   CSV.open(file.path, &:readline).map(&:strip)
+    # end
+
+
+
 end

@@ -17,18 +17,9 @@ class BatchDependentsController < InheritedResources::Base
   def create
     terms = @batch.group_remit.terms
     @batch_dependent = @batch.batch_dependents.new(batch_dependent_params)
+    
     relationship = @batch_dependent.member_dependent.relationship
-
-    case relationship
-    when 'Spouse'
-      @batch_dependent.set_premium_and_service_fees(2)
-    when 'Parent'
-      @batch_dependent.set_premium_and_service_fees(3)
-    when 'Children'
-      @batch_dependent.set_premium_and_service_fees(4)
-    when 'Sibling'
-      @batch_dependent.set_premium_and_service_fees(5)
-    end
+    @batch_dependent.set_premium_and_service_fees(relationship)
 
     respond_to do |format|
       if @batch_dependent.save
@@ -48,8 +39,11 @@ class BatchDependentsController < InheritedResources::Base
   end
 
   private
+    def batch_dependent_params
+      params.require(:batch_dependent).permit(:batch_id, :premium, :member_dependent_id, :is_beneficiary, :is_dependent)
+    end
+
     def set_group_remit_batch
-      # @cooperative = current_user.userable.cooperative
       @group_remit = GroupRemit.find(params[:group_remit_id])
       @batch = @group_remit.batches.find(params[:batch_id])
     end
@@ -57,10 +51,6 @@ class BatchDependentsController < InheritedResources::Base
     def set_dependent
       set_group_remit_batch
       @batch_dependent = @batch.batch_dependents.find(params[:id])
-    end
-
-    def batch_dependent_params
-      params.require(:batch_dependent).permit(:batch_id, :premium, :member_dependent_id, :is_beneficiary, :is_dependent)
     end
 
     def check_userable_type

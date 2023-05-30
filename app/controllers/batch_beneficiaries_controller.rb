@@ -36,8 +36,11 @@ class BatchBeneficiariesController < InheritedResources::Base
 
 
   private
+    def batch_beneficiary_params
+      params.require(:batch_beneficiary).permit(:batch_id, :member_dependent_id)
+    end
+
     def set_group_remit_batch
-      # @cooperative = current_user.userable.cooperative
       @group_remit = GroupRemit.find(params[:group_remit_id])
       @batch = @group_remit.batches.find(params[:batch_id])
     end
@@ -45,10 +48,6 @@ class BatchBeneficiariesController < InheritedResources::Base
     def set_beneficiary
       set_group_remit_batch
       @batch_beneficiary = @batch.batch_beneficiaries.find(params[:id])
-    end
-
-    def batch_beneficiary_params
-      params.require(:batch_beneficiary).permit(:batch_id, :member_dependent_id)
     end
 
     def check_userable_type
