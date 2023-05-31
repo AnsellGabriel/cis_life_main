@@ -74,20 +74,20 @@ class Batch < ApplicationRecord
     if agreement.plan.acronym == 'GYRT' || agreement.plan.acronym == 'GYRTF'
       batch.set_premium_and_service_fees(:principal, batch.group_remit) # model/concerns/calculate.rb
     elsif agreement.plan.acronym == 'GYRTBR' || agreement.plan.acronym == 'GYRTFR'
-      self.determine_premium(rank, batch)
+      self.determine_premium(rank, batch, batch.group_remit)
     end
   end
 
-  def self.determine_premium(rank, batch)
+  def self.determine_premium(rank, batch, group_remit)
     case rank
     when 'BOD'
-      batch.set_premium_and_service_fees(:ranking_bod)
+      batch.set_premium_and_service_fees(:ranking_bod, group_remit)
     when 'SO'
-      batch.set_premium_and_service_fees(:ranking_senior_officer)
+      batch.set_premium_and_service_fees(:ranking_senior_officer, group_remit)
     when 'JO'
-      batch.set_premium_and_service_fees(:ranking_junior_officer)
+      batch.set_premium_and_service_fees(:ranking_junior_officer, group_remit)
     when 'RF'
-      batch.set_premium_and_service_fees(:ranking_rank_and_file)
+      batch.set_premium_and_service_fees(:ranking_rank_and_file, group_remit)
     end
   end
 end

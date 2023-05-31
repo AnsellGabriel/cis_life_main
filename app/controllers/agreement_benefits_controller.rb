@@ -2,17 +2,17 @@ class AgreementBenefitsController < InheritedResources::Base
   before_action :authenticate_user!
   before_action :check_userable_type
 
-  def selected
-    # @target = params[:target]
-    @agreement_benefit = AgreementBenefit.find(params[:id])
-    @premium = @agreement_benefit.premium
-    @coop_sf = (@agreement_benefit.coop_sf * @premium)
-    @agent_sf = (@agreement_benefit.agent_sf * @premium)
+  # def selected
+  #   # @target = params[:target]
+  #   @agreement_benefit = AgreementBenefit.find(params[:id])
+  #   @premium = @agreement_benefit.premium
+  #   @coop_sf = (@agreement_benefit.coop_sf * @premium)
+  #   @agent_sf = (@agreement_benefit.agent_sf * @premium)
     
-    respond_to do |format|
-      format.turbo_stream
-    end
-  end
+  #   respond_to do |format|
+  #     format.turbo_stream
+  #   end
+  # end
 
   private
 

@@ -1,4 +1,7 @@
 class GroupRemitsController < InheritedResources::Base
+  include Container
+  include Counter
+  
   before_action :authenticate_user!
   before_action :check_userable_type
   before_action :set_group_remit, only: %i[show edit update destroy submit]
@@ -23,17 +26,12 @@ class GroupRemitsController < InheritedResources::Base
 
   def show
     @agreement = @group_remit.agreement
-    @batches_dependents= @group_remit.batches_dependents
-    @batches_container = @group_remit.batches.order(created_at: :desc)
+
+    containers # controller/concerns/container.rb
+    counters  # controller/concerns/counter.rb
+
     @pagy, @batches = pagy(@batches_container, items: 10)
 
-    @principal_count = @batches_container.count
-    @dependent_count = @batches_dependents.count
-
-    # @all_batches_have_beneficiaries = @group_remit.all_batches_have_beneficiaries?
-    @batch_count = @group_remit.batches.count
-    @batch_without_beneficiaries_count = @group_remit.batches_without_beneficiaries.count
-    @batch_without_batch_health_dec_count = @group_remit.batches_without_health_dec.count
   end
 
   def new

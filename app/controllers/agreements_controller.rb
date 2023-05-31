@@ -4,16 +4,13 @@ class AgreementsController < InheritedResources::Base
   before_action :set_agreement, only: %i[show edit update destroy]
 
   def index 
-    # filtered @cooperative.agreements
     @f_agreements = @cooperative.filtered_agreements(params[:agreement_filter])
   end
 
   def show
     @group_remits = @agreement.group_remits
     @coop_sf = @agreement.get_coop_sf
-
-    expiry_dates = @group_remits.pluck(:expiry_date).map { |date| date.strftime("%m-%d") }
-    @anniversaries = @agreement.get_filtered_anniversaries(expiry_dates)
+    @anniversaries = @agreement.get_filtered_anniversaries(@group_remits.expiry_dates)
   end
 
   def new

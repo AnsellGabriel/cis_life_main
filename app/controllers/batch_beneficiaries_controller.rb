@@ -34,8 +34,8 @@ class BatchBeneficiariesController < InheritedResources::Base
     end
   end
 
-
   private
+
     def batch_beneficiary_params
       params.require(:batch_beneficiary).permit(:batch_id, :member_dependent_id)
     end

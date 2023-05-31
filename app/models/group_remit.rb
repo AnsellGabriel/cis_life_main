@@ -95,5 +95,8 @@ class GroupRemit < ApplicationRecord
     (anniversary_date.year * 12 + anniversary_date.month) - (Date.today.year * 12 + Date.today.month)
   end
 
+  def self.expiry_dates
+    pluck(:expiry_date).map { |date| date.strftime("%m-%d") }
+  end
 end
 

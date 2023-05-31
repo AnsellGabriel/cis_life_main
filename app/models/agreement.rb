@@ -15,6 +15,7 @@ class Agreement < ApplicationRecord
       agreement_benefits.first.proposal.coop_sf
     end
 
+    # filters anniversaries based on a given set of expiry dates
     def get_filtered_anniversaries(expiry_dates)
 			anniversaries.reject do |anniv|
 				expiry_dates.include?(anniv.anniversary_date.strftime("%m-%d"))
