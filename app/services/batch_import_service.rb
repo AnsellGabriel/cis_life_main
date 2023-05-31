@@ -33,7 +33,7 @@ class BatchImportService
 
     import_message = "#{@added_members_counter} member(s) added, #{@duplicate_members_counter} duplicate members, #{@denied_members_counter} member(s) denied. #{@unenrolled_members_counter} unenrolled members"
   end
-
+  
   private
 
   def initialize_counters_and_arrays
