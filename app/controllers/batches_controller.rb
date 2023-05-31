@@ -42,7 +42,7 @@ class BatchesController < ApplicationController
       return redirect_to new_group_remit_batch_path(@group_remit), alert: "Member age must be between 18 and 65 years old."
     end
     
-    Batch.process_batch(@batch, member, @group_remit, batch_params[:rank], batch_params[:transferred])
+    Batch.process_batch(@batch, @group_remit, batch_params[:rank], batch_params[:transferred])
     
     respond_to do |format|
       if @batch.save!

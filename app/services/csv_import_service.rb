@@ -24,13 +24,14 @@ class CsvImportService
   
       csv = parse_csv_file
 
-      if @type == :batch
+      case @type
+      when :batch
         if csv.count < @group_remit.agreement.proposal.minimum_participation
           return "Imported members must be at least 100 for GYRT plan. Current count: #{csv.count}"
         end
         import_service = BatchImportService.new(csv, @group_remit, @cooperative)
         import_message = import_service.import_batches
-      elsif @type == :member
+      when :member
         import_service = MemberImportService.new(csv, @cooperative)
         import_message = import_service.import_members
       end

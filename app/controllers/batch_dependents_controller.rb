@@ -17,9 +17,9 @@ class BatchDependentsController < InheritedResources::Base
   def create
     terms = @batch.group_remit.terms
     @batch_dependent = @batch.batch_dependents.new(batch_dependent_params)
-    
     relationship = @batch_dependent.member_dependent.relationship
-    @batch_dependent.set_premium_and_service_fees(relationship)
+    insured_type = @batch_dependent.insured_type(relationship)
+    @batch_dependent.set_premium_and_service_fees(insured_type, @group_remit) # model/concerns/calculate.rb
 
     respond_to do |format|
       if @batch_dependent.save

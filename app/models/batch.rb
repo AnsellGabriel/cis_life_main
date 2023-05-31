@@ -1,5 +1,7 @@
 class Batch < ApplicationRecord
+  include Calculate
   attr_accessor :rank
+  
   # validates_presence_of :effectivity_date, :expiry_date, :coop_sf_amount, :agent_sf_amount, :status, :premium, :coop_member_id
 
   # updates the batches table realtime when a new batch is created
@@ -49,22 +51,7 @@ class Batch < ApplicationRecord
     batch_dependents.sum(:premium)
   end
 
-  def get_premium
-    agreement_benefit.product_benefits.sum(:premium)
-  end
-
-  def set_premium_and_service_fees(insured_type)
-    gr = self.group_remit
-    terms = self.group_remit.terms
-    agreement_benefit = gr.agreement.agreement_benefits.find_by(insured_type: insured_type)
-
-    self.agreement_benefit_id = agreement_benefit.id
-    self.premium = ((self.get_premium / 12.to_d) * terms) 
-    self.coop_sf_amount = (gr.get_coop_sf/100.to_d) * self.premium
-    self.agent_sf_amount = (gr.get_agent_sf/100.to_d) * self.premium
-  end
-
-  def self.process_batch(batch, member, group_remit, rank = nil, transferred = false)
+  def self.process_batch(batch, group_remit, rank = nil, transferred = false)
     agreement = group_remit.agreement
     coop_member = batch.coop_member
     renewal_member = agreement.coop_members.find_by(id: coop_member.id)
@@ -85,7 +72,7 @@ class Batch < ApplicationRecord
 
   def self.check_plan(agreement, batch, rank)
     if agreement.plan.acronym == 'GYRT' || agreement.plan.acronym == 'GYRTF'
-      batch.set_premium_and_service_fees(:principal)
+      batch.set_premium_and_service_fees(:principal, batch.group_remit) # model/concerns/calculate.rb
     elsif agreement.plan.acronym == 'GYRTBR' || agreement.plan.acronym == 'GYRTFR'
       self.determine_premium(rank, batch)
     end
