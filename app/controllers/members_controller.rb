@@ -4,8 +4,15 @@ class MembersController < InheritedResources::Base
 
   def import
     required_headers = ["Birth Place", "First Name", "Middle Name", "Last Name", "Suffix", "Birthdate", "Gender", "Address", "SSS #", "TIN #", "Mobile #", "Email", "Civil Status", "Height (cm)", "Weight (kg)", "Occupation", "Employer", "Work Address", "Spouse", "Work Phone #"]
-    import_service = CsvImportService.new(:member, params[:file], required_headers, @cooperative)
+
+    import_service = CsvImportService.new(
+      :member, 
+      params[:file], 
+      required_headers, 
+      @cooperative
+    )
     import_message = import_service.import
+
     redirect_to coop_members_path, notice: import_message
   end
 

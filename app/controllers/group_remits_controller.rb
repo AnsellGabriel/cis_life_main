@@ -8,7 +8,7 @@ class GroupRemitsController < InheritedResources::Base
   before_action :set_members, only: %i[new create edit update]
 
   def submit
-    @group_remit.compute_save_premium_commissions
+    @group_remit.save_total_premium_and_fees
 
     respond_to do |format|
       if @group_remit.save
@@ -103,9 +103,7 @@ class GroupRemitsController < InheritedResources::Base
     end
 
     def set_members
-      set_cooperative
-      @coop_members = @cooperative.coop_members
-      @members = Member.joins(:coop_members).where(coop_members: { id: @coop_members.ids }).order(:last_name)
+      @members = Member.coop_member_details(@cooperative.coop_members)
     end
 
     def group_remit_params

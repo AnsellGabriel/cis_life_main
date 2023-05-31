@@ -5,12 +5,19 @@ class BatchesController < ApplicationController
   before_action :authenticate_user!
   before_action :check_userable_type
   before_action :set_batch, only: %i[show edit update destroy]
-  before_action :set_group_remit_and_agreement, only: %i[index new create edit update show import destroy]
+  before_action :set_group_remit_and_agreement
   
   def import
     required_headers = ["First Name", "Middle Name", "Last Name", "Suffix"]
-    import_service = CsvImportService.new(:batch, params[:file], required_headers, @cooperative, @group_remit)
+    import_service = CsvImportService.new(
+      :batch, 
+      params[:file], 
+      required_headers, 
+      @cooperative, 
+      @group_remit
+    )
     import_message = import_service.import
+
     redirect_to group_remit_path(@group_remit), notice: import_message
   end
   
@@ -29,7 +36,12 @@ class BatchesController < ApplicationController
 
   def new
     @coop_members = @cooperative.unselected_coop_members(@group_remit.coop_member_ids)
-    @batch = @group_remit.batches.new(effectivity_date: FFaker::Time.date, expiry_date: FFaker::Time.date, active: true, status: :recent)
+    @batch = @group_remit.batches.new(
+      effectivity_date: FFaker::Time.date, 
+      expiry_date: FFaker::Time.date, 
+      active: true, 
+      status: :recent
+    )
   end
 
   def create
@@ -42,7 +54,12 @@ class BatchesController < ApplicationController
       return redirect_to new_group_remit_batch_path(@group_remit), alert: "Member age must be between 18 and 65 years old."
     end
     
-    Batch.process_batch(@batch, @group_remit, batch_params[:rank], batch_params[:transferred])
+    Batch.process_batch(
+      @batch, 
+      @group_remit, 
+      batch_params[:rank], 
+      batch_params[:transferred]
+    )
     
     respond_to do |format|
       if @batch.save!

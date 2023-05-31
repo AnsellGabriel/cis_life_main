@@ -3,7 +3,7 @@ class GroupRemit < ApplicationRecord
   belongs_to :anniversary, optional: true
   has_many :batches, dependent: :destroy
 
-  def compute_save_premium_commissions
+  def save_total_premium_and_fees
     self.gross_premium = gross_premium
     self.coop_commission = total_coop_commissions
     self.agent_commission = total_agent_commissions
