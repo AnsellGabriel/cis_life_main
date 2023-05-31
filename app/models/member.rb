@@ -5,8 +5,15 @@ class Member < ApplicationRecord
 
   VALID_PH_MOBILE_NUMBER_REGEX = /\A(09|\+639)\d{9}\z/
   VALID_PH_LANDLINE_NUMBER_REGEX = /\A(02|03[2-9]|042|043|044|045|046|047|048|049|052|053|054|055|056|057|058|072|074|075|076|077|078)\d{7}\z/
-  validates :mobile_number, presence: true, format: { with: VALID_PH_MOBILE_NUMBER_REGEX, message: "must be a valid Philippine mobile number" }
-  validates :work_phone_number, allow_blank: true, format: { with: /\A#{VALID_PH_MOBILE_NUMBER_REGEX}|#{VALID_PH_LANDLINE_NUMBER_REGEX}\z/, message: "must be a valid Philippine mobile or landline number" }
+
+  validates :mobile_number, presence: true, format: { 
+    with: VALID_PH_MOBILE_NUMBER_REGEX, 
+    message: "must be a valid Philippine mobile number" 
+  }
+  validates :work_phone_number, allow_blank: true, format: { 
+    with: /\A#{VALID_PH_MOBILE_NUMBER_REGEX}|#{VALID_PH_LANDLINE_NUMBER_REGEX}\z/, 
+    message: "must be a valid Philippine mobile or landline number" 
+  }
 
   validates_presence_of :last_name, :first_name, :middle_name, :birth_date, :address, :civil_status, :gender
   validates :email, format: { with: URI::MailTo::EMAIL_REGEXP }
@@ -20,7 +27,7 @@ class Member < ApplicationRecord
   accepts_nested_attributes_for :coop_members
 
   def unselected_dependents(selected_dependent_ids)
-    self.member_dependents.where.not(id: selected_dependent_ids)
+    member_dependents.where.not(id: selected_dependent_ids)
   end
 
   def age
@@ -28,7 +35,7 @@ class Member < ApplicationRecord
   end
 
   def coop_member_id(coop)
-    self.coop_members.find_by(cooperative_id: coop.id).id
+    coop_members.find_by(cooperative_id: coop.id).id
   end
 
   private

@@ -1,5 +1,5 @@
 class MemberDependent < ApplicationRecord
-  before_validation :uppercase_fields
+  before_validation :name_to_upcase
 
   validates_presence_of :first_name, :last_name, :birth_date, :relationship
 
@@ -11,7 +11,7 @@ class MemberDependent < ApplicationRecord
   has_many :batch_beneficiaries, dependent: :destroy
   has_many :batches, through: :batch_beneficiaries
 
-  def uppercase_fields
+  def name_to_upcase
     self.last_name = self.last_name.upcase
     self.first_name = self.first_name.upcase
     self.middle_name = self.middle_name.upcase

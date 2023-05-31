@@ -13,7 +13,7 @@ class GroupRemit < ApplicationRecord
   end
 
   def coop_member_ids
-    self.batches.pluck(:coop_member_id)
+    batches.pluck(:coop_member_id)
   end
 
   def batches_dependents
@@ -22,55 +22,55 @@ class GroupRemit < ApplicationRecord
   end
 
   def set_premium(insured_type)
-    self.agreement.agreement_benefits.find_by(insured_type: insured_type).product_benefits[0].premium
+    agreement.agreement_benefits.find_by(insured_type: insured_type).product_benefits[0].premium
   end
 
   def get_coop_sf
-    self.agreement.agreement_benefits[0].proposal.coop_sf
+    agreement.agreement_benefits[0].proposal.coop_sf
   end
 
   def get_agent_sf
-    self.agreement.agreement_benefits[0].proposal.agent_sf
+    agreement.agreement_benefits[0].proposal.agent_sf
   end
 
   def total_dependent_premiums
-    self.batches.joins(:batch_dependents).sum('batch_dependents.premium')
+    batches.joins(:batch_dependents).sum('batch_dependents.premium')
   end
 
   def dependent_coop_commissions
-    self.batches.joins(:batch_dependents).sum('batch_dependents.coop_sf_amount')
+    batches.joins(:batch_dependents).sum('batch_dependents.coop_sf_amount')
   end
 
   def dependent_agent_commissions
-    self.batches.joins(:batch_dependents).sum('batch_dependents.agent_sf_amount')
+    batches.joins(:batch_dependents).sum('batch_dependents.agent_sf_amount')
   end
 
   def total_principal_premium
-    self.batches.sum(:premium)
+    batches.sum(:premium)
   end
 
   def gross_premium
-    self.total_principal_premium + self.total_dependent_premiums
+    total_principal_premium + total_dependent_premiums
   end
 
   def coop_commissions
-    self.batches.sum(:coop_sf_amount)
+    batches.sum(:coop_sf_amount)
   end
 
   def total_coop_commissions
-    self.coop_commissions + self.dependent_coop_commissions
+    coop_commissions + dependent_coop_commissions
   end
 
   def total_agent_commissions
-    self.agent_commissions + self.dependent_agent_commissions
+    agent_commissions + dependent_agent_commissions
   end
 
   def agent_commissions
-    self.batches.sum(:agent_sf_amount)
+    batches.sum(:agent_sf_amount)
   end
 
   def net_premium
-    self.gross_premium - self.total_coop_commissions
+    gross_premium - total_coop_commissions
   end
   
   def batches_without_beneficiaries
