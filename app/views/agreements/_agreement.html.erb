@@ -10,8 +10,8 @@
             margin: '' 
           %>
           
-          <% if agreement.submitted_group_remits.exists? %>
-            <% last_group_remit = agreement.submitted_group_remits.last %>
+          <% if agreement.active_group_remits.present? || agreement.group_remits.where(status: :expired).present? %>
+            <% last_group_remit = agreement.active_group_remits.first || agreement.group_remits.where(status: :expired).first %>
             <%= render 'submitted_field', group_remit: last_group_remit %>
           <% else %>
             <%= render 'agreement_field', 
@@ -33,14 +33,9 @@
 
           <div class="mt-4 text-center">
 
-            <% if agreement.submitted_group_remits.exists? %>
+            <% if agreement.active_group_remits.present? || agreement.group_remits.where(status: :expired).present? %>
               <%= link_to 'View Group Remit', agreement_group_remit_path(@agreement, @group_remits.first), 
                 class: small_btn('warning'), 
-                data: { turbo: false } 
-              %>
-            <% elsif agreement.group_remits.exists? %>
-              <%= link_to 'Finish Group Remit', agreement_group_remit_path(@agreement, @group_remits.first), 
-                class: small_btn('outline-warning'), 
                 data: { turbo: false } 
               %>
             <% else %>
@@ -83,15 +78,15 @@
               margin: ''
             %>
 
-            <% if gr.submitted %>
+            <% if gr.active? %>
               <%= render 'submitted_field', group_remit: gr %>
             <% else %>
               <%= render 'unsubmitted_field', agreement: agreement, anniv: gr.anniversary %>
             <% end %>
 
             <div class="mt-4 text-center">
-              <%= link_to "#{gr.submitted ? 'View Group Remit' : 'Finish Group Remit'}", agreement_group_remit_path(@agreement, gr), 
-                class: "btn btn-sm btn#{gr.submitted ? '' : '-outline'}-warning", 
+              <%= link_to "#{gr.active? ? 'View Group Remit' : 'Finish Group Remit'}", agreement_group_remit_path(@agreement, gr), 
+                class: "btn btn-sm btn#{gr.active? ? '' : '-outline'}-warning", 
                 data: { turbo: false } 
               %>
             </div>

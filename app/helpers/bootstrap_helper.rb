@@ -1,5 +1,5 @@
 module BootstrapHelper
-	# "d-flex justify-content-#{between} align-items-#{center} {flex-column}"
+	# "d-flex justify-content-#{justify} align-items-#{align} #{if column = flex-column}"
   def flex_justify_align(justify = '', align = '', column = false)
     classes = []
     classes << "d-flex"

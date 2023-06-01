@@ -29,7 +29,7 @@ class GroupRemitsController < InheritedResources::Base
 
     containers # controller/concerns/container.rb
     counters  # controller/concerns/counter.rb
-
+    @passed_requirements = group_remit_passed_requirements?
     @pagy, @batches = pagy(@batches_container, items: 10)
 
   end
@@ -123,5 +123,9 @@ class GroupRemitsController < InheritedResources::Base
       unless current_user.userable_type == 'CoopUser'
         render file: "#{Rails.root}/public/404.html", status: :not_found
       end
+    end
+
+    def group_remit_passed_requirements?
+      @batch_without_beneficiaries_count > 0 || @batch_without_batch_health_dec_count > 0 || @batch_count < @agreement.proposal.minimum_participation
     end
 end

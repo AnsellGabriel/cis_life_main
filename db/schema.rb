@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_05_25_054127) do
+ActiveRecord::Schema[7.0].define(version: 2023_06_01_015151) do
   create_table "active_admin_comments", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.string "namespace"
     t.text "body"
@@ -268,7 +268,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_05_25_054127) do
     t.date "effectivity_date"
     t.date "expiry_date"
     t.integer "terms"
-    t.boolean "submitted"
+    t.integer "status", default: 0
     t.decimal "gross_premium", precision: 10, scale: 2
     t.decimal "net_premium", precision: 10, scale: 2
     t.decimal "coop_commission", precision: 10, scale: 2

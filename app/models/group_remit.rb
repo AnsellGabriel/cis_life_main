@@ -3,13 +3,21 @@ class GroupRemit < ApplicationRecord
   belongs_to :anniversary, optional: true
   has_many :batches, dependent: :destroy
 
+  enum status: {
+    pending: 0,
+    active: 1,
+    renewal: 2,
+    expired: 3
+  }
+
+
   def save_total_premium_and_fees
     self.gross_premium = gross_premium
     self.coop_commission = total_coop_commissions
     self.agent_commission = total_agent_commissions
     self.net_premium = net_premium - total_agent_commissions
     self.effectivity_date = Date.today
-    self.submitted = true
+    self.status = :active
   end
 
   def coop_member_ids

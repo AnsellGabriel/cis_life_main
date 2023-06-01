@@ -22,7 +22,7 @@ class Agreement < ApplicationRecord
 			end
 		end
 
-    def submitted_group_remits
-      group_remits.where(submitted: true)
+    def active_group_remits
+      group_remits.where(status: :active)
     end
 end

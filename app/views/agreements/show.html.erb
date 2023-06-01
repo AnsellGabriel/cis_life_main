@@ -7,10 +7,12 @@
           <div class="d-flex gap-1">
             <h6 class="card-title mb-0"><%= @agreement.moa_no %></h6>
 
-            <% if @agreement.submitted_group_remits.present? %>
-              <span class="<%= badge('warning') %> text-dark">Active</span>
+            <% if @agreement.active_group_remits.present? %>
+              <span class="<%= badge('info') %> text-dark">Active</span>
+            <% elsif @agreement.group_remits.where(status: :expired).present? %>
+              <span class="<%= badge('danger') %>">Expired</span>
             <% elsif @agreement.group_remits.present? %>
-              <span class="<%= badge('danger') %>">Pending</span>
+              <span class="<%= badge('warning') %> text-dark">Pending</span>
             <% else %>
               <span class="<%= badge('success') %>">New</span>
             <% end %>

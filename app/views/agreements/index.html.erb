@@ -6,7 +6,12 @@
     
   <%= form_with url: agreements_path, method: :get do %>
     <div class="form-group d-flex gap-3">
-      <%= text_field_tag 'agreement_filter', nil, placeholder: 'Search', class: "form-control", style: "width: auto"%>
+      <%= text_field_tag 'agreement_filter', 
+        nil, 
+        placeholder: 'Search', 
+        class: "form-control", 
+        style: "width: auto"
+      %>
       <%= submit_tag 'Search', class: small_btn('warning') %>
     </div>
   <% end %>
@@ -22,8 +27,8 @@
             <div class="<%= flex_justify_align('','center') %> gap-1">
               <h6 class="card-title mb-0"><%= agreement.moa_no %></h6>
 
-              <% if agreement.group_remits.where(submitted: true).present? %>
-                <span class="<%= badge('warning') %> text-dark">Active</span>
+              <% if agreement.group_remits.where(status: :active).present? %>
+                <span class="<%= badge('info') %> text-dark">Active</span>
 
                 <% agreement.group_remits.each do |group_remit| %>
                   <% gr_presenter = GroupRemitPresenter.new(group_remit)%>
@@ -34,8 +39,10 @@
                   <% end %>
 
                 <% end %>
+              <% elsif agreement.group_remits.where(status: :expired).present? %>
+                <span class="<%= badge('danger') %>">Expired</span>
               <% elsif agreement.group_remits.present? %>
-                <span class="<%= badge('danger') %>">Pending</span>
+                <span class="<%= badge('warning') %> text-dark">Pending</span>
               <% else %>
                 <span class="<%= badge('success') %>">New</span>
               <% end %>

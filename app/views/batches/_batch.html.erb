@@ -2,6 +2,7 @@
     <% member = batch.coop_member.member %>
     <% beneficiaries = batch.batch_beneficiaries %>
     <% dependents = batch.batch_dependents %>
+    <% batch_presenter = BatchPresenter.new(batch)%>
 
     <td class="text-center align-middle" ><%= batch.id %></td>
     <td class="align-middle" >
@@ -9,15 +10,19 @@
             <div class="d-flex flex-column gap-1">
                 <div class="">
                     <% if batch.status == 'recent' %>
-                        <span class="badge bg-success">New</span>
+                        <span class="<%= badge('success') %>">New</span>
                     <% else %>
-                        <span class="badge bg-warning text-dark"><%= batch.status.to_s.titleize %></span>
+                        <span class="<%= badge('warning') %> text-dark"><%= batch.status.to_s.titleize %></span>
                     <% end %>
                     
                     <%= content_tag :span, "#{member.last_name}, #{member.first_name} #{member.middle_name}" %>
+
                     <% if agreement.plan.acronym == 'GYRTBR' || agreement.plan.acronym == 'GYRTFR'%>
-                        <span class="badge bg-info text-dark"><%= batch.agreement_benefit.insured_type.gsub('_', ' ').split(' ').drop(1).join(' ').upcase %></span>
+                        <span class="badge bg-info text-dark">
+                            <%= batch_presenter.capitalized_insured_type %>
+                        </span>
                     <% end %>
+
                 </div>
                 <div class="">
                     <% if batch.batch_beneficiaries.count == 0 %>
@@ -33,44 +38,62 @@
         </div>
     </td>
     <td class="align-middle" >
-        <div class="d-flex justify-content-center">
-            <div class="d-flex flex-column align-items-center ps-6">
+        <div class="<%= flex_justify_align('center') %>">
+            <div class="<%= flex_justify_align('','center',true) %> ps-6">
                 <div class="d-flex flex-column mb-1">
-                    <%= content_tag :span, "Principal premium: #{number_to_currency(batch.premium, unit: "₱", precision: 2)}", class: "text-secondary", style: "font-size: .7rem; color: green !important; font-weight: 700;" %>
+                    <%= content_tag :span, 
+                        "Principal premium: #{number_to_currency(batch.premium, unit: "₱", precision: 2)}", 
+                        class: "text-secondary sm-green-text"
+                    %>
+
                     <% if dependents.exists? %>
-                        <%= content_tag :span, "Dependent(s) premium: #{number_to_currency(batch.dependents_premium, unit: "₱", precision: 2) }", class: "text-secondary", style: "font-size: .7rem; color: green !important; font-weight: 700;" %>
+                        <%= content_tag :span, 
+                            "Dependent(s) premium: #{number_to_currency(batch.dependents_premium, unit: "₱", precision: 2) }", 
+                            class: "text-secondary sm-green-text" %>
                     <% end %>
+
                 </div>
         </div>
     </td>
     <td class="align-middle">
-        <div class="d-flex justify-content-center">
+        <div class="<%= flex_justify_align('center') %>">
             <div class="d-flex flex-column ps-6">
+
                 <% unless beneficiaries.exists? %>
-                    <%= content_tag :span, "None", style: "color: red; font-size: .7rem;" %>
+                    <%= content_tag :span, "None", class: 'sm-red-text' %>
                 <% else %>
                     <div class="d-flex flex-column mb-1">
                         <% beneficiaries.each do |b| %>
-                            <%= content_tag :span, "#{b.member_dependent.last_name}, #{b.member_dependent.first_name} #{b.member_dependent.middle_name}", class: "text-secondary", style: "font-size: .7rem;" %>
+                            <%= content_tag :span, "#{b.member_dependent.last_name}, #{b.member_dependent.first_name} #{b.member_dependent.middle_name}", 
+                                class: "text-secondary", 
+                                style: "font-size: .7rem;" 
+                            %>
                         <% end %>
                     </div>
                 <% end %>
+
             </div>
         </div>
     </td>
+
     <% if group_remit.agreement.plan.gyrt_type == 'family' %>
         <td class="align-middle">
-            <div class="d-flex justify-content-center">
-                <div class="d-flex flex-column align-items-center ps-6">
+            <div class="<%= flex_justify_align('center') %>">
+                <div class="<%= flex_justify_align('','center',true) %> ps-6">
+
                     <% unless dependents.exists? %>
-                        <%= content_tag :span, "None", style: "color: red; font-size: .7rem;" %>
+                        <%= content_tag :span, "None", class: 'sm-red-text' %>
                     <% else %>
                         <div class="d-flex flex-column mb-1">
                             <% dependents.each do |d| %>
-                                <%= content_tag :span, "#{d.member_dependent.last_name}, #{d.member_dependent.first_name} #{d.member_dependent.middle_name}", class: "text-secondary", style: "font-size: .7rem;" %>
+                                <%= content_tag :span, "#{d.member_dependent.last_name}, #{d.member_dependent.first_name} #{d.member_dependent.middle_name}", 
+                                    class: "text-secondary", 
+                                    style: "font-size: .7rem;" 
+                                %>
                             <% end %>
                             </div>
                     <% end %>
+
                 </div>
             </div>
         </td>
@@ -80,11 +103,13 @@
         <div  class="d-flex gap-1" >
             <%= link_to 'Show', group_remit_batch_path(group_remit, batch),
                 data: {turbo_frame: "_top"}, 
-                class: 'btn btn-sm btn-primary' %>
-            <% unless group_remit.submitted? %>
+                class: small_btn('primary') 
+            %>
+
+            <% unless group_remit.active? || group_remit.expired? %>
                 <% if batch.status == 'recent' && !batch.batch_health_dec.present? %>
                     <%= link_to "!!!", new_group_remit_batch_health_declaration_path(group_remit, batch),
-                        class: "btn btn-sm btn-danger", 
+                        class: small_btn('danger'), 
                         data: {
                             turbo_frame: "modal-xl"
                             } 
@@ -96,8 +121,9 @@
                     data: { turbo_frame: "_top", 
                     turbo_confirm: "Delete Batch: #{member.last_name}, #{member.first_name} #{member.middle_name}?" } 
                     }, 
-                    class: 'btn btn-sm btn-danger' %>
+                    class: small_btn('danger') %>
             <% end %>
+
         </div>
     </td>
 </tr>

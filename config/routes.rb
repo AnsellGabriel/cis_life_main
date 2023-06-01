@@ -1,4 +1,7 @@
+require 'sidekiq/web'
+
 Rails.application.routes.draw do 
+  
   resources :anniversaries, :agent_groups, :departments, :agents, :coop_users, :employees, :plans, :product_benefits, :proposals
 
   resources :agreement_benefits do
@@ -55,6 +58,7 @@ Rails.application.routes.draw do
 
   devise_scope :user do
     authenticated :user do
+      # mount Sidekiq::Web in your Rails app
         root 'application#root', as: :authenticated_root
     end
   
@@ -62,6 +66,11 @@ Rails.application.routes.draw do
       root 'devise/sessions#new', as: :unauthenticated_root
     end
   end
+
+  authenticate :user, -> (u) { u.admin? } do
+    mount Sidekiq::Web => "/sidekiq"
+  end
+  
   # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
 
   # Defines the root path route ("/")

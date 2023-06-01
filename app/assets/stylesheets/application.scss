@@ -66,3 +66,19 @@ input[type="number"]::-webkit-outer-spin-button {
   gap: 20px;
 
 }
+
+.sm-secondary-text {
+  width: 150px; 
+  font-size: .8rem;
+}
+
+.sm-green-text {
+  font-size: .7rem; 
+  color: var(--bs-green) !important; 
+  font-weight: 700;
+}
+
+.sm-red-text {
+  font-size: .7rem; 
+  color: var(--bs-red) !important; 
+}
