@@ -22,7 +22,7 @@
         <%= f.input :rank, collection: [['Ranking - BOD', 'BOD'], ['Ranking - SO', 'SO'], ['Ranking - JO', 'JO'], ['Ranking - Rank & File', 'RF']], input_html: {style: "width: 250px !important", }, include_blank: "Rank", wrapper_html: {style: 'margin-bottom: 0 !important'}, label: false%>
 
       <% end %>
-        <%= f.button :submit, "Add", class: 'btn btn-sm btn-outline-success' %>
+        <%= f.button :submit, "Add", class: 'btn btn-sm btn-outline-success', data: {turbo: false} %>
         <%= link_to "Cancel", :back, class: 'btn btn-sm btn-outline-danger' %>
       </div>
     </div>

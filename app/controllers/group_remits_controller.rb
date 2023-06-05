@@ -7,8 +7,25 @@ class GroupRemitsController < InheritedResources::Base
   before_action :set_group_remit, only: %i[show edit update destroy submit]
   before_action :set_members, only: %i[new create edit update]
 
+  def renewal
+    @group_remit = GroupRemit.find_by(id: params[:id])
+    renewal_result = @group_remit.renew
+    new_group_remit = renewal_result[:new_group_remit]
+
+    respond_to do |format|
+      if @group_remit.present?
+        format.html { redirect_to group_remit_path(new_group_remit), notice: "Group remit renewed" }
+      end
+    end
+    # byebug
+  end
+
   def submit
-    @group_remit.save_total_premium_and_fees
+    if @group_remit.status == "pending"
+      @group_remit.set_active_status
+    elsif @group_remit.status == "renewal"
+      @group_remit.set_renewed_status
+    end
 
     respond_to do |format|
       if @group_remit.save
@@ -29,6 +46,7 @@ class GroupRemitsController < InheritedResources::Base
 
     containers # controller/concerns/container.rb
     counters  # controller/concerns/counter.rb
+
     @passed_requirements = group_remit_passed_requirements?
     @pagy, @batches = pagy(@batches_container, items: 10)
 
@@ -88,9 +106,10 @@ class GroupRemitsController < InheritedResources::Base
   end
 
   def destroy
+    agreement = @group_remit.agreement
     respond_to do |format|
       if @group_remit.destroy
-        format.html { redirect_to agreements_path, alert: "Group remit was successfully deleted." }
+        format.html { redirect_to agreement_path(agreement), alert: "Group remit was successfully deleted." }
       end
     end
   end

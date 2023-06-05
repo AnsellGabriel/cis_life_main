@@ -89,7 +89,7 @@
             <div class="d-flex gap-1 align-items-center">
                 <h6 class="mb-0">Beneficiaries</h6>
                 <!-- button to open turbo-frame "modal"  -->
-                <% unless @group_remit.active? || @group_remit.expired? %>
+                <% unless @group_remit.active? || @group_remit.expired? || @group_remit.renewed? %>
                   <%= link_to "+", new_group_remit_batch_beneficiary_path(@group_remit, @batch),
                       class: small_btn('success'), 
                       data: {
@@ -123,7 +123,7 @@
           <div class="row mb-1">
             <div class="d-flex align-items-center">
                 <div class="col-sm-1">
-                  <% unless @group_remit.active? || @group_remit.expired? %>
+                  <% unless @group_remit.active? || @group_remit.expired? || @group_remit.renewed? %>
                     <%= button_to "x", group_remit_batch_beneficiary_path(@group_remit, @batch, b), 
                     method: :delete,
                     form: { 
@@ -158,15 +158,15 @@
         <div class="card-body">
           <div class="row">
             <div class="col-sm-12 <%= flex_justify_align('center') %>">
-              <div class="gap-1<%= flex_justify_align('','center') %>">
+              <div class="gap-1 <%= flex_justify_align('','center') %>">
                   <h6 class="mb-0">Dependents</h6>
                   <!-- button to open turbo-frame "modal"  -->
-                  <% unless @group_remit.active? || @group_remit.expired? %>
+                  <% unless @group_remit.active? || @group_remit.expired? || @group_remit.renewed? %>
                     <%= link_to "+", new_group_remit_batch_dependent_path(@group_remit, @batch),
-                        class: smal_btn('success'), 
+                        class: small_btn('success'), 
                         data: {
-                            turbo_frame: "modal"
-                            } 
+                          turbo_frame: "modal"
+                        } 
                     %>        
                   <% end %>
               </div>     
@@ -201,7 +201,7 @@
             <div class="row mb-1">
               <div class="d-flex align-items-center">
                 <div class="col-sm-1">
-                  <% unless @group_remit.active? || @group_remit.expired? %>
+                  <% unless @group_remit.active? || @group_remit.expired? || @group_remit.renewed? %>                   
                     <%= button_to "x", group_remit_batch_dependent_path(@group_remit, @batch, d), 
                       method: :delete,
                       form: { 

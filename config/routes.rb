@@ -14,9 +14,7 @@ Rails.application.routes.draw do
 
   resources :group_remits do 
     get :submit, on: :member
-    collection do
-      post 'create_single'
-    end
+    get :renewal, on: :member
     resources :batches do
       collection do
         post :import

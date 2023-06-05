@@ -7,16 +7,68 @@ class GroupRemit < ApplicationRecord
     pending: 0,
     active: 1,
     renewal: 2,
-    expired: 3
+    renewed: 3,
+    expired: 4
   }
 
+  def renew
+    new_group_remit = self.dup
+    new_group_remit.set_terms_and_expiry_date(self.expiry_date)
+    new_group_remit.expiry_date = self.expiry_date + 1.year # Assuming the renewal duration is 1 year from the current date
+    new_group_remit.status = :renewal
+    new_group_remit.effectivity_date = nil
+    new_group_remit.save
 
-  def save_total_premium_and_fees
+    removed_batches = [] # To store the batches that are removed from the renewal
+
+    self.batches.each do |batch|
+      if batch.member_details.age >= batch.agreement_benefit.min_age && batch.member_details.age <= batch.agreement_benefit.max_age
+        new_batch = batch.dup
+        new_batch.group_remit_id = new_group_remit.id
+        new_batch.status = :renewal
+        # byebug
+        new_batch.save
+
+        if batch.batch_dependents.present?
+          batch.batch_dependents.each do |dependent|
+            new_dependent = dependent.dup
+            new_dependent.batch_id = new_batch.id
+            new_dependent.save
+          end
+        end
+
+        batch.batch_beneficiaries.each do |beneficiary|
+          new_beneficiary = beneficiary.dup
+          new_beneficiary.batch_id = new_batch.id
+          new_beneficiary.save
+        end
+
+      else
+        removed_batches << batch
+      end
+    end
+    
+    renewal_result = {
+      new_group_remit: new_group_remit,
+      removed_batches: removed_batches
+    }
+  end
+
+  def set_total_premiums_and_fees
     self.gross_premium = gross_premium
     self.coop_commission = total_coop_commissions
     self.agent_commission = total_agent_commissions
     self.net_premium = net_premium - total_agent_commissions
     self.effectivity_date = Date.today
+  end
+
+  def set_renewed_status
+    set_total_premiums_and_fees
+    self.status = :renewed
+  end
+
+  def set_active_status
+    set_total_premiums_and_fees
     self.status = :active
   end
 

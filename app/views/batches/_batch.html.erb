@@ -106,7 +106,7 @@
                 class: small_btn('primary') 
             %>
 
-            <% unless group_remit.active? || group_remit.expired? %>
+            <% unless group_remit.active? || group_remit.expired? || batch.status == 'renewal'%>
                 <% if batch.status == 'recent' && !batch.batch_health_dec.present? %>
                     <%= link_to "!!!", new_group_remit_batch_health_declaration_path(group_remit, batch),
                         class: small_btn('danger'), 

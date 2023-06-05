@@ -50,29 +50,30 @@ class BatchesController < ApplicationController
     coop_member = @batch.coop_member
     member = coop_member.member
     
-    if member.age < 18 or member.age > 65
-      return redirect_to new_group_remit_batch_path(@group_remit), alert: "Member age must be between 18 and 65 years old."
-    end
-    
     Batch.process_batch(
       @batch, 
       @group_remit, 
       batch_params[:rank], 
       batch_params[:transferred]
     )
-    
-    respond_to do |format|
-      if @batch.save!
-        premiums_and_commissions
-        containers # controller/concerns/container.rb
-        counters  # controller/concerns/counter.rb
-        # format.turbo_stream
-        format.html { 
-          redirect_to group_remit_path(@group_remit)
-        }
-        format.turbo_stream { flash.now[:notice] = "Member successfully added." }
-      else
-        format.html { render :new, status: :unprocessable_entity }
+    # byebug
+    if member.age < @batch.agreement_benefit.min_age or member.age > @batch.agreement_benefit.max_age
+      return redirect_to group_remit_path(@group_remit), alert: "Member age must be between 18 and 65 years old."
+    else
+      respond_to do |format|
+        if @batch.save!
+          premiums_and_commissions
+          containers # controller/concerns/container.rb
+          counters  # controller/concerns/counter.rb
+          # format.turbo_stream
+          format.html { 
+            redirect_to group_remit_path(@group_remit)
+            flash[:notice] = "Member successfully added."
+          }
+          # format.turbo_stream { flash.now[:notice] = "Member successfully added." }
+        else
+          format.html { render :new, status: :unprocessable_entity }
+        end
       end
     end
 

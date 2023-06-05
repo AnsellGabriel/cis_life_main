@@ -2,15 +2,16 @@
 <% gr_presenter = GroupRemitPresenter.new(@group_remit)%>
 
 <div class="mb-3 gap-3 <%= flex_justify_align('', 'center') %>">
-  <%= link_to 'MOAs', agreements_path, class: small_btn('secondary') %>
+  <%= link_to 'Back', agreement_path(@agreement), class: small_btn('secondary') %>
 
-  <% unless @group_remit.active? || @group_remit.expired? %>
+  <% if !@group_remit.active? && !@group_remit.expired? && !@group_remit.renewed?%>
     <div class="d-flex gap-1">
 
       <% unless @passed_requirements %>
-        <%= link_to 'Submit Remittance', submit_group_remit_path(@group_remit), 
+        <%= button_to 'Submit Remittance', submit_group_remit_path(@group_remit), 
+          method: :get,
           class: small_btn('warning'), 
-          data: {confirm: 'Submit group remit?' } 
+          data: {turbo_confirm: 'Submit group remit?' } 
         %>
       <% end %>
 
@@ -19,6 +20,12 @@
           data: { turbo_confirm: 'Delete group remit?'},
           class: small_btn('danger') %>
     </div>
+  <% elsif @group_remit.expired? %>
+    <%= button_to 'Renew', renewal_group_remit_path(@group_remit),
+        method: :get, 
+        class: small_btn('warning'), 
+        data: {turbo_confirm: 'Renew group remit?' } 
+      %>
   <% end %>
 
 </div>
@@ -49,7 +56,7 @@
     <div class="<%= flex_justify_align('between') %> " style="height: 100%; width: 460px;">
       <div style="width: 100%">
 
-        <% unless @group_remit.active? || @group_remit.expired? %>
+        <% unless @group_remit.active? || @group_remit.expired? || @group_remit.renewed? %>
             <%= turbo_frame_tag "batch_import_form" do %>
               <%= turbo_frame_tag "batch_form" do %>     
                 <div class="d-flex gap-3 mb-2">

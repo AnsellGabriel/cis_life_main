@@ -23,7 +23,7 @@ class Batch < ApplicationRecord
     approved: 0,
     denied: 1,
     pending: 2,
-    fore_review: 3
+    for_review: 3
   }
 
   belongs_to :coop_member

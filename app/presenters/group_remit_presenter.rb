@@ -18,9 +18,9 @@ class GroupRemitPresenter
 	end
 
 	def status_color
-		if @group_remit.pending?
+		if @group_remit.pending? || @group_remit.renewal?
 			"var(--bs-yellow)"
-		elsif @group_remit.active?
+		elsif @group_remit.active? || @group_remit.renewed?
 			"var(--bs-green)"
 		elsif @group_remit.expired?
 			"var(--bs-red)"

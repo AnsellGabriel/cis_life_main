@@ -6,7 +6,7 @@ module DateHelper
 
 	# "MM/DD/YYYY"
 	def date_as_month_day_year(date)
-		date.strftime("%B %d, %Y")
+		date.present? ? date.strftime("%B %d, %Y") : 'Tentative'
 	end
 
 	def remaining_days(date)

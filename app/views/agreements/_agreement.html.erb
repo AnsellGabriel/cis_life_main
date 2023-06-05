@@ -1,9 +1,28 @@
 <div id="<%= dom_id(agreement) %>" class="row <%= flex_justify_align('between') %>">
   <div class="<%= flex_justify_align('', 'center', true) %> gap-3">
+  <% last_group_remit = agreement.group_remits.last %>
 
     <% if agreement.anniversary_type != 'multiple' %>
       <div class="card">
         <div class="card-body d-flex flex-column" style="width: 400px">
+          <div class="mb-3">
+            <% if agreement.group_remits.present? %>
+
+              <% case last_group_remit.status %>
+              <% when 'active' %>
+                <span class="<%= badge('success') %>">Active</span>
+              <% when 'renewal' %>
+                <span class="<%= badge('warning') %> text-dark">Renewal</span>
+              <% when 'renewed' %>
+                <span class="<%= badge('success') %>">Renewed</span>
+              <% when 'pending' %>
+                <span class="<%= badge('warning') %> text-dark">Pending</span>
+              <% when 'expired' %>
+                <span class="<%= badge('danger') %>">Expired</span>
+              <% end %>
+            
+            <% end %>
+          </div>
           <%= render 'agreement_field', 
             name: 'Proposal', 
             value: agreement.proposal.proposal_no, 
@@ -11,7 +30,7 @@
           %>
           
           <% if agreement.active_group_remits.present? || agreement.group_remits.where(status: :expired).present? %>
-            <% last_group_remit = agreement.active_group_remits.first || agreement.group_remits.where(status: :expired).first %>
+            
             <%= render 'submitted_field', group_remit: last_group_remit %>
           <% else %>
             <%= render 'agreement_field', 
@@ -33,8 +52,8 @@
 
           <div class="mt-4 text-center">
 
-            <% if agreement.active_group_remits.present? || agreement.group_remits.where(status: :expired).present? %>
-              <%= link_to 'View Group Remit', agreement_group_remit_path(@agreement, @group_remits.first), 
+            <% if agreement.group_remits.present?  %>
+              <%= link_to 'View Group Remit', agreement_group_remit_path(@agreement, @group_remits.last), 
                 class: small_btn('warning'), 
                 data: { turbo: false } 
               %>
@@ -85,8 +104,8 @@
             <% end %>
 
             <div class="mt-4 text-center">
-              <%= link_to "#{gr.active? ? 'View Group Remit' : 'Finish Group Remit'}", agreement_group_remit_path(@agreement, gr), 
-                class: "btn btn-sm btn#{gr.active? ? '' : '-outline'}-warning", 
+              <%= link_to "View Group Remit", agreement_group_remit_path(@agreement, gr), 
+                class: "btn btn-sm btn-warning", 
                 data: { turbo: false } 
               %>
             </div>
