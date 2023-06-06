@@ -90,12 +90,14 @@
                 <h6 class="mb-0">Beneficiaries</h6>
                 <!-- button to open turbo-frame "modal"  -->
                 <% unless @group_remit.active? || @group_remit.expired? || @group_remit.renewed? %>
-                  <%= link_to "+", new_group_remit_batch_beneficiary_path(@group_remit, @batch),
-                      class: small_btn('success'), 
-                      data: {
-                          turbo_frame: "modal"
-                          } 
-                  %>      
+                  <% if @batch.batch_beneficiaries.size < 5 %>
+                    <%= link_to "+", new_group_remit_batch_beneficiary_path(@group_remit, @batch),
+                        class: small_btn('success'), 
+                        data: {
+                            turbo_frame: "modal"
+                            } 
+                    %>      
+                  <% end %>
                 <% end %>  
             </div>
           </div>
@@ -162,12 +164,14 @@
                   <h6 class="mb-0">Dependents</h6>
                   <!-- button to open turbo-frame "modal"  -->
                   <% unless @group_remit.active? || @group_remit.expired? || @group_remit.renewed? %>
-                    <%= link_to "+", new_group_remit_batch_dependent_path(@group_remit, @batch),
-                        class: small_btn('success'), 
-                        data: {
-                          turbo_frame: "modal"
-                        } 
-                    %>        
+                    <% if @batch.batch_dependents.size < 5 %>
+                      <%= link_to "+", new_group_remit_batch_dependent_path(@group_remit, @batch),
+                          class: small_btn('success'), 
+                          data: {
+                            turbo_frame: "modal"
+                          } 
+                      %>     
+                    <% end %>   
                   <% end %>
               </div>     
             </div>

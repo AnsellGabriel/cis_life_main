@@ -62,7 +62,7 @@ gem 'jquery-rails'
 gem 'cocoon'
 gem 'sidekiq'
 gem 'sidekiq-scheduler'
-gem 'bullet', group: 'development'
+# gem 'bullet', group: 'development'
 
 
 

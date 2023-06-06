@@ -23,45 +23,47 @@
       </div>
     </div>
 
-    <div class="col">
-      <div class="card">
-        <div class="card-body">
-          <div class="<%= flex_justify_align('between', 'center') %>">
-            <div class="d-flex gap-1">
-              <h6 class="card-title mb-0">History</h6>
-            </div>
-          </div>
-          <hr>
-          <div class="<%= flex_justify_align('', '', true) %> gap-1">
-            <% @agreement.group_remits.order(created_at: :desc).each do |group_remit| %>
-              <% gr_presenter = GroupRemitPresenter.new(group_remit)%>
-              <div class="card">
-                <div class="card-body <%= flex_justify_align('between', 'center') %> gap-1">
-                  <div class="<%= flex_justify_align('', 'center') %> gap-3">
-                    <span class="<%= gr_presenter.status_badge %>" style="width: 70px;">
-                      <%= gr_presenter.status_text %>
-                    </span>
-                    <div class="text-secondary small">
-                      <%= content_tag :span, 'Effectivity date: ' %>
-                      <span> 
-                      <% if group_remit.effectivity_date.present? %>
-                        <%= date_as_month_day_year(group_remit.effectivity_date) %>
-                      <% else %>
-                        Tentative
-                      <% end %>
-                      </span>
-                    </div>
-                    <div class="text-secondary small">
-                        <%= content_tag :span, 'Expiry date: ' %>
-                        <%= content_tag :span, date_as_month_day_year(group_remit.expiry_date) %>
-                    </div>
-                  </div>
-                  <%= link_to 'View', group_remit_path(group_remit), class: small_btn('secondary') %>
-                </div>
+    <% unless @agreement.group_remits.empty? %>
+      <div class="col">
+        <div class="card">
+          <div class="card-body">
+            <div class="<%= flex_justify_align('between', 'center') %>">
+              <div class="d-flex gap-1">
+                <h6 class="card-title mb-0">History</h6>
               </div>
-            <% end %>
+            </div>
+            <hr>
+            <div class="<%= flex_justify_align('', '', true) %> gap-1">
+              <% @agreement.group_remits.order(created_at: :desc).each do |group_remit| %>
+                <% gr_presenter = GroupRemitPresenter.new(group_remit)%>
+                <div class="card">
+                  <div class="card-body <%= flex_justify_align('between', 'center') %> gap-1">
+                    <div class="<%= flex_justify_align('', 'center') %> gap-3">
+                      <span class="<%= gr_presenter.status_badge %>" style="width: 70px;">
+                        <%= gr_presenter.status_text %>
+                      </span>
+                      <div class="text-secondary small">
+                        <%= content_tag :span, 'Effectivity date: ' %>
+                        <span> 
+                        <% if group_remit.effectivity_date.present? %>
+                          <%= date_as_month_day_year(group_remit.effectivity_date) %>
+                        <% else %>
+                          Tentative
+                        <% end %>
+                        </span>
+                      </div>
+                      <div class="text-secondary small">
+                          <%= content_tag :span, 'Expiry date: ' %>
+                          <%= content_tag :span, date_as_month_day_year(group_remit.expiry_date) %>
+                      </div>
+                    </div>
+                    <%= link_to 'View', group_remit_path(group_remit), class: small_btn('secondary') %>
+                  </div>
+                </div>
+              <% end %>
+            </div>
           </div>
         </div>
       </div>
-    </div>
+    <% end %>
   </div>

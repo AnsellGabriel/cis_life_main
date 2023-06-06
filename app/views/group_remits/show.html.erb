@@ -20,7 +20,7 @@
           data: { turbo_confirm: 'Delete group remit?'},
           class: small_btn('danger') %>
     </div>
-  <% elsif @group_remit.expired? %>
+  <% elsif @group_remit.expired? && @group_remit == @agreement.group_remits.last %>
     <%= button_to 'Renew', renewal_group_remit_path(@group_remit),
         method: :get, 
         class: small_btn('warning'), 
@@ -109,6 +109,7 @@
         <%= content_tag :h6, "Benefit", style: "width: 150px;", class: 'text-center' %>
         <%= content_tag :h6, "Coverage Amount", style: "width: 150px;", class: 'text-center'%>
       </div>
+
       <% @agreement.agreement_benefits.includes({product_benefits: :benefit}).each do |ab| %>
         <div class="<%= flex_justify_align('between', 'center') %> text-secondary">
           <%= content_tag :span, "#{ab.insured_type == 'principal' ? ab.insured_type.upcase : ab.insured_type.gsub('_', ' ').split(' ').drop(1).join(' ').upcase}", class: 'text-secondary', style: 'font-size: .8rem' %>
