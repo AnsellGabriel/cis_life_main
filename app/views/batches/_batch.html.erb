@@ -9,6 +9,7 @@
         <div class="d-flex" style="padding-left: 60px; padding-top: 30px; padding-bottom: 30px;">
             <div class="d-flex flex-column gap-1">
                 <div class="">
+                
                     <% if batch.status == 'recent' %>
                         <span class="<%= badge('success') %>">New</span>
                     <% else %>
@@ -25,12 +26,15 @@
 
                 </div>
                 <div class="">
-                    <% if batch.batch_beneficiaries.count == 0 %>
+
+                    <% if beneficiaries.empty? %>
                         <span class="badge bg-danger">No beneficiary!</span>
                     <% end %>
-                    <% if batch.status == 'recent' && !batch.batch_health_dec.present? %>
+
+                    <% if batch.status == 'recent' && batch.batch_health_dec.blank? %>
                         <span class="badge bg-danger">No Health Declaration!</span>
                     <% end %>
+                    
                 </div>
             </div>
             
@@ -63,12 +67,14 @@
                     <%= content_tag :span, "None", class: 'sm-red-text' %>
                 <% else %>
                     <div class="d-flex flex-column mb-1">
+
                         <% beneficiaries.each do |b| %>
                             <%= content_tag :span, "#{b.member_dependent.last_name}, #{b.member_dependent.first_name} #{b.member_dependent.middle_name}", 
                                 class: "text-secondary", 
                                 style: "font-size: .7rem;" 
                             %>
                         <% end %>
+
                     </div>
                 <% end %>
 
@@ -107,7 +113,8 @@
             %>
 
             <% unless group_remit.active? || group_remit.expired? || batch.status == 'renewal'%>
-                <% if batch.status == 'recent' && !batch.batch_health_dec.present? %>
+
+                <% if batch.status == 'recent' && batch.batch_health_dec.blank? %>
                     <%= link_to "!!!", new_group_remit_batch_health_declaration_path(group_remit, batch),
                         class: small_btn('danger'), 
                         data: {
@@ -115,6 +122,7 @@
                             } 
                     %> 
                 <% end %>
+
                 <%= button_to "x", group_remit_batch_path(group_remit, batch), 
                     method: :delete,
                     form: { 

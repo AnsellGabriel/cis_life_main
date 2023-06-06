@@ -27,4 +27,34 @@ class GroupRemitPresenter
 		end
 	end
 
+	def status_badge
+		case @group_remit.status
+		when "pending"
+			"badge bg-warning text-dark"
+		when "active"
+			"badge bg-success"
+		when "expired"
+			"badge bg-danger"
+		when "renewal"
+			"badge bg-warning text-dark"
+		when "renewed"
+			"badge bg-success"
+		end
+	end
+	
+	def status_text
+		case @group_remit.status
+		when "pending"
+			"Pending"
+		when "active"
+			"Active"
+		when "expired"
+			"Expired"
+		when "renewal"
+			"Renewal"
+		when "renewed"
+			"Renewed"
+		end
+	end
+
 end

@@ -43,13 +43,13 @@ class GroupRemitsController < InheritedResources::Base
 
   def show
     @agreement = @group_remit.agreement
+    # @agreement_eager = @agreement.includes([:agreement_benefits]).includes([:product_benefits])
 
     containers # controller/concerns/container.rb
     counters  # controller/concerns/counter.rb
 
     @passed_requirements = group_remit_passed_requirements?
     @pagy, @batches = pagy(@batches_container, items: 10)
-
   end
 
   def new

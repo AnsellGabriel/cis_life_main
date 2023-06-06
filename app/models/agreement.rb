@@ -12,7 +12,7 @@ class Agreement < ApplicationRecord
     has_and_belongs_to_many :coop_members
 
     def get_coop_sf
-      agreement_benefits.first.proposal.coop_sf
+      proposal.coop_sf
     end
 
     # filters anniversaries based on a given set of expiry dates
@@ -24,5 +24,13 @@ class Agreement < ApplicationRecord
 
     def active_group_remits
       group_remits.where(status: :active)
+    end
+
+    def expired_group_remits
+      group_remits.where(status: :expired)
+    end
+
+    def renewed_group_remits
+      group_remits.where(status: :renewed)
     end
 end

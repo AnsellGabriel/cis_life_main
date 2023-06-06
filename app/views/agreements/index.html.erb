@@ -19,57 +19,48 @@
 
 <div class="row row-cols-2 row-cols-md-2 g-4 mb-3">
   <% @f_agreements.each do |agreement| %>
-  <%= turbo_frame_tag agreement.id do %>
-    <div class="col">
-      <div class="card">
-        <div class="card-body">
-          <div class="<%= flex_justify_align('between') %>">
-            <div class="<%= flex_justify_align('','center') %> gap-1">
-              <h6 class="card-title mb-0"><%= agreement.moa_no %></h6>
-                <% last_group_remit = agreement.group_remits.last %>
-                  <% gr_presenter = GroupRemitPresenter.new(last_group_remit)%>
+    <%= turbo_frame_tag agreement.id do %>
+      <div class="col">
+        <div class="card">
+          <div class="card-body">
+            <div class="<%= flex_justify_align('between') %>">
+              <div class="<%= flex_justify_align('','center') %> gap-1">
+                <h6 class="card-title mb-0"><%= agreement.moa_no %></h6>
+                  <% last_group_remit = agreement.group_remits.last %>
+                    <% gr_presenter = GroupRemitPresenter.new(last_group_remit)%>
 
-                  <% if last_group_remit.present? %>
-                    <% case last_group_remit.status %>
-                    <% when 'active' %>
-                      <span class="<%= badge('success') %>">Active</span>
-                    <% when 'renewal' %>
-                      <span class="<%= badge('warning') %> text-dark">Renewal</span>
-                    <% when 'renewed' %>
-                      <span class="<%= badge('success') %>">Renewed</span>
-                    <% when 'pending' %>
-                      <span class="<%= badge('warning') %> text-dark">Pending</span>
-                    <% when 'expired' %>
-                      <span class="<%= badge('danger') %>">Expired</span>
+                    <% if last_group_remit.present? %>
+                        <span class="<%= gr_presenter.status_badge %>">
+                          <%= gr_presenter.status_text %>
+                        </span>
+
+                      <% if gr_presenter.remaining_days <= 90 && gr_presenter.remaining_days > 0 %>
+                        <span class="<%= badge("#{gr_presenter.countdown_color}") %>">
+                            Expiry : <%= gr_presenter.remaining_days %> days
+                        </span>
+                      <% end %>  
+
+                    <% else %>
+                    <span class="<%= badge('info') %>">New</span>
                     <% end %>
 
-                    <% if gr_presenter.remaining_days <= 90 && gr_presenter.remaining_days > 0 %>
-                      <span class="<%= badge("#{gr_presenter.countdown_color}") %>">
-                          Expiry : <%= gr_presenter.remaining_days %> days
-                      </span>
-                    <% end %>  
+                        
 
-                  <% else %>
-                  <span class="<%= badge('info') %>">New</span>
-                  <% end %>
-
-                      
-
+              </div>
+              <%= link_to 'View', agreement_path(agreement), 
+                class: small_btn('outline-warning'),
+                data: {turbo: false}
+              %>
             </div>
-            <%= link_to 'View', agreement_path(agreement), 
-              class: small_btn('outline-warning'),
-              data: {turbo: false}
-            %>
-          </div>
 
-        </div>
-        <div class="card-footer <%= flex_justify_align('between') %>">
-          <small class="text-muted">Created by: <%= agreement.agent.full_name %></small>
-          <small class="text-muted">Updated: <%= time_ago_in_words(agreement.updated_at) %></small>
+          </div>
+          <div class="card-footer <%= flex_justify_align('between') %>">
+            <small class="text-muted">Created by: <%= agreement.agent.full_name %></small>
+            <small class="text-muted">Updated: <%= time_ago_in_words(agreement.updated_at) %></small>
+          </div>
         </div>
       </div>
-    </div>
-  <% end %>
+    <% end %>
   <% end %>
 </div>
 

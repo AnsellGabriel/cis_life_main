@@ -4,9 +4,9 @@ class GroupRemitStatusUpdater
 	include Sidekiq::Worker
 
   def perform
-    GroupRemit.where(status: :active)
+    GroupRemit.where(status: [:active, :renewed])
       .where("expiry_date <= ?", Date.current)
-      .update_all(status: :expired)
+      .update(status: :expired)
   end
 
 end

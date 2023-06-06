@@ -91,7 +91,7 @@ class BatchImportService
     coop_member = member.coop_members.find_by(cooperative: @cooperative)
     new_batch = @group_remit.batches.build(coop_member_id: coop_member.id)
     
-    Batch.process_batch(new_batch, member, @group_remit, batch_hash[:rank], batch_hash[:transferred])
+    Batch.process_batch(new_batch, @group_remit, batch_hash[:rank], batch_hash[:transferred])
 
     # process_dependents(row["Beneficiary"], new_batch, true) if row["Beneficiary"].present?
     # process_dependents(row["Dependents"], new_batch, false) if row["Dependents"].present?
@@ -99,20 +99,20 @@ class BatchImportService
     new_batch.save ? 1 : 0
   end
 
-  def process_dependents(dependents_string, batch, beneficiary)
-    dependents = dependents_string.split(",")
-    dependents.each do |dependent|
-      name, relation = dependent.split(" - ").map(&:strip)
-      first_name, last_name = name.split(" ").map(&:strip)
-      member_dependent = MemberDependent.find_by(first_name: first_name, last_name: last_name)
+  # def process_dependents(dependents_string, batch, beneficiary)
+  #   dependents = dependents_string.split(",")
+  #   dependents.each do |dependent|
+  #     name, relation = dependent.split(" - ").map(&:strip)
+  #     first_name, last_name = name.split(" ").map(&:strip)
+  #     member_dependent = MemberDependent.find_by(first_name: first_name, last_name: last_name)
 
-      if member_dependent.persisted?
-        batch_dependent = batch.batch_dependents.build
-        batch_dependent.member_dependent_id = member_dependent.id
-        batch_dependent.beneficiary = beneficiary
-        batch_dependent.premium = ((premium / 12) * terms)
-        batch_dependent.save
-      end
-    end
-  end
+  #     if member_dependent.persisted?
+  #       batch_dependent = batch.batch_dependents.build
+  #       batch_dependent.member_dependent_id = member_dependent.id
+  #       batch_dependent.beneficiary = beneficiary
+  #       batch_dependent.premium = ((premium / 12) * terms)
+  #       batch_dependent.save
+  #     end
+  #   end
+  # end
 end
