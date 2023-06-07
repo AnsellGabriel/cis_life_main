@@ -4,9 +4,21 @@ import { Controller } from "@hotwired/stimulus"
 export default class extends Controller {
   static targets = ["toggleable"]
 
-  toggle() {
+  toggle(event) {
+    event.preventDefault()
+
+    const btn = event.currentTarget
+    const buttonId = btn.dataset.id
+
     this.toggleableTargets.forEach(element => {
-      element.classList.toggle("hidden")
+
+      if (buttonId === element.dataset.id) {
+        element.classList.toggle("hidden")
+      } else {
+        element.classList.add("hidden")
+      }
+
     })
   }
 }
+
