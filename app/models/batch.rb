@@ -57,6 +57,8 @@ class Batch < ApplicationRecord
     coop_member = batch.coop_member
     renewal_member = agreement.coop_members.find_by(id: coop_member.id)
     
+    check_plan(agreement, batch, rank)
+
     if renewal_member.present?
         batch.status = :renewal
     else
@@ -68,11 +70,11 @@ class Batch < ApplicationRecord
       agreement.coop_members << coop_member
     end
 
-    check_plan(agreement, batch, rank)
   end
 
   def self.check_plan(agreement, batch, rank)
     if agreement.plan.acronym == 'GYRT' || agreement.plan.acronym == 'GYRTF'
+
       batch.set_premium_and_service_fees(:principal, batch.group_remit) # model/concerns/calculate.rb
     elsif agreement.plan.acronym == 'GYRTBR' || agreement.plan.acronym == 'GYRTFR'
       self.determine_premium(rank, batch, batch.group_remit)

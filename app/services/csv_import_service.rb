@@ -9,6 +9,7 @@ class CsvImportService
     end
   
     def import
+      
       if file.nil?
         return "No file uploaded"
       elsif !valid_csv_file?
@@ -26,17 +27,20 @@ class CsvImportService
 
       case @type
       when :batch
-        if csv.count < @group_remit.agreement.proposal.minimum_participation
-          return "Imported members must be at least 100 for GYRT plan. Current count: #{csv.count}"
+        min_participation = @group_remit.agreement.proposal.minimum_participation
+
+        if csv.count < min_participation
+          return "Imported members must be at least #{min_participation}. Current count: #{csv.count}"
         end
+
         import_service = BatchImportService.new(csv, @group_remit, @cooperative)
-        import_message = import_service.import_batches
+        import_result = import_service.import_batches
       when :member
         import_service = MemberImportService.new(csv, @cooperative)
-        import_message = import_service.import_members
+        import_result = import_service.import_members
       end
 
-      import_message
+      import_result
     end
   
     private

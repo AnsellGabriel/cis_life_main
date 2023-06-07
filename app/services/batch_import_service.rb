@@ -7,13 +7,16 @@ class BatchImportService
 
   def import_batches
     initialize_counters_and_arrays
+    agreement_benefits = GroupRemit.includes(agreement: :agreement_benefits).find(@group_remit.id).agreement.agreement_benefits
 
     @csv.each do |row|
       batch_hash = extract_batch_data(row)
+      age_min_max = age_min_max_by_insured_type(agreement_benefits, batch_hash[:rank])
       member = find_or_initialize_member(batch_hash)
 
-      if age_not_within_range?(member)
+      if age_not_within_range?(member, age_min_max)
         increment_denied_members_counter
+        @denied_members << [member, 'Age not within agreement range']
         next
       end
 
@@ -25,25 +28,58 @@ class BatchImportService
       duplicate_member = find_duplicate_member(member)
 
       if duplicate_member
-        add_duplicate_member(batch_hash)
+        # add_duplicate_member(member)
+        @denied_members << [member, 'Member already exists']
       else
         @added_members_counter += create_batch(member, batch_hash)
       end
     end
 
-    import_message = "#{@added_members_counter} member(s) added, #{@duplicate_members_counter} duplicate members, #{@denied_members_counter} member(s) denied. #{@unenrolled_members_counter} unenrolled members"
+    import_result = {
+      added_members_counter: @added_members_counter,
+      denied_members_counter: @denied_members_counter,
+      denied_members: @denied_members
+    }
   end
   
   private
 
+  def age_min_max_by_insured_type(agreement_benefits, rank)
+    if rank.nil?
+      {
+        min_age: agreement_benefits.find_by(insured_type: :principal).min_age,
+        max_age: agreement_benefits.find_by(insured_type: :principal).max_age
+      }
+    else
+      case rank
+      when 'BOD'
+        {
+          min_age: agreement_benefits.find_by(insured_type: :ranking_bod).min_age,
+          max_age: agreement_benefits.find_by(insured_type: :ranking_bod).max_age
+        }      
+      when 'SO'
+        {
+          min_age: agreement_benefits.find_by(insured_type: :ranking_senior_officer).min_age,
+          max_age: agreement_benefits.find_by(insured_type: :ranking_senior_officer).max_age
+        }
+      when 'JO'
+        {
+          min_age: agreement_benefits.find_by(insured_type: :ranking_junior_officer).min_age,
+          max_age: agreement_benefits.find_by(insured_type: :ranking_junior_officer).max_age
+        }      
+      when 'RF'
+        {
+          min_age: agreement_benefits.find_by(insured_type: :ranking_rank_and_file).min_age,
+          max_age: agreement_benefits.find_by(insured_type: :ranking_rank_and_file).max_age
+        }      
+      end
+    end
+  end
+
   def initialize_counters_and_arrays
     @added_members_counter = 0
     @denied_members_counter = 0
-    @duplicate_members_counter = 0
-    @unenrolled_members_counter = 0
-    @unenrolled_members_array = []
-    @denied_members_array = []
-    @duplicate_members_array = []
+    @denied_members = []
   end
 
   def extract_batch_data(row)
@@ -65,8 +101,8 @@ class BatchImportService
     )
   end
 
-  def age_not_within_range?(member)
-    member.age < 18 || member.age > 65
+  def age_not_within_range?(member, age_min_max)
+    member.age < age_min_max[:min_age] || member.age > age_min_max[:max_age]
   end
 
   def increment_denied_members_counter
@@ -74,18 +110,18 @@ class BatchImportService
   end
 
   def add_unenrolled_member(member)
-    @unenrolled_members_array << member
-    @unenrolled_members_counter += 1
+    @denied_members << [member, 'Unerolled']
+    increment_denied_members_counter
   end
 
   def find_duplicate_member(member)
     @group_remit.batches.find_by(coop_member_id: member.coop_member_id(@cooperative))
   end
 
-  def add_duplicate_member(batch_hash)
-    @duplicate_members_array << batch_hash
-    @duplicate_members_counter += 1
-  end
+  # def add_duplicate_member(batch_hash)
+  #   @duplicate_members << batch_hash
+  #   @duplicate_members_counter += 1
+  # end
 
   def create_batch(member, batch_hash)
     coop_member = member.coop_members.find_by(cooperative: @cooperative)

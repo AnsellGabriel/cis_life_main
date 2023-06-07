@@ -16,9 +16,14 @@ class BatchesController < ApplicationController
       @cooperative, 
       @group_remit
     )
-    import_message = import_service.import
 
-    redirect_to group_remit_path(@group_remit), notice: import_message
+    import_result = import_service.import
+    @denied_members = import_result[:denied_members]
+    @denied_members_counter = import_result[:denied_members_counter]
+    @added_members_counter = import_result[:added_members_counter]
+    byebug
+
+    redirect_to group_remit_path(@group_remit), notice: "#{@added_members_counter} members successfully added. #{@denied_members_counter} members denied."
   end
   
 
@@ -118,7 +123,21 @@ class BatchesController < ApplicationController
 
   private
     def batch_params
-      params.require(:batch).permit(:rank, :active, :coop_sf_amount, :agent_sf_amount, :status, :premium, :coop_member_id, :transferred, batch_dependents_attributes: [:member_dependent_id, :beneficiary, :_destroy])
+      params.require(:batch).permit(
+        :rank, 
+        :active, 
+        :coop_sf_amount, 
+        :agent_sf_amount, 
+        :status, 
+        :premium, 
+        :coop_member_id, 
+        :transferred, 
+        batch_dependents_attributes: [
+          :member_dependent_id, 
+          :beneficiary, 
+          :_destroy
+        ]
+      )
     end
 
     def set_group_remit_and_agreement
