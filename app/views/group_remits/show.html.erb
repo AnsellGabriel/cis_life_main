@@ -14,11 +14,16 @@
           data: {turbo_confirm: 'Submit group remit?' } 
         %>
       <% end %>
+       
+      <%  if @group_remit.denied_members.present? %>
+        <%= link_to 'Denied members', group_remit_denied_members_path(@group_remit), class: small_btn('secondary') %>
+      <% end %>
 
       <%= button_to "Delete", group_remit_path(@group_remit), 
           method: :delete,
           data: { turbo_confirm: 'Delete group remit?'},
-          class: small_btn('danger') %>
+          class: small_btn('danger') 
+      %>
     </div>
   <% elsif @group_remit.expired? && @group_remit == @agreement.group_remits.last %>
     <%= button_to 'Renew', renewal_group_remit_path(@group_remit),

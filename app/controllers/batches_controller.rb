@@ -8,7 +8,10 @@ class BatchesController < ApplicationController
   before_action :set_group_remit_and_agreement
   
   def import
-    required_headers = ["First Name", "Middle Name", "Last Name", "Suffix"]
+    required_headers = ["First Name", "Middle Name", "Last Name", "Suffix", "Transferred?"]
+    gyrt_ranking_plans = ["GYRTBR", "GYRTFR"]
+    required_headers << "Rank" if gyrt_ranking_plans.include?(@agreement.plan.acronym)
+
     import_service = CsvImportService.new(
       :batch, 
       params[:file], 
@@ -17,16 +20,21 @@ class BatchesController < ApplicationController
       @group_remit
     )
 
-    import_result = import_service.import
-    @denied_members = import_result[:denied_members]
-    @denied_members_counter = import_result[:denied_members_counter]
-    @added_members_counter = import_result[:added_members_counter]
-    byebug
+    @import_result = import_service.import
+    
+    if @import_result.is_a?(Hash)
+      notice = "#{@import_result[:added_members_counter]} members successfully added. #{@import_result[:denied_members_counter]} members denied."
+      if @import_result[:denied_members_counter] > 0
+        redirect_to group_remit_denied_members_path(@group_remit), notice: notice
+      else
+        redirect_to group_remit_path(@group_remit), notice: notice
+      end
+    else
+      redirect_to group_remit_path(@group_remit), notice: @import_result
+    end
 
-    redirect_to group_remit_path(@group_remit), notice: "#{@added_members_counter} members successfully added. #{@denied_members_counter} members denied."
   end
   
-
   def index
     @pagy, @batches = pagy(@group_remit.batches, items: 10)
   end

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_06_01_015151) do
+ActiveRecord::Schema[7.0].define(version: 2023_06_08_064702) do
   create_table "active_admin_comments", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.string "namespace"
     t.text "body"
@@ -237,6 +237,16 @@ ActiveRecord::Schema[7.0].define(version: 2023_06_01_015151) do
     t.string "contact_number"
   end
 
+  create_table "denied_members", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+    t.string "name"
+    t.integer "age"
+    t.string "reason"
+    t.bigint "group_remit_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["group_remit_id"], name: "index_denied_members_on_group_remit_id"
+  end
+
   create_table "departments", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.string "name"
     t.text "description"
@@ -392,6 +402,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_06_01_015151) do
   add_foreign_key "coop_members", "members"
   add_foreign_key "coop_users", "coop_branches"
   add_foreign_key "coop_users", "cooperatives"
+  add_foreign_key "denied_members", "group_remits"
   add_foreign_key "employees", "departments"
   add_foreign_key "group_remits", "agreements"
   add_foreign_key "member_dependents", "members"

@@ -13,6 +13,8 @@ Rails.application.routes.draw do
   end
 
   resources :group_remits do 
+    get 'denied_members', to: 'denied_members#index'
+    get 'download_csv', to: 'denied_members#download_csv'
     get :submit, on: :member
     get :renewal, on: :member
     resources :batches do

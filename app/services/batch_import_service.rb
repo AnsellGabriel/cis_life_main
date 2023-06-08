@@ -2,7 +2,10 @@ class BatchImportService
   def initialize(csv, group_remit, cooperative)
     @csv = csv
     @group_remit = group_remit
-    @cooperative = cooperative
+    @cooperative = cooperative  
+    @agreement = Agreement.includes(:plan).find(@group_remit.agreement_id)
+    @gyrt_plan = ['GYRT', 'GYRTF']
+    @gyrt_ranking_plan = ['GYRTBR', 'GYRTFR']
   end
 
   def import_batches
@@ -11,17 +14,24 @@ class BatchImportService
 
     @csv.each do |row|
       batch_hash = extract_batch_data(row)
-      age_min_max = age_min_max_by_insured_type(agreement_benefits, batch_hash[:rank])
       member = find_or_initialize_member(batch_hash)
 
+      if @gyrt_ranking_plan.include?(@agreement.plan.acronym)
+        unless row['Rank'].present?
+          create_denied_member(member, 'Rank not present')
+          next
+        end
+      end
+
+      age_min_max = age_min_max_by_insured_type(agreement_benefits, batch_hash[:rank])
+      
       if age_not_within_range?(member, age_min_max)
-        increment_denied_members_counter
-        @denied_members << [member, 'Age not within agreement range']
+        create_denied_member(member, 'Age not within agreement\'s age range')
         next
       end
 
       unless member.persisted?
-        add_unenrolled_member(member)
+        create_denied_member(member, 'Unenrolled member.')
         next
       end
 
@@ -29,7 +39,8 @@ class BatchImportService
 
       if duplicate_member
         # add_duplicate_member(member)
-        @denied_members << [member, 'Member already exists']
+        create_denied_member(member, 'Member already exist in the group remit.')
+        next
       else
         @added_members_counter += create_batch(member, batch_hash)
       end
@@ -38,19 +49,24 @@ class BatchImportService
     import_result = {
       added_members_counter: @added_members_counter,
       denied_members_counter: @denied_members_counter,
-      denied_members: @denied_members
     }
   end
   
   private
 
+  def create_denied_member(member, reason)
+    DeniedMember.find_or_create_by!(name: "#{member.first_name} #{member.middle_name} #{member.last_name}", age: member.age, reason: reason, group_remit: @group_remit)
+    increment_denied_members_counter
+  end
+
   def age_min_max_by_insured_type(agreement_benefits, rank)
-    if rank.nil?
+    
+    if @gyrt_plan.include?(@agreement.plan.acronym)
       {
         min_age: agreement_benefits.find_by(insured_type: :principal).min_age,
         max_age: agreement_benefits.find_by(insured_type: :principal).max_age
       }
-    else
+    elsif @gyrt_ranking_plan.include?(@agreement.plan.acronym)
       case rank
       when 'BOD'
         {
@@ -79,7 +95,6 @@ class BatchImportService
   def initialize_counters_and_arrays
     @added_members_counter = 0
     @denied_members_counter = 0
-    @denied_members = []
   end
 
   def extract_batch_data(row)
@@ -102,16 +117,11 @@ class BatchImportService
   end
 
   def age_not_within_range?(member, age_min_max)
-    member.age < age_min_max[:min_age] || member.age > age_min_max[:max_age]
+      member.age < age_min_max[:min_age] || member.age > age_min_max[:max_age]
   end
 
   def increment_denied_members_counter
     @denied_members_counter += 1
-  end
-
-  def add_unenrolled_member(member)
-    @denied_members << [member, 'Unerolled']
-    increment_denied_members_counter
   end
 
   def find_duplicate_member(member)

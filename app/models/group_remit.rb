@@ -2,6 +2,7 @@ class GroupRemit < ApplicationRecord
   belongs_to :agreement
   belongs_to :anniversary, optional: true
   has_many :batches, dependent: :destroy
+  has_many :denied_members, dependent: :destroy
 
   enum status: {
     pending: 0,
