@@ -4,19 +4,24 @@
 <div class="mb-3 gap-3 <%= flex_justify_align('', 'center') %>">
   <%= link_to 'Back', agreement_path(@agreement), class: small_btn('secondary') %>
 
+  <div class="<%= flex_justify_align('', 'center') %> gap-1">
+    <%= content_tag :span, @group_remit.status.titleize, style: "color: #{gr_presenter.status_color}; font-weight: 700;" %>
+    <%= content_tag :h3, "#{@agreement.moa_no}", class: 'mb-0' %>
+  </div>
+
   <% if !@group_remit.active? && !@group_remit.expired? && !@group_remit.renewed?%>
     <div class="d-flex gap-1">
 
       <% unless @passed_requirements %>
         <%= button_to 'Submit Remittance', submit_group_remit_path(@group_remit), 
           method: :get,
-          class: small_btn('warning'), 
+          class: small_btn('outline-warning'), 
           data: {turbo_confirm: 'Submit group remit?' } 
         %>
       <% end %>
        
       <%  if @group_remit.denied_members.present? %>
-        <%= link_to 'Denied members', group_remit_denied_members_path(@group_remit), class: small_btn('secondary') %>
+        <%= link_to 'Denied members', group_remit_denied_members_path(@group_remit), class: small_btn('outline-secondary') %>
       <% end %>
 
       <%= button_to "Delete", group_remit_path(@group_remit), 
@@ -33,11 +38,6 @@
       %>
   <% end %>
 
-</div>
-
-<div class="<%= flex_justify_align('', 'center') %> gap-1 mb-3">
-  <%= content_tag :span, @group_remit.status.titleize, style: "color: #{gr_presenter.status_color}; font-weight: 700;" %>
-  <%= content_tag :h3, "#{@agreement.moa_no}", class: 'mb-0' %>
 </div>
 
 <div class="<%= flex_justify_align('between', 'center') %> mb-3 gap-3">
@@ -136,6 +136,17 @@
   <% end %>  
 </div>
 
+<%= form_with url: group_remit_path(@group_remit), method: :get do %>
+    <div class="form-group d-flex justify-content-end gap-3 mb-3">
+      <%= text_field_tag 'batch_filter', 
+        nil, 
+        placeholder: 'Member\'s name', 
+        class: "form-control", 
+        style: "width: auto"
+      %>
+      <%= submit_tag 'Search', class: small_btn('outline-warning') %>
+    </div>
+  <% end %>
 
 <div class="table-responsive">
   <%= turbo_frame_tag "batches" do %>
