@@ -1,23 +1,37 @@
 class BatchImportService
-  def initialize(csv, group_remit, cooperative)
-    @csv = csv
+  def initialize(spreadsheet, group_remit, cooperative)
+    @spreadsheet = spreadsheet
     @group_remit = group_remit
     @cooperative = cooperative  
-    @agreement = Agreement.includes(:plan).find(@group_remit.agreement_id)
-    @gyrt_plan = ['GYRT', 'GYRTF']
-    @gyrt_ranking_plan = ['GYRTBR', 'GYRTFR']
+    @agreement = @group_remit.agreement
+    @gyrt_plans = ['GYRT', 'GYRTF']
+    @gyrt_ranking_plans = ['GYRTBR', 'GYRTFR']
+    @principal_headers = ["First Name", "Middle Name", "Last Name", "Suffix", "Transferred?"]
+    @principal_headers << "Rank" if @gyrt_ranking_plans.include?(@agreement.plan.acronym)
   end
 
   def import_batches
+    headers = extract_headers(@spreadsheet, 'Principal')
+    principal_spreadsheet = parse_file('Principal')
+    missing_headers = find_missing_headers(@principal_headers, headers)
+    min_participation = @agreement.proposal.minimum_participation
     initialize_counters_and_arrays
-    agreement_benefits = GroupRemit.includes(agreement: :agreement_benefits).find(@group_remit.id).agreement.agreement_benefits
+    agreement_benefits = @agreement.agreement_benefits
 
-    @csv.each do |row|
+    if missing_headers.any?
+      return "The following CSV headers are missing: #{missing_headers.join(', ')}"
+    end
+
+    if principal_spreadsheet.size < min_participation
+      return "Imported members must be at least #{min_participation}. Current count: #{principal_spreadsheet.size}"
+    end
+
+    principal_spreadsheet.each do |row|
       batch_hash = extract_batch_data(row)
       member = find_or_initialize_member(batch_hash)
 
-      if @gyrt_ranking_plan.include?(@agreement.plan.acronym)
-        unless row['Rank'].present?
+      if @gyrt_ranking_plans.include?(@agreement.plan.acronym)
+        unless row[0].present?
           create_denied_member(member, 'Rank not present')
           next
         end
@@ -54,19 +68,36 @@ class BatchImportService
   
   private
 
+  def find_missing_headers(required_headers, headers)
+    required_headers - headers
+  end
+
+  def extract_headers(spreadsheet, sheet_name)
+    spreadsheet.sheet(sheet_name).row(1).map(&:strip)
+  end
+
+  def parse_file(sheet_name)
+    @spreadsheet.sheet(sheet_name).parse.delete_if { |row| row.all?(&:blank?) }
+  end
+
   def create_denied_member(member, reason)
-    DeniedMember.find_or_create_by!(name: "#{member.first_name} #{member.middle_name} #{member.last_name}", age: member.age, reason: reason, group_remit: @group_remit)
+    DeniedMember.find_or_create_by!(
+      name: "#{member.first_name} #{member.middle_name} #{member.last_name}", 
+      age: member.age, 
+      reason: reason, 
+      group_remit: @group_remit
+    )
     increment_denied_members_counter
   end
 
   def age_min_max_by_insured_type(agreement_benefits, rank)
     
-    if @gyrt_plan.include?(@agreement.plan.acronym)
+    if @gyrt_plans.include?(@agreement.plan.acronym)
       {
         min_age: agreement_benefits.find_by(insured_type: :principal).min_age,
         max_age: agreement_benefits.find_by(insured_type: :principal).max_age
       }
-    elsif @gyrt_ranking_plan.include?(@agreement.plan.acronym)
+    elsif @gyrt_ranking_plans.include?(@agreement.plan.acronym)
       case rank
       when 'BOD'
         {
@@ -99,14 +130,15 @@ class BatchImportService
 
   def extract_batch_data(row)
     {
-      first_name: row["First Name"].upcase,
-      middle_name: row["Middle Name"].upcase,
-      last_name: row["Last Name"].upcase,
-      suffix: row["Suffix"].upcase,
-      rank: row["Rank"].present? ? row["Rank"].upcase : nil,
-      transferred: row["Transferred?"].upcase == "TRUE" ? true : false
+      first_name: row[2].to_s.upcase,
+      middle_name: row[3].to_s.upcase,
+      last_name: row[1].to_s.upcase,
+      suffix: row[4].to_s.upcase,
+      rank: row[5].to_s.present? ? row[5].to_s.upcase : nil,
+      transferred: row[0].to_s.upcase == "TRUE"
     }
   end
+  
 
   def find_or_initialize_member(batch_hash)
     Member.find_or_initialize_by(
