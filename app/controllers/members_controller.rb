@@ -3,12 +3,10 @@ class MembersController < InheritedResources::Base
   before_action :check_userable_type 
 
   def import
-    required_headers = ["Birth Place", "First Name", "Middle Name", "Last Name", "Suffix", "Birthdate", "Gender", "Address", "SSS #", "TIN #", "Mobile #", "Email", "Civil Status", "Height (cm)", "Weight (kg)", "Occupation", "Employer", "Work Address", "Spouse", "Work Phone #"]
 
     import_service = CsvImportService.new(
       :member, 
-      params[:file], 
-      required_headers, 
+      params[:file],  
       @cooperative
     )
     import_message = import_service.import

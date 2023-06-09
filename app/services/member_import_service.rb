@@ -1,18 +1,25 @@
 class MemberImportService
-    def initialize(csv, cooperative)
-        @csv = csv
-        @cooperative = cooperative
+    def initialize(spreadsheet, cooperative)
+      @spreadsheet = spreadsheet
+      @cooperative = cooperative
+      @required_headers = ["Birth Place", "First Name", "Middle Name", "Last Name", "Suffix", "Birthdate", "Gender", "Address", "SSS #", "TIN #", "Mobile #", "Email", "Civil Status", "Height (cm)", "Weight (kg)", "Occupation", "Employer", "Work Address", "Spouse", "Work Phone #"]
+
     end
 
 
     def import_members
+    headers = extract_headers(@spreadsheet, 'Members_Data')
+    members_spreadsheet = parse_file('Members_Data')
+    missing_headers = find_missing_headers(@required_headers, headers)
+
+
     # ! Attributes with Date type should have a format of: yyyy-mm-dd
     # Initialize variables to keep track of member imports
     created_members_counter = 0
     updated_members_counter = 0
 
     # Iterate over each row in the CSV file
-    @csv.each do |row|
+    members_spreadsheet.drop(1).each do |row|
       # Extract member data from CSV row
       member_hash = {
         last_name: row["Last Name"].upcase,
@@ -69,5 +76,20 @@ class MemberImportService
         created_members_counter: created_members_counter,
         updated_members_counter: updated_members_counter
       }
-end
+    end
+
+    private
+
+    def extract_headers(spreadsheet, sheet_name)
+      spreadsheet.sheet(sheet_name).row(1).map(&:strip)
+    end
+
+    def parse_file(sheet_name)
+      @spreadsheet.sheet(sheet_name).parse(headers: true).delete_if { |row| row.all?(&:blank?) }
+    end
+
+    def find_missing_headers(required_headers, headers)
+      required_headers - headers
+    end
+    
 end
