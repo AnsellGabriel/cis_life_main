@@ -18,6 +18,8 @@ class BatchImportService
     initialize_counters_and_arrays
     agreement_benefits = @agreement.agreement_benefits
 
+    # byebug
+
     if missing_headers.any?
       return "The following CSV headers are missing: #{missing_headers.join(', ')}"
     end
@@ -26,12 +28,13 @@ class BatchImportService
       return "Imported members must be at least #{min_participation}. Current count: #{principal_spreadsheet.size}"
     end
 
-    principal_spreadsheet.each do |row|
+    principal_spreadsheet.drop(1).each do |row|
       batch_hash = extract_batch_data(row)
+      # byebug
       member = find_or_initialize_member(batch_hash)
 
       if @gyrt_ranking_plans.include?(@agreement.plan.acronym)
-        unless row[0].present?
+        unless row["Rank"].present?
           create_denied_member(member, 'Rank not present')
           next
         end
@@ -77,7 +80,7 @@ class BatchImportService
   end
 
   def parse_file(sheet_name)
-    @spreadsheet.sheet(sheet_name).parse.delete_if { |row| row.all?(&:blank?) }
+    @spreadsheet.sheet(sheet_name).parse(headers: true).delete_if { |row| row.all?(&:blank?) }
   end
 
   def create_denied_member(member, reason)
@@ -130,12 +133,12 @@ class BatchImportService
 
   def extract_batch_data(row)
     {
-      first_name: row[2].to_s.upcase,
-      middle_name: row[3].to_s.upcase,
-      last_name: row[1].to_s.upcase,
-      suffix: row[4].to_s.upcase,
-      rank: row[5].to_s.present? ? row[5].to_s.upcase : nil,
-      transferred: row[0].to_s.upcase == "TRUE"
+      first_name: row["First Name"].to_s.upcase,
+      middle_name: row["Middle Name"].to_s.upcase,
+      last_name: row["Last Name"].to_s.upcase,
+      suffix: row["Suffix"].to_s.upcase,
+      rank: row["Rank"].to_s.present? ? row["Rank"].to_s.upcase : nil,
+      transferred: row["Transferred?"].to_s.upcase == "TRUE"
     }
   end
   
