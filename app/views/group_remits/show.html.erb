@@ -70,6 +70,10 @@
 
                 <% if @passed_requirements %>
                   <div class="d-flex flex-column">
+                    <%= content_tag :span, "(click reason to filter batches)", 
+                      class: 'mb-1',  
+                      style: "font-size: .7rem; color: red !important; font-weight: 700;"   
+                    %>
                     <%= content_tag :span, "Unable to submit group remit due to: ", 
                       class: 'mb-1',  
                       style: "font-size: .7rem; color: red !important; font-weight: 700;"  
@@ -81,11 +85,19 @@
                       <% end %>
 
                       <% if @batch_without_beneficiaries_count > 0 %>
-                        <%= content_tag :span, "#{@batch_without_beneficiaries_count} member(s) without beneficiary!", class: badge('danger') %>
+                        <%= link_to "#{@batch_without_beneficiaries_count} member(s) without beneficiary!", group_remit_path(@group_remit, batch_beneficiary_filter: true), 
+                          method: :get, 
+                          class: "#{badge('danger')} hovered-link", 
+                          data: { turbo: false } 
+                        %>
                       <% end %>
 
                       <% if @batch_without_batch_health_dec_count > 0 %>
-                        <%= content_tag :span, "#{@batch_without_batch_health_dec_count} member(s) without batch health declaration!", class: badge('danger') %>
+                        <%= link_to "#{@batch_without_batch_health_dec_count} member(s) without batch health declaration!", group_remit_path(@group_remit, batch_health_dec_filter: true), 
+                          method: :get, 
+                          class: "#{badge('danger')} hovered-link", 
+                          data: { turbo: false } 
+                        %>
                       <% end %>
 
                     </div>
@@ -137,16 +149,16 @@
 </div>
 
 <%= form_with url: group_remit_path(@group_remit), method: :get do %>
-    <div class="form-group d-flex justify-content-end gap-3 mb-3">
-      <%= text_field_tag 'batch_filter', 
-        nil, 
-        placeholder: 'Member\'s name', 
-        class: "form-control", 
-        style: "width: auto"
-      %>
-      <%= submit_tag 'Search', class: small_btn('outline-warning') %>
-    </div>
-  <% end %>
+  <div class="form-group d-flex justify-content-end gap-3 mb-3">
+    <%= text_field_tag 'batch_filter', 
+      nil, 
+      placeholder: 'Member\'s name', 
+      class: "form-control", 
+      style: "width: auto"
+    %>
+    <%= submit_tag 'Search', class: small_btn('warning') %>
+  </div>
+<% end %>
 
 <div class="table-responsive">
   <%= turbo_frame_tag "batches" do %>

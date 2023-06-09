@@ -87,8 +87,6 @@ input[type="number"]::-webkit-outer-spin-button {
   height:  70vh;
 }
 
-.hovered-yellow {
-  color: var(--bs-btn-hover-color);
-  background-color: var(--bs-btn-hover-bg);
-  border-color: var(--bs-btn-hover-border-color);
+.hovered-link:hover {
+  color: black;
 }

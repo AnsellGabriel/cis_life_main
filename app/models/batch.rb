@@ -1,6 +1,11 @@
 class Batch < ApplicationRecord
   include Calculate
   attr_accessor :rank
+
+  scope :filter_by_member_name, ->(name) {
+    joins(coop_member: :member)
+      .where("members.first_name LIKE :name OR members.last_name LIKE :name", name: "%#{name}%")
+  }
   
   # validates_presence_of :effectivity_date, :expiry_date, :coop_sf_amount, :agent_sf_amount, :status, :premium, :coop_member_id
 

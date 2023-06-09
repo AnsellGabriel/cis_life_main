@@ -44,15 +44,22 @@ class GroupRemitsController < InheritedResources::Base
   def show
     @agreement = @group_remit.agreement
     # @agreement_eager = @agreement.includes([:agreement_benefits]).includes([:product_benefits])
-
     containers # controller/concerns/container.rb
     counters  # controller/concerns/counter.rb
-
-    @f_batches = @group_remit.batches.includes(coop_member: :member)
-                    .where("batch.coop_member.member.last_name LIKE :name OR batch.coop_member.member.first_name LIKE :name", name: "%#{params[:batch_filter]}%")
-    
     @passed_requirements = group_remit_passed_requirements?
-    @pagy, @batches = pagy(@f_batches, items: 10)
+    batches_eager_loaded = @group_remit.batches.includes(coop_member: :member)
+
+    if params[:batch_filter].present?
+      @f_batches = batches_eager_loaded.filter_by_member_name(params[:batch_filter].upcase)
+    elsif params[:batch_beneficiary_filter].present?
+      @f_batches = @group_remit.batches_without_beneficiaries
+    elsif params[:batch_health_dec_filter].present?
+      @f_batches = @group_remit.batches_without_health_dec
+    else
+      @f_batches = batches_eager_loaded
+    end
+
+    @pagy, @batches = pagy(@f_batches, items: 10)     
   end
 
   def new
