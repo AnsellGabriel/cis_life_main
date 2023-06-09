@@ -111,7 +111,13 @@ class BatchesController < ApplicationController
   end
 
   def destroy
-    
+    # to remove coop_member from agreement.coop_members if they are newly added
+    if @batch.status == "recent"
+      agreement = @batch.group_remit.agreement
+      agreement.coop_members.delete(@batch.coop_member)
+      agreement.save
+    end
+
     respond_to do |format|
       if @batch.destroy
         premiums_and_commissions
