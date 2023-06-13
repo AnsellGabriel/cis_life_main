@@ -2,6 +2,10 @@ class Batch < ApplicationRecord
   include Calculate
   attr_accessor :rank
 
+  # remove association of coop_member from agreement.coop_members
+  # if batch is destroyed and status is new/recent
+  before_destroy :delete_agreements_coop_members, if: :new_status?
+
   scope :filter_by_member_name, ->(name) {
     joins(coop_member: :member)
       .where("members.first_name LIKE :name OR members.last_name LIKE :name", name: "%#{name}%")
@@ -97,5 +101,18 @@ class Batch < ApplicationRecord
     when 'RF'
       batch.set_premium_and_service_fees(:ranking_rank_and_file, group_remit)
     end
+  end
+
+  private
+
+  def new_status?
+    self.status == "recent"
+  end
+
+  def delete_agreements_coop_members
+    agreement = self.group_remit.agreement
+    coop_member = self.coop_member
+
+    agreement.coop_members.delete(coop_member)
   end
 end

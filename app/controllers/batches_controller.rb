@@ -8,10 +8,6 @@ class BatchesController < ApplicationController
   before_action :set_group_remit_and_agreement
   
   def import
-    # required_headers = ["First Name", "Middle Name", "Last Name", "Suffix", "Transferred?"]
-    # gyrt_ranking_plans = ["GYRTBR", "GYRTFR"]
-    # required_headers << "Rank" if gyrt_ranking_plans.include?(@agreement.plan.acronym)
-
     import_service = CsvImportService.new(
       :batch, 
       params[:file], 
@@ -41,7 +37,7 @@ class BatchesController < ApplicationController
   def show
     @batch_member = @batch.coop_member
     @effectivity_date = @batch.group_remit.effectivity_date
-    @expiry_date = @batch.group_remit.expiry_date 
+    @expiry_date = @batch.group_remit.expiry_date
     @beneficiaries = @batch.batch_beneficiaries
     @dependents = @batch.batch_dependents
   end
@@ -112,11 +108,11 @@ class BatchesController < ApplicationController
   def destroy
     # to remove coop_member from agreement.coop_members 
     # if they are newly added when batch is destroyed
-    if @batch.status == "recent"
-      agreement = @batch.group_remit.agreement
-      agreement.coop_members.delete(@batch.coop_member)
-      agreement.save
-    end
+    # if @batch.status == "recent"
+    #   agreement = @batch.group_remit.agreement
+    #   agreement.coop_members.delete(@batch.coop_member)
+    #   agreement.save
+    # end
 
     respond_to do |format|
       if @batch.destroy
