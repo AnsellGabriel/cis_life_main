@@ -71,7 +71,7 @@
   <% if @agreement.plan.gyrt_type.present? && @agreement.plan.gyrt_type == 'basic' %>
     <div class="col-md-10" style="margin: auto;">
   <% else %>
-    <div class="col-md-5" style="margin-left: auto;">
+    <div class="col-md-4" style="margin-left: auto;">
   <% end %>
     <div class="card mb-3">
       <div class="card-body">
@@ -86,12 +86,12 @@
                 <!-- button to open turbo-frame "modal"  -->
                 <% unless @group_remit.active? || @group_remit.expired? || @group_remit.renewed? %>
                   <% if @batch.batch_beneficiaries.size < 4 %>
-                    <%= link_to "+", new_group_remit_batch_beneficiary_path(@group_remit, @batch),
-                        class: small_btn('success'), 
-                        data: {
-                            turbo_frame: "modal"
-                            } 
-                    %>      
+                    <%= link_to new_group_remit_batch_beneficiary_path(@group_remit, @batch),
+                                class: small_btn('success'),
+                                data: { turbo_frame: "modal" } do %>
+                      <i class="bi bi-plus-lg"></i>
+                    <% end %>
+
                   <% end %>
                 <% end %>  
             </div>
@@ -107,7 +107,13 @@
                 style: 'font-size: .8rem' 
               %>  
             </div>
-            <div class="col-sm-5">
+            <div class="col-sm-2">
+              <%= content_tag :h6, 'Age', 
+                class: 'text-center', 
+                style: 'font-size: .8rem' 
+              %>  
+            </div>
+            <div class="col-sm-3">
               <%= content_tag :h6, 'Relationship', 
                 class: 'text-center', 
                 style: 'font-size: .8rem' 
@@ -121,13 +127,15 @@
             <div class="d-flex align-items-center">
                 <div class="col-sm-1">
                   <% unless @group_remit.active? || @group_remit.expired? || @group_remit.renewed? %>
-                    <%= button_to "x", group_remit_batch_beneficiary_path(@group_remit, @batch, b), 
+                    <%= button_to group_remit_batch_beneficiary_path(@group_remit, @batch, b), 
                     method: :delete,
                     form: { 
                     data: { turbo_frame: "_top", 
                     turbo_confirm: "Delete beneficiary?" } 
                     }, 
-                    class: small_btn('danger') %>
+                    class: small_btn('danger') do %>
+                    <i class="bi bi-x-lg"></i>
+                    <% end %>
                   <% end %>
                 </div>
               <div class="col-sm-6 text-secondary">
@@ -136,7 +144,13 @@
                   style: "font-size: .8rem" 
                 %>
               </div>
-              <div class="col-sm-5 text-secondary">
+              <div class="col-sm-2 text-secondary">
+                <%= content_tag :h6, "#{b.member_dependent.age}", 
+                  class: "mb-0 text-center", 
+                  style: "font-size: .8rem" 
+                %>
+              </div>
+              <div class="col-sm-3 text-secondary">
                 <%= content_tag :h6, "#{b.member_dependent.relationship}", 
                   class: "mb-0 text-center", 
                   style: "font-size: .8rem" 
@@ -150,7 +164,7 @@
   </div>
 
   <% if @agreement.plan.gyrt_type.present? && @agreement.plan.gyrt_type == 'family' %>
-    <div class="col-md-5" style="margin-right: auto;">
+    <div class="col-md-6" style="margin-right: auto;">
       <div class="card mb-3">
         <div class="card-body">
           <div class="row">
@@ -160,12 +174,13 @@
                   <!-- button to open turbo-frame "modal"  -->
                   <% unless @group_remit.active? || @group_remit.expired? || @group_remit.renewed? %>
                     <% if @batch.batch_dependents.size < 4 %>
-                      <%= link_to "+", new_group_remit_batch_dependent_path(@group_remit, @batch),
+                      <%= link_to new_group_remit_batch_dependent_path(@group_remit, @batch),
                           class: small_btn('success'), 
                           data: {
                             turbo_frame: "modal"
-                          } 
-                      %>     
+                          } do %>     
+                        <i class="bi bi-plus-lg"></i>
+                      <% end %>
                     <% end %>   
                   <% end %>
               </div>     
@@ -175,8 +190,14 @@
           <% if @dependents.present? %>
             <div class="row">
               <div class="col-sm-1"></div>
-              <div class="col-sm-5">
+              <div class="col-sm-3">
                 <%= content_tag :h6, 'Name', 
+                  class: 'text-center', 
+                  style: 'font-size: .8rem' 
+                %>
+              </div>
+              <div class="col-sm-2">
+                <%= content_tag :h6, 'Age', 
                   class: 'text-center', 
                   style: 'font-size: .8rem' 
                 %>
@@ -201,18 +222,26 @@
               <div class="d-flex align-items-center">
                 <div class="col-sm-1">
                   <% unless @group_remit.active? || @group_remit.expired? || @group_remit.renewed? %>                   
-                    <%= button_to "x", group_remit_batch_dependent_path(@group_remit, @batch, d), 
+                    <%= button_to group_remit_batch_dependent_path(@group_remit, @batch, d), 
                       method: :delete,
                       form: { 
                       data: { turbo_frame: "_top", 
                       turbo_confirm: "Delete dependent?" } 
                       }, 
                       class: small_btn('danger'),
-                      style: "font-size: .8rem" %>
+                      style: "font-size: .8rem" do %>
+                      <i class="bi bi-x-lg"></i>
+                    <% end %>
                   <% end %>
                 </div>
-                <div class="col-sm-5 text-secondary">
+                <div class="col-sm-3 text-secondary">
                   <%= content_tag :h6, "#{d.member_dependent.last_name}, #{d.member_dependent.first_name} #{d.member_dependent.middle_name}", 
+                    class: "mb-0 text-center", 
+                    style: "font-size: .8rem" 
+                  %>
+                </div>
+                <div class="col-sm-2 text-secondary">
+                  <%= content_tag :h6, "#{d.member_dependent.age}", 
                     class: "mb-0 text-center", 
                     style: "font-size: .8rem" 
                   %>

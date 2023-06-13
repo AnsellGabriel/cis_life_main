@@ -18,4 +18,8 @@ class MemberDependent < ApplicationRecord
     self.suffix = self.suffix == nil ? '' : self.suffix.upcase
     # repeat the above line for each field you want to make all caps
   end
+
+  def age
+    Date.today.year - self.birth_date.year - ((Date.today.month > self.birth_date.month || (Date.today.month == self.birth_date.month && Date.today.day >= self.birth_date.day)) ? 0 : 1)
+  end
 end

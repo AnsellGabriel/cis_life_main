@@ -18,9 +18,16 @@
                 <div class="">
                 
                     <%= content_tag :span, "#{member.last_name}, #{member.first_name} #{member.middle_name}" %>
-                    <div class="sm-secondary-text">
-                        <%= content_tag :span, "#{member.mobile_number}" %>
-                        <%= content_tag :span, "#{member.email}" %>
+                    <div class="sm-secondary-text <%= flex_justify_align('center','center') %> gap-1">
+                        <div class="">
+                            <i class="bi bi-phone"></i>
+                            <%= content_tag :span, "#{member.mobile_number}" %>
+                        </div>
+                        <%= content_tag :span, '|' %>
+                        <div class="">
+                            <i class="bi bi-envelope"></i>
+                            <%= content_tag :span, "#{member.email}" %>
+                        </div>
                     </div>
 
                     <% if agreement.plan.acronym == 'GYRTBR' || agreement.plan.acronym == 'GYRTFR'%>
@@ -120,21 +127,23 @@
             <% unless group_remit.active? || group_remit.expired? || batch.status == 'renewal'%>
 
                 <% if batch.status == 'recent' && batch.batch_health_dec.blank? %>
-                    <%= link_to "!!!", new_group_remit_batch_health_declaration_path(group_remit, batch),
-                        class: small_btn('danger'), 
-                        data: {
-                            turbo_frame: "modal-xl"
-                            } 
-                    %> 
+                    <%= link_to new_group_remit_batch_health_declaration_path(group_remit, batch),
+                                class: small_btn('danger'), 
+                                title: 'Health Declaration Form',
+                                data: { turbo_frame: "modal-xl" } do %> 
+                    <i class="bi bi-file-earmark-medical"></i>
+                    <% end %>
                 <% end %>
 
-                <%= button_to "x", group_remit_batch_path(group_remit, batch), 
+                <%= button_to group_remit_batch_path(group_remit, batch), 
                     method: :delete,
                     form: { 
                     data: { turbo_frame: "_top", 
                     turbo_confirm: "Delete Batch: #{member.last_name}, #{member.first_name} #{member.middle_name}?" } 
                     }, 
-                    class: small_btn('danger') %>
+                    class: small_btn('danger') do %>
+                        <i class="bi bi-x-lg"></i>                    
+                    <% end %>
             <% end %>
 
         </div>
