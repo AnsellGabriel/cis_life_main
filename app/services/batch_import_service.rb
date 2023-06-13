@@ -108,14 +108,14 @@ class BatchImportService
       )
 
       if dependent_hash[:dependent].to_s.strip.upcase == 'TRUE' && @gyrt_family_plans.include?(@agreement.plan.acronym)
-        batch_dependent = batch.batch_dependents.new(
+        batch_dependent = batch.batch_dependents.find_or_initialize_by(
           member_dependent_id: dependent.id,
         )
         insured_type = batch_dependent.insured_type(dependent[:relationship])
         batch_dependent.set_premium_and_service_fees(insured_type, @group_remit)
         batch_dependent.save
       elsif dependent_hash[:beneficiary].to_s.strip.upcase == 'TRUE'
-        batch_beneficiary = batch.batch_beneficiaries.create(member_dependent_id: dependent.id)
+        batch_beneficiary = batch.batch_beneficiaries.find_or_create_by(member_dependent_id: dependent.id)
       end
     end
 
