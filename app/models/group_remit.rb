@@ -159,5 +159,6 @@ class GroupRemit < ApplicationRecord
   def self.expiry_dates
     pluck(:expiry_date).map { |date| date.strftime("%m-%d") }
   end
+
 end
 

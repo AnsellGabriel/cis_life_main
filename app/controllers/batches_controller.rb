@@ -64,25 +64,27 @@ class BatchesController < ApplicationController
       batch_params[:rank], 
       batch_params[:transferred]
     )
-    # byebug
-    if member.age < @batch.agreement_benefit.min_age or member.age > @batch.agreement_benefit.max_age
-      return redirect_to group_remit_path(@group_remit), alert: "Member age must be between 18 and 65 years old."
-    else
-      respond_to do |format|
-        if @batch.save!
-          premiums_and_commissions
-          containers # controller/concerns/container.rb
-          counters  # controller/concerns/counter.rb
-          # format.turbo_stream
-          format.html { 
-            redirect_to group_remit_path(@group_remit)
-            flash[:notice] = "Member successfully added."
-          }
-          # format.turbo_stream { flash.now[:notice] = "Member successfully added." }
-        else
-          format.html { render :new, status: :unprocessable_entity }
+
+    begin
+      if member.age < @batch.agreement_benefit.min_age or member.age > @batch.agreement_benefit.max_age
+        return redirect_to group_remit_path(@group_remit), alert: "Member age must be between 18 and 65 years old."
+      else
+        respond_to do |format|
+          if @batch.save!
+            premiums_and_commissions
+            containers # controller/concerns/container.rb
+            counters  # controller/concerns/counter.rb
+            format.html { 
+              redirect_to group_remit_path(@group_remit)
+              flash[:notice] = "Member successfully added"
+            }
+          else
+            format.html { render :new, status: :unprocessable_entity }
+          end
         end
       end
+    rescue NoMethodError
+      return redirect_to group_remit_path(@group_remit), alert: "Please include the rank of the member"
     end
 
   end
@@ -98,7 +100,6 @@ class BatchesController < ApplicationController
         format.html { 
           redirect_to group_remit_path(@group_remit), notice: "Batch updated"
         }
-        # format.turbo_stream
       else
         format.html { render :edit, status: :unprocessable_entity }
       end
@@ -106,28 +107,21 @@ class BatchesController < ApplicationController
   end
 
   def destroy
-    # to remove coop_member from agreement.coop_members 
-    # if they are newly added when batch is destroyed
-    # if @batch.status == "recent"
-    #   agreement = @batch.group_remit.agreement
-    #   agreement.coop_members.delete(@batch.coop_member)
-    #   agreement.save
-    # end
-
     respond_to do |format|
+
       if @batch.destroy
         premiums_and_commissions
         containers # controller/concerns/container.rb
         counters  # controller/concerns/counter.rb
         format.html {
-          redirect_to group_remit_path(@group_remit), alert: 'Batch was successfully destroyed.'
+          redirect_to group_remit_path(@group_remit), alert: 'Member removed'
         }
-        # format.turbo_stream { flash.now[:alert] = "Member removed" }
       else
         format.html {
           redirect_to group_remit_batch_path(@group_remit, @batch), alert: 'Unable to destroy batch.'
         }
       end
+      
     end  
   end
 
