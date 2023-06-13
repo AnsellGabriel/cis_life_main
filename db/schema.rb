@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_06_08_064702) do
+ActiveRecord::Schema[7.0].define(version: 2023_06_13_012545) do
   create_table "active_admin_comments", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.string "namespace"
     t.text "body"
@@ -187,6 +187,8 @@ ActiveRecord::Schema[7.0].define(version: 2023_06_08_064702) do
     t.datetime "updated_at", null: false
     t.text "description"
     t.string "street"
+    t.string "email"
+    t.string "branch_head"
     t.index ["cooperative_id"], name: "index_coop_branches_on_cooperative_id"
   end
 

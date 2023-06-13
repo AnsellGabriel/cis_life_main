@@ -9,14 +9,19 @@
         <div class="d-flex" style="padding-left: 60px; padding-top: 30px; padding-bottom: 30px;">
             <div class="d-flex flex-column gap-1">
                 <div class="">
-                
                     <% if batch.status == 'recent' %>
                         <span class="<%= badge('success') %>">New</span>
                     <% else %>
                         <span class="<%= badge('warning') %> text-dark"><%= batch.status.to_s.titleize %></span>
                     <% end %>
-                    
+                </div>
+                <div class="">
+                
                     <%= content_tag :span, "#{member.last_name}, #{member.first_name} #{member.middle_name}" %>
+                    <div class="sm-secondary-text">
+                        <%= content_tag :span, "#{member.mobile_number}" %>
+                        <%= content_tag :span, "#{member.email}" %>
+                    </div>
 
                     <% if agreement.plan.acronym == 'GYRTBR' || agreement.plan.acronym == 'GYRTFR'%>
                         <span class="badge bg-info text-dark">

@@ -6,22 +6,23 @@ class BatchImportService
     @agreement = @group_remit.agreement
     @gyrt_plans = ['GYRT', 'GYRTF']
     @gyrt_ranking_plans = ['GYRTBR', 'GYRTFR']
+    @gyrt_family_plans = ['GYRTF', 'GYRTFR']
     @principal_headers = ["First Name", "Middle Name", "Last Name", "Suffix", "Transferred?"]
     @principal_headers << "Rank" if @gyrt_ranking_plans.include?(@agreement.plan.acronym)
+    @dependent_headers = ["Member First Name", "Member Middle Name", "Member Last Name", "Dependent First Name", "Dependent Middle Name", "Dependent Last Name", "Relationship", "Beneficiary?", "Dependent?"]
   end
 
   def import_batches
-    headers = extract_headers(@spreadsheet, 'Principal')
-    principal_spreadsheet = parse_file('Principal')
-    missing_headers = find_missing_headers(@principal_headers, headers)
-    min_participation = @agreement.proposal.minimum_participation
     initialize_counters_and_arrays
     agreement_benefits = @agreement.agreement_benefits
+    min_participation = @agreement.proposal.minimum_participation
 
-    # byebug
+    principal_headers = extract_headers(@spreadsheet, 'Principal')
+    principal_spreadsheet = parse_file('Principal')
+    missing_headers = find_missing_headers(@principal_headers, principal_headers)
 
     if missing_headers.any?
-      return "The following CSV headers are missing: #{missing_headers.join(', ')}"
+      return "The following headers are missing: #{missing_headers.join(', ')}"
     end
 
     if principal_spreadsheet.size < min_participation
@@ -30,7 +31,6 @@ class BatchImportService
 
     principal_spreadsheet.drop(1).each do |row|
       batch_hash = extract_batch_data(row)
-      # byebug
       member = find_or_initialize_member(batch_hash)
 
       if @gyrt_ranking_plans.include?(@agreement.plan.acronym)
@@ -42,13 +42,13 @@ class BatchImportService
 
       age_min_max = age_min_max_by_insured_type(agreement_benefits, batch_hash[:rank])
       
-      if age_not_within_range?(member, age_min_max)
-        create_denied_member(member, 'Age not within agreement\'s age range')
+      unless member.persisted?
+        create_denied_member(member, 'Unenrolled member.')
         next
       end
 
-      unless member.persisted?
-        create_denied_member(member, 'Unenrolled member.')
+      if age_not_within_range?(member, age_min_max)
+        create_denied_member(member, 'Age not within agreement\'s age range')
         next
       end
 
@@ -63,10 +63,67 @@ class BatchImportService
       end
     end
 
+    ## Dependent batch import section
+    dependent_headers = extract_headers(@spreadsheet, 'Member_Dependents')
+    dependent_spreadsheet = parse_file('Member_Dependents')
+    missing_headers = find_missing_headers(@dependent_headers, dependent_headers)
+
+    if missing_headers.any?
+      return "The following headers are missing: #{missing_headers.join(', ')}"
+    end
+
+    dependent_spreadsheet.drop(1).each do |row|
+      member_name = {
+        first_name: row["Member First Name"].to_s.upcase,
+        middle_name: row["Member Middle Name"].to_s.upcase,
+        last_name: row["Member Last Name"].to_s.upcase,
+        birth_date: row["Member Birthdate"]
+      }
+    
+      member = Member.find_by(member_name)
+
+      if member.nil?
+        next
+      end
+
+      coop_member = @cooperative.coop_members.find_by(member_id: member.id)
+      batch = @group_remit.batches.find_by(coop_member_id: coop_member.id)
+
+      dependent_hash = {
+        first_name: row["Dependent First Name"].to_s.upcase,
+        middle_name: row["Dependent Middle Name"].to_s.upcase,
+        last_name: row["Dependent Last Name"].to_s.upcase,
+        birth_date: row["Dependent Birthdate"],
+        relationship: row["Relationship"].to_s.titleize.strip,
+        beneficiary: row["Beneficiary?"],
+        dependent: row["Dependent?"]
+      }
+
+      dependent = member.member_dependents.find_or_create_by(
+        first_name: dependent_hash[:first_name],
+        middle_name: dependent_hash[:middle_name],
+        last_name: dependent_hash[:last_name],
+        birth_date: dependent_hash[:birth_date],
+        relationship: dependent_hash[:relationship]
+      )
+
+      if dependent_hash[:dependent].to_s.strip.upcase == 'TRUE' && @gyrt_family_plans.include?(@agreement.plan.acronym)
+        batch_dependent = batch.batch_dependents.new(
+          member_dependent_id: dependent.id,
+        )
+        insured_type = batch_dependent.insured_type(dependent[:relationship])
+        batch_dependent.set_premium_and_service_fees(insured_type, @group_remit)
+        batch_dependent.save
+      elsif dependent_hash[:beneficiary].to_s.strip.upcase == 'TRUE'
+        batch_beneficiary = batch.batch_beneficiaries.create(member_dependent_id: dependent.id)
+      end
+    end
+
     import_result = {
       added_members_counter: @added_members_counter,
-      denied_members_counter: @denied_members_counter,
+      denied_members_counter: @denied_members_counter
     }
+
   end
   
   private
@@ -76,7 +133,7 @@ class BatchImportService
   end
 
   def extract_headers(spreadsheet, sheet_name)
-    spreadsheet.sheet(sheet_name).row(1).map(&:strip)
+    spreadsheet.sheet(sheet_name).row(1).compact.map(&:strip)
   end
 
   def parse_file(sheet_name)
@@ -86,7 +143,7 @@ class BatchImportService
   def create_denied_member(member, reason)
     DeniedMember.find_or_create_by!(
       name: "#{member.first_name} #{member.middle_name} #{member.last_name}", 
-      age: member.age, 
+      age: member.birth_date.nil? ? 0 : member.age, 
       reason: reason, 
       group_remit: @group_remit
     )
@@ -142,7 +199,6 @@ class BatchImportService
     }
   end
   
-
   def find_or_initialize_member(batch_hash)
     Member.find_or_initialize_by(
       first_name: batch_hash[:first_name],
@@ -163,37 +219,11 @@ class BatchImportService
     @group_remit.batches.find_by(coop_member_id: member.coop_member_id(@cooperative))
   end
 
-  # def add_duplicate_member(batch_hash)
-  #   @duplicate_members << batch_hash
-  #   @duplicate_members_counter += 1
-  # end
-
   def create_batch(member, batch_hash)
     coop_member = member.coop_members.find_by(cooperative: @cooperative)
     new_batch = @group_remit.batches.build(coop_member_id: coop_member.id)
-    
     Batch.process_batch(new_batch, @group_remit, batch_hash[:rank], batch_hash[:transferred])
-
-    # process_dependents(row["Beneficiary"], new_batch, true) if row["Beneficiary"].present?
-    # process_dependents(row["Dependents"], new_batch, false) if row["Dependents"].present?
-
     new_batch.save ? 1 : 0
   end
 
-  # def process_dependents(dependents_string, batch, beneficiary)
-  #   dependents = dependents_string.split(",")
-  #   dependents.each do |dependent|
-  #     name, relation = dependent.split(" - ").map(&:strip)
-  #     first_name, last_name = name.split(" ").map(&:strip)
-  #     member_dependent = MemberDependent.find_by(first_name: first_name, last_name: last_name)
-
-  #     if member_dependent.persisted?
-  #       batch_dependent = batch.batch_dependents.build
-  #       batch_dependent.member_dependent_id = member_dependent.id
-  #       batch_dependent.beneficiary = beneficiary
-  #       batch_dependent.premium = ((premium / 12) * terms)
-  #       batch_dependent.save
-  #     end
-  #   end
-  # end
 end

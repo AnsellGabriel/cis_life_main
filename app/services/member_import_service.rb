@@ -43,7 +43,7 @@ class MemberImportService
         legal_spouse: row["Spouse"],
         work_phone_number: row["Work Phone #"]
       }
-
+      # byebug
       # Extract cooperative member data from CSV row
       coop_member_hash = {
         cooperative_id: @cooperative.id,

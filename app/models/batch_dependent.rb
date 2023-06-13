@@ -10,7 +10,7 @@ class BatchDependent < ApplicationRecord
     {
       'Spouse' => 2,
       'Parent' => 3,
-      'Children' => 4,
+      'Child' => 4,
       'Sibling' => 5
     }[relationship]
   end
