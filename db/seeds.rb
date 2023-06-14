@@ -48,14 +48,14 @@ Benefit.create!(name: 'Accidental Death & Dismemberment', description: 'Benefit 
 
 
 # GYRT Basic Single Anniversary  
-Agreement.create!(proposal_id: 1, moa_no: 'GYRT-MOA-0001', description: 'Agreement with a single anniversary type', plan_id: 1, agent_id: 1, cooperative_id: 1, anniversary_type: 'single')
+Agreement.create!(proposal_id: 1, moa_no: 'GYRT Basic - Single Anniversary', description: 'Agreement with a single anniversary type', plan_id: 1, agent_id: 1, cooperative_id: 1, anniversary_type: 'single')
 AgreementBenefit.create!(agreement_id: 1, proposal_id: 1, name: 'Agreement Benefit principal', min_age: 18, max_age: 65, insured_type: 1)
 ProductBenefit.create!(coverage_amount: 150000,benefit_id: 1, agreement_benefit_id: 1, premium: 200)
 ProductBenefit.create!(coverage_amount: 100000,benefit_id: 2, agreement_benefit_id: 1, premium: 150)
-Anniversary.create!(agreement_id: 1, name: 'Today', anniversary_date: Date.today)
+Anniversary.create!(agreement_id: 1, name: 'May 31', anniversary_date: '2023/05/31')
 
 # GYRT Family Multiple Anniversary
-Agreement.create!(proposal_id: 1, moa_no: 'GYRTF-MOA-0001', description: 'Agreement with a mutiple anniversary type', plan_id: 2, agent_id: 1, cooperative_id: 1, anniversary_type: 'multiple')
+Agreement.create!(proposal_id: 1, moa_no: 'GYRT Family - No Anniversary date', description: 'Agreement with a mutiple anniversary type', plan_id: 2, agent_id: 1, cooperative_id: 1, anniversary_type: 'none')
 ### Principal
 AgreementBenefit.create!(agreement_id: 2, proposal_id: 1, name: 'Agreement Benefit principal', min_age: 18, max_age: 65, insured_type: 1)
 ProductBenefit.create!(coverage_amount: 150000,benefit_id: 1, agreement_benefit_id: 2, premium: 200)
@@ -72,31 +72,28 @@ ProductBenefit.create!(coverage_amount: 50000,benefit_id: 1, agreement_benefit_i
 AgreementBenefit.create!(agreement_id: 2, proposal_id: 1, name: 'Agreement Benefit principal', min_age: 18, max_age: 65, insured_type: 5)
 ProductBenefit.create!(coverage_amount: 75000,benefit_id: 1, agreement_benefit_id: 6, premium: 100)
 
-
-Anniversary.create!(agreement_id: 2, name: 'March 18', anniversary_date: '2023/03/18')
-Anniversary.create!(agreement_id: 2, name: 'February 25', anniversary_date: '2023/02/25')
-Anniversary.create!(agreement_id: 2, name: 'January 30', anniversary_date: '2023/01/30')
-
-# GYRT Basic No Anniversary
-Agreement.create!(proposal_id: 1, moa_no: 'GYRT-MOA-0002', description: 'Agreement with no anniversary type', plan_id: 1, agent_id: 1, cooperative_id: 1, anniversary_type: 'none')
-AgreementBenefit.create!(agreement_id: 3, proposal_id: 1, name: 'Agreement Benefit principal', min_age: 18, max_age: 65, insured_type: 1)
-ProductBenefit.create!(coverage_amount: 150000,benefit_id: 1, agreement_benefit_id: 7, premium: 200)
-ProductBenefit.create!(coverage_amount: 100000,benefit_id: 2, agreement_benefit_id: 7, premium: 150)
+# # GYRT Basic No Anniversary
+# Agreement.create!(proposal_id: 1, moa_no: 'GYRT-MOA-0002', description: 'Agreement with no anniversary type', plan_id: 1, agent_id: 1, cooperative_id: 1, anniversary_type: 'none')
+# AgreementBenefit.create!(agreement_id: 3, proposal_id: 1, name: 'Agreement Benefit principal', min_age: 18, max_age: 65, insured_type: 1)
+# ProductBenefit.create!(coverage_amount: 150000,benefit_id: 1, agreement_benefit_id: 7, premium: 200)
+# ProductBenefit.create!(coverage_amount: 100000,benefit_id: 2, agreement_benefit_id: 7, premium: 150)
 
 # GYRT Ranking - Basic
-Agreement.create!(proposal_id: 1, moa_no: 'GYRTR-MOA-0001', description: 'Agreement with ranking type', plan_id: 3, agent_id: 1, cooperative_id: 1, anniversary_type: 'single')
-AgreementBenefit.create!(agreement_id: 4, proposal_id: 1, name: 'Agreement Benefit BOD', min_age: 18, max_age: 65, insured_type: 6)
-AgreementBenefit.create!(agreement_id: 4, proposal_id: 1, name: 'Agreement Benefit SO', min_age: 18, max_age: 65, insured_type: 7)
-AgreementBenefit.create!(agreement_id: 4, proposal_id: 1, name: 'Agreement Benefit JO', min_age: 18, max_age: 65, insured_type: 8)
-AgreementBenefit.create!(agreement_id: 4, proposal_id: 1, name: 'Agreement Benefit Rank & File', min_age: 18, max_age: 65, insured_type: 9)
+Agreement.create!(proposal_id: 1, moa_no: 'GYRT Ranking - Multiple Anniversary', description: 'Agreement with ranking type', plan_id: 3, agent_id: 1, cooperative_id: 1, anniversary_type: 'multiple')
 
+AgreementBenefit.create!(agreement_id: 3, proposal_id: 1, name: 'Agreement Benefit BOD', min_age: 18, max_age: 65, insured_type: 6)
+AgreementBenefit.create!(agreement_id: 3, proposal_id: 1, name: 'Agreement Benefit SO', min_age: 18, max_age: 65, insured_type: 7)
+AgreementBenefit.create!(agreement_id: 3, proposal_id: 1, name: 'Agreement Benefit JO', min_age: 18, max_age: 65, insured_type: 8)
+AgreementBenefit.create!(agreement_id: 3, proposal_id: 1, name: 'Agreement Benefit Rank & File', min_age: 18, max_age: 65, insured_type: 9)
 
-ProductBenefit.create!(coverage_amount: 500000,benefit_id: 1, agreement_benefit_id: 8, premium: 500)
-ProductBenefit.create!(coverage_amount: 350000,benefit_id: 1, agreement_benefit_id: 9, premium: 350)
-ProductBenefit.create!(coverage_amount: 250000,benefit_id: 1, agreement_benefit_id: 10, premium: 250)
-ProductBenefit.create!(coverage_amount: 150000,benefit_id: 1, agreement_benefit_id: 11, premium: 150)
+ProductBenefit.create!(coverage_amount: 500000,benefit_id: 1, agreement_benefit_id: 7, premium: 500)
+ProductBenefit.create!(coverage_amount: 350000,benefit_id: 1, agreement_benefit_id: 8, premium: 350)
+ProductBenefit.create!(coverage_amount: 250000,benefit_id: 1, agreement_benefit_id: 9, premium: 250)
+ProductBenefit.create!(coverage_amount: 150000,benefit_id: 1, agreement_benefit_id: 10, premium: 150)
 
-Anniversary.create!(agreement_id: 4, name: 'April 18', anniversary_date: '2023/03/18')
+Anniversary.create!(agreement_id: 3, name: 'March 18', anniversary_date: '2023/03/18')
+Anniversary.create!(agreement_id: 3, name: 'February 25', anniversary_date: '2023/02/25')
+Anniversary.create!(agreement_id: 3, name: 'January 30', anniversary_date: '2023/01/30')
 
 # CoopBranch of Coop 1
 10.times do |i|

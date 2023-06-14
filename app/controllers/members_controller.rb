@@ -11,7 +11,7 @@ class MembersController < InheritedResources::Base
     )
     import_message = import_service.import
 
-    redirect_to coop_members_path, notice: import_message
+    redirect_to coop_members_path, notice: "#{import_message[:created_members_counter]} members enrolled. #{import_message[:updated_members_counter]} members updated."
   end
 
   def new

@@ -84,7 +84,7 @@
             <div class="d-flex gap-1 align-items-center">
                 <h6 class="mb-0">Beneficiaries</h6>
                 <!-- button to open turbo-frame "modal"  -->
-                <% unless @group_remit.active? || @group_remit.expired? || @group_remit.renewed? %>
+                <% unless @group_remit.active? || @group_remit.expired? || @group_remit.renewed? || @group_remit.renewal? %>
                   <% if @batch.batch_beneficiaries.size < 4 %>
                     <%= link_to new_group_remit_batch_beneficiary_path(@group_remit, @batch),
                                 class: small_btn('success'),
@@ -126,7 +126,7 @@
           <div class="row mb-1">
             <div class="d-flex align-items-center">
                 <div class="col-sm-1">
-                  <% unless @group_remit.active? || @group_remit.expired? || @group_remit.renewed? %>
+                  <% unless @group_remit.active? || @group_remit.expired? || @group_remit.renewed? || @group_remit.renewal? %>
                     <%= button_to group_remit_batch_beneficiary_path(@group_remit, @batch, b), 
                     method: :delete,
                     form: { 
@@ -172,7 +172,7 @@
               <div class="gap-1 <%= flex_justify_align('','center') %>">
                   <h6 class="mb-0">Dependents</h6>
                   <!-- button to open turbo-frame "modal"  -->
-                  <% unless @group_remit.active? || @group_remit.expired? || @group_remit.renewed? %>
+                  <% unless @group_remit.active? || @group_remit.expired? || @group_remit.renewed? || @group_remit.renewal? %>
                     <% if @batch.batch_dependents.size < 4 %>
                       <%= link_to new_group_remit_batch_dependent_path(@group_remit, @batch),
                           class: small_btn('success'), 
@@ -221,7 +221,7 @@
             <div class="row mb-1">
               <div class="d-flex align-items-center">
                 <div class="col-sm-1">
-                  <% unless @group_remit.active? || @group_remit.expired? || @group_remit.renewed? %>                   
+                  <% unless @group_remit.active? || @group_remit.expired? || @group_remit.renewed? || @group_remit.renewal? %>                   
                     <%= button_to group_remit_batch_dependent_path(@group_remit, @batch, d), 
                       method: :delete,
                       form: { 

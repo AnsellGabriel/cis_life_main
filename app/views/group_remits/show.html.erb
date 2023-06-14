@@ -10,26 +10,27 @@
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body">
-        <div class="<%= flex_justify_align('between', 'center') %>">
+        <div class="<%= flex_justify_align('between', 'center') %> mb-2">
           <%= content_tag :h6, "Insured", style: "width: 150px;" %>
           <%= content_tag :h6, "Benefit", style: "width: 150px;", class: 'text-center' %>
           <%= content_tag :h6, "Coverage Amount", style: "width: 150px;", class: 'text-center'%>
         </div>
 
         <% @agreement.agreement_benefits.includes({product_benefits: :benefit}).each do |ab| %>
-          <div class="<%= flex_justify_align('between', 'center') %> text-secondary">
+          <div class="<%= flex_justify_align('between') %> text-secondary">
             <%= content_tag :span, "#{ab.insured_type == 'principal' ? ab.insured_type.upcase : ab.insured_type.gsub('_', ' ').split(' ').drop(1).join(' ').upcase}", class: 'text-secondary', style: 'font-size: .8rem' %>
             <div class="<%= flex_justify_align('between', 'center', true) %>">
 
               <% ab.product_benefits.each do |product| %>
-                <div class="<%= flex_justify_align('around') %> text-secondary mb-2">
-                  <%= content_tag :span, "#{product.benefit.name}", class: 'sm-secondary-text text-center'%>
-                  <%= content_tag :span, "#{number_to_currency(product.coverage_amount, unit: '₱', precision: 2)}", class: 'sm-secondary-text text-center'%>
+                <div class="<%= flex_justify_align('between') %> text-secondary mb-1">
+                  <%= content_tag :span, "#{product.benefit.name}", class: 'sm-secondary-text text-center', style: "width: 150px;"%>
+                  <%= content_tag :span, "#{number_to_currency(product.coverage_amount, unit: '₱', precision: 2)}", class: 'sm-secondary-text text-center', style: "width: 150px;"%>
                 </div>
               <% end %>
 
             </div>
           </div>
+          <hr>
         <% end %>
 
       </div>
@@ -109,16 +110,16 @@
     <div class="card mb-2">
       <div class="card-body text-secondary">
         <div class="<%= flex_justify_align('center') %>">
-          <%= content_tag :h6, "Effectivity Date ", class: 'sm-secondary-text' %>
-          <%= content_tag :h6, "#{@group_remit.effectivity_date.present? ? @group_remit.effectivity_date.strftime('%B %d, %Y') : 'Tentative'}", class: 'sm-secondary-text' %>
+          <%= content_tag :h6, "Effectivity Date ", class: 'sm-secondary-text', style: "width: 150px" %>
+          <%= content_tag :h6, "#{@group_remit.effectivity_date.present? ? @group_remit.effectivity_date.strftime('%B %d, %Y') : 'Tentative'}", class: 'sm-secondary-text', style: "width: 150px" %>
         </div>
         <div class="<%= flex_justify_align('center') %>">
-          <%= content_tag :h6, "Expiry Date", class: 'sm-secondary-text' %>
-          <%= content_tag :h6, "#{@group_remit.expiry_date.strftime('%B %d, %Y')}", class: 'sm-secondary-text' %>
+          <%= content_tag :h6, "Expiry Date", class: 'sm-secondary-text', style: "width: 150px" %>
+          <%= content_tag :h6, "#{@group_remit.expiry_date.strftime('%B %d, %Y')}", class: 'sm-secondary-text', style: "width: 150px" %>
         </div>
         <div class="<%= flex_justify_align('center') %>">
-          <%= content_tag :h6, "Terms", class: 'sm-secondary-text' %>
-          <%= content_tag :h6, "#{@group_remit.terms}", class: 'sm-secondary-text'%>
+          <%= content_tag :h6, "Terms", class: 'sm-secondary-text', style: "width: 150px" %>
+          <%= content_tag :h6, "#{@group_remit.terms}", class: 'sm-secondary-text', style: "width: 150px"%>
         </div>
       </div>
     </div>

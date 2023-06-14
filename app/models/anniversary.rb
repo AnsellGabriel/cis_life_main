@@ -1,4 +1,4 @@
 class Anniversary < ApplicationRecord
     belongs_to :agreement
-    has_one :group_remit
+    has_many :group_remits
 end

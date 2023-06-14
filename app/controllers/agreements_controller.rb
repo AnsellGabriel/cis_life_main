@@ -8,10 +8,11 @@ class AgreementsController < InheritedResources::Base
   end
 
   def show
-    @group_remits_eager = @agreement.group_remits.includes(:anniversary)
+    @group_remits_eager = @agreement.group_remits.joins(:anniversary)
     @group_remits = @agreement.group_remits
     @coop_sf = @agreement.get_coop_sf
-    @anniversaries = @agreement.get_filtered_anniversaries(@group_remits.expiry_dates)
+    @filtered_anniversaries = @agreement.get_filtered_anniversaries(@group_remits.expiry_dates)
+    @anniversaries = @agreement.anniversaries
   end
 
   def new

@@ -22,7 +22,36 @@ class GroupRemit < ApplicationRecord
 
     removed_batches = [] # To store the batches that are removed from the renewal
 
-    self.batches.each do |batch|
+    # eligible_batches = self.batches.includes(coop_member: :member)
+    #                         .select do |batch|
+    #                           age = batch.member_details.age
+    #                           age.between?(batch.agreement_benefit.min_age, batch.agreement_benefit.max_age)
+    #                         end
+
+    # eligible_batches.each do |batch|
+    #   new_batch = batch.dup
+    #   new_batch.group_remit_id = new_group_remit.id
+    #   new_batch.status = :renewal
+    #   new_batch.save!
+
+    #   batch.batch_dependents.each do |dependent|
+    #     new_dependent = dependent.dup
+    #     new_dependent.batch_id = new_batch.id
+    #     new_dependent.save!
+    #   end
+
+    #   new_beneficiaries = batch.batch_beneficiaries.map { |beneficiary| beneficiary.dup.merge(batch_id: new_batch.id) }
+    #   BatchBeneficiary.insert_all(new_beneficiaries)
+    # end
+
+
+    # removed_batches = self.batches - eligible_batches
+    # renewal_result = {
+    #   new_group_remit: new_group_remit,
+    #   removed_batches: removed_batches
+    # }
+
+    self.batches.includes(coop_member: :member).each do |batch|
       if batch.member_details.age >= batch.agreement_benefit.min_age && batch.member_details.age <= batch.agreement_benefit.max_age
         new_batch = batch.dup
         new_batch.group_remit_id = new_group_remit.id

@@ -9,7 +9,8 @@ class BatchImportService
     @gyrt_family_plans = ['GYRTF', 'GYRTFR']
     @principal_headers = ["First Name", "Middle Name", "Last Name", "Suffix", "Transferred?"]
     @principal_headers << "Rank" if @gyrt_ranking_plans.include?(@agreement.plan.acronym)
-    @dependent_headers = ["Member First Name", "Member Middle Name", "Member Last Name", "Dependent First Name", "Dependent Middle Name", "Dependent Last Name", "Relationship", "Beneficiary?", "Dependent?"]
+    @dependent_headers = ["Member First Name", "Member Middle Name", "Member Last Name", "Dependent First Name", "Dependent Middle Name", "Dependent Last Name", "Relationship", "Beneficiary?"]
+    @dependent_headers << "Dependent?" if @gyrt_family_plans.include?(@agreement.plan.acronym)
   end
 
   def import_batches
