@@ -27,6 +27,29 @@
               <div class="<%= flex_justify_align('','center') %> gap-1">
                 <h6 class="card-title mb-0"><%= agreement.moa_no %></h6>
                   <% last_group_remit = agreement.group_remits.last %>
+                  <% if agreement.anniversary_type == 'multiple' %>
+                    <% agreement.anniversaries.each do |anniv| %>
+                      <% if anniv.group_remits.empty? %>
+                        <% next %>
+                      <% end %>
+
+                      <% if anniv.group_remits.last.status == 'expired' %>
+                          <% last_group_remit = anniv.group_remits.last %>
+                          <% break %>
+                      <% end %>
+
+                      <% if anniv.group_remits.last.status == 'renewal' %>
+                          <% last_group_remit = anniv.group_remits.last %>
+                          <% break %>
+                      <% end %>
+
+                      <% if anniv.group_remits.last.status == 'pending' %>
+                          <% last_group_remit = anniv.group_remits.last %>
+                          <% break %>
+                      <% end %>
+                    <% end %>
+                  <% end %>
+                  
                     <% gr_presenter = GroupRemitPresenter.new(last_group_remit)%>
 
                     <% if last_group_remit.present? %>
@@ -41,10 +64,8 @@
                       <% end %>
 
                     <% else %>
-                    <span class="<%= badge('info') %>">New</span>
+                      <span class="<%= badge('info') %>">New</span>
                     <% end %>
-
-                        
 
               </div>
               <%= link_to 'View', agreement_path(agreement), 

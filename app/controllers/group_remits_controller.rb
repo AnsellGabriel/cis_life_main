@@ -43,6 +43,7 @@ class GroupRemitsController < InheritedResources::Base
 
   def show
     @agreement = @group_remit.agreement
+    @anniversary = @group_remit.anniversary
     # @agreement_eager = @agreement.includes([:agreement_benefits]).includes([:product_benefits])
     containers # controller/concerns/container.rb
     counters  # controller/concerns/counter.rb

@@ -66,15 +66,16 @@
   </div>
 </div>
 
-<div class="mb-3 gap-3 <%= flex_justify_align('', 'center') %>">
+<div class="mb-3 gap-1 <%= flex_justify_align('', 'center') %>">
   <%= link_to 'Back', agreement_path(@agreement), class: small_btn('secondary') %>
 
-  <div class="<%= flex_justify_align('', 'center') %> gap-1">
-    <%= content_tag :span, @group_remit.status.titleize, style: "color: #{gr_presenter.status_color}; font-weight: 700;" %>
-    <%= content_tag :h3, "#{@agreement.moa_no}", class: 'mb-0' %>
-  </div>
-
   <% if !@group_remit.active? && !@group_remit.expired? && !@group_remit.renewed?%>
+    <%= button_to "Delete", group_remit_path(@group_remit), 
+      method: :delete,
+      data: { turbo_confirm: 'Delete group remit?'},
+      class: small_btn('danger') 
+    %>
+
     <div class="d-flex gap-1">
 
       <% unless @passed_requirements %>
@@ -89,13 +90,8 @@
         <%= link_to 'Denied members', group_remit_denied_members_path(@group_remit), class: small_btn('outline-secondary') %>
       <% end %>
 
-      <%= button_to "Delete", group_remit_path(@group_remit), 
-          method: :delete,
-          data: { turbo_confirm: 'Delete group remit?'},
-          class: small_btn('danger') 
-      %>
     </div>
-  <% elsif @group_remit.expired? && @group_remit == @agreement.group_remits.last %>
+  <% elsif @group_remit.expired? && @group_remit == @anniversary.group_remits.last %>
     <%= button_to 'Renew', renewal_group_remit_path(@group_remit),
         method: :get, 
         class: small_btn('warning'), 
@@ -103,6 +99,13 @@
       %>
   <% end %>
 
+  
+
+</div>
+
+<div class="<%= flex_justify_align('', 'center') %> gap-1">
+  <%= content_tag :span, @group_remit.status.titleize, style: "color: #{gr_presenter.status_color}; font-weight: 700;" %>
+  <%= content_tag :h3, "#{@agreement.moa_no}", class: 'mb-0' %>
 </div>
 
 <div class="<%= flex_justify_align('between', 'center') %> mb-3 gap-3">
