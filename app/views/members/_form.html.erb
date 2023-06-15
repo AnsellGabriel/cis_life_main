@@ -13,9 +13,11 @@
               <div class="col-md-6">
                 <%= member.input :coop_branch_id, collection: @cooperative.coop_branches.map {|branch| [branch.name, branch.id]}, style: "width: auto" ,class: "form-select mb-3"  %>
               </div>
+              <!--
               <div class="">
                 <%= member.input :transferred, as: :boolean, label: "Transferred?" %>
               </div>
+              -->
             </div>
           <% end %>
       </div>
@@ -101,6 +103,6 @@
   </div>
 
   <div class="form-actions text-end">
-    <%= f.button :submit, 'Enroll', class: 'btn btn-success' %>
+    <%= f.button :submit, 'Enroll', class: 'btn btn-success', data: {turbo: false} %>
   </div>
 <% end %>

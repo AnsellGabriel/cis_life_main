@@ -10,10 +10,11 @@
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body">
-        <div class="<%= flex_justify_align('between', 'center') %> mb-2">
-          <%= content_tag :h6, "Insured", style: "width: 150px;" %>
-          <%= content_tag :h6, "Benefit", style: "width: 150px;", class: 'text-center' %>
-          <%= content_tag :h6, "Coverage Amount", style: "width: 150px;", class: 'text-center'%>
+        <div class="<%= flex_justify_align('around', 'center') %> mb-2">
+          <%= content_tag :h6, "Insured", style: "width: 100px;" %>
+          <%= content_tag :h6, "Benefit", style: "width: 100px;", class: 'text-center' %>
+          <%= content_tag :h6, "Premium", style: "width: 100px;", class: 'text-center' %>
+          <%= content_tag :h6, "Coverage Amount", style: "width: 100px;", class: 'text-center'%>
         </div>
 
         <% @agreement.agreement_benefits.includes({product_benefits: :benefit}).each do |ab| %>
@@ -23,8 +24,9 @@
 
               <% ab.product_benefits.each do |product| %>
                 <div class="<%= flex_justify_align('between') %> text-secondary mb-1">
-                  <%= content_tag :span, "#{product.benefit.name}", class: 'sm-secondary-text text-center', style: "width: 150px;"%>
-                  <%= content_tag :span, "#{number_to_currency(product.coverage_amount, unit: '₱', precision: 2)}", class: 'sm-secondary-text text-center', style: "width: 150px;"%>
+                  <%= content_tag :span, "#{product.benefit.name}", class: 'sm-secondary-text text-center', style: "width: 100px;"%>
+                  <%= content_tag :span, "#{number_to_currency(product.premium, unit: '₱', precision: 2)}", class: 'sm-secondary-text text-center', style: "width: 100px;"%>
+                  <%= content_tag :span, "#{number_to_currency(product.coverage_amount, unit: '₱', precision: 2)}", class: 'sm-secondary-text text-center', style: "width: 100px;"%>
                 </div>
               <% end %>
 
@@ -136,12 +138,26 @@
                   <%= render 'group_remits/add_member' %>
                 </div>
 
+                <% if @batch_without_beneficiaries_count > 0 || @passed_requirements%>
+                  <%= content_tag :span, "(click reason to filter batches)", 
+                    class: 'mb-1',  
+                    style: "font-size: .7rem; color: red !important; font-weight: 700;"   
+                  %>
+                <% end %>
+                
+                <% if @batch_without_beneficiaries_count > 0 %>
+                  <div class="mb-1">
+                    <%= link_to "#{@batch_without_beneficiaries_count} member(s) without beneficiary!", group_remit_path(@group_remit, batch_beneficiary_filter: true), 
+                      method: :get, 
+                      class: "#{badge('danger')} hovered-link", 
+                      data: { turbo: false } 
+                    %>
+                  </div>
+                <% end %>
+
                 <% if @passed_requirements %>
                   <div class="d-flex flex-column">
-                    <%= content_tag :span, "(click reason to filter batches)", 
-                      class: 'mb-1',  
-                      style: "font-size: .7rem; color: red !important; font-weight: 700;"   
-                    %>
+
                     <%= content_tag :span, "Unable to submit group remit due to: ", 
                       class: 'mb-1',  
                       style: "font-size: .7rem; color: red !important; font-weight: 700;"  
@@ -150,14 +166,6 @@
 
                       <% if @batch_count < @agreement.proposal.minimum_participation %>
                         <%= content_tag :span, "Below minimum participation: Need #{@agreement.proposal.minimum_participation - @batch_count} more", class: badge('danger') %>
-                      <% end %>
-
-                      <% if @batch_without_beneficiaries_count > 0 %>
-                        <%= link_to "#{@batch_without_beneficiaries_count} member(s) without beneficiary!", group_remit_path(@group_remit, batch_beneficiary_filter: true), 
-                          method: :get, 
-                          class: "#{badge('danger')} hovered-link", 
-                          data: { turbo: false } 
-                        %>
                       <% end %>
 
                       <% if @batch_without_batch_health_dec_count > 0 %>

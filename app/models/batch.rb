@@ -72,7 +72,7 @@ class Batch < ApplicationRecord
         batch.status = :renewal
     else
       if transferred == true || transferred == "1"
-        batch.status = :renewal
+        batch.status = :transferred
       else
         batch.status = :recent
       end

@@ -156,6 +156,6 @@ class GroupRemitsController < InheritedResources::Base
     end
 
     def group_remit_passed_requirements?
-      @batch_without_beneficiaries_count > 0 || @batch_without_batch_health_dec_count > 0 || @batch_count < @agreement.proposal.minimum_participation
+      @batch_without_batch_health_dec_count > 0 || @batch_count < @agreement.proposal.minimum_participation
     end
 end

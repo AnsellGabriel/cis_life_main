@@ -45,7 +45,7 @@ class MembersController < InheritedResources::Base
       if @member.save
         format.html { 
           coop_member = @member.coop_members.find_by(cooperative_id: @cooperative.id)
-          redirect_to coop_member_path(coop_member),
+          redirect_to coop_members_path,
           notice: "Member was successfully created." }
       else
         format.html { render :new, status: :unprocessable_entity }

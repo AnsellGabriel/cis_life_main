@@ -74,9 +74,18 @@
         <th scope="row" ><%= coop_member.id %></th>
         <td>
           <div class="">
-            <%= content_tag :p, "#{member.first_name} #{member.middle_name} #{member.last_name} #{member.suffix}" %>
-            <%= content_tag :span, "#{age}", class: "badge bg-primary" %>
-            <%= content_tag :span, "#{member.civil_status}", class: "badge bg-warning text-dark" %>
+            <%= content_tag :span, "#{member.first_name} #{member.middle_name} #{member.last_name} #{member.suffix}" %>
+            <div class="d-flex align-items-center gap-1"> 
+              <div class="">
+                <i class="bi bi-phone"></i>
+                <%= content_tag :span, "#{member.mobile_number}", class: "sm-secondary-text text-muted" %>
+              </div>
+              <div class="">|</div>
+              <div class="">
+                <i class="bi bi-envelope"></i>
+                <%= content_tag :span, "#{member.email}", class: "text-muted sm-secondary-text" %>
+              </div>
+            </div>
           </div>
         </td>
         <td><%= coop_member.coop_branch.name %></td>
