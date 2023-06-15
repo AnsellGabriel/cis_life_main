@@ -14,4 +14,5 @@ class User < ApplicationRecord
   def active_for_authentication?
     super && approved?
   end
+  
 end

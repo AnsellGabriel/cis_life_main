@@ -16,25 +16,25 @@ class MembersController < InheritedResources::Base
 
   def new
     @member = Member.new(
-      birth_place: FFaker::Address.city,
-      address: FFaker::Address.street_address,
-      sss_no: FFaker::Identification.ssn,
-      tin_no: FFaker::Identification.ssn,
-      civil_status: 'Single',
-      legal_spouse: FFaker::Name.name,
-      height: '178',
-      weight: '70',
-      occupation: 'Programmer',
-      employer: 'Company',
-      work_address: FFaker::Address.street_address,
-      work_phone_number: '09123456789',
-      last_name: FFaker::Name.last_name,
-      first_name: FFaker::Name.first_name,
-      middle_name: FFaker::Name.last_name,
-      suffix: 'Jr',
-      email: FFaker::Internet.email,
-      mobile_number: '09123456789',
-      birth_date: FFaker::Time.date
+      # birth_place: FFaker::Address.city,
+      # address: FFaker::Address.street_address,
+      # sss_no: FFaker::Identification.ssn,
+      # tin_no: FFaker::Identification.ssn,
+      # civil_status: 'Single',
+      # legal_spouse: FFaker::Name.name,
+      # height: '178',
+      # weight: '70',
+      # occupation: 'Programmer',
+      # employer: 'Company',
+      # work_address: FFaker::Address.street_address,
+      # work_phone_number: '09123456789',
+      # last_name: FFaker::Name.last_name,
+      # first_name: FFaker::Name.first_name,
+      # middle_name: FFaker::Name.last_name,
+      # suffix: 'Jr',
+      # email: FFaker::Internet.email,
+      # mobile_number: '09123456789',
+      # birth_date: FFaker::Time.date
     )
     @coop_member = @member.coop_members.build
   end

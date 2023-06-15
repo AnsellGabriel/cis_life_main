@@ -19,13 +19,13 @@
 
         <% @agreement.agreement_benefits.includes({product_benefits: :benefit}).each do |ab| %>
           <div class="<%= flex_justify_align('between') %> text-secondary">
-            <%= content_tag :span, "#{ab.insured_type == 'principal' ? ab.insured_type.upcase : ab.insured_type.gsub('_', ' ').split(' ').drop(1).join(' ').upcase}", class: 'text-secondary', style: 'font-size: .8rem' %>
+            <%= content_tag :span, "#{ab.insured_type == 'principal' ? ab.insured_type.upcase : ab.insured_type.gsub('_', ' ').split(' ').drop(1).join(' ').upcase}", class: 'text-secondary', style: 'font-size: .8rem; width: 100px' %>
             <div class="<%= flex_justify_align('between', 'center', true) %>">
 
               <% ab.product_benefits.each do |product| %>
                 <div class="<%= flex_justify_align('between') %> text-secondary mb-1">
                   <%= content_tag :span, "#{product.benefit.name}", class: 'sm-secondary-text text-center', style: "width: 100px;"%>
-                  <%= content_tag :span, "#{number_to_currency(product.premium, unit: '₱', precision: 2)}", class: 'sm-secondary-text text-center', style: "width: 100px;"%>
+                  <%= content_tag :span, "#{number_to_currency(product.premium, unit: '₱', precision: 2)}", class: 'sm-secondary-text text-center', style: "width: 150px;"%>
                   <%= content_tag :span, "#{number_to_currency(product.coverage_amount, unit: '₱', precision: 2)}", class: 'sm-secondary-text text-center', style: "width: 100px;"%>
                 </div>
               <% end %>
@@ -144,7 +144,7 @@
                     style: "font-size: .7rem; color: red !important; font-weight: 700;"   
                   %>
                 <% end %>
-                
+
                 <% if @batch_without_beneficiaries_count > 0 %>
                   <div class="mb-1">
                     <%= link_to "#{@batch_without_beneficiaries_count} member(s) without beneficiary!", group_remit_path(@group_remit, batch_beneficiary_filter: true), 
@@ -220,17 +220,31 @@
   <% end %>  
 </div>
 
-<%= form_with url: group_remit_path(@group_remit), method: :get do %>
-  <div class="form-group d-flex justify-content-end gap-3 mb-3">
-    <%= text_field_tag 'batch_filter', 
-      nil, 
-      placeholder: 'Member\'s name', 
-      class: "form-control", 
-      style: "width: auto"
-    %>
-    <%= submit_tag 'Search', class: small_btn('warning') %>
-  </div>
-<% end %>
+<div class="<%= flex_justify_align('end', 'center') %> gap-1">
+  <%= form_with url: group_remit_path(@group_remit), method: :get do %>
+    <div class="form-group d-flex justify-content-end gap-3 mb-3">
+      <%= text_field_tag 'batch_filter', 
+        nil, 
+        placeholder: 'Member\'s name', 
+        class: "form-control", 
+        style: "width: auto"
+      %>
+      <%= submit_tag 'Search', class: small_btn('warning') %>
+    </div>
+  <% end %>
+
+  <% if ['GYRTBR','GYRTFR'].include?(@agreement.plan.acronym) %>
+    <div class="">
+      <%= link_to "View All", group_remit_path(@group_remit), 
+        class: "#{small_btn('outline-warning')} mb-3 d-flex align-items-center", 
+        style: "height: 38px;",
+        data: { turbo: false } 
+      %>
+    </div>
+  <% end %>
+  
+    
+</div>
 
 <div class="table-responsive">
   <%= turbo_frame_tag "batches" do %>
