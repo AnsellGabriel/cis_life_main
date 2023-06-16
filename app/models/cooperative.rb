@@ -9,14 +9,16 @@ class Cooperative < ApplicationRecord
     has_many :group_remits
 
     def unselected_coop_members(ids)
-		coop_members.where.not(id: ids).includes(:member).order('members.first_name')
+      coop_members.includes(:member)
     end
+    
+    
 
     def coop_member_details
-		coop_members.includes(:member).order('members.last_name')
+		  coop_members.includes(:member).order('members.last_name')
     end
 
     def filtered_agreements(filter)
-    	agreements.filtered_by_moa_no(filter).order(updated_at: :desc)
+    	agreements.filtered_by_moa_no(filter).includes({anniversaries: :group_remits}, :agent, :group_remits).order(updated_at: :desc)
     end
 end

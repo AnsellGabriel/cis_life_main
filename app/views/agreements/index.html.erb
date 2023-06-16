@@ -29,7 +29,7 @@
                   <% last_group_remit = agreement.group_remits.last %>
                   <% if agreement.anniversary_type == 'multiple' %>
                     <% agreement.anniversaries.each do |anniv| %>
-                      <% if anniv.group_remits.empty? %>
+                      <% if anniv.group_remits.blank? %>
                         <% next %>
                       <% end %>
 

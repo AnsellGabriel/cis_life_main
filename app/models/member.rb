@@ -38,6 +38,10 @@ class Member < ApplicationRecord
     coop_members.find_by(cooperative_id: coop.id).id
   end
 
+  def full_name
+    "#{last_name}, #{first_name} #{middle_name} #{suffix}"
+  end
+
   private
   def capitalize_status
     self.civil_status = self.civil_status.titleize
@@ -76,8 +80,10 @@ class Member < ApplicationRecord
     # repeat the above line for each field you want to make all caps
   end
 
+  
+
   def self.coop_member_details(coop_members)
-    joins(:coop_members).where(coop_members: { id: coop_members.ids }).order(:first_name)
+    includes(coop_members: :coop_branch).where(coop_members: { id: coop_members.ids }).order(:first_name)
   end
 
   def self.filter_by_name(last_name_filter, first_name_filter)

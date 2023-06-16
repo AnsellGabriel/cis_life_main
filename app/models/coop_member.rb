@@ -6,4 +6,8 @@ class CoopMember < ApplicationRecord
   belongs_to :member
   has_many :batches
   has_and_belongs_to_many :agreements
+
+  def to_s
+    "#{CoopMember.find(self.id).member.full_name}"
+  end
 end

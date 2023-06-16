@@ -4,15 +4,14 @@ class AgreementsController < InheritedResources::Base
   before_action :set_agreement, only: %i[show edit update destroy]
 
   def index 
-    @f_agreements = @cooperative.filtered_agreements(params[:agreement_filter]).includes([:agent])
+    @f_agreements = @cooperative.filtered_agreements(params[:agreement_filter])
   end
 
   def show
     @group_remits_eager = @agreement.group_remits.joins(:anniversary)
-    @group_remits = @agreement.group_remits
+    # @group_remits = @agreement.group_remits.order(created_at: :desc)
     @coop_sf = @agreement.get_coop_sf
-    @filtered_anniversaries = @agreement.get_filtered_anniversaries(@group_remits.expiry_dates)
-    @anniversaries = @agreement.anniversaries
+    @filtered_anniversaries = @agreement.get_filtered_anniversaries(@agreement.group_remits.expiry_dates)
   end
 
   def new
@@ -40,7 +39,7 @@ class AgreementsController < InheritedResources::Base
     end
 
     def set_agreement
-      @agreement = Agreement.find(params[:id])
+      @agreement = Agreement.includes({anniversaries: [:group_remits]}, :proposal).order('group_remits.created_at DESC').find(params[:id])
     end
 
     def check_userable_type

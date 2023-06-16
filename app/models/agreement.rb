@@ -23,11 +23,11 @@ class Agreement < ApplicationRecord
 		end
 
     def active_group_remits
-      group_remits.where(status: :active)
+      group_remits.map { |gr| gr if gr.status == 'active'}
     end
 
     def expired_group_remits
-      group_remits.where(status: :expired)
+      group_remits.map { |gr| gr if gr.status == 'expired'}
     end
 
     def renewed_group_remits

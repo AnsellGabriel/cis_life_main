@@ -20,12 +20,12 @@ class ApplicationController < ActionController::Base
 
   def set_cooperative
     if current_user && current_user.userable_type == 'CoopUser'
-      session[:cooperative_id] = current_user.userable.cooperative.id 
+      session[:cooperative_id] ||= current_user.userable.cooperative_id
+      @cooperative ||= Cooperative.find_by(id: session[:cooperative_id])
     end
-
-    @cooperative = Cooperative.find_by(id: session[:cooperative_id])
   end
-
+  
+  
   protected
   # Overwriting the sign_out redirect path method for unapproved users
   def after_sign_in_path_for(resource)

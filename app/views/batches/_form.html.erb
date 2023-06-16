@@ -6,8 +6,7 @@
     <div class="row d-flex align-items-start">
       <div class="d-flex align-items-center gap-1" data-controller="batch" >
         <%= f.association :coop_member, 
-        collection: @coop_members.map { |coop| 
-        ["#{coop.member.last_name}, #{coop.member.first_name} #{coop.member.middle_name}", coop.id] }, 
+        collection: @coop_members, 
         include_blank: "Search member",
         input_html: { 
           style: "width: 250px !important",

@@ -124,7 +124,7 @@ class GroupRemit < ApplicationRecord
   end
 
   def total_dependent_premiums
-    batches.joins(:batch_dependents).sum('batch_dependents.premium')
+    batches.includes(:batch_dependents).sum {|batch| batch.batch_dependents.sum(&:premium) }
   end
 
   def dependent_coop_commissions
@@ -136,7 +136,7 @@ class GroupRemit < ApplicationRecord
   end
 
   def total_principal_premium
-    batches.sum(:premium)
+    batches.to_a.sum(&:premium)
   end
 
   def gross_premium
@@ -144,7 +144,7 @@ class GroupRemit < ApplicationRecord
   end
 
   def coop_commissions
-    batches.sum(:coop_sf_amount)
+    batches.sum(&:coop_sf_amount)
   end
 
   def total_coop_commissions

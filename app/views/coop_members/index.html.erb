@@ -65,13 +65,15 @@
 
     <tbody>
       <td colspan="12" class="text-center">
-        <% if @filtered_members.empty? %>
+        <% if @filtered_members.blank? %>
           No members yet.
         <% end %>
       </td>
       <% @filtered_members.each do |member| %>
         <% age = Date.today.year - member.birth_date.year - ((Date.today.month > member.birth_date.month || (Date.today.month == member.birth_date.month && Date.today.day >= member.birth_date.day)) ? 0 : 1) %>
-        <% coop_member = member.coop_members.find_by(cooperative_id: @cooperative.id) %>
+        <% coop_member = member.coop_members.find { |coop_member| coop_member.cooperative_id == @cooperative.id }
+ %>
+        
         <tr>
         <%# <% member = coop_member.member %> 
         <%# <td><%= member.id %>

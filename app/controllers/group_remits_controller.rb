@@ -48,7 +48,7 @@ class GroupRemitsController < InheritedResources::Base
     containers # controller/concerns/container.rb
     counters  # controller/concerns/counter.rb
     @passed_requirements = group_remit_passed_requirements?
-    batches_eager_loaded = @group_remit.batches.includes(coop_member: :member).order(created_at: :desc)
+    batches_eager_loaded = @group_remit.batches.includes({coop_member: :member, batch_dependents: :member_dependent, batch_beneficiaries: :member_dependent}, :batch_health_dec).order(created_at: :desc)
 
     if params[:batch_filter].present?
       @f_batches = batches_eager_loaded.filter_by_member_name(params[:batch_filter].upcase).order(created_at: :desc)
@@ -59,7 +59,9 @@ class GroupRemitsController < InheritedResources::Base
     else
       @f_batches = batches_eager_loaded
     end
-
+    
+    # @group_remit.batches.includes({coop_member: :member, batch_dependents: :member_dependent, batch_beneficiaries: :member_dependent}, :batch_health_dec)
+    
     @pagy, @batches = pagy(@f_batches, items: 10)     
   end
 
@@ -129,7 +131,7 @@ class GroupRemitsController < InheritedResources::Base
   private
 
     def set_group_remit
-      @group_remit = GroupRemit.find_by(id: params[:id])
+      @group_remit = GroupRemit.includes(:batches).find(params[:id])
     end
 
     def set_members

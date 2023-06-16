@@ -9,7 +9,13 @@ class MemberImportService
 
     def import_members
     headers = extract_headers(@spreadsheet, 'Members_Data')
+
+    if headers.nil?
+      return "Incorrect/Missing sheet name: Members_Data"
+    end
+
     members_spreadsheet = parse_file('Members_Data')
+
     missing_headers = find_missing_headers(@required_headers, headers)
 
 
@@ -81,7 +87,11 @@ class MemberImportService
     private
 
     def extract_headers(spreadsheet, sheet_name)
-      spreadsheet.sheet(sheet_name).row(1).map(&:strip)
+      begin
+        spreadsheet.sheet(sheet_name).row(1).map(&:strip)
+      rescue RangeError
+        return nil
+      end
     end
 
     def parse_file(sheet_name)

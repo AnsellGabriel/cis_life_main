@@ -43,7 +43,7 @@ class BatchesController < ApplicationController
   end
 
   def new
-    @coop_members = @cooperative.unselected_coop_members(@group_remit.coop_member_ids)
+    @coop_members = @cooperative.coop_members.joins(:member).select('coop_members.id, members.id, members.first_name, members.middle_name, members.last_name, members.suffix')
     @batch = @group_remit.batches.new(
       effectivity_date: FFaker::Time.date, 
       expiry_date: FFaker::Time.date, 

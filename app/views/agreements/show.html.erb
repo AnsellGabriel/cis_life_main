@@ -32,9 +32,9 @@
               </div>
             </div>
             <hr>
-            <% if !@agreement.group_remits.empty? %>
+            <% if !@agreement.group_remits.blank? %>
               <div class="<%= flex_justify_align('', '', true) %> gap-1">
-                <% @agreement.group_remits.order(created_at: :desc).each do |group_remit| %>
+                <% @agreement.group_remits.each do |group_remit| %>
                   <% gr_presenter = GroupRemitPresenter.new(group_remit)%>
                   <div class="card <%= @agreement.anniversary_type == 'multiple' ? 'hidden' : '' %>" data-toggler-target="toggleable" data-id="history_<%= group_remit.anniversary.nil? ? '' : dom_id(group_remit.anniversary) %>">
                     <div class="card-body <%= flex_justify_align('between', 'center') %> gap-1">
