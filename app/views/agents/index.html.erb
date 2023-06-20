@@ -1,28 +1,47 @@
 <%= content_tag :h1, "List of Agents" %>
+
+
 <div class="text-end mb-3">
   <%= link_to new_agent_path, class: 'btn btn-primary' do %>
     New Agent
   <% end %>
 </div>
-<table class ="table table-striped">
+
+<div class="table-responsive">
   <table class="table table-striped table-bordered table-hover">
     <thead>
       <tr>
-        <th>#</th>
+
+      <th>ID</th>
+        <th>Last Name</th>
+        <th>First Name</th>
+        <th>Middle Name</th>
+        <th>Birthdate</th>
+        <th>Mobile Number</th>
+        <th>Agent Group</th>
         <th></th>
-        <th></th>
+
       </tr>
     </thead>
+
     <tbody>
       <% @agents.each do |agent| %>
         <tr>
-          <th scope="row"><%= agent.id %></th>
-          <td> <%= agent.get_fullname %> </td>
+
+        <td><%= agent.id %></td>
+        <td><%= agent.last_name %></td>
+        <td><%= agent.first_name %></td>
+        <td><%= agent.middle_name %></td>
+        <td><%= agent.birthdate %></td>
+        <td><%= agent.mobile_number %></td>
+        <td><%= agent.agent_group %></td>
+    
           <td>
-            <%= link_to 'View', agent, class: 'btn btn-secondary btn-sm' %>
-            <%= link_to 'Edit', edit_agent_path(agent), class: 'btn btn-secondary btn-sm' %>
-            <%= link_to "Delete", agent, class: "btn btn-danger btn-sm", method: :delete, data: { "turbo-method": :delete, turbo_confirm: "Are you sure?" } %>
+            <%= link_to 'View', agent, class: 'btn' %>
+            <%= link_to 'Edit', edit_agent_path(agent), class: 'btn' %>
+            <%= link_to 'Delete', agent, method: :delete, data: { confirm: 'Are you sure?' }, class: 'btn' %>
           </td>
+
         </tr>
       <% end %>
     </tbody>

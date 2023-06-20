@@ -1,0 +1,33 @@
+<%= simple_form_for(@batch, url: group_remit_batches_path) do |f| %>
+  <%= f.error_notification %>
+  <%= f.error_notification message: f.object.errors[:base].to_sentence if f.object.errors[:base].present? %>
+  <div class="form-inputs">
+    
+    <div class="row d-flex align-items-start">
+      <div class="d-flex align-items-center gap-1" data-controller="batch" >
+        <%= f.association :coop_member, 
+        collection: @coop_members, 
+        include_blank: "Search member",
+        input_html: { 
+          style: "width: 250px !important",
+          id: "member_id", 
+          data: {  
+            controller: "slim-select" }  
+          }, label: false %>
+          <%= f.input  :transferred, as: :boolean, label: "Transferred?" %>
+      </div>
+      <div class="d-flex gap-1 align-items-center">
+      <% if @agreement.plan.acronym == 'GYRTBR' ||  @agreement.plan.acronym == 'GYRTFR' %>
+        <%= f.input :rank, collection: [['Ranking - BOD', 'BOD'], ['Ranking - SO', 'SO'], ['Ranking - JO', 'JO'], ['Ranking - Rank & File', 'RF']], input_html: {style: "width: 250px !important", }, include_blank: "Rank", wrapper_html: {style: 'margin-bottom: 0 !important'}, label: false%>
+
+      <% end %>
+        <%= f.button :submit, "Add", class: 'btn btn-sm btn-outline-success', data: {turbo: false} %>
+        <%= link_to "Cancel", :back, class: 'btn btn-sm btn-outline-danger' %>
+      </div>
+    </div>
+  </div>
+<% end %>
+</div>
+</div>
+</div>
+<% console %>

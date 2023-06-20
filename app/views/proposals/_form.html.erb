@@ -1,0 +1,18 @@
+
+<%= simple_form_for(@proposal) do |f| %>
+  <%= f.error_notification %>
+  <%= f.error_notification message: f.object.errors[:base].to_sentence if f.object.errors[:base].present? %>
+
+  <div class="form-inputs mb-3">
+    <%= f.association :cooperative %>
+    <%= f.input :ave_age %>
+    <%= f.input :total_premium %>
+    <%= f.input :coop_sf %>
+    <%= f.input :agent_sf %>
+  </div>
+
+  <div class="form-actions text-end">
+    <%= link_to "Back", proposals_path, class: 'btn btn-secondary' %>
+    <%= f.button :submit, class: 'btn-success' %>
+  </div>
+<% end %>

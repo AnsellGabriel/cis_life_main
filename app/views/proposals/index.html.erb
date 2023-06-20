@@ -1,0 +1,47 @@
+<%= content_tag :h1, "List of Proposals" %>
+
+
+<div class="text-end mb-3">
+  <%= link_to new_proposal_path, class: 'btn btn-primary' do %>
+    New Proposal
+  <% end %>
+</div>
+
+<div class="table-responsive">
+  <table class="table table-striped table-bordered table-hover">
+    <thead>
+      <tr>
+
+      <th>ID</th>
+        <th>Cooperative</th>
+        <th>Ave Age</th>
+        <th>Total Premium</th>
+        <th>Coop Sf</th>
+        <th>Agent Sf</th>
+        <th></th>
+
+      </tr>
+    </thead>
+
+    <tbody>
+      <% @proposals.each do |proposal| %>
+        <tr>
+
+        <td><%= proposal.id %></td>
+        <td><%= proposal.cooperative %></td>
+        <td><%= proposal.ave_age %></td>
+        <td><%= proposal.total_premium %></td>
+        <td><%= proposal.coop_sf %></td>
+        <td><%= proposal.agent_sf %></td>
+    
+          <td>
+            <%= link_to 'View', proposal, class: 'btn' %>
+            <%= link_to 'Edit', edit_proposal_path(proposal), class: 'btn' %>
+            <%= link_to 'Delete', proposal, method: :delete, data: { confirm: 'Are you sure?' }, class: 'btn' %>
+          </td>
+
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+</div>

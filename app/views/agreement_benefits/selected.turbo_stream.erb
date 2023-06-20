@@ -1,0 +1,5 @@
+<%= turbo_stream.update @target do %>
+    <%= @member_dependents.each do |cb| %>
+        <%= content_tag :option, "#{cb.last_name}, #{cb.first_name} #{cb.middle_name}", value: cb.id %>
+    <% end %>
+<% end %>

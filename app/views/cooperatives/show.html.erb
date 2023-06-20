@@ -1,13 +1,9 @@
 
+<%= render @cooperative %>
 
-<div class="card">
-  <div class="card-body">
-    <%= render @cooperative %>
-  </div>
-  <div class="card-footer">
-    <%= link_to "Delete", @cooperative, class: "btn btn-danger btn-sm", method: :delete, data: { "turbo-method": :delete, turbo_confirm: "Are you sure?" } %> |
-    <%= link_to "Edit", edit_cooperative_path(@cooperative), class: "btn btn-secondary btn-sm" %> |
-    <%= link_to "Back", cooperatives_path, class: "btn btn-secondary btn-sm" %>
-  </div>
+<div>
+  <%= link_to "Edit", edit_cooperative_path(@cooperative), class: 'btn btn-primary' %> |
+  <%= link_to "Back", cooperatives_path, class: 'btn btn-primary' %>
 
+  <%= button_to "Delete", @cooperative, method: :delete, class: 'btn btn-danger' %>
 </div>

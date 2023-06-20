@@ -1,0 +1,312 @@
+<%= turbo_stream_from @cooperative, "batches" %>
+<% gr_presenter = GroupRemitPresenter.new(@group_remit)%>
+
+<!-- Benefits & Coverages Modal -->
+<div class="modal fade" id="benefitsModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title text-center" id="staticBackdropLabel">Benefit & Coverages</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <div class="<%= flex_justify_align('around', 'center') %> mb-2">
+          <%= content_tag :h6, "Insured", style: "width: 100px;" %>
+          <%= content_tag :h6, "Benefit", style: "width: 100px;", class: 'text-center' %>
+          <%= content_tag :h6, "Premium", style: "width: 100px;", class: 'text-center' %>
+          <%= content_tag :h6, "Coverage Amount", style: "width: 100px;", class: 'text-center'%>
+        </div>
+
+        <% @agreement.agreement_benefits.includes({product_benefits: :benefit}).each do |ab| %>
+          <div class="<%= flex_justify_align('between') %> text-secondary">
+            <%= content_tag :span, "#{ab.insured_type == 'principal' ? ab.insured_type.upcase : ab.insured_type.gsub('_', ' ').split(' ').drop(1).join(' ').upcase}", class: 'text-secondary', style: 'font-size: .8rem; width: 100px' %>
+            <div class="<%= flex_justify_align('between', 'center', true) %>">
+
+              <% ab.product_benefits.each do |product| %>
+                <div class="<%= flex_justify_align('between') %> text-secondary mb-1">
+                  <%= content_tag :span, "#{product.benefit.name}", class: 'sm-secondary-text text-center', style: "width: 100px;"%>
+                  <%= content_tag :span, "#{number_to_currency(product.premium, unit: '₱', precision: 2)}", class: 'sm-secondary-text text-center', style: "width: 150px;"%>
+                  <%= content_tag :span, "#{number_to_currency(product.coverage_amount, unit: '₱', precision: 2)}", class: 'sm-secondary-text text-center', style: "width: 100px;"%>
+                </div>
+              <% end %>
+
+            </div>
+          </div>
+          <hr>
+        <% end %>
+
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Member's count Modal -->
+<div class="modal fade" id="insuredType" data-bs-b ackdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title text-center" id="staticBackdropLabel">Insured Count</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+
+        <div class="<%= flex_justify_align('around', 'center') %>">
+          <%= content_tag :h6, "Insured Type", style: "width: 150px;" %>
+          <%= content_tag :h6, "Count", style: "width: 150px;", class: 'text-center' %>
+        </div>
+
+        <% @agreement.agreement_benefits.includes({product_benefits: :benefit}).each do |ab| %>
+          <div class="<%= flex_justify_align('around', 'center') %> text-secondary">
+            <%= content_tag :span, "#{ab.insured_type == 'principal' ? ab.insured_type.upcase : ab.insured_type.gsub('_', ' ').split(' ').drop(1).join(' ').upcase}", class: 'text-secondary', style: 'font-size: .8rem; width: 150px;' %>
+            
+            <%= content_tag :span, "#{@group_remit.batches.where(agreement_benefit_id: ab.id).size}", class: 'text-secondary text-center', style: 'font-size: .8rem; width: 150px;' %>
+          </div>
+        <% end %>
+
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="mb-3 gap-1 <%= flex_justify_align('', 'center') %>">
+  <%= link_to 'Back', agreement_path(@agreement), class: small_btn('secondary') %>
+
+  <% if !@group_remit.active? && !@group_remit.expired? && !@group_remit.renewed?%>
+    <%= button_to "Delete", group_remit_path(@group_remit), 
+      method: :delete,
+      data: { turbo_confirm: 'Delete group remit?'},
+      class: small_btn('danger') 
+    %>
+
+    <div class="d-flex gap-1">
+
+      <% unless @passed_requirements %>
+        <%= button_to 'Submit Remittance', submit_group_remit_path(@group_remit), 
+          method: :get,
+          class: small_btn('outline-warning'), 
+          data: {turbo_confirm: 'Submit group remit?' } 
+        %>
+      <% end %>
+       
+      <%  if @group_remit.denied_members.present? %>
+        <%= link_to 'Denied members', group_remit_denied_members_path(@group_remit), class: small_btn('outline-secondary') %>
+      <% end %>
+
+    </div>
+  <% elsif @group_remit.expired? && @group_remit == @anniversary.group_remits.last %>
+    <%= button_to 'Renew', renewal_group_remit_path(@group_remit),
+        method: :get, 
+        class: small_btn('warning'), 
+        data: {turbo_confirm: 'Renew group remit?' } 
+      %>
+  <% end %>
+
+  
+
+</div>
+
+<div class="<%= flex_justify_align('', 'center') %> gap-1">
+  <%= content_tag :span, @group_remit.status.titleize, style: "color: #{gr_presenter.status_color}; font-weight: 700;" %>
+  <%= content_tag :h3, "#{@agreement.moa_no}", class: 'mb-0' %>
+</div>
+
+<div class="<%= flex_justify_align('between', 'center') %> mb-3 gap-3">
+  <div class="d-flex flex-column " style="height: 100%; width: 100%">
+    <div class="card mb-2">
+      <div class="card-body text-secondary">
+        <div class="<%= flex_justify_align('center') %>">
+          <%= content_tag :h6, "Effectivity Date ", class: 'sm-secondary-text', style: "width: 150px" %>
+          <%= content_tag :h6, "#{@group_remit.effectivity_date.present? ? @group_remit.effectivity_date.strftime('%B %d, %Y') : 'Tentative'}", class: 'sm-secondary-text', style: "width: 150px" %>
+        </div>
+        <div class="<%= flex_justify_align('center') %>">
+          <%= content_tag :h6, "Expiry Date", class: 'sm-secondary-text', style: "width: 150px" %>
+          <%= content_tag :h6, "#{@group_remit.expiry_date.strftime('%B %d, %Y')}", class: 'sm-secondary-text', style: "width: 150px" %>
+        </div>
+        <div class="<%= flex_justify_align('center') %>">
+          <%= content_tag :h6, "Terms", class: 'sm-secondary-text', style: "width: 150px" %>
+          <%= content_tag :h6, "#{@group_remit.terms}", class: 'sm-secondary-text', style: "width: 150px"%>
+        </div>
+      </div>
+    </div>
+    <div class="<%= flex_justify_align('between') %> " style="height: 100%; width: 460px;">
+      <div style="width: 100%">
+
+        <% unless @group_remit.active? || @group_remit.expired? || @group_remit.renewed? %>
+            <%= turbo_frame_tag "batch_import_form" do %>
+              <%= turbo_frame_tag "batch_form" do %>     
+                <div class="d-flex gap-3 mb-2">
+                  <%= render 'group_remits/add_member' %>
+                </div>
+
+                <% if @batch_without_beneficiaries_count > 0 || @passed_requirements%>
+                  <%= content_tag :span, "(click reason to filter batches)", 
+                    class: 'mb-1',  
+                    style: "font-size: .7rem; color: red !important; font-weight: 700;"   
+                  %>
+                <% end %>
+
+                <% if @batch_without_beneficiaries_count > 0 %>
+                  <div class="mb-1">
+                    <%= link_to "#{@batch_without_beneficiaries_count} member(s) without beneficiary!", group_remit_path(@group_remit, batch_beneficiary_filter: true), 
+                      method: :get, 
+                      class: "#{badge('danger')} hovered-link", 
+                      data: { turbo: false } 
+                    %>
+                  </div>
+                <% end %>
+
+                <% if @passed_requirements %>
+                  <div class="d-flex flex-column">
+
+                    <%= content_tag :span, "Unable to submit group remit due to: ", 
+                      class: 'mb-1',  
+                      style: "font-size: .7rem; color: red !important; font-weight: 700;"  
+                    %>
+                    <div class="">
+
+                      <% if @batch_count < @agreement.proposal.minimum_participation %>
+                        <%= content_tag :span, "Below minimum participation: Need #{@agreement.proposal.minimum_participation - @batch_count} more", class: badge('danger') %>
+                      <% end %>
+
+                      <% if @batch_without_batch_health_dec_count > 0 %>
+                        <%= link_to "#{@batch_without_batch_health_dec_count} member(s) without batch health declaration!", group_remit_path(@group_remit, batch_health_dec_filter: true), 
+                          method: :get, 
+                          class: "#{badge('danger')} hovered-link", 
+                          data: { turbo: false } 
+                        %>
+                      <% end %>
+
+                    </div>
+                  </div>
+                <% end %>
+
+              <% end %>
+
+            <% end %>
+
+        <% end%>
+
+      </div>
+    </div>
+
+    
+  </div>
+
+  <div class="card" style="height: 100%; width: 100%">
+    <div class="card-body <%= flex_justify_align('around', '', true) %> ">
+      <div class="<%= flex_justify_align('center') %>">
+        <%= content_tag :h6, "#{@agreement.plan.name}"%>
+      </div>
+
+      <%= content_tag :button, "Benefits & Coverages", 
+        class: small_btn('outline-success'), 
+        data: {bs_toggle: "modal",
+          bs_target: "#benefitsModal"
+        }
+      %>
+
+      <%= content_tag :button, "Insured Count", 
+        class: small_btn('outline-success'), 
+        data: {bs_toggle: "modal",
+          bs_target: "#insuredType"
+        }
+      %>
+
+    </div>
+  </div> 
+
+  <%= turbo_frame_tag "computation" do %>
+    <%= render "group_remits/computation", group_remit: @group_remit %>
+  <% end %>  
+</div>
+
+  <% if ['GYRTBR','GYRTFR'].include?(@agreement.plan.acronym) %>
+    <div class="<%= flex_justify_align('between', 'center') %> gap-1">
+      <div class="d-flex gap-1">
+        <div class="">
+          <%= link_to "BOD", group_remit_path(@group_remit, rank_filter: 'BOD'), 
+                          method: :get, 
+                          class: small_btn('warning'), 
+                          data: { turbo: false } 
+                        %>
+        </div>
+        <div class="">
+           <%= link_to "Senior Officer", group_remit_path(@group_remit, rank_filter: 'SO'), 
+                          method: :get, 
+                          class: small_btn('warning'), 
+                          data: { turbo: false } 
+                        %>
+        </div>
+        <div class="">
+           <%= link_to "Junior Officer", group_remit_path(@group_remit, rank_filter: 'JO'), 
+                          method: :get, 
+                          class: small_btn('warning'), 
+                          data: { turbo: false } 
+                        %>
+        </div>
+        <div class="">
+           <%= link_to "Rank and File", group_remit_path(@group_remit, rank_filter: 'RF'), 
+                          method: :get, 
+                          class: small_btn('warning'), 
+                          data: { turbo: false } 
+                        %>
+        </div>
+      </div>
+  <% else %>
+    <div class="<%= flex_justify_align('end', 'center') %> gap-1">
+  <% end %>
+  
+  <div class="d-flex gap-1">
+    <%= form_with url: group_remit_path(@group_remit), method: :get do %>
+      <div class="form-group d-flex justify-content-end gap-3 mb-3">
+        <%= text_field_tag 'batch_filter', 
+          nil, 
+          placeholder: 'Member\'s name', 
+          class: "form-control", 
+          style: "width: auto"
+        %>
+        <%= submit_tag 'Search', class: small_btn('warning') %>
+      </div>
+    <% end %>
+
+    <div class="">
+      <%= link_to "View All", group_remit_path(@group_remit), 
+        class: "#{small_btn('outline-warning')} mb-3 d-flex align-items-center", 
+        style: "height: 38px;",
+        data: { turbo: false } 
+      %>
+    </div>
+  </div>
+  
+    
+</div>
+
+<div class="table-responsive">
+  <%= turbo_frame_tag "batches" do %>
+  <table class="table table-hover">
+    <thead>
+      <tr class="table-dark">
+
+        <th class="text-center" scope="col">ID</th>
+        <th class="text-center" scope="col">Members</th>
+        <th class="text-center" scope="col">Premium</th>
+        <th class="text-center" scope="col">Beneficiaries</th>
+        <% if @agreement.plan.gyrt_type == 'family' %>
+          <th class="text-center" scope="col">Dependents</th>
+        <% end %>
+        <th class="text-center" scope="col">Actions</th>
+
+      </tr>
+    </thead>
+
+    <tbody id="batches_body">
+      <% if @group_remit.batches.exists? %>
+        <%= render @batches, group_remit: @group_remit, agreement: @agreement %>
+      <% end %>
+    </tbody>
+  </table>
+
+</div>
+
+<%== pagy_bootstrap_nav(@pagy)  %>
+<% end %>
