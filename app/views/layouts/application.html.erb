@@ -24,6 +24,7 @@
     </div>
     <div class="container">
       <%= yield %>
+      <%= turbo_frame_tag "remote_modal", target: "_top" %>
     </div>
 
     <!-- New form Modal -->

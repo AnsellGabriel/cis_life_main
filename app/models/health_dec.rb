@@ -1,0 +1,2 @@
+class HealthDec < ApplicationRecord
+end

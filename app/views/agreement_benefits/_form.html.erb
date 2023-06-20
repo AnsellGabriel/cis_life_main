@@ -4,15 +4,15 @@
   <%= f.error_notification message: f.object.errors[:base].to_sentence if f.object.errors[:base].present? %>
 
   <div class="form-inputs">
-    <%= f.association :agreements %>
-    <%= f.association :plans %>
-    <%= f.association :proposals %>
-    <%= f.association :options %>
+    <%= f.association :agreement %>
+    <%= f.association :plan %>
+    <%#= f.association :proposal %>
+    <%#= f.association :option %>
     <%= f.input :name %>
     <%= f.input :description %>
     <%= f.input :min_age %>
     <%= f.input :max_age %>
-    <%= f.input :insured_type %>
+    <%= f.input :insured_type, collection: AgreementBenefit::InsuredType %>
   </div>
   <br>
   <div class="form-actions text-end">
