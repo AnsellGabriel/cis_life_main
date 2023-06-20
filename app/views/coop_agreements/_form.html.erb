@@ -1,0 +1,37 @@
+<%= simple_form_for(@agreement) do |f| %>
+  <%= f.error_notification %>
+  <%= f.error_notification message: f.object.errors[:base].to_sentence if f.object.errors[:base].present? %>
+  <div class="form-inputs">
+    <%= f.association :cooperative  %>
+    <div class="row">
+      <%= f.association :plan, wrapper_html: { class: "col-md-4" }  %>
+      <%= f.association :agent, wrapper_html: {class: "col-md-4" }  %>
+      <%= f.input :moa_no, label: "MOA", wrapper_html: {class: "col-md-4" } %>
+    </div>
+    <div class="row">
+      <%= f.input :comm_type, collection: Agreement::Comm_type, wrapper_html: { class: "col-md-3" } %>
+      <%= f.input :anniversary_type, collection: Agreement::Anniversary, wrapper_html: { class: "col-md-3" } %>
+      <%= f.input :contestability, wrapper_html: { class: "col-md-2" } %>
+      <%= f.input :nel, wrapper_html: { class: "col-md-2" } %>
+      <%= f.input :nml, wrapper_html: { class: "col-md-2" } %>
+    </div>
+    <div class="row">
+      <%= f.input :entry_age_from, wrapper_html: { class: "col-md-2"} %>
+      <%= f.input :entry_age_to, wrapper_html: { class: "col-md-2"} %>
+      <%= f.input :exit_age, wrapper_html: { class: "col-md-2"} %>
+    </div>
+    <div class="row">
+      <%= f.input :claims_fund, wrapper_html: { class: "col-md-3" } %>
+      <%= f.input :transferred, wrapper_html: { class: "col-md-3" } %>
+    </div>
+    <div class="row">
+      <%= f.input :transferred_date, wrapper_html: { class: "col-md-3" } %>
+      <%= f.input :previous_provider, wrapper_html: { class: "col-md-3" } %>
+    </div>
+  </div>
+  <br>
+  <div class="form-actions text-end">
+    <%= link_to "Back", agreements_path, class: "btn btn-secondary" %>
+    <%= f.button :submit, class: "btn btn-success" %>
+  </div>
+<% end %>

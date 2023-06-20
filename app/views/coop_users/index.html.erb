@@ -7,12 +7,20 @@
   <% end %>
 </div>
 
-<table class ="table table-striped">
+<div class="table-responsive">
   <table class="table table-striped table-bordered table-hover">
     <thead>
       <tr>
 
-      <th>#</th>
+      <th>ID</th>
+        <th>Last Name</th>
+        <th>First Name</th>
+        <th>Middle Name</th>
+        <th>Birthdate</th>
+        <th>Mobile Number</th>
+        <th>Designation</th>
+        <th>Cooperative</th>
+        <th>Coop Branch</th>
         <th></th>
 
       </tr>
@@ -22,12 +30,20 @@
       <% @coop_users.each do |coop_user| %>
         <tr>
 
-        <th scope="row"><%= coop_user.id %></th>
+        <td><%= coop_user.id %></td>
+        <td><%= coop_user.last_name %></td>
+        <td><%= coop_user.first_name %></td>
+        <td><%= coop_user.middle_name %></td>
+        <td><%= coop_user.birthdate %></td>
+        <td><%= coop_user.mobile_number %></td>
+        <td><%= coop_user.designation %></td>
+        <td><%= coop_user.cooperative %></td>
+        <td><%= coop_user.coop_branch %></td>
     
           <td>
-            <%= link_to 'View', coop_user, class: 'btn btn-secondary btn-sm' %>
-            <%= link_to 'Edit', edit_coop_user_path(coop_user), class: 'btn btn-secondary btn-sm' %>
-            <%= link_to "Delete", coop_user, class: "btn btn-danger btn-sm", method: :delete, data: { "turbo-method": :delete, turbo_confirm: "Are you sure?" } %>
+            <%= link_to 'View', coop_user, class: 'btn' %>
+            <%= link_to 'Edit', edit_coop_path(coop_user), class: 'btn' %>
+            <%= link_to 'Delete', coop_user, method: :delete, data: { confirm: 'Are you sure?' }, class: 'btn' %>
           </td>
 
         </tr>

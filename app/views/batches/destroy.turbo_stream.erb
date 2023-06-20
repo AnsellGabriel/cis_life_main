@@ -1,0 +1,7 @@
+<%= turbo_stream.replace "computation" do %>
+  <%= turbo_frame_tag "computation" do %>
+    <%= render "group_remits/computation" %>
+  <% end %>
+<% end %>
+
+<%= turbo_stream.prepend "flash", partial: "layouts/notification" %>

@@ -1,0 +1,6 @@
+:scheduler:
+  :schedule:
+    group_remit_update:
+      cron: '0 9 * * *' # Set the desired time for the job to run (4:00 am in this example)
+      class: 'GroupRemitStatusUpdater'
+      queue: 'default'

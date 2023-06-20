@@ -6,11 +6,12 @@ ruby "3.0.3"
 # Bundle edge Rails instead: gem "rails", github: "rails/rails", branch: "main"
 gem "rails", "~> 7.0.4", ">= 7.0.4.3"
 
-# The original asset pipeline for Rails [https://github.com/rails/sprockets-rails]
+# The original arails sset pipeline for Rails [https://github.com/rails/sprockets-rails]
 gem "sprockets-rails"
 
-# Use mysql as the database for Active Record
+# Use mysql2 as the database for Active Record
 gem "mysql2", "~> 0.5"
+
 
 # Use the Puma web server [https://github.com/puma/puma]
 gem "puma", "~> 5.0"
@@ -28,7 +29,7 @@ gem "stimulus-rails"
 # gem "jbuilder"
 
 # Use Redis adapter to run Action Cable in production
-# gem "redis", "~> 4.0"
+# gem "redis"
 
 # Use Kredis to get higher-level data types in Redis [https://github.com/rails/kredis]
 # gem "kredis"
@@ -48,9 +49,30 @@ gem "bootsnap", require: false
 # Use Active Storage variants [https://guides.rubyonrails.org/active_storage_overview.html#transforming-images]
 # gem "image_processing", "~> 1.2"
 
+gem 'bootstrap', '~> 5.1', '>= 5.1.3'
+gem 'simple_form'
+gem 'devise'
+gem 'activeadmin'
+gem "roo", "~> 2.10.0"
+gem 'csv'
+gem 'requestjs-rails'
+gem 'pagy'
+gem 'ransack'
+gem 'jquery-rails'
+gem 'cocoon'
+gem 'sidekiq'
+gem 'sidekiq-scheduler'
+gem 'bullet', group: 'development'
+
+
+
+
+
 group :development, :test do
   # See https://guides.rubyonrails.org/debugging_rails_applications.html#debugging-with-the-debug-gem
   gem "debug", platforms: %i[ mri mingw x64_mingw ]
+  gem "ffaker"
+  gem 'byebug'
 end
 
 group :development do
@@ -71,16 +93,4 @@ group :test do
   gem "capybara"
   gem "selenium-webdriver"
   gem "webdrivers"
-  
 end
-
-gem "sassc-rails"
-gem 'bootstrap', '~> 5.2.3'
-gem 'simple_form'
-gem "roo", "~> 2.9.0"
-gem 'devise'
-gem 'csv'
-gem 'requestjs-rails'
-gem 'pagy'
-gem 'ransack'
-gem 'jquery-rails'

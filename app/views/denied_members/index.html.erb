@@ -1,0 +1,37 @@
+<div class="mb-3">
+	<%= link_to 'Back', group_remit_path(@group_remit), class: small_btn('secondary') %>
+</div>
+<div class="<%= flex_justify_align('', 'center') %> gap-1 mb-3">
+  <%= content_tag :h6, "#{@group_remit.agreement.moa_no} (Denied members)", class: 'mb-0' %>
+  <div class="">
+    <%= link_to 'Download CSV file', group_remit_download_csv_path(@group_remit), class: small_btn('success') %>
+  </div>
+</div>
+
+		<table class="table table-hover">
+		<thead>
+		<tr class="table-dark">
+			<th class="text-center" scope="col">Name</th>
+			<th class="text-center" scope="col">Age</th>
+			<th class="text-center" scope="col">Reason</th>
+		</tr>
+		</thead>
+
+		<tbody id="batches_body">
+			<% @denied_members.each do |member| %>
+				<tr class="text-muted">
+					<td class="<%= flex_justify_align('center') %>">
+						<div class="" style="width: 250px; font-size: .7rem;">
+							<%= member.name %>
+						</div>
+					</td>
+					<td class="text-center" style="font-size: .7rem;">
+						<%= member.age == 0 ? "Unknown" : member.age %>
+					</td>
+					<td class="text-center" style="font-size: .7rem;">
+						<%= member.reason %>
+					</td>
+				</tr>
+			<% end %>
+		</tbody>
+	</table>

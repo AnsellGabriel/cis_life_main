@@ -1,16 +1,9 @@
 
+<%= render @department %>
 
-<div class="card">
-  <div class="card-header">
-    <h1>Department</h1>
-    <%= link_to "Delete", @department, class: "btn btn-danger btn-sm", method: :delete, data: { "turbo-method": :delete, turbo_confirm: "Are you sure?" } %>
-  </div>
-  <div class="card-body">
-    <%= render @department %>
-  </div>
-  <div class="card-footer">
-    <%= link_to "Edit", edit_department_path(@department), class: "btn btn-secondary btn-sm" %> |
-    <%= link_to "Back", departments_path, class: "btn btn-secondary btn-sm" %>
-  </div>
+<div>
+  <%= link_to "Edit", edit_department_path(@department), class: 'btn btn-primary' %> |
+  <%= link_to "Back", departments_path, class: 'btn btn-primary' %>
 
+  <%= button_to "Delete", @department, method: :delete, class: 'btn btn-danger' %>
 </div>
