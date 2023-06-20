@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_06_13_012545) do
+ActiveRecord::Schema[7.0].define(version: 2023_06_20_001741) do
   create_table "active_admin_comments", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.string "namespace"
     t.text "body"
@@ -200,6 +200,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_06_13_012545) do
     t.boolean "transferred", default: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.string "full_name"
     t.index ["coop_branch_id"], name: "index_coop_members_on_coop_branch_id"
     t.index ["cooperative_id"], name: "index_coop_members_on_cooperative_id"
     t.index ["member_id"], name: "index_coop_members_on_member_id"
