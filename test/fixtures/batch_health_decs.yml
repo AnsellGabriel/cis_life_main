@@ -1,0 +1,27 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  ans_q1: false
+  ans_q2: false
+  ans_q3: false
+  ans_q3_desc: MyString
+  ans_q4: false
+  ans_q4_desc: MyString
+  ans_q5_a: false
+  ans_q5_a_desc: MyString
+  ans_q5_b: false
+  ans_q5_b: MyString
+  batch: one
+
+two:
+  ans_q1: false
+  ans_q2: false
+  ans_q3: false
+  ans_q3_desc: MyString
+  ans_q4: false
+  ans_q4_desc: MyString
+  ans_q5_a: false
+  ans_q5_a_desc: MyString
+  ans_q5_b: false
+  ans_q5_b: MyString
+  batch: two

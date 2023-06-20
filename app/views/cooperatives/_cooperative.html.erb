@@ -1,20 +1,32 @@
 <div id="<%= dom_id cooperative %>">
-  <h3>
-    <%= cooperative.name %> <small class="text-primary"> <%= cooperative.acronym %>  </small>
-  </h3>
   <p>
-    <%= cooperative.get_fulladdress %>
+    <strong>Name:</strong>
+    <%= cooperative.name %>
   </p>
+
   <p>
-    <%= cooperative.contact_no %> |  <%= cooperative.email %>
+    <strong>Region:</strong>
+    <%= cooperative.region %>
   </p>
+
   <p>
-    Type: <%= cooperative.coop_type %> |
-    Reg. no. :<%= cooperative.registration_no %> |
-    TIN <%= cooperative.tin %>
+    <strong>Province:</strong>
+    <%= cooperative.province %>
   </p>
+
   <p>
-    <small><%= cooperative.description %></small>
+    <strong>Municipality:</strong>
+    <%= cooperative.municipality %>
+  </p>
+
+  <p>
+    <strong>Barangay:</strong>
+    <%= cooperative.barangay %>
+  </p>
+
+  <p>
+    <strong>Contact details:</strong>
+    <%= cooperative.contact_details %>
   </p>
 
 </div>

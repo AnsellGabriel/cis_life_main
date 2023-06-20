@@ -1,0 +1,16 @@
+<div>
+  <%= link_to "#{@group_remit.name}", group_remit_path(@group_remit), class: 'btn btn-secondary mb-3' %>
+  <%= link_to "#{@batch.coop_member.member.last_name}, #{@batch.coop_member.member.first_name} #{@batch.coop_member.member.middle_name}", group_remit_batch_path(@group_remit, @batch), class: 'btn btn-secondary mb-3' %>
+
+</div>
+
+<%= turbo_frame_tag "modal" do %>
+  <div class="modal-header">
+    <%= content_tag :h5, 'New Beneficiary', class: "modal-title", id: "staticBackdropLabel" %>
+    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+  </div>
+  
+  <div class="modal-body">
+    <%= render "form", batch_beneficiary: @batch_beneficiary %>
+  </div>
+<% end %>

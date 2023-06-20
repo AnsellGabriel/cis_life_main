@@ -1,0 +1,21 @@
+<div class='nested-form-wrapper' data-new-record="<%= f.object.new_record?%>">
+    <%= f.input :active, wrapper_html: {class: "ps-3"} %>
+    <%= f.association :coop_member, collection: @members.map { |member| ["#{member.last_name}, #{member.first_name} #{member.middle_name}", member.id] }, input_html: { id: "member_id", data: { action: "change->batch#change", controller: "slim-select" }  } %>
+
+
+    <%= f.fields_for :batch_dependents do |dependent| %>
+        <%= dependent.label :member_dependent_id, label: "Beneficiary"%>
+        <%= dependent.select :member_dependent_id, [], {prompt: "No Beneficiaries"}, { id: "dependent_id", data: { batch_target: "dependentSelect" }, class: "form-select" } %>
+        <% dependent.hidden_field :beneficiary, value: true%>
+    <% end %>
+
+    <%= f.input :effectivity_date, as: :date, html5: true %>
+    <%= f.input :expiry_date, as: :date, html5: true %>
+    <%= f.input :premium %>
+    <%= f.input :coop_sf_amount, label: "Coop Service Fee (%)" %>
+    <%= f.input :agent_sf_amount, label: "Agent Service Fee (%)" %>
+    <%= f.hidden_field :status, value: "recent" %>
+
+    <button type="button" data-action="nested-form#remove" class="btn btn-danger mb-3">Remove Batch</button>
+    <%= f.hidden_field :_destroy %>
+</div>

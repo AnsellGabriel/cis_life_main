@@ -1,0 +1,41 @@
+<%= content_tag :h1, "List of Batch Beneficiaries" %>
+
+
+<div class="text-end mb-3">
+  <%= link_to new_batch_beneficiary_path, class: 'btn btn-primary' do %>
+    New Batch Beneficiary
+  <% end %>
+</div>
+
+<div class="table-responsive">
+  <table class="table table-striped table-bordered table-hover">
+    <thead>
+      <tr>
+
+      <th>ID</th>
+        <th>Batch</th>
+        <th>Member Dependent</th>
+        <th></th>
+
+      </tr>
+    </thead>
+
+    <tbody>
+      <% @batch_beneficiaries.each do |batch_beneficiary| %>
+        <tr>
+
+        <td><%= batch_beneficiary.id %></td>
+        <td><%= batch_beneficiary.batch %></td>
+        <td><%= batch_beneficiary.member_dependent %></td>
+    
+          <td>
+            <%= link_to 'View', batch_beneficiary, class: 'btn' %>
+            <%= link_to 'Edit', edit_batch_beneficiary_path(batch_beneficiary), class: 'btn' %>
+            <%= link_to 'Delete', batch_beneficiary, method: :delete, data: { confirm: 'Are you sure?' }, class: 'btn' %>
+          </td>
+
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+</div>

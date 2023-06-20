@@ -1,0 +1,151 @@
+<tr id="<%= dom_id(batch) %>">
+    <% member = batch.coop_member.member %>
+    <% beneficiaries = batch.batch_beneficiaries %>
+    <% dependents = batch.batch_dependents %>
+    <% batch_presenter = BatchPresenter.new(batch)%>
+
+    <td class="text-center align-middle" ><%= batch.id %></td>
+    <td class="align-middle" >
+        <div class="d-flex" style="padding-left: 60px; padding-top: 30px; padding-bottom: 30px;">
+            <div class="d-flex flex-column gap-1">
+                <div class="">
+                    <% if batch.status == 'recent' %>
+                        <span class="<%= badge('success') %>">New</span>
+                    <% else %>
+                        <span class="<%= badge('warning') %> text-dark"><%= batch.status.to_s.titleize %></span>
+                    <% end %>
+                </div>
+                <div class="">
+                
+                    <%= content_tag :span, "#{member.last_name}, #{member.first_name} #{member.middle_name}" %>
+                    <div class="sm-secondary-text <%= flex_justify_align('center','center') %> gap-1">
+                        <div class="">
+                            <i class="bi bi-phone"></i>
+                            <%= content_tag :span, "#{member.mobile_number}" %>
+                        </div>
+                        <%= content_tag :span, '|' %>
+                        <div class="">
+                            <i class="bi bi-envelope"></i>
+                            <%= content_tag :span, "#{member.email}" %>
+                        </div>
+                    </div>
+
+                    <% if agreement.plan.acronym == 'GYRTBR' || agreement.plan.acronym == 'GYRTFR'%>
+                        <span class="badge bg-info text-dark">
+                            <%= batch_presenter.capitalized_insured_type %>
+                        </span>
+                    <% end %>
+
+                </div>
+                <div class="">
+
+                    <% if beneficiaries.empty? %>
+                        <span class="badge bg-danger">No beneficiary!</span>
+                    <% end %>
+
+                    <% if batch.status == 'recent' && batch.batch_health_dec.blank? %>
+                        <span class="badge bg-danger">No Health Declaration!</span>
+                    <% end %>
+                    
+                </div>
+            </div>
+            
+
+        </div>
+    </td>
+    <td class="align-middle" >
+        <div class="<%= flex_justify_align('center') %>">
+            <div class="<%= flex_justify_align('','center',true) %> ps-6">
+                <div class="d-flex flex-column mb-1">
+                    <%= content_tag :span, 
+                        "Principal premium: #{number_to_currency(batch.premium, unit: "₱", precision: 2)}", 
+                        class: "text-secondary sm-green-text"
+                    %>
+
+                    <% if dependents.exists? %>
+                        <%= content_tag :span, 
+                            "Dependent(s) premium: #{number_to_currency(batch.dependents_premium, unit: "₱", precision: 2) }", 
+                            class: "text-secondary sm-green-text" %>
+                    <% end %>
+
+                </div>
+        </div>
+    </td>
+    <td class="align-middle">
+        <div class="<%= flex_justify_align('center') %>">
+            <div class="d-flex flex-column ps-6">
+
+                <% unless beneficiaries.exists? %>
+                    <%= content_tag :span, "None", class: 'sm-red-text' %>
+                <% else %>
+                    <div class="d-flex flex-column mb-1">
+
+                        <% beneficiaries.each do |b| %>
+                            <%= content_tag :span, "#{b.member_dependent.last_name}, #{b.member_dependent.first_name} #{b.member_dependent.middle_name}", 
+                                class: "text-secondary", 
+                                style: "font-size: .7rem;" 
+                            %>
+                        <% end %>
+
+                    </div>
+                <% end %>
+
+            </div>
+        </div>
+    </td>
+
+    <% if group_remit.agreement.plan.gyrt_type == 'family' %>
+        <td class="align-middle">
+            <div class="<%= flex_justify_align('center') %>">
+                <div class="<%= flex_justify_align('','center',true) %> ps-6">
+
+                    <% unless dependents.exists? %>
+                        <%= content_tag :span, "None", class: 'sm-red-text' %>
+                    <% else %>
+                        <div class="d-flex flex-column mb-1">
+                            <% dependents.each do |d| %>
+                                <%= content_tag :span, "#{d.member_dependent.last_name}, #{d.member_dependent.first_name} #{d.member_dependent.middle_name}", 
+                                    class: "text-secondary", 
+                                    style: "font-size: .7rem;" 
+                                %>
+                            <% end %>
+                            </div>
+                    <% end %>
+
+                </div>
+            </div>
+        </td>
+    <% end %>
+
+    <td class="align-middle">
+        <div  class="d-flex gap-1" >
+            <%= link_to 'Show', group_remit_batch_path(group_remit, batch),
+                data: {turbo_frame: "_top"}, 
+                class: small_btn('primary') 
+            %>
+
+            <% unless group_remit.active? || group_remit.expired? || batch.status == 'renewal'%>
+
+                <% if batch.status == 'recent' && batch.batch_health_dec.blank? %>
+                    <%= link_to new_group_remit_batch_health_declaration_path(group_remit, batch),
+                                class: small_btn('danger'), 
+                                title: 'Health Declaration Form',
+                                data: { turbo_frame: "modal-xl" } do %> 
+                    <i class="bi bi-file-earmark-medical"></i>
+                    <% end %>
+                <% end %>
+
+                <%= button_to group_remit_batch_path(group_remit, batch), 
+                    method: :delete,
+                    form: { 
+                    data: { turbo_frame: "_top", 
+                    turbo_confirm: "Delete Batch: #{member.last_name}, #{member.first_name} #{member.middle_name}?" } 
+                    }, 
+                    class: small_btn('danger') do %>
+                        <i class="bi bi-x-lg"></i>                    
+                    <% end %>
+            <% end %>
+
+        </div>
+    </td>
+</tr>

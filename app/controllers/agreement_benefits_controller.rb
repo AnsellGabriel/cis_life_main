@@ -1,4 +1,6 @@
 class AgreementBenefitsController < ApplicationController
+  before_action :authenticate_user!
+  before_action :check_userable_type
   before_action :set_agreement_benefit, only: %i[ show edit update destroy ]
 
   # GET /agreement_benefits
@@ -54,5 +56,11 @@ class AgreementBenefitsController < ApplicationController
     # Only allow a list of trusted parameters through.
     def agreement_benefit_params
       params.require(:agreement_benefit).permit(:agreements_id, :plans_id, :proposals_id, :options_id, :name, :description, :min_age, :max_age, :insured_type)
+    end
+
+    def check_userable_type
+      unless current_user.userable_type == 'CoopUser'
+        render file: "#{Rails.root}/public/404.html", status: :not_found
+      end
     end
 end

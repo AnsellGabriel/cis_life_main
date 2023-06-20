@@ -1,0 +1,36 @@
+<div class="mb-3">
+  <%= link_to 'Agreements', agreements_path, class: 'btn btn-secondary' %>
+</div>
+
+<%= content_tag :h3, "#{@agreement.moa_no} Group Remits" %>
+
+
+
+<div class="row row-cols-2 row-cols-md-4 g-4 mb-3">
+  <% @group_remits.each do |group_remit| %>
+  <% batches = group_remit.batches %>
+        <% batches_dependents= BatchDependent.joins(batch: :group_remit)
+                                 .where(group_remits: {id: group_remit.id}) %>
+        <% batches_premium = batches.sum(:premium) %>
+        <% batch_dependent_premiums = batches_dependents.sum('batch_dependents.premium') %>
+        <% gross_premium = batches_premium + batch_dependent_premiums %>
+    <div class="col">
+      <div class="card">
+        <div class="card-body">
+          <div class="d-flex justify-content-between">
+            <h5 class="card-title"><%= group_remit.name %></h5>
+          </div>
+          <hr>
+          <p class="card-text">Expiry date: <%= content_tag :span, group_remit.effectivity_date.strftime('%B %d, %Y'), class: 'text-secondary' %></p>
+          <p class="card-text">Total Premium: <%= content_tag :span, number_to_currency(gross_premium , unit: "₱", precision: 2), class: 'text-secondary' %></p>
+        </div>
+        <div class="d-flex justify-content-center gap-1">
+          <%= link_to 'View', group_remit, class: 'btn btn-sm btn-primary' %>
+          <%= link_to 'Edit', edit_group_remit_path(group_remit), class: 'btn btn-sm btn-secondary' %>
+        </div>
+      </div>
+    </div>
+  <% end %>
+</div>
+
+

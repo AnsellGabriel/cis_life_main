@@ -14,55 +14,78 @@
  *= require_self
  */
 
- @import "bootstrap";
+@import "bootstrap";
 
- .hidden {
-   display: none;
- }
- 
- .alert {
-   padding: 1rem;
-   margin-bottom: 1rem;
-   border-radius: 0.25rem;
- }
- 
- .alert-success {
-   color: #155724;
-   background-color: #d4edda;
-   border-color: #c3e6cb;
- }
- 
- // input[type="submit"],
- // button,
- // .btn .btn-success {
- //   color: #fff !important;
- //     background-color: #198754 !important;
- //     border-color: #198754 !important;
- //   background-image: none !important;
- //   border-radius: 0.25rem !important;
- //   font-weight: 400 !important;
- //     line-height: 1.5 !important;
- // }
- 
- input[type=checkbox]:hover, input[type="date"]:hover {
-   cursor: pointer;
- }
- 
- a {
-   text-decoration: none !important;
- }
- 
- input[type="number"]::-webkit-inner-spin-button,
- input[type="number"]::-webkit-outer-spin-button {
-   -webkit-appearance: none;
-   margin: 0;
- }
- 
-  svg.ss-arrow {
-   display: none !important;
- }
- 
- .coop-member-form {
-   gap: 20px;
- 
- }
+.hidden {
+  display: none;
+}
+
+.alert {
+  padding: 1rem;
+  margin-bottom: 1rem;
+  border-radius: 0.25rem;
+}
+
+.alert-success {
+  color: #155724;
+  background-color: #d4edda;
+  border-color: #c3e6cb;
+}
+
+// input[type="submit"],
+// button,
+// .btn .btn-success {
+//   color: #fff !important;
+//     background-color: #198754 !important;
+//     border-color: #198754 !important;
+//   background-image: none !important;
+//   border-radius: 0.25rem !important;
+//   font-weight: 400 !important;
+//     line-height: 1.5 !important;
+// }
+
+input[type=checkbox]:hover, input[type="date"]:hover {
+  cursor: pointer;
+}
+
+a {
+  text-decoration: none !important;
+}
+
+input[type="number"]::-webkit-inner-spin-button,
+input[type="number"]::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+ svg.ss-arrow {
+  display: none !important;
+}
+
+.coop-member-form {
+  gap: 20px;
+
+}
+
+.sm-secondary-text {
+  font-size: .8rem;
+}
+
+.sm-green-text {
+  font-size: .7rem; 
+  color: var(--bs-green) !important; 
+  font-weight: 700;
+}
+
+.sm-red-text {
+  font-size: .7rem; 
+  color: var(--bs-red) !important; 
+}
+
+.lg-card {
+  height:  70vh;
+}
+
+.hovered-link:hover {
+  color: black;
+}

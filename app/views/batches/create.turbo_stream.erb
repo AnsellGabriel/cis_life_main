@@ -1,0 +1,33 @@
+<%= turbo_stream.update "batch_form" do %>
+  <div class="d-flex gap-1 mb-2">
+    <% if @all_batches_have_beneficiaries && @batch_count >= @agreement.proposal.minimum_participation %>
+      <%= link_to 'Submit Batch', submit_group_remit_path(@group_remit),class: 'btn btn-sm btn-warning', data: {turbo: false } %>
+    <% end %>
+    <%= render 'group_remits/add_member' %>
+  </div>
+  <% if @batch_without_beneficiaries_count > 0 || @batch_without_batch_health_dec_count > 0 || @batch_count < @agreement.proposal.minimum_participation %>
+    <div class="d-flex flex-column">
+      <%= content_tag :span, "Unable to submit group remit due to: ", class: 'mb-1',  style: "font-size: .7rem; color: red !important; font-weight: 700;"  %>
+      <div class="">
+        <% if @batch_count < @agreement.proposal.minimum_participation %>
+          <%= content_tag :span, "Below minimum participation: Need #{@agreement.proposal.minimum_participation - @batch_count} more", class: 'badge bg-danger' %>
+        <% end %>
+        <% if @batch_without_beneficiaries_count > 0 %>
+          <%= content_tag :span, "#{@batch_without_beneficiaries_count} member(s) without beneficiary!", class: 'badge bg-danger' %>
+        <% end %>
+        <% if @batch_without_batch_health_dec_count > 0 %>
+          <%= content_tag :span, "#{@batch_without_batch_health_dec_count} member(s) without batch health declaration!", class: 'badge bg-danger' %>
+        <% end %>
+      </div>
+    </div>
+  <% end %>
+<% end %>
+
+
+<%= turbo_stream.replace "computation" do %>
+  <%= turbo_frame_tag "computation" do %>
+    <%= render "group_remits/computation" %>
+  <% end %>
+<% end %>
+
+<%= turbo_stream.prepend "flash", partial: "layouts/notification" %>
