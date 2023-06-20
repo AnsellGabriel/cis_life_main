@@ -17,7 +17,7 @@ class AgreementBenefitsControllerTest < ActionDispatch::IntegrationTest
 
   test "should create agreement_benefit" do
     assert_difference("AgreementBenefit.count") do
-      post agreement_benefits_url, params: { agreement_benefit: { agreements_id: @agreement_benefit.agreements_id, description: @agreement_benefit.description, insured_type: @agreement_benefit.insured_type, max_age: @agreement_benefit.max_age, min_age: @agreement_benefit.min_age, name: @agreement_benefit.name, options_id: @agreement_benefit.options_id, plans_id: @agreement_benefit.plans_id, proposals_id: @agreement_benefit.proposals_id } }
+      post agreement_benefits_url, params: { agreement_benefit: { agreement_id: @agreement_benefit.agreement_id, description: @agreement_benefit.description, insured_type: @agreement_benefit.insured_type, max_age: @agreement_benefit.max_age, min_age: @agreement_benefit.min_age, name: @agreement_benefit.name, option_id: @agreement_benefit.option_id, plan_id: @agreement_benefit.plan_id, proposal_id: @agreement_benefit.proposal_id } }
     end
 
     assert_redirected_to agreement_benefit_url(AgreementBenefit.last)
@@ -34,7 +34,7 @@ class AgreementBenefitsControllerTest < ActionDispatch::IntegrationTest
   end
 
   test "should update agreement_benefit" do
-    patch agreement_benefit_url(@agreement_benefit), params: { agreement_benefit: { agreements_id: @agreement_benefit.agreements_id, description: @agreement_benefit.description, insured_type: @agreement_benefit.insured_type, max_age: @agreement_benefit.max_age, min_age: @agreement_benefit.min_age, name: @agreement_benefit.name, options_id: @agreement_benefit.options_id, plans_id: @agreement_benefit.plans_id, proposals_id: @agreement_benefit.proposals_id } }
+    patch agreement_benefit_url(@agreement_benefit), params: { agreement_benefit: { agreement_id: @agreement_benefit.agreement_id, description: @agreement_benefit.description, insured_type: @agreement_benefit.insured_type, max_age: @agreement_benefit.max_age, min_age: @agreement_benefit.min_age, name: @agreement_benefit.name, option_id: @agreement_benefit.option_id, plan_id: @agreement_benefit.plan_id, proposal_id: @agreement_benefit.proposal_id } }
     assert_redirected_to agreement_benefit_url(@agreement_benefit)
   end
 

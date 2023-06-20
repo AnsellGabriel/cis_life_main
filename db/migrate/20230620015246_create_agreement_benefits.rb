@@ -1,10 +1,10 @@
 class CreateAgreementBenefits < ActiveRecord::Migration[7.0]
   def change
     create_table :agreement_benefits do |t|
-      t.references :agreements#, null: false, foreign_key: true
-      t.references :plans#, null: false, foreign_key: true
-      t.references :proposals#, null: false, foreign_key: true
-      t.references :options#, null: false, foreign_key: true
+      t.references :agreement#, null: false, foreign_key: true
+      t.references :plan#, null: false, foreign_key: true
+      t.references :proposal#, null: false, foreign_key: true
+      t.references :option#, null: false, foreign_key: true
       t.string :name
       t.text :description
       t.integer :min_age

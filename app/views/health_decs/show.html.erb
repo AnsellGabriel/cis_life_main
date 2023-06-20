@@ -1,0 +1,16 @@
+
+
+<div class="card">
+  <div class="card-header">
+    <h1>Health dec</h1>
+    <%= link_to "Delete", @health_dec, class: "btn btn-danger btn-sm", method: :delete, data: { "turbo-method": :delete, turbo_confirm: "Are you sure?" } %>
+  </div>
+  <div class="card-body">
+    <%= render @health_dec %>
+  </div>
+  <div class="card-footer">
+    <%= link_to "Edit", edit_health_dec_path(@health_dec), class: "btn btn-secondary btn-sm" %> |
+    <%= link_to "Back", health_decs_path, class: "btn btn-secondary btn-sm" %>
+  </div>
+
+</div>

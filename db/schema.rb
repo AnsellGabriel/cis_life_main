@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_06_20_011225) do
+ActiveRecord::Schema[7.0].define(version: 2023_06_20_061347) do
   create_table "agent_groups", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.string "name"
     t.text "description"
@@ -31,10 +31,10 @@ ActiveRecord::Schema[7.0].define(version: 2023_06_20_011225) do
   end
 
   create_table "agreement_benefits", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
-    t.bigint "agreements_id"
-    t.bigint "plans_id"
-    t.bigint "proposals_id"
-    t.bigint "options_id"
+    t.bigint "agreement_id"
+    t.bigint "plan_id"
+    t.bigint "proposal_id"
+    t.bigint "option_id"
     t.string "name"
     t.text "description"
     t.integer "min_age"
@@ -42,10 +42,10 @@ ActiveRecord::Schema[7.0].define(version: 2023_06_20_011225) do
     t.string "insured_type"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["agreements_id"], name: "index_agreement_benefits_on_agreements_id"
-    t.index ["options_id"], name: "index_agreement_benefits_on_options_id"
-    t.index ["plans_id"], name: "index_agreement_benefits_on_plans_id"
-    t.index ["proposals_id"], name: "index_agreement_benefits_on_proposals_id"
+    t.index ["agreement_id"], name: "index_agreement_benefits_on_agreement_id"
+    t.index ["option_id"], name: "index_agreement_benefits_on_option_id"
+    t.index ["plan_id"], name: "index_agreement_benefits_on_plan_id"
+    t.index ["proposal_id"], name: "index_agreement_benefits_on_proposal_id"
   end
 
   create_table "agreements", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
@@ -194,6 +194,16 @@ ActiveRecord::Schema[7.0].define(version: 2023_06_20_011225) do
 
   create_table "geo_regions", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.string "name"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  create_table "health_decs", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+    t.text "question"
+    t.boolean "active"
+    t.boolean "with_details"
+    t.boolean "valid_answer"
+    t.integer "question_sort"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
   end
