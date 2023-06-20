@@ -220,20 +220,55 @@
   <% end %>  
 </div>
 
-<div class="<%= flex_justify_align('end', 'center') %> gap-1">
-  <%= form_with url: group_remit_path(@group_remit), method: :get do %>
-    <div class="form-group d-flex justify-content-end gap-3 mb-3">
-      <%= text_field_tag 'batch_filter', 
-        nil, 
-        placeholder: 'Member\'s name', 
-        class: "form-control", 
-        style: "width: auto"
-      %>
-      <%= submit_tag 'Search', class: small_btn('warning') %>
-    </div>
-  <% end %>
-
   <% if ['GYRTBR','GYRTFR'].include?(@agreement.plan.acronym) %>
+    <div class="<%= flex_justify_align('between', 'center') %> gap-1">
+      <div class="d-flex gap-1">
+        <div class="">
+          <%= link_to "BOD", group_remit_path(@group_remit, rank_filter: 'BOD'), 
+                          method: :get, 
+                          class: small_btn('warning'), 
+                          data: { turbo: false } 
+                        %>
+        </div>
+        <div class="">
+           <%= link_to "Senior Officer", group_remit_path(@group_remit, rank_filter: 'SO'), 
+                          method: :get, 
+                          class: small_btn('warning'), 
+                          data: { turbo: false } 
+                        %>
+        </div>
+        <div class="">
+           <%= link_to "Junior Officer", group_remit_path(@group_remit, rank_filter: 'JO'), 
+                          method: :get, 
+                          class: small_btn('warning'), 
+                          data: { turbo: false } 
+                        %>
+        </div>
+        <div class="">
+           <%= link_to "Rank and File", group_remit_path(@group_remit, rank_filter: 'RF'), 
+                          method: :get, 
+                          class: small_btn('warning'), 
+                          data: { turbo: false } 
+                        %>
+        </div>
+      </div>
+  <% else %>
+    <div class="<%= flex_justify_align('end', 'center') %> gap-1">
+  <% end %>
+  
+  <div class="d-flex gap-1">
+    <%= form_with url: group_remit_path(@group_remit), method: :get do %>
+      <div class="form-group d-flex justify-content-end gap-3 mb-3">
+        <%= text_field_tag 'batch_filter', 
+          nil, 
+          placeholder: 'Member\'s name', 
+          class: "form-control", 
+          style: "width: auto"
+        %>
+        <%= submit_tag 'Search', class: small_btn('warning') %>
+      </div>
+    <% end %>
+
     <div class="">
       <%= link_to "View All", group_remit_path(@group_remit), 
         class: "#{small_btn('outline-warning')} mb-3 d-flex align-items-center", 
@@ -241,7 +276,7 @@
         data: { turbo: false } 
       %>
     </div>
-  <% end %>
+  </div>
   
     
 </div>
