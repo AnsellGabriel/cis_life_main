@@ -14,15 +14,15 @@ class AgreementBenefitsTest < ApplicationSystemTestCase
     visit agreement_benefits_url
     click_on "New agreement benefit"
 
-    fill_in "Agreements", with: @agreement_benefit.agreements_id
+    fill_in "Agreement", with: @agreement_benefit.agreement_id
     fill_in "Description", with: @agreement_benefit.description
     fill_in "Insured type", with: @agreement_benefit.insured_type
     fill_in "Max age", with: @agreement_benefit.max_age
     fill_in "Min age", with: @agreement_benefit.min_age
     fill_in "Name", with: @agreement_benefit.name
-    fill_in "Options", with: @agreement_benefit.options_id
-    fill_in "Plans", with: @agreement_benefit.plans_id
-    fill_in "Proposals", with: @agreement_benefit.proposals_id
+    fill_in "Option", with: @agreement_benefit.option_id
+    fill_in "Plan", with: @agreement_benefit.plan_id
+    fill_in "Proposal", with: @agreement_benefit.proposal_id
     click_on "Create Agreement benefit"
 
     assert_text "Agreement benefit was successfully created"
@@ -33,15 +33,15 @@ class AgreementBenefitsTest < ApplicationSystemTestCase
     visit agreement_benefit_url(@agreement_benefit)
     click_on "Edit this agreement benefit", match: :first
 
-    fill_in "Agreements", with: @agreement_benefit.agreements_id
+    fill_in "Agreement", with: @agreement_benefit.agreement_id
     fill_in "Description", with: @agreement_benefit.description
     fill_in "Insured type", with: @agreement_benefit.insured_type
     fill_in "Max age", with: @agreement_benefit.max_age
     fill_in "Min age", with: @agreement_benefit.min_age
     fill_in "Name", with: @agreement_benefit.name
-    fill_in "Options", with: @agreement_benefit.options_id
-    fill_in "Plans", with: @agreement_benefit.plans_id
-    fill_in "Proposals", with: @agreement_benefit.proposals_id
+    fill_in "Option", with: @agreement_benefit.option_id
+    fill_in "Plan", with: @agreement_benefit.plan_id
+    fill_in "Proposal", with: @agreement_benefit.proposal_id
     click_on "Update Agreement benefit"
 
     assert_text "Agreement benefit was successfully updated"

@@ -1,0 +1,47 @@
+<%= content_tag :h1, "List of Health Decs" %>
+
+
+<div class="text-end mb-3">
+  <%= link_to new_health_dec_path, class: 'btn btn-primary' do %>
+    New Health Dec
+  <% end %>
+</div>
+
+<table class ="table table-striped">
+  <table class="table table-striped table-bordered table-hover">
+    <thead>
+      <tr>
+
+      <th>#</th>
+        <th>Question</th>
+        <th>Active</th>
+        <th>With Details</th>
+        <th>Valid Answer</th>
+        <th>Question Sort</th>
+        <th></th>
+
+      </tr>
+    </thead>
+
+    <tbody>
+      <% @health_decs.each do |health_dec| %>
+        <tr>
+
+        <th scope="row"><%= health_dec.id %></th>
+        <td><%= health_dec.question %></td>
+        <td><%= health_dec.active %></td>
+        <td><%= health_dec.with_details %></td>
+        <td><%= health_dec.valid_answer %></td>
+        <td><%= health_dec.question_sort %></td>
+    
+          <td>
+            <%= link_to 'View', health_dec, class: 'btn btn-secondary btn-sm' %>
+            <%= link_to 'Edit', edit_health_dec_path(health_dec), class: 'btn btn-secondary btn-sm' %>
+            <%= link_to "Delete", health_dec, class: "btn btn-danger btn-sm", method: :delete, data: { "turbo-method": :delete, turbo_confirm: "Are you sure?" } %>
+          </td>
+
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+</div>

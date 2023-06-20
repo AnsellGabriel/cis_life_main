@@ -13,6 +13,15 @@ class AgreementBenefitsController < ApplicationController
   # GET /agreement_benefits/new
   def new
     @agreement_benefit = AgreementBenefit.new
+    # if params[:a] == 'plan'
+    #   @agreement_benefit.plan_id = params[:id]
+    # end
+    # raise "errors"
+    default_value
+  end
+  def default_value 
+    @agreement_benefit.min_age = 18
+    @agreement_benefit.max_age = 65
   end
 
   # GET /agreement_benefits/1/edit
@@ -27,6 +36,7 @@ class AgreementBenefitsController < ApplicationController
       redirect_to @agreement_benefit, notice: "Agreement benefit was successfully created."
     else
       render :new, status: :unprocessable_entity
+      format.turbo_stream { render :form_update, status: :unprocessable_entity }
     end
   end
 
@@ -36,6 +46,7 @@ class AgreementBenefitsController < ApplicationController
       redirect_to @agreement_benefit, notice: "Agreement benefit was successfully updated."
     else
       render :edit, status: :unprocessable_entity
+      format.turbo_stream { render :form_update, status: :unprocessable_entity }
     end
   end
 
@@ -53,6 +64,6 @@ class AgreementBenefitsController < ApplicationController
 
     # Only allow a list of trusted parameters through.
     def agreement_benefit_params
-      params.require(:agreement_benefit).permit(:agreements_id, :plans_id, :proposals_id, :options_id, :name, :description, :min_age, :max_age, :insured_type)
+      params.require(:agreement_benefit).permit(:agreement_id, :plan_id, :proposal_id, :option_id, :name, :description, :min_age, :max_age, :insured_type)
     end
 end
