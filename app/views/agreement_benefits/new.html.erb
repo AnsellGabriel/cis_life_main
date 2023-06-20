@@ -1,7 +1,7 @@
 
-<div class="card">
-  <h5 class="card-header">New agreement benefit</h5>
-  <div class="card-body">
-    <%= render "form", agreement_benefit: @agreement_benefit %>
-  </div>
-</div>
+
+<%= render "remote_modal", title: "New Agreement benefit" do %>
+
+  <%= render "form", agreement_benefit: @agreement_benefit %>
+
+<% end %>

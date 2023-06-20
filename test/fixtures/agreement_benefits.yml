@@ -1,10 +1,10 @@
 # Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
 
 one:
-  agreements: one
-  plans: one
-  proposals: one
-  options: one
+  agreement: one
+  plan: one
+  proposal: one
+  option: one
   name: MyString
   description: MyText
   min_age: 1
@@ -12,10 +12,10 @@ one:
   insured_type: MyString
 
 two:
-  agreements: two
-  plans: two
-  proposals: two
-  options: two
+  agreement: two
+  plan: two
+  proposal: two
+  option: two
   name: MyString
   description: MyText
   min_age: 1
