@@ -1,0 +1,78 @@
+
+<div class="<%= flex_justify_align('between') %>">
+  <div class="gap-3 <%= flex_justify_align('', 'center') %> mb-3">
+    <%= content_tag :h4, "Group Yearly Renewable Term" %>
+  </div>
+</div>
+
+<div class="row row-cols-2 row-cols-md-2 g-4 mb-3">
+  <% @agreements.each do |agreement| %>
+    <%= turbo_frame_tag agreement.id do %>
+      <div class="col">
+        <div class="card">
+          <div class="card-body">
+            <div class="<%= flex_justify_align('between') %>">
+              <div class="<%= flex_justify_align('','center') %> gap-1">
+                <h6 class="card-title mb-0"><%= agreement.moa_no %></h6>
+                  <% last_group_remit = agreement.group_remits.last %>
+                  <% if agreement.anniversary_type == 'multiple' %>
+                    <% agreement.anniversaries.each do |anniv| %>
+                      <% if anniv.group_remits.blank? %>
+                        <% next %>
+                      <% end %>
+
+                      <% if anniv.group_remits.last.status == 'expired' %>
+                          <% last_group_remit = anniv.group_remits.last %>
+                          <% break %>
+                      <% end %>
+
+                      <% if anniv.group_remits.last.status == 'renewal' %>
+                          <% last_group_remit = anniv.group_remits.last %>
+                          <% break %>
+                      <% end %>
+
+                      <% if anniv.group_remits.last.status == 'pending' %>
+                          <% last_group_remit = anniv.group_remits.last %>
+                          <% break %>
+                      <% end %>
+                    <% end %>
+                  <% end %>
+                  
+                    <% gr_presenter = GroupRemitPresenter.new(last_group_remit)%>
+
+                    <% if last_group_remit.present? %>
+                        <span class="<%= gr_presenter.status_badge %>">
+                          <%= gr_presenter.status_text %>
+                        </span>
+
+                      <% if gr_presenter.remaining_days <= 90 && gr_presenter.remaining_days > 0 %>
+                        <span class="<%= badge("#{gr_presenter.countdown_color}") %>">
+                            Expiry : <%= gr_presenter.remaining_days %> days
+                        </span>
+                      <% end %>
+
+                    <% else %>
+                      <span class="<%= badge('info') %>">New</span>
+                    <% end %>
+
+              </div>
+              <%= link_to 'View', coop_agreement_path(agreement), 
+                class: small_btn('outline-warning'),
+                data: {turbo: false}
+              %>
+            </div>
+
+          </div>
+          <div class="card-footer <%= flex_justify_align('between') %>">
+            <small class="text-muted">Created by: <%= agreement.agent.full_name %></small>
+            <small class="text-muted">Updated: <%= time_ago_in_words(agreement.updated_at) %></small>
+          </div>
+        </div>
+      </div>
+    <% end %>
+  <% end %>
+</div>
+
+<% unless @cooperative.agreements.exists? %>
+  <p class="text-danger text-center">No agreements found.</p>
+<% end %>

@@ -1,0 +1,156 @@
+<div id="<%= dom_id(agreement) %>" class="row <%= flex_justify_align('between') %>">
+  <% agreement_presenter = AgreementPresenter.new(agreement) %>
+
+  <div class="<%= flex_justify_align('', 'center', true) %> gap-3">
+
+    <% if agreement.anniversary_type != 'multiple' %>
+
+      <% last_group_remit = agreement.group_remits.includes(batches: :batch_dependents).last %>
+      <% single_gr_presenter = GroupRemitPresenter.new(last_group_remit) %>
+
+      <div class="card">
+        <div class="card-body d-flex flex-column" style="width: 400px">
+          <div class="mb-3">
+
+            <% if agreement.group_remits.present? %>
+                <span class="<%= single_gr_presenter.status_badge %>">
+                  <%= single_gr_presenter.status_text %>
+                </span>
+            <% end %>
+
+          </div>
+
+          <%= render 'agreement_field', 
+            name: 'Proposal', 
+            value: agreement.proposal.proposal_no, 
+            margin: '' 
+          %>
+          
+          <% if agreement_presenter.group_remits_submitted? %>
+            <%= render 'submitted_field', group_remit: last_group_remit %>
+          <% else %>
+
+            <%= render 'agreement_field', 
+              name: 'Min. Participants', 
+              value: agreement.proposal.minimum_participation, 
+              margin: 'mb-2'
+            %>
+            <%= render 'agreement_field', 
+              name: 'Anniversary Date', 
+              value: agreement.anniversaries.first.present? ? date_as_month_day(agreement.anniversaries.first.anniversary_date) : 'Tentative', 
+              margin: ''
+            %>
+            <%= render 'agreement_field', 
+              name: 'Cooperative Service Fee', 
+              value: "#{@coop_sf}%", 
+              margin: ''
+            %>
+
+          <% end %>
+
+          <div class="mt-4 text-center">
+
+            <% if agreement.group_remits.present?  %>
+              <%= link_to 'View Group Remit', agreement_group_remit_path(@agreement, @agreement.group_remits.last), 
+                class: small_btn('warning'), 
+                data: { turbo: false } 
+              %>
+            <% else %>
+
+              <% if @agreement.anniversary_type == 'single' %>
+                <%= button_to "New Group Remit", group_remits_path, 
+                  method: :post, 
+                  params: { 
+                    agreement_id: agreement.id, 
+                    anniversary_id: agreement.anniversaries.first, 
+                    anniv_type: 'single' 
+                  }, 
+                  class: small_btn('success'), 
+                  data: { turbo: false } 
+                %>
+              <% else %>
+                <%= button_to "New Group Remit", group_remits_path, 
+                  method: :post, 
+                  params: { 
+                    agreement_id: agreement.id, 
+                    anniversary_id: nil,
+                    anniv_type: 'none' 
+                  }, 
+                  class: small_btn('success'), 
+                  data: { turbo: false } 
+                %>
+              <% end %>
+
+            <% end %>
+
+          </div>
+        </div>
+      </div>
+    <% else %>
+      <% @agreement.anniversaries.each do |anniv| %>
+        <% if anniv.group_remits.last == nil %>
+          <% next %>
+        <% end %>
+        <% last_group_remit = anniv.group_remits.last %>
+        <% multiple_gr_presenter = GroupRemitPresenter.new(last_group_remit) %>
+        <div class="card">
+          <div class="card-body d-flex flex-column" style="width: 400px">
+            <div class="mb-3 <%= flex_justify_align('between', 'center') %>">
+              <span class="<%= multiple_gr_presenter.status_badge %>">
+                <%= multiple_gr_presenter.status_text %>
+              </span>
+
+              <%= link_to 'History', '#',
+                class: small_btn('outline-warning'),
+                data: { action: "click->toggler#toggle", id: "history_#{dom_id(last_group_remit.anniversary)}" }
+              %>
+            </div>
+
+            <%= render 'agreement_field', 
+              name: 'Proposal', 
+              value: agreement.proposal.proposal_no, 
+              margin: ''
+            %>
+
+            <% if last_group_remit.active? %>
+              <%= render 'submitted_field', group_remit: last_group_remit %>
+            <% else %>
+              <%= render 'unsubmitted_field', agreement: agreement, anniv: anniv %>
+            <% end %>
+
+            <div class="mt-4 text-center">
+              <%= link_to "View Group Remit", agreement_group_remit_path(@agreement, last_group_remit), 
+                class: small_btn('warning'), 
+                data: { turbo: false } 
+              %>
+            </div>
+          </div>
+        </div>
+      <% end %>
+
+      <% @filtered_anniversaries.each do |anniv| %>
+        <div class="card">
+          <div class="card-body d-flex flex-column" style="width: 400px">
+            <%= render 'agreement_field', 
+              name: 'Proposal', 
+              value: agreement.proposal.proposal_no, 
+              margin: '' 
+            %>
+            <%= render 'unsubmitted_field', agreement: agreement, anniv: anniv %>
+            <div class="mt-4 text-center">
+              <%= button_to "New Group Remit", group_remits_path, 
+                method: :post, 
+                params: { 
+                  agreement_id: agreement.id, 
+                  anniversary_id: anniv.id, 
+                  anniv_type: 'multiple' 
+                }, 
+                class: small_btn('success'), 
+                data: { turbo: false } %>
+            </div>
+          </div>
+        </div>
+      <% end %>
+    <% end %>
+  </div>
+</div>

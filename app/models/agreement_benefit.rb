@@ -7,7 +7,7 @@ class AgreementBenefit < ApplicationRecord
 
   belongs_to :agreement
   belongs_to :proposal
-  belongs_to :options
+  # belongs_to :options
 
 
   enum insured_type: { 

@@ -1,0 +1,15 @@
+<%= render 'agreement_field', 
+	name: 'Min. Participants', 
+	value: agreement.proposal.minimum_participation, 
+	margin: 'mb-2'
+%>
+<%= render 'agreement_field', 
+	name: 'Anniversary Date', 
+	value: date_as_month_day(anniv.anniversary_date), 
+	margin: ''
+%>
+<%= render 'agreement_field', 
+	name: 'Cooperative Service Fee', 
+	value: "#{@coop_sf}%", 
+	margin: ''
+%>

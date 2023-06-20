@@ -5,29 +5,29 @@
 #
 #   movies = Movie.create([{ name: "Star Wars" }, { name: "Lord of the Rings" }])
 #   Character.create(name: "Luke", movie: movies.first)
-spreadsheet = Roo::Spreadsheet.open("./db/uploads/benefits.xlsx")
-
-(2..spreadsheet.last_row).each do |row|
-    benefit = Benefit.find_or_initialize_by(name: spreadsheet.cell(row, 'A'))
-    benefit.acronym = spreadsheet.cell(row,'B')
-    puts "#{benefit.name}" if benefit.save!
-end
-
-# spreadsheet = Roo::Spreadsheet.open("./db/uploads/department.xlsx")
+# spreadsheet = Roo::Spreadsheet.open("./db/uploads/benefits.xlsx")
 
 # (2..spreadsheet.last_row).each do |row|
-#     dep = Department.find_or_initialize_by(name: spreadsheet.cell(row, 'A'))
-#     dep.description = spreadsheet.cell(row,'B')
-#     puts "#{dep.name}" if dep.save!
+#     benefit = Benefit.find_or_initialize_by(name: spreadsheet.cell(row, 'A'))
+#     benefit.acronym = spreadsheet.cell(row,'B')
+#     puts "#{benefit.name}" if benefit.save!
 # end
 
+# # spreadsheet = Roo::Spreadsheet.open("./db/uploads/department.xlsx")
 
-spreadsheet = Roo::Spreadsheet.open("./db/uploads/department.xlsx")
-(2..spreadsheet.last_row).each do |row|
-    dep = CoopType.find_or_initialize_by(name: spreadsheet.cell(row, 'C'))
-    dep.description = spreadsheet.cell(row,'D')
-    puts "#{dep.name}" if dep.save!
-end
+# # (2..spreadsheet.last_row).each do |row|
+# #     dep = Department.find_or_initialize_by(name: spreadsheet.cell(row, 'A'))
+# #     dep.description = spreadsheet.cell(row,'B')
+# #     puts "#{dep.name}" if dep.save!
+# # end
+
+
+# spreadsheet = Roo::Spreadsheet.open("./db/uploads/department.xlsx")
+# (2..spreadsheet.last_row).each do |row|
+#     dep = CoopType.find_or_initialize_by(name: spreadsheet.cell(row, 'C'))
+#     dep.description = spreadsheet.cell(row,'D')
+#     puts "#{dep.name}" if dep.save!
+# end
 # Cooperatives
 # cooperatives_spreadsheet = Roo::Spreadsheet.open("/Users/macbookair/Desktop/cis_data/Operating-Coops.xlsx")
 # (5..100).each do |row|
@@ -83,15 +83,15 @@ cooperatives_spreadsheet = Roo::Spreadsheet.open("/Users/macbookair/Desktop/cis_
 (5..100).each do |row|
     spreadsheet = cooperatives_spreadsheet
     Cooperative.find_or_create_by!(
-        registration_number: spreadsheet.cell(row, 'A'), 
+        # registration_number: spreadsheet.cell(row, 'A'), 
         name: spreadsheet.cell(row, 'B'), 
-        region: spreadsheet.cell(row, 'C'), 
-        province: spreadsheet.cell(row, 'D'), 
-        municipality: spreadsheet.cell(row, 'E'), 
-        street: spreadsheet.cell(row, 'F'), 
-        cooperative_type: spreadsheet.cell(row, 'H'),
+        # region: spreadsheet.cell(row, 'C'), 
+        # province: spreadsheet.cell(row, 'D'), 
+        # municipality: spreadsheet.cell(row, 'E'), 
+        # street: spreadsheet.cell(row, 'F'), 
+        # cooperative_type: spreadsheet.cell(row, 'H'),
         email: spreadsheet.cell(row, 'K'), 
-        contact_number: spreadsheet.cell(row, 'J'),
+        # contact_number: spreadsheet.cell(row, 'J'),
     )
 end
 
@@ -112,8 +112,8 @@ Plan.create!(name: 'GYRT-Family Ranking', description: 'Plan 4 description', gyr
 
 
 # Benefit
-Benefit.create!(name: 'Life', description: 'Benefit 1 description', abbreviation: 'LIFE')
-Benefit.create!(name: 'Accidental Death & Dismemberment', description: 'Benefit 2 description', abbreviation: 'ADD')
+Benefit.create!(name: 'Life', description: 'Benefit 1 description', acronym: 'LIFE')
+Benefit.create!(name: 'Accidental Death & Dismemberment', description: 'Benefit 2 description', acronym: 'ADD')
 
 
 # GYRT Basic Single Anniversary  

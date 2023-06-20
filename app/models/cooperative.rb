@@ -8,11 +8,11 @@ class Cooperative < ApplicationRecord
     has_many :agreements
     has_many :group_remits
 
-    belongs_to :coop_type
-    belongs_to :geo_region
-    belongs_to :geo_province
-    belongs_to :geo_municipality
-    belongs_to :geo_barangay
+    # belongs_to :coop_type
+    # belongs_to :geo_region
+    # belongs_to :geo_province
+    # belongs_to :geo_municipality
+    # belongs_to :geo_barangay
 
     def unselected_coop_members(ids)
       coop_members.includes(:member)
