@@ -1,0 +1,16 @@
+
+
+<div class="card">
+  <div class="card-header">
+    <h1>Agreement</h1>
+    <%= link_to "Delete", @agreement, class: "btn btn-danger btn-sm", method: :delete, data: { "turbo-method": :delete, turbo_confirm: "Are you sure?" } %>
+  </div>
+  <div class="card-body">
+    <%= render @agreement %>
+  </div>
+  <div class="card-footer">
+    <%= link_to "Edit", edit_agreement_path(@agreement), class: "btn btn-secondary btn-sm" %> |
+    <%= link_to "Back", agreements_path, class: "btn btn-secondary btn-sm" %>
+  </div>
+
+</div>

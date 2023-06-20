@@ -4,9 +4,13 @@ class CoopUser < ApplicationRecord
     VALID_PH_MOBILE_NUMBER_REGEX = /\A(09|\+639)\d{9}\z/
     validates :mobile_number, presence: true, format: { with: VALID_PH_MOBILE_NUMBER_REGEX, message: "must be a valid Philippine mobile number" }
   
-    belongs_to :cooperative
-    belongs_to :coop_branch
+    belongs_to :cooperative, optional: true
+    belongs_to :coop_branch, optional: true
     has_one :user, as: :userable, dependent: :destroy
     accepts_nested_attributes_for :user
+
+    def get_fullname 
+      last_name + ', ' + first_name + ' ' + middle_name[0] + '.'
+    end
   end
   

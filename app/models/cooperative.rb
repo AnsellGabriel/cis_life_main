@@ -1,18 +1,11 @@
 class Cooperative < ApplicationRecord
-    has_many :coop_users
-    has_many :coop_branches
+  belongs_to :coop_type
+  belongs_to :geo_region
+  belongs_to :geo_province
+  belongs_to :geo_municipality
+  belongs_to :geo_barangay
 
-    has_many :coop_members, dependent: :destroy
-    has_many :members, through: :coop_members
-    
-    has_many :agreements
-    has_many :group_remits
-
-    def unselected_coop_members(ids)
-        self.coop_members.where.not(id: ids).includes(:member).order('members.last_name')
-    end
-
-    def coop_member_details
-        self.coop_members.includes(:member).order('members.last_name')
-    end
+  def get_fulladdress 
+    geo_region.name + ', ' + geo_province.name + ', ' + geo_municipality.name + ', ' + geo_barangay.name + ' ' + street
+  end
 end

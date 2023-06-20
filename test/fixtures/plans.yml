@@ -3,7 +3,17 @@
 one:
   name: MyString
   description: MyText
+  entry_age_from: 1
+  entry_age_to: 1
+  exit_age: 1
+  min_participation: 1
+  acronym: MyString
 
 two:
   name: MyString
   description: MyText
+  entry_age_from: 1
+  entry_age_to: 1
+  exit_age: 1
+  min_participation: 1
+  acronym: MyString

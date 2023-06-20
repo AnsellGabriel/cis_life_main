@@ -1,0 +1,41 @@
+<%= content_tag :h1, "List of Geo Provinces" %>
+
+
+<div class="text-end mb-3">
+  <%= link_to new_geo_province_path, class: 'btn btn-primary' do %>
+    New Geo Province
+  <% end %>
+</div>
+
+<table class ="table table-striped">
+  <table class="table table-striped table-bordered table-hover">
+    <thead>
+      <tr>
+
+      <th>#</th>
+        <th>Name</th>
+        <th></th>
+
+      </tr>
+    </thead>
+
+    <tbody>
+      <% @geo_provinces.each do |geo_province| %>
+        <tr>
+
+        <th scope="row"><%= geo_province.id %></th>
+       <td><strong><%= geo_province.name %></strong>
+        <small><%= geo_province.geo_region %></small>
+        </td>
+    
+          <td>
+            <%= link_to 'View', geo_province, class: 'btn btn-secondary btn-sm' %>
+            <%= link_to 'Edit', edit_geo_province_path(geo_province), class: 'btn btn-secondary btn-sm' %>
+            <%= link_to "Delete", geo_province, class: "btn btn-danger btn-sm", method: :delete, data: { "turbo-method": :delete, turbo_confirm: "Are you sure?" } %>
+          </td>
+
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+</div>

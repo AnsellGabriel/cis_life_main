@@ -30,6 +30,7 @@
               Data Entries
             </a>
             <ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+              <%= link_to "Agreement", agreements_path, class: "dropdown-item" %>
               <%= link_to "Plans", plans_path, class: "dropdown-item" %>
               <%= link_to "Benefits", benefits_path, class: "dropdown-item" %>
               <%#= link_to "Benefits", benefits_path, class: "dropdown-item" %>
@@ -39,14 +40,18 @@
               <%#= link_to "Agents", agents_path, class: "dropdown-item" %>
               <%#= link_to "Plan", plans_path, class: "dropdown-item" %>
               <%#= link_to "Status", statuses_path, class: "dropdown-item" %>
-              <%#= link_to "Cooperative", cooperatives_path, class: "dropdown-item" %>
+              <%= link_to "Cooperative", cooperatives_path, class: "dropdown-item" %>
+              <%= link_to "Cooperative Type", coop_types_path, class: "dropdown-item" %>
               <%#= link_to "Coop Branch", coop_branches_path, class: "dropdown-item" %>
               <li><hr class="dropdown-divider"></li>
-              <%#= link_to "Region", geo_regions_path, class: "dropdown-item" %>
-              <%#= link_to "Province", geo_provinces_path, class: "dropdown-item" %>
-              <%#= link_to "Municipality", geo_municipalities_path, class: "dropdown-item" %>
-              <%#= link_to "Barangay", geo_barangays_path, class: "dropdown-item" %>
+              <%= link_to "Region", geo_regions_path, class: "dropdown-item" %>
+              <%= link_to "Province", geo_provinces_path, class: "dropdown-item" %>
+              <%= link_to "Municipality", geo_municipalities_path, class: "dropdown-item" %>
+              <%= link_to "Barangay", geo_barangays_path, class: "dropdown-item" %>
               <li><hr class="dropdown-divider"></li>
+              <%= link_to "Employees", employees_path, class: "dropdown-item" %>
+              <%= link_to "Cooperative User", coop_users_path, class: "dropdown-item" %>
+              <%= link_to "Agents", agents_path, class: "dropdown-item" %>
               <%#= link_to "Branch", branches_path, class: "dropdown-item" %>
               <%#= link_to "Authority Level", authority_levels_path, class: "dropdown-item" %>
               <%#= link_to "Claim routes", claim_routes_path, class: "dropdown-item" %>
@@ -54,7 +59,7 @@
           </li>
           <li class="nav-item dropdown">
             <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-              <i class="bi bi-person-circle"></i> Hi, <%#= current_user.user_name %>
+              <i class="bi bi-person-circle"></i> <small> Hi, <%= current_user.userable.get_fullname  %> </small>
             </a>
             <ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
               <li class="nav-item"> <%= link_to "Edit Account", edit_user_registration_path, class: "nav-link" %></li>

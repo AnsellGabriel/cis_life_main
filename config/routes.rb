@@ -1,11 +1,19 @@
 Rails.application.routes.draw do
+  resources :agreement_benefits
+  resources :plans
+  resources :agreements
+  resources :cooperatives
+  resources :coop_types
+  resources :geo_barangays
+  resources :geo_municipalities
+  resources :geo_provinces
+  resources :geo_regions
   resources :agent_groups
   resources :departments
   resources :agents
   resources :coop_users
   resources :employees
   resources :benefits
-  resources :plans
   get 'pages/home'
   # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
 

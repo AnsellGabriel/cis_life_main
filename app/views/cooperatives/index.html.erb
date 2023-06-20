@@ -13,6 +13,7 @@
       <tr>
 
       <th>#</th>
+        <th>Details</th>
         <th></th>
 
       </tr>
@@ -23,6 +24,9 @@
         <tr>
 
         <th scope="row"><%= cooperative.id %></th>
+        <td><strong><%= cooperative.name %></strong> <small class="text-primary"><%= cooperative.acronym %></small> <br>
+        <small> <%= cooperative.get_fulladdress %> </small> <br>
+        <small><%= cooperative.contact_no %> | <%= cooperative.email %> </small></td>
     
           <td>
             <%= link_to 'View', cooperative, class: 'btn btn-secondary btn-sm' %>

@@ -1,0 +1,13 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  geo_region: one
+  geo_province: one
+  geo_municipality: one
+  psgc_code: MyString
+
+two:
+  geo_region: two
+  geo_province: two
+  geo_municipality: two
+  psgc_code: MyString

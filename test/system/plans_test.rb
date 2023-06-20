@@ -14,7 +14,12 @@ class PlansTest < ApplicationSystemTestCase
     visit plans_url
     click_on "New plan"
 
+    fill_in "Acronym", with: @plan.acronym
     fill_in "Description", with: @plan.description
+    fill_in "Entry age from", with: @plan.entry_age_from
+    fill_in "Entry age to", with: @plan.entry_age_to
+    fill_in "Exit age", with: @plan.exit_age
+    fill_in "Min participation", with: @plan.min_participation
     fill_in "Name", with: @plan.name
     click_on "Create Plan"
 
@@ -26,7 +31,12 @@ class PlansTest < ApplicationSystemTestCase
     visit plan_url(@plan)
     click_on "Edit this plan", match: :first
 
+    fill_in "Acronym", with: @plan.acronym
     fill_in "Description", with: @plan.description
+    fill_in "Entry age from", with: @plan.entry_age_from
+    fill_in "Entry age to", with: @plan.entry_age_to
+    fill_in "Exit age", with: @plan.exit_age
+    fill_in "Min participation", with: @plan.min_participation
     fill_in "Name", with: @plan.name
     click_on "Update Plan"
 

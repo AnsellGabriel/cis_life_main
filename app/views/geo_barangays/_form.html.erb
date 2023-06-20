@@ -1,0 +1,18 @@
+
+<%= simple_form_for(@geo_barangay) do |f| %>
+  <%= f.error_notification %>
+  <%= f.error_notification message: f.object.errors[:base].to_sentence if f.object.errors[:base].present? %>
+
+  <div class="form-inputs">
+   <%= f.input :name %>
+    <%= f.association :geo_region %>
+    <%= f.association :geo_province %>
+    <%= f.association :geo_municipality %>
+    <%= f.input :psgc_code %>
+  </div>
+  <br>
+  <div class="form-actions text-end">
+    <%= link_to "Back", geo_barangays_path, class: "btn btn-secondary" %>
+    <%= f.button :submit, class: "btn btn-success" %>
+  </div>
+<% end %>

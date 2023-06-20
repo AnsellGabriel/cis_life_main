@@ -7,8 +7,8 @@ class CreateCoopUsers < ActiveRecord::Migration[7.0]
       t.date :birthdate
       t.string :mobile_number
       t.string :designation
-      t.references :coop_branch, null: false, foreign_key: true
-      t.references :cooperative, null: false, foreign_key: true
+      t.references :coop_branch#, null: false, foreign_key: true
+      t.references :cooperative#, null: false, foreign_key: true
       
       t.timestamps
     end
