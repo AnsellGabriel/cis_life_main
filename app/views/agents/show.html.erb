@@ -1,16 +1,9 @@
 
+<%= render @agent %>
 
-<div class="card">
-  <div class="card-header">
-    <h1>Agent</h1>
-    <%= link_to "Delete", @agent, class: "btn btn-danger btn-sm", method: :delete, data: { "turbo-method": :delete, turbo_confirm: "Are you sure?" } %>
-  </div>
-  <div class="card-body">
-    <%= render @agent %>
-  </div>
-  <div class="card-footer">
-    <%= link_to "Edit", edit_agent_path(@agent), class: "btn btn-secondary btn-sm" %> |
-    <%= link_to "Back", agents_path, class: "btn btn-secondary btn-sm" %>
-  </div>
+<div>
+  <%= link_to "Edit", edit_agent_path(@agent), class: 'btn btn-primary' %> |
+  <%= link_to "Back", agents_path, class: 'btn btn-primary' %>
 
+  <%= button_to "Delete", @agent, method: :delete, class: 'btn btn-danger' %>
 </div>

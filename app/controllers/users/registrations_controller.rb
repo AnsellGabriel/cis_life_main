@@ -10,7 +10,8 @@ class Users::RegistrationsController < Devise::RegistrationsController
     # new instance of the "User" class associated with the "Agent" instance.
     @agent.build_user
 
-    @coop_user = CoopUser.new(last_name: FFaker::Name.last_name, first_name: FFaker::Name.first_name, middle_name: FFaker::Name.last_name, mobile_number: FFaker::PhoneNumber, designation: FFaker::String)
+    @coop_user = CoopUser.new()
+    # last_name: FFaker::Name.last_name, first_name: FFaker::Name.first_name, middle_name: FFaker::Name.last_name, mobile_number: FFaker::PhoneNumber, designation: FFaker::String
     # new instance of the "User" class associated with the "Coop" instance.
     @coop_user.build_user
 

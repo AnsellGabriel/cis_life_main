@@ -1,16 +1,7 @@
 
-
-<div class="card">
-  <div class="card-header">
-    <h1>Coop branch</h1>
-    <%= link_to "Delete", @coop_branch, class: "btn btn-danger btn-sm", method: :delete, data: { "turbo-method": :delete, turbo_confirm: "Are you sure?" } %>
-  </div>
-  <div class="card-body">
-    <%= render @coop_branch %>
-  </div>
-  <div class="card-footer">
-    <%= link_to "Edit", edit_coop_branch_path(@coop_branch), class: "btn btn-secondary btn-sm" %> |
-    <%= link_to "Back", coop_branches_path, class: "btn btn-secondary btn-sm" %>
-  </div>
-
+<div>
+  <%= link_to "Back", :back, class: 'btn btn-primary' %>
 </div>
+
+<%= render @coop_branch %>
+

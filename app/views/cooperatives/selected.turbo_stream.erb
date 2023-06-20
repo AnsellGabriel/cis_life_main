@@ -1,0 +1,5 @@
+<%= turbo_stream.update @target do %>
+    <%= @coop_branches.each do |cb| %>
+        <%= content_tag :option, cb.name, value: cb.id %>
+    <% end %>
+<% end %>

@@ -2,7 +2,6 @@ class CoopBranchesController < ApplicationController
   before_action :authenticate_user!
   before_action :check_userable_type
   before_action :set_coop_branch, only: %i[ show edit update destroy ]
-  before_action :set_cooperative, only: %i[ index new create show ]
 
   # GET /coop_branches or /coop_branches.json
   def index
@@ -61,9 +60,6 @@ class CoopBranchesController < ApplicationController
 
   private
     # Use callbacks to share common setup or constraints between actions.
-    def set_cooperative
-      @cooperative = current_user.userable.cooperative
-    end
 
     def set_coop_branch
       set_cooperative

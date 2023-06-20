@@ -1,0 +1,59 @@
+<%= content_tag :h1, "List of Batch Health Decs" %>
+
+
+<div class="text-end mb-3">
+  <%= link_to new_batch_health_dec_path, class: 'btn btn-primary' do %>
+    New Batch Health Dec
+  <% end %>
+</div>
+
+<div class="table-responsive">
+  <table class="table table-striped table-bordered table-hover">
+    <thead>
+      <tr>
+
+      <th>ID</th>
+        <th>Ans Q1</th>
+        <th>Ans Q2</th>
+        <th>Ans Q3</th>
+        <th>Ans Q3 Desc</th>
+        <th>Ans Q4</th>
+        <th>Ans Q4 Desc</th>
+        <th>Ans Q5 A</th>
+        <th>Ans Q5 A Desc</th>
+        <th>Ans Q5 B</th>
+        <th>Ans Q5 B</th>
+        <th>Batch</th>
+        <th></th>
+
+      </tr>
+    </thead>
+
+    <tbody>
+      <% @batch_health_decs.each do |batch_health_dec| %>
+        <tr>
+
+        <td><%= batch_health_dec.id %></td>
+        <td><%= batch_health_dec.ans_q1 %></td>
+        <td><%= batch_health_dec.ans_q2 %></td>
+        <td><%= batch_health_dec.ans_q3 %></td>
+        <td><%= batch_health_dec.ans_q3_desc %></td>
+        <td><%= batch_health_dec.ans_q4 %></td>
+        <td><%= batch_health_dec.ans_q4_desc %></td>
+        <td><%= batch_health_dec.ans_q5_a %></td>
+        <td><%= batch_health_dec.ans_q5_a_desc %></td>
+        <td><%= batch_health_dec.ans_q5_b %></td>
+        <td><%= batch_health_dec.ans_q5_b %></td>
+        <td><%= batch_health_dec.batch %></td>
+    
+          <td>
+            <%= link_to 'View', batch_health_dec, class: 'btn' %>
+            <%= link_to 'Edit', edit_batch_health_dec_path(batch_health_dec), class: 'btn' %>
+            <%= link_to 'Delete', batch_health_dec, method: :delete, data: { confirm: 'Are you sure?' }, class: 'btn' %>
+          </td>
+
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+</div>

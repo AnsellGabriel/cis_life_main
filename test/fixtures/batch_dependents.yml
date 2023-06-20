@@ -1,0 +1,13 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  batch: one
+  coop_dependent: one
+  premium: 1.5
+  agreement_benefit: one
+
+two:
+  batch: two
+  coop_dependent: two
+  premium: 1.5
+  agreement_benefit: two

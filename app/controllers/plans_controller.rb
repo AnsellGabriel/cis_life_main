@@ -1,58 +1,21 @@
-class PlansController < ApplicationController
-  before_action :set_plan, only: %i[ show edit update destroy ]
-
-  # GET /plans
-  def index
-    @plans = Plan.all
-  end
-
-  # GET /plans/1
-  def show
-  end
-
-  # GET /plans/new
-  def new
-    @plan = Plan.new
-  end
-
-  # GET /plans/1/edit
-  def edit
-  end
-
-  # POST /plans
-  def create
-    @plan = Plan.new(plan_params)
-
-    if @plan.save
-      redirect_to @plan, notice: "Plan was successfully created."
-    else
-      render :new, status: :unprocessable_entity
-    end
-  end
-
-  # PATCH/PUT /plans/1
-  def update
-    if @plan.update(plan_params)
-      redirect_to @plan, notice: "Plan was successfully updated."
-    else
-      render :edit, status: :unprocessable_entity
-    end
-  end
-
-  # DELETE /plans/1
-  def destroy
-    @plan.destroy
-    redirect_to plans_url, notice: "Plan was successfully destroyed."
-  end
+class PlansController < InheritedResources::Base
+  before_action :authenticate_user!
+  before_action :check_userable_type
+  before_action :set_cooperative, only: %i[index new create show]
 
   private
-    # Use callbacks to share common setup or constraints between actions.
-    def set_plan
-      @plan = Plan.find(params[:id])
+
+    def plan_params
+      params.require(:plan).permit(:name, :description, :acronym, :gyrt_type)
     end
 
-    # Only allow a list of trusted parameters through.
-    def plan_params
-      params.require(:plan).permit(:name, :description, :entry_age_from, :entry_age_to, :exit_age, :min_participation, :acronym)
+    def set_cooperative
+      @cooperative = current_user.userable.cooperative
+    end
+
+    def check_userable_type
+      unless current_user.userable_type == 'CoopUser'
+        render file: "#{Rails.root}/public/404.html", status: :not_found
+      end
     end
 end
