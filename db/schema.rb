@@ -9,7 +9,34 @@
 # migrations use external dependencies or application code.
 #
 # It's strongly recommended that you check this file into your version control system.
-ActiveRecord::Schema[7.0].define(version: 2023_06_20_061347) do
+
+ActiveRecord::Schema[7.0].define(version: 2023_06_20_082823) do
+  create_table "active_admin_comments", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+    t.string "namespace"
+    t.text "body"
+    t.string "resource_type"
+    t.bigint "resource_id"
+    t.string "author_type"
+    t.bigint "author_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["author_type", "author_id"], name: "index_active_admin_comments_on_author"
+    t.index ["namespace"], name: "index_active_admin_comments_on_namespace"
+    t.index ["resource_type", "resource_id"], name: "index_active_admin_comments_on_resource"
+  end
+
+  create_table "admin_users", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+    t.string "email", default: "", null: false
+    t.string "encrypted_password", default: "", null: false
+    t.string "reset_password_token"
+    t.datetime "reset_password_sent_at"
+    t.datetime "remember_created_at"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["email"], name: "index_admin_users_on_email", unique: true
+    t.index ["reset_password_token"], name: "index_admin_users_on_reset_password_token", unique: true
+  end
+
   create_table "agent_groups", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.string "name"
     t.text "description"
@@ -30,20 +57,17 @@ ActiveRecord::Schema[7.0].define(version: 2023_06_20_061347) do
   end
 
   create_table "agreement_benefits", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
-
     t.bigint "agreement_id"
     t.bigint "plan_id"
     t.bigint "proposal_id"
     t.bigint "option_id"
     t.string "name"
     t.text "description"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
     t.integer "min_age"
     t.integer "max_age"
-    t.bigint "agreement_id", null: false
-    t.bigint "proposal_id", null: false
     t.integer "insured_type"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
     t.index ["agreement_id"], name: "index_agreement_benefits_on_agreement_id"
     t.index ["option_id"], name: "index_agreement_benefits_on_option_id"
     t.index ["plan_id"], name: "index_agreement_benefits_on_plan_id"
@@ -51,18 +75,24 @@ ActiveRecord::Schema[7.0].define(version: 2023_06_20_061347) do
   end
 
   create_table "agreements", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+    t.bigint "plan_id"
+    t.bigint "cooperative_id"
+    t.bigint "agent_id"
     t.string "moa_no"
-    t.text "description"
+    t.integer "contestability"
+    t.decimal "nel", precision: 12, scale: 2
+    t.decimal "nml", precision: 12, scale: 2
+    t.string "anniversary_type"
+    t.boolean "transferred"
+    t.date "transferred_date"
+    t.string "previous_provider"
+    t.string "comm_type"
+    t.boolean "claims_fund"
+    t.integer "entry_age_from"
+    t.integer "entry_age_to"
+    t.integer "exit_age"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.bigint "plan_id", null: false
-    t.bigint "cooperative_id", null: false
-    t.string "anniversary_type"
-    t.date "notarized_date"
-    t.date "moa_signed_date"
-    t.date "contestability_period"
-    t.string "nel"
-    t.bigint "agent_id", null: false
     t.bigint "proposal_id", null: false
     t.index ["agent_id"], name: "index_agreements_on_agent_id"
     t.index ["cooperative_id"], name: "index_agreements_on_cooperative_id"
@@ -186,6 +216,13 @@ ActiveRecord::Schema[7.0].define(version: 2023_06_20_061347) do
     t.index ["member_id"], name: "index_coop_members_on_member_id"
   end
 
+  create_table "coop_types", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+    t.string "name"
+    t.text "description"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
   create_table "coop_users", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.string "last_name"
     t.string "first_name"
@@ -193,35 +230,31 @@ ActiveRecord::Schema[7.0].define(version: 2023_06_20_061347) do
     t.date "birthdate"
     t.string "mobile_number"
     t.string "designation"
-    t.bigint "coop_branch_id"
-    t.bigint "cooperative_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.bigint "cooperative_id", null: false
+    t.bigint "coop_branch_id", null: false
     t.index ["coop_branch_id"], name: "index_coop_users_on_coop_branch_id"
     t.index ["cooperative_id"], name: "index_coop_users_on_cooperative_id"
   end
 
   create_table "cooperatives", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
-    t.bigint "coop_type_id"
-    t.bigint "geo_region_id"
-    t.bigint "geo_province_id"
-    t.bigint "geo_municipality_id"
-    t.bigint "geo_barangay_id"
-    t.string "street"
     t.string "name"
-    t.text "description"
-    t.string "registration_no"
-    t.string "tin"
-    t.string "acronym"
-    t.string "contact_no"
-    t.string "email"
+    t.string "region"
+    t.string "province"
+    t.string "municipality"
+    t.string "barangay"
+    t.string "contact_details"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["coop_type_id"], name: "index_cooperatives_on_coop_type_id"
-    t.index ["geo_barangay_id"], name: "index_cooperatives_on_geo_barangay_id"
-    t.index ["geo_municipality_id"], name: "index_cooperatives_on_geo_municipality_id"
-    t.index ["geo_province_id"], name: "index_cooperatives_on_geo_province_id"
-    t.index ["geo_region_id"], name: "index_cooperatives_on_geo_region_id"
+    t.text "description"
+    t.string "registration_number"
+    t.integer "tin_number"
+    t.string "cooperative_type"
+    t.string "acronym"
+    t.string "street"
+    t.string "email"
+    t.string "contact_number"
   end
 
   create_table "denied_members", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
@@ -249,9 +282,9 @@ ActiveRecord::Schema[7.0].define(version: 2023_06_20_061347) do
     t.string "employee_number"
     t.string "mobile_number"
     t.string "designation"
-    t.bigint "department_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.bigint "department_id", null: false
     t.index ["department_id"], name: "index_employees_on_department_id"
   end
 
@@ -290,8 +323,6 @@ ActiveRecord::Schema[7.0].define(version: 2023_06_20_061347) do
     t.string "name"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.bigint "department_id", null: false
-    t.index ["department_id"], name: "index_employees_on_department_id"
   end
 
   create_table "group_remits", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
@@ -311,6 +342,16 @@ ActiveRecord::Schema[7.0].define(version: 2023_06_20_061347) do
     t.decimal "agent_commission", precision: 10, scale: 2
     t.index ["agreement_id"], name: "index_group_remits_on_agreement_id"
     t.index ["anniversary_id"], name: "index_group_remits_on_anniversary_id"
+  end
+
+  create_table "health_decs", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+    t.text "question"
+    t.boolean "active"
+    t.boolean "with_details"
+    t.boolean "valid_answer"
+    t.integer "question_sort"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
   end
 
   create_table "member_dependents", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
@@ -354,16 +395,6 @@ ActiveRecord::Schema[7.0].define(version: 2023_06_20_061347) do
     t.string "municipality"
     t.string "barangay"
     t.string "street"
-  end
-
-  create_table "health_decs", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
-    t.text "question"
-    t.boolean "active"
-    t.boolean "with_details"
-    t.boolean "valid_answer"
-    t.integer "question_sort"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
   end
 
   create_table "plans", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
@@ -420,11 +451,6 @@ ActiveRecord::Schema[7.0].define(version: 2023_06_20_061347) do
   end
 
   add_foreign_key "agents", "agent_groups"
-  add_foreign_key "agreement_benefits", "agreements"
-  add_foreign_key "agreement_benefits", "proposals"
-  add_foreign_key "agreements", "agents"
-  add_foreign_key "agreements", "cooperatives"
-  add_foreign_key "agreements", "plans"
   add_foreign_key "agreements", "proposals"
   add_foreign_key "anniversaries", "agreements"
   add_foreign_key "batch_beneficiaries", "batches"
