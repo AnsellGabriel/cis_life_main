@@ -1,9 +1,26 @@
-
 <%= simple_form_for(@cooperative) do |f| %>
   <%= f.error_notification %>
   <%= f.error_notification message: f.object.errors[:base].to_sentence if f.object.errors[:base].present? %>
-
   <div class="form-inputs">
+    <div class="row">
+      <%= f.input :name, wrapper_html: { class: "col col-md-8" } %>
+      <%= f.input :acronym, wrapper_html: { class: "col col-md-4" } %>
+    </div>
+    <%= f.input :description %>
+    <div class="row">
+      <%= f.association :geo_region, label: "Region", wrapper_html: { class: "col col-md-3" } %>
+      <%= f.association :geo_province, label: "Province", wrapper_html: { class: "col col-md-3" } %>
+      <%= f.association :geo_municipality, label: "Municipality", wrapper_html: { class: "col col-md-3" } %>
+      <%= f.association :geo_barangay, label: "Barangay", wrapper_html: { class: "col col-md-3" } %>
+    </div>
+    <div class="row">
+      <%= f.input :street, wrapper_html: { class: "col col-md-6" } %>
+      <%= f.association :coop_type, wrapper_html: { class: "col col-md-6" } %>
+      <%= f.input :registration_no, wrapper_html: { class: "col col-md-6" } %>
+      <%= f.input :tin, wrapper_html: { class: "col col-md-6" } %>
+      <%= f.input :contact_no, wrapper_html: { class: "col col-md-6"} %>
+      <%= f.input :email, wrapper_html: { class: "col col-md-6"} %>
+    </div>
   </div>
   <br>
   <div class="form-actions text-end">

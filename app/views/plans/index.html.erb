@@ -24,8 +24,10 @@
         <tr>
 
         <th scope="row"><%= plan.id %></th>
-        <td><strong><%= plan.name %></strong> <small class="text-primary"><%= plan.acronym %></small> <br>
-        <small><%= plan.description %></small></td>
+        <td>
+            <strong><%= plan.name %></strong> <small class="text-primary"><%= plan.acronym %></small> <br>
+              <small><%= plan.description %></small>
+          </td>
     
           <td>
             <%= link_to 'View', plan, class: 'btn btn-secondary btn-sm' %>

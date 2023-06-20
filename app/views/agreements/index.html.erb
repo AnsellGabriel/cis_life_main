@@ -1,0 +1,69 @@
+<%= content_tag :h1, "List of Agreements" %>
+
+
+<div class="text-end mb-3">
+  <%= link_to new_agreement_path, class: 'btn btn-primary' do %>
+    New Agreement
+  <% end %>
+</div>
+
+<table class ="table table-striped">
+  <table class="table table-striped table-bordered table-hover">
+    <thead>
+      <tr>
+
+      <th>#</th>
+        <th>Plan</th>
+        <th>Cooperative</th>
+        <th>Agent</th>
+        <th>Moa No</th>
+        <th>Contestability</th>
+        <th>Nel</th>
+        <th>Nml</th>
+        <th>Anniversary Type</th>
+        <th>Transferred</th>
+        <th>Transferred Date</th>
+        <th>Previous Provider</th>
+        <th>Comm Type</th>
+        <th>Claims Fund</th>
+        <th>Entry Age From</th>
+        <th>Entry Age To</th>
+        <th>Exit Age</th>
+        <th></th>
+
+      </tr>
+    </thead>
+
+    <tbody>
+      <% @agreements.each do |agreement| %>
+        <tr>
+
+        <th scope="row"><%= agreement.id %></th>
+        <td><%= agreement.plan %></td>
+        <td><%= agreement.cooperative %></td>
+        <td><%= agreement.agent %></td>
+        <td><%= agreement.moa_no %></td>
+        <td><%= agreement.contestability %></td>
+        <td><%= agreement.nel %></td>
+        <td><%= agreement.nml %></td>
+        <td><%= agreement.anniversary_type %></td>
+        <td><%= agreement.transferred %></td>
+        <td><%= agreement.transferred_date %></td>
+        <td><%= agreement.previous_provider %></td>
+        <td><%= agreement.comm_type %></td>
+        <td><%= agreement.claims_fund %></td>
+        <td><%= agreement.entry_age_from %></td>
+        <td><%= agreement.entry_age_to %></td>
+        <td><%= agreement.exit_age %></td>
+    
+          <td>
+            <%= link_to 'View', agreement, class: 'btn btn-secondary btn-sm' %>
+            <%= link_to 'Edit', edit_agreement_path(agreement), class: 'btn btn-secondary btn-sm' %>
+            <%= link_to "Delete", agreement, class: "btn btn-danger btn-sm", method: :delete, data: { "turbo-method": :delete, turbo_confirm: "Are you sure?" } %>
+          </td>
+
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+</div>

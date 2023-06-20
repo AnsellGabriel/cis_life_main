@@ -1,0 +1,55 @@
+<%= content_tag :h1, "List of Agreement Benefits" %>
+
+
+<div class="text-end mb-3">
+  <%= link_to new_agreement_benefit_path, class: 'btn btn-primary' do %>
+    New Agreement Benefit
+  <% end %>
+</div>
+
+<table class ="table table-striped">
+  <table class="table table-striped table-bordered table-hover">
+    <thead>
+      <tr>
+
+      <th>#</th>
+        <th>Agreements</th>
+        <th>Plans</th>
+        <th>Proposals</th>
+        <th>Options</th>
+        <th>Name</th>
+        <th>Description</th>
+        <th>Min Age</th>
+        <th>Max Age</th>
+        <th>Insured Type</th>
+        <th></th>
+
+      </tr>
+    </thead>
+
+    <tbody>
+      <% @agreement_benefits.each do |agreement_benefit| %>
+        <tr>
+
+        <th scope="row"><%= agreement_benefit.id %></th>
+        <td><%= agreement_benefit.agreements %></td>
+        <td><%= agreement_benefit.plans %></td>
+        <td><%= agreement_benefit.proposals %></td>
+        <td><%= agreement_benefit.options %></td>
+        <td><%= agreement_benefit.name %></td>
+        <td><%= agreement_benefit.description %></td>
+        <td><%= agreement_benefit.min_age %></td>
+        <td><%= agreement_benefit.max_age %></td>
+        <td><%= agreement_benefit.insured_type %></td>
+    
+          <td>
+            <%= link_to 'View', agreement_benefit, class: 'btn btn-secondary btn-sm' %>
+            <%= link_to 'Edit', edit_agreement_benefit_path(agreement_benefit), class: 'btn btn-secondary btn-sm' %>
+            <%= link_to "Delete", agreement_benefit, class: "btn btn-danger btn-sm", method: :delete, data: { "turbo-method": :delete, turbo_confirm: "Are you sure?" } %>
+          </td>
+
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+</div>

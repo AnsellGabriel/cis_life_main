@@ -1,0 +1,37 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  plan: one
+  cooperative: one
+  agent: one
+  moa_no: MyString
+  contestability: 1
+  nel: 9.99
+  nml: 9.99
+  anniversary_type: MyString
+  transferred: false
+  transferred_date: 2023-06-19
+  previous_provider: MyString
+  comm_type: MyString
+  claims_fund: false
+  entry_age_from: 1
+  entry_age_to: 1
+  exit_age: 1
+
+two:
+  plan: two
+  cooperative: two
+  agent: two
+  moa_no: MyString
+  contestability: 1
+  nel: 9.99
+  nml: 9.99
+  anniversary_type: MyString
+  transferred: false
+  transferred_date: 2023-06-19
+  previous_provider: MyString
+  comm_type: MyString
+  claims_fund: false
+  entry_age_from: 1
+  entry_age_to: 1
+  exit_age: 1

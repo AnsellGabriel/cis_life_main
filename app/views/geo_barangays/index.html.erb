@@ -1,0 +1,41 @@
+<%= content_tag :h1, "List of Geo Barangays" %>
+
+
+<div class="text-end mb-3">
+  <%= link_to new_geo_barangay_path, class: 'btn btn-primary' do %>
+    New Geo Barangay
+  <% end %>
+</div>
+
+<table class ="table table-striped">
+  <table class="table table-striped table-bordered table-hover">
+    <thead>
+      <tr>
+
+      <th>#</th>
+        <th>Details</th>
+        <th></th>
+ 
+      </tr>
+    </thead>
+
+    <tbody>
+      <% @geo_barangays.each do |geo_barangay| %>
+        <tr>
+
+        <th scope="row"><%= geo_barangay.id %></th>
+        <td><p><%= geo_barangay.name %> <small class="text-primary"><%= geo_barangay.psgc_code %></small></p> 
+        <small><%= geo_barangay.geo_region %>, <%= geo_barangay.geo_province %> <%= geo_barangay.geo_municipality %></small>
+        </td>
+    
+          <td>
+            <%= link_to 'View', geo_barangay, class: 'btn btn-secondary btn-sm' %>
+            <%= link_to 'Edit', edit_geo_barangay_path(geo_barangay), class: 'btn btn-secondary btn-sm' %>
+            <%= link_to "Delete", geo_barangay, class: "btn btn-danger btn-sm", method: :delete, data: { "turbo-method": :delete, turbo_confirm: "Are you sure?" } %>
+          </td>
+
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+</div>

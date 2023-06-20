@@ -6,8 +6,8 @@ class Agent < ApplicationRecord
   
     accepts_nested_attributes_for :user
   
-    def full_name
-      "#{first_name} #{last_name}"
+    def get_fullname 
+      last_name + ', ' + first_name + ' ' + middle_name[0] + '.'
     end
   end
   

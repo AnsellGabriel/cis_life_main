@@ -1,2 +1,20 @@
 <div id="<%= dom_id cooperative %>">
+  <h3>
+    <%= cooperative.name %> <small class="text-primary"> <%= cooperative.acronym %>  </small>
+  </h3>
+  <p>
+    <%= cooperative.get_fulladdress %>
+  </p>
+  <p>
+    <%= cooperative.contact_no %> |  <%= cooperative.email %>
+  </p>
+  <p>
+    Type: <%= cooperative.coop_type %> |
+    Reg. no. :<%= cooperative.registration_no %> |
+    TIN <%= cooperative.tin %>
+  </p>
+  <p>
+    <small><%= cooperative.description %></small>
+  </p>
+
 </div>

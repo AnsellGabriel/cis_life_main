@@ -1,12 +1,12 @@
 class PlansController < ApplicationController
   before_action :set_plan, only: %i[ show edit update destroy ]
 
-  # GET /plans or /plans.json
+  # GET /plans
   def index
     @plans = Plan.all
   end
 
-  # GET /plans/1 or /plans/1.json
+  # GET /plans/1
   def show
   end
 
@@ -19,42 +19,30 @@ class PlansController < ApplicationController
   def edit
   end
 
-  # POST /plans or /plans.json
+  # POST /plans
   def create
     @plan = Plan.new(plan_params)
 
-    respond_to do |format|
-      if @plan.save
-        format.html { redirect_to plan_url(@plan), notice: "Plan was successfully created." }
-        format.json { render :show, status: :created, location: @plan }
-      else
-        format.html { render :new, status: :unprocessable_entity }
-        format.json { render json: @plan.errors, status: :unprocessable_entity }
-      end
+    if @plan.save
+      redirect_to @plan, notice: "Plan was successfully created."
+    else
+      render :new, status: :unprocessable_entity
     end
   end
 
-  # PATCH/PUT /plans/1 or /plans/1.json
+  # PATCH/PUT /plans/1
   def update
-    respond_to do |format|
-      if @plan.update(plan_params)
-        format.html { redirect_to plan_url(@plan), notice: "Plan was successfully updated." }
-        format.json { render :show, status: :ok, location: @plan }
-      else
-        format.html { render :edit, status: :unprocessable_entity }
-        format.json { render json: @plan.errors, status: :unprocessable_entity }
-      end
+    if @plan.update(plan_params)
+      redirect_to @plan, notice: "Plan was successfully updated."
+    else
+      render :edit, status: :unprocessable_entity
     end
   end
 
-  # DELETE /plans/1 or /plans/1.json
+  # DELETE /plans/1
   def destroy
     @plan.destroy
-
-    respond_to do |format|
-      format.html { redirect_to plans_url, notice: "Plan was successfully destroyed." }
-      format.json { head :no_content }
-    end
+    redirect_to plans_url, notice: "Plan was successfully destroyed."
   end
 
   private
@@ -65,6 +53,6 @@ class PlansController < ApplicationController
 
     # Only allow a list of trusted parameters through.
     def plan_params
-      params.require(:plan).permit(:name, :description, :acronym)
+      params.require(:plan).permit(:name, :description, :entry_age_from, :entry_age_to, :exit_age, :min_participation, :acronym)
     end
 end

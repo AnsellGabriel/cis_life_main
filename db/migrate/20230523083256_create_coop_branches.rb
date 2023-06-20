@@ -9,7 +9,7 @@ class CreateCoopBranches < ActiveRecord::Migration[7.0]
       t.string :barangay
       t.string :street
       t.string :contact_details
-      t.references :cooperative, null: false, foreign_key: true
+      t.references :cooperative#, null: false, foreign_key: true
 
       t.timestamps
     end

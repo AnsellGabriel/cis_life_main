@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title>CisLifeMain</title>
+    <title>CIS - Core Insurance System</title>
     <meta name="viewport" content="width=device-width,initial-scale=1">
     <%= csrf_meta_tags %>
     <%= csp_meta_tag %>
@@ -19,8 +19,10 @@
         <div id="flash">
           <%= render "layouts/partials/notification" %>
         </div>
-        <%= yield %>    
       </div>
+    </div>
+    <div class="container">
+      <%= yield %>
     </div>
   </body>
 </html>
