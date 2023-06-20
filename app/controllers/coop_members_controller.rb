@@ -10,10 +10,10 @@ class CoopMembersController < InheritedResources::Base
     # get all members data of the cooperative and filter it by last name, first name
     coop_members = Member.coop_member_details(@cooperative.coop_members)
     # byebug
-    # f_members = Member.coop_member_details(coop_members)
-    #   .filter_by_name(params[:last_name_filter], params[:first_name_filter])
+    f_members = Member.coop_member_details(coop_members)
+      .filter_by_name(params[:last_name_filter], params[:first_name_filter])
     # # paginate members
-    @pagy, @filtered_members = pagy(coop_members, items: 10)
+    @pagy, @filtered_members = pagy(f_members, items: 10)
   end
 
   def new

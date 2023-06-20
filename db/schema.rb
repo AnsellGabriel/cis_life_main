@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_06_20_011225) do
+ActiveRecord::Schema[7.0].define(version: 2023_06_20_035049) do
   create_table "active_admin_comments", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.string "namespace"
     t.text "body"
@@ -36,6 +36,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_06_20_011225) do
     t.index ["email"], name: "index_admin_users_on_email", unique: true
     t.index ["reset_password_token"], name: "index_admin_users_on_reset_password_token", unique: true
   end
+
   create_table "agent_groups", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.string "name"
     t.text "description"
@@ -309,8 +310,6 @@ ActiveRecord::Schema[7.0].define(version: 2023_06_20_011225) do
     t.string "name"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
     t.bigint "department_id", null: false
     t.index ["department_id"], name: "index_employees_on_department_id"
   end
@@ -384,14 +383,6 @@ ActiveRecord::Schema[7.0].define(version: 2023_06_20_011225) do
     t.integer "entry_age_to"
     t.integer "exit_age"
     t.integer "min_participation"
-    t.string "acronym"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-  end
-
-  create_table "users", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
-    t.integer "userable_id"
-    t.string "userable_type"
     t.string "acronym"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
