@@ -9,34 +9,7 @@
 # migrations use external dependencies or application code.
 #
 # It's strongly recommended that you check this file into your version control system.
-
-ActiveRecord::Schema[7.0].define(version: 2023_06_20_035049) do
-  create_table "active_admin_comments", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
-    t.string "namespace"
-    t.text "body"
-    t.string "resource_type"
-    t.bigint "resource_id"
-    t.string "author_type"
-    t.bigint "author_id"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.index ["author_type", "author_id"], name: "index_active_admin_comments_on_author"
-    t.index ["namespace"], name: "index_active_admin_comments_on_namespace"
-    t.index ["resource_type", "resource_id"], name: "index_active_admin_comments_on_resource"
-  end
-
-  create_table "admin_users", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
-    t.string "email", default: "", null: false
-    t.string "encrypted_password", default: "", null: false
-    t.string "reset_password_token"
-    t.datetime "reset_password_sent_at"
-    t.datetime "remember_created_at"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.index ["email"], name: "index_admin_users_on_email", unique: true
-    t.index ["reset_password_token"], name: "index_admin_users_on_reset_password_token", unique: true
-  end
-
+ActiveRecord::Schema[7.0].define(version: 2023_06_20_061347) do
   create_table "agent_groups", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.string "name"
     t.text "description"
@@ -57,6 +30,11 @@ ActiveRecord::Schema[7.0].define(version: 2023_06_20_035049) do
   end
 
   create_table "agreement_benefits", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+
+    t.bigint "agreement_id"
+    t.bigint "plan_id"
+    t.bigint "proposal_id"
+    t.bigint "option_id"
     t.string "name"
     t.text "description"
     t.datetime "created_at", null: false
@@ -67,6 +45,8 @@ ActiveRecord::Schema[7.0].define(version: 2023_06_20_035049) do
     t.bigint "proposal_id", null: false
     t.integer "insured_type"
     t.index ["agreement_id"], name: "index_agreement_benefits_on_agreement_id"
+    t.index ["option_id"], name: "index_agreement_benefits_on_option_id"
+    t.index ["plan_id"], name: "index_agreement_benefits_on_plan_id"
     t.index ["proposal_id"], name: "index_agreement_benefits_on_proposal_id"
   end
 
@@ -374,6 +354,16 @@ ActiveRecord::Schema[7.0].define(version: 2023_06_20_035049) do
     t.string "municipality"
     t.string "barangay"
     t.string "street"
+  end
+
+  create_table "health_decs", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+    t.text "question"
+    t.boolean "active"
+    t.boolean "with_details"
+    t.boolean "valid_answer"
+    t.integer "question_sort"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
   end
 
   create_table "plans", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|

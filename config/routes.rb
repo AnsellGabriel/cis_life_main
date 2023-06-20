@@ -1,3 +1,4 @@
+
 require 'sidekiq/web'
 
 Rails.application.routes.draw do 
@@ -32,7 +33,25 @@ Rails.application.routes.draw do
         end
       end
     end
-  end
+  end 
+  resources :health_decs
+  resources :agreement_benefits
+  resources :plans
+  resources :agreements
+  resources :cooperatives
+  resources :coop_types
+  resources :geo_barangays
+  resources :geo_municipalities
+  resources :geo_provinces
+  resources :geo_regions
+  resources :agent_groups
+  resources :departments
+  resources :agents
+  resources :coop_users
+  resources :employees
+  resources :benefits
+  get 'pages/home'
+  # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
 
   resources :cooperatives do
     get :selected, on: :member

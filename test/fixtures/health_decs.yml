@@ -1,0 +1,15 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  question: MyText
+  active: false
+  with_details: false
+  valid_answer: false
+  question_sort: 1
+
+two:
+  question: MyText
+  active: false
+  with_details: false
+  valid_answer: false
+  question_sort: 1
