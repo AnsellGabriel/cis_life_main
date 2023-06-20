@@ -42,13 +42,17 @@
     </div>
   </div>
 
-  <%= form_with url: coop_members_path, method: :get do %>
-    <div class="form-group d-flex gap-3">
-      <%= text_field_tag 'first_name_filter', nil, placeholder: 'First name', class: "form-control", style: "width: auto"%>
-      <%= text_field_tag 'last_name_filter', nil, placeholder: 'Last name', class: "form-control", style: "width: auto;"%>
-      <%= submit_tag 'Filter', class: "btn btn-sm btn-dark" %>
-    </div>
-  <% end %>
+  <div class="d-flex align-items-center gap-1">
+    <%= form_with url: coop_members_path, method: :get do %>
+      <div class="form-group d-flex gap-3">
+        <%= text_field_tag 'first_name_filter', nil, placeholder: 'First name', class: "form-control", style: "width: auto"%>
+        <%= text_field_tag 'last_name_filter', nil, placeholder: 'Last name', class: "form-control", style: "width: auto;"%>
+        <%= submit_tag 'Filter', class: "btn btn-sm btn-dark" %>
+      </div>
+    <% end %>
+
+    <%= link_to "All", coop_members_path, class: "#{small_btn('outline-dark')} d-flex align-items-center", style: 'height: 38px;' %>
+  </div>
 </div>
 
 

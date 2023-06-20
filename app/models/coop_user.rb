@@ -8,4 +8,8 @@ class CoopUser < ApplicationRecord
   belongs_to :coop_branch
   has_one :user, as: :userable, dependent: :destroy
   accepts_nested_attributes_for :user
+
+  def get_fullname
+    "#{first_name} #{last_name}"
+  end
 end
