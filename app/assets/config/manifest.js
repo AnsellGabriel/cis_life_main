@@ -3,3 +3,7 @@
 //= link_tree ../../javascript .js
 //= link_tree ../../../vendor/javascript .js
 //= link toggleForms.js
+//= require jquery3
+//= require rails-ujs
+//= require cocoon
+

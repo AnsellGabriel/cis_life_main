@@ -10,6 +10,7 @@
     <%= link_to "Edit", edit_plan_path(@plan), class: "btn btn-secondary btn-sm" %> |
     <%= link_to "Back", plans_path, class: "btn btn-secondary btn-sm" %>
   </div>
+
 </div>
 <%= link_to "Add Benefits", new_agreement_benefit_path, class: "btn btn-secondary btn-sm mb-3", data: { turbo_frame: "remote_modal" } %>
 <% @agreement_benefits = AgreementBenefit.where(plan_id: @plan) %>

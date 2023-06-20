@@ -1,0 +1,9 @@
+
+<%= render @proposal %>
+
+<div>
+  <%= link_to "Edit", edit_proposal_path(@proposal), class: 'btn btn-primary' %> |
+  <%= link_to "Back", proposals_path, class: 'btn btn-primary' %>
+
+  <%= button_to "Delete", @proposal, method: :delete, class: 'btn btn-danger' %>
+</div>

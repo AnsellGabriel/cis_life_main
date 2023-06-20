@@ -1,0 +1,23 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  cooperative: one
+  coop_branch: one
+  last_name: MyString
+  first_name: MyString
+  middle_name: MyString
+  suffix: MyString
+  birthdate: 2023-04-03
+  mobile_number: 1
+  email: MyString
+
+two:
+  cooperative: two
+  coop_branch: two
+  last_name: MyString
+  first_name: MyString
+  middle_name: MyString
+  suffix: MyString
+  birthdate: 2023-04-03
+  mobile_number: 1
+  email: MyString

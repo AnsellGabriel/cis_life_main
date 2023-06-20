@@ -1,0 +1,41 @@
+<%= content_tag :h1, "List of Anniversaries" %>
+
+
+<div class="text-end mb-3">
+  <%= link_to new_anniversary_path, class: 'btn btn-primary' do %>
+    New Anniversary
+  <% end %>
+</div>
+
+<div class="table-responsive">
+  <table class="table table-striped table-bordered table-hover">
+    <thead>
+      <tr>
+
+      <th>ID</th>
+        <th>Name</th>
+        <th>Anniversary Date</th>
+        <th></th>
+
+      </tr>
+    </thead>
+
+    <tbody>
+      <% @anniversaries.each do |anniversary| %>
+        <tr>
+
+        <td><%= anniversary.id %></td>
+        <td><%= anniversary.name %></td>
+        <td><%= anniversary.anniversary_date %></td>
+    
+          <td>
+            <%= link_to 'View', anniversary, class: 'btn' %>
+            <%= link_to 'Edit', edit_anniversary_path(anniversary), class: 'btn' %>
+            <%= link_to 'Delete', anniversary, method: :delete, data: { confirm: 'Are you sure?' }, class: 'btn' %>
+          </td>
+
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+</div>

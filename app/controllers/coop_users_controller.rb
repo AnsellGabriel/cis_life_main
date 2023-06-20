@@ -15,7 +15,13 @@ class CoopUsersController < ApplicationController
 
   # GET /coop_users/new
   def new
-    @coop_user = CoopUser.new(last_name: FFaker::Name.last_name, first_name: FFaker::Name.first_name, middle_name: FFaker::Name.last_name, mobile_number: FFaker::PhoneNumber, designation: FFaker::String)
+    @coop_user = CoopUser.new(
+      last_name: FFaker::Name.last_name, 
+      first_name: FFaker::Name.first_name, 
+      middle_name: FFaker::Name.last_name, 
+      mobile_number: FFaker::PhoneNumber, 
+      designation: FFaker::String
+    )
     
     # new instance of the "User" class associated with the "Coop_user" instance.
     @coop_user.build_user

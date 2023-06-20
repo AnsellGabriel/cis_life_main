@@ -1,0 +1,9 @@
+
+<%= render @product_benefit %>
+
+<div>
+  <%= link_to "Edit", edit_product_benefit_path(@product_benefit), class: 'btn btn-primary' %> |
+  <%= link_to "Back", product_benefits_path, class: 'btn btn-primary' %>
+
+  <%= button_to "Delete", @product_benefit, method: :delete, class: 'btn btn-danger' %>
+</div>
