@@ -2,6 +2,8 @@
 require 'sidekiq/web'
 
 Rails.application.routes.draw do 
+  resources :process_remarks
+  resources :process_coverages
   resources :coop_agreements do
     resources :group_remits
   end

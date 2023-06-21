@@ -190,6 +190,8 @@ GEM
     net-smtp (0.3.3)
       net-protocol
     nio4r (2.5.8)
+    nokogiri (1.14.2-arm64-darwin)
+      racc (~> 1.4)
     nokogiri (1.14.2-x86_64-darwin)
       racc (~> 1.4)
     orm_adapter (0.5.0)
@@ -285,7 +287,6 @@ GEM
       sprockets (>= 3.0.0)
     stimulus-rails (1.2.1)
       railties (>= 6.0.0)
-    table_print (1.5.7)
     thor (1.2.1)
     tilt (2.1.0)
     timeout (0.3.2)
@@ -316,6 +317,7 @@ GEM
     zeitwerk (2.6.7)
 
 PLATFORMS
+  arm64-darwin-21
   x86_64-darwin-21
 
 DEPENDENCIES
@@ -345,7 +347,6 @@ DEPENDENCIES
   simple_form
   sprockets-rails
   stimulus-rails
-  table_print
   turbo-rails
   tzinfo-data
   web-console

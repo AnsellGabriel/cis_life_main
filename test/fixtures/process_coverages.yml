@@ -1,0 +1,27 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  group_remit: one
+  agent: one
+  effectivity: 2023-06-21
+  expiry: 2023-06-21
+  status: MyString
+  approved_count: 1
+  approved_total_coverage: 9.99
+  approved_total_prem: 9.99
+  denied_count: 1
+  denied_total_coverage: 9.99
+  denied_total_prem: 9.99
+
+two:
+  group_remit: two
+  agent: two
+  effectivity: 2023-06-21
+  expiry: 2023-06-21
+  status: MyString
+  approved_count: 1
+  approved_total_coverage: 9.99
+  approved_total_prem: 9.99
+  denied_count: 1
+  denied_total_coverage: 9.99
+  denied_total_prem: 9.99

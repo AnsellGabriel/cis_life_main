@@ -1,0 +1,17 @@
+
+<%= simple_form_for(@process_remark) do |f| %>
+  <%= f.error_notification %>
+  <%= f.error_notification message: f.object.errors[:base].to_sentence if f.object.errors[:base].present? %>
+
+  <div class="form-inputs mb-3">
+    <%= f.association :process_coverage %>
+    <%= f.input :remark %>
+    <%= f.input :status %>
+    <%= f.association :user %>
+  </div>
+
+  <div class="form-actions text-end">
+    <%= link_to "Back", process_remarks_path, class: 'btn btn-secondary' %>
+    <%= f.button :submit, class: 'btn-success' %>
+  </div>
+<% end %>
