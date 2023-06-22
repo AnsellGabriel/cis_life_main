@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_06_20_082823) do
+ActiveRecord::Schema[7.0].define(version: 2023_06_22_010611) do
   create_table "active_admin_comments", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.string "namespace"
     t.text "body"
@@ -140,19 +140,13 @@ ActiveRecord::Schema[7.0].define(version: 2023_06_20_082823) do
   end
 
   create_table "batch_health_decs", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
-    t.boolean "ans_q1"
-    t.boolean "ans_q2"
-    t.boolean "ans_q3"
-    t.string "ans_q3_desc"
-    t.boolean "ans_q4"
-    t.string "ans_q4_desc"
-    t.boolean "ans_q5_a"
-    t.string "ans_q5_a_desc"
-    t.boolean "ans_q5_b"
-    t.string "ans_q5_b_desc"
     t.bigint "batch_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.text "answer"
+    t.string "answerable_type", null: false
+    t.bigint "answerable_id", null: false
+    t.index ["answerable_type", "answerable_id"], name: "index_batch_health_decs_on_answerable"
     t.index ["batch_id"], name: "index_batch_health_decs_on_batch_id"
   end
 
@@ -344,6 +338,14 @@ ActiveRecord::Schema[7.0].define(version: 2023_06_20_082823) do
     t.index ["anniversary_id"], name: "index_group_remits_on_anniversary_id"
   end
 
+  create_table "health_dec_subquestions", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+    t.bigint "health_dec_id", null: false
+    t.text "question"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["health_dec_id"], name: "index_health_dec_subquestions_on_health_dec_id"
+  end
+
   create_table "health_decs", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.text "question"
     t.boolean "active"
@@ -471,6 +473,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_06_20_082823) do
   add_foreign_key "denied_members", "group_remits"
   add_foreign_key "employees", "departments"
   add_foreign_key "group_remits", "agreements"
+  add_foreign_key "health_dec_subquestions", "health_decs"
   add_foreign_key "member_dependents", "members"
   add_foreign_key "product_benefits", "agreement_benefits"
   add_foreign_key "product_benefits", "benefits"

@@ -8,6 +8,7 @@ class HealthDecsController < ApplicationController
 
   # GET /health_decs/1
   def show
+    @subquestions = @health_dec.health_dec_subquestions
   end
 
   # GET /health_decs/new
@@ -23,7 +24,7 @@ class HealthDecsController < ApplicationController
   def create
     @health_dec = HealthDec.new(health_dec_params)
 
-    if @health_dec.save
+    if @health_dec.save!
       redirect_to @health_dec, notice: "Health dec was successfully created."
     else
       render :new, status: :unprocessable_entity

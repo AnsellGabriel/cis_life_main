@@ -4,6 +4,13 @@
     <%= health_dec.question %>
   </p>
 
+  <% @subquestions.each_with_index do |sub, index| %>
+    <p>
+      <strong>Subquestion <%= index+1 %>:</strong>
+      <%= sub.question %>
+    </p>
+  <% end %>
+
   <p>
     <strong>Active:</strong>
     <%= health_dec.active %>

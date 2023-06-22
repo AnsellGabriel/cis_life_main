@@ -173,3 +173,18 @@ end
 CoopUser.create!(first_name: 'Lian', last_name: 'Postrano', middle_name: 'Elliot', birthdate: FFaker::Time.date, mobile_number: '09948423385', coop_branch_id: 1, cooperative_id: 1)
 User.create!(email: 'coop@gmail.com', password: 'password', password_confirmation: 'password',  approved: true, userable_id: 1, userable_type: 'CoopUser')
 
+HealthDec.create!(question: "Are you now in good health and free from any kind of disease? (Ikaw ba ay nasa mabuting kalusugan at walang anumang karamdaman?)", active: true, with_details: false, valid_answer: true)
+
+HealthDec.create!(question: "Can you perform the activities of daily living such as feeding, toileting, mobility, bathing, dressing etc.? (Kaya mo bang kumain, magbanyo, maglakad, maligo, magbihis, atbp?)", active: true, with_details: false, valid_answer: true)
+
+HealthDec.create!(question: "Have you ever consulted a physician for a health condition such as high blood pressure, diabetes malignancies, lung ailments, heart ailments, etc? (Ikaw ba ay kumunsulta na sa isang doktor ukol sa kalagayan ng iyong kalusugan tulad ng pagtaas ng presyon, diabetes, tumor, sakit sa baga, sakit sa puso atbp?)", active: true, with_details: true, valid_answer: false)
+HealthDecSubquestion.create!(question: "Kindly give details on the space provided such as kind of illness/disease(diagnosis), name of doctor & hospital, medicine taken, date of operation, results, doctor's recommendation, etc. (Magbigay ng impormasyon tulad ng uri/panglan ng sakit, pangalan ng doktor at ospital, petsa ng operasyon, resulta, rekomendasyon ng doktor at iba pa.)", health_dec_id: 3)
+
+HealthDec.create!(question: "Have you ever  been hospitalized or had any minor/major surgery in the last five years? (Ikaw ba ay naospital o naoperahan sa loob ng nakaraang limang taon?)", active: true, with_details: true, valid_answer: false)
+HealthDecSubquestion.create!(question: "Kindly give details on the space provided such as name of doctor and hospital, date of operation or hospitalization, medicine taken, doctor's recommendations, results, etc. (Magbigay ng impormasyon tulad ng dahilan ng pagkaospital, klase ng operasyon, pangalan ng doktor at ospital, petsa ng operasyon o paglaospital, gamot na iniinom, rekomendasyon ng doktor, resulta at iba pa.)", health_dec_id: 4 )
+
+HealthDec.create!(question: "Have you smoked any cigerettes in the past 12 months?", active: true, with_details: true, valid_answer: false)
+HealthDecSubquestion.create!(question: "Please state your average daily consumption", health_dec_id: 5)
+
+HealthDec.create!(question: "Do you drink alcohol?", active: true, with_details: true, valid_answer: false)
+HealthDecSubquestion.create!(question: "Please state whether beer, wine, or spirits; and your average daily consumption", health_dec_id: 6)
