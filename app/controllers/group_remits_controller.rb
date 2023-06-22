@@ -48,7 +48,7 @@ class GroupRemitsController < InheritedResources::Base
     containers # controller/concerns/container.rb
     counters  # controller/concerns/counter.rb
     @passed_requirements = group_remit_passed_requirements?
-    batches_eager_loaded = @group_remit.batches.includes({coop_member: :member, batch_dependents: :member_dependent, batch_beneficiaries: :member_dependent}, :batch_health_dec, :agreement_benefit).order(created_at: :desc)
+    batches_eager_loaded = @group_remit.batches.includes({coop_member: :member, batch_dependents: :member_dependent, batch_beneficiaries: :member_dependent}, :batch_health_decs, :agreement_benefit).order(created_at: :desc)
 
     if params[:batch_filter].present?
       @f_batches = batches_eager_loaded.filter_by_member_name(params[:batch_filter].upcase).order(created_at: :desc)
@@ -133,7 +133,7 @@ class GroupRemitsController < InheritedResources::Base
     agreement = @group_remit.agreement
     respond_to do |format|
       if @group_remit.destroy
-        format.html { redirect_to agreement_path(agreement), alert: "Group remit was successfully deleted." }
+        format.html { redirect_to coop_agreement_path(agreement), alert: "Group remit was successfully deleted." }
       end
     end
   end

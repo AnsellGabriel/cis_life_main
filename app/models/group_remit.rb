@@ -168,7 +168,7 @@ class GroupRemit < ApplicationRecord
   end
 
   def batches_without_health_dec
-    batches.where(status: :recent).where.not(id: self.batches.joins(:batch_health_dec).select(:id))
+    batches.where(status: :recent).where.not(id: self.batches.joins(:batch_health_decs).select(:id))
   end
 
   def all_batches_have_beneficiaries?
