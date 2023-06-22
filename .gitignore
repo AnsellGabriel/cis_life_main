@@ -1,3 +1,4 @@
 
 # Ignore uploaded files (if using Active Storage).
 /storage/*
+/tmp/*
