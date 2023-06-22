@@ -39,7 +39,7 @@ class Batch < ApplicationRecord
   belongs_to :group_remit
   belongs_to :agreement_benefit
   
-  has_one :batch_health_dec, dependent: :destroy
+  has_many :batch_health_decs, dependent: :destroy
   has_many :batch_dependents, dependent: :destroy
   has_many :member_dependents, through: :batch_dependents
   has_many :batch_beneficiaries, dependent: :destroy
@@ -65,6 +65,7 @@ class Batch < ApplicationRecord
     agreement = group_remit.agreement
     coop_member = batch.coop_member
     renewal_member = agreement.coop_members.find_by(id: coop_member.id)
+    batch.age = batch.member_details.age
     
     check_plan(agreement, batch, rank)
 

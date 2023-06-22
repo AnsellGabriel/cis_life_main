@@ -5,6 +5,9 @@
   </div>
   
   <div class="modal-body">
+    <% if flash[:error] %>
+      <%= render "layouts/partials/notification" %>
+    <% end %>
     <%= render "form", batch_health_dec: @batch_health_dec %>
   </div>
 <% end %>
