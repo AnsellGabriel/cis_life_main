@@ -20,6 +20,7 @@ Rails.application.routes.draw do
     get :submit, on: :member
     get :renewal, on: :member
     resources :batches do
+      get :health_dec, on: :member
       collection do
         post :import
       end
@@ -34,7 +35,11 @@ Rails.application.routes.draw do
       end
     end
   end 
-  resources :health_decs
+  
+  resources :health_decs do
+    resources :health_dec_subquestions
+  end
+
   resources :agreement_benefits
   resources :plans
   resources :agreements

@@ -1,0 +1,14 @@
+
+<%= simple_form_for(@health_dec_subquestion, url: health_dec_health_dec_subquestions_path) do |f| %>
+  <%= f.error_notification %>
+  <%= f.error_notification message: f.object.errors[:base].to_sentence if f.object.errors[:base].present? %>
+
+  <div class="form-inputs mb-3">
+    <%= f.input :question  %>
+  </div>
+
+  <div class="form-actions text-start">
+    <%= f.button :submit, 'Add question', class: 'btn-success' %>
+    <%= link_to "Back", health_dec_path(@health_dec), class: 'btn btn-secondary' %>
+  </div>
+<% end %>
