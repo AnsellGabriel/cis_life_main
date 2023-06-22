@@ -1,4 +1,5 @@
 Rails.application.routes.draw do
+  resources :process_routes
   resources :health_decs
   resources :agreement_benefits
   resources :plans

@@ -1,0 +1,16 @@
+
+<%= simple_form_for(@process_route) do |f| %>
+  <%= f.error_notification %>
+  <%= f.error_notification message: f.object.errors[:base].to_sentence if f.object.errors[:base].present? %>
+
+  <div class="form-inputs">
+    <%= f.input :name %>
+    <%= f.input :department %>
+    <%= f.input :description %>
+  </div>
+  <br>
+  <div class="form-actions text-end">
+    <%= link_to "Back", process_routes_path, class: "btn btn-secondary" %>
+    <%= f.button :submit, class: "btn btn-success" %>
+  </div>
+<% end %>
