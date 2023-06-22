@@ -15,7 +15,7 @@ class Cooperative < ApplicationRecord
     # belongs_to :geo_barangay
 
     def unselected_coop_members(ids)
-      coop_members.includes(:member)
+      coop_members.where.not(id: ids)
     end
     
     

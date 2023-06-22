@@ -1,0 +1,2 @@
+module HealthDecSubquestionsHelper
+end
