@@ -3,6 +3,7 @@
 <div class="card">
   <div class="card-header">
     <h1>Health dec</h1>
+    <%= link_to "Add subquestion", new_health_dec_health_dec_subquestion_path(@health_dec), class: small_btn('warning') %>
     <%= link_to "Delete", @health_dec, class: "btn btn-danger btn-sm", method: :delete, data: { "turbo-method": :delete, turbo_confirm: "Are you sure?" } %>
   </div>
   <div class="card-body">

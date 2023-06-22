@@ -4,7 +4,7 @@ class BatchesController < ApplicationController
 
   before_action :authenticate_user!
   before_action :check_userable_type
-  before_action :set_batch, only: %i[show edit update destroy]
+  before_action :set_batch, only: %i[show edit update destroy health_dec]
   before_action :set_group_remit_and_agreement
   
   def import
@@ -29,6 +29,14 @@ class BatchesController < ApplicationController
     end
 
   end
+
+  def health_dec
+    @member = @batch.member_details
+    @batch_health_dec = @batch.batch_health_decs
+    @group_remit = @batch.group_remit
+    @questionaires = BatchHealthDec.where(batch_id: @batch.id).where(answerable_type: "HealthDec")
+    @subquestions = BatchHealthDec.where(batch_id: @batch.id).where(answerable_type: "HealthDecSubquestion")
+  end
   
   def index
     @pagy, @batches = pagy(@group_remit.batches, items: 10)
@@ -43,7 +51,7 @@ class BatchesController < ApplicationController
   end
 
   def new
-    @coop_members = @cooperative.coop_members
+    @coop_members = @cooperative.unselected_coop_members(@group_remit.coop_member_ids)
     @batch = @group_remit.batches.new(
       effectivity_date: FFaker::Time.date, 
       expiry_date: FFaker::Time.date, 

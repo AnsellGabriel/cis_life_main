@@ -1,0 +1,9 @@
+
+<%= render @health_dec_subquestion %>
+
+<div>
+  <%= link_to "Edit", edit_health_dec_subquestion_path(@health_dec_subquestion), class: 'btn btn-primary' %> |
+  <%= link_to "Back", health_dec_subquestions_path, class: 'btn btn-primary' %>
+
+  <%= button_to "Delete", @health_dec_subquestion, method: :delete, class: 'btn btn-danger' %>
+</div>
