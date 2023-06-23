@@ -40,7 +40,7 @@
                   <div class="card <%= @agreement.anniversary_type == 'multiple' ? 'hidden' : '' %>" data-toggler-target="toggleable" data-id="history_<%= group_remit.anniversary.nil? ? '' : dom_id(group_remit.anniversary) %>">
                     <div class="card-body <%= flex_justify_align('between', 'center') %> gap-1">
                       <div class="<%= flex_justify_align('', 'center') %> gap-3">
-                        <span class="<%= gr_presenter.status_badge %>" style="width: 70px;">
+                        <span class="<%= gr_presenter.status_badge %>" style="width: auto;">
                           <%= gr_presenter.status_text %>
                         </span>
                         <div class="text-secondary small">
