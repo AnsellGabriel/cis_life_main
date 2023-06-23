@@ -6,17 +6,19 @@ class GroupRemit < ApplicationRecord
 
   enum status: {
     pending: 0,
-    active: 1,
-    renewal: 2,
-    renewed: 3,
-    expired: 4
+    under_review: 1,
+    for_payment: 2,
+    payment_verification: 3,
+    active: 4,
+    for_renewal: 5,
+    expired: 6
   }
 
   def renew
     new_group_remit = self.dup
     new_group_remit.set_terms_and_expiry_date(self.expiry_date)
     new_group_remit.expiry_date = self.expiry_date + 1.year # Assuming the renewal duration is 1 year from the current date
-    new_group_remit.status = :renewal
+    new_group_remit.status = :for_renewal
     new_group_remit.effectivity_date = nil
     new_group_remit.save
 
@@ -52,10 +54,18 @@ class GroupRemit < ApplicationRecord
     # }
 
     self.batches.includes(coop_member: :member).each do |batch|
-      if batch.member_details.age >= batch.agreement_benefit.min_age && batch.member_details.age <= batch.agreement_benefit.max_age
+      if batch.insurance_status == "denied"
+        removed_batches << batch
+        next
+      end
+
+      if batch.member_details.age <= batch.agreement_benefit.exit_age
         new_batch = batch.dup
         new_batch.group_remit_id = new_group_remit.id
+        new_batch.age = new_batch.member_details.age
+        new_batch.set_premium_and_service_fees(batch.agreement_benefit.insured_type, new_group_remit)
         new_batch.status = :renewal
+        new_batch.insurance_status = :approved
         # byebug
         new_batch.save
 
@@ -92,14 +102,16 @@ class GroupRemit < ApplicationRecord
     self.effectivity_date = Date.today
   end
 
-  def set_renewed_status
+  def set_for_payment_status
     set_total_premiums_and_fees
-    self.status = :renewed
+    self.status = :for_payment
+    self.save
   end
 
-  def set_active_status
+  def set_under_review_status
     set_total_premiums_and_fees
-    self.status = :active
+    self.status = :under_review
+    self.save
   end
 
   def coop_member_ids
