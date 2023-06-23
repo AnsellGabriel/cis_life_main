@@ -74,32 +74,28 @@
         <% end %>
       </td>
       <% @filtered_members.each do |member| %>
-        <% age = Date.today.year - member.birth_date.year - ((Date.today.month > member.birth_date.month || (Date.today.month == member.birth_date.month && Date.today.day >= member.birth_date.day)) ? 0 : 1) %>
-        <% coop_member = member.coop_members.find { |coop_member| coop_member.cooperative_id == @cooperative.id }
- %>
+        <%# <% age = Date.today.year - member.birth_date.year - ((Date.today.month > member.birth_date.month || (Date.today.month == member.birth_date.month && Date.today.day >= member.birth_date.day)) ? 0 : 1) %> 
+        <% coop_member = member.coop_members.find { |coop_member| coop_member.cooperative_id == @cooperative.id }%>
         
         <tr>
-        <%# <% member = coop_member.member %> 
-        <%# <td><%= member.id %>
-        <%# <td><%= member.coop_members.branch.name %>
-        <th scope="row" ><%= coop_member.id %></th>
-        <td>
-          <div class="">
-            <%= content_tag :span, "#{member.first_name} #{member.middle_name} #{member.last_name} #{member.suffix}" %>
-            <div class="d-flex align-items-center gap-1"> 
-              <div class="">
-                <i class="bi bi-phone"></i>
-                <%= content_tag :span, "#{member.mobile_number}", class: "sm-secondary-text text-muted" %>
-              </div>
-              <div class="">|</div>
-              <div class="">
-                <i class="bi bi-envelope"></i>
-                <%= content_tag :span, "#{member.email}", class: "text-muted sm-secondary-text" %>
+          <th scope="row" ><%= coop_member.id %></th>
+          <td>
+            <div class="">
+              <%= content_tag :span, "#{coop_member.full_name}" %>
+              <div class="d-flex align-items-center gap-1"> 
+                <div class="">
+                  <i class="bi bi-phone"></i>
+                  <%= content_tag :span, "#{member.mobile_number}", class: "sm-secondary-text text-muted" %>
+                </div>
+                <div class="">|</div>
+                <div class="">
+                  <i class="bi bi-envelope"></i>
+                  <%= content_tag :span, "#{member.email}", class: "text-muted sm-secondary-text" %>
+                </div>
               </div>
             </div>
-          </div>
-        </td>
-        <td><%= coop_member.coop_branch.name %></td>
+          </td>
+          <td><%= coop_member.coop_branch.name %></td>
           <td>
             <%= link_to 'View details', coop_member_path(coop_member.id), class: 'btn btn-sm btn-primary', data: {turbo_frame: 'modal-xl'} %>
             <%= link_to 'Edit', edit_member_path(member), class: 'btn btn-sm btn-secondary', data: {turbo_frame: 'modal-xl'} %>
