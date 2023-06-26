@@ -41,7 +41,7 @@ gem "stimulus-rails"
 gem "tzinfo-data", platforms: %i[ mingw mswin x64_mingw jruby ]
 
 # Reduces boot times through caching; required in config/boot.rb
-gem "bootsnap", require: false
+# gem "bootsnap", require: false
 
 # Use Sass to process CSS
 # gem "sassc-rails"
@@ -50,10 +50,7 @@ gem "bootsnap", require: false
 # gem "image_processing", "~> 1.2"
 
 gem 'bootstrap', '~> 5.1', '>= 5.1.3'
-<<<<<<< HEAD
-=======
 gem 'bootstrap-icons-helper'
->>>>>>> 5d3ce79 (merge from underwriting module to main)
 gem 'simple_form'
 gem 'devise'
 gem 'activeadmin'
