@@ -7,10 +7,9 @@ set :repo_url, "git@github.com:AnsellGabriel/cis_life_main.git"
 
 set :deploy_to, "/home/deploy/#{fetch :application}"
 
-append :linked_dirs, 'log', 'tmp/pids', 'tmp/cache', 'tmp/sockets', 'vendor/bundle', '.bundle', 'public/system', 'public/uploads'
+# append :linked_dirs, 'log', 'tmp/pids', 'tmp/cache', 'tmp/sockets', 'vendor/bundle', '.bundle', 'public/system', 'public/uploads'
 
 # Only keep the last 5 releases to save disk space
-set :keep_releases, 5
 
 set :branch, "main"
 
@@ -24,7 +23,7 @@ namespace :deploy do
         unless test("[ -f #{shared_path}/config/master.key ]")
           upload! 'config/master.key', "#{shared_path}/config/master.key"
         end
-       
+        
       end
     end
   end
@@ -32,6 +31,7 @@ end
 # Default branch is :master
 # ask :branch, `git rev-parse --abbrev-ref HEAD`.chomp
 
+set :keep_releases, 5
 # Default deploy_to directory is /var/www/my_app_name
 # set :deploy_to, "/var/www/my_app_name"
 
