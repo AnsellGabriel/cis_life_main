@@ -47,6 +47,7 @@
         <td><%= process_coverage.denied_total_prem %></td>
     
           <td>
+            <%= link_to "MD", all_health_decs_group_remit_batches_path(process_coverage.group_remit), class: "btn btn-secondary" %>
             <%= link_to 'View', process_coverage, class: 'btn btn-secondary btn-sm' %>
             <%= link_to 'Edit', edit_process_coverage_path(process_coverage), class: 'btn btn-secondary btn-sm' %>
             <%= link_to "Delete", process_coverage, class: "btn btn-danger btn-sm", method: :delete, data: { "turbo-method": :delete, turbo_confirm: "Are you sure?" } %>

@@ -3,6 +3,7 @@ class GroupRemit < ApplicationRecord
   belongs_to :anniversary, optional: true
   has_many :batches, dependent: :destroy
   has_many :denied_members, dependent: :destroy
+  has_one :process_coverage
 
   enum status: {
     pending: 0,
@@ -11,6 +12,10 @@ class GroupRemit < ApplicationRecord
     renewed: 3,
     expired: 4
   }
+
+  def to_s
+    name
+  end
 
   def renew
     new_group_remit = self.dup
@@ -168,7 +173,11 @@ class GroupRemit < ApplicationRecord
   end
 
   def batches_without_health_dec
+<<<<<<< HEAD
     batches.where(status: :recent).where.not(id: self.batches.joins(:batch_health_dec).select(:id))
+=======
+    batches.where(status: :recent).where.not(id: self.batches.joins(:batch_health_decs).select(:id))
+>>>>>>> 5d3ce79 (merge from underwriting module to main)
   end
 
   def all_batches_have_beneficiaries?

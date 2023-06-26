@@ -1,0 +1,9 @@
+
+<div class="card">
+  <h5 class="card-header">New batch remark</h5>
+  <div class="card-body">
+    <%= render "remote_modal", title: @title do %>
+      <%= render "form", batch_remark: @batch_remark %>
+    <% end %>
+  </div>
+</div>

@@ -10,7 +10,11 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
+<<<<<<< HEAD
 ActiveRecord::Schema[7.0].define(version: 2023_06_21_032632) do
+=======
+ActiveRecord::Schema[7.0].define(version: 2023_06_22_083643) do
+>>>>>>> 5d3ce79 (merge from underwriting module to main)
   create_table "active_admin_comments", charset: "utf8mb4", force: :cascade do |t|
     t.string "namespace"
     t.text "body"
@@ -94,6 +98,10 @@ ActiveRecord::Schema[7.0].define(version: 2023_06_21_032632) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.bigint "proposal_id", null: false
+<<<<<<< HEAD
+=======
+    t.string "description"
+>>>>>>> 5d3ce79 (merge from underwriting module to main)
     t.index ["agent_id"], name: "index_agreements_on_agent_id"
     t.index ["cooperative_id"], name: "index_agreements_on_cooperative_id"
     t.index ["plan_id"], name: "index_agreements_on_plan_id"
@@ -140,6 +148,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_06_21_032632) do
   end
 
   create_table "batch_health_decs", charset: "utf8mb4", force: :cascade do |t|
+<<<<<<< HEAD
     t.boolean "ans_q1"
     t.boolean "ans_q2"
     t.boolean "ans_q3"
@@ -156,6 +165,30 @@ ActiveRecord::Schema[7.0].define(version: 2023_06_21_032632) do
     t.index ["batch_id"], name: "index_batch_health_decs_on_batch_id"
   end
 
+=======
+    t.bigint "batch_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.text "answer"
+    t.string "answerable_type", null: false
+    t.bigint "answerable_id", null: false
+    t.index ["answerable_type", "answerable_id"], name: "index_batch_health_decs_on_answerable"
+    t.index ["batch_id"], name: "index_batch_health_decs_on_batch_id"
+  end
+
+  create_table "batch_remarks", charset: "utf8mb4", force: :cascade do |t|
+    t.bigint "batch_id", null: false
+    t.text "remark"
+    t.integer "status"
+    t.string "user_type", null: false
+    t.bigint "user_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["batch_id"], name: "index_batch_remarks_on_batch_id"
+    t.index ["user_type", "user_id"], name: "index_batch_remarks_on_user"
+  end
+
+>>>>>>> 5d3ce79 (merge from underwriting module to main)
   create_table "batches", charset: "utf8mb4", force: :cascade do |t|
     t.date "effectivity_date"
     t.date "expiry_date"
@@ -344,6 +377,17 @@ ActiveRecord::Schema[7.0].define(version: 2023_06_21_032632) do
     t.index ["anniversary_id"], name: "index_group_remits_on_anniversary_id"
   end
 
+<<<<<<< HEAD
+=======
+  create_table "health_dec_subquestions", charset: "utf8mb4", force: :cascade do |t|
+    t.bigint "health_dec_id", null: false
+    t.text "question"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["health_dec_id"], name: "index_health_dec_subquestions_on_health_dec_id"
+  end
+
+>>>>>>> 5d3ce79 (merge from underwriting module to main)
   create_table "health_decs", charset: "utf8mb4", force: :cascade do |t|
     t.text "question"
     t.boolean "active"
@@ -415,7 +459,11 @@ ActiveRecord::Schema[7.0].define(version: 2023_06_21_032632) do
     t.bigint "agent_id"
     t.date "effectivity"
     t.date "expiry"
+<<<<<<< HEAD
     t.string "status"
+=======
+    t.integer "status"
+>>>>>>> 5d3ce79 (merge from underwriting module to main)
     t.integer "approved_count"
     t.decimal "approved_total_coverage", precision: 20, scale: 4
     t.decimal "approved_total_prem", precision: 20, scale: 4
@@ -424,8 +472,15 @@ ActiveRecord::Schema[7.0].define(version: 2023_06_21_032632) do
     t.decimal "denied_total_prem", precision: 20, scale: 4
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+<<<<<<< HEAD
     t.index ["agent_id"], name: "index_process_coverages_on_agent_id"
     t.index ["group_remit_id"], name: "index_process_coverages_on_group_remit_id"
+=======
+    t.bigint "underwriting_route_id"
+    t.index ["agent_id"], name: "index_process_coverages_on_agent_id"
+    t.index ["group_remit_id"], name: "index_process_coverages_on_group_remit_id"
+    t.index ["underwriting_route_id"], name: "index_process_coverages_on_underwriting_route_id"
+>>>>>>> 5d3ce79 (merge from underwriting module to main)
   end
 
   create_table "process_remarks", charset: "utf8mb4", force: :cascade do |t|
@@ -464,6 +519,16 @@ ActiveRecord::Schema[7.0].define(version: 2023_06_21_032632) do
     t.index ["cooperative_id"], name: "index_proposals_on_cooperative_id"
   end
 
+<<<<<<< HEAD
+=======
+  create_table "underwriting_routes", charset: "utf8mb4", force: :cascade do |t|
+    t.string "name"
+    t.string "description"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+>>>>>>> 5d3ce79 (merge from underwriting module to main)
   create_table "users", charset: "utf8mb4", force: :cascade do |t|
     t.string "email", default: "", null: false
     t.string "encrypted_password", default: "", null: false
@@ -489,6 +554,10 @@ ActiveRecord::Schema[7.0].define(version: 2023_06_21_032632) do
   add_foreign_key "batch_dependents", "batches"
   add_foreign_key "batch_dependents", "member_dependents"
   add_foreign_key "batch_health_decs", "batches"
+<<<<<<< HEAD
+=======
+  add_foreign_key "batch_remarks", "batches"
+>>>>>>> 5d3ce79 (merge from underwriting module to main)
   add_foreign_key "batches", "agreement_benefits"
   add_foreign_key "batches", "coop_members"
   add_foreign_key "batches", "group_remits"
@@ -501,6 +570,10 @@ ActiveRecord::Schema[7.0].define(version: 2023_06_21_032632) do
   add_foreign_key "denied_members", "group_remits"
   add_foreign_key "employees", "departments"
   add_foreign_key "group_remits", "agreements"
+<<<<<<< HEAD
+=======
+  add_foreign_key "health_dec_subquestions", "health_decs"
+>>>>>>> 5d3ce79 (merge from underwriting module to main)
   add_foreign_key "member_dependents", "members"
   add_foreign_key "product_benefits", "agreement_benefits"
   add_foreign_key "product_benefits", "benefits"

@@ -2,6 +2,11 @@ class Batch < ApplicationRecord
   include Calculate
   attr_accessor :rank
 
+<<<<<<< HEAD
+=======
+
+
+>>>>>>> 5d3ce79 (merge from underwriting module to main)
   # remove association of coop_member from agreement.coop_members
   # if batch is destroyed and status is new/recent
   before_destroy :delete_agreements_coop_members, if: :new_status?
@@ -16,7 +21,11 @@ class Batch < ApplicationRecord
   # updates the batches table realtime when a new batch is created
   after_create_commit -> { broadcast_prepend_to [ coop_member.cooperative, "batches" ], locals: { group_remit: self.group_remit, agreement: self.group_remit.agreement }, target: "batches_body" }
   # updates the batches table realtime when a batch is updated
+<<<<<<< HEAD
   after_update_commit -> { broadcast_replace_to [ coop_member.cooperative, "batches" ], locals: { group_remit: self.group_remit }, target: self }
+=======
+  # after_update_commit -> { broadcast_replace_to [ coop_member.cooperative, "batches" ], locals: { group_remit: self.group_remit }, target: self }
+>>>>>>> 5d3ce79 (merge from underwriting module to main)
   # updates the batches table realtime when a batch is destroyed
   after_destroy_commit -> { broadcast_remove_to [ coop_member.cooperative, "batches" ], target: self }
 
@@ -36,14 +45,18 @@ class Batch < ApplicationRecord
   }
 
   belongs_to :coop_member
+  belongs_to :member, optional: true
+  scope :coop_member, -> { joins(:member).where('members.coop_member = ?', true) }
+
   belongs_to :group_remit
   belongs_to :agreement_benefit
   
-  has_one :batch_health_dec, dependent: :destroy
+  has_many :batch_health_decs, dependent: :destroy
   has_many :batch_dependents, dependent: :destroy
   has_many :member_dependents, through: :batch_dependents
   has_many :batch_beneficiaries, dependent: :destroy
   has_many :member_dependents, through: :batch_beneficiaries
+  has_many :batch_remarks
 
   def member_details
     coop_member.member
@@ -65,6 +78,7 @@ class Batch < ApplicationRecord
     agreement = group_remit.agreement
     coop_member = batch.coop_member
     renewal_member = agreement.coop_members.find_by(id: coop_member.id)
+    batch.age = batch.member_details.age
     
     check_plan(agreement, batch, rank)
 

@@ -43,7 +43,7 @@
                         <span class="badge bg-danger">No beneficiary!</span>
                     <% end %>
 
-                    <% if batch.status == 'recent' && batch.batch_health_dec.blank? %>
+                    <% if batch.status == 'recent' && batch.batch_health_decs.blank? %>
                         <span class="badge bg-danger">No Health Declaration!</span>
                     <% end %>
                     
@@ -126,7 +126,11 @@
 
             <% unless group_remit.active? || group_remit.expired? || batch.status == 'renewal'%>
 
+<<<<<<< HEAD
                 <% if batch.status == 'recent' && batch.batch_health_dec.blank? %>
+=======
+                <% if batch.status == 'recent' && batch.batch_health_decs.blank? %>
+>>>>>>> 5d3ce79 (merge from underwriting module to main)
                     <%= link_to new_group_remit_batch_health_declaration_path(group_remit, batch),
                                 class: small_btn('danger'), 
                                 title: 'Health Declaration Form',

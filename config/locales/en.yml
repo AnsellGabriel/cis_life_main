@@ -45,3 +45,11 @@ en:
           attributes:
             email:
               blank: "can't be empty."
+ph:
+  number:
+    currency:
+      format:
+        unit: "₱"
+        delimiter: ","
+        separator: "."
+        precision: 2

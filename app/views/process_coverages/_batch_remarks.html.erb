@@ -1,0 +1,17 @@
+<ul>
+  <% batch.batch_remarks.each do |rem| %>
+  <div class="row">
+    <div class="col-6">
+      <li>
+        <%= rem.remark %>
+        <%= batch_rem_status(rem.status) %>
+      </li>
+    </div>
+     <div class="col-6">
+      <li>
+        <%= rem.user %> <%= content_tag :small, "- #{time_ago_in_words(rem.created_at)} ago" %>
+      </li>
+    </div>
+  </div>
+  <% end %>
+</ul>

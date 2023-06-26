@@ -12,21 +12,53 @@ class ProcessRemarksController < ApplicationController
 
   # GET /process_remarks/new
   def new
-    @process_remark = ProcessRemark.new
+    # raise 'errors'
+    @title = case params[:pro_status]
+    when "Approve" then "Process Approval"
+    when "Deny" then "Process Denial"
+    else
+      "Add Remark"
+    end
+
+    @process_status = params[:pro_status]
+    @rem_status = params[:rem_status]
+    
+    @process_coverage = ProcessCoverage.find(params[:ref])
+    @process_remark = @process_coverage.process_remarks.build(remark: FFaker::Lorem.sentence)
+  end
+
+  def view_all
+    @process_coverage = ProcessCoverage.find(params[:process_coverage])
+    @process_remarks = @process_coverage.process_remarks
   end
 
   # GET /process_remarks/1/edit
   def edit
   end
 
-  # POST /process_remarks
+  # POST /process_remarks or /process_remarks.json
   def create
+    # raise 'errors'
     @process_remark = ProcessRemark.new(process_remark_params)
+    @process_remark.user_type = current_user.userable_type
+    @process_remark.user_id = current_user.userable_id
 
-    if @process_remark.save
-      redirect_to @process_remark, notice: "Process remark was successfully created."
-    else
-      render :new, status: :unprocessable_entity
+    respond_to do |format|
+      if @process_remark.save
+        if params[:process_remark][:process_status] == "Approve"
+          format.html { redirect_to process_coverage_approve_path(process_coverage_id: params[:process_remark][:process_coverage_id])}
+        elsif params[:process_remark][:process_status] == "Deny"
+          format.html { redirect_to process_coverage_deny_path(process_coverage_id: params[:process_remark][:process_coverage_id])}
+        else
+          format.html { redirect_to process_coverage_url(params[:process_remark][:process_coverage_id]), notice: "Process remark was successfully created." }
+          format.json { render :show, status: :created, location: @process_remark }
+        end
+        # format.html { redirect_back fallback_location:, notice: "Process remark was successfully created." }
+        
+      else
+        format.html { render :new, status: :unprocessable_entity }
+        format.json { render json: @process_remark.errors, status: :unprocessable_entity }
+      end
     end
   end
 

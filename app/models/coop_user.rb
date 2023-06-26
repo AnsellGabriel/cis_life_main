@@ -9,6 +9,10 @@ class CoopUser < ApplicationRecord
   has_one :user, as: :userable, dependent: :destroy
   accepts_nested_attributes_for :user
 
+  def to_s
+    get_fullname.titleize
+  end
+
   def get_fullname
     "#{first_name} #{last_name}"
   end
