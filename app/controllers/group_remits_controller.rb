@@ -21,10 +21,12 @@ class GroupRemitsController < InheritedResources::Base
   end
 
   def submit
-    if @group_remit.status == "pending"
-      @group_remit.set_active_status
-    elsif @group_remit.status == "renewal"
-      @group_remit.set_renewed_status
+    all_renewal = @group_remit.batches.all? { |batch| batch.status == "renewal" }
+
+    if all_renewal
+      @group_remit.set_for_payment_status
+    else
+      @group_remit.set_under_review_status
     end
     
     respond_to do |format|

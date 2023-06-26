@@ -1,28 +1,3 @@
-// // Purpose: To toggle the forms on the new user page based on the role selected
-// function toggleForms() {
-//     const roleSelection = document.getElementById('formCategory');
-//     const agentForm = document.getElementById('agentForm');
-//     const coopForm = document.getElementById('coopForm');
-//     const employeeForm = document.getElementById('employeeForm');
-
-//     roleSelection.addEventListener('change', () => {
-//         if (roleSelection.value === 'Agent') {
-//             agentForm.style.display = 'block';
-//             coopForm.style.display = 'none';
-//             employeeForm.style.display = 'none';
-//         } else if (roleSelection.value === 'Coop') {
-//             agentForm.style.display = 'none';
-//             coopForm.style.display = 'block';
-//             employeeForm.style.display = 'none';
-//         } else if (roleSelection.value === 'Employee') {
-//             agentForm.style.display = 'none';
-//             coopForm.style.display = 'none';
-//             employeeForm.style.display = 'block';
-//         }
-//     });
-// };
-
-// Refactored code
 // Purpose: To toggle the forms on the new user page based on the role selected
 function toggleForms() {
     // Get the role selection element and form elements
@@ -39,10 +14,10 @@ function toggleForms() {
         for (const [role, form] of Object.entries(forms)) {
             if (role === roleSelection.value) {
                 // Show the form if the role matches the selected role
-                form.style.display = 'block';
+                form.style.setProperty('display', 'block', 'important');
             } else {
                 // Hide the form if the role does not match the selected role
-                form.style.display = 'none';
+                form.style.setProperty('display', 'none', 'important');
             }
         }
     });

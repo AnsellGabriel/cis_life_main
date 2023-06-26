@@ -87,7 +87,7 @@ class Member < ApplicationRecord
   
 
   def self.coop_member_details(coop_members)
-    includes(coop_members: :coop_branch).where(coop_members: { id: coop_members.ids }).order(:first_name)
+    includes(coop_members: :coop_branch).where(coop_members: { id: coop_members.ids }).order(:last_name)
   end
 
   def self.filter_by_name(last_name_filter, first_name_filter)

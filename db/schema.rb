@@ -10,8 +10,13 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
+<<<<<<< HEAD
 ActiveRecord::Schema[7.0].define(version: 2023_06_22_083643) do
   create_table "active_admin_comments", charset: "utf8mb4", force: :cascade do |t|
+=======
+ActiveRecord::Schema[7.0].define(version: 2023_06_23_073113) do
+  create_table "active_admin_comments", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+>>>>>>> main
     t.string "namespace"
     t.text "body"
     t.string "resource_type"
@@ -68,6 +73,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_06_22_083643) do
     t.integer "insured_type"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.integer "exit_age"
     t.index ["agreement_id"], name: "index_agreement_benefits_on_agreement_id"
     t.index ["option_id"], name: "index_agreement_benefits_on_option_id"
     t.index ["plan_id"], name: "index_agreement_benefits_on_plan_id"
@@ -174,11 +180,12 @@ ActiveRecord::Schema[7.0].define(version: 2023_06_22_083643) do
     t.datetime "updated_at", null: false
     t.decimal "premium", precision: 10, scale: 2
     t.integer "age"
-    t.integer "insurance_status"
+    t.integer "insurance_status", default: 3
     t.bigint "coop_member_id", null: false
     t.bigint "group_remit_id", null: false
     t.boolean "transferred"
     t.bigint "agreement_benefit_id", null: false
+    t.boolean "valid_health_dec", default: false
     t.index ["agreement_benefit_id"], name: "index_batches_on_agreement_benefit_id"
     t.index ["coop_member_id"], name: "index_batches_on_coop_member_id"
     t.index ["group_remit_id"], name: "index_batches_on_group_remit_id"

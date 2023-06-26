@@ -9,6 +9,15 @@
         <div class="d-flex" style="padding-left: 60px; padding-top: 30px; padding-bottom: 30px;">
             <div class="d-flex flex-column gap-1">
                 <div class="">
+                    <% if batch.insurance_status == 'for_review' %>
+                        <span class="<%= badge('secondary') %>">For review</span>
+                    <% elsif batch.insurance_status == 'pending' %>
+                        <span class="<%= badge('warning') %> text-dark">Pending</span>
+                    <% elsif batch.insurance_status == 'approved' %>
+                        <span class="<%= badge('success') %>">Approved</span>
+                    <% elsif batch.insurance_status == 'denied' %>
+                        <span class="<%= badge('danger') %>">Denied</span>
+                    <% end %>
                     <% if batch.status == 'recent' %>
                         <span class="<%= badge('success') %>">New</span>
                     <% else %>
@@ -124,7 +133,7 @@
                 class: small_btn('primary') 
             %>
 
-            <% unless group_remit.active? || group_remit.expired? || batch.status == 'renewal'%>
+            <% unless group_remit.active? || group_remit.expired? || group_remit.under_review? || batch.status == 'renewal' || group_remit.for_payment? %>
 
 <<<<<<< HEAD
 <<<<<<< HEAD

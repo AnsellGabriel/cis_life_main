@@ -51,6 +51,11 @@ class Batch < ApplicationRecord
   has_many :member_dependents, through: :batch_beneficiaries
   has_many :batch_remarks
 
+  def update_valid_health_dec
+    self.update_attribute(:valid_health_dec, true)
+    self.save!
+  end
+
   def member_details
     coop_member.member
   end
