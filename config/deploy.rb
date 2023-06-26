@@ -16,6 +16,8 @@ set :branch, "main"
 append :linked_dirs, 'log', 'tmp/pids', 'tmp/cache', 'tmp/sockets', 'vendor/bundle', '.bundle', 'public/system', 'public/uploads'
 append :linked_files, "config/master.key"
 
+set :linked_files, fetch(:linked_files, []).push('config/master.key')
+
 namespace :deploy do
   namespace :check do
     before :linked_files, :set_master_key do
