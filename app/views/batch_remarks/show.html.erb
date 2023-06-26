@@ -1,0 +1,9 @@
+
+<%= render @batch_remark %>
+
+<div>
+  <%= link_to "Edit", edit_batch_remark_path(@batch_remark), class: 'btn btn-primary' %> |
+  <%= link_to "Back", batch_remarks_path, class: 'btn btn-primary' %>
+
+  <%= button_to "Delete", @batch_remark, method: :delete, class: 'btn btn-danger' %>
+</div>

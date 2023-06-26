@@ -32,6 +32,9 @@
   border-color: #c3e6cb;
 }
 
+.modal-front {
+  z-index: 1001; /* Adjust the value as needed */
+}
 // input[type="submit"],
 // button,
 // .btn .btn-success {

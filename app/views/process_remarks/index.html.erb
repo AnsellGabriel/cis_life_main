@@ -1,0 +1,45 @@
+<%= content_tag :h1, "List of Process Remarks" %>
+
+
+<div class="text-end mb-3">
+  <%= link_to new_process_remark_path, class: 'btn btn-primary' do %>
+    New Process Remark
+  <% end %>
+</div>
+
+<table class ="table table-striped">
+  <table class="table table-striped table-bordered table-hover">
+    <thead>
+      <tr>
+
+      <th>#</th>
+        <th>Process Coverage</th>
+        <th>Remark</th>
+        <th>Status</th>
+        <th>User</th>
+        <th></th>
+
+      </tr>
+    </thead>
+
+    <tbody>
+      <% @process_remarks.each do |process_remark| %>
+        <tr>
+
+        <th scope="row"><%= process_remark.id %></th>
+        <td><%= process_remark.process_coverage %></td>
+        <td><%= process_remark.remark %></td>
+        <td><%= process_remark.status %></td>
+        <td><%= process_remark.user %></td>
+    
+          <td>
+            <%= link_to 'View', process_remark, class: 'btn btn-secondary btn-sm' %>
+            <%= link_to 'Edit', edit_process_remark_path(process_remark), class: 'btn btn-secondary btn-sm' %>
+            <%= link_to "Delete", process_remark, class: "btn btn-danger btn-sm", method: :delete, data: { "turbo-method": :delete, turbo_confirm: "Are you sure?" } %>
+          </td>
+
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+</div>

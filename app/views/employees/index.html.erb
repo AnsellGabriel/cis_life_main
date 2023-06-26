@@ -17,7 +17,11 @@
       <% @employees.each do |employee| %>
         <tr>
           <th scope="row"><%= employee.id %></th>
-          <td> <%= employee.get_fullname %> </td>
+          <td> 
+            <%= content_tag :span, employee.get_fullname, class: "lead, fw-bold" %> - <%= content_tag :small, employee.designation %>
+            <br>
+            <%= content_tag :small, employee.department.name %>
+          </td>
           <td>
             <%= link_to 'View', employee, class: 'btn btn-secondary btn-sm' %>
             <%= link_to 'Edit', edit_employee_path(employee), class: 'btn btn-secondary btn-sm' %>

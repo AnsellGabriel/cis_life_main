@@ -10,7 +10,12 @@ class ApplicationController < ActionController::Base
     when "CoopUser"
       redirect_to coop_members_path	
     when "Employee"
-      redirect_to employees_path
+      case current_user.userable.department_id
+      when 17
+        redirect_to process_coverages_path
+      else
+        redirect_to employees_path
+      end
     else
       super
     end

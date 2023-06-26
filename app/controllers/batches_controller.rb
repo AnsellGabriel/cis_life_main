@@ -36,10 +36,43 @@ class BatchesController < ApplicationController
     @group_remit = @batch.group_remit
     @questionaires = BatchHealthDec.where(batch_id: @batch.id).where(answerable_type: "HealthDec")
     @subquestions = BatchHealthDec.where(batch_id: @batch.id).where(answerable_type: "HealthDecSubquestion")
+
+    @for_und = params[:for_und]
+    @md = params[:md]
+
+    # Medical Director Remarks
+    @batch_remark = @batch.batch_remarks.build
+    @batch_status = "test"
+    @batch_status = "MD"
+    @rem_status = :md_reco
+    @process_coverage = @batch.group_remit.process_coverage
+
+  end
+
+  def all_health_decs
+    @group_remit = GroupRemit.find(params[:group_remit_id])
+    @batches = Batch.joins(:batch_health_decs).distinct
   end
   
   def index
     @pagy, @batches = pagy(@group_remit.batches, items: 10)
+  end
+
+  def approve_all
+    @process_coverage = ProcessCoverage.find(params[:process_coverage])
+    @batches = @process_coverage.group_remit.batches
+
+    @batches.each do |batch|
+      if batch.insurance_status == "for_review"
+        if (18..65).include?(batch.age)
+          batch.update_attribute(:insurance_status, "approved")
+          @process_coverage.increment!(:approved_count)
+        end
+      end
+    end
+
+    redirect_to process_coverage_path(@process_coverage), notice: "Batches have been approved!"
+
   end
 
   def show
