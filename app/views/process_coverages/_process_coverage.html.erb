@@ -54,7 +54,7 @@
       <% end %>
 
 
-      <% unless process_coverage.status == "approved" || process_coverage.status == "denied" || process_coverage.status == "pending" || process_coverage.group_remit.batches.where(insurance_status: 2..3).count == 0  %>
+      <% if process_coverage.status == "pending" || process_coverage.status == "for_process" %>
         <%= link_to new_process_remark_path(ref: process_coverage, pro_status: "Approve", rem_status: "Approved"), title: "Approve", class: "btn btn-sm btn-success mb-2 me-2", data: { turbo_frame: "remote_modal" } do %>
           <%= bootstrap_icon "check-lg" %> Approve
         <% end %>
