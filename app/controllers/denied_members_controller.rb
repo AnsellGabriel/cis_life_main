@@ -5,7 +5,7 @@ class DeniedMembersController < ApplicationController
 	before_action :set_group_remit
 
 	def index
-		@denied_members = @group_remit.denied_members.order(:name)
+		@denied_members = @group_remit.denied_members.order(created_at: :desc)
 	end
 
 	def download_csv

@@ -16,13 +16,15 @@ class BatchHealthDecsController < InheritedResources::Base
 
   def create
     @member = @batch.member_details
-    @batch_health_dec = @batch.batch_health_decs.build
+    @batch_health_dec = @batch
     @questionaire = HealthDec.where(active: true)
     # Retrieve the form data from params
     question_params = params[:question]
 
     ActiveRecord::Base.transaction do
       begin
+        pre_approved_helth_dec = true
+
         question_params.each do |question_id, question_data|
           health_dec = HealthDec.find(question_id)
     
@@ -31,6 +33,11 @@ class BatchHealthDecsController < InheritedResources::Base
           end
     
           answer = health_dec.batch_health_decs.build(answer: question_data[:answer], batch_id: @batch.id)
+
+          if question_data[:answer] != health_dec.valid_answer.to_s
+            pre_approved_helth_dec = false
+          end
+
           answer.save!
     
           subquestions = question_data[:subquestion]
@@ -53,7 +60,14 @@ class BatchHealthDecsController < InheritedResources::Base
         # All records created successfully, commit the transaction
         # If an exception occurs before this point, the transaction will be automatically rolled back
         # and no changes will be persisted to the database
+        if pre_approved_helth_dec
+          @batch.update!(valid_health_dec: true)
+        end
+
         ActiveRecord::Base.connection.commit_db_transaction
+
+        
+
         redirect_to health_dec_group_remit_batch_path(@batch.group_remit, @batch), notice: "Health declaration saved!"
         
       rescue ActiveRecord::Rollback => e
