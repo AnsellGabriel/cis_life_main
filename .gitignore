@@ -4,3 +4,4 @@
 /tmp/*
 dump.rdb
 .byebug_history
+/config/master.key
