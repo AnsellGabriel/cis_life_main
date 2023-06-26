@@ -134,5 +134,4 @@ module ApplicationHelper
 			when "md_reco" then content_tag(:span, "M.D Recommendation", class: "badge rounded-pill bg-warning")
 		end
 	end
-
 end

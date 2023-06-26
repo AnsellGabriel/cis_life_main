@@ -10,13 +10,8 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-<<<<<<< HEAD
 ActiveRecord::Schema[7.0].define(version: 2023_06_22_083643) do
   create_table "active_admin_comments", charset: "utf8mb4", force: :cascade do |t|
-=======
-ActiveRecord::Schema[7.0].define(version: 2023_06_23_073113) do
-  create_table "active_admin_comments", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
->>>>>>> main
     t.string "namespace"
     t.text "body"
     t.string "resource_type"
@@ -42,7 +37,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_06_23_073113) do
     t.index ["reset_password_token"], name: "index_admin_users_on_reset_password_token", unique: true
   end
 
-  create_table "agent_groups", charset: "utf8mb4", force: :cascade do |t|
+  create_table "agent_groups", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.string "name"
     t.text "description"
     t.datetime "created_at", null: false
@@ -61,7 +56,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_06_23_073113) do
     t.index ["agent_group_id"], name: "index_agents_on_agent_group_id"
   end
 
-  create_table "agreement_benefits", charset: "utf8mb4", force: :cascade do |t|
+  create_table "agreement_benefits", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.bigint "agreement_id"
     t.bigint "plan_id"
     t.bigint "proposal_id"
@@ -80,7 +75,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_06_23_073113) do
     t.index ["proposal_id"], name: "index_agreement_benefits_on_proposal_id"
   end
 
-  create_table "agreements", charset: "utf8mb4", force: :cascade do |t|
+  create_table "agreements", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.bigint "plan_id"
     t.bigint "cooperative_id"
     t.bigint "agent_id"
@@ -146,7 +141,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_06_23_073113) do
     t.index ["member_dependent_id"], name: "index_batch_dependents_on_member_dependent_id"
   end
 
-  create_table "batch_health_decs", charset: "utf8mb4", force: :cascade do |t|
+  create_table "batch_health_decs", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.bigint "batch_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
@@ -230,14 +225,14 @@ ActiveRecord::Schema[7.0].define(version: 2023_06_23_073113) do
     t.index ["member_id"], name: "index_coop_members_on_member_id"
   end
 
-  create_table "coop_types", charset: "utf8mb4", force: :cascade do |t|
+  create_table "coop_types", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.string "name"
     t.text "description"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
   end
 
-  create_table "coop_users", charset: "utf8mb4", force: :cascade do |t|
+  create_table "coop_users", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.string "last_name"
     t.string "first_name"
     t.string "middle_name"
@@ -339,6 +334,43 @@ ActiveRecord::Schema[7.0].define(version: 2023_06_23_073113) do
     t.datetime "updated_at", null: false
   end
 
+  create_table "geo_barangays", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+    t.string "name"
+    t.bigint "geo_region_id"
+    t.bigint "geo_province_id"
+    t.bigint "geo_municipality_id"
+    t.string "psgc_code"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["geo_municipality_id"], name: "index_geo_barangays_on_geo_municipality_id"
+    t.index ["geo_province_id"], name: "index_geo_barangays_on_geo_province_id"
+    t.index ["geo_region_id"], name: "index_geo_barangays_on_geo_region_id"
+  end
+
+  create_table "geo_municipalities", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+    t.string "name"
+    t.bigint "geo_region_id"
+    t.bigint "geo_province_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["geo_province_id"], name: "index_geo_municipalities_on_geo_province_id"
+    t.index ["geo_region_id"], name: "index_geo_municipalities_on_geo_region_id"
+  end
+
+  create_table "geo_provinces", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+    t.string "name"
+    t.bigint "geo_region_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["geo_region_id"], name: "index_geo_provinces_on_geo_region_id"
+  end
+
+  create_table "geo_regions", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+    t.string "name"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
   create_table "geo_barangays", charset: "utf8mb4", force: :cascade do |t|
     t.string "name"
     t.bigint "geo_region_id"
@@ -395,7 +427,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_06_23_073113) do
     t.index ["anniversary_id"], name: "index_group_remits_on_anniversary_id"
   end
 
-  create_table "health_dec_subquestions", charset: "utf8mb4", force: :cascade do |t|
+  create_table "health_dec_subquestions", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.bigint "health_dec_id", null: false
     t.text "question"
     t.datetime "created_at", null: false
@@ -403,7 +435,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_06_23_073113) do
     t.index ["health_dec_id"], name: "index_health_dec_subquestions_on_health_dec_id"
   end
 
-  create_table "health_decs", charset: "utf8mb4", force: :cascade do |t|
+  create_table "health_decs", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.text "question"
     t.boolean "active"
     t.boolean "with_details"
@@ -413,7 +445,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_06_23_073113) do
     t.datetime "updated_at", null: false
   end
 
-  create_table "member_dependents", charset: "utf8mb4", force: :cascade do |t|
+  create_table "member_dependents", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.string "last_name"
     t.string "first_name"
     t.string "middle_name"
@@ -456,7 +488,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_06_23_073113) do
     t.string "street"
   end
 
-  create_table "plans", charset: "utf8mb4", force: :cascade do |t|
+  create_table "plans", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.string "name"
     t.text "description"
     t.integer "entry_age_from"
@@ -528,14 +560,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_06_23_073113) do
     t.index ["cooperative_id"], name: "index_proposals_on_cooperative_id"
   end
 
-  create_table "underwriting_routes", charset: "utf8mb4", force: :cascade do |t|
-    t.string "name"
-    t.string "description"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-  end
-
-  create_table "users", charset: "utf8mb4", force: :cascade do |t|
+  create_table "users", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.string "email", default: "", null: false
     t.string "encrypted_password", default: "", null: false
     t.string "reset_password_token"
@@ -573,7 +598,6 @@ ActiveRecord::Schema[7.0].define(version: 2023_06_23_073113) do
   add_foreign_key "denied_members", "group_remits"
   add_foreign_key "employees", "departments"
   add_foreign_key "group_remits", "agreements"
-  add_foreign_key "health_dec_subquestions", "health_decs"
   add_foreign_key "health_dec_subquestions", "health_decs"
   add_foreign_key "member_dependents", "members"
   add_foreign_key "product_benefits", "agreement_benefits"

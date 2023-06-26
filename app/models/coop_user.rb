@@ -12,7 +12,7 @@ class CoopUser < ApplicationRecord
   def to_s
     get_fullname.titleize
   end
-
+  
   def get_fullname
     "#{first_name} #{last_name}"
   end

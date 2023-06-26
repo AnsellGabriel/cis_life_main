@@ -28,6 +28,12 @@ class GroupRemitsController < InheritedResources::Base
     else
       @group_remit.set_under_review_status
     end
+
+    if all_renewal
+      @group_remit.set_for_payment_status
+    else
+      @group_remit.set_under_review_status
+    end
     
     respond_to do |format|
       if @group_remit.save
