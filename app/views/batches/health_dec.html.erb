@@ -3,19 +3,27 @@
 <%= turbo_frame_tag "modal-xl" do %>
   <div class="modal-header">
     <%= content_tag :h5, "Health Declaration - #{@member.last_name}, #{@member.first_name} #{@member.middle_name}", class: "modal-title", id: "staticBackdropLabel" %>
+<<<<<<< HEAD
     <% unless @for_und.present? %>
       <%= link_to group_remit_path(@group_remit), data: {turbo: false} do %>
         <button type="button" class="btn-close" aria-label="Close"></button>
       <% end %>
       <% else %>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+=======
+    <%= link_to group_remit_path(@group_remit), data: {turbo: false} do %>
+      <button type="button" class="btn-close" aria-label="Close"></button>
+>>>>>>> main
     <% end %>
   </div>
   
   <div class="modal-body">
+<<<<<<< HEAD
     <% if @md.present? %>
       <%= render 'coop_members/coop_member', member: @batch.coop_member.member, coop_member: @batch.coop_member %>
     <% end %> 
+=======
+>>>>>>> main
     <table class="table table-bordered">
       <thead>
         <tr>

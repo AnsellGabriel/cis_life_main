@@ -76,10 +76,14 @@ class BatchHealthDecsController < InheritedResources::Base
   private
     def batch_health_dec_params
 <<<<<<< HEAD
+<<<<<<< HEAD
       params.require(:batch_health_dec).permit(:ans_q1, :ans_q2, :ans_q3, :ans_q3_desc, :ans_q4, :ans_q4_desc, :ans_q5_a, :ans_q5_a_desc, :ans_q5_b, :ans_q5_b_desc, :batch_id)
 =======
       params.require(:batch_health_dec).permit(:question)
 >>>>>>> 5d3ce79 (merge from underwriting module to main)
+=======
+      params.require(:batch_health_dec).permit(:question)
+>>>>>>> main
     end
 
     def set_batch
