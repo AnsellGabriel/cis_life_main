@@ -1,10 +1,5 @@
 
 # Ignore uploaded files (if using Active Storage).
 /storage/*
-<<<<<<< HEAD
-/tmp
-/log
-=======
 /tmp/*
 dump.rdb
->>>>>>> main
