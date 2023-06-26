@@ -50,8 +50,7 @@ class BatchesController < ApplicationController
 
   def all_health_decs
     @group_remit = GroupRemit.find(params[:group_remit_id])
-    # @batches = Batch.joins(:batch_health_decs, :group_remit).distinct
-    @batches = @group_remit.batches.joins(:batch_health_decs).distinct
+    @batches = Batch.joins(:batch_health_decs).distinct
     # @member = @batch.member_details
     # @batch_health_dec = @batch.batch_health_decs
     # @group_remit = @batch.group_remit
