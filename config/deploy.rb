@@ -14,7 +14,7 @@ set :deploy_to, "/home/deploy/#{fetch :application}"
 set :branch, "main"
 
 append :linked_dirs, 'log', 'tmp/pids', 'tmp/cache', 'tmp/sockets', 'vendor/bundle', '.bundle', 'public/system', 'public/uploads'
-append :linked_files, "config/master.key"
+append :linked_files, "config/master.key", "config/secrets.yml"
 
 set :linked_files, fetch(:linked_files, []).push('config/master.key')
 
@@ -24,6 +24,9 @@ namespace :deploy do
       on roles(:app), in: :sequence, wait: 10 do
         unless test("[ -f #{shared_path}/config/master.key ]")
           upload! 'config/master.key', "#{shared_path}/config/master.key"
+        end
+        unless test("[ -f #{shared_path}/config/secrets.yml ]")
+          upload! 'config/secrets.yml', "#{shared_path}/config/secrets.yml"
         end
         
       end
