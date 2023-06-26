@@ -1,5 +1,8 @@
 
 # Ignore uploaded files (if using Active Storage).
 /storage/*
+/log/*
 /tmp/*
 dump.rdb
+.byebug_history
+```

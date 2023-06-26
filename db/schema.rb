@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_06_23_073113) do
+ActiveRecord::Schema[7.0].define(version: 2023_06_26_054630) do
   create_table "active_admin_comments", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.string "namespace"
     t.text "body"
@@ -414,6 +414,19 @@ ActiveRecord::Schema[7.0].define(version: 2023_06_23_073113) do
     t.string "gyrt_type"
   end
 
+  create_table "process_claims", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+    t.bigint "cooperative_id", null: false
+    t.bigint "agreement_id", null: false
+    t.bigint "batch_id", null: false
+    t.date "date_incident"
+    t.string "entry_type"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["agreement_id"], name: "index_process_claims_on_agreement_id"
+    t.index ["batch_id"], name: "index_process_claims_on_batch_id"
+    t.index ["cooperative_id"], name: "index_process_claims_on_cooperative_id"
+  end
+
   create_table "product_benefits", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.decimal "coverage_amount", precision: 10, scale: 2
     t.decimal "premium", precision: 10, scale: 2
@@ -477,6 +490,9 @@ ActiveRecord::Schema[7.0].define(version: 2023_06_23_073113) do
   add_foreign_key "group_remits", "agreements"
   add_foreign_key "health_dec_subquestions", "health_decs"
   add_foreign_key "member_dependents", "members"
+  add_foreign_key "process_claims", "agreements"
+  add_foreign_key "process_claims", "batches"
+  add_foreign_key "process_claims", "cooperatives"
   add_foreign_key "product_benefits", "agreement_benefits"
   add_foreign_key "product_benefits", "benefits"
   add_foreign_key "proposals", "cooperatives"

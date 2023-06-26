@@ -1,0 +1,15 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  cooperative: one
+  agreement: one
+  batch: one
+  date_incident: 2023-06-26
+  entry_type: MyString
+
+two:
+  cooperative: two
+  agreement: two
+  batch: two
+  date_incident: 2023-06-26
+  entry_type: MyString

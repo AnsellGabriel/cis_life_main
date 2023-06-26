@@ -1,0 +1,9 @@
+
+<%= render @process_claim %>
+
+<div>
+  <%= link_to "Edit", edit_process_claim_path(@process_claim), class: 'btn btn-primary' %> |
+  <%= link_to "Back", process_claims_path, class: 'btn btn-primary' %>
+
+  <%= button_to "Delete", @process_claim, method: :delete, class: 'btn btn-danger' %>
+</div>

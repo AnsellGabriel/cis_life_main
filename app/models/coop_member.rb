@@ -15,5 +15,5 @@ class CoopMember < ApplicationRecord
   def set_full_name
     self.full_name = "#{member.last_name}, #{member.first_name} #{member.middle_name}"
   end
-
+  
 end

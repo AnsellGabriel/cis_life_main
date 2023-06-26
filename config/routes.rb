@@ -2,6 +2,7 @@
 require 'sidekiq/web'
 
 Rails.application.routes.draw do 
+  resources :process_claims
   resources :coop_agreements do
     resources :group_remits
   end
@@ -72,6 +73,7 @@ Rails.application.routes.draw do
 
   resources :coop_members do
     get :selected, on: :member
+    get :member_agreements, on: :member
   end
 
   devise_for :admin_users, ActiveAdmin::Devise.config
