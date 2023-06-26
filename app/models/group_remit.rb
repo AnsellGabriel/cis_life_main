@@ -173,11 +173,7 @@ class GroupRemit < ApplicationRecord
   end
 
   def batches_without_health_dec
-<<<<<<< HEAD
-    batches.where(status: :recent).where.not(id: self.batches.joins(:batch_health_dec).select(:id))
-=======
     batches.where(status: :recent).where.not(id: self.batches.joins(:batch_health_decs).select(:id))
->>>>>>> 5d3ce79 (merge from underwriting module to main)
   end
 
   def all_batches_have_beneficiaries?

@@ -2,11 +2,8 @@ class Batch < ApplicationRecord
   include Calculate
   attr_accessor :rank
 
-<<<<<<< HEAD
-=======
 
 
->>>>>>> 5d3ce79 (merge from underwriting module to main)
   # remove association of coop_member from agreement.coop_members
   # if batch is destroyed and status is new/recent
   before_destroy :delete_agreements_coop_members, if: :new_status?
@@ -21,11 +18,7 @@ class Batch < ApplicationRecord
   # updates the batches table realtime when a new batch is created
   after_create_commit -> { broadcast_prepend_to [ coop_member.cooperative, "batches" ], locals: { group_remit: self.group_remit, agreement: self.group_remit.agreement }, target: "batches_body" }
   # updates the batches table realtime when a batch is updated
-<<<<<<< HEAD
-  after_update_commit -> { broadcast_replace_to [ coop_member.cooperative, "batches" ], locals: { group_remit: self.group_remit }, target: self }
-=======
   # after_update_commit -> { broadcast_replace_to [ coop_member.cooperative, "batches" ], locals: { group_remit: self.group_remit }, target: self }
->>>>>>> 5d3ce79 (merge from underwriting module to main)
   # updates the batches table realtime when a batch is destroyed
   after_destroy_commit -> { broadcast_remove_to [ coop_member.cooperative, "batches" ], target: self }
 

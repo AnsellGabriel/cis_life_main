@@ -302,7 +302,7 @@
             </td>
             <td>
               <% unless process_coverage.status != "for_process" && process_coverage.status != "pending" %>
-                <% unless batch.insurance_status != "for_review" %>
+                <% unless batch.insurance_status != "for_review" && batch.insurance_status != "pending" %>
                   <%#= link_to approve_batch_process_coverage_path(batch: batch), title: "Approve", class: "btn btn-sm btn-success" do %>
                     <%#= bootstrap_icon "check-lg" %>
                   <%# end %>
