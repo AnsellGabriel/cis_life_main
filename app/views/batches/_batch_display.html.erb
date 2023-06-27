@@ -82,7 +82,7 @@
             <div class="col-sm-12 <%= flex_justify_align('center', 'center') %> gap-2">
           <% end %>
             <div class="d-flex gap-1 align-items-center">
-                <h6 class="mb-0">Beneficiaries</h6>
+                <h6 class="mb-0 text-primary">Beneficiaries</h6>
                 <!-- button to open turbo-frame "modal"  -->
                 <% if @group_remit.pending? || (@group_remit.for_renewal? && batch.recent?) %>
                   <% if @batch.batch_beneficiaries.size < 4 %>
@@ -170,7 +170,7 @@
           <div class="row">
             <div class="col-sm-12 <%= flex_justify_align('center') %>">
               <div class="gap-1 <%= flex_justify_align('','center') %>">
-                  <h6 class="mb-0">Dependents</h6>
+                  <h6 class="mb-0 text-primary">Dependents</h6>
                   <!-- button to open turbo-frame "modal"  -->
                   <% unless @group_remit.active? || @group_remit.expired? || @group_remit.for_renewal? %>
                     <% if @batch.batch_dependents.size < 4 %>

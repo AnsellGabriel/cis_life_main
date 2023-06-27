@@ -57,7 +57,7 @@ class BatchImportService
 
       if duplicate_member
         # add_duplicate_member(member)
-        create_denied_member(member, 'Member already exist in the group remit.')
+        create_denied_member(member, 'Member already exist in the batch.')
         next
       else
         @added_members_counter += create_batch(member, batch_hash)

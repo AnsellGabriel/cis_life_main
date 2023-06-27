@@ -132,7 +132,7 @@
 </div>
 
 <div class="<%= flex_justify_align('', 'center') %> gap-1">
-  <%= content_tag :span, @group_remit.status.titleize, style: "color: #{gr_presenter.status_color}; font-weight: 700;" %>
+  <%= content_tag :span, gr_presenter.status_text, class: gr_presenter.status_badge %>
   <%= content_tag :h3, "#{@agreement.moa_no}", class: 'mb-0' %>
 </div>
 

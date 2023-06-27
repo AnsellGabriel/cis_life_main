@@ -1,4 +1,6 @@
 class Batch < ApplicationRecord
+  validate :unique_coop_member_in_anniversary, if: -> { group_remit.present? }
+
   include Calculate
   attr_accessor :rank
 
@@ -121,4 +123,16 @@ class Batch < ApplicationRecord
 
     agreement.coop_members.delete(coop_member)
   end
+
+  def unique_coop_member_in_anniversary
+    if coop_member.present? && group_remit.agreement.group_remits.joins(:anniversary, batches: :coop_member)
+            .where('coop_members.id': coop_member_id)
+            .where.not(group_remits: { id: group_remit_id })
+            .where.not(anniversaries: { id: group_remit.anniversary_id })
+            .exists?
+
+      errors.add(:coop_member_id, "already exists in another batch with a different anniversary")
+    end
+  end
+
 end

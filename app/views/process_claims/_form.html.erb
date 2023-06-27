@@ -4,11 +4,7 @@
   <%= f.error_notification message: f.object.errors[:base].to_sentence if f.object.errors[:base].present? %>
 
   <div class="form-inputs mb-3">
-    <%= f.association :cooperative %>
-    <%= f.association :agreement %>
-    <%= f.association :batch %>
     <%= f.input :date_incident %>
-    <%= f.input :entry_type %>
   </div>
 
   <div class="form-actions text-end">

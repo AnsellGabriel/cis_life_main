@@ -86,13 +86,13 @@ class BatchesController < ApplicationController
               redirect_to group_remit_path(@group_remit)
               flash[:notice] = "Member successfully added"
             }
-          else
-            format.html { render :new, status: :unprocessable_entity }
           end
         end
       end
     rescue NoMethodError
       return redirect_to group_remit_path(@group_remit), alert: "Please include the rank of the member"
+    rescue ActiveRecord::RecordInvalid => e
+      return redirect_to group_remit_path(@group_remit), alert: e.message.gsub!(/\AValidation failed:\s?/, '')
     end
 
   end
