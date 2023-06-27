@@ -3128,3 +3128,995 @@ Caused by:
 /home/deploy/.rbenv/versions/3.0.3/bin/bundle:23:in `<main>'
  DEBUG [d2893bbe] 	Tasks: TOP => environment
  DEBUG [d2893bbe] 	(See full trace by running task with --trace)
+  INFO ---------------------------------------------------------------------------
+  INFO START 2023-06-27 11:57:55 +0800 cap production deploy:check
+  INFO ---------------------------------------------------------------------------
+ DEBUG [9e738f74] Running [ -d $HOME/.rbenv/versions/3.0.3 ] as deploy@139.177.186.220
+ DEBUG [9e738f74] Command: [ -d $HOME/.rbenv/versions/3.0.3 ]
+ DEBUG [9e738f74] Finished in 0.993 seconds with exit status 0 (successful).
+ DEBUG [5943700b] Running /usr/bin/env which passenger as deploy@139.177.186.220
+ DEBUG [5943700b] Command: /usr/bin/env which passenger
+ DEBUG [5943700b] 	/usr/bin/passenger
+ DEBUG [5943700b] Finished in 0.151 seconds with exit status 0 (successful).
+  INFO [46eb105b] Running /usr/bin/env mkdir -p /tmp as deploy@139.177.186.220
+ DEBUG [46eb105b] Command: ( export RBENV_ROOT="$HOME/.rbenv" RBENV_VERSION="3.0.3" ; /usr/bin/env mkdir -p /tmp )
+  INFO [46eb105b] Finished in 0.165 seconds with exit status 0 (successful).
+ DEBUG Uploading /tmp/git-ssh-4fdd31a5dc9fbce04329.sh 0.0%
+  INFO Uploading /tmp/git-ssh-4fdd31a5dc9fbce04329.sh 100.0%
+  INFO [78c65bac] Running /usr/bin/env chmod 700 /tmp/git-ssh-4fdd31a5dc9fbce04329.sh as deploy@139.177.186.220
+ DEBUG [78c65bac] Command: ( export RBENV_ROOT="$HOME/.rbenv" RBENV_VERSION="3.0.3" ; /usr/bin/env chmod 700 /tmp/git-ssh-4fdd31a5dc9fbce04329.sh )
+  INFO [78c65bac] Finished in 0.169 seconds with exit status 0 (successful).
+  INFO [c2436308] Running /usr/bin/env git ls-remote git@github.com:AnsellGabriel/cis_life_main.git HEAD as deploy@139.177.186.220
+ DEBUG [c2436308] Command: ( export RBENV_ROOT="$HOME/.rbenv" RBENV_VERSION="3.0.3" GIT_ASKPASS="/bin/echo" GIT_SSH="/tmp/git-ssh-4fdd31a5dc9fbce04329.sh" ; /usr/bin/env git ls-remote git@github.com:AnsellGabriel/cis_life_main.git HEAD )
+ DEBUG [c2436308] 	7cc1b131b60e1844a2473ed84ce9d747ccb9d5e4	HEAD
+  INFO [c2436308] Finished in 3.040 seconds with exit status 0 (successful).
+  INFO [19e8b450] Running /usr/bin/env mkdir -p /home/deploy/cis_life_main/shared /home/deploy/cis_life_main/releases as deploy@139.177.186.220
+ DEBUG [19e8b450] Command: ( export RBENV_ROOT="$HOME/.rbenv" RBENV_VERSION="3.0.3" ; /usr/bin/env mkdir -p /home/deploy/cis_life_main/shared /home/deploy/cis_life_main/releases )
+  INFO [19e8b450] Finished in 0.151 seconds with exit status 0 (successful).
+  INFO [5fdb11c1] Running /usr/bin/env mkdir -p /home/deploy/cis_life_main/shared/log /home/deploy/cis_life_main/shared/tmp/pids /home/deploy/cis_life_main/shared/tmp/cache /home/deploy/cis_life_main/shared/tmp/sockets /home/deploy/cis_life_main/shared/vendor/bundle /home/deploy/cis_life_main/shared/.bundle /home/deploy/cis_life_main/shared/public/system /home/deploy/cis_life_main/shared/public/uploads /home/deploy/cis_life_main/shared/public/assets as deploy@139.177.186.220
+ DEBUG [5fdb11c1] Command: ( export RBENV_ROOT="$HOME/.rbenv" RBENV_VERSION="3.0.3" ; /usr/bin/env mkdir -p /home/deploy/cis_life_main/shared/log /home/deploy/cis_life_main/shared/tmp/pids /home/deploy/cis_life_main/shared/tmp/cache /home/deploy/cis_life_main/shared/tmp/sockets /home/deploy/cis_life_main/shared/vendor/bundle /home/deploy/cis_life_main/shared/.bundle /home/deploy/cis_life_main/shared/public/system /home/deploy/cis_life_main/shared/public/uploads /home/deploy/cis_life_main/shared/public/assets )
+  INFO [5fdb11c1] Finished in 0.147 seconds with exit status 0 (successful).
+  INFO [cc57e6fc] Running /usr/bin/env mkdir -p /home/deploy/cis_life_main/shared/config as deploy@139.177.186.220
+ DEBUG [cc57e6fc] Command: ( export RBENV_ROOT="$HOME/.rbenv" RBENV_VERSION="3.0.3" ; /usr/bin/env mkdir -p /home/deploy/cis_life_main/shared/config )
+  INFO [cc57e6fc] Finished in 0.159 seconds with exit status 0 (successful).
+ DEBUG [5cfd2ad3] Running [ -f /home/deploy/cis_life_main/shared/config/master.key ] as deploy@139.177.186.220
+ DEBUG [5cfd2ad3] Command: [ -f /home/deploy/cis_life_main/shared/config/master.key ]
+ DEBUG [5cfd2ad3] Finished in 0.161 seconds with exit status 1 (failed).
+ DEBUG Uploading config/master.key 0.0%
+  INFO Uploading config/master.key 100.0%
+ DEBUG [1bc39059] Running [ -f /home/deploy/cis_life_main/shared/config/secrets.yml ] as deploy@139.177.186.220
+ DEBUG [1bc39059] Command: [ -f /home/deploy/cis_life_main/shared/config/secrets.yml ]
+ DEBUG [1bc39059] Finished in 0.145 seconds with exit status 1 (failed).
+ DEBUG Uploading config/secrets.yml 0.0%
+  INFO Uploading config/secrets.yml 100.0%
+ DEBUG [e757c9a9] Running [ -f /home/deploy/cis_life_main/shared/config/database.yml ] as deploy@139.177.186.220
+ DEBUG [e757c9a9] Command: [ -f /home/deploy/cis_life_main/shared/config/database.yml ]
+ DEBUG [e757c9a9] Finished in 0.149 seconds with exit status 0 (successful).
+ DEBUG [dfd9ffbe] Running [ -f /home/deploy/cis_life_main/shared/config/master.key ] as deploy@139.177.186.220
+ DEBUG [dfd9ffbe] Command: [ -f /home/deploy/cis_life_main/shared/config/master.key ]
+ DEBUG [dfd9ffbe] Finished in 0.151 seconds with exit status 0 (successful).
+ DEBUG [ecea3088] Running [ -f /home/deploy/cis_life_main/shared/config/secrets.yml ] as deploy@139.177.186.220
+ DEBUG [ecea3088] Command: [ -f /home/deploy/cis_life_main/shared/config/secrets.yml ]
+ DEBUG [ecea3088] Finished in 0.149 seconds with exit status 0 (successful).
+ DEBUG [b6917cf0] Running [ -f /home/deploy/cis_life_main/shared/config/database.yml ] as deploy@139.177.186.220
+ DEBUG [b6917cf0] Command: [ -f /home/deploy/cis_life_main/shared/config/database.yml ]
+ DEBUG [b6917cf0] Finished in 0.152 seconds with exit status 0 (successful).
+ DEBUG [fd1e0acc] Running [ -f /home/deploy/cis_life_main/shared/config/database.yml ] as deploy@139.177.186.220
+ DEBUG [fd1e0acc] Command: [ -f /home/deploy/cis_life_main/shared/config/database.yml ]
+ DEBUG [fd1e0acc] Finished in 0.147 seconds with exit status 0 (successful).
+ DEBUG [f959a63d] Running [ -f /home/deploy/cis_life_main/shared/config/master.key ] as deploy@139.177.186.220
+ DEBUG [f959a63d] Command: [ -f /home/deploy/cis_life_main/shared/config/master.key ]
+ DEBUG [f959a63d] Finished in 0.162 seconds with exit status 0 (successful).
+  INFO ---------------------------------------------------------------------------
+  INFO START 2023-06-27 12:01:48 +0800 cap production deploy
+  INFO ---------------------------------------------------------------------------
+ DEBUG [5fbda860] Running [ -d $HOME/.rbenv/versions/3.0.3 ] as deploy@139.177.186.220
+ DEBUG [5fbda860] Command: [ -d $HOME/.rbenv/versions/3.0.3 ]
+ DEBUG [5fbda860] Finished in 1.020 seconds with exit status 0 (successful).
+ DEBUG [55568bc9] Running /usr/bin/env which passenger as deploy@139.177.186.220
+ DEBUG [55568bc9] Command: /usr/bin/env which passenger
+ DEBUG [55568bc9] 	/usr/bin/passenger
+ DEBUG [55568bc9] Finished in 0.159 seconds with exit status 0 (successful).
+  INFO [7dd04a04] Running /usr/bin/env mkdir -p /tmp as deploy@139.177.186.220
+ DEBUG [7dd04a04] Command: ( export RBENV_ROOT="$HOME/.rbenv" RBENV_VERSION="3.0.3" ; /usr/bin/env mkdir -p /tmp )
+  INFO [7dd04a04] Finished in 0.155 seconds with exit status 0 (successful).
+ DEBUG Uploading /tmp/git-ssh-ef192334733bc306b130.sh 0.0%
+  INFO Uploading /tmp/git-ssh-ef192334733bc306b130.sh 100.0%
+  INFO [f8cf109c] Running /usr/bin/env chmod 700 /tmp/git-ssh-ef192334733bc306b130.sh as deploy@139.177.186.220
+ DEBUG [f8cf109c] Command: ( export RBENV_ROOT="$HOME/.rbenv" RBENV_VERSION="3.0.3" ; /usr/bin/env chmod 700 /tmp/git-ssh-ef192334733bc306b130.sh )
+  INFO [f8cf109c] Finished in 0.156 seconds with exit status 0 (successful).
+  INFO [a9326c53] Running /usr/bin/env git ls-remote git@github.com:AnsellGabriel/cis_life_main.git HEAD as deploy@139.177.186.220
+ DEBUG [a9326c53] Command: ( export RBENV_ROOT="$HOME/.rbenv" RBENV_VERSION="3.0.3" GIT_ASKPASS="/bin/echo" GIT_SSH="/tmp/git-ssh-ef192334733bc306b130.sh" ; /usr/bin/env git ls-remote git@github.com:AnsellGabriel/cis_life_main.git HEAD )
+ DEBUG [a9326c53] 	7cc1b131b60e1844a2473ed84ce9d747ccb9d5e4	HEAD
+  INFO [a9326c53] Finished in 2.941 seconds with exit status 0 (successful).
+  INFO [ddc81e0e] Running /usr/bin/env mkdir -p /home/deploy/cis_life_main/shared /home/deploy/cis_life_main/releases as deploy@139.177.186.220
+ DEBUG [ddc81e0e] Command: ( export RBENV_ROOT="$HOME/.rbenv" RBENV_VERSION="3.0.3" ; /usr/bin/env mkdir -p /home/deploy/cis_life_main/shared /home/deploy/cis_life_main/releases )
+  INFO [ddc81e0e] Finished in 0.091 seconds with exit status 0 (successful).
+  INFO [eeff702f] Running /usr/bin/env mkdir -p /home/deploy/cis_life_main/shared/log /home/deploy/cis_life_main/shared/tmp/pids /home/deploy/cis_life_main/shared/tmp/cache /home/deploy/cis_life_main/shared/tmp/sockets /home/deploy/cis_life_main/shared/vendor/bundle /home/deploy/cis_life_main/shared/.bundle /home/deploy/cis_life_main/shared/public/system /home/deploy/cis_life_main/shared/public/uploads /home/deploy/cis_life_main/shared/public/assets as deploy@139.177.186.220
+ DEBUG [eeff702f] Command: ( export RBENV_ROOT="$HOME/.rbenv" RBENV_VERSION="3.0.3" ; /usr/bin/env mkdir -p /home/deploy/cis_life_main/shared/log /home/deploy/cis_life_main/shared/tmp/pids /home/deploy/cis_life_main/shared/tmp/cache /home/deploy/cis_life_main/shared/tmp/sockets /home/deploy/cis_life_main/shared/vendor/bundle /home/deploy/cis_life_main/shared/.bundle /home/deploy/cis_life_main/shared/public/system /home/deploy/cis_life_main/shared/public/uploads /home/deploy/cis_life_main/shared/public/assets )
+  INFO [eeff702f] Finished in 0.162 seconds with exit status 0 (successful).
+  INFO [ceba4ee2] Running /usr/bin/env mkdir -p /home/deploy/cis_life_main/shared/config as deploy@139.177.186.220
+ DEBUG [ceba4ee2] Command: ( export RBENV_ROOT="$HOME/.rbenv" RBENV_VERSION="3.0.3" ; /usr/bin/env mkdir -p /home/deploy/cis_life_main/shared/config )
+  INFO [ceba4ee2] Finished in 0.166 seconds with exit status 0 (successful).
+ DEBUG [4af62e1b] Running [ -f /home/deploy/cis_life_main/shared/config/master.key ] as deploy@139.177.186.220
+ DEBUG [4af62e1b] Command: [ -f /home/deploy/cis_life_main/shared/config/master.key ]
+ DEBUG [4af62e1b] Finished in 0.161 seconds with exit status 0 (successful).
+ DEBUG [ae0a053b] Running [ -f /home/deploy/cis_life_main/shared/config/secrets.yml ] as deploy@139.177.186.220
+ DEBUG [ae0a053b] Command: [ -f /home/deploy/cis_life_main/shared/config/secrets.yml ]
+ DEBUG [ae0a053b] Finished in 0.164 seconds with exit status 0 (successful).
+ DEBUG [30d2bac4] Running [ -f /home/deploy/cis_life_main/shared/config/database.yml ] as deploy@139.177.186.220
+ DEBUG [30d2bac4] Command: [ -f /home/deploy/cis_life_main/shared/config/database.yml ]
+ DEBUG [30d2bac4] Finished in 0.167 seconds with exit status 0 (successful).
+ DEBUG [972f20b2] Running [ -f /home/deploy/cis_life_main/shared/config/master.key ] as deploy@139.177.186.220
+ DEBUG [972f20b2] Command: [ -f /home/deploy/cis_life_main/shared/config/master.key ]
+ DEBUG [972f20b2] Finished in 0.156 seconds with exit status 0 (successful).
+ DEBUG [f2a89ff8] Running [ -f /home/deploy/cis_life_main/shared/config/secrets.yml ] as deploy@139.177.186.220
+ DEBUG [f2a89ff8] Command: [ -f /home/deploy/cis_life_main/shared/config/secrets.yml ]
+ DEBUG [f2a89ff8] Finished in 0.157 seconds with exit status 0 (successful).
+ DEBUG [231bda63] Running [ -f /home/deploy/cis_life_main/shared/config/database.yml ] as deploy@139.177.186.220
+ DEBUG [231bda63] Command: [ -f /home/deploy/cis_life_main/shared/config/database.yml ]
+ DEBUG [231bda63] Finished in 0.155 seconds with exit status 0 (successful).
+ DEBUG [eaf07dd4] Running [ -f /home/deploy/cis_life_main/shared/config/database.yml ] as deploy@139.177.186.220
+ DEBUG [eaf07dd4] Command: [ -f /home/deploy/cis_life_main/shared/config/database.yml ]
+ DEBUG [eaf07dd4] Finished in 0.161 seconds with exit status 0 (successful).
+ DEBUG [b59c98ab] Running [ -f /home/deploy/cis_life_main/shared/config/master.key ] as deploy@139.177.186.220
+ DEBUG [b59c98ab] Command: [ -f /home/deploy/cis_life_main/shared/config/master.key ]
+ DEBUG [b59c98ab] Finished in 0.168 seconds with exit status 0 (successful).
+ DEBUG [1d8a489a] Running [ -f /home/deploy/cis_life_main/current/REVISION ] as deploy@139.177.186.220
+ DEBUG [1d8a489a] Command: [ -f /home/deploy/cis_life_main/current/REVISION ]
+ DEBUG [1d8a489a] Finished in 0.154 seconds with exit status 1 (failed).
+ DEBUG [2fcf62c3] Running [ -f /home/deploy/cis_life_main/repo/HEAD ] as deploy@139.177.186.220
+ DEBUG [2fcf62c3] Command: [ -f /home/deploy/cis_life_main/repo/HEAD ]
+ DEBUG [2fcf62c3] Finished in 0.158 seconds with exit status 0 (successful).
+  INFO The repository mirror is at /home/deploy/cis_life_main/repo
+ DEBUG [e1e4bb8e] Running if test ! -d /home/deploy/cis_life_main/repo; then echo "Directory does not exist '/home/deploy/cis_life_main/repo'" 1>&2; false; fi as deploy@139.177.186.220
+ DEBUG [e1e4bb8e] Command: if test ! -d /home/deploy/cis_life_main/repo; then echo "Directory does not exist '/home/deploy/cis_life_main/repo'" 1>&2; false; fi
+ DEBUG [e1e4bb8e] Finished in 0.165 seconds with exit status 0 (successful).
+  INFO [e2b10116] Running /usr/bin/env git remote set-url origin git@github.com:AnsellGabriel/cis_life_main.git as deploy@139.177.186.220
+ DEBUG [e2b10116] Command: cd /home/deploy/cis_life_main/repo && ( export RBENV_ROOT="$HOME/.rbenv" RBENV_VERSION="3.0.3" GIT_ASKPASS="/bin/echo" GIT_SSH="/tmp/git-ssh-ef192334733bc306b130.sh" ; /usr/bin/env git remote set-url origin git@github.com:AnsellGabriel/cis_life_main.git )
+  INFO [e2b10116] Finished in 0.157 seconds with exit status 0 (successful).
+  INFO [68464082] Running /usr/bin/env git remote update --prune as deploy@139.177.186.220
+ DEBUG [68464082] Command: cd /home/deploy/cis_life_main/repo && ( export RBENV_ROOT="$HOME/.rbenv" RBENV_VERSION="3.0.3" GIT_ASKPASS="/bin/echo" GIT_SSH="/tmp/git-ssh-ef192334733bc306b130.sh" ; /usr/bin/env git remote update --prune )
+ DEBUG [68464082] 	Fetching origin
+ DEBUG [68464082] 	From github.com:AnsellGabriel/cis_life_main
+   dd6ccfe..7cc1b13  main       -> main
+  INFO [68464082] Finished in 3.290 seconds with exit status 0 (successful).
+ DEBUG [12c3822e] Running if test ! -d /home/deploy/cis_life_main/repo; then echo "Directory does not exist '/home/deploy/cis_life_main/repo'" 1>&2; false; fi as deploy@139.177.186.220
+ DEBUG [12c3822e] Command: if test ! -d /home/deploy/cis_life_main/repo; then echo "Directory does not exist '/home/deploy/cis_life_main/repo'" 1>&2; false; fi
+ DEBUG [12c3822e] Finished in 0.165 seconds with exit status 0 (successful).
+  INFO [60440db6] Running /usr/bin/env mkdir -p /home/deploy/cis_life_main/releases/20230627040154 as deploy@139.177.186.220
+ DEBUG [60440db6] Command: cd /home/deploy/cis_life_main/repo && ( export RBENV_ROOT="$HOME/.rbenv" RBENV_VERSION="3.0.3" GIT_ASKPASS="/bin/echo" GIT_SSH="/tmp/git-ssh-ef192334733bc306b130.sh" ; /usr/bin/env mkdir -p /home/deploy/cis_life_main/releases/20230627040154 )
+  INFO [60440db6] Finished in 0.197 seconds with exit status 0 (successful).
+  INFO [9a939c60] Running /usr/bin/env git archive main | /usr/bin/env tar -x -f - -C /home/deploy/cis_life_main/releases/20230627040154 as deploy@139.177.186.220
+ DEBUG [9a939c60] Command: cd /home/deploy/cis_life_main/repo && ( export RBENV_ROOT="$HOME/.rbenv" RBENV_VERSION="3.0.3" GIT_ASKPASS="/bin/echo" GIT_SSH="/tmp/git-ssh-ef192334733bc306b130.sh" ; /usr/bin/env git archive main | /usr/bin/env tar -x -f - -C /home/deploy/cis_life_main/releases/20230627040154 )
+  INFO [9a939c60] Finished in 0.490 seconds with exit status 0 (successful).
+ DEBUG [bf9777d2] Running if test ! -d /home/deploy/cis_life_main/repo; then echo "Directory does not exist '/home/deploy/cis_life_main/repo'" 1>&2; false; fi as deploy@139.177.186.220
+ DEBUG [bf9777d2] Command: if test ! -d /home/deploy/cis_life_main/repo; then echo "Directory does not exist '/home/deploy/cis_life_main/repo'" 1>&2; false; fi
+ DEBUG [bf9777d2] Finished in 0.158 seconds with exit status 0 (successful).
+ DEBUG [1be77dd8] Running /usr/bin/env git rev-list --max-count=1 main as deploy@139.177.186.220
+ DEBUG [1be77dd8] Command: cd /home/deploy/cis_life_main/repo && ( export RBENV_ROOT="$HOME/.rbenv" RBENV_VERSION="3.0.3" GIT_ASKPASS="/bin/echo" GIT_SSH="/tmp/git-ssh-ef192334733bc306b130.sh" ; /usr/bin/env git rev-list --max-count=1 main )
+ DEBUG [1be77dd8] 	7cc1b131b60e1844a2473ed84ce9d747ccb9d5e4
+ DEBUG [1be77dd8] Finished in 0.162 seconds with exit status 0 (successful).
+ DEBUG [48ace832] Running if test ! -d /home/deploy/cis_life_main/releases/20230627040154; then echo "Directory does not exist '/home/deploy/cis_life_main/releases/20230627040154'" 1>&2; false; fi as deploy@139.177.186.220
+ DEBUG [48ace832] Command: if test ! -d /home/deploy/cis_life_main/releases/20230627040154; then echo "Directory does not exist '/home/deploy/cis_life_main/releases/20230627040154'" 1>&2; false; fi
+ DEBUG [48ace832] Finished in 0.155 seconds with exit status 0 (successful).
+  INFO [a381208b] Running /usr/bin/env echo "7cc1b131b60e1844a2473ed84ce9d747ccb9d5e4" > REVISION as deploy@139.177.186.220
+ DEBUG [a381208b] Command: cd /home/deploy/cis_life_main/releases/20230627040154 && ( export RBENV_ROOT="$HOME/.rbenv" RBENV_VERSION="3.0.3" ; /usr/bin/env echo "7cc1b131b60e1844a2473ed84ce9d747ccb9d5e4" > REVISION )
+  INFO [a381208b] Finished in 0.157 seconds with exit status 0 (successful).
+  INFO [85ab44b4] Running /usr/bin/env mkdir -p /home/deploy/cis_life_main/releases/20230627040154/config as deploy@139.177.186.220
+ DEBUG [85ab44b4] Command: ( export RBENV_ROOT="$HOME/.rbenv" RBENV_VERSION="3.0.3" ; /usr/bin/env mkdir -p /home/deploy/cis_life_main/releases/20230627040154/config )
+  INFO [85ab44b4] Finished in 0.154 seconds with exit status 0 (successful).
+ DEBUG [4b54b24e] Running [ -L /home/deploy/cis_life_main/releases/20230627040154/config/master.key ] as deploy@139.177.186.220
+ DEBUG [4b54b24e] Command: [ -L /home/deploy/cis_life_main/releases/20230627040154/config/master.key ]
+ DEBUG [4b54b24e] Finished in 0.163 seconds with exit status 1 (failed).
+ DEBUG [468999ce] Running [ -f /home/deploy/cis_life_main/releases/20230627040154/config/master.key ] as deploy@139.177.186.220
+ DEBUG [468999ce] Command: [ -f /home/deploy/cis_life_main/releases/20230627040154/config/master.key ]
+ DEBUG [468999ce] Finished in 0.185 seconds with exit status 1 (failed).
+  INFO [07f8ebe5] Running /usr/bin/env ln -s /home/deploy/cis_life_main/shared/config/master.key /home/deploy/cis_life_main/releases/20230627040154/config/master.key as deploy@139.177.186.220
+ DEBUG [07f8ebe5] Command: ( export RBENV_ROOT="$HOME/.rbenv" RBENV_VERSION="3.0.3" ; /usr/bin/env ln -s /home/deploy/cis_life_main/shared/config/master.key /home/deploy/cis_life_main/releases/20230627040154/config/master.key )
+  INFO [07f8ebe5] Finished in 0.168 seconds with exit status 0 (successful).
+ DEBUG [18b3e04f] Running [ -L /home/deploy/cis_life_main/releases/20230627040154/config/secrets.yml ] as deploy@139.177.186.220
+ DEBUG [18b3e04f] Command: [ -L /home/deploy/cis_life_main/releases/20230627040154/config/secrets.yml ]
+ DEBUG [18b3e04f] Finished in 0.156 seconds with exit status 1 (failed).
+ DEBUG [2a201d37] Running [ -f /home/deploy/cis_life_main/releases/20230627040154/config/secrets.yml ] as deploy@139.177.186.220
+ DEBUG [2a201d37] Command: [ -f /home/deploy/cis_life_main/releases/20230627040154/config/secrets.yml ]
+ DEBUG [2a201d37] Finished in 0.166 seconds with exit status 0 (successful).
+  INFO [cc938ecc] Running /usr/bin/env rm /home/deploy/cis_life_main/releases/20230627040154/config/secrets.yml as deploy@139.177.186.220
+ DEBUG [cc938ecc] Command: ( export RBENV_ROOT="$HOME/.rbenv" RBENV_VERSION="3.0.3" ; /usr/bin/env rm /home/deploy/cis_life_main/releases/20230627040154/config/secrets.yml )
+  INFO [cc938ecc] Finished in 0.165 seconds with exit status 0 (successful).
+  INFO [9ae635fc] Running /usr/bin/env ln -s /home/deploy/cis_life_main/shared/config/secrets.yml /home/deploy/cis_life_main/releases/20230627040154/config/secrets.yml as deploy@139.177.186.220
+ DEBUG [9ae635fc] Command: ( export RBENV_ROOT="$HOME/.rbenv" RBENV_VERSION="3.0.3" ; /usr/bin/env ln -s /home/deploy/cis_life_main/shared/config/secrets.yml /home/deploy/cis_life_main/releases/20230627040154/config/secrets.yml )
+  INFO [9ae635fc] Finished in 0.159 seconds with exit status 0 (successful).
+ DEBUG [81cebac3] Running [ -L /home/deploy/cis_life_main/releases/20230627040154/config/database.yml ] as deploy@139.177.186.220
+ DEBUG [81cebac3] Command: [ -L /home/deploy/cis_life_main/releases/20230627040154/config/database.yml ]
+ DEBUG [81cebac3] Finished in 0.166 seconds with exit status 1 (failed).
+ DEBUG [9669df39] Running [ -f /home/deploy/cis_life_main/releases/20230627040154/config/database.yml ] as deploy@139.177.186.220
+ DEBUG [9669df39] Command: [ -f /home/deploy/cis_life_main/releases/20230627040154/config/database.yml ]
+ DEBUG [9669df39] Finished in 0.163 seconds with exit status 0 (successful).
+  INFO [16469d93] Running /usr/bin/env rm /home/deploy/cis_life_main/releases/20230627040154/config/database.yml as deploy@139.177.186.220
+ DEBUG [16469d93] Command: ( export RBENV_ROOT="$HOME/.rbenv" RBENV_VERSION="3.0.3" ; /usr/bin/env rm /home/deploy/cis_life_main/releases/20230627040154/config/database.yml )
+  INFO [16469d93] Finished in 0.157 seconds with exit status 0 (successful).
+  INFO [df8ac9c0] Running /usr/bin/env ln -s /home/deploy/cis_life_main/shared/config/database.yml /home/deploy/cis_life_main/releases/20230627040154/config/database.yml as deploy@139.177.186.220
+ DEBUG [df8ac9c0] Command: ( export RBENV_ROOT="$HOME/.rbenv" RBENV_VERSION="3.0.3" ; /usr/bin/env ln -s /home/deploy/cis_life_main/shared/config/database.yml /home/deploy/cis_life_main/releases/20230627040154/config/database.yml )
+  INFO [df8ac9c0] Finished in 0.158 seconds with exit status 0 (successful).
+ DEBUG [a2aff079] Running [ -L /home/deploy/cis_life_main/releases/20230627040154/config/database.yml ] as deploy@139.177.186.220
+ DEBUG [a2aff079] Command: [ -L /home/deploy/cis_life_main/releases/20230627040154/config/database.yml ]
+ DEBUG [a2aff079] Finished in 0.155 seconds with exit status 0 (successful).
+ DEBUG [fbb390ad] Running [ -L /home/deploy/cis_life_main/releases/20230627040154/config/master.key ] as deploy@139.177.186.220
+ DEBUG [fbb390ad] Command: [ -L /home/deploy/cis_life_main/releases/20230627040154/config/master.key ]
+ DEBUG [fbb390ad] Finished in 0.154 seconds with exit status 0 (successful).
+  INFO [a8ce1d0a] Running /usr/bin/env mkdir -p /home/deploy/cis_life_main/releases/20230627040154 /home/deploy/cis_life_main/releases/20230627040154/tmp /home/deploy/cis_life_main/releases/20230627040154/vendor /home/deploy/cis_life_main/releases/20230627040154/public as deploy@139.177.186.220
+ DEBUG [a8ce1d0a] Command: ( export RBENV_ROOT="$HOME/.rbenv" RBENV_VERSION="3.0.3" ; /usr/bin/env mkdir -p /home/deploy/cis_life_main/releases/20230627040154 /home/deploy/cis_life_main/releases/20230627040154/tmp /home/deploy/cis_life_main/releases/20230627040154/vendor /home/deploy/cis_life_main/releases/20230627040154/public )
+  INFO [a8ce1d0a] Finished in 0.189 seconds with exit status 0 (successful).
+ DEBUG [9f329987] Running [ -L /home/deploy/cis_life_main/releases/20230627040154/log ] as deploy@139.177.186.220
+ DEBUG [9f329987] Command: [ -L /home/deploy/cis_life_main/releases/20230627040154/log ]
+ DEBUG [9f329987] Finished in 0.159 seconds with exit status 1 (failed).
+ DEBUG [7db4005a] Running [ -d /home/deploy/cis_life_main/releases/20230627040154/log ] as deploy@139.177.186.220
+ DEBUG [7db4005a] Command: [ -d /home/deploy/cis_life_main/releases/20230627040154/log ]
+ DEBUG [7db4005a] Finished in 0.156 seconds with exit status 0 (successful).
+  INFO [0ffd05fd] Running /usr/bin/env rm -rf /home/deploy/cis_life_main/releases/20230627040154/log as deploy@139.177.186.220
+ DEBUG [0ffd05fd] Command: ( export RBENV_ROOT="$HOME/.rbenv" RBENV_VERSION="3.0.3" ; /usr/bin/env rm -rf /home/deploy/cis_life_main/releases/20230627040154/log )
+  INFO [0ffd05fd] Finished in 0.207 seconds with exit status 0 (successful).
+  INFO [61578c0a] Running /usr/bin/env ln -s /home/deploy/cis_life_main/shared/log /home/deploy/cis_life_main/releases/20230627040154/log as deploy@139.177.186.220
+ DEBUG [61578c0a] Command: ( export RBENV_ROOT="$HOME/.rbenv" RBENV_VERSION="3.0.3" ; /usr/bin/env ln -s /home/deploy/cis_life_main/shared/log /home/deploy/cis_life_main/releases/20230627040154/log )
+  INFO [61578c0a] Finished in 0.190 seconds with exit status 0 (successful).
+ DEBUG [b9b2e3af] Running [ -L /home/deploy/cis_life_main/releases/20230627040154/tmp/pids ] as deploy@139.177.186.220
+ DEBUG [b9b2e3af] Command: [ -L /home/deploy/cis_life_main/releases/20230627040154/tmp/pids ]
+ DEBUG [b9b2e3af] Finished in 0.166 seconds with exit status 1 (failed).
+ DEBUG [53c60005] Running [ -d /home/deploy/cis_life_main/releases/20230627040154/tmp/pids ] as deploy@139.177.186.220
+ DEBUG [53c60005] Command: [ -d /home/deploy/cis_life_main/releases/20230627040154/tmp/pids ]
+ DEBUG [53c60005] Finished in 0.155 seconds with exit status 1 (failed).
+  INFO [217611ca] Running /usr/bin/env ln -s /home/deploy/cis_life_main/shared/tmp/pids /home/deploy/cis_life_main/releases/20230627040154/tmp/pids as deploy@139.177.186.220
+ DEBUG [217611ca] Command: ( export RBENV_ROOT="$HOME/.rbenv" RBENV_VERSION="3.0.3" ; /usr/bin/env ln -s /home/deploy/cis_life_main/shared/tmp/pids /home/deploy/cis_life_main/releases/20230627040154/tmp/pids )
+  INFO [217611ca] Finished in 0.191 seconds with exit status 0 (successful).
+ DEBUG [9f6d410d] Running [ -L /home/deploy/cis_life_main/releases/20230627040154/tmp/cache ] as deploy@139.177.186.220
+ DEBUG [9f6d410d] Command: [ -L /home/deploy/cis_life_main/releases/20230627040154/tmp/cache ]
+ DEBUG [9f6d410d] Finished in 0.164 seconds with exit status 1 (failed).
+ DEBUG [ed12ce8a] Running [ -d /home/deploy/cis_life_main/releases/20230627040154/tmp/cache ] as deploy@139.177.186.220
+ DEBUG [ed12ce8a] Command: [ -d /home/deploy/cis_life_main/releases/20230627040154/tmp/cache ]
+ DEBUG [ed12ce8a] Finished in 0.208 seconds with exit status 0 (successful).
+  INFO [9d8e9b7b] Running /usr/bin/env rm -rf /home/deploy/cis_life_main/releases/20230627040154/tmp/cache as deploy@139.177.186.220
+ DEBUG [9d8e9b7b] Command: ( export RBENV_ROOT="$HOME/.rbenv" RBENV_VERSION="3.0.3" ; /usr/bin/env rm -rf /home/deploy/cis_life_main/releases/20230627040154/tmp/cache )
+  INFO [9d8e9b7b] Finished in 0.241 seconds with exit status 0 (successful).
+  INFO [2f8dd65b] Running /usr/bin/env ln -s /home/deploy/cis_life_main/shared/tmp/cache /home/deploy/cis_life_main/releases/20230627040154/tmp/cache as deploy@139.177.186.220
+ DEBUG [2f8dd65b] Command: ( export RBENV_ROOT="$HOME/.rbenv" RBENV_VERSION="3.0.3" ; /usr/bin/env ln -s /home/deploy/cis_life_main/shared/tmp/cache /home/deploy/cis_life_main/releases/20230627040154/tmp/cache )
+  INFO [2f8dd65b] Finished in 0.207 seconds with exit status 0 (successful).
+ DEBUG [44584bf1] Running [ -L /home/deploy/cis_life_main/releases/20230627040154/tmp/sockets ] as deploy@139.177.186.220
+ DEBUG [44584bf1] Command: [ -L /home/deploy/cis_life_main/releases/20230627040154/tmp/sockets ]
+ DEBUG [44584bf1] Finished in 0.195 seconds with exit status 1 (failed).
+ DEBUG [a8133e6a] Running [ -d /home/deploy/cis_life_main/releases/20230627040154/tmp/sockets ] as deploy@139.177.186.220
+ DEBUG [a8133e6a] Command: [ -d /home/deploy/cis_life_main/releases/20230627040154/tmp/sockets ]
+ DEBUG [a8133e6a] Finished in 0.152 seconds with exit status 1 (failed).
+  INFO [109d1675] Running /usr/bin/env ln -s /home/deploy/cis_life_main/shared/tmp/sockets /home/deploy/cis_life_main/releases/20230627040154/tmp/sockets as deploy@139.177.186.220
+ DEBUG [109d1675] Command: ( export RBENV_ROOT="$HOME/.rbenv" RBENV_VERSION="3.0.3" ; /usr/bin/env ln -s /home/deploy/cis_life_main/shared/tmp/sockets /home/deploy/cis_life_main/releases/20230627040154/tmp/sockets )
+  INFO [109d1675] Finished in 0.162 seconds with exit status 0 (successful).
+ DEBUG [af8a7d5a] Running [ -L /home/deploy/cis_life_main/releases/20230627040154/vendor/bundle ] as deploy@139.177.186.220
+ DEBUG [af8a7d5a] Command: [ -L /home/deploy/cis_life_main/releases/20230627040154/vendor/bundle ]
+ DEBUG [af8a7d5a] Finished in 0.152 seconds with exit status 1 (failed).
+ DEBUG [94409bc2] Running [ -d /home/deploy/cis_life_main/releases/20230627040154/vendor/bundle ] as deploy@139.177.186.220
+ DEBUG [94409bc2] Command: [ -d /home/deploy/cis_life_main/releases/20230627040154/vendor/bundle ]
+ DEBUG [94409bc2] Finished in 0.146 seconds with exit status 1 (failed).
+  INFO [94a2e288] Running /usr/bin/env ln -s /home/deploy/cis_life_main/shared/vendor/bundle /home/deploy/cis_life_main/releases/20230627040154/vendor/bundle as deploy@139.177.186.220
+ DEBUG [94a2e288] Command: ( export RBENV_ROOT="$HOME/.rbenv" RBENV_VERSION="3.0.3" ; /usr/bin/env ln -s /home/deploy/cis_life_main/shared/vendor/bundle /home/deploy/cis_life_main/releases/20230627040154/vendor/bundle )
+  INFO [94a2e288] Finished in 0.156 seconds with exit status 0 (successful).
+ DEBUG [1e3d1a72] Running [ -L /home/deploy/cis_life_main/releases/20230627040154/.bundle ] as deploy@139.177.186.220
+ DEBUG [1e3d1a72] Command: [ -L /home/deploy/cis_life_main/releases/20230627040154/.bundle ]
+ DEBUG [1e3d1a72] Finished in 0.178 seconds with exit status 1 (failed).
+ DEBUG [ee62354b] Running [ -d /home/deploy/cis_life_main/releases/20230627040154/.bundle ] as deploy@139.177.186.220
+ DEBUG [ee62354b] Command: [ -d /home/deploy/cis_life_main/releases/20230627040154/.bundle ]
+ DEBUG [ee62354b] Finished in 0.159 seconds with exit status 1 (failed).
+  INFO [8965877e] Running /usr/bin/env ln -s /home/deploy/cis_life_main/shared/.bundle /home/deploy/cis_life_main/releases/20230627040154/.bundle as deploy@139.177.186.220
+ DEBUG [8965877e] Command: ( export RBENV_ROOT="$HOME/.rbenv" RBENV_VERSION="3.0.3" ; /usr/bin/env ln -s /home/deploy/cis_life_main/shared/.bundle /home/deploy/cis_life_main/releases/20230627040154/.bundle )
+  INFO [8965877e] Finished in 0.157 seconds with exit status 0 (successful).
+ DEBUG [3280a55d] Running [ -L /home/deploy/cis_life_main/releases/20230627040154/public/system ] as deploy@139.177.186.220
+ DEBUG [3280a55d] Command: [ -L /home/deploy/cis_life_main/releases/20230627040154/public/system ]
+ DEBUG [3280a55d] Finished in 0.155 seconds with exit status 1 (failed).
+ DEBUG [20ca0d09] Running [ -d /home/deploy/cis_life_main/releases/20230627040154/public/system ] as deploy@139.177.186.220
+ DEBUG [20ca0d09] Command: [ -d /home/deploy/cis_life_main/releases/20230627040154/public/system ]
+ DEBUG [20ca0d09] Finished in 0.181 seconds with exit status 1 (failed).
+  INFO [efc5199b] Running /usr/bin/env ln -s /home/deploy/cis_life_main/shared/public/system /home/deploy/cis_life_main/releases/20230627040154/public/system as deploy@139.177.186.220
+ DEBUG [efc5199b] Command: ( export RBENV_ROOT="$HOME/.rbenv" RBENV_VERSION="3.0.3" ; /usr/bin/env ln -s /home/deploy/cis_life_main/shared/public/system /home/deploy/cis_life_main/releases/20230627040154/public/system )
+  INFO [efc5199b] Finished in 0.160 seconds with exit status 0 (successful).
+ DEBUG [4986c47b] Running [ -L /home/deploy/cis_life_main/releases/20230627040154/public/uploads ] as deploy@139.177.186.220
+ DEBUG [4986c47b] Command: [ -L /home/deploy/cis_life_main/releases/20230627040154/public/uploads ]
+ DEBUG [4986c47b] Finished in 0.195 seconds with exit status 1 (failed).
+ DEBUG [85a20367] Running [ -d /home/deploy/cis_life_main/releases/20230627040154/public/uploads ] as deploy@139.177.186.220
+ DEBUG [85a20367] Command: [ -d /home/deploy/cis_life_main/releases/20230627040154/public/uploads ]
+ DEBUG [85a20367] Finished in 0.153 seconds with exit status 1 (failed).
+  INFO [c35e20d9] Running /usr/bin/env ln -s /home/deploy/cis_life_main/shared/public/uploads /home/deploy/cis_life_main/releases/20230627040154/public/uploads as deploy@139.177.186.220
+ DEBUG [c35e20d9] Command: ( export RBENV_ROOT="$HOME/.rbenv" RBENV_VERSION="3.0.3" ; /usr/bin/env ln -s /home/deploy/cis_life_main/shared/public/uploads /home/deploy/cis_life_main/releases/20230627040154/public/uploads )
+  INFO [c35e20d9] Finished in 0.177 seconds with exit status 0 (successful).
+ DEBUG [d2dd834d] Running [ -L /home/deploy/cis_life_main/releases/20230627040154/public/assets ] as deploy@139.177.186.220
+ DEBUG [d2dd834d] Command: [ -L /home/deploy/cis_life_main/releases/20230627040154/public/assets ]
+ DEBUG [d2dd834d] Finished in 0.163 seconds with exit status 1 (failed).
+ DEBUG [68027a58] Running [ -d /home/deploy/cis_life_main/releases/20230627040154/public/assets ] as deploy@139.177.186.220
+ DEBUG [68027a58] Command: [ -d /home/deploy/cis_life_main/releases/20230627040154/public/assets ]
+ DEBUG [68027a58] Finished in 0.154 seconds with exit status 1 (failed).
+  INFO [53f3a92b] Running /usr/bin/env ln -s /home/deploy/cis_life_main/shared/public/assets /home/deploy/cis_life_main/releases/20230627040154/public/assets as deploy@139.177.186.220
+ DEBUG [53f3a92b] Command: ( export RBENV_ROOT="$HOME/.rbenv" RBENV_VERSION="3.0.3" ; /usr/bin/env ln -s /home/deploy/cis_life_main/shared/public/assets /home/deploy/cis_life_main/releases/20230627040154/public/assets )
+  INFO [53f3a92b] Finished in 0.168 seconds with exit status 0 (successful).
+ DEBUG [bf849d4f] Running if test ! -d /home/deploy/cis_life_main/releases/20230627040154; then echo "Directory does not exist '/home/deploy/cis_life_main/releases/20230627040154'" 1>&2; false; fi as deploy@139.177.186.220
+ DEBUG [bf849d4f] Command: if test ! -d /home/deploy/cis_life_main/releases/20230627040154; then echo "Directory does not exist '/home/deploy/cis_life_main/releases/20230627040154'" 1>&2; false; fi
+ DEBUG [bf849d4f] Finished in 0.205 seconds with exit status 0 (successful).
+  INFO [cd9343a4] Running $HOME/.rbenv/bin/rbenv exec bundle config --local deployment true as deploy@139.177.186.220
+ DEBUG [cd9343a4] Command: cd /home/deploy/cis_life_main/releases/20230627040154 && ( export RBENV_ROOT="$HOME/.rbenv" RBENV_VERSION="3.0.3" ; $HOME/.rbenv/bin/rbenv exec bundle config --local deployment true )
+  INFO [cd9343a4] Finished in 0.346 seconds with exit status 0 (successful).
+  INFO [fa9b5042] Running $HOME/.rbenv/bin/rbenv exec bundle config --local path /home/deploy/cis_life_main/shared/bundle as deploy@139.177.186.220
+ DEBUG [fa9b5042] Command: cd /home/deploy/cis_life_main/releases/20230627040154 && ( export RBENV_ROOT="$HOME/.rbenv" RBENV_VERSION="3.0.3" ; $HOME/.rbenv/bin/rbenv exec bundle config --local path /home/deploy/cis_life_main/shared/bundle )
+  INFO [fa9b5042] Finished in 0.368 seconds with exit status 0 (successful).
+  INFO [de1c2f3c] Running $HOME/.rbenv/bin/rbenv exec bundle config --local without development:test as deploy@139.177.186.220
+ DEBUG [de1c2f3c] Command: cd /home/deploy/cis_life_main/releases/20230627040154 && ( export RBENV_ROOT="$HOME/.rbenv" RBENV_VERSION="3.0.3" ; $HOME/.rbenv/bin/rbenv exec bundle config --local without development:test )
+  INFO [de1c2f3c] Finished in 0.467 seconds with exit status 0 (successful).
+ DEBUG [91460c5c] Running if test ! -d /home/deploy/cis_life_main/releases/20230627040154; then echo "Directory does not exist '/home/deploy/cis_life_main/releases/20230627040154'" 1>&2; false; fi as deploy@139.177.186.220
+ DEBUG [91460c5c] Command: if test ! -d /home/deploy/cis_life_main/releases/20230627040154; then echo "Directory does not exist '/home/deploy/cis_life_main/releases/20230627040154'" 1>&2; false; fi
+ DEBUG [91460c5c] Finished in 0.174 seconds with exit status 0 (successful).
+ DEBUG [fa2fc7b8] Running $HOME/.rbenv/bin/rbenv exec bundle check as deploy@139.177.186.220
+ DEBUG [fa2fc7b8] Command: cd /home/deploy/cis_life_main/releases/20230627040154 && ( export RBENV_ROOT="$HOME/.rbenv" RBENV_VERSION="3.0.3" ; $HOME/.rbenv/bin/rbenv exec bundle check )
+ DEBUG [fa2fc7b8] 	The Gemfile's dependencies are satisfied
+ DEBUG [fa2fc7b8] Finished in 0.537 seconds with exit status 0 (successful).
+  INFO The Gemfile's dependencies are satisfied, skipping installation
+ DEBUG [fe308589] Running if test ! -d /home/deploy/cis_life_main/releases/20230627040154; then echo "Directory does not exist '/home/deploy/cis_life_main/releases/20230627040154'" 1>&2; false; fi as deploy@139.177.186.220
+ DEBUG [fe308589] Command: if test ! -d /home/deploy/cis_life_main/releases/20230627040154; then echo "Directory does not exist '/home/deploy/cis_life_main/releases/20230627040154'" 1>&2; false; fi
+ DEBUG [fe308589] Finished in 0.175 seconds with exit status 0 (successful).
+  INFO [12aa5462] Running $HOME/.rbenv/bin/rbenv exec bundle exec rake assets:precompile as deploy@139.177.186.220
+ DEBUG [12aa5462] Command: cd /home/deploy/cis_life_main/releases/20230627040154 && ( export RBENV_ROOT="$HOME/.rbenv" RBENV_VERSION="3.0.3" RAILS_ENV="production" RAILS_GROUPS="assets" ; $HOME/.rbenv/bin/rbenv exec bundle exec rake assets:precompile )
+ DEBUG [12aa5462] 	rake aborted!
+ DEBUG [12aa5462] 	ActiveSupport::MessageEncryptor::InvalidMessage: ActiveSupport::MessageEncryptor::InvalidMessage
+ DEBUG [12aa5462] 	/home/deploy/cis_life_main/shared/bundle/ruby/3.0.0/gems/activesupport-7.0.4.3/lib/active_support/message_encryptor.rb:209:in `rescue in _decrypt'
+/home/deploy/cis_life_main/shared/bundle/ruby/3.0.0/gems/activesupport-7.0.4.3/lib/active_support/message_encryptor.rb:186:in `_decrypt'
+/home/deploy/cis_life_main/shared/bundle/ruby/3.0.0/gems/activesupport-7.0.4.3/lib/active_support/message_encryptor.rb:160:in `decrypt_and_verify'
+/home/deploy/cis_life_main/shared/bundle/ruby/3.0.0/gems/activesupport-7.0.4.3/lib/active_support/messages/rotator.rb:22:in `decrypt_and_verify'
+/home/deploy/cis_life_main/shared/bundle/ruby/3.0.0/gems/activesupport-7.0.4.3/lib/active_support/encrypted_file.rb:104:in `decrypt'
+/home/deploy/cis_life_main/shared/bundle/ruby/3.0.0/gems/activesupport-7.0.4.3/lib/active_support/encrypted_file.rb:66:in `read'
+/home/deploy/cis_life_main/shared/bundle/ruby/3.0.0/gems/activesupport-7.0.4.3/lib/active_support/encrypted_configuration.rb:21:in `read'
+/home/deploy/cis_life_main/shared/bundle/ruby/3.0.0/gems/activesupport-7.0.4.3/lib/active_support/encrypted_configuration.rb:33:in `config'
+/home/deploy/cis_life_main/shared/bundle/ruby/3.0.0/gems/activesupport-7.0.4.3/lib/active_support/encrypted_configuration.rb:48:in `options'
+/home/deploy/cis_life_main/shared/bundle/ruby/3.0.0/gems/activesupport-7.0.4.3/lib/active_support/core_ext/module/delegation.rb:303:in `method_missing'
+/home/deploy/cis_life_main/shared/bundle/ruby/3.0.0/gems/activerecord-7.0.4.3/lib/active_record/railtie.rb:332:in `block in <class:Railtie>'
+/home/deploy/cis_life_main/shared/bundle/ruby/3.0.0/gems/railties-7.0.4.3/lib/rails/initializable.rb:32:in `instance_exec'
+/home/deploy/cis_life_main/shared/bundle/ruby/3.0.0/gems/railties-7.0.4.3/lib/rails/initializable.rb:32:in `run'
+/home/deploy/cis_life_main/shared/bundle/ruby/3.0.0/gems/railties-7.0.4.3/lib/rails/initializable.rb:61:in `block in run_initializers'
+/home/deploy/cis_life_main/shared/bundle/ruby/3.0.0/gems/railties-7.0.4.3/lib/rails/initializable.rb:60:in `run_initializers'
+/home/deploy/cis_life_main/shared/bundle/ruby/3.0.0/gems/railties-7.0.4.3/lib/rails/application.rb:372:in `initialize!'
+/home/deploy/cis_life_main/releases/20230627040154/config/environment.rb:5:in `<top (required)>'
+/home/deploy/cis_life_main/shared/bundle/ruby/3.0.0/gems/zeitwerk-2.6.8/lib/zeitwerk/kernel.rb:38:in `require'
+/home/deploy/cis_life_main/shared/bundle/ruby/3.0.0/gems/zeitwerk-2.6.8/lib/zeitwerk/kernel.rb:38:in `require'
+/home/deploy/cis_life_main/shared/bundle/ruby/3.0.0/gems/railties-7.0.4.3/lib/rails/application.rb:348:in `require_environment!'
+/home/deploy/cis_life_main/shared/bundle/ruby/3.0.0/gems/railties-7.0.4.3/lib/rails/application.rb:511:in `block in run_tasks_blocks'
+/home/deploy/cis_life_main/shared/bundle/ruby/3.0.0/gems/sprockets-rails-3.4.2/lib/sprockets/rails/task.rb:61:in `block (2 levels) in define'
+/home/deploy/cis_life_main/shared/bundle/ruby/3.0.0/gems/rake-13.0.6/exe/rake:27:in `<top (required)>'
+/home/deploy/.rbenv/versions/3.0.3/bin/bundle:23:in `load'
+/home/deploy/.rbenv/versions/3.0.3/bin/bundle:23:in `<main>'
+ DEBUG [12aa5462] 	
+Caused by:
+ DEBUG [12aa5462] 	ArgumentError: key must be 16 bytes
+ DEBUG [12aa5462] 	/home/deploy/cis_life_main/shared/bundle/ruby/3.0.0/gems/activesupport-7.0.4.3/lib/active_support/message_encryptor.rb:196:in `key='
+/home/deploy/cis_life_main/shared/bundle/ruby/3.0.0/gems/activesupport-7.0.4.3/lib/active_support/message_encryptor.rb:196:in `_decrypt'
+/home/deploy/cis_life_main/shared/bundle/ruby/3.0.0/gems/activesupport-7.0.4.3/lib/active_support/message_encryptor.rb:160:in `decrypt_and_verify'
+/home/deploy/cis_life_main/shared/bundle/ruby/3.0.0/gems/activesupport-7.0.4.3/lib/active_support/messages/rotator.rb:22:in `decrypt_and_verify'
+/home/deploy/cis_life_main/shared/bundle/ruby/3.0.0/gems/activesupport-7.0.4.3/lib/active_support/encrypted_file.rb:104:in `decrypt'
+/home/deploy/cis_life_main/shared/bundle/ruby/3.0.0/gems/activesupport-7.0.4.3/lib/active_support/encrypted_file.rb:66:in `read'
+/home/deploy/cis_life_main/shared/bundle/ruby/3.0.0/gems/activesupport-7.0.4.3/lib/active_support/encrypted_configuration.rb:21:in `read'
+/home/deploy/cis_life_main/shared/bundle/ruby/3.0.0/gems/activesupport-7.0.4.3/lib/active_support/encrypted_configuration.rb:33:in `config'
+/home/deploy/cis_life_main/shared/bundle/ruby/3.0.0/gems/activesupport-7.0.4.3/lib/active_support/encrypted_configuration.rb:48:in `options'
+/home/deploy/cis_life_main/shared/bundle/ruby/3.0.0/gems/activesupport-7.0.4.3/lib/active_support/core_ext/module/delegation.rb:303:in `method_missing'
+/home/deploy/cis_life_main/shared/bundle/ruby/3.0.0/gems/activerecord-7.0.4.3/lib/active_record/railtie.rb:332:in `block in <class:Railtie>'
+/home/deploy/cis_life_main/shared/bundle/ruby/3.0.0/gems/railties-7.0.4.3/lib/rails/initializable.rb:32:in `instance_exec'
+/home/deploy/cis_life_main/shared/bundle/ruby/3.0.0/gems/railties-7.0.4.3/lib/rails/initializable.rb:32:in `run'
+/home/deploy/cis_life_main/shared/bundle/ruby/3.0.0/gems/railties-7.0.4.3/lib/rails/initializable.rb:61:in `block in run_initializers'
+/home/deploy/cis_life_main/shared/bundle/ruby/3.0.0/gems/railties-7.0.4.3/lib/rails/initializable.rb:60:in `run_initializers'
+/home/deploy/cis_life_main/shared/bundle/ruby/3.0.0/gems/railties-7.0.4.3/lib/rails/application.rb:372:in `initialize!'
+/home/deploy/cis_life_main/releases/20230627040154/config/environment.rb:5:in `<top (required)>'
+/home/deploy/cis_life_main/shared/bundle/ruby/3.0.0/gems/zeitwerk-2.6.8/lib/zeitwerk/kernel.rb:38:in `require'
+/home/deploy/cis_life_main/shared/bundle/ruby/3.0.0/gems/zeitwerk-2.6.8/lib/zeitwerk/kernel.rb:38:in `require'
+/home/deploy/cis_life_main/shared/bundle/ruby/3.0.0/gems/railties-7.0.4.3/lib/rails/application.rb:348:in `require_environment!'
+/home/deploy/cis_life_main/shared/bundle/ruby/3.0.0/gems/railties-7.0.4.3/lib/rails/application.rb:511:in `block in run_tasks_blocks'
+/home/deploy/cis_life_main/shared/bundle/ruby/3.0.0/gems/sprockets-rails-3.4.2/lib/sprockets/rails/task.rb:61:in `block (2 levels) in define'
+/home/deploy/cis_life_main/shared/bundle/ruby/3.0.0/gems/rake-13.0.6/exe/rake:27:in `<top (required)>'
+/home/deploy/.rbenv/versions/3.0.3/bin/bundle:23:in `load'
+/home/deploy/.rbenv/versions/3.0.3/bin/bundle:23:in `<main>'
+ DEBUG [12aa5462] 	Tasks: TOP => environment
+ DEBUG [12aa5462] 	(See full trace by running task with --trace)
+  INFO ---------------------------------------------------------------------------
+  INFO START 2023-06-27 13:11:36 +0800 cap production deploy
+  INFO ---------------------------------------------------------------------------
+ DEBUG [1f8b5850] Running [ -d $HOME/.rbenv/versions/3.0.3 ] as deploy@139.177.186.220
+ DEBUG [1f8b5850] Command: [ -d $HOME/.rbenv/versions/3.0.3 ]
+ DEBUG [1f8b5850] Finished in 1.199 seconds with exit status 0 (successful).
+ DEBUG [f6adf7ab] Running /usr/bin/env which passenger as deploy@139.177.186.220
+ DEBUG [f6adf7ab] Command: /usr/bin/env which passenger
+ DEBUG [f6adf7ab] 	/usr/bin/passenger
+ DEBUG [f6adf7ab] Finished in 0.158 seconds with exit status 0 (successful).
+  INFO [524ae1eb] Running /usr/bin/env mkdir -p /tmp as deploy@139.177.186.220
+ DEBUG [524ae1eb] Command: ( export RBENV_ROOT="$HOME/.rbenv" RBENV_VERSION="3.0.3" ; /usr/bin/env mkdir -p /tmp )
+  INFO [524ae1eb] Finished in 0.178 seconds with exit status 0 (successful).
+ DEBUG Uploading /tmp/git-ssh-4720760832fccae118e0.sh 0.0%
+  INFO Uploading /tmp/git-ssh-4720760832fccae118e0.sh 100.0%
+  INFO [3539b198] Running /usr/bin/env chmod 700 /tmp/git-ssh-4720760832fccae118e0.sh as deploy@139.177.186.220
+ DEBUG [3539b198] Command: ( export RBENV_ROOT="$HOME/.rbenv" RBENV_VERSION="3.0.3" ; /usr/bin/env chmod 700 /tmp/git-ssh-4720760832fccae118e0.sh )
+  INFO [3539b198] Finished in 0.163 seconds with exit status 0 (successful).
+  INFO [a02e6114] Running /usr/bin/env git ls-remote git@github.com:AnsellGabriel/cis_life_main.git HEAD as deploy@139.177.186.220
+ DEBUG [a02e6114] Command: ( export RBENV_ROOT="$HOME/.rbenv" RBENV_VERSION="3.0.3" GIT_ASKPASS="/bin/echo" GIT_SSH="/tmp/git-ssh-4720760832fccae118e0.sh" ; /usr/bin/env git ls-remote git@github.com:AnsellGabriel/cis_life_main.git HEAD )
+ DEBUG [a02e6114] 	7cc1b131b60e1844a2473ed84ce9d747ccb9d5e4	HEAD
+  INFO [a02e6114] Finished in 3.092 seconds with exit status 0 (successful).
+  INFO [81c1e5fd] Running /usr/bin/env mkdir -p /home/deploy/cis_life_main/shared /home/deploy/cis_life_main/releases as deploy@139.177.186.220
+ DEBUG [81c1e5fd] Command: ( export RBENV_ROOT="$HOME/.rbenv" RBENV_VERSION="3.0.3" ; /usr/bin/env mkdir -p /home/deploy/cis_life_main/shared /home/deploy/cis_life_main/releases )
+  INFO [81c1e5fd] Finished in 0.153 seconds with exit status 0 (successful).
+  INFO [73ccd441] Running /usr/bin/env mkdir -p /home/deploy/cis_life_main/shared/log /home/deploy/cis_life_main/shared/tmp/pids /home/deploy/cis_life_main/shared/tmp/cache /home/deploy/cis_life_main/shared/tmp/sockets /home/deploy/cis_life_main/shared/vendor/bundle /home/deploy/cis_life_main/shared/.bundle /home/deploy/cis_life_main/shared/public/system /home/deploy/cis_life_main/shared/public/uploads /home/deploy/cis_life_main/shared/public/assets as deploy@139.177.186.220
+ DEBUG [73ccd441] Command: ( export RBENV_ROOT="$HOME/.rbenv" RBENV_VERSION="3.0.3" ; /usr/bin/env mkdir -p /home/deploy/cis_life_main/shared/log /home/deploy/cis_life_main/shared/tmp/pids /home/deploy/cis_life_main/shared/tmp/cache /home/deploy/cis_life_main/shared/tmp/sockets /home/deploy/cis_life_main/shared/vendor/bundle /home/deploy/cis_life_main/shared/.bundle /home/deploy/cis_life_main/shared/public/system /home/deploy/cis_life_main/shared/public/uploads /home/deploy/cis_life_main/shared/public/assets )
+  INFO [73ccd441] Finished in 0.184 seconds with exit status 0 (successful).
+  INFO [008e4def] Running /usr/bin/env mkdir -p /home/deploy/cis_life_main/shared/config as deploy@139.177.186.220
+ DEBUG [008e4def] Command: ( export RBENV_ROOT="$HOME/.rbenv" RBENV_VERSION="3.0.3" ; /usr/bin/env mkdir -p /home/deploy/cis_life_main/shared/config )
+  INFO [008e4def] Finished in 0.162 seconds with exit status 0 (successful).
+ DEBUG [1949274d] Running [ -f /home/deploy/cis_life_main/shared/config/master.key ] as deploy@139.177.186.220
+ DEBUG [1949274d] Command: [ -f /home/deploy/cis_life_main/shared/config/master.key ]
+ DEBUG [1949274d] Finished in 0.171 seconds with exit status 0 (successful).
+ DEBUG [70441245] Running [ -f /home/deploy/cis_life_main/shared/config/secrets.yml ] as deploy@139.177.186.220
+ DEBUG [70441245] Command: [ -f /home/deploy/cis_life_main/shared/config/secrets.yml ]
+ DEBUG [70441245] Finished in 0.161 seconds with exit status 0 (successful).
+ DEBUG [323baae0] Running [ -f /home/deploy/cis_life_main/shared/config/database.yml ] as deploy@139.177.186.220
+ DEBUG [323baae0] Command: [ -f /home/deploy/cis_life_main/shared/config/database.yml ]
+ DEBUG [323baae0] Finished in 0.167 seconds with exit status 0 (successful).
+ DEBUG [04b66b1a] Running [ -f /home/deploy/cis_life_main/shared/config/master.key ] as deploy@139.177.186.220
+ DEBUG [04b66b1a] Command: [ -f /home/deploy/cis_life_main/shared/config/master.key ]
+ DEBUG [04b66b1a] Finished in 0.206 seconds with exit status 0 (successful).
+ DEBUG [8cc0d6a9] Running [ -f /home/deploy/cis_life_main/shared/config/secrets.yml ] as deploy@139.177.186.220
+ DEBUG [8cc0d6a9] Command: [ -f /home/deploy/cis_life_main/shared/config/secrets.yml ]
+ DEBUG [8cc0d6a9] Finished in 0.301 seconds with exit status 0 (successful).
+ DEBUG [ab2cb469] Running [ -f /home/deploy/cis_life_main/shared/config/database.yml ] as deploy@139.177.186.220
+ DEBUG [ab2cb469] Command: [ -f /home/deploy/cis_life_main/shared/config/database.yml ]
+ DEBUG [ab2cb469] Finished in 0.182 seconds with exit status 0 (successful).
+ DEBUG [1fb2b57e] Running [ -f /home/deploy/cis_life_main/shared/config/database.yml ] as deploy@139.177.186.220
+ DEBUG [1fb2b57e] Command: [ -f /home/deploy/cis_life_main/shared/config/database.yml ]
+ DEBUG [1fb2b57e] Finished in 0.185 seconds with exit status 0 (successful).
+ DEBUG [f409491e] Running [ -f /home/deploy/cis_life_main/shared/config/master.key ] as deploy@139.177.186.220
+ DEBUG [f409491e] Command: [ -f /home/deploy/cis_life_main/shared/config/master.key ]
+ DEBUG [f409491e] Finished in 0.178 seconds with exit status 0 (successful).
+ DEBUG [e3415eaa] Running [ -f /home/deploy/cis_life_main/current/REVISION ] as deploy@139.177.186.220
+ DEBUG [e3415eaa] Command: [ -f /home/deploy/cis_life_main/current/REVISION ]
+ DEBUG [e3415eaa] Finished in 0.166 seconds with exit status 1 (failed).
+ DEBUG [b960f7cf] Running [ -f /home/deploy/cis_life_main/repo/HEAD ] as deploy@139.177.186.220
+ DEBUG [b960f7cf] Command: [ -f /home/deploy/cis_life_main/repo/HEAD ]
+ DEBUG [b960f7cf] Finished in 0.163 seconds with exit status 0 (successful).
+  INFO The repository mirror is at /home/deploy/cis_life_main/repo
+ DEBUG [fd9fe180] Running if test ! -d /home/deploy/cis_life_main/repo; then echo "Directory does not exist '/home/deploy/cis_life_main/repo'" 1>&2; false; fi as deploy@139.177.186.220
+ DEBUG [fd9fe180] Command: if test ! -d /home/deploy/cis_life_main/repo; then echo "Directory does not exist '/home/deploy/cis_life_main/repo'" 1>&2; false; fi
+ DEBUG [fd9fe180] Finished in 0.153 seconds with exit status 0 (successful).
+  INFO [854f1de5] Running /usr/bin/env git remote set-url origin git@github.com:AnsellGabriel/cis_life_main.git as deploy@139.177.186.220
+ DEBUG [854f1de5] Command: cd /home/deploy/cis_life_main/repo && ( export RBENV_ROOT="$HOME/.rbenv" RBENV_VERSION="3.0.3" GIT_ASKPASS="/bin/echo" GIT_SSH="/tmp/git-ssh-4720760832fccae118e0.sh" ; /usr/bin/env git remote set-url origin git@github.com:AnsellGabriel/cis_life_main.git )
+  INFO [854f1de5] Finished in 0.159 seconds with exit status 0 (successful).
+  INFO [8fab0205] Running /usr/bin/env git remote update --prune as deploy@139.177.186.220
+ DEBUG [8fab0205] Command: cd /home/deploy/cis_life_main/repo && ( export RBENV_ROOT="$HOME/.rbenv" RBENV_VERSION="3.0.3" GIT_ASKPASS="/bin/echo" GIT_SSH="/tmp/git-ssh-4720760832fccae118e0.sh" ; /usr/bin/env git remote update --prune )
+ DEBUG [8fab0205] 	Fetching origin
+ DEBUG [8fab0205] 	From github.com:AnsellGabriel/cis_life_main
+   e399bbf..9cdcf36  coop-claims      -> coop-claims
+ * [new ref]         refs/pull/9/head -> refs/pull/9/head
+  INFO [8fab0205] Finished in 6.808 seconds with exit status 0 (successful).
+ DEBUG [9797d479] Running if test ! -d /home/deploy/cis_life_main/repo; then echo "Directory does not exist '/home/deploy/cis_life_main/repo'" 1>&2; false; fi as deploy@139.177.186.220
+ DEBUG [9797d479] Command: if test ! -d /home/deploy/cis_life_main/repo; then echo "Directory does not exist '/home/deploy/cis_life_main/repo'" 1>&2; false; fi
+ DEBUG [9797d479] Finished in 0.168 seconds with exit status 0 (successful).
+  INFO [c917fa4d] Running /usr/bin/env mkdir -p /home/deploy/cis_life_main/releases/20230627051144 as deploy@139.177.186.220
+ DEBUG [c917fa4d] Command: cd /home/deploy/cis_life_main/repo && ( export RBENV_ROOT="$HOME/.rbenv" RBENV_VERSION="3.0.3" GIT_ASKPASS="/bin/echo" GIT_SSH="/tmp/git-ssh-4720760832fccae118e0.sh" ; /usr/bin/env mkdir -p /home/deploy/cis_life_main/releases/20230627051144 )
+  INFO [c917fa4d] Finished in 0.162 seconds with exit status 0 (successful).
+  INFO [f8ab382c] Running /usr/bin/env git archive main | /usr/bin/env tar -x -f - -C /home/deploy/cis_life_main/releases/20230627051144 as deploy@139.177.186.220
+ DEBUG [f8ab382c] Command: cd /home/deploy/cis_life_main/repo && ( export RBENV_ROOT="$HOME/.rbenv" RBENV_VERSION="3.0.3" GIT_ASKPASS="/bin/echo" GIT_SSH="/tmp/git-ssh-4720760832fccae118e0.sh" ; /usr/bin/env git archive main | /usr/bin/env tar -x -f - -C /home/deploy/cis_life_main/releases/20230627051144 )
+  INFO [f8ab382c] Finished in 0.665 seconds with exit status 0 (successful).
+ DEBUG [49bb7613] Running if test ! -d /home/deploy/cis_life_main/repo; then echo "Directory does not exist '/home/deploy/cis_life_main/repo'" 1>&2; false; fi as deploy@139.177.186.220
+ DEBUG [49bb7613] Command: if test ! -d /home/deploy/cis_life_main/repo; then echo "Directory does not exist '/home/deploy/cis_life_main/repo'" 1>&2; false; fi
+ DEBUG [49bb7613] Finished in 0.200 seconds with exit status 0 (successful).
+ DEBUG [3883afeb] Running /usr/bin/env git rev-list --max-count=1 main as deploy@139.177.186.220
+ DEBUG [3883afeb] Command: cd /home/deploy/cis_life_main/repo && ( export RBENV_ROOT="$HOME/.rbenv" RBENV_VERSION="3.0.3" GIT_ASKPASS="/bin/echo" GIT_SSH="/tmp/git-ssh-4720760832fccae118e0.sh" ; /usr/bin/env git rev-list --max-count=1 main )
+ DEBUG [3883afeb] 	7cc1b131b60e1844a2473ed84ce9d747ccb9d5e4
+ DEBUG [3883afeb] Finished in 0.157 seconds with exit status 0 (successful).
+ DEBUG [c91b33ef] Running if test ! -d /home/deploy/cis_life_main/releases/20230627051144; then echo "Directory does not exist '/home/deploy/cis_life_main/releases/20230627051144'" 1>&2; false; fi as deploy@139.177.186.220
+ DEBUG [c91b33ef] Command: if test ! -d /home/deploy/cis_life_main/releases/20230627051144; then echo "Directory does not exist '/home/deploy/cis_life_main/releases/20230627051144'" 1>&2; false; fi
+ DEBUG [c91b33ef] Finished in 0.154 seconds with exit status 0 (successful).
+  INFO [5f623b36] Running /usr/bin/env echo "7cc1b131b60e1844a2473ed84ce9d747ccb9d5e4" > REVISION as deploy@139.177.186.220
+ DEBUG [5f623b36] Command: cd /home/deploy/cis_life_main/releases/20230627051144 && ( export RBENV_ROOT="$HOME/.rbenv" RBENV_VERSION="3.0.3" ; /usr/bin/env echo "7cc1b131b60e1844a2473ed84ce9d747ccb9d5e4" > REVISION )
+  INFO [5f623b36] Finished in 0.160 seconds with exit status 0 (successful).
+  INFO [2a713e97] Running /usr/bin/env mkdir -p /home/deploy/cis_life_main/releases/20230627051144/config as deploy@139.177.186.220
+ DEBUG [2a713e97] Command: ( export RBENV_ROOT="$HOME/.rbenv" RBENV_VERSION="3.0.3" ; /usr/bin/env mkdir -p /home/deploy/cis_life_main/releases/20230627051144/config )
+  INFO [2a713e97] Finished in 0.199 seconds with exit status 0 (successful).
+ DEBUG [d77ab13e] Running [ -L /home/deploy/cis_life_main/releases/20230627051144/config/master.key ] as deploy@139.177.186.220
+ DEBUG [d77ab13e] Command: [ -L /home/deploy/cis_life_main/releases/20230627051144/config/master.key ]
+ DEBUG [d77ab13e] Finished in 0.152 seconds with exit status 1 (failed).
+ DEBUG [67106a4c] Running [ -f /home/deploy/cis_life_main/releases/20230627051144/config/master.key ] as deploy@139.177.186.220
+ DEBUG [67106a4c] Command: [ -f /home/deploy/cis_life_main/releases/20230627051144/config/master.key ]
+ DEBUG [67106a4c] Finished in 0.156 seconds with exit status 1 (failed).
+  INFO [cc8073cf] Running /usr/bin/env ln -s /home/deploy/cis_life_main/shared/config/master.key /home/deploy/cis_life_main/releases/20230627051144/config/master.key as deploy@139.177.186.220
+ DEBUG [cc8073cf] Command: ( export RBENV_ROOT="$HOME/.rbenv" RBENV_VERSION="3.0.3" ; /usr/bin/env ln -s /home/deploy/cis_life_main/shared/config/master.key /home/deploy/cis_life_main/releases/20230627051144/config/master.key )
+  INFO [cc8073cf] Finished in 0.162 seconds with exit status 0 (successful).
+ DEBUG [15421346] Running [ -L /home/deploy/cis_life_main/releases/20230627051144/config/secrets.yml ] as deploy@139.177.186.220
+ DEBUG [15421346] Command: [ -L /home/deploy/cis_life_main/releases/20230627051144/config/secrets.yml ]
+ DEBUG [15421346] Finished in 0.156 seconds with exit status 1 (failed).
+ DEBUG [466b7546] Running [ -f /home/deploy/cis_life_main/releases/20230627051144/config/secrets.yml ] as deploy@139.177.186.220
+ DEBUG [466b7546] Command: [ -f /home/deploy/cis_life_main/releases/20230627051144/config/secrets.yml ]
+ DEBUG [466b7546] Finished in 0.162 seconds with exit status 0 (successful).
+  INFO [748b48e9] Running /usr/bin/env rm /home/deploy/cis_life_main/releases/20230627051144/config/secrets.yml as deploy@139.177.186.220
+ DEBUG [748b48e9] Command: ( export RBENV_ROOT="$HOME/.rbenv" RBENV_VERSION="3.0.3" ; /usr/bin/env rm /home/deploy/cis_life_main/releases/20230627051144/config/secrets.yml )
+  INFO [748b48e9] Finished in 0.169 seconds with exit status 0 (successful).
+  INFO [0a18e547] Running /usr/bin/env ln -s /home/deploy/cis_life_main/shared/config/secrets.yml /home/deploy/cis_life_main/releases/20230627051144/config/secrets.yml as deploy@139.177.186.220
+ DEBUG [0a18e547] Command: ( export RBENV_ROOT="$HOME/.rbenv" RBENV_VERSION="3.0.3" ; /usr/bin/env ln -s /home/deploy/cis_life_main/shared/config/secrets.yml /home/deploy/cis_life_main/releases/20230627051144/config/secrets.yml )
+  INFO [0a18e547] Finished in 0.298 seconds with exit status 0 (successful).
+ DEBUG [9992a664] Running [ -L /home/deploy/cis_life_main/releases/20230627051144/config/database.yml ] as deploy@139.177.186.220
+ DEBUG [9992a664] Command: [ -L /home/deploy/cis_life_main/releases/20230627051144/config/database.yml ]
+ DEBUG [9992a664] Finished in 0.152 seconds with exit status 1 (failed).
+ DEBUG [d2145e32] Running [ -f /home/deploy/cis_life_main/releases/20230627051144/config/database.yml ] as deploy@139.177.186.220
+ DEBUG [d2145e32] Command: [ -f /home/deploy/cis_life_main/releases/20230627051144/config/database.yml ]
+ DEBUG [d2145e32] Finished in 0.157 seconds with exit status 0 (successful).
+  INFO [b2bbea29] Running /usr/bin/env rm /home/deploy/cis_life_main/releases/20230627051144/config/database.yml as deploy@139.177.186.220
+ DEBUG [b2bbea29] Command: ( export RBENV_ROOT="$HOME/.rbenv" RBENV_VERSION="3.0.3" ; /usr/bin/env rm /home/deploy/cis_life_main/releases/20230627051144/config/database.yml )
+  INFO [b2bbea29] Finished in 0.161 seconds with exit status 0 (successful).
+  INFO [262c0ce6] Running /usr/bin/env ln -s /home/deploy/cis_life_main/shared/config/database.yml /home/deploy/cis_life_main/releases/20230627051144/config/database.yml as deploy@139.177.186.220
+ DEBUG [262c0ce6] Command: ( export RBENV_ROOT="$HOME/.rbenv" RBENV_VERSION="3.0.3" ; /usr/bin/env ln -s /home/deploy/cis_life_main/shared/config/database.yml /home/deploy/cis_life_main/releases/20230627051144/config/database.yml )
+  INFO [262c0ce6] Finished in 0.163 seconds with exit status 0 (successful).
+ DEBUG [7f9ae0ce] Running [ -L /home/deploy/cis_life_main/releases/20230627051144/config/database.yml ] as deploy@139.177.186.220
+ DEBUG [7f9ae0ce] Command: [ -L /home/deploy/cis_life_main/releases/20230627051144/config/database.yml ]
+ DEBUG [7f9ae0ce] Finished in 0.166 seconds with exit status 0 (successful).
+ DEBUG [8ba27edb] Running [ -L /home/deploy/cis_life_main/releases/20230627051144/config/master.key ] as deploy@139.177.186.220
+ DEBUG [8ba27edb] Command: [ -L /home/deploy/cis_life_main/releases/20230627051144/config/master.key ]
+ DEBUG [8ba27edb] Finished in 0.156 seconds with exit status 0 (successful).
+  INFO [9cad520c] Running /usr/bin/env mkdir -p /home/deploy/cis_life_main/releases/20230627051144 /home/deploy/cis_life_main/releases/20230627051144/tmp /home/deploy/cis_life_main/releases/20230627051144/vendor /home/deploy/cis_life_main/releases/20230627051144/public as deploy@139.177.186.220
+ DEBUG [9cad520c] Command: ( export RBENV_ROOT="$HOME/.rbenv" RBENV_VERSION="3.0.3" ; /usr/bin/env mkdir -p /home/deploy/cis_life_main/releases/20230627051144 /home/deploy/cis_life_main/releases/20230627051144/tmp /home/deploy/cis_life_main/releases/20230627051144/vendor /home/deploy/cis_life_main/releases/20230627051144/public )
+  INFO [9cad520c] Finished in 0.158 seconds with exit status 0 (successful).
+ DEBUG [21c505d2] Running [ -L /home/deploy/cis_life_main/releases/20230627051144/log ] as deploy@139.177.186.220
+ DEBUG [21c505d2] Command: [ -L /home/deploy/cis_life_main/releases/20230627051144/log ]
+ DEBUG [21c505d2] Finished in 0.161 seconds with exit status 1 (failed).
+ DEBUG [aa56bad9] Running [ -d /home/deploy/cis_life_main/releases/20230627051144/log ] as deploy@139.177.186.220
+ DEBUG [aa56bad9] Command: [ -d /home/deploy/cis_life_main/releases/20230627051144/log ]
+ DEBUG [aa56bad9] Finished in 0.154 seconds with exit status 0 (successful).
+  INFO [aef5ff58] Running /usr/bin/env rm -rf /home/deploy/cis_life_main/releases/20230627051144/log as deploy@139.177.186.220
+ DEBUG [aef5ff58] Command: ( export RBENV_ROOT="$HOME/.rbenv" RBENV_VERSION="3.0.3" ; /usr/bin/env rm -rf /home/deploy/cis_life_main/releases/20230627051144/log )
+  INFO [aef5ff58] Finished in 0.157 seconds with exit status 0 (successful).
+  INFO [f6cc4419] Running /usr/bin/env ln -s /home/deploy/cis_life_main/shared/log /home/deploy/cis_life_main/releases/20230627051144/log as deploy@139.177.186.220
+ DEBUG [f6cc4419] Command: ( export RBENV_ROOT="$HOME/.rbenv" RBENV_VERSION="3.0.3" ; /usr/bin/env ln -s /home/deploy/cis_life_main/shared/log /home/deploy/cis_life_main/releases/20230627051144/log )
+  INFO [f6cc4419] Finished in 0.159 seconds with exit status 0 (successful).
+ DEBUG [d84836c2] Running [ -L /home/deploy/cis_life_main/releases/20230627051144/tmp/pids ] as deploy@139.177.186.220
+ DEBUG [d84836c2] Command: [ -L /home/deploy/cis_life_main/releases/20230627051144/tmp/pids ]
+ DEBUG [d84836c2] Finished in 0.155 seconds with exit status 1 (failed).
+ DEBUG [fbc267fd] Running [ -d /home/deploy/cis_life_main/releases/20230627051144/tmp/pids ] as deploy@139.177.186.220
+ DEBUG [fbc267fd] Command: [ -d /home/deploy/cis_life_main/releases/20230627051144/tmp/pids ]
+ DEBUG [fbc267fd] Finished in 0.168 seconds with exit status 1 (failed).
+  INFO [67034c51] Running /usr/bin/env ln -s /home/deploy/cis_life_main/shared/tmp/pids /home/deploy/cis_life_main/releases/20230627051144/tmp/pids as deploy@139.177.186.220
+ DEBUG [67034c51] Command: ( export RBENV_ROOT="$HOME/.rbenv" RBENV_VERSION="3.0.3" ; /usr/bin/env ln -s /home/deploy/cis_life_main/shared/tmp/pids /home/deploy/cis_life_main/releases/20230627051144/tmp/pids )
+  INFO [67034c51] Finished in 0.166 seconds with exit status 0 (successful).
+ DEBUG [d1ccfb2d] Running [ -L /home/deploy/cis_life_main/releases/20230627051144/tmp/cache ] as deploy@139.177.186.220
+ DEBUG [d1ccfb2d] Command: [ -L /home/deploy/cis_life_main/releases/20230627051144/tmp/cache ]
+ DEBUG [d1ccfb2d] Finished in 0.162 seconds with exit status 1 (failed).
+ DEBUG [080f6a27] Running [ -d /home/deploy/cis_life_main/releases/20230627051144/tmp/cache ] as deploy@139.177.186.220
+ DEBUG [080f6a27] Command: [ -d /home/deploy/cis_life_main/releases/20230627051144/tmp/cache ]
+ DEBUG [080f6a27] Finished in 0.155 seconds with exit status 0 (successful).
+  INFO [63fe0d85] Running /usr/bin/env rm -rf /home/deploy/cis_life_main/releases/20230627051144/tmp/cache as deploy@139.177.186.220
+ DEBUG [63fe0d85] Command: ( export RBENV_ROOT="$HOME/.rbenv" RBENV_VERSION="3.0.3" ; /usr/bin/env rm -rf /home/deploy/cis_life_main/releases/20230627051144/tmp/cache )
+  INFO [63fe0d85] Finished in 0.226 seconds with exit status 0 (successful).
+  INFO [a4f5ad35] Running /usr/bin/env ln -s /home/deploy/cis_life_main/shared/tmp/cache /home/deploy/cis_life_main/releases/20230627051144/tmp/cache as deploy@139.177.186.220
+ DEBUG [a4f5ad35] Command: ( export RBENV_ROOT="$HOME/.rbenv" RBENV_VERSION="3.0.3" ; /usr/bin/env ln -s /home/deploy/cis_life_main/shared/tmp/cache /home/deploy/cis_life_main/releases/20230627051144/tmp/cache )
+  INFO [a4f5ad35] Finished in 0.161 seconds with exit status 0 (successful).
+ DEBUG [f11b8149] Running [ -L /home/deploy/cis_life_main/releases/20230627051144/tmp/sockets ] as deploy@139.177.186.220
+ DEBUG [f11b8149] Command: [ -L /home/deploy/cis_life_main/releases/20230627051144/tmp/sockets ]
+ DEBUG [f11b8149] Finished in 0.155 seconds with exit status 1 (failed).
+ DEBUG [2962699a] Running [ -d /home/deploy/cis_life_main/releases/20230627051144/tmp/sockets ] as deploy@139.177.186.220
+ DEBUG [2962699a] Command: [ -d /home/deploy/cis_life_main/releases/20230627051144/tmp/sockets ]
+ DEBUG [2962699a] Finished in 0.223 seconds with exit status 1 (failed).
+  INFO [e08fcaa3] Running /usr/bin/env ln -s /home/deploy/cis_life_main/shared/tmp/sockets /home/deploy/cis_life_main/releases/20230627051144/tmp/sockets as deploy@139.177.186.220
+ DEBUG [e08fcaa3] Command: ( export RBENV_ROOT="$HOME/.rbenv" RBENV_VERSION="3.0.3" ; /usr/bin/env ln -s /home/deploy/cis_life_main/shared/tmp/sockets /home/deploy/cis_life_main/releases/20230627051144/tmp/sockets )
+  INFO [e08fcaa3] Finished in 0.098 seconds with exit status 0 (successful).
+ DEBUG [e8733f72] Running [ -L /home/deploy/cis_life_main/releases/20230627051144/vendor/bundle ] as deploy@139.177.186.220
+ DEBUG [e8733f72] Command: [ -L /home/deploy/cis_life_main/releases/20230627051144/vendor/bundle ]
+ DEBUG [e8733f72] Finished in 0.161 seconds with exit status 1 (failed).
+ DEBUG [e2d60ba5] Running [ -d /home/deploy/cis_life_main/releases/20230627051144/vendor/bundle ] as deploy@139.177.186.220
+ DEBUG [e2d60ba5] Command: [ -d /home/deploy/cis_life_main/releases/20230627051144/vendor/bundle ]
+ DEBUG [e2d60ba5] Finished in 0.162 seconds with exit status 1 (failed).
+  INFO [129fc616] Running /usr/bin/env ln -s /home/deploy/cis_life_main/shared/vendor/bundle /home/deploy/cis_life_main/releases/20230627051144/vendor/bundle as deploy@139.177.186.220
+ DEBUG [129fc616] Command: ( export RBENV_ROOT="$HOME/.rbenv" RBENV_VERSION="3.0.3" ; /usr/bin/env ln -s /home/deploy/cis_life_main/shared/vendor/bundle /home/deploy/cis_life_main/releases/20230627051144/vendor/bundle )
+  INFO [129fc616] Finished in 0.218 seconds with exit status 0 (successful).
+ DEBUG [4db415f5] Running [ -L /home/deploy/cis_life_main/releases/20230627051144/.bundle ] as deploy@139.177.186.220
+ DEBUG [4db415f5] Command: [ -L /home/deploy/cis_life_main/releases/20230627051144/.bundle ]
+ DEBUG [4db415f5] Finished in 0.154 seconds with exit status 1 (failed).
+ DEBUG [5799b708] Running [ -d /home/deploy/cis_life_main/releases/20230627051144/.bundle ] as deploy@139.177.186.220
+ DEBUG [5799b708] Command: [ -d /home/deploy/cis_life_main/releases/20230627051144/.bundle ]
+ DEBUG [5799b708] Finished in 0.172 seconds with exit status 1 (failed).
+  INFO [efd00735] Running /usr/bin/env ln -s /home/deploy/cis_life_main/shared/.bundle /home/deploy/cis_life_main/releases/20230627051144/.bundle as deploy@139.177.186.220
+ DEBUG [efd00735] Command: ( export RBENV_ROOT="$HOME/.rbenv" RBENV_VERSION="3.0.3" ; /usr/bin/env ln -s /home/deploy/cis_life_main/shared/.bundle /home/deploy/cis_life_main/releases/20230627051144/.bundle )
+  INFO [efd00735] Finished in 0.155 seconds with exit status 0 (successful).
+ DEBUG [81bbdf72] Running [ -L /home/deploy/cis_life_main/releases/20230627051144/public/system ] as deploy@139.177.186.220
+ DEBUG [81bbdf72] Command: [ -L /home/deploy/cis_life_main/releases/20230627051144/public/system ]
+ DEBUG [81bbdf72] Finished in 0.164 seconds with exit status 1 (failed).
+ DEBUG [0beb181b] Running [ -d /home/deploy/cis_life_main/releases/20230627051144/public/system ] as deploy@139.177.186.220
+ DEBUG [0beb181b] Command: [ -d /home/deploy/cis_life_main/releases/20230627051144/public/system ]
+ DEBUG [0beb181b] Finished in 0.157 seconds with exit status 1 (failed).
+  INFO [e2386b47] Running /usr/bin/env ln -s /home/deploy/cis_life_main/shared/public/system /home/deploy/cis_life_main/releases/20230627051144/public/system as deploy@139.177.186.220
+ DEBUG [e2386b47] Command: ( export RBENV_ROOT="$HOME/.rbenv" RBENV_VERSION="3.0.3" ; /usr/bin/env ln -s /home/deploy/cis_life_main/shared/public/system /home/deploy/cis_life_main/releases/20230627051144/public/system )
+  INFO [e2386b47] Finished in 0.202 seconds with exit status 0 (successful).
+ DEBUG [cd9219ec] Running [ -L /home/deploy/cis_life_main/releases/20230627051144/public/uploads ] as deploy@139.177.186.220
+ DEBUG [cd9219ec] Command: [ -L /home/deploy/cis_life_main/releases/20230627051144/public/uploads ]
+ DEBUG [cd9219ec] Finished in 0.172 seconds with exit status 1 (failed).
+ DEBUG [4d838ab8] Running [ -d /home/deploy/cis_life_main/releases/20230627051144/public/uploads ] as deploy@139.177.186.220
+ DEBUG [4d838ab8] Command: [ -d /home/deploy/cis_life_main/releases/20230627051144/public/uploads ]
+ DEBUG [4d838ab8] Finished in 0.158 seconds with exit status 1 (failed).
+  INFO [ae6fb3d9] Running /usr/bin/env ln -s /home/deploy/cis_life_main/shared/public/uploads /home/deploy/cis_life_main/releases/20230627051144/public/uploads as deploy@139.177.186.220
+ DEBUG [ae6fb3d9] Command: ( export RBENV_ROOT="$HOME/.rbenv" RBENV_VERSION="3.0.3" ; /usr/bin/env ln -s /home/deploy/cis_life_main/shared/public/uploads /home/deploy/cis_life_main/releases/20230627051144/public/uploads )
+  INFO [ae6fb3d9] Finished in 0.165 seconds with exit status 0 (successful).
+ DEBUG [61f0ce7c] Running [ -L /home/deploy/cis_life_main/releases/20230627051144/public/assets ] as deploy@139.177.186.220
+ DEBUG [61f0ce7c] Command: [ -L /home/deploy/cis_life_main/releases/20230627051144/public/assets ]
+ DEBUG [61f0ce7c] Finished in 0.150 seconds with exit status 1 (failed).
+ DEBUG [151cc715] Running [ -d /home/deploy/cis_life_main/releases/20230627051144/public/assets ] as deploy@139.177.186.220
+ DEBUG [151cc715] Command: [ -d /home/deploy/cis_life_main/releases/20230627051144/public/assets ]
+ DEBUG [151cc715] Finished in 0.159 seconds with exit status 1 (failed).
+  INFO [d76b1320] Running /usr/bin/env ln -s /home/deploy/cis_life_main/shared/public/assets /home/deploy/cis_life_main/releases/20230627051144/public/assets as deploy@139.177.186.220
+ DEBUG [d76b1320] Command: ( export RBENV_ROOT="$HOME/.rbenv" RBENV_VERSION="3.0.3" ; /usr/bin/env ln -s /home/deploy/cis_life_main/shared/public/assets /home/deploy/cis_life_main/releases/20230627051144/public/assets )
+  INFO [d76b1320] Finished in 0.196 seconds with exit status 0 (successful).
+ DEBUG [a035f32f] Running if test ! -d /home/deploy/cis_life_main/releases/20230627051144; then echo "Directory does not exist '/home/deploy/cis_life_main/releases/20230627051144'" 1>&2; false; fi as deploy@139.177.186.220
+ DEBUG [a035f32f] Command: if test ! -d /home/deploy/cis_life_main/releases/20230627051144; then echo "Directory does not exist '/home/deploy/cis_life_main/releases/20230627051144'" 1>&2; false; fi
+ DEBUG [a035f32f] Finished in 0.157 seconds with exit status 0 (successful).
+  INFO [66b8f08c] Running $HOME/.rbenv/bin/rbenv exec bundle config --local deployment true as deploy@139.177.186.220
+ DEBUG [66b8f08c] Command: cd /home/deploy/cis_life_main/releases/20230627051144 && ( export RBENV_ROOT="$HOME/.rbenv" RBENV_VERSION="3.0.3" ; $HOME/.rbenv/bin/rbenv exec bundle config --local deployment true )
+  INFO [66b8f08c] Finished in 0.357 seconds with exit status 0 (successful).
+  INFO [f48b99a6] Running $HOME/.rbenv/bin/rbenv exec bundle config --local path /home/deploy/cis_life_main/shared/bundle as deploy@139.177.186.220
+ DEBUG [f48b99a6] Command: cd /home/deploy/cis_life_main/releases/20230627051144 && ( export RBENV_ROOT="$HOME/.rbenv" RBENV_VERSION="3.0.3" ; $HOME/.rbenv/bin/rbenv exec bundle config --local path /home/deploy/cis_life_main/shared/bundle )
+  INFO [f48b99a6] Finished in 0.338 seconds with exit status 0 (successful).
+  INFO [1ccd4f4e] Running $HOME/.rbenv/bin/rbenv exec bundle config --local without development:test as deploy@139.177.186.220
+ DEBUG [1ccd4f4e] Command: cd /home/deploy/cis_life_main/releases/20230627051144 && ( export RBENV_ROOT="$HOME/.rbenv" RBENV_VERSION="3.0.3" ; $HOME/.rbenv/bin/rbenv exec bundle config --local without development:test )
+  INFO [1ccd4f4e] Finished in 0.347 seconds with exit status 0 (successful).
+ DEBUG [1658c504] Running if test ! -d /home/deploy/cis_life_main/releases/20230627051144; then echo "Directory does not exist '/home/deploy/cis_life_main/releases/20230627051144'" 1>&2; false; fi as deploy@139.177.186.220
+ DEBUG [1658c504] Command: if test ! -d /home/deploy/cis_life_main/releases/20230627051144; then echo "Directory does not exist '/home/deploy/cis_life_main/releases/20230627051144'" 1>&2; false; fi
+ DEBUG [1658c504] Finished in 0.176 seconds with exit status 0 (successful).
+ DEBUG [66faee37] Running $HOME/.rbenv/bin/rbenv exec bundle check as deploy@139.177.186.220
+ DEBUG [66faee37] Command: cd /home/deploy/cis_life_main/releases/20230627051144 && ( export RBENV_ROOT="$HOME/.rbenv" RBENV_VERSION="3.0.3" ; $HOME/.rbenv/bin/rbenv exec bundle check )
+ DEBUG [66faee37] 	The Gemfile's dependencies are satisfied
+ DEBUG [66faee37] Finished in 0.521 seconds with exit status 0 (successful).
+  INFO The Gemfile's dependencies are satisfied, skipping installation
+ DEBUG [3ed80fae] Running if test ! -d /home/deploy/cis_life_main/releases/20230627051144; then echo "Directory does not exist '/home/deploy/cis_life_main/releases/20230627051144'" 1>&2; false; fi as deploy@139.177.186.220
+ DEBUG [3ed80fae] Command: if test ! -d /home/deploy/cis_life_main/releases/20230627051144; then echo "Directory does not exist '/home/deploy/cis_life_main/releases/20230627051144'" 1>&2; false; fi
+ DEBUG [3ed80fae] Finished in 0.172 seconds with exit status 0 (successful).
+  INFO [15f6570d] Running $HOME/.rbenv/bin/rbenv exec bundle exec rake assets:precompile as deploy@139.177.186.220
+ DEBUG [15f6570d] Command: cd /home/deploy/cis_life_main/releases/20230627051144 && ( export RBENV_ROOT="$HOME/.rbenv" RBENV_VERSION="3.0.3" RAILS_ENV="production" RAILS_GROUPS="assets" ; $HOME/.rbenv/bin/rbenv exec bundle exec rake assets:precompile )
+ DEBUG [15f6570d] 	rake aborted!
+ DEBUG [15f6570d] 	ActiveSupport::MessageEncryptor::InvalidMessage: ActiveSupport::MessageEncryptor::InvalidMessage
+ DEBUG [15f6570d] 	/home/deploy/cis_life_main/shared/bundle/ruby/3.0.0/gems/activesupport-7.0.4.3/lib/active_support/message_encryptor.rb:209:in `rescue in _decrypt'
+/home/deploy/cis_life_main/shared/bundle/ruby/3.0.0/gems/activesupport-7.0.4.3/lib/active_support/message_encryptor.rb:186:in `_decrypt'
+/home/deploy/cis_life_main/shared/bundle/ruby/3.0.0/gems/activesupport-7.0.4.3/lib/active_support/message_encryptor.rb:160:in `decrypt_and_verify'
+/home/deploy/cis_life_main/shared/bundle/ruby/3.0.0/gems/activesupport-7.0.4.3/lib/active_support/messages/rotator.rb:22:in `decrypt_and_verify'
+/home/deploy/cis_life_main/shared/bundle/ruby/3.0.0/gems/activesupport-7.0.4.3/lib/active_support/encrypted_file.rb:104:in `decrypt'
+/home/deploy/cis_life_main/shared/bundle/ruby/3.0.0/gems/activesupport-7.0.4.3/lib/active_support/encrypted_file.rb:66:in `read'
+/home/deploy/cis_life_main/shared/bundle/ruby/3.0.0/gems/activesupport-7.0.4.3/lib/active_support/encrypted_configuration.rb:21:in `read'
+/home/deploy/cis_life_main/shared/bundle/ruby/3.0.0/gems/activesupport-7.0.4.3/lib/active_support/encrypted_configuration.rb:33:in `config'
+/home/deploy/cis_life_main/shared/bundle/ruby/3.0.0/gems/activesupport-7.0.4.3/lib/active_support/encrypted_configuration.rb:48:in `options'
+/home/deploy/cis_life_main/shared/bundle/ruby/3.0.0/gems/activesupport-7.0.4.3/lib/active_support/core_ext/module/delegation.rb:303:in `method_missing'
+/home/deploy/cis_life_main/shared/bundle/ruby/3.0.0/gems/activerecord-7.0.4.3/lib/active_record/railtie.rb:332:in `block in <class:Railtie>'
+/home/deploy/cis_life_main/shared/bundle/ruby/3.0.0/gems/railties-7.0.4.3/lib/rails/initializable.rb:32:in `instance_exec'
+/home/deploy/cis_life_main/shared/bundle/ruby/3.0.0/gems/railties-7.0.4.3/lib/rails/initializable.rb:32:in `run'
+/home/deploy/cis_life_main/shared/bundle/ruby/3.0.0/gems/railties-7.0.4.3/lib/rails/initializable.rb:61:in `block in run_initializers'
+/home/deploy/cis_life_main/shared/bundle/ruby/3.0.0/gems/railties-7.0.4.3/lib/rails/initializable.rb:60:in `run_initializers'
+/home/deploy/cis_life_main/shared/bundle/ruby/3.0.0/gems/railties-7.0.4.3/lib/rails/application.rb:372:in `initialize!'
+/home/deploy/cis_life_main/releases/20230627051144/config/environment.rb:5:in `<top (required)>'
+/home/deploy/cis_life_main/shared/bundle/ruby/3.0.0/gems/zeitwerk-2.6.8/lib/zeitwerk/kernel.rb:38:in `require'
+/home/deploy/cis_life_main/shared/bundle/ruby/3.0.0/gems/zeitwerk-2.6.8/lib/zeitwerk/kernel.rb:38:in `require'
+/home/deploy/cis_life_main/shared/bundle/ruby/3.0.0/gems/railties-7.0.4.3/lib/rails/application.rb:348:in `require_environment!'
+/home/deploy/cis_life_main/shared/bundle/ruby/3.0.0/gems/railties-7.0.4.3/lib/rails/application.rb:511:in `block in run_tasks_blocks'
+/home/deploy/cis_life_main/shared/bundle/ruby/3.0.0/gems/sprockets-rails-3.4.2/lib/sprockets/rails/task.rb:61:in `block (2 levels) in define'
+/home/deploy/cis_life_main/shared/bundle/ruby/3.0.0/gems/rake-13.0.6/exe/rake:27:in `<top (required)>'
+/home/deploy/.rbenv/versions/3.0.3/bin/bundle:23:in `load'
+/home/deploy/.rbenv/versions/3.0.3/bin/bundle:23:in `<main>'
+ DEBUG [15f6570d] 	
+Caused by:
+ DEBUG [15f6570d] 	ArgumentError: key must be 16 bytes
+ DEBUG [15f6570d] 	/home/deploy/cis_life_main/shared/bundle/ruby/3.0.0/gems/activesupport-7.0.4.3/lib/active_support/message_encryptor.rb:196:in `key='
+/home/deploy/cis_life_main/shared/bundle/ruby/3.0.0/gems/activesupport-7.0.4.3/lib/active_support/message_encryptor.rb:196:in `_decrypt'
+/home/deploy/cis_life_main/shared/bundle/ruby/3.0.0/gems/activesupport-7.0.4.3/lib/active_support/message_encryptor.rb:160:in `decrypt_and_verify'
+/home/deploy/cis_life_main/shared/bundle/ruby/3.0.0/gems/activesupport-7.0.4.3/lib/active_support/messages/rotator.rb:22:in `decrypt_and_verify'
+/home/deploy/cis_life_main/shared/bundle/ruby/3.0.0/gems/activesupport-7.0.4.3/lib/active_support/encrypted_file.rb:104:in `decrypt'
+/home/deploy/cis_life_main/shared/bundle/ruby/3.0.0/gems/activesupport-7.0.4.3/lib/active_support/encrypted_file.rb:66:in `read'
+/home/deploy/cis_life_main/shared/bundle/ruby/3.0.0/gems/activesupport-7.0.4.3/lib/active_support/encrypted_configuration.rb:21:in `read'
+/home/deploy/cis_life_main/shared/bundle/ruby/3.0.0/gems/activesupport-7.0.4.3/lib/active_support/encrypted_configuration.rb:33:in `config'
+/home/deploy/cis_life_main/shared/bundle/ruby/3.0.0/gems/activesupport-7.0.4.3/lib/active_support/encrypted_configuration.rb:48:in `options'
+/home/deploy/cis_life_main/shared/bundle/ruby/3.0.0/gems/activesupport-7.0.4.3/lib/active_support/core_ext/module/delegation.rb:303:in `method_missing'
+/home/deploy/cis_life_main/shared/bundle/ruby/3.0.0/gems/activerecord-7.0.4.3/lib/active_record/railtie.rb:332:in `block in <class:Railtie>'
+/home/deploy/cis_life_main/shared/bundle/ruby/3.0.0/gems/railties-7.0.4.3/lib/rails/initializable.rb:32:in `instance_exec'
+/home/deploy/cis_life_main/shared/bundle/ruby/3.0.0/gems/railties-7.0.4.3/lib/rails/initializable.rb:32:in `run'
+/home/deploy/cis_life_main/shared/bundle/ruby/3.0.0/gems/railties-7.0.4.3/lib/rails/initializable.rb:61:in `block in run_initializers'
+/home/deploy/cis_life_main/shared/bundle/ruby/3.0.0/gems/railties-7.0.4.3/lib/rails/initializable.rb:60:in `run_initializers'
+/home/deploy/cis_life_main/shared/bundle/ruby/3.0.0/gems/railties-7.0.4.3/lib/rails/application.rb:372:in `initialize!'
+/home/deploy/cis_life_main/releases/20230627051144/config/environment.rb:5:in `<top (required)>'
+/home/deploy/cis_life_main/shared/bundle/ruby/3.0.0/gems/zeitwerk-2.6.8/lib/zeitwerk/kernel.rb:38:in `require'
+/home/deploy/cis_life_main/shared/bundle/ruby/3.0.0/gems/zeitwerk-2.6.8/lib/zeitwerk/kernel.rb:38:in `require'
+/home/deploy/cis_life_main/shared/bundle/ruby/3.0.0/gems/railties-7.0.4.3/lib/rails/application.rb:348:in `require_environment!'
+/home/deploy/cis_life_main/shared/bundle/ruby/3.0.0/gems/railties-7.0.4.3/lib/rails/application.rb:511:in `block in run_tasks_blocks'
+/home/deploy/cis_life_main/shared/bundle/ruby/3.0.0/gems/sprockets-rails-3.4.2/lib/sprockets/rails/task.rb:61:in `block (2 levels) in define'
+/home/deploy/cis_life_main/shared/bundle/ruby/3.0.0/gems/rake-13.0.6/exe/rake:27:in `<top (required)>'
+/home/deploy/.rbenv/versions/3.0.3/bin/bundle:23:in `load'
+/home/deploy/.rbenv/versions/3.0.3/bin/bundle:23:in `<main>'
+ DEBUG [15f6570d] 	Tasks: TOP => environment
+ DEBUG [15f6570d] 	(See full trace by running task with --trace)
+  INFO ---------------------------------------------------------------------------
+  INFO START 2023-06-27 13:17:07 +0800 cap production deploy
+  INFO ---------------------------------------------------------------------------
+ DEBUG [f33771e4] Running [ -d $HOME/.rbenv/versions/3.0.3 ] as deploy@139.177.186.220
+ DEBUG [f33771e4] Command: [ -d $HOME/.rbenv/versions/3.0.3 ]
+ DEBUG [f33771e4] Finished in 0.999 seconds with exit status 0 (successful).
+ DEBUG [c24ae073] Running /usr/bin/env which passenger as deploy@139.177.186.220
+ DEBUG [c24ae073] Command: /usr/bin/env which passenger
+ DEBUG [c24ae073] 	/usr/bin/passenger
+ DEBUG [c24ae073] Finished in 0.259 seconds with exit status 0 (successful).
+  INFO [18566959] Running /usr/bin/env mkdir -p /tmp as deploy@139.177.186.220
+ DEBUG [18566959] Command: ( export RBENV_ROOT="$HOME/.rbenv" RBENV_VERSION="3.0.3" ; /usr/bin/env mkdir -p /tmp )
+  INFO [18566959] Finished in 0.199 seconds with exit status 0 (successful).
+ DEBUG Uploading /tmp/git-ssh-2f7efbfae3749ac8932d.sh 0.0%
+  INFO Uploading /tmp/git-ssh-2f7efbfae3749ac8932d.sh 100.0%
+  INFO [be3696bf] Running /usr/bin/env chmod 700 /tmp/git-ssh-2f7efbfae3749ac8932d.sh as deploy@139.177.186.220
+ DEBUG [be3696bf] Command: ( export RBENV_ROOT="$HOME/.rbenv" RBENV_VERSION="3.0.3" ; /usr/bin/env chmod 700 /tmp/git-ssh-2f7efbfae3749ac8932d.sh )
+  INFO [be3696bf] Finished in 0.178 seconds with exit status 0 (successful).
+  INFO [ad7366de] Running /usr/bin/env git ls-remote git@github.com:AnsellGabriel/cis_life_main.git HEAD as deploy@139.177.186.220
+ DEBUG [ad7366de] Command: ( export RBENV_ROOT="$HOME/.rbenv" RBENV_VERSION="3.0.3" GIT_ASKPASS="/bin/echo" GIT_SSH="/tmp/git-ssh-2f7efbfae3749ac8932d.sh" ; /usr/bin/env git ls-remote git@github.com:AnsellGabriel/cis_life_main.git HEAD )
+ DEBUG [ad7366de] 	4aa96728b2faa4b56702773ecbc11f6d1f2f3759	HEAD
+  INFO [ad7366de] Finished in 3.023 seconds with exit status 0 (successful).
+  INFO [b9238a49] Running /usr/bin/env mkdir -p /home/deploy/cis_life_main/shared /home/deploy/cis_life_main/releases as deploy@139.177.186.220
+ DEBUG [b9238a49] Command: ( export RBENV_ROOT="$HOME/.rbenv" RBENV_VERSION="3.0.3" ; /usr/bin/env mkdir -p /home/deploy/cis_life_main/shared /home/deploy/cis_life_main/releases )
+  INFO [b9238a49] Finished in 0.155 seconds with exit status 0 (successful).
+  INFO [be991c23] Running /usr/bin/env mkdir -p /home/deploy/cis_life_main/shared/log /home/deploy/cis_life_main/shared/tmp/pids /home/deploy/cis_life_main/shared/tmp/cache /home/deploy/cis_life_main/shared/tmp/sockets /home/deploy/cis_life_main/shared/vendor/bundle /home/deploy/cis_life_main/shared/.bundle /home/deploy/cis_life_main/shared/public/system /home/deploy/cis_life_main/shared/public/uploads /home/deploy/cis_life_main/shared/public/assets as deploy@139.177.186.220
+ DEBUG [be991c23] Command: ( export RBENV_ROOT="$HOME/.rbenv" RBENV_VERSION="3.0.3" ; /usr/bin/env mkdir -p /home/deploy/cis_life_main/shared/log /home/deploy/cis_life_main/shared/tmp/pids /home/deploy/cis_life_main/shared/tmp/cache /home/deploy/cis_life_main/shared/tmp/sockets /home/deploy/cis_life_main/shared/vendor/bundle /home/deploy/cis_life_main/shared/.bundle /home/deploy/cis_life_main/shared/public/system /home/deploy/cis_life_main/shared/public/uploads /home/deploy/cis_life_main/shared/public/assets )
+  INFO [be991c23] Finished in 0.223 seconds with exit status 0 (successful).
+  INFO [1406d595] Running /usr/bin/env mkdir -p /home/deploy/cis_life_main/shared/config as deploy@139.177.186.220
+ DEBUG [1406d595] Command: ( export RBENV_ROOT="$HOME/.rbenv" RBENV_VERSION="3.0.3" ; /usr/bin/env mkdir -p /home/deploy/cis_life_main/shared/config )
+  INFO [1406d595] Finished in 0.155 seconds with exit status 0 (successful).
+ DEBUG [460384b8] Running [ -f /home/deploy/cis_life_main/shared/config/master.key ] as deploy@139.177.186.220
+ DEBUG [460384b8] Command: [ -f /home/deploy/cis_life_main/shared/config/master.key ]
+ DEBUG [460384b8] Finished in 0.197 seconds with exit status 0 (successful).
+ DEBUG [9e997335] Running [ -f /home/deploy/cis_life_main/shared/config/secrets.yml ] as deploy@139.177.186.220
+ DEBUG [9e997335] Command: [ -f /home/deploy/cis_life_main/shared/config/secrets.yml ]
+ DEBUG [9e997335] Finished in 0.175 seconds with exit status 0 (successful).
+ DEBUG [b35beef4] Running [ -f /home/deploy/cis_life_main/shared/config/database.yml ] as deploy@139.177.186.220
+ DEBUG [b35beef4] Command: [ -f /home/deploy/cis_life_main/shared/config/database.yml ]
+ DEBUG [b35beef4] Finished in 0.153 seconds with exit status 0 (successful).
+ DEBUG [a8137d14] Running [ -f /home/deploy/cis_life_main/shared/config/master.key ] as deploy@139.177.186.220
+ DEBUG [a8137d14] Command: [ -f /home/deploy/cis_life_main/shared/config/master.key ]
+ DEBUG [a8137d14] Finished in 0.161 seconds with exit status 0 (successful).
+ DEBUG [d409d034] Running [ -f /home/deploy/cis_life_main/shared/config/secrets.yml ] as deploy@139.177.186.220
+ DEBUG [d409d034] Command: [ -f /home/deploy/cis_life_main/shared/config/secrets.yml ]
+ DEBUG [d409d034] Finished in 0.172 seconds with exit status 0 (successful).
+ DEBUG [e0655de0] Running [ -f /home/deploy/cis_life_main/shared/config/database.yml ] as deploy@139.177.186.220
+ DEBUG [e0655de0] Command: [ -f /home/deploy/cis_life_main/shared/config/database.yml ]
+ DEBUG [e0655de0] Finished in 0.176 seconds with exit status 0 (successful).
+ DEBUG [f8924ccc] Running [ -f /home/deploy/cis_life_main/shared/config/database.yml ] as deploy@139.177.186.220
+ DEBUG [f8924ccc] Command: [ -f /home/deploy/cis_life_main/shared/config/database.yml ]
+ DEBUG [f8924ccc] Finished in 0.161 seconds with exit status 0 (successful).
+ DEBUG [9bb7be4d] Running [ -f /home/deploy/cis_life_main/shared/config/master.key ] as deploy@139.177.186.220
+ DEBUG [9bb7be4d] Command: [ -f /home/deploy/cis_life_main/shared/config/master.key ]
+ DEBUG [9bb7be4d] Finished in 0.154 seconds with exit status 0 (successful).
+ DEBUG [56e74b79] Running [ -f /home/deploy/cis_life_main/current/REVISION ] as deploy@139.177.186.220
+ DEBUG [56e74b79] Command: [ -f /home/deploy/cis_life_main/current/REVISION ]
+ DEBUG [56e74b79] Finished in 0.155 seconds with exit status 1 (failed).
+ DEBUG [f68ff1e1] Running [ -f /home/deploy/cis_life_main/repo/HEAD ] as deploy@139.177.186.220
+ DEBUG [f68ff1e1] Command: [ -f /home/deploy/cis_life_main/repo/HEAD ]
+ DEBUG [f68ff1e1] Finished in 0.160 seconds with exit status 0 (successful).
+  INFO The repository mirror is at /home/deploy/cis_life_main/repo
+ DEBUG [1870b9d9] Running if test ! -d /home/deploy/cis_life_main/repo; then echo "Directory does not exist '/home/deploy/cis_life_main/repo'" 1>&2; false; fi as deploy@139.177.186.220
+ DEBUG [1870b9d9] Command: if test ! -d /home/deploy/cis_life_main/repo; then echo "Directory does not exist '/home/deploy/cis_life_main/repo'" 1>&2; false; fi
+ DEBUG [1870b9d9] Finished in 0.154 seconds with exit status 0 (successful).
+  INFO [ac4ecf4b] Running /usr/bin/env git remote set-url origin git@github.com:AnsellGabriel/cis_life_main.git as deploy@139.177.186.220
+ DEBUG [ac4ecf4b] Command: cd /home/deploy/cis_life_main/repo && ( export RBENV_ROOT="$HOME/.rbenv" RBENV_VERSION="3.0.3" GIT_ASKPASS="/bin/echo" GIT_SSH="/tmp/git-ssh-2f7efbfae3749ac8932d.sh" ; /usr/bin/env git remote set-url origin git@github.com:AnsellGabriel/cis_life_main.git )
+  INFO [ac4ecf4b] Finished in 0.161 seconds with exit status 0 (successful).
+  INFO [7ecc9c76] Running /usr/bin/env git remote update --prune as deploy@139.177.186.220
+ DEBUG [7ecc9c76] Command: cd /home/deploy/cis_life_main/repo && ( export RBENV_ROOT="$HOME/.rbenv" RBENV_VERSION="3.0.3" GIT_ASKPASS="/bin/echo" GIT_SSH="/tmp/git-ssh-2f7efbfae3749ac8932d.sh" ; /usr/bin/env git remote update --prune )
+ DEBUG [7ecc9c76] 	Fetching origin
+ DEBUG [7ecc9c76] 	From github.com:AnsellGabriel/cis_life_main
+ DEBUG [7ecc9c76] 	   9cdcf36..a38cf50  coop-claims      -> coop-claims
+ DEBUG [7ecc9c76] 	   7cc1b13..4aa9672  main             -> main
+ DEBUG [7ecc9c76] 	   9cdcf36..a38cf50  refs/pull/9/head -> refs/pull/9/head
+  INFO [7ecc9c76] Finished in 4.749 seconds with exit status 0 (successful).
+ DEBUG [94f4a8be] Running if test ! -d /home/deploy/cis_life_main/repo; then echo "Directory does not exist '/home/deploy/cis_life_main/repo'" 1>&2; false; fi as deploy@139.177.186.220
+ DEBUG [94f4a8be] Command: if test ! -d /home/deploy/cis_life_main/repo; then echo "Directory does not exist '/home/deploy/cis_life_main/repo'" 1>&2; false; fi
+ DEBUG [94f4a8be] Finished in 0.148 seconds with exit status 0 (successful).
+  INFO [aa275243] Running /usr/bin/env mkdir -p /home/deploy/cis_life_main/releases/20230627051714 as deploy@139.177.186.220
+ DEBUG [aa275243] Command: cd /home/deploy/cis_life_main/repo && ( export RBENV_ROOT="$HOME/.rbenv" RBENV_VERSION="3.0.3" GIT_ASKPASS="/bin/echo" GIT_SSH="/tmp/git-ssh-2f7efbfae3749ac8932d.sh" ; /usr/bin/env mkdir -p /home/deploy/cis_life_main/releases/20230627051714 )
+  INFO [aa275243] Finished in 0.179 seconds with exit status 0 (successful).
+  INFO [3abc7977] Running /usr/bin/env git archive main | /usr/bin/env tar -x -f - -C /home/deploy/cis_life_main/releases/20230627051714 as deploy@139.177.186.220
+ DEBUG [3abc7977] Command: cd /home/deploy/cis_life_main/repo && ( export RBENV_ROOT="$HOME/.rbenv" RBENV_VERSION="3.0.3" GIT_ASKPASS="/bin/echo" GIT_SSH="/tmp/git-ssh-2f7efbfae3749ac8932d.sh" ; /usr/bin/env git archive main | /usr/bin/env tar -x -f - -C /home/deploy/cis_life_main/releases/20230627051714 )
+  INFO [3abc7977] Finished in 1.192 seconds with exit status 0 (successful).
+ DEBUG [bd5ee873] Running if test ! -d /home/deploy/cis_life_main/repo; then echo "Directory does not exist '/home/deploy/cis_life_main/repo'" 1>&2; false; fi as deploy@139.177.186.220
+ DEBUG [bd5ee873] Command: if test ! -d /home/deploy/cis_life_main/repo; then echo "Directory does not exist '/home/deploy/cis_life_main/repo'" 1>&2; false; fi
+ DEBUG [bd5ee873] Finished in 0.098 seconds with exit status 0 (successful).
+ DEBUG [e778e0bd] Running /usr/bin/env git rev-list --max-count=1 main as deploy@139.177.186.220
+ DEBUG [e778e0bd] Command: cd /home/deploy/cis_life_main/repo && ( export RBENV_ROOT="$HOME/.rbenv" RBENV_VERSION="3.0.3" GIT_ASKPASS="/bin/echo" GIT_SSH="/tmp/git-ssh-2f7efbfae3749ac8932d.sh" ; /usr/bin/env git rev-list --max-count=1 main )
+ DEBUG [e778e0bd] 	4aa96728b2faa4b56702773ecbc11f6d1f2f3759
+ DEBUG [e778e0bd] Finished in 0.193 seconds with exit status 0 (successful).
+ DEBUG [0296dc14] Running if test ! -d /home/deploy/cis_life_main/releases/20230627051714; then echo "Directory does not exist '/home/deploy/cis_life_main/releases/20230627051714'" 1>&2; false; fi as deploy@139.177.186.220
+ DEBUG [0296dc14] Command: if test ! -d /home/deploy/cis_life_main/releases/20230627051714; then echo "Directory does not exist '/home/deploy/cis_life_main/releases/20230627051714'" 1>&2; false; fi
+ DEBUG [0296dc14] Finished in 0.160 seconds with exit status 0 (successful).
+  INFO [cddced48] Running /usr/bin/env echo "4aa96728b2faa4b56702773ecbc11f6d1f2f3759" > REVISION as deploy@139.177.186.220
+ DEBUG [cddced48] Command: cd /home/deploy/cis_life_main/releases/20230627051714 && ( export RBENV_ROOT="$HOME/.rbenv" RBENV_VERSION="3.0.3" ; /usr/bin/env echo "4aa96728b2faa4b56702773ecbc11f6d1f2f3759" > REVISION )
+  INFO [cddced48] Finished in 0.173 seconds with exit status 0 (successful).
+  INFO [6c3633ae] Running /usr/bin/env mkdir -p /home/deploy/cis_life_main/releases/20230627051714/config as deploy@139.177.186.220
+ DEBUG [6c3633ae] Command: ( export RBENV_ROOT="$HOME/.rbenv" RBENV_VERSION="3.0.3" ; /usr/bin/env mkdir -p /home/deploy/cis_life_main/releases/20230627051714/config )
+  INFO [6c3633ae] Finished in 0.182 seconds with exit status 0 (successful).
+ DEBUG [30935be9] Running [ -L /home/deploy/cis_life_main/releases/20230627051714/config/master.key ] as deploy@139.177.186.220
+ DEBUG [30935be9] Command: [ -L /home/deploy/cis_life_main/releases/20230627051714/config/master.key ]
+ DEBUG [30935be9] Finished in 0.222 seconds with exit status 1 (failed).
+ DEBUG [24be3ff5] Running [ -f /home/deploy/cis_life_main/releases/20230627051714/config/master.key ] as deploy@139.177.186.220
+ DEBUG [24be3ff5] Command: [ -f /home/deploy/cis_life_main/releases/20230627051714/config/master.key ]
+ DEBUG [24be3ff5] Finished in 0.198 seconds with exit status 1 (failed).
+  INFO [33f7b7be] Running /usr/bin/env ln -s /home/deploy/cis_life_main/shared/config/master.key /home/deploy/cis_life_main/releases/20230627051714/config/master.key as deploy@139.177.186.220
+ DEBUG [33f7b7be] Command: ( export RBENV_ROOT="$HOME/.rbenv" RBENV_VERSION="3.0.3" ; /usr/bin/env ln -s /home/deploy/cis_life_main/shared/config/master.key /home/deploy/cis_life_main/releases/20230627051714/config/master.key )
+  INFO [33f7b7be] Finished in 0.171 seconds with exit status 0 (successful).
+ DEBUG [73813513] Running [ -L /home/deploy/cis_life_main/releases/20230627051714/config/secrets.yml ] as deploy@139.177.186.220
+ DEBUG [73813513] Command: [ -L /home/deploy/cis_life_main/releases/20230627051714/config/secrets.yml ]
+ DEBUG [73813513] Finished in 0.199 seconds with exit status 1 (failed).
+ DEBUG [b8795594] Running [ -f /home/deploy/cis_life_main/releases/20230627051714/config/secrets.yml ] as deploy@139.177.186.220
+ DEBUG [b8795594] Command: [ -f /home/deploy/cis_life_main/releases/20230627051714/config/secrets.yml ]
+ DEBUG [b8795594] Finished in 0.157 seconds with exit status 0 (successful).
+  INFO [65a280d8] Running /usr/bin/env rm /home/deploy/cis_life_main/releases/20230627051714/config/secrets.yml as deploy@139.177.186.220
+ DEBUG [65a280d8] Command: ( export RBENV_ROOT="$HOME/.rbenv" RBENV_VERSION="3.0.3" ; /usr/bin/env rm /home/deploy/cis_life_main/releases/20230627051714/config/secrets.yml )
+  INFO [65a280d8] Finished in 0.204 seconds with exit status 0 (successful).
+  INFO [57a2cf8c] Running /usr/bin/env ln -s /home/deploy/cis_life_main/shared/config/secrets.yml /home/deploy/cis_life_main/releases/20230627051714/config/secrets.yml as deploy@139.177.186.220
+ DEBUG [57a2cf8c] Command: ( export RBENV_ROOT="$HOME/.rbenv" RBENV_VERSION="3.0.3" ; /usr/bin/env ln -s /home/deploy/cis_life_main/shared/config/secrets.yml /home/deploy/cis_life_main/releases/20230627051714/config/secrets.yml )
+  INFO [57a2cf8c] Finished in 0.158 seconds with exit status 0 (successful).
+ DEBUG [bb58fd58] Running [ -L /home/deploy/cis_life_main/releases/20230627051714/config/database.yml ] as deploy@139.177.186.220
+ DEBUG [bb58fd58] Command: [ -L /home/deploy/cis_life_main/releases/20230627051714/config/database.yml ]
+ DEBUG [bb58fd58] Finished in 0.156 seconds with exit status 1 (failed).
+ DEBUG [15653122] Running [ -f /home/deploy/cis_life_main/releases/20230627051714/config/database.yml ] as deploy@139.177.186.220
+ DEBUG [15653122] Command: [ -f /home/deploy/cis_life_main/releases/20230627051714/config/database.yml ]
+ DEBUG [15653122] Finished in 0.164 seconds with exit status 0 (successful).
+  INFO [0dc4669d] Running /usr/bin/env rm /home/deploy/cis_life_main/releases/20230627051714/config/database.yml as deploy@139.177.186.220
+ DEBUG [0dc4669d] Command: ( export RBENV_ROOT="$HOME/.rbenv" RBENV_VERSION="3.0.3" ; /usr/bin/env rm /home/deploy/cis_life_main/releases/20230627051714/config/database.yml )
+  INFO [0dc4669d] Finished in 0.218 seconds with exit status 0 (successful).
+  INFO [8a07477a] Running /usr/bin/env ln -s /home/deploy/cis_life_main/shared/config/database.yml /home/deploy/cis_life_main/releases/20230627051714/config/database.yml as deploy@139.177.186.220
+ DEBUG [8a07477a] Command: ( export RBENV_ROOT="$HOME/.rbenv" RBENV_VERSION="3.0.3" ; /usr/bin/env ln -s /home/deploy/cis_life_main/shared/config/database.yml /home/deploy/cis_life_main/releases/20230627051714/config/database.yml )
+  INFO [8a07477a] Finished in 0.158 seconds with exit status 0 (successful).
+ DEBUG [645f7bb2] Running [ -L /home/deploy/cis_life_main/releases/20230627051714/config/database.yml ] as deploy@139.177.186.220
+ DEBUG [645f7bb2] Command: [ -L /home/deploy/cis_life_main/releases/20230627051714/config/database.yml ]
+ DEBUG [645f7bb2] Finished in 0.160 seconds with exit status 0 (successful).
+ DEBUG [85761b59] Running [ -L /home/deploy/cis_life_main/releases/20230627051714/config/master.key ] as deploy@139.177.186.220
+ DEBUG [85761b59] Command: [ -L /home/deploy/cis_life_main/releases/20230627051714/config/master.key ]
+ DEBUG [85761b59] Finished in 0.176 seconds with exit status 0 (successful).
+  INFO [2d79f39b] Running /usr/bin/env mkdir -p /home/deploy/cis_life_main/releases/20230627051714 /home/deploy/cis_life_main/releases/20230627051714/tmp /home/deploy/cis_life_main/releases/20230627051714/vendor /home/deploy/cis_life_main/releases/20230627051714/public as deploy@139.177.186.220
+ DEBUG [2d79f39b] Command: ( export RBENV_ROOT="$HOME/.rbenv" RBENV_VERSION="3.0.3" ; /usr/bin/env mkdir -p /home/deploy/cis_life_main/releases/20230627051714 /home/deploy/cis_life_main/releases/20230627051714/tmp /home/deploy/cis_life_main/releases/20230627051714/vendor /home/deploy/cis_life_main/releases/20230627051714/public )
+  INFO [2d79f39b] Finished in 0.155 seconds with exit status 0 (successful).
+ DEBUG [19dabdbf] Running [ -L /home/deploy/cis_life_main/releases/20230627051714/log ] as deploy@139.177.186.220
+ DEBUG [19dabdbf] Command: [ -L /home/deploy/cis_life_main/releases/20230627051714/log ]
+ DEBUG [19dabdbf] Finished in 0.153 seconds with exit status 1 (failed).
+ DEBUG [6b0cb60b] Running [ -d /home/deploy/cis_life_main/releases/20230627051714/log ] as deploy@139.177.186.220
+ DEBUG [6b0cb60b] Command: [ -d /home/deploy/cis_life_main/releases/20230627051714/log ]
+ DEBUG [6b0cb60b] Finished in 0.155 seconds with exit status 0 (successful).
+  INFO [9362f9c6] Running /usr/bin/env rm -rf /home/deploy/cis_life_main/releases/20230627051714/log as deploy@139.177.186.220
+ DEBUG [9362f9c6] Command: ( export RBENV_ROOT="$HOME/.rbenv" RBENV_VERSION="3.0.3" ; /usr/bin/env rm -rf /home/deploy/cis_life_main/releases/20230627051714/log )
+  INFO [9362f9c6] Finished in 0.179 seconds with exit status 0 (successful).
+  INFO [5026250e] Running /usr/bin/env ln -s /home/deploy/cis_life_main/shared/log /home/deploy/cis_life_main/releases/20230627051714/log as deploy@139.177.186.220
+ DEBUG [5026250e] Command: ( export RBENV_ROOT="$HOME/.rbenv" RBENV_VERSION="3.0.3" ; /usr/bin/env ln -s /home/deploy/cis_life_main/shared/log /home/deploy/cis_life_main/releases/20230627051714/log )
+  INFO [5026250e] Finished in 0.150 seconds with exit status 0 (successful).
+ DEBUG [465b2bcc] Running [ -L /home/deploy/cis_life_main/releases/20230627051714/tmp/pids ] as deploy@139.177.186.220
+ DEBUG [465b2bcc] Command: [ -L /home/deploy/cis_life_main/releases/20230627051714/tmp/pids ]
+ DEBUG [465b2bcc] Finished in 0.151 seconds with exit status 1 (failed).
+ DEBUG [0a2110ec] Running [ -d /home/deploy/cis_life_main/releases/20230627051714/tmp/pids ] as deploy@139.177.186.220
+ DEBUG [0a2110ec] Command: [ -d /home/deploy/cis_life_main/releases/20230627051714/tmp/pids ]
+ DEBUG [0a2110ec] Finished in 0.153 seconds with exit status 1 (failed).
+  INFO [54603d59] Running /usr/bin/env ln -s /home/deploy/cis_life_main/shared/tmp/pids /home/deploy/cis_life_main/releases/20230627051714/tmp/pids as deploy@139.177.186.220
+ DEBUG [54603d59] Command: ( export RBENV_ROOT="$HOME/.rbenv" RBENV_VERSION="3.0.3" ; /usr/bin/env ln -s /home/deploy/cis_life_main/shared/tmp/pids /home/deploy/cis_life_main/releases/20230627051714/tmp/pids )
+  INFO [54603d59] Finished in 0.165 seconds with exit status 0 (successful).
+ DEBUG [9abc311c] Running [ -L /home/deploy/cis_life_main/releases/20230627051714/tmp/cache ] as deploy@139.177.186.220
+ DEBUG [9abc311c] Command: [ -L /home/deploy/cis_life_main/releases/20230627051714/tmp/cache ]
+ DEBUG [9abc311c] Finished in 0.150 seconds with exit status 1 (failed).
+ DEBUG [cdc41ce2] Running [ -d /home/deploy/cis_life_main/releases/20230627051714/tmp/cache ] as deploy@139.177.186.220
+ DEBUG [cdc41ce2] Command: [ -d /home/deploy/cis_life_main/releases/20230627051714/tmp/cache ]
+ DEBUG [cdc41ce2] Finished in 0.153 seconds with exit status 0 (successful).
+  INFO [c70f6554] Running /usr/bin/env rm -rf /home/deploy/cis_life_main/releases/20230627051714/tmp/cache as deploy@139.177.186.220
+ DEBUG [c70f6554] Command: ( export RBENV_ROOT="$HOME/.rbenv" RBENV_VERSION="3.0.3" ; /usr/bin/env rm -rf /home/deploy/cis_life_main/releases/20230627051714/tmp/cache )
+  INFO [c70f6554] Finished in 0.208 seconds with exit status 0 (successful).
+  INFO [7d9c2ac6] Running /usr/bin/env ln -s /home/deploy/cis_life_main/shared/tmp/cache /home/deploy/cis_life_main/releases/20230627051714/tmp/cache as deploy@139.177.186.220
+ DEBUG [7d9c2ac6] Command: ( export RBENV_ROOT="$HOME/.rbenv" RBENV_VERSION="3.0.3" ; /usr/bin/env ln -s /home/deploy/cis_life_main/shared/tmp/cache /home/deploy/cis_life_main/releases/20230627051714/tmp/cache )
+  INFO [7d9c2ac6] Finished in 0.155 seconds with exit status 0 (successful).
+ DEBUG [89f0d92e] Running [ -L /home/deploy/cis_life_main/releases/20230627051714/tmp/sockets ] as deploy@139.177.186.220
+ DEBUG [89f0d92e] Command: [ -L /home/deploy/cis_life_main/releases/20230627051714/tmp/sockets ]
+ DEBUG [89f0d92e] Finished in 0.158 seconds with exit status 1 (failed).
+ DEBUG [8460699a] Running [ -d /home/deploy/cis_life_main/releases/20230627051714/tmp/sockets ] as deploy@139.177.186.220
+ DEBUG [8460699a] Command: [ -d /home/deploy/cis_life_main/releases/20230627051714/tmp/sockets ]
+ DEBUG [8460699a] Finished in 0.159 seconds with exit status 1 (failed).
+  INFO [adf4f50b] Running /usr/bin/env ln -s /home/deploy/cis_life_main/shared/tmp/sockets /home/deploy/cis_life_main/releases/20230627051714/tmp/sockets as deploy@139.177.186.220
+ DEBUG [adf4f50b] Command: ( export RBENV_ROOT="$HOME/.rbenv" RBENV_VERSION="3.0.3" ; /usr/bin/env ln -s /home/deploy/cis_life_main/shared/tmp/sockets /home/deploy/cis_life_main/releases/20230627051714/tmp/sockets )
+  INFO [adf4f50b] Finished in 0.156 seconds with exit status 0 (successful).
+ DEBUG [8236601e] Running [ -L /home/deploy/cis_life_main/releases/20230627051714/vendor/bundle ] as deploy@139.177.186.220
+ DEBUG [8236601e] Command: [ -L /home/deploy/cis_life_main/releases/20230627051714/vendor/bundle ]
+ DEBUG [8236601e] Finished in 0.161 seconds with exit status 1 (failed).
+ DEBUG [7d659370] Running [ -d /home/deploy/cis_life_main/releases/20230627051714/vendor/bundle ] as deploy@139.177.186.220
+ DEBUG [7d659370] Command: [ -d /home/deploy/cis_life_main/releases/20230627051714/vendor/bundle ]
+ DEBUG [7d659370] Finished in 0.168 seconds with exit status 1 (failed).
+  INFO [0b46471f] Running /usr/bin/env ln -s /home/deploy/cis_life_main/shared/vendor/bundle /home/deploy/cis_life_main/releases/20230627051714/vendor/bundle as deploy@139.177.186.220
+ DEBUG [0b46471f] Command: ( export RBENV_ROOT="$HOME/.rbenv" RBENV_VERSION="3.0.3" ; /usr/bin/env ln -s /home/deploy/cis_life_main/shared/vendor/bundle /home/deploy/cis_life_main/releases/20230627051714/vendor/bundle )
+  INFO [0b46471f] Finished in 0.162 seconds with exit status 0 (successful).
+ DEBUG [f734f256] Running [ -L /home/deploy/cis_life_main/releases/20230627051714/.bundle ] as deploy@139.177.186.220
+ DEBUG [f734f256] Command: [ -L /home/deploy/cis_life_main/releases/20230627051714/.bundle ]
+ DEBUG [f734f256] Finished in 0.151 seconds with exit status 1 (failed).
+ DEBUG [98a3bde2] Running [ -d /home/deploy/cis_life_main/releases/20230627051714/.bundle ] as deploy@139.177.186.220
+ DEBUG [98a3bde2] Command: [ -d /home/deploy/cis_life_main/releases/20230627051714/.bundle ]
+ DEBUG [98a3bde2] Finished in 0.189 seconds with exit status 1 (failed).
+  INFO [339b56e0] Running /usr/bin/env ln -s /home/deploy/cis_life_main/shared/.bundle /home/deploy/cis_life_main/releases/20230627051714/.bundle as deploy@139.177.186.220
+ DEBUG [339b56e0] Command: ( export RBENV_ROOT="$HOME/.rbenv" RBENV_VERSION="3.0.3" ; /usr/bin/env ln -s /home/deploy/cis_life_main/shared/.bundle /home/deploy/cis_life_main/releases/20230627051714/.bundle )
+  INFO [339b56e0] Finished in 0.155 seconds with exit status 0 (successful).
+ DEBUG [9aa3beb7] Running [ -L /home/deploy/cis_life_main/releases/20230627051714/public/system ] as deploy@139.177.186.220
+ DEBUG [9aa3beb7] Command: [ -L /home/deploy/cis_life_main/releases/20230627051714/public/system ]
+ DEBUG [9aa3beb7] Finished in 0.155 seconds with exit status 1 (failed).
+ DEBUG [925597d3] Running [ -d /home/deploy/cis_life_main/releases/20230627051714/public/system ] as deploy@139.177.186.220
+ DEBUG [925597d3] Command: [ -d /home/deploy/cis_life_main/releases/20230627051714/public/system ]
+ DEBUG [925597d3] Finished in 0.153 seconds with exit status 1 (failed).
+  INFO [837d6e62] Running /usr/bin/env ln -s /home/deploy/cis_life_main/shared/public/system /home/deploy/cis_life_main/releases/20230627051714/public/system as deploy@139.177.186.220
+ DEBUG [837d6e62] Command: ( export RBENV_ROOT="$HOME/.rbenv" RBENV_VERSION="3.0.3" ; /usr/bin/env ln -s /home/deploy/cis_life_main/shared/public/system /home/deploy/cis_life_main/releases/20230627051714/public/system )
+  INFO [837d6e62] Finished in 0.154 seconds with exit status 0 (successful).
+ DEBUG [cd0ef67c] Running [ -L /home/deploy/cis_life_main/releases/20230627051714/public/uploads ] as deploy@139.177.186.220
+ DEBUG [cd0ef67c] Command: [ -L /home/deploy/cis_life_main/releases/20230627051714/public/uploads ]
+ DEBUG [cd0ef67c] Finished in 0.196 seconds with exit status 1 (failed).
+ DEBUG [cc7ff471] Running [ -d /home/deploy/cis_life_main/releases/20230627051714/public/uploads ] as deploy@139.177.186.220
+ DEBUG [cc7ff471] Command: [ -d /home/deploy/cis_life_main/releases/20230627051714/public/uploads ]
+ DEBUG [cc7ff471] Finished in 0.176 seconds with exit status 1 (failed).
+  INFO [5ceb58f7] Running /usr/bin/env ln -s /home/deploy/cis_life_main/shared/public/uploads /home/deploy/cis_life_main/releases/20230627051714/public/uploads as deploy@139.177.186.220
+ DEBUG [5ceb58f7] Command: ( export RBENV_ROOT="$HOME/.rbenv" RBENV_VERSION="3.0.3" ; /usr/bin/env ln -s /home/deploy/cis_life_main/shared/public/uploads /home/deploy/cis_life_main/releases/20230627051714/public/uploads )
+  INFO [5ceb58f7] Finished in 0.176 seconds with exit status 0 (successful).
+ DEBUG [e774ed38] Running [ -L /home/deploy/cis_life_main/releases/20230627051714/public/assets ] as deploy@139.177.186.220
+ DEBUG [e774ed38] Command: [ -L /home/deploy/cis_life_main/releases/20230627051714/public/assets ]
+ DEBUG [e774ed38] Finished in 0.169 seconds with exit status 1 (failed).
+ DEBUG [8c503ed1] Running [ -d /home/deploy/cis_life_main/releases/20230627051714/public/assets ] as deploy@139.177.186.220
+ DEBUG [8c503ed1] Command: [ -d /home/deploy/cis_life_main/releases/20230627051714/public/assets ]
+ DEBUG [8c503ed1] Finished in 0.151 seconds with exit status 1 (failed).
+  INFO [01cfede4] Running /usr/bin/env ln -s /home/deploy/cis_life_main/shared/public/assets /home/deploy/cis_life_main/releases/20230627051714/public/assets as deploy@139.177.186.220
+ DEBUG [01cfede4] Command: ( export RBENV_ROOT="$HOME/.rbenv" RBENV_VERSION="3.0.3" ; /usr/bin/env ln -s /home/deploy/cis_life_main/shared/public/assets /home/deploy/cis_life_main/releases/20230627051714/public/assets )
+  INFO [01cfede4] Finished in 0.160 seconds with exit status 0 (successful).
+ DEBUG [215c4cd1] Running if test ! -d /home/deploy/cis_life_main/releases/20230627051714; then echo "Directory does not exist '/home/deploy/cis_life_main/releases/20230627051714'" 1>&2; false; fi as deploy@139.177.186.220
+ DEBUG [215c4cd1] Command: if test ! -d /home/deploy/cis_life_main/releases/20230627051714; then echo "Directory does not exist '/home/deploy/cis_life_main/releases/20230627051714'" 1>&2; false; fi
+ DEBUG [215c4cd1] Finished in 0.162 seconds with exit status 0 (successful).
+  INFO [73eac2c3] Running $HOME/.rbenv/bin/rbenv exec bundle config --local deployment true as deploy@139.177.186.220
+ DEBUG [73eac2c3] Command: cd /home/deploy/cis_life_main/releases/20230627051714 && ( export RBENV_ROOT="$HOME/.rbenv" RBENV_VERSION="3.0.3" ; $HOME/.rbenv/bin/rbenv exec bundle config --local deployment true )
+  INFO [73eac2c3] Finished in 0.373 seconds with exit status 0 (successful).
+  INFO [d1d803fc] Running $HOME/.rbenv/bin/rbenv exec bundle config --local path /home/deploy/cis_life_main/shared/bundle as deploy@139.177.186.220
+ DEBUG [d1d803fc] Command: cd /home/deploy/cis_life_main/releases/20230627051714 && ( export RBENV_ROOT="$HOME/.rbenv" RBENV_VERSION="3.0.3" ; $HOME/.rbenv/bin/rbenv exec bundle config --local path /home/deploy/cis_life_main/shared/bundle )
+  INFO [d1d803fc] Finished in 0.332 seconds with exit status 0 (successful).
+  INFO [4a92f578] Running $HOME/.rbenv/bin/rbenv exec bundle config --local without development:test as deploy@139.177.186.220
+ DEBUG [4a92f578] Command: cd /home/deploy/cis_life_main/releases/20230627051714 && ( export RBENV_ROOT="$HOME/.rbenv" RBENV_VERSION="3.0.3" ; $HOME/.rbenv/bin/rbenv exec bundle config --local without development:test )
+  INFO [4a92f578] Finished in 0.333 seconds with exit status 0 (successful).
+ DEBUG [69b2407c] Running if test ! -d /home/deploy/cis_life_main/releases/20230627051714; then echo "Directory does not exist '/home/deploy/cis_life_main/releases/20230627051714'" 1>&2; false; fi as deploy@139.177.186.220
+ DEBUG [69b2407c] Command: if test ! -d /home/deploy/cis_life_main/releases/20230627051714; then echo "Directory does not exist '/home/deploy/cis_life_main/releases/20230627051714'" 1>&2; false; fi
+ DEBUG [69b2407c] Finished in 0.163 seconds with exit status 0 (successful).
+ DEBUG [e8c67bf4] Running $HOME/.rbenv/bin/rbenv exec bundle check as deploy@139.177.186.220
+ DEBUG [e8c67bf4] Command: cd /home/deploy/cis_life_main/releases/20230627051714 && ( export RBENV_ROOT="$HOME/.rbenv" RBENV_VERSION="3.0.3" ; $HOME/.rbenv/bin/rbenv exec bundle check )
+ DEBUG [e8c67bf4] 	The Gemfile's dependencies are satisfied
+ DEBUG [e8c67bf4] Finished in 0.544 seconds with exit status 0 (successful).
+  INFO The Gemfile's dependencies are satisfied, skipping installation
+ DEBUG [38b99ef6] Running if test ! -d /home/deploy/cis_life_main/releases/20230627051714; then echo "Directory does not exist '/home/deploy/cis_life_main/releases/20230627051714'" 1>&2; false; fi as deploy@139.177.186.220
+ DEBUG [38b99ef6] Command: if test ! -d /home/deploy/cis_life_main/releases/20230627051714; then echo "Directory does not exist '/home/deploy/cis_life_main/releases/20230627051714'" 1>&2; false; fi
+ DEBUG [38b99ef6] Finished in 0.176 seconds with exit status 0 (successful).
+  INFO [ba5937e1] Running $HOME/.rbenv/bin/rbenv exec bundle exec rake assets:precompile as deploy@139.177.186.220
+ DEBUG [ba5937e1] Command: cd /home/deploy/cis_life_main/releases/20230627051714 && ( export RBENV_ROOT="$HOME/.rbenv" RBENV_VERSION="3.0.3" RAILS_ENV="production" RAILS_GROUPS="assets" ; $HOME/.rbenv/bin/rbenv exec bundle exec rake assets:precompile )
+ DEBUG [ba5937e1] 	rake aborted!
+ DEBUG [ba5937e1] 	ActiveSupport::MessageEncryptor::InvalidMessage: ActiveSupport::MessageEncryptor::InvalidMessage
+ DEBUG [ba5937e1] 	/home/deploy/cis_life_main/shared/bundle/ruby/3.0.0/gems/activesupport-7.0.4.3/lib/active_support/message_encryptor.rb:209:in `rescue in _decrypt'
+/home/deploy/cis_life_main/shared/bundle/ruby/3.0.0/gems/activesupport-7.0.4.3/lib/active_support/message_encryptor.rb:186:in `_decrypt'
+/home/deploy/cis_life_main/shared/bundle/ruby/3.0.0/gems/activesupport-7.0.4.3/lib/active_support/message_encryptor.rb:160:in `decrypt_and_verify'
+/home/deploy/cis_life_main/shared/bundle/ruby/3.0.0/gems/activesupport-7.0.4.3/lib/active_support/messages/rotator.rb:22:in `decrypt_and_verify'
+/home/deploy/cis_life_main/shared/bundle/ruby/3.0.0/gems/activesupport-7.0.4.3/lib/active_support/encrypted_file.rb:104:in `decrypt'
+/home/deploy/cis_life_main/shared/bundle/ruby/3.0.0/gems/activesupport-7.0.4.3/lib/active_support/encrypted_file.rb:66:in `read'
+/home/deploy/cis_life_main/shared/bundle/ruby/3.0.0/gems/activesupport-7.0.4.3/lib/active_support/encrypted_configuration.rb:21:in `read'
+/home/deploy/cis_life_main/shared/bundle/ruby/3.0.0/gems/activesupport-7.0.4.3/lib/active_support/encrypted_configuration.rb:33:in `config'
+/home/deploy/cis_life_main/shared/bundle/ruby/3.0.0/gems/activesupport-7.0.4.3/lib/active_support/encrypted_configuration.rb:48:in `options'
+/home/deploy/cis_life_main/shared/bundle/ruby/3.0.0/gems/activesupport-7.0.4.3/lib/active_support/core_ext/module/delegation.rb:303:in `method_missing'
+/home/deploy/cis_life_main/shared/bundle/ruby/3.0.0/gems/activerecord-7.0.4.3/lib/active_record/railtie.rb:332:in `block in <class:Railtie>'
+/home/deploy/cis_life_main/shared/bundle/ruby/3.0.0/gems/railties-7.0.4.3/lib/rails/initializable.rb:32:in `instance_exec'
+/home/deploy/cis_life_main/shared/bundle/ruby/3.0.0/gems/railties-7.0.4.3/lib/rails/initializable.rb:32:in `run'
+/home/deploy/cis_life_main/shared/bundle/ruby/3.0.0/gems/railties-7.0.4.3/lib/rails/initializable.rb:61:in `block in run_initializers'
+/home/deploy/cis_life_main/shared/bundle/ruby/3.0.0/gems/railties-7.0.4.3/lib/rails/initializable.rb:60:in `run_initializers'
+/home/deploy/cis_life_main/shared/bundle/ruby/3.0.0/gems/railties-7.0.4.3/lib/rails/application.rb:372:in `initialize!'
+/home/deploy/cis_life_main/releases/20230627051714/config/environment.rb:5:in `<top (required)>'
+/home/deploy/cis_life_main/shared/bundle/ruby/3.0.0/gems/zeitwerk-2.6.8/lib/zeitwerk/kernel.rb:38:in `require'
+/home/deploy/cis_life_main/shared/bundle/ruby/3.0.0/gems/zeitwerk-2.6.8/lib/zeitwerk/kernel.rb:38:in `require'
+/home/deploy/cis_life_main/shared/bundle/ruby/3.0.0/gems/railties-7.0.4.3/lib/rails/application.rb:348:in `require_environment!'
+/home/deploy/cis_life_main/shared/bundle/ruby/3.0.0/gems/railties-7.0.4.3/lib/rails/application.rb:511:in `block in run_tasks_blocks'
+/home/deploy/cis_life_main/shared/bundle/ruby/3.0.0/gems/sprockets-rails-3.4.2/lib/sprockets/rails/task.rb:61:in `block (2 levels) in define'
+/home/deploy/cis_life_main/shared/bundle/ruby/3.0.0/gems/rake-13.0.6/exe/rake:27:in `<top (required)>'
+/home/deploy/.rbenv/versions/3.0.3/bin/bundle:23:in `load'
+/home/deploy/.rbenv/versions/3.0.3/bin/bundle:23:in `<main>'
+ DEBUG [ba5937e1] 	
+Caused by:
+ DEBUG [ba5937e1] 	ArgumentError: key must be 16 bytes
+ DEBUG [ba5937e1] 	/home/deploy/cis_life_main/shared/bundle/ruby/3.0.0/gems/activesupport-7.0.4.3/lib/active_support/message_encryptor.rb:196:in `key='
+/home/deploy/cis_life_main/shared/bundle/ruby/3.0.0/gems/activesupport-7.0.4.3/lib/active_support/message_encryptor.rb:196:in `_decrypt'
+/home/deploy/cis_life_main/shared/bundle/ruby/3.0.0/gems/activesupport-7.0.4.3/lib/active_support/message_encryptor.rb:160:in `decrypt_and_verify'
+/home/deploy/cis_life_main/shared/bundle/ruby/3.0.0/gems/activesupport-7.0.4.3/lib/active_support/messages/rotator.rb:22:in `decrypt_and_verify'
+/home/deploy/cis_life_main/shared/bundle/ruby/3.0.0/gems/activesupport-7.0.4.3/lib/active_support/encrypted_file.rb:104:in `decrypt'
+/home/deploy/cis_life_main/shared/bundle/ruby/3.0.0/gems/activesupport-7.0.4.3/lib/active_support/encrypted_file.rb:66:in `read'
+/home/deploy/cis_life_main/shared/bundle/ruby/3.0.0/gems/activesupport-7.0.4.3/lib/active_support/encrypted_configuration.rb:21:in `read'
+/home/deploy/cis_life_main/shared/bundle/ruby/3.0.0/gems/activesupport-7.0.4.3/lib/active_support/encrypted_configuration.rb:33:in `config'
+/home/deploy/cis_life_main/shared/bundle/ruby/3.0.0/gems/activesupport-7.0.4.3/lib/active_support/encrypted_configuration.rb:48:in `options'
+/home/deploy/cis_life_main/shared/bundle/ruby/3.0.0/gems/activesupport-7.0.4.3/lib/active_support/core_ext/module/delegation.rb:303:in `method_missing'
+/home/deploy/cis_life_main/shared/bundle/ruby/3.0.0/gems/activerecord-7.0.4.3/lib/active_record/railtie.rb:332:in `block in <class:Railtie>'
+/home/deploy/cis_life_main/shared/bundle/ruby/3.0.0/gems/railties-7.0.4.3/lib/rails/initializable.rb:32:in `instance_exec'
+/home/deploy/cis_life_main/shared/bundle/ruby/3.0.0/gems/railties-7.0.4.3/lib/rails/initializable.rb:32:in `run'
+/home/deploy/cis_life_main/shared/bundle/ruby/3.0.0/gems/railties-7.0.4.3/lib/rails/initializable.rb:61:in `block in run_initializers'
+/home/deploy/cis_life_main/shared/bundle/ruby/3.0.0/gems/railties-7.0.4.3/lib/rails/initializable.rb:60:in `run_initializers'
+/home/deploy/cis_life_main/shared/bundle/ruby/3.0.0/gems/railties-7.0.4.3/lib/rails/application.rb:372:in `initialize!'
+/home/deploy/cis_life_main/releases/20230627051714/config/environment.rb:5:in `<top (required)>'
+/home/deploy/cis_life_main/shared/bundle/ruby/3.0.0/gems/zeitwerk-2.6.8/lib/zeitwerk/kernel.rb:38:in `require'
+/home/deploy/cis_life_main/shared/bundle/ruby/3.0.0/gems/zeitwerk-2.6.8/lib/zeitwerk/kernel.rb:38:in `require'
+/home/deploy/cis_life_main/shared/bundle/ruby/3.0.0/gems/railties-7.0.4.3/lib/rails/application.rb:348:in `require_environment!'
+/home/deploy/cis_life_main/shared/bundle/ruby/3.0.0/gems/railties-7.0.4.3/lib/rails/application.rb:511:in `block in run_tasks_blocks'
+/home/deploy/cis_life_main/shared/bundle/ruby/3.0.0/gems/sprockets-rails-3.4.2/lib/sprockets/rails/task.rb:61:in `block (2 levels) in define'
+/home/deploy/cis_life_main/shared/bundle/ruby/3.0.0/gems/rake-13.0.6/exe/rake:27:in `<top (required)>'
+/home/deploy/.rbenv/versions/3.0.3/bin/bundle:23:in `load'
+/home/deploy/.rbenv/versions/3.0.3/bin/bundle:23:in `<main>'
+ DEBUG [ba5937e1] 	Tasks: TOP => environment
+ DEBUG [ba5937e1] 	(See full trace by running task with --trace)
