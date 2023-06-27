@@ -1,0 +1,9 @@
+
+<%= render @process_remark %>
+
+<div>
+  <%= link_to "Edit", edit_process_remark_path(@process_remark), class: 'btn btn-primary' %> |
+  <%= link_to "Back", process_remarks_path, class: 'btn btn-primary' %>
+
+  <%= button_to "Delete", @process_remark, method: :delete, class: 'btn btn-danger' %>
+</div>

@@ -1,0 +1,43 @@
+<%= content_tag :h1, "List of Batch Remarks" %>
+
+
+<div class="text-end mb-3">
+  <%= link_to new_batch_remark_path, class: 'btn btn-primary' do %>
+    New Batch Remark
+  <% end %>
+</div>
+
+<table class ="table table-striped">
+  <table class="table table-striped table-bordered table-hover">
+    <thead>
+      <tr>
+
+      <th>#</th>
+        <th>Batch</th>
+        <th>Remark</th>
+        <th>User</th>
+        <th></th>
+
+      </tr>
+    </thead>
+
+    <tbody>
+      <% @batch_remarks.each do |batch_remark| %>
+        <tr>
+
+        <th scope="row"><%= batch_remark.id %></th>
+        <td><%= batch_remark.batch %></td>
+        <td><%= batch_remark.remark %></td>
+        <td><%= batch_remark.user %></td>
+    
+          <td>
+            <%= link_to 'View', batch_remark, class: 'btn btn-secondary btn-sm' %>
+            <%= link_to 'Edit', edit_batch_remark_path(batch_remark), class: 'btn btn-secondary btn-sm' %>
+            <%= link_to "Delete", batch_remark, class: "btn btn-danger btn-sm", method: :delete, data: { "turbo-method": :delete, turbo_confirm: "Are you sure?" } %>
+          </td>
+
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+</div>

@@ -29,9 +29,24 @@ class GroupRemitsController < InheritedResources::Base
       @group_remit.set_under_review_status
     end
 
+    if all_renewal
+      @group_remit.set_for_payment_status
+    else
+      @group_remit.set_under_review_status
+    end
+    
     respond_to do |format|
       if @group_remit.save
-        format.html { redirect_to @group_remit, notice: "Group remit submitted" }
+        @process_coverage = @group_remit.build_process_coverage
+        @process_coverage.effectivity = @group_remit.effectivity_date
+        @process_coverage.expiry = @group_remit.expiry_date
+        @process_coverage.set_default_attributes
+        
+        if @process_coverage.save
+          format.html { redirect_to @group_remit, notice: "Group remit submitted" }
+        else
+          format.html { redirect_to @group_remit, alert: "Process Coverage not created!" }
+        end
       else
         format.html { redirect_to @group_remit, alert: "Please see members below and complete the necessary details." }
       end
@@ -152,7 +167,8 @@ class GroupRemitsController < InheritedResources::Base
     end
 
     def group_remit_params
-      params.require(:group_remit).permit(:name, :description, :agreement_id, :anniversary_id)
+      params.require(:group_remit).permit(:name, :description, :agreement_id, :anniversary_id, 
+        process_coverage_attributes: [:group_remit_id, :effectivity, :expiry] )
     end
 
     def set_anniversary(anniversary_type, anniv_id)

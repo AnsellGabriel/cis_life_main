@@ -30,6 +30,10 @@ class Member < ApplicationRecord
     member_dependents.where.not(id: selected_dependent_ids)
   end
 
+  def to_s
+    full_name.titleize
+  end
+
   def age
     Date.today.year - self.birth_date.year - ((Date.today.month > self.birth_date.month || (Date.today.month == self.birth_date.month && Date.today.day >= self.birth_date.day)) ? 0 : 1)
   end

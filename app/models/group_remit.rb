@@ -3,6 +3,7 @@ class GroupRemit < ApplicationRecord
   belongs_to :anniversary, optional: true
   has_many :batches, dependent: :destroy
   has_many :denied_members, dependent: :destroy
+  has_one :process_coverage
 
   enum status: {
     pending: 0,
@@ -13,6 +14,10 @@ class GroupRemit < ApplicationRecord
     for_renewal: 5,
     expired: 6
   }
+
+  def to_s
+    name
+  end
 
   def renew
     new_group_remit = self.dup

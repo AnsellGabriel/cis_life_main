@@ -1,0 +1,9 @@
+
+<%= render @process_coverage %>
+
+<div>
+  <%= link_to "Edit", edit_process_coverage_path(@process_coverage), class: 'btn btn-primary' %> |
+  <%= link_to "Back", process_coverages_path, class: 'btn btn-primary' %>
+
+  <%= button_to "Delete", @process_coverage, method: :delete, class: 'btn btn-danger' %>
+</div>

@@ -1,0 +1,9 @@
+
+<div class="card">
+  <h5 class="card-header">New process remark</h5>
+  <div class="card-body">
+    <%= render "remote_modal", title: @title do %>
+      <%= render "form", process_remark: @process_remark %>
+    <% end %>
+  </div>
+</div>

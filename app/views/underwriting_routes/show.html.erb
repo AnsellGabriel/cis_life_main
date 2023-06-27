@@ -1,0 +1,9 @@
+
+<%= render @underwriting_route %>
+
+<div>
+  <%= link_to "Edit", edit_underwriting_route_path(@underwriting_route), class: 'btn btn-primary' %> |
+  <%= link_to "Back", underwriting_routes_path, class: 'btn btn-primary' %>
+
+  <%= button_to "Delete", @underwriting_route, method: :delete, class: 'btn btn-danger' %>
+</div>

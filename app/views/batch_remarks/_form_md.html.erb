@@ -1,0 +1,18 @@
+<%= simple_form_for @batch_remark, url: batch_remarks_path(), method: :post do |f| %>
+  <%= f.error_notification %>
+  <%= f.error_notification message: f.object.errors[:base].to_sentence if f.object.errors[:base].present? %>
+
+  <div class="form-inputs mb-3">
+      <%= f.association :batch, as: :hidden %>
+      <%= f.input :remark, label: "Recommendation" %>
+      <%= f.input :status, input_html: { value: @rem_status }, as: :hidden %>
+      <%#= f.association :user %>
+      <%= f.input :batch_status, input_html: { value: @batch_status }, as: :hidden %>
+      <%= f.input :process_coverage, input_html: { value: @process_coverage }, as: :hidden %>
+    </div>
+
+    <div class="form-actions text-end">
+      <%= link_to "Back", batch_remarks_path, class: 'btn btn-secondary' %>
+      <%= f.button :submit, class: 'btn-success', data: {turbo: false} %>
+  </div>
+<% end %>

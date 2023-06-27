@@ -3,6 +3,22 @@ require 'sidekiq/web'
 
 Rails.application.routes.draw do 
   resources :process_claims
+  resources :underwriting_routes
+  resources :batch_remarks do
+    get :form_md, on: :member
+  end
+  resources :process_remarks do 
+    get :view_all, on: :collection
+  end
+  resources :process_coverages do 
+    get :approve_batch, on: :member
+    get :deny_batch, on: :member
+    get :pending_batch, on: :member
+    get :approve
+    get :deny
+    get :modal_remarks, on: :member
+    get :cov_list, on: :collection
+  end
   resources :coop_agreements do
     resources :group_remits
   end
@@ -24,7 +40,11 @@ Rails.application.routes.draw do
       get :health_dec, on: :member
       collection do
         post :import
+        get :approve_all
+        get :all_health_decs
       end
+      # get :approve_selected, on: :collection
+      # get :approve_all, on: :collection
       resources :batch_health_decs, as: 'health_declarations'
       resources :batch_dependents, as: 'dependents'
       resources :batch_beneficiaries, as: 'beneficiaries'

@@ -4,6 +4,8 @@ class Batch < ApplicationRecord
   include Calculate
   attr_accessor :rank
 
+
+
   # remove association of coop_member from agreement.coop_members
   # if batch is destroyed and status is new/recent
   before_destroy :delete_agreements_coop_members, if: :new_status?
@@ -38,6 +40,9 @@ class Batch < ApplicationRecord
   }
 
   belongs_to :coop_member
+  belongs_to :member, optional: true
+  scope :coop_member, -> { joins(:member).where('members.coop_member = ?', true) }
+
   belongs_to :group_remit
   belongs_to :agreement_benefit
   
@@ -46,6 +51,12 @@ class Batch < ApplicationRecord
   has_many :member_dependents, through: :batch_dependents
   has_many :batch_beneficiaries, dependent: :destroy
   has_many :member_dependents, through: :batch_beneficiaries
+  has_many :batch_remarks
+
+  def update_valid_health_dec
+    self.update_attribute(:valid_health_dec, true)
+    self.save!
+  end
 
   def update_valid_health_dec
     self.update_attribute(:valid_health_dec, true)
