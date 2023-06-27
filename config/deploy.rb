@@ -13,10 +13,10 @@ set :deploy_to, "/home/deploy/#{fetch :application}"
 
 set :branch, "main"
 
-# append :linked_files, "config/master.key", "config/secrets.yml", "config/database.yml"
+append :linked_files, "config/master.key", "config/secrets.yml", "config/database.yml"
 append :linked_files, "config/database.yml"
 
-# set :linked_files, fetch(:linked_files, []).push('config/master.key')
+set :linked_files, fetch(:linked_files, []).push('config/master.key')
 
 set :keep_releases, 5
 
@@ -24,12 +24,12 @@ namespace :deploy do
   namespace :check do
     before :linked_files, :set_master_key do
       on roles(:app), in: :sequence, wait: 10 do
-        # unless test("[ -f #{shared_path}/config/master.key ]")
-        #   upload! 'config/master.key', "#{shared_path}/config/master.key"
-        # end
-        # unless test("[ -f #{shared_path}/config/secrets.yml ]")
-        #   upload! 'config/secrets.yml', "#{shared_path}/config/secrets.yml"
-        # end
+        unless test("[ -f #{shared_path}/config/master.key ]")
+          upload! 'config/master.key', "#{shared_path}/config/master.key"
+        end
+        unless test("[ -f #{shared_path}/config/secrets.yml ]")
+          upload! 'config/secrets.yml', "#{shared_path}/config/secrets.yml"
+        end
         unless test("[ -f #{shared_path}/config/database.yml ]")
           upload! 'config/database.yml', "#{shared_path}/config/database.yml"
         end
