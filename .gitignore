@@ -5,5 +5,3 @@
 dump.rdb
 .byebug_history
 /config/master.key
-
-/config/credentials/production.key
