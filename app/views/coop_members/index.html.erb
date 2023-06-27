@@ -21,24 +21,26 @@
   </div>
 </div>
 
-<%# <% console %> 
 <!-- Button trigger for New Member Enrollment -->
-<div class="d-flex justify-content-between align-items-end">
-  <div class="d-flex gap-1">
-    <div class="mb-1">
-      <%= link_to "Enroll Member", new_member_path, 
-        class: "btn btn-sm btn-warning", 
-        data: {
-          turbo_frame: "modal-xl"
-        } %>
-    </div>
+<div class="d-flex justify-content-between align-items-center">
+  <div class="d-flex align-items-center gap-3">
+    <%= content_tag :h1, "Members"  %>
+    <div class="d-flex gap-1">
+      <div class="mb-1">
+        <%= link_to "Enroll Member", new_member_path, 
+          class: "btn btn-sm btn-warning", 
+          data: {
+            turbo_frame: "modal-xl"
+          } %>
+      </div>
 
-    <div class="mb-1">
-      <%= content_tag :button, "Batch Enrollment", 
-        class: "btn btn-sm btn-warning", 
-        data: {bs_toggle: "modal",
-          bs_target: "#batchEnrollment"
-        }%>
+      <div class="mb-1">
+        <%= content_tag :button, "Batch Enrollment", 
+          class: "btn btn-sm btn-warning", 
+          data: {bs_toggle: "modal",
+            bs_target: "#batchEnrollment"
+          }%>
+      </div>
     </div>
   </div>
 
@@ -56,9 +58,9 @@
 </div>
 
 
-<div class="table-responsive mt-3">
-  <table class="table table-hover align-middle">
-    <thead class="table-dark">
+<div class="table table-striped">
+  <table class="table table-striped table-bordered table-hover align-middle">
+    <thead>
       <tr>
         <th scope="col" >ID</th>
         <th scope="col" >Name</th>
@@ -74,7 +76,6 @@
         <% end %>
       </td>
       <% @filtered_members.each do |member| %>
-        <%# <% age = Date.today.year - member.birth_date.year - ((Date.today.month > member.birth_date.month || (Date.today.month == member.birth_date.month && Date.today.day >= member.birth_date.day)) ? 0 : 1) %> 
         <% coop_member = member.coop_members.find { |coop_member| coop_member.cooperative_id == @cooperative.id }%>
         
         <tr>
@@ -97,7 +98,8 @@
           </td>
           <td><%= coop_member.coop_branch.name %></td>
           <td>
-            <%= link_to 'View details', coop_member_path(coop_member.id), class: 'btn btn-sm btn-primary', data: {turbo_frame: 'modal-xl'} %>
+            <%= link_to 'Insurance', member_agreements_coop_member_path(coop_member), class: 'btn btn-sm btn-primary' %>
+            <%= link_to 'Details', coop_member_path(coop_member), class: 'btn btn-sm btn-primary', data: {turbo_frame: 'modal-xl'} %>
             <%= link_to 'Edit', edit_member_path(member), class: 'btn btn-sm btn-secondary', data: {turbo_frame: 'modal-xl'} %>
           </td>
 

@@ -22,4 +22,8 @@ class MemberDependent < ApplicationRecord
   def age
     Date.today.year - self.birth_date.year - ((Date.today.month > self.birth_date.month || (Date.today.month == self.birth_date.month && Date.today.day >= self.birth_date.day)) ? 0 : 1)
   end
+
+  def full_name
+    "#{self.last_name}, #{self.first_name} #{self.middle_name} #{self.suffix}"
+  end
 end

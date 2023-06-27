@@ -1,0 +1,47 @@
+<%= content_tag :h1, "List of Process Claims" %>
+
+
+<div class="text-end mb-3">
+  <%= link_to new_process_claim_path, class: 'btn btn-primary' do %>
+    New Process Claim
+  <% end %>
+</div>
+
+<table class ="table table-striped">
+  <table class="table table-striped table-bordered table-hover">
+    <thead>
+      <tr>
+
+      <th>#</th>
+        <th>Cooperative</th>
+        <th>Agreement</th>
+        <th>Batch</th>
+        <th>Date Incident</th>
+        <th>Entry Type</th>
+        <th></th>
+
+      </tr>
+    </thead>
+
+    <tbody>
+      <% @process_claims.each do |process_claim| %>
+        <tr>
+
+        <th scope="row"><%= process_claim.id %></th>
+        <td><%= process_claim.cooperative %></td>
+        <td><%= process_claim.agreement %></td>
+        <td><%= process_claim.batch %></td>
+        <td><%= process_claim.date_incident %></td>
+        <td><%= process_claim.entry_type %></td>
+    
+          <td>
+            <%= link_to 'View', process_claim, class: 'btn btn-secondary btn-sm' %>
+            <%= link_to 'Edit', edit_process_claim_path(process_claim), class: 'btn btn-secondary btn-sm' %>
+            <%= link_to "Delete", process_claim, class: "btn btn-danger btn-sm", method: :delete, data: { "turbo-method": :delete, turbo_confirm: "Are you sure?" } %>
+          </td>
+
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+</div>

@@ -36,4 +36,8 @@ class Agreement < ApplicationRecord
     def renewed_group_remits
       group_remits.where(status: :renewed)
     end
+
+    def batches
+      
+    end
 end

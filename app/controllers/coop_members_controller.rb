@@ -1,7 +1,7 @@
 class CoopMembersController < InheritedResources::Base
   before_action :authenticate_user!
   before_action :check_userable_type
-  before_action :set_coop_member, only: %i[show edit update destroy selected]
+  before_action :set_coop_member, only: %i[show edit update destroy selected member_agreements]
 
   def index
     # initalize new member for coop member modal form
@@ -61,6 +61,11 @@ class CoopMembersController < InheritedResources::Base
     respond_to do |format|
       format.turbo_stream
     end
+  end
+
+  def member_agreements
+    # byebug
+    @agreements = @coop_member.agreements.includes(:plan)
   end
 
   private

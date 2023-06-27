@@ -9,11 +9,11 @@ class CoopMember < ApplicationRecord
   has_and_belongs_to_many :agreements
 
   def to_s
-    "#{full_name}"
+    "#{full_name.titleize}"
   end
 
   def set_full_name
     self.full_name = "#{member.last_name}, #{member.first_name} #{member.middle_name}"
   end
-
+  
 end
