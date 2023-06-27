@@ -17,6 +17,8 @@ append :linked_files, "config/master.key", "config/secrets.yml", "config/databas
 
 set :linked_files, fetch(:linked_files, []).push('config/master.key')
 
+set :keep_releases, 5
+
 namespace :deploy do
   namespace :check do
     before :linked_files, :set_master_key do
@@ -40,7 +42,6 @@ append :linked_dirs, 'log', 'tmp/pids', 'tmp/cache', 'tmp/sockets', 'vendor/bund
 # Default branch is :master
 # ask :branch, `git rev-parse --abbrev-ref HEAD`.chomp
 
-set :keep_releases, 5
 
 set :migration_role, :app
 
