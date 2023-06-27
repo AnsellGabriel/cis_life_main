@@ -13,6 +13,14 @@ class ProcessClaimsController < ApplicationController
   # GET /process_claims/new
   def new
     @process_claim = ProcessClaim.new
+    @coop_member = CoopMember.find(params[:coop_member_id])
+    @agreement = Agreement.find(params[:agreement_id])
+    @group_remit = @agreement.group_remits.joins(:batches)
+                           .where(batches: { coop_member_id: @coop_member.id })
+                           .order('group_remits.created_at DESC')
+                           .limit(1)
+                           .first
+    @batch = @group_remit.batches.find_by(coop_member_id: @coop_member.id)
   end
 
   # GET /process_claims/1/edit
@@ -23,7 +31,26 @@ class ProcessClaimsController < ApplicationController
   def create
     @process_claim = ProcessClaim.new(process_claim_params)
 
-    if @process_claim.save
+    batch = Batch.find(process_claim_params[:batch_id])
+    coop_member = batch.coop_member
+    agreement = Agreement.find(process_claim_params[:agreement_id])
+    @group_remit = agreement.group_remits.joins(:batches)
+                           .where(batches: { coop_member_id: coop_member.id })
+                           .order('group_remits.created_at DESC')
+                           .limit(1)
+                           .first
+
+    expiry_date = @group_remit.expiry_date
+    incident_date = process_claim_params[:date_incident].to_date
+    difference_in_months = (expiry_date.year * 12 + expiry_date.month) - (incident_date.year * 12 + incident_date.month)
+    # byebug
+
+    if difference_in_months > 60
+      return redirect_to new_process_claim_path, alert: "The claim cannot be processed. The incident date has passed the 5-year claim period."
+    end
+
+
+    if @process_claim.save!
       redirect_to @process_claim, notice: "Process claim was successfully created."
     else
       render :new, status: :unprocessable_entity
@@ -53,6 +80,6 @@ class ProcessClaimsController < ApplicationController
 
     # Only allow a list of trusted parameters through.
     def process_claim_params
-      params.require(:process_claim).permit(:cooperative_id, :agreement_id, :batch_id, :date_incident, :entry_type)
+      params.require(:process_claim).permit(:cooperative_id, :agreement_id, :batch_id, :date_incident, :entry_type, :batch_beneficiary_id)
     end
 end

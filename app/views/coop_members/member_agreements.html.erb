@@ -26,7 +26,7 @@
 								</div>
 								<div class="">
 									<% if group_remit.status == 'active' %>
-										<%= link_to 'File Claim', new_process_claim_path, class: small_btn('primary') %>
+										<%= link_to 'File Claim', new_process_claim_path(coop_member_id: @coop_member.id, agreement_id: agreement.id), class: small_btn('primary') %>
 									<% end %>
 									<button class="<%= small_btn('warning text-dark') %>"
 									data-action = "click->toggler#toggle" data-id="<%= dom_id(agreement) %>"

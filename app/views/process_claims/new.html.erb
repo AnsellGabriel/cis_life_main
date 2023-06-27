@@ -1,7 +1,7 @@
 
-<div class="card">
-  <h5 class="card-header">New process claim</h5>
-  <div class="card-body">
+<div class="card col-md-10" style="margin: auto">
+  <h5 class="card-header text-center"><%= @agreement.plan.name %> Claim Form</h5>
+  <div class="card-body col-md-10" style="margin: auto">
     <%= render "form", process_claim: @process_claim %>
   </div>
 </div>

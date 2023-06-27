@@ -5,7 +5,6 @@
 #
 #   movies = Movie.create([{ name: "Star Wars" }, { name: "Lord of the Rings" }])
 #   Character.create(name: "Luke", movie: movies.first)
-<<<<<<<<< Temporary merge branch 1
 spreadsheet = Roo::Spreadsheet.open("./db/uploads/benefits.xlsx")
 
 (2..spreadsheet.last_row).each do |row|
@@ -14,14 +13,10 @@ spreadsheet = Roo::Spreadsheet.open("./db/uploads/benefits.xlsx")
     puts "#{benefit.name}" if benefit.save!
 end
 
-# Cooperatives
-=========
-
 # Admin
 # AdminUser.create!(email: 'admin@example.com', password: 'password', password_confirmation: 'password') if Rails.env.development?
 
 # Cooperative
->>>>>>>>> Temporary merge branch 2
 cooperatives_spreadsheet = Roo::Spreadsheet.open("/Users/macbookair/Desktop/cis_data/Operating-Coops.xlsx")
 (5..100).each do |row|
     spreadsheet = cooperatives_spreadsheet
@@ -121,7 +116,7 @@ AgreementBenefit.create!(agreement_id: 3, proposal_id: 1, name: 'Agreement Benef
   user.approved = true
   puts "#{user.email} - DONE!" if user.save!
 end
-=======
+
 # CoopBranch of Coop 1
 10.times do |i|
     CoopBranch.create!(name: "Branch #{i+1}", cooperative_id: 1, region: "Region 1", province: "Province 1", municipality: "Municipality 1", barangay: "Barangay 1", street: "Street 1", contact_details: "09123456789")
@@ -131,7 +126,6 @@ end
 CoopUser.create!(first_name: 'Lian', last_name: 'Postrano', middle_name: 'Elliot', birthdate: FFaker::Time.date, mobile_number: '09948423385', coop_branch_id: 1, cooperative_id: 1)
 User.create!(email: 'coop@gmail.com', password: 'password', password_confirmation: 'password',  approved: true, userable_id: 1, userable_type: 'CoopUser')
 
->>>>>>>>> Temporary merge branch 2
 
 HealthDec.create!(question: "Do you drink alcohol?", active: true, with_details: true, valid_answer: false)
 HealthDecSubquestion.create!(question: "Please state whether beer, wine, or spirits; and your average daily consumption", health_dec_id: 6)
