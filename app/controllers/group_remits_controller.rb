@@ -37,6 +37,7 @@ class GroupRemitsController < InheritedResources::Base
     
     respond_to do |format|
       if @group_remit.save
+        # @group_remit.batches
         @process_coverage = @group_remit.build_process_coverage
         @process_coverage.effectivity = @group_remit.effectivity_date
         @process_coverage.expiry = @group_remit.expiry_date
