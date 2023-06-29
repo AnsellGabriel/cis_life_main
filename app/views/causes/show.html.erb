@@ -1,0 +1,16 @@
+
+
+<div class="card">
+  <div class="card-header">
+    <h1>Cause</h1>
+    <%= link_to "Delete", @cause, class: "btn btn-danger btn-sm", method: :delete, data: { "turbo-method": :delete, turbo_confirm: "Are you sure?" } %>
+  </div>
+  <div class="card-body">
+    <%= render @cause %>
+  </div>
+  <div class="card-footer">
+    <%= link_to "Edit", edit_cause_path(@cause), class: "btn btn-secondary btn-sm" %> |
+    <%= link_to "Back", causes_path, class: "btn btn-secondary btn-sm" %>
+  </div>
+
+</div>

@@ -1,0 +1,41 @@
+<%= content_tag :h1, "List of Requirements" %>
+
+
+<div class="text-end mb-3">
+  <%= link_to new_requirement_path, class: 'btn btn-primary' do %>
+    New Requirement
+  <% end %>
+</div>
+
+<table class ="table table-striped">
+  <table class="table table-striped table-bordered table-hover">
+    <thead>
+      <tr>
+
+      <th>#</th>
+        <th>Name</th>
+        <th>Description</th>
+        <th></th>
+
+      </tr>
+    </thead>
+
+    <tbody>
+      <% @requirements.each do |requirement| %>
+        <tr>
+
+        <th scope="row"><%= requirement.id %></th>
+        <td><%= requirement.name %></td>
+        <td><%= requirement.description %></td>
+    
+          <td>
+            <%= link_to 'View', requirement, class: 'btn btn-secondary btn-sm' %>
+            <%= link_to 'Edit', edit_requirement_path(requirement), class: 'btn btn-secondary btn-sm' %>
+            <%= link_to "Delete", requirement, class: "btn btn-danger btn-sm", method: :delete, data: { "turbo-method": :delete, turbo_confirm: "Are you sure?" } %>
+          </td>
+
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+</div>

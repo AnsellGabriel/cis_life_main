@@ -1,4 +1,6 @@
 Rails.application.routes.draw do
+  resources :requirements
+  resources :causes
   resources :process_routes
   resources :health_decs
   resources :agreement_benefits
