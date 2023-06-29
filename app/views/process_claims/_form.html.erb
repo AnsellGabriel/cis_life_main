@@ -3,7 +3,7 @@
   <%= f.error_notification %>
   <%= f.error_notification message: f.object.errors[:base].to_sentence if f.object.errors[:base].present? %>
 
-  <div class="form-inputs mb-3 ">
+  <div class="form-inputs mb-3 " data-controller="toggler">
     <%= f.hidden_field :cooperative_id, value: @cooperative.id %>
     <%= f.hidden_field :agreement_id, value: @agreement.id %>
     <%= f.hidden_field :batch_id, value: @batch.id %>
@@ -45,7 +45,7 @@
           <%= content_tag :span, 'Nature of Claim :', class: "text-primary mb-2" %>
         </div>
         <div class="d-flex flex-column ps-3">
-            <%= f.collection_radio_buttons :nature_of_claim,
+          <%= f.collection_radio_buttons :nature_of_claim,
             [
               ['Death Claim', :life],
               ['Hospital Income Benefit', :hospitalization],
@@ -54,19 +54,24 @@
               ['Total & Permanent Disability', :disability]
             ],
             :last, :first do |b| %>
-              <div class="d-flex gap-2">
-                <%= b.radio_button %> <!-- Radio button -->
-                <%= b.label %> <!-- Text label -->
-              </div>
-            <% end %>
+            <div class="d-flex gap-2">
+              <%= b.radio_button data: { action: "click->toggler#toggle", id: b.text },
+                checked: true %>
+              <%= b.text %> <!-- Text label -->
+            </div>
+          <% end %>
         </div>
+
+
+
+
       </div>
     </div>
     <div class="row">
       <div class="">
         <%= content_tag :span, 'Required Documents : ', class: "text-primary" %>
       </div>
-      <div class="">
+      <div class="hidden" data-toggler-target="toggleable" data-id="Death Claim">
         <span>For Death Claim:</span>
         <ul>
           <li><small>Certified True Copy of Certificate of Death <i>(originally stamped/signed as certified true copy)</i></small></li>
@@ -78,7 +83,7 @@
           <li><small>Official Receipt or Billing Statement <i>(if available)</i></small></li>
         </ul>
       </div>
-      <div class="">
+      <div class="hidden" data-toggler-target="toggleable" data-id="Hospital Income Benefit">
         <span>For Hospital Income Benefit:</span>
         <ul>
           <li><small>Medical Certificate <i>(including date of confinement and final diagnosis)</i></small></li>
@@ -87,7 +92,25 @@
         </ul>
       </div>
     </div>
-    <div class="">
+    <div class="hidden" data-toggler-target="toggleable" data-id="Accidental Medical Reimbursement">
+      <span>For Accidental Medical Reimbursement, Total and Permanent Disability, and Dismemberment:</span>
+      <ul>
+        <li><small>Medical Certificate <i>(including date of confinement and final diagnosis)</i></small></li>
+        <li><small>Police Report</small></li>
+        <li><small>Statement of Account/Hospital Bill</small></li>
+        <li><small>Original Official Receipts</small></li>
+      </ul>
+    </div>
+    <div class="hidden" data-toggler-target="toggleable" data-id="Accidental Dismemberment">
+      <span>For Accidental Medical Reimbursement, Total and Permanent Disability, and Dismemberment:</span>
+      <ul>
+        <li><small>Medical Certificate <i>(including date of confinement and final diagnosis)</i></small></li>
+        <li><small>Police Report</small></li>
+        <li><small>Statement of Account/Hospital Bill</small></li>
+        <li><small>Original Official Receipts</small></li>
+      </ul>
+    </div>
+    <div class="hidden" data-toggler-target="toggleable" data-id="Total & Permanent Disability">
       <span>For Accidental Medical Reimbursement, Total and Permanent Disability, and Dismemberment:</span>
       <ul>
         <li><small>Medical Certificate <i>(including date of confinement and final diagnosis)</i></small></li>
