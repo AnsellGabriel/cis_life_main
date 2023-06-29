@@ -18,6 +18,10 @@ class Cooperative < ApplicationRecord
       coop_members.where.not(id: ids)
     end
     
+    def get_fulladdress
+      "#{municipality}, #{province}, #{region}"
+    end
+    
     
 
     def coop_member_details

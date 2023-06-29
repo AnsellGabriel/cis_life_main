@@ -4,10 +4,10 @@ class Agreement < ApplicationRecord
     Comm_type = ["Gross Commission", "Net Commission"]
     Anniversary = ["Single", "Multiple", "12 Months"]
 
-    belongs_to :plan
-    belongs_to :proposal
-    belongs_to :agent
-    belongs_to :cooperative
+    belongs_to :plan, optional: true
+    belongs_to :proposal, optional: true
+    belongs_to :agent, optional: true
+    belongs_to :cooperative, optional: true
 
     has_many :agreement_benefits
     has_many :group_remits
