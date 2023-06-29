@@ -47,8 +47,10 @@
         <td><%= process_coverage.denied_total_prem %></td>
     
           <td>
-            <% if current_user.userable_type == "Employee" && current_user.userable_designation == "Medical Director" %>
-              <%= link_to "MD", all_health_decs_group_remit_batches_path(process_coverage.group_remit), class: "btn btn-secondary" %>
+            <% if current_user.userable_type == "Employee" %>
+              <% if current_user.userable.designation == "Medical Director" %>
+                <%= link_to "MD", all_health_decs_group_remit_batches_path(process_coverage.group_remit), class: "btn btn-secondary" %>
+              <% end %>
             <% end %>
             <%= link_to 'View', process_coverage, class: 'btn btn-secondary btn-sm' %>
             <%= link_to 'Edit', edit_process_coverage_path(process_coverage), class: 'btn btn-secondary btn-sm' %>
