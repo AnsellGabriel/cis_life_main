@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_06_26_054630) do
+ActiveRecord::Schema[7.0].define(version: 2023_06_29_030202) do
   create_table "active_admin_comments", charset: "utf8mb4", force: :cascade do |t|
     t.string "namespace"
     t.text "body"
@@ -520,7 +520,6 @@ ActiveRecord::Schema[7.0].define(version: 2023_06_26_054630) do
   end
 
   add_foreign_key "agents", "agent_groups"
-  add_foreign_key "agreements", "proposals"
   add_foreign_key "anniversaries", "agreements"
   add_foreign_key "batch_beneficiaries", "batches"
   add_foreign_key "batch_beneficiaries", "member_dependents"
