@@ -23,11 +23,11 @@ class BatchHealthDecsController < InheritedResources::Base
 
     ActiveRecord::Base.transaction do
       begin
-        pre_approved_helth_dec = true
-
+        pre_approved_health_dec = true
+        
         question_params.each do |question_id, question_data|
           health_dec = HealthDec.find(question_id)
-    
+          # byebug
           if question_data[:answer].nil?
             raise ActiveRecord::Rollback, "Please answer all questions"
           end
@@ -35,7 +35,7 @@ class BatchHealthDecsController < InheritedResources::Base
           answer = health_dec.batch_health_decs.build(answer: question_data[:answer], batch_id: @batch.id)
 
           if question_data[:answer] != health_dec.valid_answer.to_s
-            pre_approved_helth_dec = false
+            pre_approved_health_dec = false
           end
 
           answer.save!
@@ -60,7 +60,7 @@ class BatchHealthDecsController < InheritedResources::Base
         # All records created successfully, commit the transaction
         # If an exception occurs before this point, the transaction will be automatically rolled back
         # and no changes will be persisted to the database
-        if pre_approved_helth_dec
+        if pre_approved_health_dec
           @batch.update!(valid_health_dec: true)
         end
 
@@ -71,9 +71,8 @@ class BatchHealthDecsController < InheritedResources::Base
         redirect_to health_dec_group_remit_batch_path(@batch.group_remit, @batch), notice: "Health declaration saved!"
         
       rescue ActiveRecord::Rollback => e
-        flash.now[:error] = e.message
         respond_to do |format|
-          format.html { render :new, status: :unprocessable_entity }
+          format.html { redirect_to new_group_remit_batch_health_declaration_path(@batch.group_remit, @batch), alert: e.message  }
         end
     
         return
