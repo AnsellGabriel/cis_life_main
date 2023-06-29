@@ -12,7 +12,7 @@ class AgreementsController < ApplicationController
 
   # GET /agreements/new
   def new
-    @agreement = Agreement.new
+    @agreement = Agreement.new()
   end
 
   # GET /agreements/1/edit
@@ -22,8 +22,8 @@ class AgreementsController < ApplicationController
   # POST /agreements
   def create
     @agreement = Agreement.new(agreement_params)
-
-    if @agreement.save
+    
+    if @agreement.save!
       redirect_to @agreement, notice: "Agreement was successfully created."
     else
       render :new, status: :unprocessable_entity
@@ -53,6 +53,6 @@ class AgreementsController < ApplicationController
 
     # Only allow a list of trusted parameters through.
     def agreement_params
-      params.require(:agreement).permit(:plan_id, :cooperative_id, :agent_id, :moa_no, :contestability, :nel, :nml, :anniversary_type, :transferred, :transferred_date, :previous_provider, :comm_type, :claims_fund, :entry_age_from, :entry_age_to, :exit_age)
+      params.require(:agreement).permit(:plan_id, :cooperative_id, :agent_id, :moa_no, :contestability, :nel, :nml, :anniversary_type, :transferred, :transferred_date, :previous_provider, :comm_type, :claims_fund, :entry_age_from, :entry_age_to, :exit_age, :proposal_id)
     end
 end
