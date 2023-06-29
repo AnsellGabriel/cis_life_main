@@ -51,7 +51,7 @@ class BatchesController < ApplicationController
 
   def all_health_decs
     @group_remit = GroupRemit.find(params[:group_remit_id])
-    @batches = Batch.joins(:batch_health_decs).distinct
+    @batches = @group_remit.batches.joins(:batch_health_decs).distinct
   end
   
   def index
@@ -203,7 +203,7 @@ class BatchesController < ApplicationController
     end
 
     def check_userable_type
-      unless current_user.userable_type == 'CoopUser'
+      unless current_user.userable_type == 'CoopUser' || current_user.userable_type == 'Employee'
         render file: "#{Rails.root}/public/404.html", status: :not_found
       end
     end
