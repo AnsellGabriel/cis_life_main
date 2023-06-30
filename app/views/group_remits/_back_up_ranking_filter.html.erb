@@ -1,0 +1,28 @@
+<div class="">
+          <%= link_to "BOD", group_remit_path(@group_remit, rank_filter: 'BOD'), 
+                          method: :get, 
+                          class: small_btn('warning'), 
+                          data: { turbo: false } 
+                        %>
+        </div>
+        <div class="">
+           <%= link_to "Senior Officer", group_remit_path(@group_remit, rank_filter: 'SO'), 
+                          method: :get, 
+                          class: small_btn('warning'), 
+                          data: { turbo: false } 
+                        %>
+        </div>
+        <div class="">
+           <%= link_to "Junior Officer", group_remit_path(@group_remit, rank_filter: 'JO'), 
+                          method: :get, 
+                          class: small_btn('warning'), 
+                          data: { turbo: false } 
+                        %>
+        </div>
+        <div class="">
+           <%= link_to "Rank and File", group_remit_path(@group_remit, rank_filter: 'RF'), 
+                          method: :get, 
+                          class: small_btn('warning'), 
+                          data: { turbo: false } 
+                        %>
+        </div>

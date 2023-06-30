@@ -2,6 +2,9 @@
   <%= link_to "#{@group_remit.name}", group_remit_path, class: "btn btn-secondary" %>
 </div>
 
-<%= render @batch_dependent %>
+<%= render "remote_modal", title: "Dependents" do %>
+  <%= render @batch_dependent %>
+<% end %>
+
 
 
