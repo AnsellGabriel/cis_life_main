@@ -5,11 +5,7 @@
 #
 #   movies = Movie.create([{ name: "Star Wars" }, { name: "Lord of the Rings" }])
 #   Character.create(name: "Luke", movie: movies.first)
-<<<<<<< HEAD
-spreadsheet = Roo::Spreadsheet.open("./db/uploads/benefits.xlsx")
-=======
 # spreadsheet = Roo::Spreadsheet.open("./db/uploads/benefits.xlsx")
->>>>>>> main
 
 # (2..spreadsheet.last_row).each do |row|
 #     benefit = Benefit.find_or_initialize_by(name: spreadsheet.cell(row, 'A'))
@@ -17,27 +13,6 @@ spreadsheet = Roo::Spreadsheet.open("./db/uploads/benefits.xlsx")
 #     puts "#{benefit.name}" if benefit.save!
 # end
 
-<<<<<<< HEAD
-# Admin
-# AdminUser.create!(email: 'admin@example.com', password: 'password', password_confirmation: 'password') if Rails.env.development?
-
-# Cooperative
-cooperatives_spreadsheet = Roo::Spreadsheet.open("/Users/macbookair/Desktop/cis_data/Operating-Coops.xlsx")
-(5..100).each do |row|
-    spreadsheet = cooperatives_spreadsheet
-    Cooperative.find_or_create_by!(
-        registration_number: spreadsheet.cell(row, 'A'), 
-        name: spreadsheet.cell(row, 'B'), 
-        region: spreadsheet.cell(row, 'C'), 
-        province: spreadsheet.cell(row, 'D'), 
-        municipality: spreadsheet.cell(row, 'E'), 
-        street: spreadsheet.cell(row, 'F'), 
-        cooperative_type: spreadsheet.cell(row, 'H'),
-        email: spreadsheet.cell(row, 'K'), 
-        contact_number: spreadsheet.cell(row, 'J'),
-    )
-end
-=======
 # # Cooperatives
 
 # # Admin
@@ -59,7 +34,6 @@ end
 #         contact_number: spreadsheet.cell(row, 'J'),
 #     )
 # end
->>>>>>> main
 
 # Proposal
 # Proposal.create!(proposal_no: 'PROP-00001' ,cooperative_id: 1, coop_sf: 12.5, agent_sf: 4.5, ave_age: 50, minimum_participation: 3)
@@ -137,20 +111,6 @@ end
 #   employee.mobile_number = ""
 #   puts "#{employee.last_name} - DONE!" if employee.save!
   
-<<<<<<< HEAD
-  user = User.find_or_initialize_by(email: email)
-  user.password = user_name
-  user.userable = employee
-  user.admin = spreadsheet.cell(emp, "H")
-  user.approved = true
-  puts "#{user.email} - DONE!" if user.save!
-end
-
-# CoopBranch of Coop 1
-10.times do |i|
-    CoopBranch.create!(name: "Branch #{i+1}", cooperative_id: 1, region: "Region 1", province: "Province 1", municipality: "Municipality 1", barangay: "Barangay 1", street: "Street 1", contact_details: "09123456789")
-end
-=======
 #   user = User.find_or_initialize_by(email: email)
 #   user.password = user_name
 #   user.userable = employee
@@ -182,17 +142,13 @@ end
 # coop.street = 'Jollibee Plaza, Ortigas Center'
 # coop.email = 'JFC@coop.com'
 # coop.save!
->>>>>>> main
 
 # Coop User
 # CoopUser.create!(first_name: 'Cherry', last_name: 'Gonzales', middle_name: 'P', birthdate: FFaker::Time.date, mobile_number: '09948423385', coop_branch_id: 32, cooperative_id: 97)
 # User.create!(email: 'jfc@gmail.com', password: 'password', password_confirmation: 'password',  approved: true, userable_id: 1, userable_type: 'CoopUser')
 
-<<<<<<< HEAD
-=======
 #Agreement
 # agreement = Agreement.create!(plan_id: 4, cooperative_id: 97, agent_id: 1, moa_no: "JFC-0001", contestability: 12, nel: 25000, nml: 5000000, anniversary_type: 'Single', transferred: 0, comm_type: "Gross Commission", entry_age_from: 18, entry_age_to: 65, exit_age: 80, proposal_id: 1)
->>>>>>> main
 
 # for Principal (name, insured_type)
 # agreement = Agreement.find_by(id: 8)
@@ -276,59 +232,184 @@ end
 #   puts "#{dep[0]} - Done!" if agree_ben.save!
 # end
 
+# [
+#   #spouse option 1
+#   [23, "Life Insurance", 50000, 240],
+#   [23, "Accidental Death & Dismemberment", 50000, 240],
+#   [23, "Burial Benefit(Natural)", 5000, 25],
+#   #spouse option 2
+#   [27, "Life Insurance", 200000, 955],
+#   [27, "Accidental Death & Dismemberment", 200000, 955],
+#   [27, "Burial Benefit(Natural)", 20000, 100],
+#   #spouse option 3
+#   [28, "Life Insurance", 400000, 1875],
+#   [28, "Accidental Death & Dismemberment", 400000, 1875],
+#   [28, "Burial Benefit(Natural)", 20000, 100],
+#   #parent option 1
+#   [24, "Life Insurance", 50000, 240],
+#   [24, "Accidental Death & Dismemberment", 50000, 240],
+#   [24, "Burial Benefit(Natural)", 5000, 25],
+#   #parent option 2
+#   [29, "Life Insurance", 200000, 955],
+#   [29, "Accidental Death & Dismemberment", 200000, 955],
+#   [29, "Burial Benefit(Natural)", 20000, 100],
+#   #parent option 3
+#   [30, "Life Insurance", 400000, 1875],
+#   [30, "Accidental Death & Dismemberment", 400000, 1875],
+#   [30, "Burial Benefit(Natural)", 20000, 100],
+#   #child option 1
+#   [25, "Life Insurance", 50000, 60],
+#   [25, "Accidental Death & Dismemberment", 50000, 60],
+#   [25, "Burial Benefit(Natural)", 5000, 25],
+#   #child option 2
+#   [31, "Life Insurance", 200000, 235],
+#   [31, "Accidental Death & Dismemberment", 200000, 235],
+#   [31, "Burial Benefit(Natural)", 20000, 100],
+#   #child option 3
+#   [32, "Life Insurance", 400000, 497.5],
+#   [32, "Accidental Death & Dismemberment", 400000, 497.5],
+#   [32, "Burial Benefit(Natural)", 20000, 100],
+#   #sibling option 1
+#   [26, "Life Insurance", 50000, 60],
+#   [26, "Accidental Death & Dismemberment", 50000, 60],
+#   [26, "Burial Benefit(Natural)", 5000, 25],
+#   #sibling option 2
+#   [33, "Life Insurance", 200000, 235],
+#   [33, "Accidental Death & Dismemberment", 200000, 235],
+#   [33, "Burial Benefit(Natural)", 20000, 100],
+#   #sibling option 3
+#   [34, "Life Insurance", 400000, 497.5],
+#   [34, "Accidental Death & Dismemberment", 400000, 497.5],
+#   [34, "Burial Benefit(Natural)", 20000, 100],
+# ].each do |option|
+#   benefit = Benefit.find_by(name: option[1])
+#   prod_ben = ProductBenefit.find_or_initialize_by(agreement_benefit_id: option[0], benefit_id: benefit.id)
+#   prod_ben.coverage_amount = option[2]
+#   prod_ben.premium = option[3]
+#   puts "#{prod_ben.agreement_benefit.name}(#{prod_ben.benefit.name}) - Done" if prod_ben.save!
+# end
+
+####################### PMFC seed data
+
+# PMFC import
+coop = Cooperative.find_or_initialize_by(name: "PEOPLE’S MICRO FINANCE COOP")
+coop.region = "NCR"
+coop.province = 'Metro Manila'
+coop.municipality = 'Pasig City'
+coop.cooperative_type = 'Multi-Purpose'
+coop.street = 'PMFC Plaza, Ortigas Center'
+coop.email = 'pmfc@coop.com'
+coop.save!
+
+CoopBranch.create!(name: "PMFC Branch 1", cooperative_id: 97, region: "Region 1", province: "Province 1", municipality: "Municipality 1", barangay: "Barangay 1", street: "Street 1", contact_details: "09123456789")
+
+# Coop User
+CoopUser.create!(first_name: 'Cherry', last_name: 'Gonzales', middle_name: 'P', birthdate: FFaker::Time.date, mobile_number: '09948423385', coop_branch_id: 11, cooperative_id: 97)
+User.create!(email: 'pmfc@gmail.com', password: 'password', password_confirmation: 'password',  approved: true, userable_id: 2, userable_type: 'CoopUser')
+
+# PMFC Proposal
+Proposal.create!(proposal_no: 'PMFC-PROP-00001', cooperative_id: 97, coop_sf: 10, agent_sf: 10, ave_age: 50, minimum_participation: 3)
+
+# PMFC Plan
+Plan.create!(name: 'Special Term Insurance (PMFC)', description: 'Special term insurance for PEOPLE’S MICRO FINANCE COOP', gyrt_type: 'family', acronym: 'PMFC')
+
+# PMFC Benefits
+Benefit.create!(name: 'Life', description: 'Benefit 2 description', abbreviation: 'LI')
+Benefit.create!(name: 'Accidental Death & Dismemberment', description: 'Benefit 2 description', abbreviation: 'ADD')
+Benefit.create!(name: 'Burial Cash Assistance', description: 'Benefit 2 description', abbreviation: 'BCA')
+
+# PMFC Agreement
+Agreement.create!(proposal_id: 2, moa_no: 'PMFC-MOA-00001', description: '', plan_id: 1, agent_id: 1, cooperative_id: 97, anniversary_type: 'none')
+
+# PMFC Agreement Benefit
+# for Principal (name, insured_type)
+agreement = Agreement.find_by(id: 5)
 [
-  #spouse option 1
-  [23, "Life Insurance", 50000, 240],
-  [23, "Accidental Death & Dismemberment", 50000, 240],
-  [23, "Burial Benefit(Natural)", 5000, 25],
-  #spouse option 2
-  [27, "Life Insurance", 200000, 955],
-  [27, "Accidental Death & Dismemberment", 200000, 955],
-  [27, "Burial Benefit(Natural)", 20000, 100],
-  #spouse option 3
-  [28, "Life Insurance", 400000, 1875],
-  [28, "Accidental Death & Dismemberment", 400000, 1875],
-  [28, "Burial Benefit(Natural)", 20000, 100],
-  #parent option 1
-  [24, "Life Insurance", 50000, 240],
-  [24, "Accidental Death & Dismemberment", 50000, 240],
-  [24, "Burial Benefit(Natural)", 5000, 25],
-  #parent option 2
-  [29, "Life Insurance", 200000, 955],
-  [29, "Accidental Death & Dismemberment", 200000, 955],
-  [29, "Burial Benefit(Natural)", 20000, 100],
-  #parent option 3
-  [30, "Life Insurance", 400000, 1875],
-  [30, "Accidental Death & Dismemberment", 400000, 1875],
-  [30, "Burial Benefit(Natural)", 20000, 100],
-  #child option 1
-  [25, "Life Insurance", 50000, 60],
-  [25, "Accidental Death & Dismemberment", 50000, 60],
-  [25, "Burial Benefit(Natural)", 5000, 25],
-  #child option 2
-  [31, "Life Insurance", 200000, 235],
-  [31, "Accidental Death & Dismemberment", 200000, 235],
-  [31, "Burial Benefit(Natural)", 20000, 100],
-  #child option 3
-  [32, "Life Insurance", 400000, 497.5],
-  [32, "Accidental Death & Dismemberment", 400000, 497.5],
-  [32, "Burial Benefit(Natural)", 20000, 100],
-  #sibling option 1
-  [26, "Life Insurance", 50000, 60],
-  [26, "Accidental Death & Dismemberment", 50000, 60],
-  [26, "Burial Benefit(Natural)", 5000, 25],
-  #sibling option 2
-  [33, "Life Insurance", 200000, 235],
-  [33, "Accidental Death & Dismemberment", 200000, 235],
-  [33, "Burial Benefit(Natural)", 20000, 100],
-  #sibling option 3
-  [34, "Life Insurance", 400000, 497.5],
-  [34, "Accidental Death & Dismemberment", 400000, 497.5],
-  [34, "Burial Benefit(Natural)", 20000, 100],
-].each do |option|
-  benefit = Benefit.find_by(name: option[1])
-  prod_ben = ProductBenefit.find_or_initialize_by(agreement_benefit_id: option[0], benefit_id: benefit.id)
-  prod_ben.coverage_amount = option[2]
-  prod_ben.premium = option[3]
-  puts "#{prod_ben.agreement_benefit.name}(#{prod_ben.benefit.name}) - Done" if prod_ben.save!
+  ['Principal', 1
+  ],
+  ['Spouse', 2
+  ],
+  ['Parent', 3
+  ],
+  ['Children', 4
+  ],
+  ['Sibling', 5
+  ]
+].each do |ab|
+  agree_ben = AgreementBenefit.find_or_initialize_by(agreement_id: agreement.id, name: ab[0])
+  agree_ben.proposal_id = agreement.proposal_id
+  case ab[1]
+  when 1 || 2 || 3
+    agree_ben.min_age = 18
+    agree_ben.max_age = 65
+    agree_ben.exit_age = 79.5
+  when 4
+    agree_ben.min_age = 0.038
+    agree_ben.max_age = 21
+    agree_ben.exit_age = 21.5
+  when 5
+    agree_ben.min_age = 1
+    agree_ben.max_age = 21
+    agree_ben.exit_age = 21.5
+  end
+  agree_ben.insured_type = ab[1]
+  puts "#{ab[0]} - Done!" if agree_ben.save!
+  
 end
+
+[
+    #spouse option 1
+    [, "Life Insurance", 50000, 240],
+    [23, "Accidental Death & Dismemberment", 50000, 240],
+    [23, "Burial Benefit(Natural)", 5000, 25],
+    #spouse option 2
+    [27, "Life Insurance", 200000, 955],
+    [27, "Accidental Death & Dismemberment", 200000, 955],
+    [27, "Burial Benefit(Natural)", 20000, 100],
+    #spouse option 3
+    [28, "Life Insurance", 400000, 1875],
+    [28, "Accidental Death & Dismemberment", 400000, 1875],
+    [28, "Burial Benefit(Natural)", 20000, 100],
+    #parent option 1
+    [24, "Life Insurance", 50000, 240],
+    [24, "Accidental Death & Dismemberment", 50000, 240],
+    [24, "Burial Benefit(Natural)", 5000, 25],
+    #parent option 2
+    [29, "Life Insurance", 200000, 955],
+    [29, "Accidental Death & Dismemberment", 200000, 955],
+    [29, "Burial Benefit(Natural)", 20000, 100],
+    #parent option 3
+    [30, "Life Insurance", 400000, 1875],
+    [30, "Accidental Death & Dismemberment", 400000, 1875],
+    [30, "Burial Benefit(Natural)", 20000, 100],
+    #child option 1
+    [25, "Life Insurance", 50000, 60],
+    [25, "Accidental Death & Dismemberment", 50000, 60],
+    [25, "Burial Benefit(Natural)", 5000, 25],
+    #child option 2
+    [31, "Life Insurance", 200000, 235],
+    [31, "Accidental Death & Dismemberment", 200000, 235],
+    [31, "Burial Benefit(Natural)", 20000, 100],
+    #child option 3
+    [32, "Life Insurance", 400000, 497.5],
+    [32, "Accidental Death & Dismemberment", 400000, 497.5],
+    [32, "Burial Benefit(Natural)", 20000, 100],
+    #sibling option 1
+    [26, "Life Insurance", 50000, 60],
+    [26, "Accidental Death & Dismemberment", 50000, 60],
+    [26, "Burial Benefit(Natural)", 5000, 25],
+    #sibling option 2
+    [33, "Life Insurance", 200000, 235],
+    [33, "Accidental Death & Dismemberment", 200000, 235],
+    [33, "Burial Benefit(Natural)", 20000, 100],
+    #sibling option 3
+    [34, "Life Insurance", 400000, 497.5],
+    [34, "Accidental Death & Dismemberment", 400000, 497.5],
+    [34, "Burial Benefit(Natural)", 20000, 100],
+  ].each do |option|
+    benefit = Benefit.find_by(name: option[1])
+    prod_ben = ProductBenefit.find_or_initialize_by(agreement_benefit_id: option[0], benefit_id: benefit.id)
+    prod_ben.coverage_amount = option[2]
+    prod_ben.premium = option[3]
+    puts "#{prod_ben.agreement_benefit.name}(#{prod_ben.benefit.name}) - Done" if prod_ben.save!
+  end
