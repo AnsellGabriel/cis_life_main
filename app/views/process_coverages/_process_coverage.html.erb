@@ -20,9 +20,9 @@
       
       <%= content_tag :p do %>
         <strong>Effectivity:</strong>
-        <%= process_coverage.effectivity %> |
+        <%= month_day_year(process_coverage.effectivity) %> |
         <strong>Expiry:</strong>
-        <%= process_coverage.expiry %>
+        <%= month_day_year(process_coverage.expiry) %>
       <% end %>
 
       <%= content_tag :p do %>
@@ -224,13 +224,13 @@
               <%= link_to batch.coop_member.member, batch.coop_member.member, class: "link-primary", data: { turbo_frame: "remote_modal" } %> <%= content_tag :small, "Age: #{mem_age}" %> <br>
               <%= content_tag :small, mem_bday.nil? ? "No Birthday" : "Birthday: #{mem_bday.strftime('%b-%d-%Y')}", class: "text-secondary" %> <br>
               <%= batch_status(batch.status) %>  <br>
-              <%= insured_type(batch.agreement_benefit.insured_type, batch.agreement_benefit.insured_type) %>
+              <%= insured_type(batch.agreement_benefit.insured_type, batch.agreement_benefit.name) %>
             </td>
             <td>
               <% terms = (batch.group_remit.expiry_date.year * 12 + batch.group_remit.expiry_date.month) - (effect.year * 12 + effect.month) %>
               
-              <%= process_dates("Eff", effect) %> <br>
-              <%= process_dates("Exp", expire) %> <br>
+              <%= process_dates("Eff", month_day_year(effect)) %> <br>
+              <%= process_dates("Exp", month_day_year(expire)) %> <br>
               <%= process_dates("Terms", terms) %><br>
             </td>
             <td>

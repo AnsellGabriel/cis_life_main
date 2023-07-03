@@ -18,15 +18,10 @@
         <th>#</th>
           <th>Group Remit</th>
           <th>Agent</th>
-          <th>Effectivity</th>
-          <th>Expiry</th>
+          <th>Terms</th>
           <th>Status</th>
-          <th>Approved Count</th>
-          <th>Approved Total Coverage</th>
-          <th>Approved Total Prem</th>
-          <th>Denied Count</th>
-          <th>Denied Total Coverage</th>
-          <th>Denied Total Prem</th>
+          <th></th>
+          <th></th>
           <th></th>
 
         </tr>
@@ -39,15 +34,21 @@
           <th scope="row"><%= process_coverage.id %></th>
           <td><%= process_coverage.group_remit %></td>
           <td><%= process_coverage.agent %></td>
-          <td><%= process_coverage.effectivity %></td>
-          <td><%= process_coverage.expiry %></td>
-          <td><%= process_coverage.status %></td>
-          <td><%= process_coverage.approved_count %></td>
-          <td><%= process_coverage.approved_total_coverage %></td>
-          <td><%= process_coverage.approved_total_prem %></td>
-          <td><%= process_coverage.denied_count %></td>
-          <td><%= process_coverage.denied_total_coverage %></td>
-          <td><%= process_coverage.denied_total_prem %></td>
+          <td>
+            Effectivity: <%= month_day_year(process_coverage.effectivity) %> <br>
+            Expiry: <%= month_day_year(process_coverage.expiry) %>
+          </td>
+          <td><%= process_status(process_coverage.status) %></td>
+          <td>
+            Total Approved Count:   <%= process_coverage.approved_count %> </br>
+            Total Approved Coverage: <%= to_currency(process_coverage.approved_total_coverage) %> </br>
+            Total Approved Premium: <%= to_currency(process_coverage.approved_total_prem) %>  
+          </td>
+          <td>
+            Total Denied Count: <%= process_coverage.denied_count %> <br>
+            Total Denied Coverage: <%= process_coverage.denied_total_coverage %> <br>
+            Total Denied Premium: <%= process_coverage.denied_total_prem %>
+          </td>
       
             <td>
               <% if current_user.userable_type == "Employee" %>
