@@ -191,10 +191,10 @@ class BatchImportService
 
   def extract_batch_data(row)
     {
-      first_name: row["First Name"].to_s.upcase,
-      middle_name: row["Middle Name"].to_s.upcase,
-      last_name: row["Last Name"].to_s.upcase,
-      suffix: row["Suffix"].to_s.upcase,
+      first_name: row["First Name"].to_s.strip.upcase,
+      middle_name: row["Middle Name"].to_s.strip.upcase,
+      last_name: row["Last Name"].to_s.strip.upcase,
+      suffix: row["Suffix"].to_s.strip.upcase,
       rank: row["Rank"].to_s.present? ? row["Rank"].to_s.upcase : nil,
       transferred: row["Transferred?"].to_s.upcase == "TRUE"
     }

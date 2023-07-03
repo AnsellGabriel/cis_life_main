@@ -3,6 +3,7 @@
     <% beneficiaries = batch.batch_beneficiaries %>
     <% dependents = batch.batch_dependents %>
     <% batch_presenter = BatchPresenter.new(batch)%>
+    <% product_benefit = batch.agreement_benefit.product_benefits.select {|pb| pb.benefit.acronym == "LI" } %>
 
     <td class="text-center align-middle" ><%= batch.id %></td>
     <td class="align-middle" >
@@ -135,13 +136,7 @@
 
             <% unless group_remit.active? || group_remit.expired? || group_remit.under_review? || batch.status == 'renewal' || group_remit.for_payment? %>
 
-
-                <% if batch.status == 'recent' && batch.batch_health_dec.blank? %>
-                <% if batch.status == 'recent' && batch.batch_health_decs.blank? %>
-
-                <% if batch.status == 'recent' && batch.batch_health_decs.blank? %>
-
-                <% if batch.status == 'recent' && batch.batch_health_decs.blank? %>
+                <% if batch.status == 'recent' && batch.batch_health_decs.blank? && product_benefit[0].coverage_amount > agreement.nel %>
                     <%= link_to new_group_remit_batch_health_declaration_path(group_remit, batch),
                                 class: small_btn('danger'), 
                                 title: 'Health Declaration Form',

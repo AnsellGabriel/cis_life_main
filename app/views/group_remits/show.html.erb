@@ -13,8 +13,8 @@
         <div class="<%= flex_justify_align('around', 'center') %> mb-2">
           <%= content_tag :h6, "Insured", style: "width: 100px;" %>
           <%= content_tag :h6, "Benefit", style: "width: 100px;", class: 'text-center' %>
-          <%= content_tag :h6, "Premium", style: "width: 100px;", class: 'text-center' %>
           <%= content_tag :h6, "Coverage Amount", style: "width: 100px;", class: 'text-center'%>
+          <%= content_tag :h6, "Premium", style: "width: 100px;", class: 'text-center' %>
         </div>
 
         <% @agreement.agreement_benefits.includes({product_benefits: :benefit}).each do |ab| %>
@@ -25,8 +25,8 @@
               <% ab.product_benefits.each do |product| %>
                 <div class="<%= flex_justify_align('between') %> text-secondary mb-1">
                   <%= content_tag :span, "#{product.benefit.name}", class: 'sm-secondary-text text-center', style: "width: 100px;"%>
-                  <%= content_tag :span, "#{number_to_currency(product.premium, unit: '₱', precision: 2)}", class: 'sm-secondary-text text-center', style: "width: 150px;"%>
-                  <%= content_tag :span, "#{number_to_currency(product.coverage_amount, unit: '₱', precision: 2)}", class: 'sm-secondary-text text-center', style: "width: 100px;"%>
+                  <%= content_tag :span, "#{number_to_currency(product.coverage_amount, unit: '₱', precision: 2)}", class: 'sm-secondary-text text-center', style: "width: 150px;"%>
+                  <%= content_tag :span, "#{number_to_currency(product.premium, unit: '₱', precision: 2)}", class: 'sm-secondary-text text-center', style: "width: 100px;"%>
                 </div>
               <% end %>
 
