@@ -4,7 +4,23 @@ class ProcessCoveragesController < ApplicationController
   # GET /process_coverages
   def index
     @process_coverages = ProcessCoverage.all
+    @approved_process_coverages = ProcessCoverage.where(status: :approved)
+    @pending_process_coverages = ProcessCoverage.where(status: :pending)
+    @denied_process_coverages = ProcessCoverage.where(status: :denied)
   end
+
+  def cov_list
+    # raise 'errors'
+    @process_coverages = case params[:cov_type]
+      when "Approved" then ProcessCoverage.where(status: :approved)
+      when "Pending" then ProcessCoverage.where(status: :pending)
+      when "Denied" then ProcessCoverage.where(status: :denied)
+    end
+
+    @title = params[:title]
+    
+  end
+  
 
   # GET /process_coverages/1
   def show

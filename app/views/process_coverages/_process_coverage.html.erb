@@ -147,49 +147,9 @@
     <% else %>
 
       <div class="row">
-        <% batches = process_coverage.group_remit.batches %>
-        <% @insured_types2.each do |type| %>
-        <% i_type = type.insured_type_before_type_cast %>
-        <% batch_deps = process_coverage.get_batch_dep(i_type, type) %>
+        <%= render "process_coverages/agreement_benefits", process_coverage: process_coverage %>
+        
           <%# ctr = batches.joins(:batch_dependents).where(batch_depedents: { proposal_insured }) %>
-          <div class="col-xl-4 mb-2">
-            <div class="card mb-2">
-              <div class="card-header">
-                <%= content_tag :span, "#{type.name} - #{i_type}", class: "lead" %>
-              </div>
-              <div class="card-body">
-                <% life_cov = type.product_benefits.find_by(benefit_id: 1).coverage_amount %>
-                <div class="row">
-                  <div class="col">
-                    <p>Life: <b><%= to_currency(life_cov) %></b></p>
-                  </div>
-                  <div class="col">
-                    <p>Premium: <b><%= to_currency(type.product_benefits.sum(:premium)) %></b></p>
-                  </div>
-                </div>
-                <div class="row">
-                  <div class="col">
-                    <p>Total Coverage: <b><%= to_currency(batch_deps * life_cov) %></b></p>
-                  </div>
-                  <div class="col">
-                    <p>For Review: <b><%= process_coverage.group_remit.batches.joins(:batch_dependents).where(batch_dependents: { agreement_benefit: type }, insurance_status: "for_review").count %></b></p>
-                  </div>
-                </div>
-                <div class="row">
-                  <div class="col text-success">
-                    <p>Approved: <b><%= process_coverage.count_approved(i_type, type) %></b></p>
-                  </div>
-                  <div class="col text-secondary">
-                    <p>Pending: <b><%= process_coverage.count_pending(i_type, type) %></b></p>
-                  </div>
-                  <div class="col text-danger">
-                    <p>Denied: <b><%= process_coverage.count_denied(i_type, type) %></b></p>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        <% end %>
       </div>
 
   <% end %>
