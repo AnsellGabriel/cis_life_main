@@ -3,9 +3,125 @@
   <%= f.error_notification %>
   <%= f.error_notification message: f.object.errors[:base].to_sentence if f.object.errors[:base].present? %>
 
-  <div class="form-inputs mb-3">
-    <%= f.input :date_incident %>
+  <div class="form-inputs mb-3 " data-controller="toggler">
+    <%= f.hidden_field :cooperative_id, value: @cooperative.id %>
+    <%= f.hidden_field :agreement_id, value: @agreement.id %>
+    <%= f.hidden_field :batch_id, value: @batch.id %>
+    <%= f.hidden_field :entry_type, value: "coop" %>
+    <div class="row <%= flex_justify_align('between', 'center') %>">
+      <div class="d-flex gap-2 col-md-5">
+        <%= content_tag :p, "Insured Member :" %>
+        <%= content_tag :span, @coop_member.full_name.titleize, class: "text-primary" %>
+      </div>
+      <div class="col-md-5">
+        <%= f.input :date_incident, as: :string, input_html: {data: {
+              controller: "flatpickr",
+              flatpickr_max_date: Time.zone.now,
+              flatpickr_next_arrow: "Next",
+              flatpickr_prev_arrow: "Prev"},
+              class: 'text-center'},
+              label: "Incident Date : ",
+              wrapper_html: {class: flex_justify_align('start', 'center')},
+              label_html: {style: "width: 170px; margin: 0"} %> 
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-md-6">
+        <%= f.input :batch_beneficiary_id, collection: @batch.batch_beneficiaries,
+          label: "Claimant : ",
+          label_html: {style: "width: 170px; margin: 0"},
+          wrapper_html: {class: "#{flex_justify_align('', 'center')} gap-2 mb-0" } %>
+      </div>
+      <div class="col-md-3">
+        <%= f.input :claimant_email, input_html: {placeholder: "Claimant's Email"}, label: false %>
+      </div>
+      <div class="col-md-3">
+        <%= f.input :claimant_contact_no, input_html: {placeholder: "Claimant's Contact #"}, label: false %>
+      </div>
+    </div>
+    <div class="row <%= flex_justify_align('between') %> mb-3">
+      <div class="col-md-5">
+        <div class="">
+          <%= content_tag :span, 'Nature of Claim :', class: "text-primary mb-2" %>
+        </div>
+        <div class="d-flex flex-column ps-3">
+          <%= f.collection_radio_buttons :nature_of_claim,
+            [
+              ['Death Claim', :life],
+              ['Hospital Income Benefit', :hospitalization],
+              ['Accidental Medical Reimbursement', :reimbursement],
+              ['Accidental Dismemberment', :dismemberment],
+              ['Total & Permanent Disability', :disability]
+            ],
+            :last, :first do |b| %>
+            <div class="d-flex gap-2">
+              <%= b.radio_button data: { action: "click->toggler#toggle", id: b.text },
+                checked: true %>
+              <%= b.text %> <!-- Text label -->
+            </div>
+          <% end %>
+        </div>
+
+
+
+
+      </div>
+    </div>
+    <div class="row">
+      <div class="">
+        <%= content_tag :span, 'Required Documents : ', class: "text-primary" %>
+      </div>
+      <div class="hidden" data-toggler-target="toggleable" data-id="Death Claim">
+        <span>For Death Claim:</span>
+        <ul>
+          <li><small>Certified True Copy of Certificate of Death <i>(originally stamped/signed as certified true copy)</i></small></li>
+          <li><small>Attending Physician's Statement <i>(if attended by a physician)</i></small></li>
+          <li><small>Police Report <i>(for Accidental Death, Murder & Assault, Suicide)</i></small></li>
+          <li><small>Notarized Claimant's Statement <i>(Notarization can be waived provided that a Proof of Relationship will be submitted suchs as "Birth Certificate" or "Marriage Certificate")</i></small></li>
+          <li><small>Certified True Copy of Loan Ledger for LPPI with signature of authorized cooperative representative</small></li>
+          <li><small>Insurance Certificate (for LPPI and PAI - if available)</small></li>
+          <li><small>Official Receipt or Billing Statement <i>(if available)</i></small></li>
+        </ul>
+      </div>
+      <div class="hidden" data-toggler-target="toggleable" data-id="Hospital Income Benefit">
+        <span>For Hospital Income Benefit:</span>
+        <ul>
+          <li><small>Medical Certificate <i>(including date of confinement and final diagnosis)</i></small></li>
+          <li><small>Statement of Account/Hospital Bill</small></li>
+          <li><small>Original Official Receipts</small></li>
+        </ul>
+      </div>
+    </div>
+    <div class="hidden" data-toggler-target="toggleable" data-id="Accidental Medical Reimbursement">
+      <span>For Accidental Medical Reimbursement, Total and Permanent Disability, and Dismemberment:</span>
+      <ul>
+        <li><small>Medical Certificate <i>(including date of confinement and final diagnosis)</i></small></li>
+        <li><small>Police Report</small></li>
+        <li><small>Statement of Account/Hospital Bill</small></li>
+        <li><small>Original Official Receipts</small></li>
+      </ul>
+    </div>
+    <div class="hidden" data-toggler-target="toggleable" data-id="Accidental Dismemberment">
+      <span>For Accidental Medical Reimbursement, Total and Permanent Disability, and Dismemberment:</span>
+      <ul>
+        <li><small>Medical Certificate <i>(including date of confinement and final diagnosis)</i></small></li>
+        <li><small>Police Report</small></li>
+        <li><small>Statement of Account/Hospital Bill</small></li>
+        <li><small>Original Official Receipts</small></li>
+      </ul>
+    </div>
+    <div class="hidden" data-toggler-target="toggleable" data-id="Total & Permanent Disability">
+      <span>For Accidental Medical Reimbursement, Total and Permanent Disability, and Dismemberment:</span>
+      <ul>
+        <li><small>Medical Certificate <i>(including date of confinement and final diagnosis)</i></small></li>
+        <li><small>Police Report</small></li>
+        <li><small>Statement of Account/Hospital Bill</small></li>
+        <li><small>Original Official Receipts</small></li>
+      </ul>
+    </div>
+    
   </div>
+
 
   <div class="form-actions text-end">
     <%= link_to "Back", process_claims_path, class: 'btn btn-secondary' %>

@@ -28,10 +28,10 @@ class MemberImportService
     members_spreadsheet.drop(1).each do |row|
       # Extract member data from CSV row
       member_hash = {
-        last_name: row["Last Name"].upcase,
-        first_name: row["First Name"].upcase,
-        middle_name: row["Middle Name"].upcase,
-        suffix: row["Suffix"].upcase,
+        last_name: row["Last Name"].strip.upcase,
+        first_name: row["First Name"].strip.upcase,
+        middle_name: row["Middle Name"].strip.upcase,
+        suffix: row["Suffix"].strip.upcase,
         birth_place: row["Birth Place"],
         birth_date: row["Birthdate"],
         gender: row["Gender"],

@@ -5,7 +5,11 @@
 #
 #   movies = Movie.create([{ name: "Star Wars" }, { name: "Lord of the Rings" }])
 #   Character.create(name: "Luke", movie: movies.first)
+<<<<<<< HEAD
+spreadsheet = Roo::Spreadsheet.open("./db/uploads/benefits.xlsx")
+=======
 # spreadsheet = Roo::Spreadsheet.open("./db/uploads/benefits.xlsx")
+>>>>>>> main
 
 # (2..spreadsheet.last_row).each do |row|
 #     benefit = Benefit.find_or_initialize_by(name: spreadsheet.cell(row, 'A'))
@@ -13,6 +17,27 @@
 #     puts "#{benefit.name}" if benefit.save!
 # end
 
+<<<<<<< HEAD
+# Admin
+# AdminUser.create!(email: 'admin@example.com', password: 'password', password_confirmation: 'password') if Rails.env.development?
+
+# Cooperative
+cooperatives_spreadsheet = Roo::Spreadsheet.open("/Users/macbookair/Desktop/cis_data/Operating-Coops.xlsx")
+(5..100).each do |row|
+    spreadsheet = cooperatives_spreadsheet
+    Cooperative.find_or_create_by!(
+        registration_number: spreadsheet.cell(row, 'A'), 
+        name: spreadsheet.cell(row, 'B'), 
+        region: spreadsheet.cell(row, 'C'), 
+        province: spreadsheet.cell(row, 'D'), 
+        municipality: spreadsheet.cell(row, 'E'), 
+        street: spreadsheet.cell(row, 'F'), 
+        cooperative_type: spreadsheet.cell(row, 'H'),
+        email: spreadsheet.cell(row, 'K'), 
+        contact_number: spreadsheet.cell(row, 'J'),
+    )
+end
+=======
 # # Cooperatives
 
 # # Admin
@@ -34,6 +59,7 @@
 #         contact_number: spreadsheet.cell(row, 'J'),
 #     )
 # end
+>>>>>>> main
 
 # Proposal
 # Proposal.create!(proposal_no: 'PROP-00001' ,cooperative_id: 1, coop_sf: 12.5, agent_sf: 4.5, ave_age: 50, minimum_participation: 3)
@@ -111,6 +137,20 @@
 #   employee.mobile_number = ""
 #   puts "#{employee.last_name} - DONE!" if employee.save!
   
+<<<<<<< HEAD
+  user = User.find_or_initialize_by(email: email)
+  user.password = user_name
+  user.userable = employee
+  user.admin = spreadsheet.cell(emp, "H")
+  user.approved = true
+  puts "#{user.email} - DONE!" if user.save!
+end
+
+# CoopBranch of Coop 1
+10.times do |i|
+    CoopBranch.create!(name: "Branch #{i+1}", cooperative_id: 1, region: "Region 1", province: "Province 1", municipality: "Municipality 1", barangay: "Barangay 1", street: "Street 1", contact_details: "09123456789")
+end
+=======
 #   user = User.find_or_initialize_by(email: email)
 #   user.password = user_name
 #   user.userable = employee
@@ -142,13 +182,17 @@
 # coop.street = 'Jollibee Plaza, Ortigas Center'
 # coop.email = 'JFC@coop.com'
 # coop.save!
+>>>>>>> main
 
 # Coop User
 # CoopUser.create!(first_name: 'Cherry', last_name: 'Gonzales', middle_name: 'P', birthdate: FFaker::Time.date, mobile_number: '09948423385', coop_branch_id: 32, cooperative_id: 97)
 # User.create!(email: 'jfc@gmail.com', password: 'password', password_confirmation: 'password',  approved: true, userable_id: 1, userable_type: 'CoopUser')
 
+<<<<<<< HEAD
+=======
 #Agreement
 # agreement = Agreement.create!(plan_id: 4, cooperative_id: 97, agent_id: 1, moa_no: "JFC-0001", contestability: 12, nel: 25000, nml: 5000000, anniversary_type: 'Single', transferred: 0, comm_type: "Gross Commission", entry_age_from: 18, entry_age_to: 65, exit_age: 80, proposal_id: 1)
+>>>>>>> main
 
 # for Principal (name, insured_type)
 # agreement = Agreement.find_by(id: 8)
