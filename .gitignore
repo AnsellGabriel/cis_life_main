@@ -5,9 +5,5 @@
 /tmp/*
 dump.rdb
 .byebug_history
-<<<<<<< HEAD
-/config/master.key
-=======
 /config/master.key
 /db/uploads/*
->>>>>>> ce1b629 (create dashboards in process_coverages)
