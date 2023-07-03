@@ -8,13 +8,19 @@
     <th>Action</th>
   </thead>
   <tbody>
-    <% @batches.each do |batch| %>
-      <tr>
-        <td><%= batch.id %></td>
-        <td><%= batch.coop_member %></td>
-        <td>
-          <%= link_to "View", health_dec_group_remit_batch_path(batch.group_remit, batch, for_und: true, md: true), class: "btn btn-sm btn-warning mb-1", data: { turbo_frame: "modal-xl" } %>
-        </td>
+    <% unless @batches.count == 0 %>
+      <% @batches.each do |batch| %>
+        <tr>
+          <td><%= batch.id %></td>
+          <td><%= batch.coop_member %></td>
+          <td>
+            <%= link_to "View", health_dec_group_remit_batch_path(batch.group_remit, batch, for_und: true, md: true), class: "btn btn-sm btn-warning mb-1", data: { turbo_frame: "modal-xl" } %>
+          </td>
+        </tr>
+      <% end %>
+    <% else %>
+      <tr class="text-center">
+        <%= content_tag :td, "NO HEALTH DECS", colspan: 3, class: "lead fw-bold" %>
       </tr>
     <% end %>
   </tbody>

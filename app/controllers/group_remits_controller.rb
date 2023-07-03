@@ -37,6 +37,7 @@ class GroupRemitsController < InheritedResources::Base
     
     respond_to do |format|
       if @group_remit.save
+        # @group_remit.batches
         @process_coverage = @group_remit.build_process_coverage
         @process_coverage.effectivity = @group_remit.effectivity_date
         @process_coverage.expiry = @group_remit.expiry_date
@@ -74,16 +75,17 @@ class GroupRemitsController < InheritedResources::Base
     elsif params[:batch_health_dec_filter].present?
       @f_batches = @group_remit.batches_without_health_dec.order(created_at: :desc)
     elsif params[:rank_filter].present?
-      case params[:rank_filter]
-      when "BOD"
-        @f_batches = @group_remit.batches.joins(:agreement_benefit).where(agreement_benefits: { insured_type: 6 })
-      when "SO"
-        @f_batches = @group_remit.batches.joins(:agreement_benefit).where(agreement_benefits: { insured_type: 7 })
-      when "JO"
-        @f_batches = @group_remit.batches.joins(:agreement_benefit).where(agreement_benefits: { insured_type: 8 })
-      when "RF"
-        @f_batches = @group_remit.batches.joins(:agreement_benefit).where(agreement_benefits: { insured_type: 9 })
-      end
+      # case params[:rank_filter]
+      # when "BOD"
+      #   @f_batches = @group_remit.batches.joins(:agreement_benefit).where(agreement_benefits: { insured_type: 6 })
+      # when "SO"
+      #   @f_batches = @group_remit.batches.joins(:agreement_benefit).where(agreement_benefits: { insured_type: 7 })
+      # when "JO"
+      #   @f_batches = @group_remit.batches.joins(:agreement_benefit).where(agreement_benefits: { insured_type: 8 })
+      # when "RF"
+      #   @f_batches = @group_remit.batches.joins(:agreement_benefit).where(agreement_benefits: { insured_type: 9 })
+      # end
+      @f_batches = @group_remit.batches.joins(:agreement_benefit).where(agreement_benefits: params[:rank_filter] )
     else
       @f_batches = batches_eager_loaded
     end

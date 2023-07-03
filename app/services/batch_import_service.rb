@@ -40,7 +40,6 @@ class BatchImportService
           next
         end
       end
-
       age_min_max = age_min_max_by_insured_type(agreement_benefits, batch_hash[:rank])
       
       unless member.persisted?
@@ -159,28 +158,32 @@ class BatchImportService
         max_age: agreement_benefits.find_by(insured_type: :principal).max_age
       }
     elsif @gyrt_ranking_plans.include?(@agreement.plan.acronym)
-      case rank
-      when 'BOD'
-        {
-          min_age: agreement_benefits.find_by(insured_type: :ranking_bod).min_age,
-          max_age: agreement_benefits.find_by(insured_type: :ranking_bod).max_age
-        }      
-      when 'SO'
-        {
-          min_age: agreement_benefits.find_by(insured_type: :ranking_senior_officer).min_age,
-          max_age: agreement_benefits.find_by(insured_type: :ranking_senior_officer).max_age
-        }
-      when 'JO'
-        {
-          min_age: agreement_benefits.find_by(insured_type: :ranking_junior_officer).min_age,
-          max_age: agreement_benefits.find_by(insured_type: :ranking_junior_officer).max_age
-        }      
-      when 'RF'
-        {
-          min_age: agreement_benefits.find_by(insured_type: :ranking_rank_and_file).min_age,
-          max_age: agreement_benefits.find_by(insured_type: :ranking_rank_and_file).max_age
-        }      
-      end
+      {
+        min_age: agreement_benefits.find_by(name: rank).min_age,
+        max_age: agreement_benefits.find_by(name: rank).max_age
+      }
+      # case rank
+      # when 'BOD'
+      #   {
+      #     min_age: agreement_benefits.find_by(insured_type: :ranking_bod).min_age,
+      #     max_age: agreement_benefits.find_by(insured_type: :ranking_bod).max_age
+      #   }      
+      # when 'SO'
+      #   {
+      #     min_age: agreement_benefits.find_by(insured_type: :ranking_senior_officer).min_age,
+      #     max_age: agreement_benefits.find_by(insured_type: :ranking_senior_officer).max_age
+      #   }
+      # when 'JO'
+      #   {
+      #     min_age: agreement_benefits.find_by(insured_type: :ranking_junior_officer).min_age,
+      #     max_age: agreement_benefits.find_by(insured_type: :ranking_junior_officer).max_age
+      #   }      
+      # when 'RF'
+      #   {
+      #     min_age: agreement_benefits.find_by(insured_type: :ranking_rank_and_file).min_age,
+      #     max_age: agreement_benefits.find_by(insured_type: :ranking_rank_and_file).max_age
+      #   }      
+      # end
     end
   end
 
@@ -223,7 +226,9 @@ class BatchImportService
   def create_batch(member, batch_hash)
     coop_member = member.coop_members.find_by(cooperative: @cooperative)
     new_batch = @group_remit.batches.build(coop_member_id: coop_member.id)
-    Batch.process_batch(new_batch, @group_remit, batch_hash[:rank], batch_hash[:transferred])
+    b_rank = @group_remit.agreement.agreement_benefits.find_by(name: batch_hash[:rank])
+    # Batch.process_batch(new_batch, @group_remit, batch_hash[:rank], batch_hash[:transferred])
+    Batch.process_batch(new_batch, @group_remit, b_rank, batch_hash[:transferred])
     new_batch.save ? 1 : 0
   end
 

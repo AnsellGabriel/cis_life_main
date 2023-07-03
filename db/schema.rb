@@ -10,7 +10,11 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
+<<<<<<< HEAD
 ActiveRecord::Schema[7.0].define(version: 2023_06_27_064952) do
+=======
+ActiveRecord::Schema[7.0].define(version: 2023_06_29_030202) do
+>>>>>>> main
   create_table "active_admin_comments", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.string "namespace"
     t.text "body"
@@ -174,13 +178,13 @@ ActiveRecord::Schema[7.0].define(version: 2023_06_27_064952) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.decimal "premium", precision: 10, scale: 2
-    t.integer "age"
-    t.integer "insurance_status", default: 3
     t.bigint "coop_member_id", null: false
     t.bigint "group_remit_id", null: false
     t.boolean "transferred"
     t.bigint "agreement_benefit_id", null: false
     t.boolean "valid_health_dec", default: false
+    t.integer "age"
+    t.integer "insurance_status", default: 3
     t.index ["agreement_benefit_id"], name: "index_batches_on_agreement_benefit_id"
     t.index ["coop_member_id"], name: "index_batches_on_coop_member_id"
     t.index ["group_remit_id"], name: "index_batches_on_group_remit_id"
@@ -522,7 +526,6 @@ ActiveRecord::Schema[7.0].define(version: 2023_06_27_064952) do
   end
 
   add_foreign_key "agents", "agent_groups"
-  add_foreign_key "agreements", "proposals"
   add_foreign_key "anniversaries", "agreements"
   add_foreign_key "batch_beneficiaries", "batches"
   add_foreign_key "batch_beneficiaries", "member_dependents"

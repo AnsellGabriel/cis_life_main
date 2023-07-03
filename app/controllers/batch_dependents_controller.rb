@@ -54,7 +54,7 @@ class BatchDependentsController < InheritedResources::Base
     end
 
     def check_userable_type
-      unless current_user.userable_type == 'CoopUser'
+      unless current_user.userable_type == 'CoopUser' || current_user.userable_type == 'Employee'
         render file: "#{Rails.root}/public/404.html", status: :not_found
       end
     end

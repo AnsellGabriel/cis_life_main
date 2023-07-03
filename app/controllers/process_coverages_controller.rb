@@ -9,12 +9,13 @@ class ProcessCoveragesController < ApplicationController
   # GET /process_coverages/1
   def show
 
-    @insured_types = @process_coverage.group_remit.agreement.agreement_benefits
+    @insured_types = @process_coverage.group_remit.agreement.agreement_benefits.insured_types.symbolize_keys.values
+    @insured_types2 = @process_coverage.group_remit.agreement.agreement_benefits
     puts "insured type id: #{@insured_types}"
-    if params[:insured_type_id].present?
+    if params[:insured_type].present?
       # @batches_o = @group_remit.batches.joins(coop_member: [:member]).where(proposal_insured_id: params[:insured_type_id])
       # @batches_o = @process_coverage.group_remit.batches.joins(coop_member: [:member]).where(proposal_insured_id: params[:insured_type_id])
-      @batches_o = @process_coverage.group_remit.batches.joins(coop_member: [:member]).where(agreement_benefit_id: params[:insured_type_id])
+      @batches_o = @process_coverage.group_remit.batches.joins(coop_member: [:member]).where(agreement_benefit_id: params[:insured_type])
     else
       @batches_o = @process_coverage.group_remit.batches.includes(:coop_member, :member)
     end
@@ -26,7 +27,7 @@ class ProcessCoveragesController < ApplicationController
         when "regular" then @batches_o.where(age: 18..65)
         when "overage" then @batches_o.where(age: 66..)
         # when "health_decs" then @batches_o.joins(:batch_health_decs)
-        when "health_decs" then @batches_o.includes(:batch_health_decs)
+        when "health_decs" then @batches_o.joins(:batch_health_decs).distinct
         # when "health_decs" then @batches_o.joins(:batch_health_dec).where.not(batch_health_decs: { health_dec_question_id: nil })
       end
     else
@@ -44,6 +45,7 @@ class ProcessCoveragesController < ApplicationController
     # @life_cov = ProcessCoverage.includes(group_remit: { moa: { proposal:{ proposal_insureds: :proposal_insured_benefits }}}).find_by(id: @process_coverage.id).group_remit.moa.proposal.proposal_insureds.joins(:proposal_insured_benefits).where(proposal_insureds: {insured_type: 1}, proposal_insured_benefits: {benefit: 1}).pluck('proposal_insured_benefits.cov_amount').first
 
     @life_cov = ProcessCoverage.includes(group_remit: { agreement: { agreement_benefits: :product_benefits }}).find_by(id: @process_coverage.id).group_remit.agreement.agreement_benefits.joins(:product_benefits).where(agreement_benefits: {insured_type: 1}, product_benefits: {benefit_id: 1}).pluck('product_benefits.coverage_amount').first
+    
     @group_remit = @process_coverage.group_remit
     # raise 'errors'
     puts "#{@life_cov} ********************************"
@@ -55,7 +57,7 @@ class ProcessCoveragesController < ApplicationController
   end
 
   def approve
-    byebug
+    # byebug
     @process_coverage = ProcessCoverage.find_by(id: params[:process_coverage_id])
 
     respond_to do |format|

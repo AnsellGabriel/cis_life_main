@@ -51,7 +51,7 @@ class BatchesController < ApplicationController
 
   def all_health_decs
     @group_remit = GroupRemit.find(params[:group_remit_id])
-    @batches = Batch.joins(:batch_health_decs).distinct
+    @batches = @group_remit.batches.joins(:batch_health_decs).distinct
   end
   
   def index
@@ -61,10 +61,11 @@ class BatchesController < ApplicationController
   def approve_all
     @process_coverage = ProcessCoverage.find(params[:process_coverage])
     @batches = @process_coverage.group_remit.batches
-
+    
     @batches.each do |batch|
       if batch.insurance_status == "for_review"
-        if (18..65).include?(batch.age)
+        # if (18..65).include?(batch.age)
+        if (batch.agreement_benefit.min_age..batch.agreement_benefit.max_age).include?(batch.age)
           batch.update_attribute(:insurance_status, "approved")
           @process_coverage.increment!(:approved_count)
         end
@@ -94,6 +95,7 @@ class BatchesController < ApplicationController
   end
 
   def create
+    # raise 'errors'
     @coop_members = @cooperative.coop_member_details
     @batch = @group_remit.batches.new(batch_params)
     coop_member = @batch.coop_member
@@ -203,7 +205,7 @@ class BatchesController < ApplicationController
     end
 
     def check_userable_type
-      unless current_user.userable_type == 'CoopUser'
+      unless current_user.userable_type == 'CoopUser' || current_user.userable_type == 'Employee'
         render file: "#{Rails.root}/public/404.html", status: :not_found
       end
     end

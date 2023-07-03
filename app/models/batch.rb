@@ -110,16 +110,17 @@ class Batch < ApplicationRecord
   end
 
   def self.determine_premium(rank, batch, group_remit)
-    case rank
-    when 'BOD'
-      batch.set_premium_and_service_fees(:ranking_bod, group_remit)
-    when 'SO'
-      batch.set_premium_and_service_fees(:ranking_senior_officer, group_remit)
-    when 'JO'
-      batch.set_premium_and_service_fees(:ranking_junior_officer, group_remit)
-    when 'RF'
-      batch.set_premium_and_service_fees(:ranking_rank_and_file, group_remit)
-    end
+    # case rank
+    # when 'BOD'
+    #   batch.set_premium_and_service_fees(:ranking_bod, group_remit)
+    # when 'SO'
+    #   batch.set_premium_and_service_fees(:ranking_senior_officer, group_remit)
+    # when 'JO'
+    #   batch.set_premium_and_service_fees(:ranking_junior_officer, group_remit)
+    # when 'RF'
+    #   batch.set_premium_and_service_fees(:ranking_rank_and_file, group_remit)
+    # end
+    batch.set_premium_and_service_fees(rank, group_remit)
   end
 
   private
