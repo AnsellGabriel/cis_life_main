@@ -283,14 +283,14 @@
                     <%= bootstrap_icon "x-lg" %>
                   <% end %>
                 <% end %>
-                <% if batch.batch_health_decs.present? %>
+              <% end %>
+              <% if batch.batch_health_decs.present? %>
                   <%#= link_to batch_health_dec_path(id: batch.batch_health_dec.id, b_id: batch.batch_health_dec, for_modal: "yes", pro_id: process_coverage), title: "For MD Review", class: "btn btn-sm btn-warning mb-1", remote: true, data: { turbo_frame: "remote_modal" } do %>
                   <%#= link_to group_remit_batch_health_declaration_path(@group_remit,batch,group_remit: @group_remit, batch: batch,id: batch.batch_health_decs.id, b_id: batch.batch_health_decs, for_modal: "yes", pro_id: process_coverage), title: "For MD Review", class: "btn btn-sm btn-warning mb-1", remote: true, data: { turbo_frame: "remote_modal" } do %>
                   <%= link_to health_dec_group_remit_batch_path(@group_remit, batch, for_und: true), class: "btn btn-sm btn-warning mb-1", data: { turbo_frame: "modal-xl" } do %>
                     <%= bootstrap_icon "file-earmark-medical" %>
                   <% end %>
                 <% end %>
-              <% end %>
             </td>
             <td>
               <% if batch.batch_remarks.count == 0 %>

@@ -136,11 +136,7 @@
 
             <% unless group_remit.active? || group_remit.expired? || group_remit.under_review? || batch.status == 'renewal' || group_remit.for_payment? %>
 
-<<<<<<< HEAD
                 <% if batch.status == 'recent' && batch.batch_health_decs.blank? && product_benefit[0].coverage_amount > agreement.nel %>
-=======
-                <% if batch.status == 'recent' && batch.batch_health_decs.blank? %>
->>>>>>> main
                     <%= link_to new_group_remit_batch_health_declaration_path(group_remit, batch),
                                 class: small_btn('danger'), 
                                 title: 'Health Declaration Form',

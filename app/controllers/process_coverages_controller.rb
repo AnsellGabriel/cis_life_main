@@ -43,7 +43,7 @@ class ProcessCoveragesController < ApplicationController
         when "regular" then @batches_o.where(age: 18..65)
         when "overage" then @batches_o.where(age: 66..)
         # when "health_decs" then @batches_o.joins(:batch_health_decs)
-        when "health_decs" then @batches_o.joins(:batch_health_decs).distinct
+        when "health_decs" then @batches_o.joins(:batch_health_decs).where(batches: { valid_health_dec: false }).distinct
         # when "health_decs" then @batches_o.joins(:batch_health_dec).where.not(batch_health_decs: { health_dec_question_id: nil })
       end
     else

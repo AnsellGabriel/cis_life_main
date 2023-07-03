@@ -58,7 +58,7 @@ class BatchHealthDecsController < InheritedResources::Base
           end
         end
     
-        if pre_approved_helth_dec
+        if pre_approved_health_dec
           @batch.update!(valid_health_dec: true)
         end
 
