@@ -61,10 +61,11 @@ class BatchesController < ApplicationController
   def approve_all
     @process_coverage = ProcessCoverage.find(params[:process_coverage])
     @batches = @process_coverage.group_remit.batches
-
+    
     @batches.each do |batch|
       if batch.insurance_status == "for_review"
-        if (18..65).include?(batch.age)
+        # if (18..65).include?(batch.age)
+        if (batch.agreement_benefit.min_age..batch.agreement_benefit.max_age).include?(batch.age)
           batch.update_attribute(:insurance_status, "approved")
           @process_coverage.increment!(:approved_count)
         end
@@ -94,6 +95,7 @@ class BatchesController < ApplicationController
   end
 
   def create
+    # raise 'errors'
     @coop_members = @cooperative.coop_member_details
     @batch = @group_remit.batches.new(batch_params)
     coop_member = @batch.coop_member

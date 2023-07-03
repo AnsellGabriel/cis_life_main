@@ -3,7 +3,11 @@ module Calculate
 
 	included do
 		def set_premium_and_service_fees(insured_type, group_remit)
-			agreement_benefit = group_remit.agreement.agreement_benefits.find_by(insured_type: insured_type)
+			# agreement_benefit = group_remit.agreement.agreement_benefits.find_by(insured_type: insured_type)
+			agreement_benefit = group_remit.agreement.agreement_benefits.find_by(id: insured_type)
+			if agreement_benefit.nil?
+				agreement_benefit = group_remit.agreement.agreement_benefits.find_by(insured_type: insured_type)
+			end
 			self.agreement_benefit_id = agreement_benefit.id
 			calculate_premium_and_fees(total_premium, group_remit)
 		end

@@ -4,12 +4,15 @@ class BatchPresenter
 	end
 
     def capitalized_insured_type
+        # @batch.agreement_benefit
+        #     .insured_type
+        #     .gsub('_', ' ')
+        #     .split(' ')
+        #     .drop(1)
+        #     .join(' ')
+        #     .upcase
         @batch.agreement_benefit
-            .insured_type
-            .gsub('_', ' ')
-            .split(' ')
-            .drop(1)
-            .join(' ')
+            .name
             .upcase
     end
 end

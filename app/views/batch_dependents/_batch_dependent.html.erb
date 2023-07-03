@@ -12,20 +12,20 @@
           <%= "#{@dependent.member.last_name}, #{@dependent.member.first_name} #{@dependent.member.middle_name}" %>
         </div>
         <div class="col-sm-3">
-          <% if batch_dependent.is_dependent? && batch_dependent.is_beneficiary?%>
-            <%= content_tag :h6, 'Beneficiary/Dependent: ', class: "mb-0" %>
-          <% elsif batch_dependent.is_dependent? %>
+          <%# if batch_dependent.is_dependent? && batch_dependent.is_beneficiary?%>
+            <%#= content_tag :h6, 'Beneficiary/Dependent: ', class: "mb-0" %>
+          <%# elsif batch_dependent.is_dependent? %>
             <%= content_tag :h6, 'Dependent: ', class: "mb-0" %>
-          <% elsif batch_dependent.is_beneficiary? %>
-            <%= content_tag :h6, 'Beneficiary: ', class: "mb-0" %>
-          <% end %>
+          <%# elsif batch_dependent.is_beneficiary? %>
+            <%#= content_tag :h6, 'Beneficiary: ', class: "mb-0" %>
+          <%# end %>
         </div>
         <div class="col-sm-3 text-secondary">
           <%= "#{@dependent.last_name}, #{@dependent.first_name} #{@dependent.middle_name}" %>
         </div>
       </div>
       <hr>
-      <% if batch_dependent.is_dependent? %>
+      <%# if batch_dependent.is_dependent? %>
         <div class="row">
           <div class="col-sm-3">
             <h6 class="mb-0">Premium</h6>
@@ -34,7 +34,7 @@
             <%= number_to_currency(batch_dependent.premium, unit: "₱", precision: 2) %>
           </div>
         </div>
-      <% end %>
+      <%# end %>
     </div>
   </div>
 </div>

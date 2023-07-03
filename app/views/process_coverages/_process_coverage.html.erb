@@ -71,7 +71,8 @@
   </div>
 
   
-  <% insured_types = @insured_types.pluck(:insured_type) %>
+  <%# insured_types = @insured_types.pluck(:insured_type) %>
+  <% insured_types = @insured_types %>
   <% unless insured_types.any?{ |element| (2..9).include?(element) } %>
     <div class="row mb-3">
       <div class="col-4">
@@ -147,22 +148,23 @@
 
       <div class="row">
         <% batches = process_coverage.group_remit.batches %>
-        <% @insured_types.each do |type| %>
-        <% batch_deps = process_coverage.get_batch_dep(type) %>
+        <% @insured_types2.each do |type| %>
+        <% i_type = type.insured_type_before_type_cast %>
+        <% batch_deps = process_coverage.get_batch_dep(i_type, type) %>
           <%# ctr = batches.joins(:batch_dependents).where(batch_depedents: { proposal_insured }) %>
           <div class="col-xl-4 mb-2">
             <div class="card mb-2">
               <div class="card-header">
-                <%= content_tag :span, type.name, class: "lead" %>
+                <%= content_tag :span, "#{type.name} - #{i_type}", class: "lead" %>
               </div>
               <div class="card-body">
-                <% life_cov = type.proposal_insured_benefits.find_by(benefit_id: 1).cov_amount %>
+                <% life_cov = type.product_benefits.find_by(benefit_id: 1).coverage_amount %>
                 <div class="row">
                   <div class="col">
                     <p>Life: <b><%= to_currency(life_cov) %></b></p>
                   </div>
                   <div class="col">
-                    <p>Premium: <b><%= to_currency(type.total_prem) %></b></p>
+                    <p>Premium: <b><%= to_currency(type.product_benefits.sum(:premium)) %></b></p>
                   </div>
                 </div>
                 <div class="row">
@@ -170,18 +172,18 @@
                     <p>Total Coverage: <b><%= to_currency(batch_deps * life_cov) %></b></p>
                   </div>
                   <div class="col">
-                    <p>For Review: <b><%= process_coverage.group_remit.batches.joins(:batch_dependents).where(batch_dependents: { proposal_insured: type }, insurance_status: "For Review").count %></b></p>
+                    <p>For Review: <b><%= process_coverage.group_remit.batches.joins(:batch_dependents).where(batch_dependents: { agreement_benefit: type }, insurance_status: "for_review").count %></b></p>
                   </div>
                 </div>
                 <div class="row">
                   <div class="col text-success">
-                    <p>Approved: <b><%= process_coverage.group_remit.batches.joins(:batch_dependents).where(batch_dependents: { proposal_insured: type }, insurance_status: "Approved").count %></b></p>
+                    <p>Approved: <b><%= process_coverage.count_approved(i_type, type) %></b></p>
                   </div>
                   <div class="col text-secondary">
-                    <p>Pending: <b><%= process_coverage.group_remit.batches.joins(:batch_dependents).where(batch_dependents: { proposal_insured: type }, insurance_status: "Pending").count %></b></p>
+                    <p>Pending: <b><%= process_coverage.count_pending(i_type, type) %></b></p>
                   </div>
                   <div class="col text-danger">
-                    <p>Denied: <b><%= process_coverage.group_remit.batches.joins(:batch_dependents).where(batch_dependents: { proposal_insured: type }, insurance_status: "Denied").count %></b></p>
+                    <p>Denied: <b><%= process_coverage.count_denied(i_type, type) %></b></p>
                   </div>
                 </div>
               </div>
@@ -207,10 +209,12 @@
     </div>
     <div class="col-4">
       <div class="links mb-2">
-       <% @insured_types.each do |type| %>
+       <% @insured_types2.each do |type| %>
         <%# unless type.insured_type.id == 2..5 %>
-        <% unless type.insured_type == 2..5 %>
-          <%= link_to type.name, process_coverage_path(process_coverage, insured_type_id: type.id), class: "btn btn-primary btn-sm mb-2" %>
+        <%# unless type.insured_type == 2..5 %>
+        <% i_type = type.insured_type_before_type_cast %>
+        <% unless i_type == 2..5 %>
+          <%= link_to type.name, process_coverage_path(process_coverage, insured_type: type), class: "btn btn-primary btn-sm mb-2" %>
         <% end %>
        <% end %>
       </div>
@@ -289,7 +293,7 @@
             <td>
               <% batch.batch_dependents.each do |dep| %>
                 <%= content_tag :small do %>
-                  <%= link_to "#{dep.member_dependent} (#{dep.proposal_insured.insured_type.name}) - #{to_currency(dep.premium)}", dep, remote: true, data: { turbo_frame: "remote_modal" } %> <br>
+                <%= link_to "#{dep.member_dependent} (#{dep.agreement_benefit.name}) - #{to_currency(dep.premium)}", group_remit_batch_dependent_path(@group_remit, batch, dep, modal: true), data: { turbo_frame: "remote_modal" } %> <br>
                 <% end %>
               <% end %>
             </td>
