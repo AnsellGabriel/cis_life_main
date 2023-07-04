@@ -105,7 +105,8 @@ class BatchesController < ApplicationController
       @batch, 
       @group_remit, 
       batch_params[:rank], 
-      batch_params[:transferred]
+      batch_params[:transferred],
+      batch_params[:duration]
     )
 
     begin
@@ -124,8 +125,8 @@ class BatchesController < ApplicationController
           end
         end
       end
-    rescue NoMethodError
-      return redirect_to group_remit_path(@group_remit), alert: "Please include the rank of the member"
+    rescue NoMethodError => e
+      return redirect_to group_remit_path(@group_remit), alert: e.message
     rescue ActiveRecord::RecordInvalid => e
       return redirect_to group_remit_path(@group_remit), alert: e.message.gsub!(/\AValidation failed:\s?/, '')
     end
@@ -172,6 +173,7 @@ class BatchesController < ApplicationController
     def batch_params
       params.require(:batch).permit(
         :rank, 
+        :duration,
         :active, 
         :coop_sf_amount, 
         :agent_sf_amount, 
