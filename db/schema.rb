@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_07_03_082806) do
+ActiveRecord::Schema[7.0].define(version: 2023_07_04_005226) do
   create_table "active_admin_comments", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.string "namespace"
     t.text "body"
@@ -181,6 +181,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_07_03_082806) do
     t.boolean "transferred"
     t.bigint "agreement_benefit_id", null: false
     t.boolean "valid_health_dec", default: false
+    t.boolean "below_nel", default: false
     t.index ["agreement_benefit_id"], name: "index_batches_on_agreement_benefit_id"
     t.index ["coop_member_id"], name: "index_batches_on_coop_member_id"
     t.index ["group_remit_id"], name: "index_batches_on_group_remit_id"
