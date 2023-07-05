@@ -81,7 +81,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_07_04_083803) do
     t.bigint "agent_id"
     t.string "moa_no"
     t.integer "contestability"
-    t.decimal "nel", precision: 12, scale: 2
+    t.decimal "nel", precision: 12, scale: 2, default: "25000.0"
     t.decimal "nml", precision: 12, scale: 2
     t.string "anniversary_type"
     t.boolean "transferred"

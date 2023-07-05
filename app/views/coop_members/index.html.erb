@@ -96,7 +96,7 @@
               </div>
             </div>
           </td>
-          <td><%= coop_member.coop_branch.name %></td>
+          <td><%= coop_member.coop_branch.name.titleize %></td>
           <td>
             <%= link_to 'Insurance', member_agreements_coop_member_path(coop_member), class: 'btn btn-sm btn-primary' %>
             <%= link_to 'Details', coop_member_path(coop_member), class: 'btn btn-sm btn-primary', data: {turbo_frame: 'modal-xl'} %>
