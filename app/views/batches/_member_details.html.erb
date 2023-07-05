@@ -1,0 +1,33 @@
+<% batch_presenter = BatchPresenter.new(batch)%>
+
+<div class="">
+	<%= content_tag :span, "#{member.last_name}, #{member.first_name} #{member.middle_name}" %>
+	<div class="sm-secondary-text <%= flex_justify_align('center','center') %> gap-1">
+			<div class="">
+					<i class="bi bi-phone text-primary"></i>
+					<%= content_tag :span, "#{member.mobile_number}" %>
+			</div>
+			<%= content_tag :span, '|' %>
+			<div class="">
+					<i class="bi bi-envelope text-primary"></i>
+					<%= content_tag :span, "#{member.email}" %>
+			</div>
+	</div>
+
+	<% if agreement.plan.acronym == 'GYRTBR' || agreement.plan.acronym == 'GYRTFR'%>
+			<span class="badge bg-info text-dark">
+					<%= batch_presenter.capitalized_insured_type %>
+			</span>
+	<% end %>
+</div>
+<div class="">
+
+	<% if beneficiaries.empty? %>
+			<span class="badge bg-danger">No beneficiary!</span>
+	<% end %>
+
+	<% if batch.status == 'recent' && batch.batch_health_decs.blank? %>
+			<span class="badge bg-danger">No Health Declaration!</span>
+	<% end %>
+	
+</div>

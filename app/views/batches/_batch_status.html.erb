@@ -1,0 +1,14 @@
+<% if batch.insurance_status == 'for_review' %>
+    <span class="<%= badge('secondary') %>">For review</span>
+<% elsif batch.insurance_status == 'pending' %>
+    <span class="<%= badge('warning') %> text-dark">Pending</span>
+<% elsif batch.insurance_status == 'approved' %>
+    <span class="<%= badge('success') %>">Approved</span>
+<% elsif batch.insurance_status == 'denied' %>
+    <span class="<%= badge('danger') %>">Denied</span>
+<% end %>
+<% if batch.status == 'recent' %>
+    <span class="<%= badge('success') %>">New</span>
+<% else %>
+    <span class="<%= badge('warning') %> text-dark"><%= batch.status.to_s.titleize %></span>
+<% end %>

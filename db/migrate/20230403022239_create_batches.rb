@@ -5,8 +5,8 @@ class CreateBatches < ActiveRecord::Migration[7.0]
       t.date :effectivity_date
       t.date :expiry_date
       t.boolean :active
-      t.float :coop_sf_amount
-      t.float :agent_sf_amount
+      t.decimal :coop_sf_amount, precision: 10, scale: 2
+      t.decimal :agent_sf_amount, precision: 10, scale: 2
       t.string :status
 
       t.timestamps

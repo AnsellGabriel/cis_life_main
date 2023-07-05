@@ -35,8 +35,8 @@ module Calculate
 		end
 
 		def calculate_term_insurance(group_remit)
-			product_benefit = get_term_insurance_product_benefit
-			self.premium = product_benefit.premium if product_benefit
+			product_benefits = get_term_insurance_product_benefit
+			self.premium = product_benefits[0].premium
 
 			# self.premium = self.agreement_benefit.product_benefits.find_by(duration: self.duration, residency: self.residency).premium
 			self.coop_sf_amount = calculate_service_fee(group_remit.get_coop_sf, self.premium)
@@ -48,13 +48,11 @@ module Calculate
 				self.agreement_benefit.product_benefits
 							.where(duration: self.duration)
 							.where("residency_floor = ?", 120)
-							.find_by(duration: self.duration)
 			else
 				self.agreement_benefit.product_benefits
                              .where(duration: self.duration)
                              .where("residency_floor <= ?", self.residency)
                              .where("residency_ceiling >= ?", self.residency)
-                             .find_by(duration: self.duration)
 			end
 		end
 	end

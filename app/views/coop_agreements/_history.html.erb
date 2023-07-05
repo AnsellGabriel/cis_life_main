@@ -1,0 +1,53 @@
+<% if !@agreement.group_remits.blank? %>
+	<div class="<%= flex_justify_align('', '', true) %> gap-1">
+
+		<% @agreement.group_remits.includes(:anniversary).order(created_at: :desc).each do |group_remit| %>
+			<% gr_presenter = GroupRemitPresenter.new(group_remit)%>
+			<div class="card <%= @agreement.anniversary_type == 'multiple' ? 'hidden' : '' %>" data-toggler-target="toggleable" data-id="history_<%= group_remit.anniversary.nil? ? '' : dom_id(group_remit.anniversary) %>">
+				<div class="card-body <%= flex_justify_align('between', 'center') %> gap-1">
+					<div class="<%= flex_justify_align('', 'center') %> gap-3">
+						<span class="<%= gr_presenter.status_badge %>" style="width: 100px;">
+							<%= gr_presenter.status_text %>
+						</span>
+
+						<% if plan_acronym == 'PMFC' %>
+							<div class="text-secondary small">
+								<%= content_tag :span, "#{@cooperative.name} BATCH #{@agreement.group_remits.find_index(group_remit) + 1}" %>
+							</div>
+						<% else %>
+							<div class="text-secondary small">
+								<%= content_tag :span, 'Effectivity date: ' %>
+								<span> 
+
+								<% if group_remit.effectivity_date.present? %>
+									<%= date_as_month_day_year(group_remit.effectivity_date) %>
+								<% else %>
+									Tentative
+								<% end %>
+
+								</span>
+							</div>
+							<div class="text-secondary small">
+									<%= content_tag :span, 'Expiry date: ' %>
+									<%= content_tag :span, date_as_month_day_year(group_remit.expiry_date) %>
+							</div>
+						<% end %>
+
+					</div>
+					<%= link_to 'View', group_remit_path(group_remit), class: small_btn('secondary') %>
+				</div>
+			</div>
+		<% end %>
+
+	</div>
+<% else %>
+	<div class="text-center">
+
+		<% if plan_acronym == 'PMFC' %>
+			<p class="text-muted">No remmitance yet.</p>
+		<% else %>
+			<p class="text-muted">No history yet.</p>
+		<% end %>
+
+	</div>
+<% end %>

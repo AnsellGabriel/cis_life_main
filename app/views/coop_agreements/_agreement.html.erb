@@ -29,29 +29,31 @@
           <% if agreement_presenter.group_remits_submitted? %>
             <%= render 'submitted_field', group_remit: last_group_remit %>
           <% else %>
-
             <%= render 'agreement_field', 
               name: 'Min. Participants', 
               value: agreement.proposal.minimum_participation, 
               margin: 'mb-2'
             %>
-            <%= render 'agreement_field', 
-              name: 'Anniversary Date', 
-              value: agreement.anniversaries.first.present? ? date_as_month_day(agreement.anniversaries.first.anniversary_date) : 'Tentative', 
-              margin: ''
-            %>
+
+            <% unless agreement.plan.acronym == 'PMFC' %>
+              <%= render 'agreement_field', 
+                name: 'Anniversary Date', 
+                value: agreement.anniversaries.first.present? ? date_as_month_day(agreement.anniversaries.first.anniversary_date) : 'Tentative', 
+                margin: ''
+              %>
+            <% end %>
+
             <%= render 'agreement_field', 
               name: 'Cooperative Service Fee', 
               value: "#{@coop_sf}%", 
               margin: ''
             %>
-
           <% end %>
 
           <div class="mt-4 text-center">
 
             <% if agreement.group_remits.present?  %>
-              <%= link_to 'View Group Remit', agreement_group_remit_path(@agreement, @agreement.group_remits.last), 
+              <%= link_to 'View Group Remit', coop_agreement_group_remit_path(@agreement, @agreement.group_remits.last), 
                 class: small_btn('warning'), 
                 data: { turbo: false } 
               %>

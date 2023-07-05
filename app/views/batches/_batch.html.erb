@@ -1,161 +1,97 @@
+<% plan_acronym = agreement.plan.acronym %>
+<% member = batch.coop_member.member %>
+<% beneficiaries = batch.batch_beneficiaries %>
+<% dependents = batch.batch_dependents %>
+<% if plan_acronym == 'PMFC' %>
+	<% product_benefits = batch.get_term_insurance_product_benefit %>
+	<% life_benefit = product_benefits.select {|pb| pb.benefit.acronym == "LI" } %>
+<% else %>
+	<% life_benefit = batch.agreement_benefit.product_benefits.select {|pb| pb.benefit.acronym == "LI" } %>
+<% end %>
+
 <tr id="<%= dom_id(batch) %>">
-    <% member = batch.coop_member.member %>
-    <% beneficiaries = batch.batch_beneficiaries %>
-    <% dependents = batch.batch_dependents %>
-    <% batch_presenter = BatchPresenter.new(batch)%>
-    <% product_benefit = batch.agreement_benefit.product_benefits.select {|pb| pb.benefit.acronym == "LI" } %>
+	<td class="text-center align-middle" ><%= batch.id %></td>
+	<td class="align-middle" >
+		<div class="d-flex" style="padding-left: 60px; padding-top: 30px; padding-bottom: 30px;">
+			<div class="d-flex flex-column gap-1">
+				<div class="">
+					<%= render 'batches/batch_status', batch: batch %>
+				</div>
+				<%= render 'batches/member_details', 
+					batch: batch, 
+					member: member, 
+					agreement: agreement,
+					beneficiaries: beneficiaries
+				%>
+			</div>
+		</div>
+	</td>
+	<td class="align-middle" >
+		<div class="<%= flex_justify_align('center') %>">
+			<div class="<%= flex_justify_align('','center',true) %> ps-6">
+				<div class="d-flex flex-column mb-1">
+					<%= render 'batches/premiums', 
+						batch: batch,
+						dependents: dependents,
+						plan_acronym: plan_acronym
+					%>
+				</div>
+			</div>
+		</div>
+	</td>
+	<td class="align-middle">
+		<div class="<%= flex_justify_align('center') %>">
+			<div class="d-flex flex-column ps-6">
 
-    <td class="text-center align-middle" ><%= batch.id %></td>
-    <td class="align-middle" >
-        <div class="d-flex" style="padding-left: 60px; padding-top: 30px; padding-bottom: 30px;">
-            <div class="d-flex flex-column gap-1">
-                <div class="">
-                    <% if batch.insurance_status == 'for_review' %>
-                        <span class="<%= badge('secondary') %>">For review</span>
-                    <% elsif batch.insurance_status == 'pending' %>
-                        <span class="<%= badge('warning') %> text-dark">Pending</span>
-                    <% elsif batch.insurance_status == 'approved' %>
-                        <span class="<%= badge('success') %>">Approved</span>
-                    <% elsif batch.insurance_status == 'denied' %>
-                        <span class="<%= badge('danger') %>">Denied</span>
-                    <% end %>
-                    <% if batch.status == 'recent' %>
-                        <span class="<%= badge('success') %>">New</span>
-                    <% else %>
-                        <span class="<%= badge('warning') %> text-dark"><%= batch.status.to_s.titleize %></span>
-                    <% end %>
-                </div>
-                <div class="">
-                
-                    <%= content_tag :span, "#{member.last_name}, #{member.first_name} #{member.middle_name}" %>
-                    <div class="sm-secondary-text <%= flex_justify_align('center','center') %> gap-1">
-                        <div class="">
-                            <i class="bi bi-phone text-primary"></i>
-                            <%= content_tag :span, "#{member.mobile_number}" %>
-                        </div>
-                        <%= content_tag :span, '|' %>
-                        <div class="">
-                            <i class="bi bi-envelope text-primary"></i>
-                            <%= content_tag :span, "#{member.email}" %>
-                        </div>
-                    </div>
+				<% unless beneficiaries.exists? %>
+					<%= content_tag :span, "None", class: 'sm-red-text' %>
+				<% else %>
+					<div class="d-flex flex-column mb-1">
 
-                    <% if agreement.plan.acronym == 'GYRTBR' || agreement.plan.acronym == 'GYRTFR'%>
-                        <span class="badge bg-info text-dark">
-                            <%= batch_presenter.capitalized_insured_type %>
-                        </span>
-                    <% end %>
+						<% beneficiaries.each do |b| %>
+							<%= content_tag :span, "#{b.member_dependent.last_name}, #{b.member_dependent.first_name} #{b.member_dependent.middle_name}", 
+								class: "text-secondary", 
+								style: "font-size: .7rem;" 
+							%>
+						<% end %>
 
-                </div>
-                <div class="">
+					</div>
+				<% end %>
 
-                    <% if beneficiaries.empty? %>
-                        <span class="badge bg-danger">No beneficiary!</span>
-                    <% end %>
+			</div>
+		</div>
+	</td>
 
-                    <% if batch.status == 'recent' && batch.batch_health_decs.blank? %>
-                        <span class="badge bg-danger">No Health Declaration!</span>
-                    <% end %>
-                    
-                </div>
-            </div>
-            
+	<% if group_remit.agreement.plan.gyrt_type == 'family' %>
+		<td class="align-middle">
+			<div class="<%= flex_justify_align('center') %>">
+				<div class="<%= flex_justify_align('','center',true) %> ps-6">
 
-        </div>
-    </td>
-    <td class="align-middle" >
-        <div class="<%= flex_justify_align('center') %>">
-            <div class="<%= flex_justify_align('','center',true) %> ps-6">
-                <div class="d-flex flex-column mb-1">
-                    <%= content_tag :span, 
-                        "Principal premium: #{number_to_currency(batch.premium, unit: "₱", precision: 2)}", 
-                        class: "text-secondary sm-green-text"
-                    %>
+					<% unless dependents.exists? %>
+						<%= content_tag :span, "None", class: 'sm-red-text' %>
+					<% else %>
+						<div class="d-flex flex-column mb-1">
+							<% dependents.each do |d| %>
+								<%= content_tag :span, "#{d.member_dependent.last_name}, #{d.member_dependent.first_name} #{d.member_dependent.middle_name}", 
+									class: "text-secondary", 
+									style: "font-size: .7rem;" 
+								%>
+							<% end %>
+						</div>
+					<% end %>
 
-                    <% if dependents.exists? %>
-                        <%= content_tag :span, 
-                            "Dependent(s) premium: #{number_to_currency(batch.dependents_premium, unit: "₱", precision: 2) }", 
-                            class: "text-secondary sm-green-text" %>
-                    <% end %>
+				</div>
+			</div>
+		</td>
+	<% end %>
 
-                </div>
-        </div>
-    </td>
-    <td class="align-middle">
-        <div class="<%= flex_justify_align('center') %>">
-            <div class="d-flex flex-column ps-6">
-
-                <% unless beneficiaries.exists? %>
-                    <%= content_tag :span, "None", class: 'sm-red-text' %>
-                <% else %>
-                    <div class="d-flex flex-column mb-1">
-
-                        <% beneficiaries.each do |b| %>
-                            <%= content_tag :span, "#{b.member_dependent.last_name}, #{b.member_dependent.first_name} #{b.member_dependent.middle_name}", 
-                                class: "text-secondary", 
-                                style: "font-size: .7rem;" 
-                            %>
-                        <% end %>
-
-                    </div>
-                <% end %>
-
-            </div>
-        </div>
-    </td>
-
-    <% if group_remit.agreement.plan.gyrt_type == 'family' %>
-        <td class="align-middle">
-            <div class="<%= flex_justify_align('center') %>">
-                <div class="<%= flex_justify_align('','center',true) %> ps-6">
-
-                    <% unless dependents.exists? %>
-                        <%= content_tag :span, "None", class: 'sm-red-text' %>
-                    <% else %>
-                        <div class="d-flex flex-column mb-1">
-                            <% dependents.each do |d| %>
-                                <%= content_tag :span, "#{d.member_dependent.last_name}, #{d.member_dependent.first_name} #{d.member_dependent.middle_name}", 
-                                    class: "text-secondary", 
-                                    style: "font-size: .7rem;" 
-                                %>
-                            <% end %>
-                            </div>
-                    <% end %>
-
-                </div>
-            </div>
-        </td>
-    <% end %>
-
-    <td class="align-middle">
-        <div  class="d-flex gap-1" >
-            <%= link_to 'Show', group_remit_batch_path(group_remit, batch),
-                data: {turbo_frame: "_top"}, 
-                class: small_btn('primary') 
-            %>
-
-            <% unless group_remit.active? || group_remit.expired? || group_remit.under_review? || batch.status == 'renewal' || group_remit.for_payment? %>
-
-                <% if batch.status == 'recent' && batch.batch_health_decs.blank? && product_benefit[0].coverage_amount > agreement.nel %>
-                    <%= link_to new_group_remit_batch_health_declaration_path(group_remit, batch),
-                                class: small_btn('danger'), 
-                                title: 'Health Declaration Form',
-                                data: { turbo_frame: "modal-xl" } do %> 
-                    <i class="bi bi-file-earmark-medical"></i>
-                    <% end %>
-                <% end %>
-
-                <%= button_to group_remit_batch_path(group_remit, batch), 
-                    method: :delete,
-                    form: { 
-                    data: { turbo_frame: "_top", 
-                    turbo_confirm: "Delete Batch: #{member.last_name}, #{member.first_name} #{member.middle_name}?" } 
-                    }, 
-                    class: small_btn('danger') do %>
-                        <i class="bi bi-x-lg"></i>                    
-                    <% end %>
-            <% end %>
-
-        </div>
-    </td>
+	<td class="align-middle">
+		<%= render 'batches/action_buttons', 
+			group_remit: group_remit,
+			batch: batch,
+			life_benefit: life_benefit,
+			agreement: agreement,
+			member: member
+		%>
+	</td>
 </tr>
