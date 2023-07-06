@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_07_04_083803) do
+ActiveRecord::Schema[7.0].define(version: 2023_07_06_053206) do
   create_table "active_admin_comments", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.string "namespace"
     t.text "body"
@@ -487,6 +487,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_07_04_083803) do
     t.integer "duration"
     t.integer "residency_floor"
     t.integer "residency_ceiling"
+    t.string "benefit_type"
     t.index ["agreement_benefit_id"], name: "index_product_benefits_on_agreement_benefit_id"
     t.index ["benefit_id"], name: "index_product_benefits_on_benefit_id"
   end

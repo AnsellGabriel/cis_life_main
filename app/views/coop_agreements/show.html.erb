@@ -18,16 +18,18 @@
               <% end %>
               </h6>
             </div>
-            <%= button_to "New Batch", group_remits_path, 
-              method: :post, 
-              params: { 
-                agreement_id: @agreement.id, 
-                anniversary_id: nil,
-                anniv_type: 'none' 
-              }, 
-              class: small_btn('success'), 
-              data: { turbo: false } 
-            %>
+            <% if plan_acronym == 'PMFC' %>
+              <%= button_to "New Batch", group_remits_path, 
+                method: :post, 
+                params: { 
+                  agreement_id: @agreement.id, 
+                  anniversary_id: nil,
+                  anniv_type: 'none' 
+                }, 
+                class: small_btn('success'), 
+                data: { turbo: false } 
+              %>
+            <% end %>
           </div>
           <hr>
           <div class="<%= flex_justify_align('center', 'center') %>">
@@ -61,3 +63,4 @@
         </div>
       </div>
   </div>
+<% console %>

@@ -18,7 +18,7 @@ class BatchImportService
   def import_batches
     initialize_counters_and_arrays
     agreement_benefits = @agreement.agreement_benefits
-    min_participation = @agreement.proposal.minimum_participation
+    # min_participation = @agreement.proposal.minimum_participation
 
     principal_headers = extract_headers(@spreadsheet, 'Principal')
     principal_spreadsheet = parse_file('Principal')
@@ -28,9 +28,9 @@ class BatchImportService
       return "The following headers are missing: #{missing_headers.join(', ')}"
     end
 
-    if principal_spreadsheet.size < min_participation
-      return "Imported members must be at least #{min_participation}. Current count: #{principal_spreadsheet.size}"
-    end
+    # if principal_spreadsheet.size < min_participation
+    #   return "Imported members must be at least #{min_participation}. Current count: #{principal_spreadsheet.size}"
+    # end
 
     principal_spreadsheet.drop(1).each do |row|
       batch_hash = extract_batch_data(row)

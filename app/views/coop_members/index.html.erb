@@ -76,7 +76,7 @@
         <% end %>
       </td>
       <% @filtered_members.each do |member| %>
-        <% coop_member = member.coop_members.find { |coop_member| coop_member.cooperative_id == @cooperative.id }%>
+        <% coop_member = member.coop_members.find_by(cooperative_id: @cooperative.id)%>
         
         <tr>
           <th scope="row" ><%= coop_member.id %></th>

@@ -22,13 +22,13 @@
     %>
     <div class="d-flex gap-1">
 
-      <% unless @passed_requirements %>
-        <%= button_to 'Submit Batch', submit_group_remit_path(@group_remit), 
-          method: :get,
-          class: small_btn('outline-warning'), 
-          data: {turbo_confirm: 'Submit group remit?' } 
-        %>
-      <% end %>
+      <%# <% unless @passed_requirements %> 
+      <%= button_to 'Submit Batch', submit_group_remit_path(@group_remit), 
+        method: :get,
+        class: small_btn('outline-warning'), 
+        data: {turbo_confirm: 'Submit group remit?' } 
+      %>
+      <%# <% end %> 
        
       <%  if @group_remit.denied_members.present? %>
         <%= link_to 'Denied members', group_remit_denied_members_path(@group_remit), class: small_btn('outline-secondary') %>
@@ -86,8 +86,8 @@
                   <%= render 'group_remits/add_member' %>
                 </div>
 
-                <% if @batch_without_beneficiaries_count > 0 || @passed_requirements%>
-                  <%= content_tag :span, "(click reason to filter batches)", 
+                <% if @batch_without_beneficiaries_count > 0 %>
+                  <%= content_tag :span, "Filter this batch by:", 
                     class: 'mb-1',  
                     style: "font-size: .7rem; color: red !important; font-weight: 700;"   
                   %>
@@ -103,30 +103,14 @@
                   </div>
                 <% end %>
 
-                <% if @passed_requirements %>
-                  <div class="d-flex flex-column">
-
-                    <%= content_tag :span, "Unable to submit group remit due to: ", 
-                      class: 'mb-1',  
-                      style: "font-size: .7rem; color: red !important; font-weight: 700;"  
-                    %>
-                    <div class="">
-
-                      <% if @batch_count < @agreement.proposal.minimum_participation %>
-                        <%= content_tag :span, "Below minimum participation: Need #{@agreement.proposal.minimum_participation - @batch_count} more", class: badge('danger') %>
-                      <% end %>
-
-                      <% if @batch_without_batch_health_dec_count > 0 %>
-                        <%= link_to "#{@batch_without_batch_health_dec_count} member(s) without batch health declaration!", group_remit_path(@group_remit, batch_health_dec_filter: true), 
-                          method: :get, 
-                          class: "#{badge('danger')} hovered-link", 
-                          data: { turbo: false } 
-                        %>
-                      <% end %>
-
-                    </div>
-                  </div>
+                <% if @batch_without_batch_health_dec_count > 0 %>
+                  <%= link_to "#{@batch_without_batch_health_dec_count} member(s) without batch health declaration!", group_remit_path(@group_remit, batch_health_dec_filter: true), 
+                    method: :get, 
+                    class: "#{badge('danger')} hovered-link", 
+                    data: { turbo: false } 
+                  %>
                 <% end %>
+
               <% end %>
             <% end %>
         <% end%>

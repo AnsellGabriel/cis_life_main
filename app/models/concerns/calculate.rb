@@ -8,7 +8,9 @@ module Calculate
 			if agreement_benefit.nil?
 				agreement_benefit = group_remit.agreement.agreement_benefits.find_by(insured_type: insured_type)
 			end
+
 			self.agreement_benefit_id = agreement_benefit.id
+
 			if term_insurance
 				calculate_term_insurance(group_remit)
 			else
@@ -31,6 +33,7 @@ module Calculate
 		end
 
 		def total_premium
+			# byebug
 			agreement_benefit.product_benefits.sum(:premium)
 		end
 
