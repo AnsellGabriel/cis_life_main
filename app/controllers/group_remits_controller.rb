@@ -21,6 +21,13 @@ class GroupRemitsController < InheritedResources::Base
   end
 
   def submit
+    if @group_remit.batches.empty?
+      respond_to do |format|
+        format.html { redirect_to @group_remit, alert: "Unable to submit empty batch!" }
+      end
+      return
+    end
+
     all_renewal = @group_remit.batches.all? { |batch| batch.status == "renewal" }
 
     if all_renewal
@@ -65,7 +72,7 @@ class GroupRemitsController < InheritedResources::Base
     # @agreement_eager = @agreement.includes([:agreement_benefits]).includes([:product_benefits])
     containers # controller/concerns/container.rb
     counters  # controller/concerns/counter.rb
-    @passed_requirements = group_remit_passed_requirements?
+    # @passed_requirements = group_remit_passed_requirements?
     batches_eager_loaded = @group_remit.batches.includes({coop_member: :member, batch_dependents: :member_dependent, batch_beneficiaries: :member_dependent}, :batch_health_decs, :agreement_benefit).order(created_at: :desc)
 
     if params[:batch_filter].present?
@@ -188,7 +195,7 @@ class GroupRemitsController < InheritedResources::Base
       end
     end
 
-    def group_remit_passed_requirements?
-      @batch_without_batch_health_dec_count > 0 || @batch_count < @agreement.proposal.minimum_participation
-    end
+    # def group_remit_passed_requirements?
+    #   @batch_without_batch_health_dec_count > 0 || @batch_count < @agreement.proposal.minimum_participation
+    # end
 end

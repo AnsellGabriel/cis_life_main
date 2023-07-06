@@ -1,0 +1,31 @@
+
+
+<div  class="d-flex gap-1" >
+	<%= link_to 'Show', group_remit_batch_path(group_remit, batch),
+		data: {turbo_frame: "_top"}, 
+		class: small_btn('primary') 
+	%>
+
+	<% if group_remit.pending? && batch.recent? %>
+
+		<% if batch.recent? && batch.batch_health_decs.blank? && life_benefit[0].coverage_amount > agreement.nel %>
+			<%= link_to new_group_remit_batch_health_declaration_path(group_remit, batch),
+				class: small_btn('danger'), 
+				title: 'Health Declaration Form',
+				data: { turbo_frame: "modal-xl" } do %> 
+				<i class="bi bi-file-earmark-medical"></i>
+			<% end %>
+		<% end %>
+
+		<%= button_to group_remit_batch_path(group_remit, batch), 
+			method: :delete,
+			form: { 
+			data: { turbo_frame: "_top", 
+			turbo_confirm: "Delete Batch: #{member.last_name}, #{member.first_name} #{member.middle_name}?" } 
+			}, 
+			class: small_btn('danger') do %>
+					<i class="bi bi-x-lg"></i>                    
+		<% end %>
+	<% end %>
+
+</div>

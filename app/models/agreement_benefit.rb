@@ -21,6 +21,7 @@ class AgreementBenefit < ApplicationRecord
     ranking_junior_officer: 8,
     ranking_rank_and_file: 9
   }
+  
   belongs_to :agreement, optional: true
   belongs_to :plan, optional: true
   belongs_to :proposal, optional: true

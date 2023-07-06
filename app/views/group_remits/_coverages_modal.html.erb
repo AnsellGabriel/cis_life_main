@@ -1,0 +1,38 @@
+<div class="modal fade" id="benefitsModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title text-center" id="staticBackdropLabel">Benefit & Coverages</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <div class="<%= flex_justify_align('around', 'center') %> mb-2">
+          <%= content_tag :h6, "Insured", style: "width: 100px;" %>
+          <%= content_tag :h6, "Benefit", style: "width: 100px;", class: 'text-center' %>
+          <%= content_tag :h6, "Coverage Amount", style: "width: 100px;", class: 'text-center'%>
+          <%= content_tag :h6, "Premium", style: "width: 100px;", class: 'text-center' %>
+        </div>
+
+        <% @agreement.agreement_benefits.includes({product_benefits: :benefit}).each do |ab| %>
+          <div class="<%= flex_justify_align('between') %> text-secondary">
+            <%#= content_tag :span, "#{ab.insured_type == 'principal' ? ab.insured_type.upcase : ab.insured_type.gsub('_', ' ').split(' ').drop(1).join(' ').upcase}", class: 'text-secondary', style: 'font-size: .8rem; width: 100px' %>
+            <%= content_tag :span, "#{ab.insured_type == 'principal' ? ab.insured_type.upcase : ab.name.upcase}", class: 'text-secondary', style: 'font-size: .8rem; width: 100px' %>
+            <div class="<%= flex_justify_align('between', 'center', true) %>">
+
+              <% ab.product_benefits.each do |product| %>
+                <div class="<%= flex_justify_align('between') %> text-secondary mb-1">
+                  <%= content_tag :span, "#{product.benefit.name}", class: 'sm-secondary-text text-center', style: "width: 100px;"%>
+                  <%= content_tag :span, "#{number_to_currency(product.coverage_amount, unit: '₱', precision: 2)}", class: 'sm-secondary-text text-center', style: "width: 150px;"%>
+                  <%= content_tag :span, "#{number_to_currency(product.premium, unit: '₱', precision: 2)}", class: 'sm-secondary-text text-center', style: "width: 100px;"%>
+                </div>
+              <% end %>
+
+            </div>
+          </div>
+          <hr>
+        <% end %>
+
+      </div>
+    </div>
+  </div>
+</div>

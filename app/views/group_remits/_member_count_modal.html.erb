@@ -1,0 +1,27 @@
+<div class="modal fade" id="insuredType" data-bs-b ackdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title text-center" id="staticBackdropLabel">Insured Count</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+
+        <div class="<%= flex_justify_align('around', 'center') %>">
+          <%= content_tag :h6, "Insured Type", style: "width: 150px;" %>
+          <%= content_tag :h6, "Count", style: "width: 150px;", class: 'text-center' %>
+        </div>
+
+        <% @agreement.agreement_benefits.includes({product_benefits: :benefit}).each do |ab| %>
+          <div class="<%= flex_justify_align('around', 'center') %> text-secondary">
+            <%#= content_tag :span, "#{ab.insured_type == 'principal' ? ab.insured_type.upcase : ab.insured_type.gsub('_', ' ').split(' ').drop(1).join(' ').upcase}", class: 'text-secondary', style: 'font-size: .8rem; width: 150px;' %>
+            <%= content_tag :span, "#{ab.insured_type == 'principal' ? ab.insured_type.upcase : ab.name.upcase}", class: 'text-secondary', style: 'font-size: .8rem; width: 150px;' %>
+            
+            <%= content_tag :span, "#{@group_remit.batches.where(agreement_benefit_id: ab.id).length}", class: 'text-secondary text-center', style: 'font-size: .8rem; width: 150px;' %>
+          </div>
+        <% end %>
+
+      </div>
+    </div>
+  </div>
+</div>

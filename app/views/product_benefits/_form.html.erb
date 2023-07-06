@@ -4,9 +4,13 @@
   <%= f.error_notification message: f.object.errors[:base].to_sentence if f.object.errors[:base].present? %>
 
   <div class="form-inputs mb-3">
+    <%= f.association :benefit %>
+    <%= f.association :agreement_benefit %>
     <%= f.input :coverage_amount %>
     <%= f.input :premium %>
-    <%= f.association :agreement_benefit %>
+    <%= f.input :duration, placeholder: "In months, ex: 0,3,6,9" %>
+    <%= f.input :residency_floor %>
+    <%= f.input :residency_ceiling %>
   </div>
 
   <div class="form-actions text-end">

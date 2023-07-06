@@ -24,7 +24,13 @@ class BatchHealthDecsController < InheritedResources::Base
     ActiveRecord::Base.transaction do
       begin
         pre_approved_health_dec = true
-        
+        valid_health_dec_ids = HealthDec.where(valid_answer: true).pluck(:id)
+        identical = valid_health_dec_ids == question_params.keys.map(&:to_i)
+
+        unless identical
+          raise ActiveRecord::Rollback, "Please answer all questions"
+        end
+
         question_params.each do |question_id, question_data|
           # byebug
           health_dec = HealthDec.find(question_id)
@@ -72,7 +78,7 @@ class BatchHealthDecsController < InheritedResources::Base
         flash[:error] = e.message
         respond_to do |format|
           format.html { redirect_to new_group_remit_batch_health_declaration_path(@batch.group_remit, @batch) }
-          format.turbo_stream { render turbo_stream: turbo_stream.replace('error_notif', partial: 'layouts/notification') }
+          format.turbo_stream { render turbo_stream: turbo_stream.update('error_notif', partial: 'layouts/notification') }
         end
     
         return

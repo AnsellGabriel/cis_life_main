@@ -53,7 +53,7 @@ class MemberImportService
       # Extract cooperative member data from CSV row
       coop_member_hash = {
         cooperative_id: @cooperative.id,
-        coop_branch_id: CoopBranch.find_by(name: row["Branch"]).id,
+        coop_branch_id: CoopBranch.find_by(name: row["Branch"].downcase).id,
         membership_date: row["Membership Date"]
       } 
 

@@ -1,0 +1,21 @@
+<% if plan_acronym == 'PMFC' %>
+		<%= content_tag :span, 
+				"Residency: #{months_to_years_months(batch.residency)}", 
+				class: "text-secondary sm-green-text"
+		%>
+		<%= content_tag :span, 
+				"Terms: #{batch.duration} months", 
+				class: "text-secondary sm-green-text"
+		%>
+<% end %>
+
+<%= content_tag :span, 
+		"Principal premium: #{number_to_currency(batch.premium, unit: "₱", precision: 2)}", 
+		class: "text-secondary sm-green-text"
+%>
+
+<% if dependents.exists? %>
+		<%= content_tag :span, 
+				"Dependent(s) premium: #{number_to_currency(batch.dependents_premium, unit: "₱", precision: 2) }", 
+				class: "text-secondary sm-green-text" %>
+<% end %>

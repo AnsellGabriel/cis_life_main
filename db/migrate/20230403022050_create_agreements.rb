@@ -6,7 +6,7 @@ class CreateAgreements < ActiveRecord::Migration[7.0]
       t.references :agent#, null: false, foreign_key: true
       t.string :moa_no
       t.integer :contestability
-      t.decimal :nel, precision: 12, scale: 2
+      t.decimal :nel, precision: 12, scale: 2, default: 25000
       t.decimal :nml, precision: 12, scale: 2
       t.string :anniversary_type
       t.boolean :transferred

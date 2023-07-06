@@ -76,7 +76,7 @@
         <% end %>
       </td>
       <% @filtered_members.each do |member| %>
-        <% coop_member = member.coop_members.find { |coop_member| coop_member.cooperative_id == @cooperative.id }%>
+        <% coop_member = member.coop_members.find_by(cooperative_id: @cooperative.id)%>
         
         <tr>
           <th scope="row" ><%= coop_member.id %></th>
@@ -96,7 +96,7 @@
               </div>
             </div>
           </td>
-          <td><%= coop_member.coop_branch.name %></td>
+          <td><%= coop_member.coop_branch.name.titleize %></td>
           <td>
             <%= link_to 'Insurance', member_agreements_coop_member_path(coop_member), class: 'btn btn-sm btn-primary' %>
             <%= link_to 'Details', coop_member_path(coop_member), class: 'btn btn-sm btn-primary', data: {turbo_frame: 'modal-xl'} %>

@@ -64,7 +64,7 @@ class GroupRemit < ApplicationRecord
         next
       end
 
-      if batch.member_details.age <= batch.agreement_benefit.exit_age
+      if batch.member_details.age < batch.agreement_benefit.exit_age
         new_batch = batch.dup
         new_batch.group_remit_id = new_group_remit.id
         new_batch.age = new_batch.member_details.age

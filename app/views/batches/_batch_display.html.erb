@@ -38,6 +38,23 @@
           </div>
         </div>
         <hr class="mb-3">
+        <% if @agreement.plan.acronym == 'PMFC' %>
+          <div class="row">
+            <div class="col-sm">
+              <h6 class="mb-0">Coop residency:</h6>
+            </div>
+            <div class="col-sm text-secondary">
+              <%= months_to_years_months(batch.residency) %>
+            </div>
+            <div class="col-sm">
+              <h6 class="mb-0">Term duration:</h6>
+            </div>
+            <div class="col-sm text-secondary">
+              <%= "#{batch.duration} months"%>
+            </div>
+          </div>
+        <% end %>
+        <hr class="mb-3">
         <div class="row">
           <div class="col-sm-3">
             <h6 class="mb-0">Premium</h6>
@@ -172,7 +189,7 @@
               <div class="gap-1 <%= flex_justify_align('','center') %>">
                   <h6 class="mb-0 text-primary">Dependents</h6>
                   <!-- button to open turbo-frame "modal"  -->
-                  <% unless @group_remit.active? || @group_remit.expired? || @group_remit.for_renewal? %>
+                  <% if @group_remit.pending? %>
                     <% if @batch.batch_dependents.size < 4 %>
                       <%= link_to new_group_remit_batch_dependent_path(@group_remit, @batch),
                           class: small_btn('success'), 
@@ -221,7 +238,7 @@
             <div class="row mb-1">
               <div class="d-flex align-items-center">
                 <div class="col-sm-1">
-                  <% unless @group_remit.active? || @group_remit.expired? || @group_remit.for_renewal? %>                   
+                  <% if @group_remit.pending? %>                   
                     <%= button_to group_remit_batch_dependent_path(@group_remit, @batch, d), 
                       method: :delete,
                       form: { 
@@ -266,3 +283,4 @@
     </div>
   <% end %>
 </div>
+<% console %>
