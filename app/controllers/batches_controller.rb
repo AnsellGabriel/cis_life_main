@@ -99,7 +99,12 @@ class BatchesController < ApplicationController
     @coop_members = @cooperative.coop_member_details
     @batch = @group_remit.batches.new(batch_params)
     coop_member = @batch.coop_member
-    member = coop_member.member
+
+    begin
+      member = coop_member.member
+    rescue NoMethodError => e
+      return redirect_to group_remit_path(@group_remit), alert: "Member not found"
+    end
     
     Batch.process_batch(
       @batch, 
