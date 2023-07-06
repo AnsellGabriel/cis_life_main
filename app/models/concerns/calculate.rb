@@ -44,15 +44,28 @@ module Calculate
 		end
 
 		def get_term_insurance_product_benefit
-			if self.residency >= 120
-				self.agreement_benefit.product_benefits
-							.where(duration: self.duration)
-							.where("residency_floor = ?", 120)
+			if self.class.name == "BatchDependent"
+				if self.batch.residency >= 120
+					self.agreement_benefit.product_benefits
+								.where(duration: self.batch.duration)
+								.where("residency_floor = ?", 120)
+				else
+					self.agreement_benefit.product_benefits
+								.where(duration: self.batch.duration)
+								.where("residency_floor <= ?", self.batch.residency)
+								.where("residency_ceiling >= ?", self.batch.residency)
+				end
 			else
-				self.agreement_benefit.product_benefits
-                             .where(duration: self.duration)
-                             .where("residency_floor <= ?", self.residency)
-                             .where("residency_ceiling >= ?", self.residency)
+				if self.residency >= 120
+					self.agreement_benefit.product_benefits
+								.where(duration: self.duration)
+								.where("residency_floor = ?", 120)
+				else
+					self.agreement_benefit.product_benefits
+								.where(duration: self.duration)
+								.where("residency_floor <= ?", self.residency)
+								.where("residency_ceiling >= ?", self.residency)
+				end
 			end
 		end
 	end
