@@ -6,3 +6,4 @@
 dump.rdb
 .byebug_history
 /config/master.key
+/db/uploads/*

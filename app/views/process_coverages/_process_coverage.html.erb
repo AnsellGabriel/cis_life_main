@@ -20,9 +20,9 @@
       
       <%= content_tag :p do %>
         <strong>Effectivity:</strong>
-        <%= process_coverage.effectivity %> |
+        <%= month_day_year(process_coverage.effectivity) %> |
         <strong>Expiry:</strong>
-        <%= process_coverage.expiry %>
+        <%= month_day_year(process_coverage.expiry) %>
       <% end %>
 
       <%= content_tag :p do %>
@@ -147,49 +147,9 @@
     <% else %>
 
       <div class="row">
-        <% batches = process_coverage.group_remit.batches %>
-        <% @insured_types2.each do |type| %>
-        <% i_type = type.insured_type_before_type_cast %>
-        <% batch_deps = process_coverage.get_batch_dep(i_type, type) %>
+        <%= render "process_coverages/agreement_benefits", process_coverage: process_coverage %>
+        
           <%# ctr = batches.joins(:batch_dependents).where(batch_depedents: { proposal_insured }) %>
-          <div class="col-xl-4 mb-2">
-            <div class="card mb-2">
-              <div class="card-header">
-                <%= content_tag :span, "#{type.name} - #{i_type}", class: "lead" %>
-              </div>
-              <div class="card-body">
-                <% life_cov = type.product_benefits.find_by(benefit_id: 1).coverage_amount %>
-                <div class="row">
-                  <div class="col">
-                    <p>Life: <b><%= to_currency(life_cov) %></b></p>
-                  </div>
-                  <div class="col">
-                    <p>Premium: <b><%= to_currency(type.product_benefits.sum(:premium)) %></b></p>
-                  </div>
-                </div>
-                <div class="row">
-                  <div class="col">
-                    <p>Total Coverage: <b><%= to_currency(batch_deps * life_cov) %></b></p>
-                  </div>
-                  <div class="col">
-                    <p>For Review: <b><%= process_coverage.group_remit.batches.joins(:batch_dependents).where(batch_dependents: { agreement_benefit: type }, insurance_status: "for_review").count %></b></p>
-                  </div>
-                </div>
-                <div class="row">
-                  <div class="col text-success">
-                    <p>Approved: <b><%= process_coverage.count_approved(i_type, type) %></b></p>
-                  </div>
-                  <div class="col text-secondary">
-                    <p>Pending: <b><%= process_coverage.count_pending(i_type, type) %></b></p>
-                  </div>
-                  <div class="col text-danger">
-                    <p>Denied: <b><%= process_coverage.count_denied(i_type, type) %></b></p>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        <% end %>
       </div>
 
   <% end %>
@@ -264,13 +224,13 @@
               <%= link_to batch.coop_member.member, batch.coop_member.member, class: "link-primary", data: { turbo_frame: "remote_modal" } %> <%= content_tag :small, "Age: #{mem_age}" %> <br>
               <%= content_tag :small, mem_bday.nil? ? "No Birthday" : "Birthday: #{mem_bday.strftime('%b-%d-%Y')}", class: "text-secondary" %> <br>
               <%= batch_status(batch.status) %>  <br>
-              <%= insured_type(batch.agreement_benefit.insured_type, batch.agreement_benefit.insured_type) %>
+              <%= insured_type(batch.agreement_benefit.insured_type, batch.agreement_benefit.name) %>
             </td>
             <td>
               <% terms = (batch.group_remit.expiry_date.year * 12 + batch.group_remit.expiry_date.month) - (effect.year * 12 + effect.month) %>
               
-              <%= process_dates("Eff", effect) %> <br>
-              <%= process_dates("Exp", expire) %> <br>
+              <%= process_dates("Eff", month_day_year(effect)) %> <br>
+              <%= process_dates("Exp", month_day_year(expire)) %> <br>
               <%= process_dates("Terms", terms) %><br>
             </td>
             <td>
@@ -323,14 +283,14 @@
                     <%= bootstrap_icon "x-lg" %>
                   <% end %>
                 <% end %>
-                <% if batch.batch_health_decs.present? %>
+              <% end %>
+              <% if batch.batch_health_decs.present? %>
                   <%#= link_to batch_health_dec_path(id: batch.batch_health_dec.id, b_id: batch.batch_health_dec, for_modal: "yes", pro_id: process_coverage), title: "For MD Review", class: "btn btn-sm btn-warning mb-1", remote: true, data: { turbo_frame: "remote_modal" } do %>
                   <%#= link_to group_remit_batch_health_declaration_path(@group_remit,batch,group_remit: @group_remit, batch: batch,id: batch.batch_health_decs.id, b_id: batch.batch_health_decs, for_modal: "yes", pro_id: process_coverage), title: "For MD Review", class: "btn btn-sm btn-warning mb-1", remote: true, data: { turbo_frame: "remote_modal" } do %>
                   <%= link_to health_dec_group_remit_batch_path(@group_remit, batch, for_und: true), class: "btn btn-sm btn-warning mb-1", data: { turbo_frame: "modal-xl" } do %>
                     <%= bootstrap_icon "file-earmark-medical" %>
                   <% end %>
                 <% end %>
-              <% end %>
             </td>
             <td>
               <% if batch.batch_remarks.count == 0 %>

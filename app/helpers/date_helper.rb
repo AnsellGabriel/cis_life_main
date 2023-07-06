@@ -9,6 +9,10 @@ module DateHelper
 		date.present? ? date.strftime("%B %d, %Y") : 'Tentative'
 	end
 
+	def month_day_year(date)
+		date.strftime("%m-%d-%Y")
+	end
+
 	def remaining_days(date)
 		(date - Date.today).to_i
 	end

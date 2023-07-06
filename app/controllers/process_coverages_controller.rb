@@ -4,7 +4,23 @@ class ProcessCoveragesController < ApplicationController
   # GET /process_coverages
   def index
     @process_coverages = ProcessCoverage.all
+    @approved_process_coverages = ProcessCoverage.where(status: :approved)
+    @pending_process_coverages = ProcessCoverage.where(status: :pending)
+    @denied_process_coverages = ProcessCoverage.where(status: :denied)
   end
+
+  def cov_list
+    # raise 'errors'
+    @process_coverages = case params[:cov_type]
+      when "Approved" then ProcessCoverage.where(status: :approved)
+      when "Pending" then ProcessCoverage.where(status: :pending)
+      when "Denied" then ProcessCoverage.where(status: :denied)
+    end
+
+    @title = params[:title]
+    
+  end
+  
 
   # GET /process_coverages/1
   def show
@@ -27,7 +43,7 @@ class ProcessCoveragesController < ApplicationController
         when "regular" then @batches_o.where(age: 18..65)
         when "overage" then @batches_o.where(age: 66..)
         # when "health_decs" then @batches_o.joins(:batch_health_decs)
-        when "health_decs" then @batches_o.joins(:batch_health_decs).distinct
+        when "health_decs" then @batches_o.joins(:batch_health_decs).where(batches: { valid_health_dec: false }).distinct
         # when "health_decs" then @batches_o.joins(:batch_health_dec).where.not(batch_health_decs: { health_dec_question_id: nil })
       end
     else

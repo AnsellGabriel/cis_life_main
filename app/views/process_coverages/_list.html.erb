@@ -1,0 +1,23 @@
+<table class="table">
+  <thead>
+    <th>ID</th>
+    <th>Group Remit</th>
+    <th>Plan</th>
+    <th>Agent</th>
+    <th>Terms</th>
+    <th>Status</th>
+  </thead>
+  <tbody>
+    <% process_coverages.each do |pc| %>
+      <tr>
+        <% term = (pc.expiry.year * 12 + pc.expiry.month) - (pc.effectivity.year * 12 + pc.effectivity.month)%>
+        <td><%= pc.id %></td>
+        <td><%= link_to pc.group_remit, pc, data: {turbo: false} %></td>
+        <td><%= pc.group_remit.agreement.plan %></td>
+        <td><%= pc.agent %></td>
+        <td><%= term %></td>
+        <td><%= pc.status %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>

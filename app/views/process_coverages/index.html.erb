@@ -1,64 +1,74 @@
-<%= content_tag :h1, "List of Process Coverages" %>
 
+<% if current_user.userable_type == "Employee" %>
+  <% if current_user.admin? %>
+    <%= render "process_coverages/dashboard_head" %>
+  <% else %>
+    <%= content_tag :h1, "List of Process Coverages" %>
 
-<div class="text-end mb-3">
-  <%= link_to new_process_coverage_path, class: 'btn btn-primary' do %>
-    New Process Coverage
-  <% end %>
-</div>
+    <div class="text-end mb-3">
+      <%= link_to new_process_coverage_path, class: 'btn btn-primary' do %>
+        New Process Coverage
+      <% end %>
+    </div>
 
-<table class ="table table-striped">
-  <table class="table table-striped table-bordered table-hover">
-    <thead>
-      <tr>
-
-      <th>#</th>
-        <th>Group Remit</th>
-        <th>Agent</th>
-        <th>Effectivity</th>
-        <th>Expiry</th>
-        <th>Status</th>
-        <th>Approved Count</th>
-        <th>Approved Total Coverage</th>
-        <th>Approved Total Prem</th>
-        <th>Denied Count</th>
-        <th>Denied Total Coverage</th>
-        <th>Denied Total Prem</th>
-        <th></th>
-
-      </tr>
-    </thead>
-
-    <tbody>
-      <% @process_coverages.each do |process_coverage| %>
+    <table class="table table-striped table-bordered table-hover">
+      <thead>
         <tr>
 
-        <th scope="row"><%= process_coverage.id %></th>
-        <td><%= process_coverage.group_remit %></td>
-        <td><%= process_coverage.agent %></td>
-        <td><%= process_coverage.effectivity %></td>
-        <td><%= process_coverage.expiry %></td>
-        <td><%= process_coverage.status %></td>
-        <td><%= process_coverage.approved_count %></td>
-        <td><%= process_coverage.approved_total_coverage %></td>
-        <td><%= process_coverage.approved_total_prem %></td>
-        <td><%= process_coverage.denied_count %></td>
-        <td><%= process_coverage.denied_total_coverage %></td>
-        <td><%= process_coverage.denied_total_prem %></td>
-    
-          <td>
-            <% if current_user.userable_type == "Employee" %>
-              <% if current_user.userable.designation == "Medical Director" %>
-                <%= link_to "MD", all_health_decs_group_remit_batches_path(process_coverage.group_remit), class: "btn btn-secondary" %>
-              <% end %>
-            <% end %>
-            <%= link_to 'View', process_coverage, class: 'btn btn-secondary btn-sm' %>
-            <%= link_to 'Edit', edit_process_coverage_path(process_coverage), class: 'btn btn-secondary btn-sm' %>
-            <%= link_to "Delete", process_coverage, class: "btn btn-danger btn-sm", method: :delete, data: { "turbo-method": :delete, turbo_confirm: "Are you sure?" } %>
-          </td>
+        <th>#</th>
+          <th>Group Remit</th>
+          <th>Agent</th>
+          <th>Terms</th>
+          <th>Status</th>
+          <th></th>
+          <th></th>
+          <th></th>
 
         </tr>
-      <% end %>
-    </tbody>
-  </table>
-</div>
+      </thead>
+
+      <tbody>
+        <% @process_coverages.each do |process_coverage| %>
+          <tr>
+
+          <th scope="row"><%= process_coverage.id %></th>
+          <td><%= process_coverage.group_remit %></td>
+          <td><%= process_coverage.agent %></td>
+          <td>
+            Effectivity: <%= month_day_year(process_coverage.effectivity) %> <br>
+            Expiry: <%= month_day_year(process_coverage.expiry) %>
+          </td>
+          <td><%= process_status(process_coverage.status) %></td>
+          <td>
+            Total Approved Count:   <%= process_coverage.approved_count %> </br>
+            Total Approved Coverage: <%= to_currency(process_coverage.approved_total_coverage) %> </br>
+            Total Approved Premium: <%= to_currency(process_coverage.approved_total_prem) %>  
+          </td>
+          <td>
+            Total Denied Count: <%= process_coverage.denied_count %> <br>
+            Total Denied Coverage: <%= process_coverage.denied_total_coverage %> <br>
+            Total Denied Premium: <%= process_coverage.denied_total_prem %>
+          </td>
+      
+            <td>
+              <% if current_user.userable_type == "Employee" %>
+                <% if current_user.userable.designation == "Medical Director" %>
+                  <%= link_to "MD", all_health_decs_group_remit_batches_path(process_coverage.group_remit), class: "btn btn-secondary" %>
+                <% end %>
+              <% end %>
+              <%= link_to 'View', process_coverage, class: 'btn btn-secondary btn-sm' %>
+              <%= link_to 'Edit', edit_process_coverage_path(process_coverage), class: 'btn btn-secondary btn-sm' %>
+              <%= link_to "Delete", process_coverage, class: "btn btn-danger btn-sm", method: :delete, data: { "turbo-method": :delete, turbo_confirm: "Are you sure?" } %>
+            </td>
+
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+
+  <% end %>
+  
+<% end %>
+
+
+
