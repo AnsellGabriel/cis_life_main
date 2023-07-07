@@ -1,0 +1,38 @@
+<%= render 'remote_modal', title: @title do %>
+
+  <div class="row d-flex fustify-content-center" >
+
+    <div class="col-md-8" style="margin: auto;">
+      <div class="card mb-3">
+        <div class="card-body">
+          <div class="row">
+            <div class="col-sm-3">
+              <h6 class="mb-0">Policy Owner:</h6>
+            </div>
+            <div class="col-sm text-secondary">
+              <%= "#{@batch.coop_member.member.last_name}, #{@batch.coop_member.member.first_name} #{@batch.coop_member.member.middle_name}" %>
+            </div>
+          </div>
+          <br>
+
+          <%= content_tag :h6, 'Dependent(s): ', class: "mb-0" %>
+          <% @dependents.each do |dependent| %>
+            <div class="row">
+              <div class="col-sm-6 text-secondary">
+                <%= "#{dependent.member_dependent.last_name}, #{dependent.member_dependent.first_name} #{dependent.member_dependent.middle_name} (#{dependent.member_dependent.relationship})" %>
+              </div>
+                <div class="col-sm-6 text-secondary">
+                Premium: <%= number_to_currency(dependent.premium, unit: "₱", precision: 2) %>
+              </div>
+            </div>
+            <hr>
+          <% end %>
+
+          <%# if batch_dependent.is_dependent? %>
+          <%# end %>
+        </div>
+      </div>
+    </div>
+  </div>
+
+<% end %>

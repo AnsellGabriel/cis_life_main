@@ -37,7 +37,7 @@ module ApplicationHelper
 		period <= 0 ? "Waived Contestability" : "#{pluralize(sprintf('%g', period), type)}"
 	end
 
-	def nel_nml(amount)
+	def nel_nml(amount = nil)
 		amount == 0 ? "None" : "#{to_currency(amount)}"
 	end
 
@@ -51,13 +51,17 @@ module ApplicationHelper
 		end
 	end
 
-	def health_dec_answer(val)
-		puts "#{val}---->"
-		case val 
-			when "true" then bootstrap_icon('check-circle-fill', fill: "green")
-			when "false" then bootstrap_icon('x-circle-fill', fill: "gray")
-			else
-				val
+	def health_dec_answer(id, val)
+		if (1..2).include?(id)
+			case val
+				when "true" then content_tag(:small, "Yes", class: 'text-success')
+				when "false" then content_tag(:small, "No", class: "text-danger")
+			end
+		else
+			case val
+				when "true" then content_tag(:small, "Yes", class: 'text-danger')
+				when "false" then content_tag(:small, "No", class: "text-success")
+			end
 		end
 	end
 
@@ -72,9 +76,9 @@ module ApplicationHelper
 
 	def batch_status(val)
 		case val
-			when "NEW" then content_tag(:span, val, class: "badge bg-primary")
-			when "TRANSFERRED" then content_tag(:span, val, class: "badge bg-secondary")
-			when "RENEWAL" then content_tag(:span, val, class: "badge bg-success")
+			when "recent" then content_tag(:span, "NEW", class: "badge bg-primary")
+			when "transferred" then content_tag(:span, "TRANSFERRED", class: "badge bg-secondary")
+			when "renewal" then content_tag(:span, "RENEWAL", class: "badge bg-success")
 		end
 	end
 
@@ -85,9 +89,10 @@ module ApplicationHelper
 	end
 
 	def process_premiums(type, val)
-		content_tag :span, class: process_premiums_class(type)  do
-			"#{type}: #{content_tag(:b, to_currency(val))}".html_safe
-		end
+		# content_tag :span, class: "badge text-dark"  do
+		# 	"#{type}: #{content_tag(:b, to_currency(val))}".html_safe
+		# end
+		content_tag :span, "#{type}: #{to_currency(val)}", class: "badge text-dark text-start"
 	end
 
 	def process_premiums_class(val)
@@ -134,4 +139,14 @@ module ApplicationHelper
 			when "md_reco" then content_tag(:span, "M.D Recommendation", class: "badge rounded-pill bg-warning")
 		end
 	end
+
+	def aria_sel(index)
+		if index == 0 then
+			"true"
+		else
+			"false"
+		end
+		
+	end
+	
 end

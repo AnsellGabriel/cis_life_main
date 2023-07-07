@@ -1,5 +1,5 @@
 class AgreementsController < ApplicationController
-  before_action :set_agreement, only: %i[ show edit update destroy ]
+  before_action :set_agreement, only: %i[ show edit update destroy show_details ]
 
   # GET /agreements
   def index
@@ -8,6 +8,9 @@ class AgreementsController < ApplicationController
 
   # GET /agreements/1
   def show
+  end
+
+  def show_details
   end
 
   # GET /agreements/new

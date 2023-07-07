@@ -1,0 +1,38 @@
+<table class="table">
+  <thead>
+    <tr>
+      <th rowspan=2 class="text-center">Insured</th>
+      <th colspan=8 class="text-center">Coverages, Premium & Insured Count</th>
+    </tr>
+    <tr>
+      <th>Life Coverage</th>
+      <th>Premium</th>
+      <th>Total Coverages</th>
+      <th>For Review</th>
+      <th>Approved</th>
+      <th>Pending</th>
+      <th>Denied</th>
+    </tr>
+  </thead>
+  <tbody>
+    <% batches = process_coverage.group_remit.batches %>
+    <% @insured_types2.each do |type| %>
+      <% i_type = type.insured_type_before_type_cast %>
+      <% batch_deps = process_coverage.get_batch_dep(i_type, type) %>
+      <% life_cov = type.product_benefits.find_by(benefit_id: 1).coverage_amount %>
+
+      <tr>
+        <td><%= type.name %></td>
+        <td><%= to_currency(life_cov) %></td>
+        <td><%= to_currency(type.product_benefits.sum(:premium)) %></td>
+        <td><%= to_currency(batch_deps * life_cov) %></td>
+        <td><%= process_coverage.group_remit.batches.joins(:batch_dependents).where(batch_dependents: { agreement_benefit: type }, insurance_status: "for_review").count %></td>
+        <td><%= process_coverage.count_approved(i_type, type) %></td>
+        <td><%= process_coverage.count_pending(i_type, type) %></td>
+        <td><%= process_coverage.count_denied(i_type, type) %></td>
+      </tr>
+
+    <% end %>
+  </tbody>
+
+</table>
