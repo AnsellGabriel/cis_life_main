@@ -26,12 +26,20 @@
       </div>
     </div>
     <div class="row">
-      <div class="col-md-6">
+      <div class="col-md-6 <%= flex_justify_align('', 'center') %> gap-2">
         <%= f.input :batch_beneficiary_id, collection: @batch.batch_beneficiaries,
           label: "Claimant : ",
           label_html: {style: "width: 170px; margin: 0"},
           wrapper_html: {class: "#{flex_justify_align('', 'center')} gap-2 mb-0" } %>
+          <div class="<%= flex_justify_align('center', 'center') %> mb-3">
+            <%= link_to new_group_remit_batch_beneficiary_path(@batch.group_remit, @batch, claims: true),
+              class: small_btn('success'),
+              data: { turbo_frame: "modal" } do %>
+              <i class="bi bi-plus-lg"></i>
+            <% end %>
+          </div>
       </div>
+      
       <div class="col-md-3">
         <%= f.input :claimant_email, input_html: {placeholder: "Claimant's Email"}, label: false %>
       </div>

@@ -3,9 +3,12 @@
   <%= f.error_notification message: f.object.errors[:base].to_sentence if f.object.errors[:base].present? %>
 
   <div class="form-inputs mb-3">
-        <%= f.input :first_name, input_html: {placeholder: 'First name'}, label: false %>
-        <%= f.input :middle_name, input_html: {placeholder: 'Middle name (optional)'}, label: false %>
-        <%= f.input :last_name, input_html: {placeholder: 'Last name'}, label: false %>
+    <% if @claims == 'true' %>
+      <%= f.hidden_field :claims, value: true %>
+    <% end %>
+    <%= f.input :first_name, input_html: {placeholder: 'First name'}, label: false %>
+    <%= f.input :middle_name, input_html: {placeholder: 'Middle name (optional)'}, label: false %>
+    <%= f.input :last_name, input_html: {placeholder: 'Last name'}, label: false %>
     <div class="row">
       <div class="col-md-3">
         <%= f.input :suffix, input_html: {placeholder: 'Suffix'}, label: false %>
@@ -26,6 +29,10 @@
 
   <div class="form-actions text-end">
     <%= f.button :submit, 'Enroll Beneficiary', class: 'btn-success' %>
-    <%= link_to "Back", new_group_remit_batch_beneficiary_path(@group_remit, @batch), class: 'btn btn-secondary', data: {turbo_frame: "modal"} %>
+    <% if @claims == 'true' %>
+      <%= link_to "Back", new_group_remit_batch_beneficiary_path(@group_remit, @batch, claims: true), class: 'btn btn-secondary', data: {turbo_frame: "modal"} %>
+    <% else %>
+      <%= link_to "Back", new_group_remit_batch_beneficiary_path(@group_remit, @batch), class: 'btn btn-secondary', data: {turbo_frame: "modal"} %>
+    <% end %>
   </div>
 <% end %>

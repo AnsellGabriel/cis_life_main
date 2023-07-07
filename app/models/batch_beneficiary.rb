@@ -1,4 +1,6 @@
 class BatchBeneficiary < ApplicationRecord
+  attr_accessor :claims
+
   belongs_to :batch
   belongs_to :member_dependent
 

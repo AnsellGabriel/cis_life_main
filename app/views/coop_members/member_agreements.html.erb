@@ -74,7 +74,8 @@
 								</tr>
 							</thead>
 							<tbody>
-								<% benefit.product_benefits.includes(:benefit).each do |product| %>
+								<% batch_benefits = agreement.plan.acronym == 'PMFC' ? batch.get_term_insurance_product_benefit : benefit.product_benefits %>
+								<% batch_benefits.includes(:benefit).each do |product| %>
 									<tr>
 										<td><small><%= product.benefit.name %></small></td>
 										<td class="text-end"><%= peso_currency(product.coverage_amount) %></td>
@@ -83,7 +84,8 @@
 							</tbody>
 							<tfoot class="fw-bold border-top border-primary mb-3">
 								<td colspan='2'>Total</td>
-								<td class="text-end"><%= peso_currency(benefit.product_benefits.sum(:coverage_amount)) %></td>
+
+								<td class="text-end"><%= peso_currency(batch_benefits.sum(:coverage_amount)) %></td>
 							</tfoot>
 						</table>
 
@@ -106,8 +108,9 @@
 										</tr>
 									</thead>
 									<tbody>
-										<% benefit = dependent.agreement_benefit %>
-										<% benefit.product_benefits.includes(:benefit).each do |product| %>
+										<% dependent_benefits = agreement.plan.acronym == 'PMFC' ? dependent.get_term_insurance_product_benefit : dependent.product_benefits %>
+
+										<% dependent_benefits.includes(:benefit).each do |product| %>
 											<tr>
 												<td><small><%= product.benefit.name %></small></td>
 												<td class="text-end"><%= peso_currency(product.coverage_amount) %></td>
@@ -116,7 +119,7 @@
 									</tbody>
 									<tfoot class="fw-bold border-top border-primary mb-3">
 										<td colspan='2'>Total</td>
-										<td class="text-end"><%= peso_currency(benefit.product_benefits.sum(:coverage_amount)) %></td>
+										<td class="text-end"><%= peso_currency(dependent_benefits.sum(:coverage_amount)) %></td>
 									</tfoot>
 								</table>
 							<% end %>

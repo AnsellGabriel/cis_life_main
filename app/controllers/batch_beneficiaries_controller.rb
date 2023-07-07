@@ -12,14 +12,21 @@ class BatchBeneficiariesController < InheritedResources::Base
     @batch_beneficiary = @batch.batch_beneficiaries.new
     @member = @batch.member_details
     @beneficiaries = @member.unselected_dependents(@batch.beneficiary_ids)
+    @claims = params[:claims]
+
   end
 
   def create
     @batch_beneficiary = @batch.batch_beneficiaries.new(batch_beneficiary_params)
-    
+
     respond_to do |format|
       if @batch_beneficiary.save
-        format.html { redirect_to group_remit_batch_path(@group_remit, @batch), notice: "Batch beneficiary was successfully created." }
+        
+        if batch_beneficiary_params[:claims]
+          format.html { redirect_to new_process_claim_path(coop_member_id: @batch.coop_member, agreement_id: @group_remit.agreement), notice: "Beneficiary was successfully created." }
+        else
+          format.html { redirect_to group_remit_batch_path(@group_remit, @batch), notice: "Batch beneficiary was successfully created." }
+        end
       else
         format.html { render :new, status: :unprocessable_entity }
       end
@@ -37,7 +44,7 @@ class BatchBeneficiariesController < InheritedResources::Base
   private
 
     def batch_beneficiary_params
-      params.require(:batch_beneficiary).permit(:batch_id, :member_dependent_id)
+      params.require(:batch_beneficiary).permit(:batch_id, :member_dependent_id, :claims)
     end
 
     def set_group_remit_batch
