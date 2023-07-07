@@ -34,7 +34,8 @@
           <div class="<%= flex_justify_align('center', 'center') %> mb-3">
             <%= link_to new_group_remit_batch_beneficiary_path(@batch.group_remit, @batch, claims: true),
               class: small_btn('success'),
-              data: { turbo_frame: "modal" } do %>
+              data: { turbo_frame: "modal" },
+              title: 'Add Beneficiary' do %>
               <i class="bi bi-plus-lg"></i>
             <% end %>
           </div>
@@ -62,17 +63,15 @@
               ['Total & Permanent Disability', :disability]
             ],
             :last, :first do |b| %>
-            <div class="d-flex gap-2">
-              <%= b.radio_button data: { action: "click->toggler#toggle", id: b.text },
-                checked: true %>
-              <%= b.text %> <!-- Text label -->
+            <div class="d-flex gap-2 form-check">
+              <%= b.radio_button data: { action: "click->toggler#toggleRadio", id: b.text},
+                class: 'form-check-input',
+                checked: false %>
+              <%= b.label class: 'form-check-label' %> <!-- Text label -->
             </div>
           <% end %>
         </div>
-
-
-
-
+  
       </div>
     </div>
     <div class="row">
@@ -101,7 +100,7 @@
       </div>
     </div>
     <div class="hidden" data-toggler-target="toggleable" data-id="Accidental Medical Reimbursement">
-      <span>For Accidental Medical Reimbursement, Total and Permanent Disability, and Dismemberment:</span>
+      <span>For Accidental Medical Reimbursement:</span>
       <ul>
         <li><small>Medical Certificate <i>(including date of confinement and final diagnosis)</i></small></li>
         <li><small>Police Report</small></li>
@@ -110,7 +109,7 @@
       </ul>
     </div>
     <div class="hidden" data-toggler-target="toggleable" data-id="Accidental Dismemberment">
-      <span>For Accidental Medical Reimbursement, Total and Permanent Disability, and Dismemberment:</span>
+      <span>For Accidental Dismemberment:</span>
       <ul>
         <li><small>Medical Certificate <i>(including date of confinement and final diagnosis)</i></small></li>
         <li><small>Police Report</small></li>
@@ -119,7 +118,7 @@
       </ul>
     </div>
     <div class="hidden" data-toggler-target="toggleable" data-id="Total & Permanent Disability">
-      <span>For Accidental Medical Reimbursement, Total and Permanent Disability, and Dismemberment:</span>
+      <span>For Total and Permanent Disability:</span>
       <ul>
         <li><small>Medical Certificate <i>(including date of confinement and final diagnosis)</i></small></li>
         <li><small>Police Report</small></li>

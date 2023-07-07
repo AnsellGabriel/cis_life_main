@@ -51,6 +51,15 @@ input[type=checkbox]:hover, input[type="date"]:hover {
   cursor: pointer;
 }
 
+.claims-btn[type="radio"] {
+  /* Apply custom styles when the radio button is checked */
+  /* Example styles: add your own or modify as needed */
+  background-color: #007bff;
+  border-color: #007bff;
+  color: #ffffff;
+}
+
+
 a {
   text-decoration: none !important;
 }

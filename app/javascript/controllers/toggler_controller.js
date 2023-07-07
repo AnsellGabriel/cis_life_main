@@ -20,5 +20,30 @@ export default class extends Controller {
 
     })
   }
+
+  toggleRadio(event) {
+    event.preventDefault()
+
+    const btn = event.currentTarget
+    const radios = document.querySelectorAll('input[type="radio"]');
+    const buttonId = btn.dataset.id
+    
+    this.toggleableTargets.forEach(element => {
+
+      if (buttonId === element.dataset.id) {
+        element.classList.remove("hidden")
+      } else {
+        element.classList.add("hidden")
+      }
+
+    })
+    
+    radios.forEach((r) => {
+      if (r.checked)
+       r.classList.add("claims-btn")
+      else
+        r.classList.remove("claims-btn")
+    })
+  }
 }
 

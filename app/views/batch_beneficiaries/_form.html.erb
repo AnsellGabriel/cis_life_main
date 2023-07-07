@@ -4,16 +4,21 @@
 
   <div class="form-inputs mb-3">
     <div class="d-flex align-items-center gap-2 justify-content-center">
+
       <% if @claims == 'true' %>
         <%= f.hidden_field :claims, value: true %>
       <% end %>
+
       <%= content_tag :p, 'Beneficiary not on the list?', class: "text-muted" %>
+
       <% if @claims == 'true' %>
         <%= link_to 'Enroll Beneficiary', new_beneficiary_group_remit_batch_member_dependents_path(@group_remit, @batch, claims: true), class: "mb-3 btn btn-sm btn-primary", data: {turbo_frame: "modal"} %>
       <% else %>
         <%= link_to 'Enroll Beneficiary', new_beneficiary_group_remit_batch_member_dependents_path(@group_remit, @batch), class: "mb-3 btn btn-sm btn-primary", data: {turbo_frame: "modal"} %>
       <% end %>
+
     </div>
+
     <% if @beneficiaries.count == 0%> 
       <p class="text-danger text-center">Enroll a beneficiary.</p>
     <% else %>
@@ -25,5 +30,6 @@
         <%= f.button :submit, "Add", class: 'btn-success', style: "width: 100%", data: {turbo: false} %>
       </div>
     <% end %>
+    
   </div>
 <% end %>

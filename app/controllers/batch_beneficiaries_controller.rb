@@ -27,6 +27,7 @@ class BatchBeneficiariesController < InheritedResources::Base
         else
           format.html { redirect_to group_remit_batch_path(@group_remit, @batch), notice: "Batch beneficiary was successfully created." }
         end
+        
       else
         format.html { render :new, status: :unprocessable_entity }
       end
