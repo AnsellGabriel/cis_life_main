@@ -4,7 +4,8 @@ class EmployeesController < ApplicationController
 
   # GET /employees or /employees.json
   def index
-    @employees = Employee.all
+    @f_employees = Employee.includes(:department).all
+    @pagy, @employees = pagy(@f_employees, items: 20)
   end
 
   # GET /employees/1 or /employees/1.json

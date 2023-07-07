@@ -14,6 +14,14 @@ class BatchDependentsController < InheritedResources::Base
     @dependents = @member.unselected_dependents(@batch.dependent_ids)
   end
 
+  def show_all
+    @title = "List of Dependents"
+    @group_remit = GroupRemit.find(params[:group_remit_id])
+    @batch = Batch.find(params[:batch_id])
+    @dependents = @batch.batch_dependents
+  end
+
+
   def create
     terms = @batch.group_remit.terms
     agreement = @batch.group_remit.agreement

@@ -1,0 +1,151 @@
+<div class="card">
+    <div class="card-body p-4">
+      <div class="col-md text-sm-center">
+        <%= content_tag :h5, "#{moa.moa_no}", class: "mb-1" %>
+        <%= content_tag :p, "#{moa.plan.name} (#{moa.plan.acronym})", class: "mb-0" %>
+      </div>
+      <div class="w-100 border my-3"></div>
+      <div class="coop-block row">
+        <div class="col-3">Proposal No.</div>
+        <div class="col-9 fw-bold">
+          <%= moa.proposal.proposal_no %>
+        </div>
+        <div class="w-100 mb-2"></div>
+        <div class="col-3">Cooperative</div>
+        <div class="col-9">
+          <%= content_tag :p, moa.cooperative.name, class: "fw-bold w-75 mb-0" %>
+          <%= content_tag :p,  "#{moa.cooperative.province}, #{moa.cooperative.region}", class: "w-75 mb-0" %>
+        </div>
+        <div class="w-100 mb-2"></div>
+        <div class="col-3">Cooperative Officers</div>
+          <div class="col-9">
+            <%# @proposal.officers.each_with_index do |officer, index| %>
+            
+              <%#= content_tag :p, officer.full_name, class: "fw-bold w-75 mb-0" %>
+              <%#= content_tag :p,  officer.designation, class: "w-75 mb-0" %>
+              <%#= content_tag :div, "", class: "w-100 mb-2" %>
+
+            <%# end %>
+          </div>
+      </div>
+      
+      <div class="w-100 border my-3"></div>
+      <div class="details-header col-12 text-center border-top border-bottom py-2 mb-3">
+        SCHEDULE OF BENEFITS
+        <%= content_tag :p, class: "mb-0" do %>
+          <%= content_tag :span, "No. of insured types:", class: "mr-3" %>
+          <%= content_tag :span, moa.agreement_benefits.count, class: "fw-bold lead" %>
+        <% end %>
+      </div>
+      <% moa.agreement_benefits.each_with_index do |pi, index| %>
+        <div class="row mb-3">
+          <div class="insured-details col-lg-6">
+            <p>Insured Type No. <%= index+1 %> - <b> <%= pi.name.upcase %> </b></p>
+          </div>
+          <div class="insured-benefit col-lg-6">
+            <%= content_tag :p, "Benefits Covered".upcase %>
+            <div class="benefits-heading row text-primary border-top border-bottom py-2 mb-3">
+              <%= content_tag :div, "Benefit", class: "col-6" %>
+              <%= content_tag :div, "Amount Covered", class: "col text-center" %>
+              <%= content_tag :div, "Premium", class: "col text-end" %>
+            </div>
+            <div class="benefit-list">
+              <% pi.product_benefits.each do |pib| %>
+                <div class="row mb-2">
+                  <%= content_tag :div, class: "col-6" do %>
+                    <%= content_tag :span, pib.benefit.name %>
+                  <% end %>
+                  <%= content_tag :div, class: "col text-center" do %>
+                    <%= content_tag :p, to_currency(pib.coverage_amount), class: "text-secondary mb-0" %>
+                  <% end %>
+                  <%= content_tag :div, class: "col text-end" do %>
+                    <%= content_tag :p, to_currency(pib.premium), class: "fw-bold mb-0" %>
+                  <% end %>
+                </div>
+              <% end %>
+            </div>
+            <div class="total-prem row text-primary border-top border-bottom h6 py-2 mb-3">
+              <%= content_tag :div, "TOTAL PREMIUM", class: "col" %>
+              <%= content_tag :div, to_currency(pi.product_benefits.sum(:premium)), class: "col fw-bold text-end" %>
+            </div>
+          </div>
+        </div>
+        <hr>
+      <% end %>
+      <div class="row">
+        <div class="col-12 text-center border-top border-bottom py-2 mt-5 mb-2">
+          <%= content_tag :h5, "OTHER @proposal DETAILS", class: "mb-0" %>
+        </div>
+        <div class="col-12 border-bottom py-2 mb-5">
+          <%= content_tag :span, "Age Requirements", class: "lead text-primary" %>
+          <%= content_tag :ul, class: "mb-2" do %>
+            <%= content_tag :li do %>
+              <p>Entry Age: <b><%= moa.entry_age_from %> to <%= moa.entry_age_to %></b> years old </p>
+            <% end %>
+            <%= content_tag :li do %>
+              <p>Exit Age: <b><%= moa.exit_age %></b> years old </p>
+            <% end %>
+          <% end %>
+
+          <%= content_tag :span, "Minimum Participation", class: "lead text-primary" %>
+          <%= content_tag :ul, class: "mb-2" do %>
+            <%= content_tag :li do %>
+              <p><b><%= num_delimit(moa.proposal.minimum_participation) %></b> members</p>
+            <% end %>
+          <% end %>
+
+          <%= content_tag :span, "Service Fee", class: "lead text-primary" %>
+          <%= content_tag :ul, class: "mb-2" do %>
+            <%= content_tag :li do %>
+              <p>Cooperative: <b><%= to_percent(moa.proposal.coop_sf * 100) %></b></p>
+            <% end %>
+            <%= content_tag :li do %>
+              <p>Marketing Agent: <b><%= to_percent(moa.proposal.agent_sf * 100) %></b></p>
+            <% end %>
+          <% end %>
+
+          <%= content_tag :span, "Policy Anniversary", class: "lead text-primary" %>
+          <%= content_tag :ul, class: "mb-2" do %>
+            <%= content_tag :li do %>
+              <p>Type: <b><%= moa.anniversary_type.titleize %></b> </p>
+            <% end %>
+          <% end %>
+
+          <%= content_tag :span, "Contestability", class: "lead text-primary" %>
+          <%= content_tag :ul, class: "mb-2" do %>
+            <%= content_tag :li do %>
+              <p>Contestability: <b><%= moa.contestability if moa.contestability %></b> </p>
+            <% end %>
+          <% end %>
+
+          <%= content_tag :span, "No Evidence Limit", class: "lead text-primary" %>
+          <%= content_tag :ul, class: "mb-2" do %>
+            <%= content_tag :li do %>
+              <p><%= nel_nml(moa.nel) %></p>
+            <% end %>
+          <% end %>
+         
+          <%= content_tag :span, "Non-Medical Limit", class: "lead text-primary" %>
+          <%= content_tag :ul, class: "mb-2" do %>
+            <%= content_tag :li do %>
+              <p><%= nel_nml(moa.nml) %></p>
+            <% end %>
+          <% end %>
+
+          <%= content_tag :span, "Signed Date", class: "lead text-primary" %>
+          <%= content_tag :ul, class: "mb-2" do %>
+            <%= content_tag :li do %>
+              <p><%#= moa.moa_signed_date.strftime('%B %d, %Y') %></p>
+            <% end %>
+          <% end %>
+
+          <%= content_tag :span, "Notarized Date", class: "lead text-primary" %>
+          <%= content_tag :ul, class: "mb-2" do %>
+            <%= content_tag :li do %>
+              <p><%#= moa.notarized_date.strftime('%B %d, %Y') %></p>
+            <% end %>
+          <% end %>
+        </div>
+      </div>
+    </div>
+  </div>
