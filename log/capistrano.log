@@ -11102,6 +11102,7 @@ Restarting cis_life_main_websocket
   INFO [9dea68f3] Running /usr/bin/env echo "Branch main (at bb6f52a5890581bc4d9887d8719128f7703b616a) deployed as release 20230703080400 by jaysonregalario" >> /home/deploy/cis_life_main/revisions.log as deploy@139.177.186.220
  DEBUG [9dea68f3] Command: cd /home/deploy/cis_life_main/releases && ( export RBENV_ROOT="$HOME/.rbenv" RBENV_VERSION="3.0.3" ; /usr/bin/env echo "Branch main (at bb6f52a5890581bc4d9887d8719128f7703b616a) deployed as release 20230703080400 by jaysonregalario" >> /home/deploy/cis_life_main/revisions.log )
   INFO [9dea68f3] Finished in 0.187 seconds with exit status 0 (successful).
+<<<<<<< HEAD
   INFO ---------------------------------------------------------------------------
   INFO START 2023-07-07 15:32:01 +0800 cap production deploy:check
   INFO ---------------------------------------------------------------------------
@@ -11565,3 +11566,5 @@ Restarting cis_life_main_websocket
   INFO [c9ec88ec] Running /usr/bin/env echo "Branch main (at 800a35c88382bdb63bad2facdde43e7f602b3485) deployed as release 20230707073217 by jaysonregalario" >> /home/deploy/cis_life_main/revisions.log as deploy@139.177.186.220
  DEBUG [c9ec88ec] Command: cd /home/deploy/cis_life_main/releases && ( export RBENV_ROOT="$HOME/.rbenv" RBENV_VERSION="3.0.3" ; /usr/bin/env echo "Branch main (at 800a35c88382bdb63bad2facdde43e7f602b3485) deployed as release 20230707073217 by jaysonregalario" >> /home/deploy/cis_life_main/revisions.log )
   INFO [c9ec88ec] Finished in 0.159 seconds with exit status 0 (successful).
+=======
+>>>>>>> 32e0a07 (update process coverage agreement benefits & add agreement details page)
