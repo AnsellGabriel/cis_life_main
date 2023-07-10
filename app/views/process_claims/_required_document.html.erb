@@ -1,0 +1,6 @@
+<small>
+  <%= form.simple_fields_for :claim_documents do |document| %>
+    <%= document.input :document, as: :file, label: label, input_html: {style:"width: 300px"}, label_html: {class: 'text-muted', style: 'width: 400px'}%>
+    <%= document.hidden_field :document_type, value: value %>
+  <% end %>
+</small>
