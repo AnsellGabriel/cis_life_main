@@ -25,7 +25,7 @@
               label_html: {style: "width: 170px; margin: 0"} %> 
       </div>
     </div>
-    <div class="row">
+    <div class="row mb-5">
       <div class="col-md-6 <%= flex_justify_align('', 'center') %> gap-2">
         <%= f.input :batch_beneficiary_id, collection: @batch.batch_beneficiaries,
           label: "Claimant : ",
@@ -48,12 +48,12 @@
         <%= f.input :claimant_contact_no, input_html: {placeholder: "Claimant's Contact #"}, label: false %>
       </div>
     </div>
-    <div class="row <%= flex_justify_align('between') %> mb-3">
-      <div class="col-md-5">
+    <div class="row mb-3">
+      <div class="col-md-12">
         <div class="">
           <%= content_tag :span, 'Nature of Claim :', class: "text-primary mb-2" %>
         </div>
-        <div class="d-flex flex-column ps-3">
+        <div class="d-flex ps-3">
           <%= f.collection_radio_buttons :nature_of_claim,
             [
               ['Death Claim', :life],
@@ -63,11 +63,13 @@
               ['Total & Permanent Disability', :disability]
             ],
             :last, :first do |b| %>
-            <div class="d-flex gap-2 form-check">
-              <%= b.radio_button data: { action: "click->toggler#toggleRadio", id: b.text},
-                class: 'form-check-input',
-                checked: false %>
-              <%= b.label class: 'form-check-label' %> <!-- Text label -->
+            <div class="<%= flex_justify_align('between', 'center') %> gap-2 form-check">
+              <small>
+                <%= b.radio_button data: { action: "click->toggler#toggleRadio", id: b.text},
+                  class: 'form-check-input',
+                  checked: false %>
+                <%= b.label class: 'form-check-label' %> <!-- Text label -->
+              </small>
             </div>
           <% end %>
         </div>
