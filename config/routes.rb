@@ -18,6 +18,7 @@ Rails.application.routes.draw do
     get :deny
     get :modal_remarks, on: :member
     get :cov_list, on: :collection
+    patch :update_batch_selected, on: :collection
   end
   resources :coop_agreements do
     resources :group_remits
