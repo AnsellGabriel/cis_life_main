@@ -239,12 +239,14 @@
   </div>
   
   <%= form_tag update_batch_selected_process_coverages_path(p_id: process_coverage), method: :patch do %>
-    <% if process_coverage.group_remit.batches.where(insurance_status: [:pending, :for_review]).count > 0 %>
-      <div class="mb-2 text-end">
-        <%= link_to "Approve All", approve_all_group_remit_batches_path(@group_remit,group_remit: process_coverage.group_remit, process_coverage: process_coverage), class: "btn btn-success", onclick: "return confirm('Are you sure?')", method: :get %>
-        <%= submit_tag 'Approve Selected', name: 'approve', onclick: "return confirm('Are you sure?')", class: "btn btn-primary" %>
-        <%= button_tag 'Deny Selected', name: 'deny', type: "submit", onclick: "return confirm('Are you sure?')", class: "btn btn-danger" %>
-      </div>
+    <% unless process_coverage.status != "for_process" && process_coverage.status != "pending" %>
+      <% if process_coverage.group_remit.batches.where(insurance_status: [:pending, :for_review]).count > 0 %>
+        <div class="mb-2 text-end">
+          <%= link_to "Approve All", approve_all_group_remit_batches_path(@group_remit,group_remit: process_coverage.group_remit, process_coverage: process_coverage), class: "btn btn-success", onclick: "return confirm('Are you sure?')", method: :get %>
+          <%= submit_tag 'Approve Selected', name: 'approve', onclick: "return confirm('Are you sure?')", class: "btn btn-primary" %>
+          <%= button_tag 'Deny Selected', name: 'deny', type: "submit", onclick: "return confirm('Are you sure?')", class: "btn btn-danger" %>
+        </div>
+      <% end %>
     <% end %>
 
     <table class="table border-dark">
@@ -282,7 +284,7 @@
                 <% end %>
               </td>
               <td>
-                <%= link_to batch.coop_member.member, batch.coop_member.member, class: "link-primary", data: { turbo_frame: "remote_modal" } %> <br> 
+                <%= link_to batch.coop_member.member, batch.coop_member, class: "link-primary", data: { turbo_frame: "modal-xl" } %> <br> 
                 <%= content_tag :small, "Age: #{mem_age}" %> <br>
                 <%= content_tag :small, mem_bday.nil? ? "No Birthday" : "Birthday: #{mem_bday.strftime('%b-%d-%Y')}", class: "text-secondary" %> <br>
                 <%= batch_status(batch.status) %>  <br>
