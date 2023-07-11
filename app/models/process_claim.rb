@@ -1,6 +1,6 @@
 class ProcessClaim < ApplicationRecord
   
-  validates_presence_of :cooperative_id, :agreement_id, :batch_id, :date_incident, :entry_type, :batch_beneficiary_id, :claimant_email, :claimant_contact_no, :nature_of_claim
+  validates_presence_of :cooperative_id, :agreement_id, :batch_id, :date_incident, :entry_type, :claimant_email, :claimant_contact_no, :nature_of_claim
 
   enum nature_of_claim: {
     LI: 0, # Life
@@ -10,8 +10,22 @@ class ProcessClaim < ApplicationRecord
     TPD: 4 # Total & Permanent Disability
   }
 
+  enum claim_route: {
+    cooperative_filed: 0,
+    claim_filed: 1,
+    processing: 2,
+    evaluation: 3,
+    vp_evaluation: 4,
+    president_evaluation: 5,
+    payment_procedure: 6,
+    process_completed: 7,
+    denied_claim: 8,
+    reconsider_review: 9
+  }
+
   belongs_to :cooperative
   belongs_to :agreement
+  belongs_to :agreement_benefit
   belongs_to :batch
   has_many :claim_documents
   accepts_nested_attributes_for :claim_documents

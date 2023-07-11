@@ -49,13 +49,13 @@ module Calculate
 
 		def get_term_insurance_product_benefit
 			if self.class.name == "BatchDependent"
-				dependent_product_benefits
+				dependent_term_product_benefits
 			else
-				batch_product_benefits
+				batch_term_product_benefits
 			end
 		end
 
-		def batch_product_benefits
+		def batch_term_product_benefits
 			if self.residency >= 120
 				self.agreement_benefit.product_benefits
 							.where(duration: self.duration)
@@ -68,7 +68,7 @@ module Calculate
 			end
 		end
 
-		def dependent_product_benefits
+		def dependent_term_product_benefits
 			if self.batch.residency >= 120
 				self.agreement_benefit.product_benefits
 							.where(duration: self.batch.duration)

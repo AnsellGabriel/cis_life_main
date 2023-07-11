@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_07_10_024826) do
+ActiveRecord::Schema[7.0].define(version: 2023_07_11_064914) do
   create_table "active_admin_comments", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.string "namespace"
     t.text "body"
@@ -168,8 +168,8 @@ ActiveRecord::Schema[7.0].define(version: 2023_07_10_024826) do
     t.date "effectivity_date"
     t.date "expiry_date"
     t.boolean "active"
-    t.float "coop_sf_amount"
-    t.float "agent_sf_amount"
+    t.decimal "coop_sf_amount", precision: 10, scale: 2
+    t.decimal "agent_sf_amount", precision: 10, scale: 2
     t.integer "status"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
@@ -447,12 +447,15 @@ ActiveRecord::Schema[7.0].define(version: 2023_07_10_024826) do
     t.string "entry_type"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.bigint "batch_beneficiary_id"
     t.string "claimant_email"
     t.string "claimant_contact_no"
     t.integer "nature_of_claim"
+    t.bigint "agreement_benefit_id", null: false
+    t.string "claimant_name"
+    t.string "relationship"
+    t.integer "claim_route"
+    t.index ["agreement_benefit_id"], name: "index_process_claims_on_agreement_benefit_id"
     t.index ["agreement_id"], name: "index_process_claims_on_agreement_id"
-    t.index ["batch_beneficiary_id"], name: "index_process_claims_on_batch_beneficiary_id"
     t.index ["batch_id"], name: "index_process_claims_on_batch_id"
     t.index ["cooperative_id"], name: "index_process_claims_on_cooperative_id"
   end
@@ -563,6 +566,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_07_10_024826) do
   add_foreign_key "group_remits", "agreements"
   add_foreign_key "health_dec_subquestions", "health_decs"
   add_foreign_key "member_dependents", "members"
+  add_foreign_key "process_claims", "agreement_benefits"
   add_foreign_key "process_claims", "agreements"
   add_foreign_key "process_claims", "batches"
   add_foreign_key "process_claims", "cooperatives"

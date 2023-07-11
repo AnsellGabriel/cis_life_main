@@ -33,7 +33,6 @@ class ProcessClaimsController < ApplicationController
   # POST /process_claims
   def create
     @process_claim = ProcessClaim.new(process_claim_params)
-
     batch = Batch.find(process_claim_params[:batch_id])
     coop_member = batch.coop_member
     agreement = Agreement.find(process_claim_params[:agreement_id])
@@ -46,7 +45,11 @@ class ProcessClaimsController < ApplicationController
     expiry_date = @group_remit.expiry_date
     incident_date = process_claim_params[:date_incident].to_date
     difference_in_months = (expiry_date.year * 12 + expiry_date.month) - (incident_date.year * 12 + incident_date.month) if incident_date != nil
-    # byebug
+
+    if process_claim_params[:relationship].nil?
+      @process_claim.relationship = BatchBeneficiary.find(process_claim_params[:claimant_name]).member_dependent.relationship
+      @process_claim.claimant_name = BatchBeneficiary.find(process_claim_params[:claimant_name]).member_dependent.full_name.titleize
+    end
 
     if difference_in_months != nil && difference_in_months > 60
       return redirect_to new_process_claim_path, alert: "The claim cannot be processed. The incident date has passed the 5-year claim period."
@@ -84,7 +87,7 @@ class ProcessClaimsController < ApplicationController
 
     # Only allow a list of trusted parameters through.
     def process_claim_params
-      params.require(:process_claim).permit(:cooperative_id, :agreement_id, :batch_id, :date_incident, :entry_type, :batch_beneficiary_id, :claimant_email, :claimant_contact_no, :nature_of_claim, claim_documents_attributes: [:id, :document, :document_type, :_destroy])
+      params.require(:process_claim).permit(:cooperative_id, :claim_route, :agreement_id, :batch_id, :date_incident, :entry_type, :claimant_name, :claimant_email, :claimant_contact_no, :nature_of_claim, :agreement_benefit_id, :relationship, claim_documents_attributes: [:id, :document, :document_type, :_destroy])
     end
 
 end

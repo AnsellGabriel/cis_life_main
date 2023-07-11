@@ -14,7 +14,7 @@
 		<div class="col" data-controller="toggler">
 			<div class="card">
 				<div class="card-body">
-					<div class="d-flex gap-2 align-items-center">
+					<div class="d-flex gap-2 align-items-center mb-3">
 						<h5 class="card-title" style= "width: 100%">
 							<div class="<%= flex_justify_align('between', 'center') %>">
 								<div class="">
@@ -25,7 +25,6 @@
 									%>
 								</div>
 								<div class="">
-										<%= link_to 'File Claim', new_process_claim_path(coop_member_id: @coop_member.id, agreement_id: agreement.id), class: small_btn('primary') %>
 									<button class="<%= small_btn('warning text-dark') %>"
 									data-action = "click->toggler#toggle" data-id="<%= dom_id(agreement) %>"
 									>Details</button>
@@ -34,72 +33,44 @@
 						</h5>
 					</div>
 					<div class="hidden" data-toggler-target="toggleable" data-id="<%= dom_id(agreement) %>">
-						<%= content_tag :span, @coop_member.full_name.titleize, class: 'text-primary', style: 'font-size: 1.2rem; font-weight: bold' %>
-						<%= content_tag :span, "- #{benefit.name.to_s.titleize}", class: 'text-muted' %>
-						
-						<% if batch.batch_beneficiaries.exists? %>
-							<table class="table table-borderless table-hover border border-warning rounded mt-3">
-							<thead>
-								<tr>
-									<th class="text-warning">Beneficiaries</th>
-								</tr>
-							</thead>
-							<tbody>
-								<% beneficiaries = batch.batch_beneficiaries.includes(:member_dependent) %>
-								<% beneficiaries_size = beneficiaries.size %>
-								<% ben_ctr = 0 %>
-								<% while ben_ctr <= beneficiaries_size/2 do %>
-									<tr>
-										<td>
-											<small><%= beneficiaries[ben_ctr].member_dependent.full_name.titleize %></small>
-											<small class="text-muted"><%= content_tag :span, " - #{beneficiaries[ben_ctr].member_dependent.relationship}"%></small>
-										</td>
-										<% unless beneficiaries[ben_ctr+1] == nil %>
-											<td>
-												<small><%= beneficiaries[ben_ctr+1].member_dependent.full_name.titleize %></small>
-												<small class="text-muted"><%= content_tag :span, " - #{beneficiaries[ben_ctr+1].member_dependent.relationship}"%></small>
-											</td>
+						<div class="card mb-3">
+							<div class="card-body">
+								<div class="<%= flex_justify_align('between', 'center') %>">
+									<div class="">
+										<%= content_tag :span, @coop_member.full_name.titleize, class: 'text-primary', style: 'font-size: 1.2rem; font-weight: bold' %>
+										<%= content_tag :span, "- #{benefit.name.to_s.titleize}", class: 'text-muted' %>
+									</div>
+									<%= link_to 'File Claim', new_process_claim_path(coop_member_id: @coop_member.id, agreement_id: agreement.id), class: small_btn('primary') %>
+								</div>
+								<% if batch.batch_beneficiaries.exists? %>
+									<table class="table table-borderless table-hover border border-warning rounded mt-3">
+									<thead>
+										<tr>
+											<th class="text-warning">Beneficiaries</th>
+										</tr>
+									</thead>
+									<tbody>
+										<% beneficiaries = batch.batch_beneficiaries.includes(:member_dependent) %>
+										<% beneficiaries_size = beneficiaries.size %>
+										<% ben_ctr = 0 %>
+										<% while ben_ctr <= beneficiaries_size/2 do %>
+											<tr>
+												<td>
+													<small><%= beneficiaries[ben_ctr].member_dependent.full_name.titleize %></small>
+													<small class="text-muted"><%= content_tag :span, " - #{beneficiaries[ben_ctr].member_dependent.relationship}"%></small>
+												</td>
+												<% unless beneficiaries[ben_ctr+1] == nil %>
+													<td>
+														<small><%= beneficiaries[ben_ctr+1].member_dependent.full_name.titleize %></small>
+														<small class="text-muted"><%= content_tag :span, " - #{beneficiaries[ben_ctr+1].member_dependent.relationship}"%></small>
+													</td>
+												<% end %>
+											</tr>
+											<% ben_ctr += 2 %>
 										<% end %>
-									</tr>
-									<% ben_ctr += 2 %>
+									</tbody>
 								<% end %>
-							</tbody>
-						<% end %>
 
-						<table class="table table-borderless table-hover">
-							<thead>
-								<tr>
-									<th class="text-primary">Benefits</th>
-									<th class="text-primary text-end">Amount</th>
-								</tr>
-							</thead>
-							<tbody>
-								<% batch_benefits = agreement.plan.acronym == 'PMFC' ? batch.get_term_insurance_product_benefit : benefit.product_benefits %>
-								<% batch_benefits.includes(:benefit).each do |product| %>
-									<tr>
-										<td><small><%= product.benefit.name %></small></td>
-										<td class="text-end"><%= peso_currency(product.coverage_amount) %></td>
-									</tr>
-								<% end %>
-							</tbody>
-							<tfoot class="fw-bold border-top border-primary mb-3">
-								<td colspan='2'>Total</td>
-
-								<td class="text-end"><%= peso_currency(batch_benefits.sum(:coverage_amount)) %></td>
-							</tfoot>
-						</table>
-
-						<% if agreement.plan.gyrt_type == 'family' %>
-							<% batch.batch_dependents.includes(:member_dependent, :agreement_benefit).each do |dependent| %>
-								<%= content_tag :span, 
-									dependent.member_dependent.full_name.titleize, 
-									class: 'text-primary', 
-									style: 'font-size: 1.2rem; font-weight: bold' 
-								%>
-								<%= content_tag :span, 
-									"- #{dependent.agreement_benefit.insured_type.to_s.titleize}", 
-									class: 'text-muted' 
-								%>
 								<table class="table table-borderless table-hover">
 									<thead>
 										<tr>
@@ -108,21 +79,66 @@
 										</tr>
 									</thead>
 									<tbody>
-										<% dependent_benefits = agreement.plan.acronym == 'PMFC' ? dependent.get_term_insurance_product_benefit : dependent.product_benefits %>
-
-										<% dependent_benefits.includes(:benefit).each do |product| %>
+										<% batch_benefits = agreement.plan.acronym == 'PMFC' ? batch.get_term_insurance_product_benefit : benefit.product_benefits %>
+										<% batch_benefits.includes(:benefit).each do |product| %>
 											<tr>
 												<td><small><%= product.benefit.name %></small></td>
 												<td class="text-end"><%= peso_currency(product.coverage_amount) %></td>
 											</tr>
 										<% end %>
 									</tbody>
-									<tfoot class="fw-bold border-top border-primary mb-3">
+									<tfoot class="fw-bold border-top border-primary">
 										<td colspan='2'>Total</td>
-										<td class="text-end"><%= peso_currency(dependent_benefits.sum(:coverage_amount)) %></td>
+
+										<td class="text-end"><%= peso_currency(batch_benefits.sum(:coverage_amount)) %></td>
 									</tfoot>
 								</table>
-							<% end %>
+							</div>
+						</div>
+
+						<% if agreement.plan.gyrt_type == 'family' %>
+							<% batch.batch_dependents.includes(:member_dependent, :agreement_benefit).each do |dependent| %>
+								<div class="card mb-3">
+									<div class="card-body">
+										<div class="<%= flex_justify_align('between', 'center') %>">
+											<div class="">
+												<%= content_tag :span, 
+													dependent.member_dependent.full_name.titleize, 
+													class: 'text-primary', 
+													style: 'font-size: 1.2rem; font-weight: bold' 
+												%>
+												<%= content_tag :span, 
+													"- #{dependent.agreement_benefit.insured_type.to_s.titleize}", 
+													class: 'text-muted' 
+												%>
+											</div>
+											<%= link_to 'File Claim', new_process_claim_path(coop_member_id: @coop_member.id, agreement_id: agreement.id, dependent_id: dependent.id), class: small_btn('primary') %>
+										</div>
+										<table class="table table-borderless table-hover">
+											<thead>
+												<tr>
+													<th class="text-primary">Benefits</th>
+													<th class="text-primary text-end">Amount</th>
+												</tr>
+											</thead>
+											<tbody>
+												<% dependent_benefits = agreement.plan.acronym == 'PMFC' ? dependent.get_term_insurance_product_benefit : dependent.product_benefits %>
+
+												<% dependent_benefits.includes(:benefit).each do |product| %>
+													<tr>
+														<td><small><%= product.benefit.name %></small></td>
+														<td class="text-end"><%= peso_currency(product.coverage_amount) %></td>
+													</tr>
+												<% end %>
+											</tbody>
+											<tfoot class="fw-bold border-top border-primary mb-3">
+												<td colspan='2'>Total</td>
+												<td class="text-end"><%= peso_currency(dependent_benefits.sum(:coverage_amount)) %></td>
+											</tfoot>
+										</table>
+									<% end %>
+								</div>
+							</div>
 						<% end %>
 					</div>
 
