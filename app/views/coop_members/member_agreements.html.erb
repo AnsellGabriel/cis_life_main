@@ -1,4 +1,10 @@
 <%= content_tag :h3, 'Insurance Plans' %>
+
+
+
+
+
+
 <div class="row row-cols-2 row-cols-md-2 g-4 mb-3" >
 	<% @agreements.each do |agreement| %>
 
@@ -40,8 +46,16 @@
 										<%= content_tag :span, @coop_member.full_name.titleize, class: 'text-primary', style: 'font-size: 1.2rem; font-weight: bold' %>
 										<%= content_tag :span, "- #{benefit.name.to_s.titleize}", class: 'text-muted' %>
 									</div>
-									<%= link_to 'File Claim', new_process_claim_path(coop_member_id: @coop_member.id, agreement_id: agreement.id), class: small_btn('primary') %>
+									<% filed_claim = ProcessClaim.find_by(agreement_id: agreement.id, batch_id: batch.id) %>
+									<% claim_presenter = ProcessClaimPresenter.new(filed_claim) %>
+									<% if filed_claim.present? %>
+										<%= content_tag :span, 'Track Claims', class: small_btn('primary') %>
+									<% else %>
+										<%= link_to 'File Claim', new_process_claim_path(coop_member_id: @coop_member.id, agreement_id: agreement.id), class: small_btn('primary') %>
+									<% end %>
+
 								</div>
+
 								<% if batch.batch_beneficiaries.exists? %>
 									<table class="table table-borderless table-hover border border-warning rounded mt-3">
 									<thead>
@@ -53,21 +67,25 @@
 										<% beneficiaries = batch.batch_beneficiaries.includes(:member_dependent) %>
 										<% beneficiaries_size = beneficiaries.size %>
 										<% ben_ctr = 0 %>
+
 										<% while ben_ctr <= beneficiaries_size/2 do %>
 											<tr>
 												<td>
 													<small><%= beneficiaries[ben_ctr].member_dependent.full_name.titleize %></small>
 													<small class="text-muted"><%= content_tag :span, " - #{beneficiaries[ben_ctr].member_dependent.relationship}"%></small>
 												</td>
+
 												<% unless beneficiaries[ben_ctr+1] == nil %>
 													<td>
 														<small><%= beneficiaries[ben_ctr+1].member_dependent.full_name.titleize %></small>
 														<small class="text-muted"><%= content_tag :span, " - #{beneficiaries[ben_ctr+1].member_dependent.relationship}"%></small>
 													</td>
 												<% end %>
+
 											</tr>
 											<% ben_ctr += 2 %>
 										<% end %>
+
 									</tbody>
 								<% end %>
 
@@ -143,6 +161,53 @@
 					</div>
 
 					
+				</div>
+			</div>
+		</div>
+
+		<div class="card">
+			<div class="card-body">
+				<h4 class="col-md-6 text-primary">Claims Tracker</h4>
+				<div class="track">
+					<div class="step <%= claim_presenter.present_active_class(0) %>">
+						<span class="icon"><i class="bi bi-card-list"></i></span>
+						<span class="text"><small>Claims filed</small></span>
+					</div>
+					<div class="step <%= claim_presenter.present_active_class(2) %>">
+						<span class="icon"><i class="bi bi-window"></i></span>
+						<span class="text"><small>Processing</small></span>
+					</div>
+					<div class="step <%= claim_presenter.present_active_class(6) %>">
+						<span class="icon"><i class="bi bi-shield-check"></i></span>
+						<span class="text"><small>Approved</small></span>
+					</div>
+					<div class="step <%= claim_presenter.present_active_class(7) %>">
+						<span class="icon"><i class="bi bi-cash-coin"></i></span>
+						<span class="text"><small>Payment</small></span>
+					</div>
+					<!--
+					<div class="step">
+						<span class="icon"><i class="bi bi-send"></i></span>
+						<span class="text"><small>Release</small></span>
+					</div>
+					-->
+				</div>
+				<br>
+				<div class="mb-3">
+					<ul class="timeline">
+						<li class="mb-3">
+							<p class="text-primary mb-1">Payment Procedure <small class="text-muted">2023-05-12 13:41:56 +0800</small></p>
+							<small>Approved by Ansell Del Ayre</small>
+						</li>
+						<li class="mb-3">
+							<p class="text-primary mb-1">Evaluation <small class="text-muted">2023-05-12 13:41:22 +0800</small></p>
+							<small>by Ansell Del Ayre</small>
+						</li>
+						<li class="mb-3">
+							<p class="text-primary mb-1">Processing <small class="text-muted">2023-05-12 13:40:48 +0800</small></p>
+							<small>by Ansell Del Ayre</small>
+						</li>
+					</ul>
 				</div>
 			</div>
 		</div>

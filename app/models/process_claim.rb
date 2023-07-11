@@ -11,16 +11,16 @@ class ProcessClaim < ApplicationRecord
   }
 
   enum claim_route: {
-    cooperative_filed: 0,
+    cooperative_filed: 0, # Claims filed
     claim_filed: 1,
-    processing: 2,
+    processing: 2, # processing 
     evaluation: 3,
     vp_evaluation: 4,
     president_evaluation: 5,
-    payment_procedure: 6,
-    process_completed: 7,
-    denied_claim: 8,
-    reconsider_review: 9
+    process_completed: 6, # approved
+    payment_procedure: 7, # payment
+    denied_claim: 8, # denied
+    reconsider_review: 9 
   }
 
   belongs_to :cooperative
