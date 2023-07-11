@@ -52,11 +52,12 @@ class ProcessClaimsController < ApplicationController
       return redirect_to new_process_claim_path, alert: "The claim cannot be processed. The incident date has passed the 5-year claim period."
     end
 
-
-    if @process_claim.save!
-      redirect_to @process_claim, notice: "Process claim was successfully created."
-    else
-      render :new, status: :unprocessable_entity
+    respond_to do |format|
+      if @process_claim.save!
+        format.html { redirect_to @process_claim, notice: "Process claim was successfully created." }
+      else
+        format.html { render :new, status: :unprocessable_entity }
+      end
     end
   end
 

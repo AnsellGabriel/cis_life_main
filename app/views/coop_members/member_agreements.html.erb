@@ -35,7 +35,7 @@
 					</div>
 					<div class="hidden" data-toggler-target="toggleable" data-id="<%= dom_id(agreement) %>">
 						<%= content_tag :span, @coop_member.full_name.titleize, class: 'text-primary', style: 'font-size: 1.2rem; font-weight: bold' %>
-						<%= content_tag :span, "- #{benefit.insured_type.to_s.titleize}", class: 'text-muted' %>
+						<%= content_tag :span, "- #{benefit.name.to_s.titleize}", class: 'text-muted' %>
 						
 						<% if batch.batch_beneficiaries.exists? %>
 							<table class="table table-borderless table-hover border border-warning rounded mt-3">

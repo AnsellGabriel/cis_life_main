@@ -3836,3 +3836,30 @@ Call stack
   /Users/macbookair/workspace/cis_life_main/app/views/process_claims/index.html.erb:33:in `block in _app_views_process_claims_index_html_erb__3773346698713927780_249300'
   /Users/macbookair/workspace/cis_life_main/app/views/process_claims/index.html.erb:27:in `_app_views_process_claims_index_html_erb__3773346698713927780_249300'
 
+2023-07-11 09:19:58[WARN] user: macbookair
+GET /process_claims
+USE eager loading detected
+  ProcessClaim => [:cooperative]
+  Add to your query: .includes([:cooperative])
+Call stack
+  /Users/macbookair/workspace/cis_life_main/app/views/process_claims/index.html.erb:31:in `block in _app_views_process_claims_index_html_erb__1875114378652767698_378260'
+  /Users/macbookair/workspace/cis_life_main/app/views/process_claims/index.html.erb:27:in `_app_views_process_claims_index_html_erb__1875114378652767698_378260'
+
+2023-07-11 09:19:58[WARN] user: macbookair
+GET /process_claims
+USE eager loading detected
+  ProcessClaim => [:agreement]
+  Add to your query: .includes([:agreement])
+Call stack
+  /Users/macbookair/workspace/cis_life_main/app/views/process_claims/index.html.erb:32:in `block in _app_views_process_claims_index_html_erb__1875114378652767698_378260'
+  /Users/macbookair/workspace/cis_life_main/app/views/process_claims/index.html.erb:27:in `_app_views_process_claims_index_html_erb__1875114378652767698_378260'
+
+2023-07-11 09:19:58[WARN] user: macbookair
+GET /process_claims
+USE eager loading detected
+  ProcessClaim => [:batch]
+  Add to your query: .includes([:batch])
+Call stack
+  /Users/macbookair/workspace/cis_life_main/app/views/process_claims/index.html.erb:33:in `block in _app_views_process_claims_index_html_erb__1875114378652767698_378260'
+  /Users/macbookair/workspace/cis_life_main/app/views/process_claims/index.html.erb:27:in `_app_views_process_claims_index_html_erb__1875114378652767698_378260'
+
