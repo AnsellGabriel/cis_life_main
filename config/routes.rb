@@ -18,6 +18,7 @@ Rails.application.routes.draw do
     get :deny
     get :modal_remarks, on: :member
     get :cov_list, on: :collection
+    patch :update_batch_selected, on: :collection
   end
   resources :coop_agreements do
     resources :group_remits
@@ -29,7 +30,9 @@ Rails.application.routes.draw do
     get :selected, on: :member
   end
 
-  resources :agreements 
+  resources :agreements do
+    get :show_details, on: :member
+  end
 
   resources :group_remits do 
     get 'denied_members', to: 'denied_members#index'
@@ -46,7 +49,11 @@ Rails.application.routes.draw do
       # get :approve_selected, on: :collection
       # get :approve_all, on: :collection
       resources :batch_health_decs, as: 'health_declarations'
-      resources :batch_dependents, as: 'dependents'
+      resources :batch_dependents, as: 'dependents' do
+        collection do
+          get :show_all
+        end
+      end
       resources :batch_beneficiaries, as: 'beneficiaries'
       resources :member_dependents do
         collection do

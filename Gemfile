@@ -66,6 +66,7 @@ gem 'sidekiq-scheduler'
 gem 'bullet', group: 'development'
 gem "ffaker"
 gem 'carrierwave', '~> 3.0'
+gem 'humanize'
 
 
 

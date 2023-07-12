@@ -9,4 +9,22 @@
     <%= department.description %>
   </p>
 
+
+  <table class="table">
+    <thead>
+      <th>Name</th>
+      <th>Designation</th>
+    </thead>
+    <tbody>
+      <% @department.employees.each do |emp| %>
+        <tr>
+          <td>
+            <%= emp_name(emp.user.admin, emp.get_fullname) %> (<%= content_tag :span, emp.employee_number, class: "small" %>)
+          </td>
+          <td><%= emp.designation %></td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+
 </div>

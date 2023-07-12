@@ -58,6 +58,7 @@
     
           <td>
             <%= link_to 'View', agreement, class: 'btn btn-secondary btn-sm' %>
+            <%= link_to "MOA", show_details_agreement_path(agreement), data: { turbo_frame: "remote_modal" }, class: 'btn btn-warning btn-sm' %>
             <%= link_to 'Edit', edit_agreement_path(agreement), class: 'btn btn-secondary btn-sm' %>
             <%= link_to "Delete", agreement, class: "btn btn-danger btn-sm", method: :delete, data: { "turbo-method": :delete, turbo_confirm: "Are you sure?" } %>
           </td>

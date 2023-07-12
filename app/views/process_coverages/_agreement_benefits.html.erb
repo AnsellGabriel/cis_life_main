@@ -1,39 +1,114 @@
 
-<table class="table">
-  <thead>
-    <tr>
-      <th rowspan=2 class="text-center">Insured</th>
-      <th colspan=8 class="text-center">Coverages, Premium & Insured Count</th>
-    </tr>
-    <tr>
-      <th>Life Coverage</th>
-      <th>Premium</th>
-      <th>Total Coverages</th>
-      <th>For Review</th>
-      <th>Approved</th>
-      <th>Pending</th>
-      <th>Denied</th>
-    </tr>
-  </thead>
-  <tbody>
-    <% batches = process_coverage.group_remit.batches %>
-    <% @insured_types2.each do |type| %>
-      <% i_type = type.insured_type_before_type_cast %>
-      <% batch_deps = process_coverage.get_batch_dep(i_type, type) %>
-      <% life_cov = type.product_benefits.find_by(benefit_id: 1).coverage_amount %>
+<div class="accordion" id="accordionExample">
+  <div class="accordion-item">
+    <h2 class="accordion-header">
+      <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+        Benefit and Premium Schedule
+      </button>
+    </h2>
+    <div id="collapseOne" class="accordion-collapse collapse" data-bs-parent="#accordionExample">
+      <div class="accordion-body">
+        <ul class="nav nav-tabs mt-2" id="myTab" role="tablist">
+          <% @insured_types2.each_with_index do |type, index| %>
+            <% i_type = type.insured_type_before_type_cast %>
+            <% batch_deps = process_coverage.get_batch_dep(i_type, type) %>
+            <% life_cov = type.product_benefits.find_by(benefit_id: 1).coverage_amount %>
+            <% insured_name = type.name.downcase.parameterize(separator: "_") %>
+            <li class="nav-item" role="presentation">
+              <button class="nav-link <%= index.zero? ? 'active' : '' %>" id="<%= insured_name %>-tab" data-bs-toggle="tab" data-bs-target="#<%= insured_name %>" type="button" role="tab" aria-controls="<%= insured_name %>" aria-selected="<%= aria_sel(index) %>"> <%= type.name %> </button>
+            </li>
+          <% end %>
+        </ul>
 
-      <tr>
-        <td><%= type.name %></td>
-        <td><%= to_currency(life_cov) %></td>
-        <td><%= to_currency(type.product_benefits.sum(:premium)) %></td>
-        <td><%= to_currency(batch_deps * life_cov) %></td>
-        <td><%= process_coverage.group_remit.batches.joins(:batch_dependents).where(batch_dependents: { agreement_benefit: type }, insurance_status: "for_review").count %></td>
-        <td><%= process_coverage.count_approved(i_type, type) %></td>
-        <td><%= process_coverage.count_pending(i_type, type) %></td>
-        <td><%= process_coverage.count_denied(i_type, type) %></td>
-      </tr>
+        <div class="tab-content" id="myTabContent">
+          <% @insured_types2.each_with_index do |type, index| %>
+            <% i_type = type.insured_type_before_type_cast %>
+            <% batch_deps = process_coverage.get_batch_dep(i_type, type) %>
+            <% life_cov = type.product_benefits.find_by(benefit_id: 1).coverage_amount %>
+            <% insured_name = type.name.downcase.parameterize(separator: "_") %>
+            <div class="tab-pane fade <%= index.zero? ? 'show active' : '' %>" id="<%= insured_name %>" role="tabpanel" aria-labelledby="<%= insured_name %>-tab">
+              <div class="col-md-6">
+                <table class="table">
+                  <thead>
+                    <tr>
+                      <th>Benefit</th>
+                      <th>Coverage Amount</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <% type.product_benefits.each do |ben| %>
+                      <tr>
+                        <td><%= ben.benefit.name %></td>
+                        <td><%= to_currency(ben.coverage_amount) %></td>
+                      </tr>
+                    <% end %>
+                    <tr>
+                      <td class="text-end">TOTAL PREMIUM:</td>
+                      <%= content_tag :td, to_currency(type.product_benefits.sum(:premium)), class: "lead" %>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          <% end %>
+        </div>
 
-    <% end %>
-  </tbody>
+      </div>
+    </div>
+  </div>
+</div>
 
-</table>
+
+<!-- 
+<% batches = process_coverage.group_remit.batches %>
+  <% @insured_types2.each_with_index do |type, index| %>
+    <% i_type = type.insured_type_before_type_cast %>
+    <% batch_deps = process_coverage.get_batch_dep(i_type, type) %>
+    <% life_cov = type.product_benefits.find_by(benefit_id: 1).coverage_amount %>
+
+   
+
+
+    <div class="accordion" id="accordionExample">
+      <div class="accordion-item">
+        <% num = (index + 1).humanize.titleize %>
+        <h2 class="accordion-header" id="heading<%= num %>">
+          <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapse<%= num %>" aria-expanded="true" aria-controls="collapse<%= num %>">
+            <%= type.name %> | <%= i_type %>
+          </button>
+        </h2>
+        <div id="collapse<%= num %>" class="accordion-collapse collapse" aria-labelledby="heading<%= num %>" data-bs-parent="#accordionExample">
+          <div class="accordion-body">
+            <%= content_tag :h2, "Benefit(s)" %>
+            <table class="table">
+              <thead>
+                <th>Benefit</th>
+                <th>Coverage</th>
+                <th>Premium</th>
+              </thead>
+              <tbody>
+                <% type.product_benefits.each do |ben| %>
+                  <tr>
+                    <td><%= ben.benefit.name %></td>
+                    <td><%= to_currency(ben.coverage_amount) %></td>
+                    <td><%= to_currency(ben.premium) %></td>
+                  </tr>
+                <% end %>
+              </tbody>
+            </table>
+            <br>
+            <%= content_tag :h2, "Count" %>
+
+            <%#= content_tag :p, to_currency(life_cov) %>
+            <%#= content_tag :p, to_currency(type.product_benefits.sum(:premium)) %>
+            <%#= content_tag :p, process_coverage.group_remit.batches.joins(:batch_dependents).where(batch_dependents: { agreement_benefit: type }, insurance_status: "for_review").count %>
+            <%#= content_tag :p, to_currency(batch_deps * life_cov) %>
+            <%#= content_tag :p, process_coverage.count_approved(i_type, type) %>
+            <%#= content_tag :p, process_coverage.count_pending(i_type, type) %>
+            <%#= content_tag :p, process_coverage.count_denied(i_type, type) %>
+          </div>
+        </div>
+      </div>
+    </div>
+
+<% end %> -->

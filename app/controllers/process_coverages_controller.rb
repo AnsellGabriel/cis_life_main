@@ -4,6 +4,7 @@ class ProcessCoveragesController < ApplicationController
   # GET /process_coverages
   def index
     @process_coverages = ProcessCoverage.all
+    @for_process_coverages = ProcessCoverage.where(status: :for_process)
     @approved_process_coverages = ProcessCoverage.where(status: :approved)
     @pending_process_coverages = ProcessCoverage.where(status: :pending)
     @denied_process_coverages = ProcessCoverage.where(status: :denied)
@@ -12,6 +13,7 @@ class ProcessCoveragesController < ApplicationController
   def cov_list
     # raise 'errors'
     @process_coverages = case params[:cov_type]
+      when "For Process" then ProcessCoverage.where(status: :for_process)
       when "Approved" then ProcessCoverage.where(status: :approved)
       when "Pending" then ProcessCoverage.where(status: :pending)
       when "Denied" then ProcessCoverage.where(status: :denied)
@@ -19,6 +21,29 @@ class ProcessCoveragesController < ApplicationController
 
     @title = params[:title]
     
+  end
+
+  def update_batch_selected
+    @process_coverage = ProcessCoverage.find_by(params[:p_id])
+
+    if params[:approve]
+      ids = params[:ids]
+  
+      Batch.where(id: ids).update_all(insurance_status: :approved)
+      @process_coverage.increment!(:approved_count, ids.length)
+
+      redirect_to process_coverage_path(@process_coverage), notice: "Selected Coverages Approved!"
+      
+    elsif params[:deny]
+      ids = params[:ids]
+  
+      Batch.where(id: ids).update_all(insurance_status: :denied)
+      @process_coverage.increment!(:denied_count, ids.length)
+
+      redirect_to process_coverage_path(@process_coverage), alert: "Selected Coverages Denied!"
+    end
+    
+    # redirect_to process_coverage_path(@process_coverage), notice: "Selected Coverages Approved!"
   end
   
 
@@ -40,17 +65,22 @@ class ProcessCoveragesController < ApplicationController
     # if params[:search].present?
     if params[:search].present?
       @batches = case params[:search]
-        when "regular" then @batches_o.where(age: 18..65)
-        when "overage" then @batches_o.where(age: 66..)
+      when "regular_new" then @batches_o.where(age: 18..65, status: 0)
+      when "regular_ren" then @batches_o.where(age: 18..65, status: 1)
+      when "overage" then @batches_o.where(age: 66..)
         # when "health_decs" then @batches_o.joins(:batch_health_decs)
-        when "health_decs" then @batches_o.joins(:batch_health_decs).where(batches: { valid_health_dec: false }).distinct
+      when "health_decs" then @batches_o.joins(:batch_health_decs).where(batches: { valid_health_dec: false }).distinct
         # when "health_decs" then @batches_o.joins(:batch_health_dec).where.not(batch_health_decs: { health_dec_question_id: nil })
       end
     else
       @batches = @batches_o
     end
+    
+    if params[:search_member].present?
+      @batches = @batches_o.joins(coop_member: :member).where("members.last_name LIKE ? OR members.first_name LIKE ? OR members.middle_name LIKE ?", "%#{params[:search_member]}%", "%#{params[:search_member]}%", "%#{params[:search_member]}%")
+    end
 
-    @pagy_batch, @filtered_batches  = pagy(@batches, items: 25, page_param: :batch)
+    @pagy_batch, @filtered_batches  = pagy(@batches, items: 10, page_param: :batch)
 
     @process_cov = ProcessCoverage.includes(group_remit: { batches: [:batch_remarks, coop_member: :member ] }).find(params[:id])
 
