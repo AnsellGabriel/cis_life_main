@@ -18,14 +18,12 @@ class GroupRemitPresenter
 	end
 
 	def status_color
-		if @group_remit.pending? || @group_remit.for_renewal?
+		if @group_remit.pending? || @group_remit.for_renewal? || @group_remit.under_review?
 			"var(--bs-yellow)"
 		elsif @group_remit.active?
 			"var(--bs-green)"
 		elsif @group_remit.expired?
 			"var(--bs-red)"
-		elsif @group_remit.under_review?
-			"var(--bs-yellow)"
 		elsif @group_remit.for_payment?
 			"var(--bs-blue)"
 		end
@@ -33,17 +31,13 @@ class GroupRemitPresenter
 
 	def status_badge
 		case @group_remit.status
-		when "pending"
+		when "pending", "for_renewal", "under_review"
 			"badge bg-warning text-dark"
 		when "active"
 			"badge bg-success"
 		when "expired"
 			"badge bg-danger"
-		when "for_renewal"
-			"badge bg-warning text-dark"
-		when "under_review"
-			"badge bg-warning text-dark"
-		when "for_payment"
+		when "for_payment", "payment_verification"
 			"badge bg-primary"
 		end
 	end
@@ -62,6 +56,8 @@ class GroupRemitPresenter
 			"Under review"
 		when "for_payment"
 			"For payment"
+		when "payment_verification"
+			"For payment verification"
 		end
 	end
 

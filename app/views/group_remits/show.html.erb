@@ -79,6 +79,10 @@
     <div class="<%= flex_justify_align('between') %> " style="height: 100%; width: 460px;">
       <div style="width: 100%">
 
+        <% if @group_remit.for_payment? %>
+          <%= render 'payment' %>
+        <% end %>
+
         <% if @group_remit.pending? || @group_remit.for_renewal? %>
             <%= turbo_frame_tag "batch_import_form" do %>
               <%= turbo_frame_tag "batch_form" do %>     

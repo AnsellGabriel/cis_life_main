@@ -4,7 +4,7 @@ class GroupRemitsController < InheritedResources::Base
   
   before_action :authenticate_user!
   before_action :check_userable_type
-  before_action :set_group_remit, only: %i[show edit update destroy submit]
+  before_action :set_group_remit, only: %i[show edit update destroy submit payment]
   before_action :set_members, only: %i[new create edit update]
 
   def renewal
@@ -164,6 +164,23 @@ class GroupRemitsController < InheritedResources::Base
     end
   end
 
+  def payment
+    # byebug
+    if params[:file].nil?
+      return redirect_to @group_remit, alert: "Please attach proof of payment"
+    end
+
+    @group_remit.payments.build(receipt: params[:file])
+    @group_remit.status = :payment_verification
+    respond_to do |format|
+      if @group_remit.save!
+        format.html { redirect_to @group_remit, notice: "Proof of payment sent" }
+      else
+        format.html { redirect_to @group_remit, alert: "Invalid proof of payment" }
+      end
+    end
+  end
+
 
   private
 
@@ -177,7 +194,7 @@ class GroupRemitsController < InheritedResources::Base
 
     def group_remit_params
       params.require(:group_remit).permit(:name, :description, :agreement_id, :anniversary_id, 
-        process_coverage_attributes: [:group_remit_id, :effectivity, :expiry] )
+        process_coverage_attributes: [:group_remit_id, :effectivity, :expiry], payments_attributes: [:id, :receipt, :_destroy] )
     end
 
     def set_anniversary(anniversary_type, anniv_id)

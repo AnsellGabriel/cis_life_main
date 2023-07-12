@@ -28,7 +28,17 @@
           <div class="text-secondary d-flex justify-content-between">
             <%= content_tag :span, "#{@agreement.agreement_benefits[0].proposal.coop_sf}% Coop service fee", style: "font-size: .8rem" %>
             <%= content_tag :span, "(#{number_to_currency(group_remit.total_coop_commissions, unit: "₱", precision: 2)})", style: "font-size: .8rem; color: var(--bs-green)"%>
-          </div>          
+          </div>      
+          <div class="text-secondary d-flex justify-content-between">
+            <%= content_tag :span, "Denied Principal Premiums", style: "font-size: .8rem" %>
+            <%= content_tag :span, "(#{number_to_currency(group_remit.denied_principal_premiums, unit: "₱", precision: 2)})", style: "font-size: .8rem; color: var(--bs-red)"%>
+          </div>       
+          <% if @agreement.plan.gyrt_type == 'family' %>
+            <div class="text-secondary d-flex justify-content-between">
+              <%= content_tag :span, "Denied Dependent Premiums", style: "font-size: .8rem" %>
+              <%= content_tag :span, "(#{number_to_currency(group_remit.denied_dependent_premiums, unit: "₱", precision: 2)})", style: "font-size: .8rem; color: var(--bs-red)"%>
+            </div>   
+          <% end %>
         </div>
       </div>
       
