@@ -29,36 +29,9 @@ class GroupRemit < ApplicationRecord
     new_group_remit.effectivity_date = nil
     new_group_remit.save
 
+    agreement = new_group_remit.agreement
+
     removed_batches = [] # To store the batches that are removed from the renewal
-
-    # eligible_batches = self.batches.includes(coop_member: :member)
-    #                         .select do |batch|
-    #                           age = batch.member_details.age
-    #                           age.between?(batch.agreement_benefit.min_age, batch.agreement_benefit.max_age)
-    #                         end
-
-    # eligible_batches.each do |batch|
-    #   new_batch = batch.dup
-    #   new_batch.group_remit_id = new_group_remit.id
-    #   new_batch.status = :renewal
-    #   new_batch.save!
-
-    #   batch.batch_dependents.each do |dependent|
-    #     new_dependent = dependent.dup
-    #     new_dependent.batch_id = new_batch.id
-    #     new_dependent.save!
-    #   end
-
-    #   new_beneficiaries = batch.batch_beneficiaries.map { |beneficiary| beneficiary.dup.merge(batch_id: new_batch.id) }
-    #   BatchBeneficiary.insert_all(new_beneficiaries)
-    # end
-
-
-    # removed_batches = self.batches - eligible_batches
-    # renewal_result = {
-    #   new_group_remit: new_group_remit,
-    #   removed_batches: removed_batches
-    # }
 
     self.batches.includes(coop_member: :member).each do |batch|
       if batch.insurance_status == "denied"
@@ -71,9 +44,11 @@ class GroupRemit < ApplicationRecord
         new_batch.group_remit_id = new_group_remit.id
         new_batch.age = new_batch.member_details.age
         new_batch.set_premium_and_service_fees(batch.agreement_benefit.insured_type, new_group_remit)
-        new_batch.status = :renewal
-        new_batch.insurance_status = :approved
+
+        difference_in_months = (Date.today.year - batch.created_at.year) * 12 + (Date.today.month - batch.created_at.month)
         # byebug
+        new_batch.status = difference_in_months < 12 ? :recent : :renewal
+        new_batch.insurance_status = :approved
         new_batch.save
 
         if batch.batch_dependents.present?
@@ -94,8 +69,6 @@ class GroupRemit < ApplicationRecord
         removed_batches << batch
       end
     end
-
-    new_group_remit.set_total_premiums_and_fees
     
     renewal_result = {
       new_group_remit: new_group_remit,

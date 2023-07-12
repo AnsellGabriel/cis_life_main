@@ -722,7 +722,7 @@ Proposal.create!(proposal_no: 'JFC-PROP-00001', cooperative_id: 2, coop_sf: 12.5
 
 
 # # # #Agreement
-agreement = Agreement.create!(plan_id: 2, cooperative_id: 2, agent_id: 1, moa_no: "JFC-0001", contestability: 12, nel: 25000, nml: 5000000, anniversary_type: 'Single', transferred: 0, comm_type: "Gross Commission", entry_age_from: 18, entry_age_to: 65, exit_age: 80, proposal_id: 2)
+agreement = Agreement.create!(plan_id: 2, cooperative_id: 2, agent_id: 1, moa_no: "JFC-0001", contestability: 12, nel: 25000, nml: 5000000, anniversary_type: 'none', transferred: 0, comm_type: "Gross Commission", entry_age_from: 18, entry_age_to: 65, exit_age: 80, proposal_id: 2)
 
 # # # # for Principal (name, insured_type)
 jfc_agreement = Agreement.find_by(id: 2)
