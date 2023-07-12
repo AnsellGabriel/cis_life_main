@@ -1,2 +1,0 @@
-module GeoBarangaysHelper
-end

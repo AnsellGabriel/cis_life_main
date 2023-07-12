@@ -27,7 +27,7 @@ class ProcessClaim < ApplicationRecord
   belongs_to :agreement
   belongs_to :agreement_benefit
   belongs_to :batch
-  has_many :claim_documents
+  has_many :claim_documents, dependent: :destroy
   accepts_nested_attributes_for :claim_documents
 
 end

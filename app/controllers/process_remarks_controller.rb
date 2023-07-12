@@ -46,6 +46,9 @@ class ProcessRemarksController < ApplicationController
     respond_to do |format|
       if @process_remark.save
         if params[:process_remark][:process_status] == "Approve"
+          group_remit = ProcessCoverage.find(params[:process_remark][:process_coverage_id]).group_remit
+          group_remit.set_total_premiums_and_fees
+
           format.html { redirect_to process_coverage_approve_path(process_coverage_id: params[:process_remark][:process_coverage_id])}
         elsif params[:process_remark][:process_status] == "Deny"
           format.html { redirect_to process_coverage_deny_path(process_coverage_id: params[:process_remark][:process_coverage_id])}

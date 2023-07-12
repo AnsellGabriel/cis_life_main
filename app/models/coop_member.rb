@@ -6,7 +6,8 @@ class CoopMember < ApplicationRecord
   belongs_to :coop_branch
   belongs_to :member
   has_many :batches
-  has_and_belongs_to_many :agreements
+  has_many :agreements_coop_members
+  has_many :agreements, through: :agreements_coop_members
 
   def to_s
     "#{full_name.titleize}"

@@ -10,8 +10,8 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_07_06_053206) do
-  create_table "active_admin_comments", charset: "utf8mb4", force: :cascade do |t|
+ActiveRecord::Schema[7.0].define(version: 2023_07_12_035650) do
+  create_table "active_admin_comments", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.string "namespace"
     t.text "body"
     t.string "resource_type"
@@ -50,9 +50,9 @@ ActiveRecord::Schema[7.0].define(version: 2023_07_06_053206) do
     t.string "middle_name"
     t.date "birthdate"
     t.string "mobile_number"
+    t.bigint "agent_group_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.bigint "agent_group_id", null: false
     t.index ["agent_group_id"], name: "index_agents_on_agent_group_id"
   end
 
@@ -81,7 +81,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_07_06_053206) do
     t.bigint "agent_id"
     t.string "moa_no"
     t.integer "contestability"
-    t.decimal "nel", precision: 12, scale: 2
+    t.decimal "nel", precision: 12, scale: 2, default: "25000.0"
     t.decimal "nml", precision: 12, scale: 2
     t.string "anniversary_type"
     t.boolean "transferred"
@@ -102,11 +102,14 @@ ActiveRecord::Schema[7.0].define(version: 2023_07_06_053206) do
     t.index ["proposal_id"], name: "index_agreements_on_proposal_id"
   end
 
-  create_table "agreements_coop_members", id: false, charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+  create_table "agreements_coop_members", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.bigint "agreement_id", null: false
     t.bigint "coop_member_id", null: false
-    t.index ["agreement_id", "coop_member_id"], name: "index_agreements_coop_members_on_agreement_id_and_coop_member_id"
-    t.index ["coop_member_id", "agreement_id"], name: "index_agreements_coop_members_on_coop_member_id_and_agreement_id"
+    t.string "status"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["agreement_id"], name: "index_agreements_coop_members_on_agreement_id"
+    t.index ["coop_member_id"], name: "index_agreements_coop_members_on_coop_member_id"
   end
 
   create_table "anniversaries", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
@@ -174,13 +177,13 @@ ActiveRecord::Schema[7.0].define(version: 2023_07_06_053206) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.decimal "premium", precision: 10, scale: 2
+    t.integer "age"
+    t.integer "insurance_status", default: 3
     t.bigint "coop_member_id", null: false
     t.bigint "group_remit_id", null: false
     t.boolean "transferred"
     t.bigint "agreement_benefit_id", null: false
     t.boolean "valid_health_dec", default: false
-    t.integer "age"
-    t.integer "insurance_status", default: 3
     t.boolean "below_nel", default: false
     t.integer "duration"
     t.integer "residency"
@@ -426,6 +429,14 @@ ActiveRecord::Schema[7.0].define(version: 2023_07_06_053206) do
     t.string "street"
   end
 
+  create_table "payments", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+    t.string "receipt"
+    t.bigint "group_remit_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["group_remit_id"], name: "index_payments_on_group_remit_id"
+  end
+
   create_table "plans", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.string "name"
     t.text "description"
@@ -543,7 +554,8 @@ ActiveRecord::Schema[7.0].define(version: 2023_07_06_053206) do
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
   end
 
-  add_foreign_key "agents", "agent_groups"
+  add_foreign_key "agreements_coop_members", "agreements"
+  add_foreign_key "agreements_coop_members", "coop_members"
   add_foreign_key "anniversaries", "agreements"
   add_foreign_key "batch_beneficiaries", "batches"
   add_foreign_key "batch_beneficiaries", "member_dependents"
@@ -567,6 +579,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_07_06_053206) do
   add_foreign_key "group_remits", "agreements"
   add_foreign_key "health_dec_subquestions", "health_decs"
   add_foreign_key "member_dependents", "members"
+  add_foreign_key "payments", "group_remits"
   add_foreign_key "process_claims", "agreement_benefits"
   add_foreign_key "process_claims", "agreements"
   add_foreign_key "process_claims", "batches"

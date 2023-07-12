@@ -1,2 +1,0 @@
-module GeoMunicipalitiesHelper
-end
