@@ -41,7 +41,7 @@
 					<div class="hidden" data-toggler-target="toggleable" data-id="<%= dom_id(agreement) %>">
 						<div class="card mb-3">
 							<div class="card-body">
-								<div class="<%= flex_justify_align('between', 'center') %>">
+								<div class="<%= flex_justify_align('between', 'center') %> mb-3">
 									<div class="">
 										<%= content_tag :span, @coop_member.full_name.titleize, class: 'text-primary', style: 'font-size: 1.2rem; font-weight: bold' %>
 										<%= content_tag :span, "- #{benefit.name.to_s.titleize}", class: 'text-muted' %>
@@ -49,13 +49,45 @@
 									<% filed_claim = ProcessClaim.find_by(agreement_id: agreement.id, batch_id: batch.id) %>
 									<% claim_presenter = ProcessClaimPresenter.new(filed_claim) %>
 									<% if filed_claim.present? %>
-										<%= content_tag :span, 'Track Claims', class: small_btn('primary') %>
+										<%= content_tag :span, 'Claims submitted', class: small_btn('success') %>
 									<% else %>
 										<%= link_to 'File Claim', new_process_claim_path(coop_member_id: @coop_member.id, agreement_id: agreement.id), class: small_btn('primary') %>
 									<% end %>
 
 								</div>
 
+								<% if filed_claim.present? %>
+									<div class="card">
+										<div class="card-body">
+											<span class="col-md-6 text-primary">Claims Tracker</span>
+											<div class="track">
+												<div class="step <%= claim_presenter.present_active_class(0) %>">
+													<span class="icon"><i class="bi bi-card-list"></i></span>
+													<span class="text text-muted"><small>Claims filed</small></span>
+												</div>
+												<div class="step <%= claim_presenter.present_active_class(2) %>">
+													<span class="icon"><i class="bi bi-window"></i></span>
+													<span class="text text-muted"><small>Processing</small></span>
+												</div>
+												<% if filed_claim.claim_route_before_type_cast == 8  %>
+													<div class="step denied">
+														<span class="icon"><i class="bi bi-shield-check"></i></span>
+														<span class="text"><small>Denied</small></span>
+													</div>
+												<% else %>
+													<div class="step <%= claim_presenter.present_active_class(6) %>">
+														<span class="icon"><i class="bi bi-shield-check"></i></span>
+														<span class="text text-muted"><small>Approved</small></span>
+													</div>
+												<div class="step <%= claim_presenter.present_active_class(7) %>">
+													<span class="icon"><i class="bi bi-cash-coin"></i></span>
+													<span class="text text-muted"><small>Payment</small></span>
+												</div>
+												<% end %>
+											</div>
+										</div>
+									</div>
+								<% end %>
 								<% if batch.batch_beneficiaries.exists? %>
 									<table class="table table-borderless table-hover border border-warning rounded mt-3">
 									<thead>
@@ -165,32 +197,14 @@
 			</div>
 		</div>
 
-		<div class="card">
-			<div class="card-body">
-				<h4 class="col-md-6 text-primary">Claims Tracker</h4>
-				<div class="track">
-					<div class="step <%= claim_presenter.present_active_class(0) %>">
-						<span class="icon"><i class="bi bi-card-list"></i></span>
-						<span class="text"><small>Claims filed</small></span>
-					</div>
-					<div class="step <%= claim_presenter.present_active_class(2) %>">
-						<span class="icon"><i class="bi bi-window"></i></span>
-						<span class="text"><small>Processing</small></span>
-					</div>
-					<div class="step <%= claim_presenter.present_active_class(6) %>">
-						<span class="icon"><i class="bi bi-shield-check"></i></span>
-						<span class="text"><small>Approved</small></span>
-					</div>
-					<div class="step <%= claim_presenter.present_active_class(7) %>">
-						<span class="icon"><i class="bi bi-cash-coin"></i></span>
-						<span class="text"><small>Payment</small></span>
-					</div>
+		
+
 					<!--
 					<div class="step">
 						<span class="icon"><i class="bi bi-send"></i></span>
 						<span class="text"><small>Release</small></span>
 					</div>
-					-->
+					
 				</div>
 				<br>
 				<div class="mb-3">
@@ -209,8 +223,8 @@
 						</li>
 					</ul>
 				</div>
-			</div>
-		</div>
+				-->
+
 	<% end %>
 </div>
 

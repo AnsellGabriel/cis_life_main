@@ -3992,3 +3992,13 @@ Call stack
   /Users/macbookair/workspace/cis_life_main/app/views/coop_agreements/index.html.erb:9:in `block in _app_views_coop_agreements_index_html_erb__1971473846063899175_657920'
   /Users/macbookair/workspace/cis_life_main/app/views/coop_agreements/index.html.erb:8:in `_app_views_coop_agreements_index_html_erb__1971473846063899175_657920'
 
+2023-07-12 08:41:19[WARN] user: macbookair
+GET /coop_agreements
+AVOID eager loading detected
+  Agreement => [:anniversaries]
+  Remove from your query: .includes([:anniversaries])
+Call stack
+  /Users/macbookair/workspace/cis_life_main/app/views/coop_agreements/index.html.erb:66:in `block (2 levels) in _app_views_coop_agreements_index_html_erb__3681340495523033702_96700'
+  /Users/macbookair/workspace/cis_life_main/app/views/coop_agreements/index.html.erb:9:in `block in _app_views_coop_agreements_index_html_erb__3681340495523033702_96700'
+  /Users/macbookair/workspace/cis_life_main/app/views/coop_agreements/index.html.erb:8:in `_app_views_coop_agreements_index_html_erb__3681340495523033702_96700'
+

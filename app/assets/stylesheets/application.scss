@@ -135,6 +135,10 @@ input[type="number"]::-webkit-outer-spin-button {
   background: #226cff;
 }
 
+.track .step.denied:before {
+  background: #cd0b1e;
+}
+
 .track .step::before {
   height: 7px;
   position: absolute;
@@ -146,6 +150,11 @@ input[type="number"]::-webkit-outer-spin-button {
 
 .track .step.active .icon {
   background: #226cff;
+  color: #fff;
+}
+
+.track .step.denied .icon {
+  background: #cd0b1e;
   color: #fff;
 }
 
