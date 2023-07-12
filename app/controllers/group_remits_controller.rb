@@ -35,12 +35,6 @@ class GroupRemitsController < InheritedResources::Base
     else
       @group_remit.set_under_review_status
     end
-
-    if all_renewal
-      @group_remit.set_for_payment_status
-    else
-      @group_remit.set_under_review_status
-    end
     
     respond_to do |format|
       if @group_remit.save
@@ -172,6 +166,8 @@ class GroupRemitsController < InheritedResources::Base
 
     @group_remit.payments.build(receipt: params[:file])
     @group_remit.status = :payment_verification
+    @group_remit.effectivity_date = Date.today
+
     respond_to do |format|
       if @group_remit.save!
         format.html { redirect_to @group_remit, notice: "Proof of payment sent" }

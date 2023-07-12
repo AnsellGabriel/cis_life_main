@@ -35,7 +35,8 @@
       <% end %>
 
     </div>
-  <% elsif @group_remit.expired? && @group_remit == @anniversary.group_remits.last %>
+    
+  <% elsif @group_remit.expired? && @group_remit == @agreement.group_remits.last %>
     <%= button_to 'Renew', renewal_group_remit_path(@group_remit),
         method: :get, 
         class: small_btn('warning'), 

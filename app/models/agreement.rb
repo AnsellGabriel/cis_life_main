@@ -12,7 +12,8 @@ class Agreement < ApplicationRecord
     has_many :agreement_benefits
     has_many :group_remits
     has_many :anniversaries
-    has_and_belongs_to_many :coop_members
+    has_many :agreements_coop_members
+    has_many :coop_members, through: :agreements_coop_members
 
     def get_coop_sf
       proposal.coop_sf

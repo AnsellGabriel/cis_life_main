@@ -94,6 +94,8 @@ class GroupRemit < ApplicationRecord
         removed_batches << batch
       end
     end
+
+    new_group_remit.set_total_premiums_and_fees
     
     renewal_result = {
       new_group_remit: new_group_remit,
@@ -106,19 +108,22 @@ class GroupRemit < ApplicationRecord
     self.coop_commission = total_coop_commissions
     self.agent_commission = total_agent_commissions
     self.net_premium = net_premium - total_agent_commissions
-    self.effectivity_date = Date.today
+    self.status = :for_payment
+    # self.effectivity_date = Date.today
+    self.save!
   end
 
   def set_for_payment_status
-    set_total_premiums_and_fees
+    # set_total_premiums_and_fees
+
     self.status = :for_payment
-    self.save
+    self.save!
   end
 
   def set_under_review_status
-    set_total_premiums_and_fees
+    # set_total_premiums_and_fees
     self.status = :under_review
-    self.save
+    self.save!
   end
 
   def coop_member_ids
@@ -151,7 +156,8 @@ class GroupRemit < ApplicationRecord
   end
 
   def dependent_agent_commissions
-    batches.joins(:batch_dependents).sum('batch_dependents.agent_sf_amount')
+    # batches.joins(:batch_dependents).sum('batch_dependents.agent_sf_amount')
+    batches.where(insurance_status: :approved).includes(:batch_dependents).sum {|batch| batch.batch_dependents.sum(&:agent_sf_amount) }
   end
 
   def total_principal_premium
@@ -171,7 +177,7 @@ class GroupRemit < ApplicationRecord
   end
 
   def coop_commissions
-    batches.where(insurance_status: :approved).sum(&:coop_sf_amount)
+    batches.where(insurance_status: :approved).sum(:coop_sf_amount)
   end
 
   def total_coop_commissions
@@ -183,7 +189,7 @@ class GroupRemit < ApplicationRecord
   end
 
   def agent_commissions
-    batches.sum(:agent_sf_amount)
+    batches.where(insurance_status: :approved).sum(:agent_sf_amount)
   end
 
   def net_premium
