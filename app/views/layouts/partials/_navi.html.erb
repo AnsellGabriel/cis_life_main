@@ -4,17 +4,23 @@
       <span class="navbar-toggler-icon"></span>
     </button>
     <div class="collapse navbar-collapse" id="navbarNavDropdown">
-      <a class="navbar-brand" href="#">
-        <%= image_tag 'cis_logo.png', width: 150, class: 'mb-2 mb-lg-0 me-2' %>
+      <div class="">
+        <a class="navbar-brand" href="#">
+          <%= image_tag 'cis_logo.png', width: 150, class: 'mb-2 mb-lg-0 me-2' %>
+        </a>
         <% if current_user && current_user.userable_type == 'CoopUser' %>
-          <%= current_user.userable.cooperative.name %>
+          <span class="long-name">
+            <small>
+              <%= current_user.userable.cooperative.name %>
+            </small>
+          </span>
         <% elsif current_user && current_user.userable_type == 'Employee' && current_user.userable.department_id == 19 %>
           Claims System
         <% elsif current_user && current_user.userable_type == 'Employee' && current_user.userable.department_id == 17 %>
           UND System
         <% end %>
           <%= content_tag :span, " DEMO VERSION", class: 'fw-bold text-danger' if ["localhost:3000"].include?(request.host_with_port) %>
-      </a>
+      </div>
       <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
         <% if current_user %>
           <%= link_to "Home", authenticated_root_path, class: "nav-link" %>

@@ -20,5 +20,21 @@ export default class extends Controller {
 
     })
   }
+
+  toggleRadio(event) {
+    const btn = event.currentTarget;
+    const buttonId = btn.dataset.id;
+  
+    this.toggleableTargets.forEach(element => {
+      const inputs = element.querySelectorAll("input");
+      const isTargetElement = buttonId === element.dataset.id;
+  
+      element.classList.toggle("hidden", !isTargetElement);
+      inputs.forEach(input => {
+        input.disabled = !isTargetElement;
+      });
+    });
+  }
+  
 }
 

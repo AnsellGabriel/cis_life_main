@@ -1,0 +1,32 @@
+<%= simple_form_for(@member_dependent, url: create_beneficiary_group_remit_batch_member_dependents_path) do |f| %>
+  <%= f.error_notification %>
+  <%= f.error_notification message: f.object.errors[:base].to_sentence if f.object.errors[:base].present? %>
+
+  <div class="form-inputs mb-3">
+    <%= f.hidden_field :claims, value: true %>
+    <%= f.input :first_name, input_html: {placeholder: 'First name'}, label: false %>
+    <%= f.input :middle_name, input_html: {placeholder: 'Middle name (optional)'}, label: false %>
+    <%= f.input :last_name, input_html: {placeholder: 'Last name'}, label: false %>
+    <div class="row">
+      <div class="col-md-3">
+        <%= f.input :suffix, input_html: {placeholder: 'Suffix'}, label: false %>
+      </div>
+      <div class="col-md-4">
+        <%= f.input :birth_date, as: :string, input_html: {data: {
+              controller: "flatpickr",
+              flatpickr_max_date: Time.zone.now,
+              flatpickr_next_arrow: "Next",
+              flatpickr_prev_arrow: "Prev"},
+              placeholder: 'Birthdate'}, label: false %>
+      </div>
+      <div class="col-md-5">
+          <%= f.input :relationship, collection: ['Parent', 'Spouse', 'Child', 'Sibling'], include_blank: 'Relationship', label: false %>
+      </div>
+    </div>
+  </div>
+
+  <div class="form-actions text-end">
+    <%= f.button :submit, 'Enroll Beneficiary', class: 'btn-success' %>
+      <%= link_to "Back", new_group_remit_batch_beneficiary_path(@group_remit, @batch, claims: true), class: 'btn btn-secondary', data: {turbo_frame: "modal"} %>
+  </div>
+<% end %>

@@ -1,5 +1,6 @@
-
-<%= render @process_claim %>
+<% @process_claim.claim_documents.each do |claims| %>
+  <%= image_tag claims.document.url(:thumbnail) %>
+<% end %>
 
 <div>
   <%= link_to "Edit", edit_process_claim_path(@process_claim), class: 'btn btn-primary' %> |

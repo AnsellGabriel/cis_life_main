@@ -1,4 +1,6 @@
 class MemberDependent < ApplicationRecord
+  attr_accessor :claims
+  
   before_validation :name_to_upcase
 
   validates_presence_of :first_name, :last_name, :birth_date, :relationship

@@ -1,0 +1,11 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  process_claim: one
+  document: MyString
+  document_type: 1
+
+two:
+  process_claim: two
+  document: MyString
+  document_type: 1

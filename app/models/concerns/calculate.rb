@@ -5,6 +5,7 @@ module Calculate
 		def set_premium_and_service_fees(insured_type, group_remit, term_insurance = false)
 			# agreement_benefit = group_remit.agreement.agreement_benefits.find_by(insured_type: insured_type)
 			agreement_benefit = group_remit.agreement.agreement_benefits.find_by(id: insured_type)
+
 			if agreement_benefit.nil?
 				agreement_benefit = group_remit.agreement.agreement_benefits.find_by(insured_type: insured_type)
 			end
@@ -48,27 +49,35 @@ module Calculate
 
 		def get_term_insurance_product_benefit
 			if self.class.name == "BatchDependent"
-				if self.batch.residency >= 120
-					self.agreement_benefit.product_benefits
-								.where(duration: self.batch.duration)
-								.where("residency_floor = ?", 120)
-				else
-					self.agreement_benefit.product_benefits
-								.where(duration: self.batch.duration)
-								.where("residency_floor <= ?", self.batch.residency)
-								.where("residency_ceiling >= ?", self.batch.residency)
-				end
+				dependent_term_product_benefits
 			else
-				if self.residency >= 120
-					self.agreement_benefit.product_benefits
-								.where(duration: self.duration)
-								.where("residency_floor = ?", 120)
-				else
-					self.agreement_benefit.product_benefits
-								.where(duration: self.duration)
-								.where("residency_floor <= ?", self.residency)
-								.where("residency_ceiling >= ?", self.residency)
-				end
+				batch_term_product_benefits
+			end
+		end
+
+		def batch_term_product_benefits
+			if self.residency >= 120
+				self.agreement_benefit.product_benefits
+							.where(duration: self.duration)
+							.where("residency_floor = ?", 120)
+			else
+				self.agreement_benefit.product_benefits
+							.where(duration: self.duration)
+							.where("residency_floor <= ?", self.residency)
+							.where("residency_ceiling >= ?", self.residency)
+			end
+		end
+
+		def dependent_term_product_benefits
+			if self.batch.residency >= 120
+				self.agreement_benefit.product_benefits
+							.where(duration: self.batch.duration)
+							.where("residency_floor = ?", 120)
+			else
+				self.agreement_benefit.product_benefits
+							.where(duration: self.batch.duration)
+							.where("residency_floor <= ?", self.batch.residency)
+							.where("residency_ceiling >= ?", self.batch.residency)
 			end
 		end
 	end
