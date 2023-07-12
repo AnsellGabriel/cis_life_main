@@ -4409,3 +4409,415 @@ Call stack
   /Users/macbookair/workspace/cis_life_main/app/controllers/group_remits_controller.rb:176:in `block in payment'
   /Users/macbookair/workspace/cis_life_main/app/controllers/group_remits_controller.rb:175:in `payment'
 
+2023-07-12 11:28:21[WARN] user: macbookair
+DELETE /group_remits/2
+USE eager loading detected
+  Batch => [:batch_health_decs]
+  Add to your query: .includes([:batch_health_decs])
+Call stack
+  /Users/macbookair/workspace/cis_life_main/app/controllers/group_remits_controller.rb:161:in `block in destroy'
+  /Users/macbookair/workspace/cis_life_main/app/controllers/group_remits_controller.rb:160:in `destroy'
+
+2023-07-12 11:28:21[WARN] user: macbookair
+DELETE /group_remits/2
+USE eager loading detected
+  Batch => [:batch_dependents]
+  Add to your query: .includes([:batch_dependents])
+Call stack
+  /Users/macbookair/workspace/cis_life_main/app/controllers/group_remits_controller.rb:161:in `block in destroy'
+  /Users/macbookair/workspace/cis_life_main/app/controllers/group_remits_controller.rb:160:in `destroy'
+
+2023-07-12 11:28:21[WARN] user: macbookair
+DELETE /group_remits/2
+USE eager loading detected
+  Batch => [:batch_beneficiaries]
+  Add to your query: .includes([:batch_beneficiaries])
+Call stack
+  /Users/macbookair/workspace/cis_life_main/app/controllers/group_remits_controller.rb:161:in `block in destroy'
+  /Users/macbookair/workspace/cis_life_main/app/controllers/group_remits_controller.rb:160:in `destroy'
+
+2023-07-12 11:28:21[WARN] user: macbookair
+DELETE /group_remits/2
+USE eager loading detected
+  Batch => [:process_claims]
+  Add to your query: .includes([:process_claims])
+Call stack
+  /Users/macbookair/workspace/cis_life_main/app/controllers/group_remits_controller.rb:161:in `block in destroy'
+  /Users/macbookair/workspace/cis_life_main/app/controllers/group_remits_controller.rb:160:in `destroy'
+
+2023-07-12 11:28:21[WARN] user: macbookair
+DELETE /group_remits/2
+USE eager loading detected
+  Batch => [:coop_member]
+  Add to your query: .includes([:coop_member])
+Call stack
+  /Users/macbookair/workspace/cis_life_main/app/models/batch.rb:137:in `delete_agreements_coop_members'
+  /Users/macbookair/workspace/cis_life_main/app/controllers/group_remits_controller.rb:161:in `block in destroy'
+  /Users/macbookair/workspace/cis_life_main/app/controllers/group_remits_controller.rb:160:in `destroy'
+
+2023-07-12 11:28:43[WARN] user: macbookair
+POST /group_remits/3/batches/import
+USE eager loading detected
+  ProductBenefit => [:benefit]
+  Add to your query: .includes([:benefit])
+Call stack
+  /Users/macbookair/workspace/cis_life_main/app/views/batches/_batch.html.erb:9:in `block in _app_views_batches__batch_html_erb___3108086082596803384_262540'
+  /Users/macbookair/workspace/cis_life_main/app/views/batches/_batch.html.erb:9:in `_app_views_batches__batch_html_erb___3108086082596803384_262540'
+  /Users/macbookair/workspace/cis_life_main/app/models/batch.rb:21:in `block in <class:Batch>'
+  /Users/macbookair/workspace/cis_life_main/app/services/batch_import_service.rb:244:in `create_batch'
+  /Users/macbookair/workspace/cis_life_main/app/services/batch_import_service.rb:72:in `block in import_batches'
+  /Users/macbookair/workspace/cis_life_main/app/services/batch_import_service.rb:35:in `each'
+  /Users/macbookair/workspace/cis_life_main/app/services/batch_import_service.rb:35:in `import_batches'
+  /Users/macbookair/workspace/cis_life_main/app/services/csv_import_service.rb:23:in `import'
+  /Users/macbookair/workspace/cis_life_main/app/controllers/batches_controller.rb:18:in `import'
+
+2023-07-12 11:31:58[WARN] user: macbookair
+GET /process_coverages
+USE eager loading detected
+  ProcessCoverage => [:group_remit]
+  Add to your query: .includes([:group_remit])
+Call stack
+  /Users/macbookair/workspace/cis_life_main/app/views/process_coverages/index.html.erb:35:in `block in _app_views_process_coverages_index_html_erb___4328355867742211121_284080'
+  /Users/macbookair/workspace/cis_life_main/app/views/process_coverages/index.html.erb:31:in `_app_views_process_coverages_index_html_erb___4328355867742211121_284080'
+
+2023-07-12 11:31:58[WARN] user: macbookair
+GET /process_coverages
+USE eager loading detected
+  ProcessCoverage => [:agent]
+  Add to your query: .includes([:agent])
+Call stack
+  /Users/macbookair/workspace/cis_life_main/app/views/process_coverages/index.html.erb:36:in `block in _app_views_process_coverages_index_html_erb___4328355867742211121_284080'
+  /Users/macbookair/workspace/cis_life_main/app/views/process_coverages/index.html.erb:31:in `_app_views_process_coverages_index_html_erb___4328355867742211121_284080'
+
+2023-07-12 11:32:04[WARN] user: macbookair
+GET /process_coverages/2
+USE eager loading detected
+  ProductBenefit => [:benefit]
+  Add to your query: .includes([:benefit])
+Call stack
+  /Users/macbookair/workspace/cis_life_main/app/views/process_coverages/_agreement_benefits.html.erb:41:in `block (2 levels) in _app_views_process_coverages__agreement_benefits_html_erb___2325371604303828354_285000'
+  /Users/macbookair/workspace/cis_life_main/app/views/process_coverages/_agreement_benefits.html.erb:39:in `block in _app_views_process_coverages__agreement_benefits_html_erb___2325371604303828354_285000'
+  /Users/macbookair/workspace/cis_life_main/app/views/process_coverages/_agreement_benefits.html.erb:24:in `each_with_index'
+  /Users/macbookair/workspace/cis_life_main/app/views/process_coverages/_agreement_benefits.html.erb:24:in `_app_views_process_coverages__agreement_benefits_html_erb___2325371604303828354_285000'
+  /Users/macbookair/workspace/cis_life_main/app/views/process_coverages/_process_coverage.html.erb:155:in `_app_views_process_coverages__process_coverage_html_erb__1768498421596931195_284880'
+  /Users/macbookair/workspace/cis_life_main/app/views/process_coverages/show.html.erb:2:in `_app_views_process_coverages_show_html_erb__228651978400075842_284860'
+
+2023-07-12 11:32:04[WARN] user: macbookair
+GET /process_coverages/2
+USE eager loading detected
+  Batch => [:agreement_benefit]
+  Add to your query: .includes([:agreement_benefit])
+Call stack
+  /Users/macbookair/workspace/cis_life_main/app/views/process_coverages/_process_coverage.html.erb:291:in `block (2 levels) in _app_views_process_coverages__process_coverage_html_erb__1768498421596931195_284880'
+  /Users/macbookair/workspace/cis_life_main/app/views/process_coverages/_process_coverage.html.erb:268:in `block in _app_views_process_coverages__process_coverage_html_erb__1768498421596931195_284880'
+  /Users/macbookair/workspace/cis_life_main/app/views/process_coverages/_process_coverage.html.erb:241:in `_app_views_process_coverages__process_coverage_html_erb__1768498421596931195_284880'
+  /Users/macbookair/workspace/cis_life_main/app/views/process_coverages/show.html.erb:2:in `_app_views_process_coverages_show_html_erb__228651978400075842_284860'
+
+2023-07-12 11:32:04[WARN] user: macbookair
+GET /process_coverages/2
+USE eager loading detected
+  Batch => [:batch_dependents]
+  Add to your query: .includes([:batch_dependents])
+Call stack
+  /Users/macbookair/workspace/cis_life_main/app/views/process_coverages/_process_coverage.html.erb:318:in `block (2 levels) in _app_views_process_coverages__process_coverage_html_erb__1768498421596931195_284880'
+  /Users/macbookair/workspace/cis_life_main/app/views/process_coverages/_process_coverage.html.erb:268:in `block in _app_views_process_coverages__process_coverage_html_erb__1768498421596931195_284880'
+  /Users/macbookair/workspace/cis_life_main/app/views/process_coverages/_process_coverage.html.erb:241:in `_app_views_process_coverages__process_coverage_html_erb__1768498421596931195_284880'
+  /Users/macbookair/workspace/cis_life_main/app/views/process_coverages/show.html.erb:2:in `_app_views_process_coverages_show_html_erb__228651978400075842_284860'
+
+2023-07-12 11:32:04[WARN] user: macbookair
+GET /process_coverages/2
+USE eager loading detected
+  Batch => [:batch_health_decs]
+  Add to your query: .includes([:batch_health_decs])
+Call stack
+  /Users/macbookair/workspace/cis_life_main/app/views/process_coverages/_process_coverage.html.erb:357:in `block (2 levels) in _app_views_process_coverages__process_coverage_html_erb__1768498421596931195_284880'
+  /Users/macbookair/workspace/cis_life_main/app/views/process_coverages/_process_coverage.html.erb:268:in `block in _app_views_process_coverages__process_coverage_html_erb__1768498421596931195_284880'
+  /Users/macbookair/workspace/cis_life_main/app/views/process_coverages/_process_coverage.html.erb:241:in `_app_views_process_coverages__process_coverage_html_erb__1768498421596931195_284880'
+  /Users/macbookair/workspace/cis_life_main/app/views/process_coverages/show.html.erb:2:in `_app_views_process_coverages_show_html_erb__228651978400075842_284860'
+
+2023-07-12 11:32:04[WARN] user: macbookair
+GET /process_coverages/2
+AVOID eager loading detected
+  GroupRemit => [:batches]
+  Remove from your query: .includes([:batches])
+Call stack
+  /Users/macbookair/workspace/cis_life_main/app/views/process_coverages/_process_coverage.html.erb:37:in `block in _app_views_process_coverages__process_coverage_html_erb__1768498421596931195_284880'
+  /Users/macbookair/workspace/cis_life_main/app/views/process_coverages/_process_coverage.html.erb:35:in `_app_views_process_coverages__process_coverage_html_erb__1768498421596931195_284880'
+  /Users/macbookair/workspace/cis_life_main/app/views/process_coverages/show.html.erb:2:in `_app_views_process_coverages_show_html_erb__228651978400075842_284860'
+
+2023-07-12 11:32:04[WARN] user: macbookair
+GET /process_coverages/2
+AVOID eager loading detected
+  Batch => [:batch_remarks, :member]
+  Remove from your query: .includes([:batch_remarks, :member])
+Call stack
+  /Users/macbookair/workspace/cis_life_main/app/views/process_coverages/_process_coverage.html.erb:357:in `block (2 levels) in _app_views_process_coverages__process_coverage_html_erb__1768498421596931195_284880'
+  /Users/macbookair/workspace/cis_life_main/app/views/process_coverages/_process_coverage.html.erb:268:in `block in _app_views_process_coverages__process_coverage_html_erb__1768498421596931195_284880'
+  /Users/macbookair/workspace/cis_life_main/app/views/process_coverages/_process_coverage.html.erb:241:in `_app_views_process_coverages__process_coverage_html_erb__1768498421596931195_284880'
+  /Users/macbookair/workspace/cis_life_main/app/views/process_coverages/show.html.erb:2:in `_app_views_process_coverages_show_html_erb__228651978400075842_284860'
+
+2023-07-12 11:32:42[WARN] user: macbookair
+GET /process_coverages
+USE eager loading detected
+  ProcessCoverage => [:group_remit]
+  Add to your query: .includes([:group_remit])
+Call stack
+  /Users/macbookair/workspace/cis_life_main/app/views/process_coverages/index.html.erb:35:in `block in _app_views_process_coverages_index_html_erb___4328355867742211121_284080'
+  /Users/macbookair/workspace/cis_life_main/app/views/process_coverages/index.html.erb:31:in `_app_views_process_coverages_index_html_erb___4328355867742211121_284080'
+
+2023-07-12 11:32:42[WARN] user: macbookair
+GET /process_coverages
+USE eager loading detected
+  ProcessCoverage => [:agent]
+  Add to your query: .includes([:agent])
+Call stack
+  /Users/macbookair/workspace/cis_life_main/app/views/process_coverages/index.html.erb:36:in `block in _app_views_process_coverages_index_html_erb___4328355867742211121_284080'
+  /Users/macbookair/workspace/cis_life_main/app/views/process_coverages/index.html.erb:31:in `_app_views_process_coverages_index_html_erb___4328355867742211121_284080'
+
+2023-07-12 11:32:42[WARN] user: macbookair
+GET /process_coverages
+USE eager loading detected
+  ProcessCoverage => [:group_remit]
+  Add to your query: .includes([:group_remit])
+Call stack
+  /Users/macbookair/workspace/cis_life_main/app/views/process_coverages/index.html.erb:35:in `block in _app_views_process_coverages_index_html_erb___4328355867742211121_284080'
+  /Users/macbookair/workspace/cis_life_main/app/views/process_coverages/index.html.erb:31:in `_app_views_process_coverages_index_html_erb___4328355867742211121_284080'
+
+2023-07-12 11:32:42[WARN] user: macbookair
+GET /process_coverages
+USE eager loading detected
+  ProcessCoverage => [:agent]
+  Add to your query: .includes([:agent])
+Call stack
+  /Users/macbookair/workspace/cis_life_main/app/views/process_coverages/index.html.erb:36:in `block in _app_views_process_coverages_index_html_erb___4328355867742211121_284080'
+  /Users/macbookair/workspace/cis_life_main/app/views/process_coverages/index.html.erb:31:in `_app_views_process_coverages_index_html_erb___4328355867742211121_284080'
+
+2023-07-12 11:32:47[WARN] user: macbookair
+GET /process_coverages/2
+USE eager loading detected
+  ProductBenefit => [:benefit]
+  Add to your query: .includes([:benefit])
+Call stack
+  /Users/macbookair/workspace/cis_life_main/app/views/process_coverages/_agreement_benefits.html.erb:41:in `block (2 levels) in _app_views_process_coverages__agreement_benefits_html_erb___2325371604303828354_285000'
+  /Users/macbookair/workspace/cis_life_main/app/views/process_coverages/_agreement_benefits.html.erb:39:in `block in _app_views_process_coverages__agreement_benefits_html_erb___2325371604303828354_285000'
+  /Users/macbookair/workspace/cis_life_main/app/views/process_coverages/_agreement_benefits.html.erb:24:in `each_with_index'
+  /Users/macbookair/workspace/cis_life_main/app/views/process_coverages/_agreement_benefits.html.erb:24:in `_app_views_process_coverages__agreement_benefits_html_erb___2325371604303828354_285000'
+  /Users/macbookair/workspace/cis_life_main/app/views/process_coverages/_process_coverage.html.erb:155:in `_app_views_process_coverages__process_coverage_html_erb__1768498421596931195_284880'
+  /Users/macbookair/workspace/cis_life_main/app/views/process_coverages/show.html.erb:2:in `_app_views_process_coverages_show_html_erb__228651978400075842_284860'
+
+2023-07-12 11:32:47[WARN] user: macbookair
+GET /process_coverages/2
+USE eager loading detected
+  Batch => [:agreement_benefit]
+  Add to your query: .includes([:agreement_benefit])
+Call stack
+  /Users/macbookair/workspace/cis_life_main/app/views/process_coverages/_process_coverage.html.erb:291:in `block (2 levels) in _app_views_process_coverages__process_coverage_html_erb__1768498421596931195_284880'
+  /Users/macbookair/workspace/cis_life_main/app/views/process_coverages/_process_coverage.html.erb:268:in `block in _app_views_process_coverages__process_coverage_html_erb__1768498421596931195_284880'
+  /Users/macbookair/workspace/cis_life_main/app/views/process_coverages/_process_coverage.html.erb:241:in `_app_views_process_coverages__process_coverage_html_erb__1768498421596931195_284880'
+  /Users/macbookair/workspace/cis_life_main/app/views/process_coverages/show.html.erb:2:in `_app_views_process_coverages_show_html_erb__228651978400075842_284860'
+
+2023-07-12 11:32:47[WARN] user: macbookair
+GET /process_coverages/2
+USE eager loading detected
+  Batch => [:batch_dependents]
+  Add to your query: .includes([:batch_dependents])
+Call stack
+  /Users/macbookair/workspace/cis_life_main/app/views/process_coverages/_process_coverage.html.erb:318:in `block (2 levels) in _app_views_process_coverages__process_coverage_html_erb__1768498421596931195_284880'
+  /Users/macbookair/workspace/cis_life_main/app/views/process_coverages/_process_coverage.html.erb:268:in `block in _app_views_process_coverages__process_coverage_html_erb__1768498421596931195_284880'
+  /Users/macbookair/workspace/cis_life_main/app/views/process_coverages/_process_coverage.html.erb:241:in `_app_views_process_coverages__process_coverage_html_erb__1768498421596931195_284880'
+  /Users/macbookair/workspace/cis_life_main/app/views/process_coverages/show.html.erb:2:in `_app_views_process_coverages_show_html_erb__228651978400075842_284860'
+
+2023-07-12 11:32:47[WARN] user: macbookair
+GET /process_coverages/2
+USE eager loading detected
+  Batch => [:batch_health_decs]
+  Add to your query: .includes([:batch_health_decs])
+Call stack
+  /Users/macbookair/workspace/cis_life_main/app/views/process_coverages/_process_coverage.html.erb:357:in `block (2 levels) in _app_views_process_coverages__process_coverage_html_erb__1768498421596931195_284880'
+  /Users/macbookair/workspace/cis_life_main/app/views/process_coverages/_process_coverage.html.erb:268:in `block in _app_views_process_coverages__process_coverage_html_erb__1768498421596931195_284880'
+  /Users/macbookair/workspace/cis_life_main/app/views/process_coverages/_process_coverage.html.erb:241:in `_app_views_process_coverages__process_coverage_html_erb__1768498421596931195_284880'
+  /Users/macbookair/workspace/cis_life_main/app/views/process_coverages/show.html.erb:2:in `_app_views_process_coverages_show_html_erb__228651978400075842_284860'
+
+2023-07-12 11:32:47[WARN] user: macbookair
+GET /process_coverages/2
+AVOID eager loading detected
+  GroupRemit => [:batches]
+  Remove from your query: .includes([:batches])
+Call stack
+  /Users/macbookair/workspace/cis_life_main/app/views/process_coverages/_process_coverage.html.erb:37:in `block in _app_views_process_coverages__process_coverage_html_erb__1768498421596931195_284880'
+  /Users/macbookair/workspace/cis_life_main/app/views/process_coverages/_process_coverage.html.erb:35:in `_app_views_process_coverages__process_coverage_html_erb__1768498421596931195_284880'
+  /Users/macbookair/workspace/cis_life_main/app/views/process_coverages/show.html.erb:2:in `_app_views_process_coverages_show_html_erb__228651978400075842_284860'
+
+2023-07-12 11:32:47[WARN] user: macbookair
+GET /process_coverages/2
+AVOID eager loading detected
+  Batch => [:batch_remarks, :member]
+  Remove from your query: .includes([:batch_remarks, :member])
+Call stack
+  /Users/macbookair/workspace/cis_life_main/app/views/process_coverages/_process_coverage.html.erb:357:in `block (2 levels) in _app_views_process_coverages__process_coverage_html_erb__1768498421596931195_284880'
+  /Users/macbookair/workspace/cis_life_main/app/views/process_coverages/_process_coverage.html.erb:268:in `block in _app_views_process_coverages__process_coverage_html_erb__1768498421596931195_284880'
+  /Users/macbookair/workspace/cis_life_main/app/views/process_coverages/_process_coverage.html.erb:241:in `_app_views_process_coverages__process_coverage_html_erb__1768498421596931195_284880'
+  /Users/macbookair/workspace/cis_life_main/app/views/process_coverages/show.html.erb:2:in `_app_views_process_coverages_show_html_erb__228651978400075842_284860'
+
+2023-07-12 11:33:05[WARN] user: macbookair
+GET /group_remits/3/batches/approve_all?group_remit=3&process_coverage=2
+USE eager loading detected
+  Batch => [:agreement_benefit]
+  Add to your query: .includes([:agreement_benefit])
+Call stack
+  /Users/macbookair/workspace/cis_life_main/app/controllers/batches_controller.rb:68:in `block in approve_all'
+  /Users/macbookair/workspace/cis_life_main/app/controllers/batches_controller.rb:65:in `approve_all'
+
+2023-07-12 11:33:06[WARN] user: macbookair
+GET /process_coverages/2
+USE eager loading detected
+  ProductBenefit => [:benefit]
+  Add to your query: .includes([:benefit])
+Call stack
+  /Users/macbookair/workspace/cis_life_main/app/views/process_coverages/_agreement_benefits.html.erb:41:in `block (2 levels) in _app_views_process_coverages__agreement_benefits_html_erb___2325371604303828354_285000'
+  /Users/macbookair/workspace/cis_life_main/app/views/process_coverages/_agreement_benefits.html.erb:39:in `block in _app_views_process_coverages__agreement_benefits_html_erb___2325371604303828354_285000'
+  /Users/macbookair/workspace/cis_life_main/app/views/process_coverages/_agreement_benefits.html.erb:24:in `each_with_index'
+  /Users/macbookair/workspace/cis_life_main/app/views/process_coverages/_agreement_benefits.html.erb:24:in `_app_views_process_coverages__agreement_benefits_html_erb___2325371604303828354_285000'
+  /Users/macbookair/workspace/cis_life_main/app/views/process_coverages/_process_coverage.html.erb:155:in `_app_views_process_coverages__process_coverage_html_erb__1768498421596931195_284880'
+  /Users/macbookair/workspace/cis_life_main/app/views/process_coverages/show.html.erb:2:in `_app_views_process_coverages_show_html_erb__228651978400075842_284860'
+
+2023-07-12 11:33:06[WARN] user: macbookair
+GET /process_coverages/2
+USE eager loading detected
+  Batch => [:agreement_benefit]
+  Add to your query: .includes([:agreement_benefit])
+Call stack
+  /Users/macbookair/workspace/cis_life_main/app/views/process_coverages/_process_coverage.html.erb:291:in `block (2 levels) in _app_views_process_coverages__process_coverage_html_erb__1768498421596931195_284880'
+  /Users/macbookair/workspace/cis_life_main/app/views/process_coverages/_process_coverage.html.erb:268:in `block in _app_views_process_coverages__process_coverage_html_erb__1768498421596931195_284880'
+  /Users/macbookair/workspace/cis_life_main/app/views/process_coverages/_process_coverage.html.erb:241:in `_app_views_process_coverages__process_coverage_html_erb__1768498421596931195_284880'
+  /Users/macbookair/workspace/cis_life_main/app/views/process_coverages/show.html.erb:2:in `_app_views_process_coverages_show_html_erb__228651978400075842_284860'
+
+2023-07-12 11:33:06[WARN] user: macbookair
+GET /process_coverages/2
+USE eager loading detected
+  Batch => [:batch_dependents]
+  Add to your query: .includes([:batch_dependents])
+Call stack
+  /Users/macbookair/workspace/cis_life_main/app/views/process_coverages/_process_coverage.html.erb:318:in `block (2 levels) in _app_views_process_coverages__process_coverage_html_erb__1768498421596931195_284880'
+  /Users/macbookair/workspace/cis_life_main/app/views/process_coverages/_process_coverage.html.erb:268:in `block in _app_views_process_coverages__process_coverage_html_erb__1768498421596931195_284880'
+  /Users/macbookair/workspace/cis_life_main/app/views/process_coverages/_process_coverage.html.erb:241:in `_app_views_process_coverages__process_coverage_html_erb__1768498421596931195_284880'
+  /Users/macbookair/workspace/cis_life_main/app/views/process_coverages/show.html.erb:2:in `_app_views_process_coverages_show_html_erb__228651978400075842_284860'
+
+2023-07-12 11:33:06[WARN] user: macbookair
+GET /process_coverages/2
+USE eager loading detected
+  Batch => [:batch_health_decs]
+  Add to your query: .includes([:batch_health_decs])
+Call stack
+  /Users/macbookair/workspace/cis_life_main/app/views/process_coverages/_process_coverage.html.erb:357:in `block (2 levels) in _app_views_process_coverages__process_coverage_html_erb__1768498421596931195_284880'
+  /Users/macbookair/workspace/cis_life_main/app/views/process_coverages/_process_coverage.html.erb:268:in `block in _app_views_process_coverages__process_coverage_html_erb__1768498421596931195_284880'
+  /Users/macbookair/workspace/cis_life_main/app/views/process_coverages/_process_coverage.html.erb:241:in `_app_views_process_coverages__process_coverage_html_erb__1768498421596931195_284880'
+  /Users/macbookair/workspace/cis_life_main/app/views/process_coverages/show.html.erb:2:in `_app_views_process_coverages_show_html_erb__228651978400075842_284860'
+
+2023-07-12 11:33:06[WARN] user: macbookair
+GET /process_coverages/2
+AVOID eager loading detected
+  GroupRemit => [:batches]
+  Remove from your query: .includes([:batches])
+Call stack
+  /Users/macbookair/workspace/cis_life_main/app/views/process_coverages/_process_coverage.html.erb:37:in `block in _app_views_process_coverages__process_coverage_html_erb__1768498421596931195_284880'
+  /Users/macbookair/workspace/cis_life_main/app/views/process_coverages/_process_coverage.html.erb:35:in `_app_views_process_coverages__process_coverage_html_erb__1768498421596931195_284880'
+  /Users/macbookair/workspace/cis_life_main/app/views/process_coverages/show.html.erb:2:in `_app_views_process_coverages_show_html_erb__228651978400075842_284860'
+
+2023-07-12 11:33:06[WARN] user: macbookair
+GET /process_coverages/2
+AVOID eager loading detected
+  Batch => [:batch_remarks, :member]
+  Remove from your query: .includes([:batch_remarks, :member])
+Call stack
+  /Users/macbookair/workspace/cis_life_main/app/views/process_coverages/_process_coverage.html.erb:357:in `block (2 levels) in _app_views_process_coverages__process_coverage_html_erb__1768498421596931195_284880'
+  /Users/macbookair/workspace/cis_life_main/app/views/process_coverages/_process_coverage.html.erb:268:in `block in _app_views_process_coverages__process_coverage_html_erb__1768498421596931195_284880'
+  /Users/macbookair/workspace/cis_life_main/app/views/process_coverages/_process_coverage.html.erb:241:in `_app_views_process_coverages__process_coverage_html_erb__1768498421596931195_284880'
+  /Users/macbookair/workspace/cis_life_main/app/views/process_coverages/show.html.erb:2:in `_app_views_process_coverages_show_html_erb__228651978400075842_284860'
+
+2023-07-12 11:33:44[WARN] user: macbookair
+GET /process_coverages/2
+USE eager loading detected
+  ProductBenefit => [:benefit]
+  Add to your query: .includes([:benefit])
+Call stack
+  /Users/macbookair/workspace/cis_life_main/app/views/process_coverages/_agreement_benefits.html.erb:41:in `block (2 levels) in _app_views_process_coverages__agreement_benefits_html_erb___2325371604303828354_285000'
+  /Users/macbookair/workspace/cis_life_main/app/views/process_coverages/_agreement_benefits.html.erb:39:in `block in _app_views_process_coverages__agreement_benefits_html_erb___2325371604303828354_285000'
+  /Users/macbookair/workspace/cis_life_main/app/views/process_coverages/_agreement_benefits.html.erb:24:in `each_with_index'
+  /Users/macbookair/workspace/cis_life_main/app/views/process_coverages/_agreement_benefits.html.erb:24:in `_app_views_process_coverages__agreement_benefits_html_erb___2325371604303828354_285000'
+  /Users/macbookair/workspace/cis_life_main/app/views/process_coverages/_process_coverage.html.erb:155:in `_app_views_process_coverages__process_coverage_html_erb__1768498421596931195_284880'
+  /Users/macbookair/workspace/cis_life_main/app/views/process_coverages/show.html.erb:2:in `_app_views_process_coverages_show_html_erb__228651978400075842_284860'
+
+2023-07-12 11:33:44[WARN] user: macbookair
+GET /process_coverages/2
+USE eager loading detected
+  Batch => [:agreement_benefit]
+  Add to your query: .includes([:agreement_benefit])
+Call stack
+  /Users/macbookair/workspace/cis_life_main/app/views/process_coverages/_process_coverage.html.erb:291:in `block (2 levels) in _app_views_process_coverages__process_coverage_html_erb__1768498421596931195_284880'
+  /Users/macbookair/workspace/cis_life_main/app/views/process_coverages/_process_coverage.html.erb:268:in `block in _app_views_process_coverages__process_coverage_html_erb__1768498421596931195_284880'
+  /Users/macbookair/workspace/cis_life_main/app/views/process_coverages/_process_coverage.html.erb:241:in `_app_views_process_coverages__process_coverage_html_erb__1768498421596931195_284880'
+  /Users/macbookair/workspace/cis_life_main/app/views/process_coverages/show.html.erb:2:in `_app_views_process_coverages_show_html_erb__228651978400075842_284860'
+
+2023-07-12 11:33:44[WARN] user: macbookair
+GET /process_coverages/2
+USE eager loading detected
+  Batch => [:batch_dependents]
+  Add to your query: .includes([:batch_dependents])
+Call stack
+  /Users/macbookair/workspace/cis_life_main/app/views/process_coverages/_process_coverage.html.erb:318:in `block (2 levels) in _app_views_process_coverages__process_coverage_html_erb__1768498421596931195_284880'
+  /Users/macbookair/workspace/cis_life_main/app/views/process_coverages/_process_coverage.html.erb:268:in `block in _app_views_process_coverages__process_coverage_html_erb__1768498421596931195_284880'
+  /Users/macbookair/workspace/cis_life_main/app/views/process_coverages/_process_coverage.html.erb:241:in `_app_views_process_coverages__process_coverage_html_erb__1768498421596931195_284880'
+  /Users/macbookair/workspace/cis_life_main/app/views/process_coverages/show.html.erb:2:in `_app_views_process_coverages_show_html_erb__228651978400075842_284860'
+
+2023-07-12 11:33:44[WARN] user: macbookair
+GET /process_coverages/2
+USE eager loading detected
+  Batch => [:batch_health_decs]
+  Add to your query: .includes([:batch_health_decs])
+Call stack
+  /Users/macbookair/workspace/cis_life_main/app/views/process_coverages/_process_coverage.html.erb:357:in `block (2 levels) in _app_views_process_coverages__process_coverage_html_erb__1768498421596931195_284880'
+  /Users/macbookair/workspace/cis_life_main/app/views/process_coverages/_process_coverage.html.erb:268:in `block in _app_views_process_coverages__process_coverage_html_erb__1768498421596931195_284880'
+  /Users/macbookair/workspace/cis_life_main/app/views/process_coverages/_process_coverage.html.erb:241:in `_app_views_process_coverages__process_coverage_html_erb__1768498421596931195_284880'
+  /Users/macbookair/workspace/cis_life_main/app/views/process_coverages/show.html.erb:2:in `_app_views_process_coverages_show_html_erb__228651978400075842_284860'
+
+2023-07-12 11:33:44[WARN] user: macbookair
+GET /process_coverages/2
+AVOID eager loading detected
+  GroupRemit => [:batches]
+  Remove from your query: .includes([:batches])
+Call stack
+  /Users/macbookair/workspace/cis_life_main/app/views/process_coverages/_process_coverage.html.erb:37:in `block in _app_views_process_coverages__process_coverage_html_erb__1768498421596931195_284880'
+  /Users/macbookair/workspace/cis_life_main/app/views/process_coverages/_process_coverage.html.erb:35:in `_app_views_process_coverages__process_coverage_html_erb__1768498421596931195_284880'
+  /Users/macbookair/workspace/cis_life_main/app/views/process_coverages/show.html.erb:2:in `_app_views_process_coverages_show_html_erb__228651978400075842_284860'
+
+2023-07-12 11:33:44[WARN] user: macbookair
+GET /process_coverages/2
+AVOID eager loading detected
+  Batch => [:batch_remarks, :member]
+  Remove from your query: .includes([:batch_remarks, :member])
+Call stack
+  /Users/macbookair/workspace/cis_life_main/app/views/process_coverages/_process_coverage.html.erb:357:in `block (2 levels) in _app_views_process_coverages__process_coverage_html_erb__1768498421596931195_284880'
+  /Users/macbookair/workspace/cis_life_main/app/views/process_coverages/_process_coverage.html.erb:268:in `block in _app_views_process_coverages__process_coverage_html_erb__1768498421596931195_284880'
+  /Users/macbookair/workspace/cis_life_main/app/views/process_coverages/_process_coverage.html.erb:241:in `_app_views_process_coverages__process_coverage_html_erb__1768498421596931195_284880'
+  /Users/macbookair/workspace/cis_life_main/app/views/process_coverages/show.html.erb:2:in `_app_views_process_coverages_show_html_erb__228651978400075842_284860'
+
+2023-07-12 11:33:58[WARN] user: macbookair
+GET /coop_agreements
+AVOID eager loading detected
+  Agreement => [:anniversaries]
+  Remove from your query: .includes([:anniversaries])
+Call stack
+  /Users/macbookair/workspace/cis_life_main/app/views/coop_agreements/index.html.erb:66:in `block (2 levels) in _app_views_coop_agreements_index_html_erb__3474987116572453194_289060'
+  /Users/macbookair/workspace/cis_life_main/app/views/coop_agreements/index.html.erb:9:in `block in _app_views_coop_agreements_index_html_erb__3474987116572453194_289060'
+  /Users/macbookair/workspace/cis_life_main/app/views/coop_agreements/index.html.erb:8:in `_app_views_coop_agreements_index_html_erb__3474987116572453194_289060'
+
+2023-07-12 11:35:07[WARN] user: macbookair
+POST /group_remits/3/payment
+AVOID eager loading detected
+  GroupRemit => [:batches]
+  Remove from your query: .includes([:batches])
+Call stack
+  /Users/macbookair/workspace/cis_life_main/app/controllers/group_remits_controller.rb:176:in `block in payment'
+  /Users/macbookair/workspace/cis_life_main/app/controllers/group_remits_controller.rb:175:in `payment'
+

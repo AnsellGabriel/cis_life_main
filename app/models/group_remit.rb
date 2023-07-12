@@ -3,7 +3,7 @@ class GroupRemit < ApplicationRecord
   belongs_to :anniversary, optional: true
   has_many :batches, dependent: :destroy
   has_many :denied_members, dependent: :destroy
-  has_many :payments
+  has_many :payments, dependent: :destroy
   accepts_nested_attributes_for :payments
   has_one :process_coverage
 

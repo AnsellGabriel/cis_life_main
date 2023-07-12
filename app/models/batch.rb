@@ -52,6 +52,7 @@ class Batch < ApplicationRecord
   has_many :batch_beneficiaries, dependent: :destroy
   has_many :member_dependents, through: :batch_beneficiaries
   has_many :batch_remarks
+  has_many :process_claims, dependent: :destroy
 
   def update_valid_health_dec
     self.update_attribute(:valid_health_dec, true)
