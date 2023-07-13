@@ -28,6 +28,8 @@ class MemberDependentsController < InheritedResources::Base
       # birth_date: FFaker::Time.between(50.years.ago, 1.year.ago),
       # relationship: "Family"
     )
+    @claims = params[:claims]
+    
   end
 
   def create_beneficiary
@@ -35,10 +37,19 @@ class MemberDependentsController < InheritedResources::Base
     
     respond_to do |format|
       if @member_dependent.save
-        format.html { redirect_to new_group_remit_batch_beneficiary_path(@group_remit, @batch), notice: "Member dependent was successfully created." }
+        if member_dependent_params[:claims]
+          format.html { redirect_to new_group_remit_batch_beneficiary_path(@group_remit, @batch, claims: true), notice: "Member dependent was successfully created." }
+        else
+          format.html { redirect_to new_group_remit_batch_beneficiary_path(@group_remit, @batch), notice: "Member dependent was successfully created." }
+        end
       else
-        format.html { render :new_beneficiary, status: :unprocessable_entity }
+        if member_dependent_params[:claims]
+          format.html { render :new_beneficiary_claims, status: :unprocessable_entity }
+        else
+          format.html { render :new_beneficiary, status: :unprocessable_entity }
+        end
       end
+      
     end
   end
 
@@ -92,7 +103,7 @@ class MemberDependentsController < InheritedResources::Base
     end
 
     def member_dependent_params
-      params.require(:member_dependent).permit(:last_name, :first_name, :middle_name, :suffix, :birth_date, :relationship)
+      params.require(:member_dependent).permit(:last_name, :first_name, :middle_name, :suffix, :birth_date, :relationship, :claims)
     end
 
     def check_userable_type

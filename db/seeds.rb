@@ -35,10 +35,6 @@
 # # #     )
 # # # end
 
-# # # Proposal
-# Proposal.create!(proposal_no: 'PROP-00001' ,cooperative_id: 1, coop_sf: 12.5, agent_sf: 4.5, ave_age: 50, minimum_participation: 3)
-
-
 # # # # Plan
 # # # Plan.create!(name: 'GYRT-Basic', description: 'Plan 1 description', gyrt_type: 'basic', acronym: 'GYRT')
 # # # Plan.create!(name: 'GYRT-Family', description: 'Plan 2 description', gyrt_type: 'family', acronym: 'GYRTF')
@@ -115,7 +111,7 @@
 # # #   user.approved = true
 # # #   puts "#{user.email} - DONE!" if user.save!
 # # # end
-# # # =======
+# # # 
 # # # # CoopBranch of Coop 1
 # # # 10.times do |i|
 # # #     CoopBranch.create!(name: "Branch #{i+1}", cooperative_id: 1, region: "Region 1", province: "Province 1", municipality: "Municipality 1", barangay: "Barangay 1", street: "Street 1", contact_details: "09123456789")
@@ -138,6 +134,78 @@
 # coop.street = 'PMFC Plaza, Ortigas Center'
 # coop.email = 'pmfc@coop.com'
 # coop.save!
+
+coop = Cooperative.find_or_initialize_by(name: "PEOPLE’S MICRO FINANCE COOP")
+coop.region = "NCR"
+coop.province = 'Metro Manila'
+coop.municipality = 'Pasig City'
+coop.cooperative_type = 'Multi-Purpose'
+coop.street = 'PMFC Plaza, Ortigas Center'
+coop.email = 'pmfc@coop.com'
+coop.save!
+
+CoopBranch.create!(name: "PMFC Branch 1", cooperative_id: 1, region: "Region 1", province: "Province 1", municipality: "Municipality 1", barangay: "Barangay 1", street: "Street 1", contact_details: "09123456789")
+
+# # # # Coop User
+CoopUser.create!(first_name: 'Cherry', last_name: 'Gonzales', middle_name: 'P', birthdate: FFaker::Time.date, mobile_number: '09948423385', coop_branch_id: 1, cooperative_id: 1)
+User.create!(email: 'pmfc@gmail.com', password: 'password', password_confirmation: 'password',  approved: true, userable_id: 1, userable_type: 'CoopUser')
+
+
+# AgentGroup
+AgentGroup.create!(name: 'Marketing', description: 'Marketing Group')
+
+# # Agent
+Agent.create!(first_name: 'Rullian', middle_name: 'Postrano', last_name: 'Rong', agent_group_id: 1)
+
+# # # # PMFC Plan
+Plan.create!(name: 'Special Term Insurance (PMFC)', description: 'Special term insurance for PEOPLE’S MICRO FINANCE COOP', gyrt_type: 'family', acronym: 'PMFC')
+
+# # # # PMFC Benefits
+Benefit.create!(name: 'Life', description: 'Benefit 2 description', acronym: 'LI')
+Benefit.create!(name: 'Accidental Death & Dismemberment', description: 'Benefit 2 description', acronym: 'ADD')
+Benefit.create!(name: 'Burial Cash Assistance', description: 'Benefit 2 description', acronym: 'BCA')
+
+# # # # # PMFC Agreement
+Agreement.create!(moa_no: 'PMFC-MOA-00001', description: '', plan_id: 1, agent_id: 1, cooperative_id: 1, anniversary_type: 'none')
+
+# # # PMFC Agreement Benefit
+# # # for Principal (name, insured_type)
+pmfc_agreement = Agreement.find_by(id: 1) # Use agreement.id instead of hardcoded 1
+benefits = [
+  ['Principal', 1],
+  ['Spouse', 2],
+  ['Parent', 3],
+  ['Children', 4],
+  ['Sibling', 5]
+]
+
+benefits.each do |benefit|
+  agree_ben = AgreementBenefit.find_or_initialize_by(agreement_id: pmfc_agreement.id, name: benefit[0])
+
+  case benefit[1]
+  when 1, 2, 3
+    agree_ben.min_age = 18
+    agree_ben.max_age = 65
+    agree_ben.exit_age = 79.5
+  when 4
+    agree_ben.min_age = 0.038
+    agree_ben.max_age = 21
+    agree_ben.exit_age = 21.5
+  when 5
+    agree_ben.min_age = 1
+    agree_ben.max_age = 21
+    agree_ben.exit_age = 21.5
+  end
+
+  agree_ben.insured_type = benefit[1]
+
+  if agree_ben.save
+    puts "#{benefit[0]} - Done!"
+  else
+    puts "Failed to save #{benefit[0]}"
+  end
+end
+
 
 # CoopBranch.create!(name: "PMFC Branch 1", cooperative_id: 1, region: "Region 1", province: "Province 1", municipality: "Municipality 1", barangay: "Barangay 1", street: "Street 1", contact_details: "09123456789")
 
@@ -166,6 +234,9 @@
 
 # # # # # # PMFC Agreement
 # Agreement.create!(proposal_id: 1, moa_no: 'PMFC-MOA-00001', description: '', plan_id: 1, agent_id: 1, cooperative_id: 1, anniversary_type: 'none')
+
+# # # #Agreement
+agreement = Agreement.create!(plan_id: 2, cooperative_id: 2, agent_id: 1, moa_no: "JFC-0001", contestability: 12, nel: 25000, nml: 5000000, anniversary_type: 'none', transferred: 0, comm_type: "Gross Commission", entry_age_from: 18, entry_age_to: 65, exit_age: 80)
 
 # # # # PMFC Agreement Benefit
 # # # # for Principal (name, insured_type)
@@ -717,6 +788,85 @@
 # User.create!(email: 'jfc@gmail.com', password: 'password', password_confirmation: 'password',  approved: true, userable_id: 2, userable_type: 'CoopUser')
 
 # Plan.create!(name: 'GYRT-Family Ranking', description: 'Plan 4 description', gyrt_type: 'family', acronym: 'GYRTFR')
+
+jfc_agreement = Agreement.find_by(id: 2)
+[
+  ['Option 1', 9
+  ],
+  ['Option 2', 9
+  ],
+  ['Option 3', 8
+  ],
+  ['Option 4', 7
+  ],
+  ['Option 5', 6
+  ]
+].each do |ab|
+  agree_ben = AgreementBenefit.find_or_initialize_by(agreement_id: jfc_agreement.id, name: ab[0])
+  agree_ben.min_age = jfc_agreement.entry_age_from
+  agree_ben.max_age = jfc_agreement.entry_age_to
+  agree_ben.exit_age = jfc_agreement.exit_age
+  agree_ben.insured_type = ab[1]
+  puts "#{ab[0]} - Done!" if agree_ben.save!
+  
+end
+
+# # #Product Benefit
+[
+#   Option 1
+  [6, 'LI', 50000, 155],
+  [6, 'ADD', 50000, 155],
+  [6, 'BCA', 5000, 25],
+  #Option 2
+  [7, 'LI', 200000, 615],
+  [7, 'ADD', 200000, 615],
+  [7, 'BCA', 20000, 100],
+  #Option 3
+  [8, 'LI', 400000, 1225],
+  [8, 'ADD', 400000, 1225],
+  [8, 'BCA', 20000, 100],
+  #Option 4
+  [9, 'LI', 1000000, 3967.5],
+  [9, 'ADD', 1000000, 3967.5],
+  [9, 'BCA', 20000, 100],
+  #Option 5
+  [10, 'LI', 2000000, 8422.5],
+  [10, 'ADD', 2000000, 8422.5],
+  [10, 'BCA', 20000, 100]
+].each do |option|
+  benefit = Benefit.find_by(acronym: option[1])
+  prod_ben = ProductBenefit.find_or_initialize_by(agreement_benefit_id: option[0], benefit_id: benefit.id)
+  prod_ben.coverage_amount = option[2]
+  prod_ben.premium = option[3]
+  puts "#{prod_ben.agreement_benefit.name}(#{prod_ben.benefit.name}) - Done" if prod_ben.save!
+end
+
+
+# # # JFC Dependents
+
+agreement = Agreement.find_by(id: 2)
+
+[
+  ['Dependent-Spouse 1', 2, 18, 65], #23
+  ['Dependent-Spouse 2', 2, 18, 65], #27
+  ['Dependent-Spouse 3', 2, 18, 65], #28
+  ['Dependent-Parent 1', 3, 18, 65], #24
+  ['Dependent-Parent 2', 3, 18, 65], #29
+  ['Dependent-Parent 3', 3, 18, 65], #30
+  ['Dependent-Child 1', 4, 3, 21], #25
+  ['Dependent-Child 2', 4, 3, 21], #31
+  ['Dependent-Child 3', 4, 3, 21], #32
+  ['Dependent-Sibling 1', 5, 3, 21], #26
+  ['Dependent-Sibling 2', 5, 3, 21], #33
+  ['Dependent-Sibling 3', 5, 3, 21] #34
+].each do |dep|
+  agree_ben = AgreementBenefit.find_or_initialize_by(agreement_id: agreement.id, name: dep[0])
+  agree_ben.min_age = dep[2]
+  agree_ben.max_age = dep[3]
+  agree_ben.exit_age = dep[3]
+  agree_ben.insured_type = dep[1]
+  puts "#{dep[0]} - Done!" if agree_ben.save!
+end
 
 # Proposal.create!(proposal_no: 'JFC-PROP-00001', cooperative_id: 2, coop_sf: 12.5, agent_sf: 10, ave_age: 50, minimum_participation: 3)
 

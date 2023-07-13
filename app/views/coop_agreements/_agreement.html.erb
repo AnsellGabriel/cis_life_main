@@ -20,18 +20,13 @@
 
           </div>
 
-          <%= render 'agreement_field', 
-            name: 'Proposal', 
-            value: agreement.proposal.proposal_no, 
-            margin: '' 
-          %>
           
           <% if agreement_presenter.group_remits_submitted? %>
             <%= render 'submitted_field', group_remit: last_group_remit %>
           <% else %>
             <%= render 'agreement_field', 
               name: 'Min. Participants', 
-              value: agreement.proposal.minimum_participation, 
+              value: agreement.minimum_participation, 
               margin: 'mb-2'
             %>
 
@@ -108,12 +103,6 @@
               %>
             </div>
 
-            <%= render 'agreement_field', 
-              name: 'Proposal', 
-              value: agreement.proposal.proposal_no, 
-              margin: ''
-            %>
-
             <% if last_group_remit.active? %>
               <%= render 'submitted_field', group_remit: last_group_remit %>
             <% else %>
@@ -133,11 +122,7 @@
       <% @filtered_anniversaries.each do |anniv| %>
         <div class="card">
           <div class="card-body d-flex flex-column" style="width: 400px">
-            <%= render 'agreement_field', 
-              name: 'Proposal', 
-              value: agreement.proposal.proposal_no, 
-              margin: '' 
-            %>
+
             <%= render 'unsubmitted_field', agreement: agreement, anniv: anniv %>
             <div class="mt-4 text-center">
               <%= button_to "New Group Remit", group_remits_path, 

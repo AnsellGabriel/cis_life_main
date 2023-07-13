@@ -4,8 +4,6 @@ class Batch < ApplicationRecord
   include Calculate
   attr_accessor :rank
 
-
-
   # remove association of coop_member from agreement.coop_members
   # if batch is destroyed and status is new/recent
   before_destroy :delete_agreements_coop_members, if: :new_status?
@@ -28,7 +26,8 @@ class Batch < ApplicationRecord
   enum status: {
     recent: 0,
     renewal: 1,
-    transferred: 2
+    transferred: 2,
+    reinstated: 3
   }
 
   # batch.insurance_status
@@ -52,6 +51,7 @@ class Batch < ApplicationRecord
   has_many :batch_beneficiaries, dependent: :destroy
   has_many :member_dependents, through: :batch_beneficiaries
   has_many :batch_remarks
+  has_many :process_claims, dependent: :destroy
 
   def update_valid_health_dec
     self.update_attribute(:valid_health_dec, true)
@@ -77,20 +77,26 @@ class Batch < ApplicationRecord
   def self.process_batch(batch, group_remit, rank = nil, transferred = false, duration = nil)
     agreement = group_remit.agreement
     coop_member = batch.coop_member
-    renewal_member = agreement.coop_members.find_by(id: coop_member.id)
+    renewal_member = agreement.agreements_coop_members.find_by(coop_member_id: coop_member.id)
     batch.age = batch.member_details.age
-    
+
+    if agreement.anniversary_type == 'none'
+      batch.effectivity_date = Date.today.beginning_of_month
+      batch.expiry_date = Date.today.next_year.prev_month.end_of_month
+    end
+
     check_plan(agreement, batch, rank, duration)
 
     if renewal_member.present?
         batch.status = :renewal
+        renewal_member.update!(status: 'renewal')
     else
       if transferred == true || transferred == "1"
         batch.status = :transferred
       else
         batch.status = :recent
       end
-      agreement.coop_members << coop_member
+      agreement.agreements_coop_members.create!(coop_member_id: coop_member.id, status: 'new')
     end
 
   end
@@ -109,8 +115,8 @@ class Batch < ApplicationRecord
     
   end
 
-  def set_duration_and_residency
-  end
+  # def set_duration_and_residency
+  # end
 
   def self.determine_premium(rank, batch, group_remit)
     # case rank

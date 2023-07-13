@@ -14,7 +14,7 @@ class CoopAgreementsController < ApplicationController
   def show
     @group_remits_eager = @agreement.group_remits.joins(:anniversary)
     # @group_remits = @agreement.group_remits.order(created_at: :desc)
-    @coop_sf = @agreement.get_coop_sf
+    @coop_sf = @agreement.coop_sf
     @filtered_anniversaries = @agreement.get_filtered_anniversaries(@agreement.group_remits.expiry_dates)
   end
 

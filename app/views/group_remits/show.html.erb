@@ -35,7 +35,8 @@
       <% end %>
 
     </div>
-  <% elsif @group_remit.expired? && @group_remit == @anniversary.group_remits.last %>
+    
+  <% elsif @group_remit.expired? && @group_remit == @agreement.group_remits.last %>
     <%= button_to 'Renew', renewal_group_remit_path(@group_remit),
         method: :get, 
         class: small_btn('warning'), 
@@ -78,6 +79,10 @@
     <% end %>
     <div class="<%= flex_justify_align('between') %> " style="height: 100%; width: 460px;">
       <div style="width: 100%">
+
+        <% if @group_remit.for_payment? %>
+          <%= render 'payment' %>
+        <% end %>
 
         <% if @group_remit.pending? || @group_remit.for_renewal? %>
             <%= turbo_frame_tag "batch_import_form" do %>
@@ -202,7 +207,7 @@
     <tbody id="batches_body">
 
       <% if @group_remit.batches.exists? %>
-        <%= render @batches, group_remit: @group_remit, agreement: @agreement %>
+        <%= render @batches.includes([coop_member: :member], :agreement_benefit, :batch_beneficiaries), group_remit: @group_remit, agreement: @agreement %>
       <% end %>
 
     </tbody>

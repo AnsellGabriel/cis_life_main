@@ -51,6 +51,15 @@ input[type=checkbox]:hover, input[type="date"]:hover {
   cursor: pointer;
 }
 
+.claims-btn[type="radio"] {
+  /* Apply custom styles when the radio button is checked */
+  /* Example styles: add your own or modify as needed */
+  background-color: #007bff;
+  border-color: #007bff;
+  color: #ffffff;
+}
+
+
 a {
   text-decoration: none !important;
 }
@@ -91,4 +100,149 @@ input[type="number"]::-webkit-outer-spin-button {
 
 .hovered-link:hover {
   color: black;
+}
+
+// .long-name {
+//   display: inline-block;
+//   max-width: 200px; /* Set the desired maximum width */
+//   overflow-wrap: break-word; 
+// }
+
+
+// claims tracker CSS
+.track {
+  position: relative;
+  background-color: #ddd;
+  height: 7px;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  margin-bottom: 60px;
+  margin-top: 50px;
+}
+
+.track .step {
+  -webkit-box-flex: 1;
+  -ms-flex-positive: 1;
+  flex-grow: 1;
+  width: 25%;
+  margin-top: -18px;
+  text-align: center;
+  position: relative;
+}
+
+.track .step.active:before {
+  background: #226cff;
+}
+
+.track .step.denied:before {
+  background: #cd0b1e;
+}
+
+.track .step::before {
+  height: 7px;
+  position: absolute;
+  content: "";
+  width: 100%;
+  left: 0;
+  top: 18px;
+}
+
+.track .step.active .icon {
+  background: #226cff;
+  color: #fff;
+}
+
+.track .step.denied .icon {
+  background: #cd0b1e;
+  color: #fff;
+}
+
+.track .icon {
+  display: inline-block;
+  width: 40px;
+  height: 40px;
+  line-height: 40px;
+  position: relative;
+  border-radius: 100%;
+  background: #ddd;
+}
+
+.track .step.active .text {
+  font-weight: 400;
+  color: #000;
+}
+
+.track .text {
+  display: block;
+  margin-top: 7px;
+}
+
+.itemside {
+  position: relative;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  width: 100%;
+}
+
+.itemside .aside {
+  position: relative;
+  -ms-flex-negative: 0;
+  flex-shrink: 0;
+}
+
+.img-sm {
+  width: 80px;
+  height: 80px;
+  padding: 7px;
+}
+
+ul.row,
+ul.row-sm {
+  list-style: none;
+  padding: 0;
+}
+
+.itemside .info {
+  padding-left: 15px;
+  padding-right: 7px;
+}
+
+.itemside .title {
+  display: block;
+  margin-bottom: 5px;
+  color: #212529;
+}
+
+
+ul.timeline {
+    list-style-type: none;
+    position: relative;
+}
+ul.timeline:before {
+    content: ' ';
+    background: #d4d9df;
+    display: inline-block;
+    position: absolute;
+    left: 29px;
+    width: 2px;
+    height: 100%;
+    z-index: 400;
+}
+ul.timeline > li {
+    // margin: 25px 0;
+    padding-left: 25px;
+}
+ul.timeline > li:before {
+    content: ' ';
+    background: #226cff;
+    display: inline-block;
+    position: absolute;
+    border-radius: 50%;
+    //  border: 3px solid #226cff;
+    left: 22px;
+    width: 15px;
+    height: 15px;
+    z-index: 400;
 }

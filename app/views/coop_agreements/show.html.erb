@@ -18,7 +18,7 @@
               <% end %>
               </h6>
             </div>
-            <% if plan_acronym == 'PMFC' %>
+            <% if plan_acronym == 'PMFC' || @agreement.anniversary_type == 'none' %>
               <%= button_to "New Batch", group_remits_path, 
                 method: :post, 
                 params: { 
@@ -49,7 +49,7 @@
             <div class="<%= flex_justify_align('between', 'center') %>">
               <div class="d-flex gap-1">
 
-                <% if plan_acronym == 'PMFC' %>
+                <% if plan_acronym == 'PMFC' || @agreement.anniversary_type == 'none' %>
                   <h6 class="card-title mb-0">Group Remittances</h6>
                 <% else %>
                   <h6 class="card-title mb-0">History</h6>
@@ -64,7 +64,5 @@
       </div>
   </div>
   
-<% if Rails.env.development? %>
-  <% console %>
-<% end %>
+
   
