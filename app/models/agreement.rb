@@ -5,7 +5,7 @@ class Agreement < ApplicationRecord
     Anniversary = ["Single", "Multiple", "12 Months"]
 
     belongs_to :plan, optional: true
-    belongs_to :proposal, optional: true
+    # belongs_to :proposal, optional: true
     belongs_to :agent, optional: true
     belongs_to :cooperative, optional: true
 
@@ -14,10 +14,6 @@ class Agreement < ApplicationRecord
     has_many :anniversaries
     has_many :agreements_coop_members
     has_many :coop_members, through: :agreements_coop_members
-
-    def get_coop_sf
-      proposal.coop_sf
-    end
 
     # filters anniversaries based on a given set of expiry dates
     def get_filtered_anniversaries(expiry_dates)

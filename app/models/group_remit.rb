@@ -113,11 +113,11 @@ class GroupRemit < ApplicationRecord
   end
 
   def get_coop_sf
-    agreement.agreement_benefits[0].proposal.coop_sf
+    agreement.coop_sf
   end
 
   def get_agent_sf
-    agreement.agreement_benefits[0].proposal.agent_sf
+    agreement.agent_sf
   end
 
   def total_dependent_premiums
