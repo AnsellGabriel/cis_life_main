@@ -849,6 +849,10 @@ end
   puts "#{prod_ben.agreement_benefit.name}(#{prod_ben.benefit.name}) - Done" if prod_ben.save!
 end
 
+Department.create!(name: 'Underwriting')
+# # # # Coop User
+Employee.create!(first_name: 'Cherry', last_name: 'Gonzales', middle_name: 'P', birthdate: FFaker::Time.date, mobile_number: '09948423385', department_id: 1)
+User.create!(email: 'analyst@gmail.com', password: 'password', password_confirmation: 'password',  approved: true, userable_id: 1, userable_type: 'Employee')
 
 
 # # # [

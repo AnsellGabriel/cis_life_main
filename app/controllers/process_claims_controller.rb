@@ -57,7 +57,7 @@ class ProcessClaimsController < ApplicationController
 
     respond_to do |format|
       if @process_claim.save!
-        format.html { redirect_to @process_claim, notice: "Process claim was successfully created." }
+        format.html { redirect_to member_agreements_coop_member_path(coop_member), notice: "Claims submitted!" }
       else
         format.html { render :new, status: :unprocessable_entity }
       end

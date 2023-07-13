@@ -38,8 +38,11 @@
                 Insurance
               </a>
               <ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
-                <%= link_to "Group Yearly Renewable Term", coop_agreements_path, class: "dropdown-item" %>
-                <%= link_to "LPPI", plans_path, class: "dropdown-item" %>
+                <% current_user.userable.cooperative.agreements.each do |agreement| %>
+                  <%= link_to agreement.plan.name, coop_agreement_path(agreement), 
+                    class: 'dropdown-item'
+                  %>
+                <% end %>
               </ul>
             </li>
             <li class="nav-item dropdown">

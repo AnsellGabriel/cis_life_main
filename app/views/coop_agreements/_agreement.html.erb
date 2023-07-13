@@ -10,43 +10,35 @@
 
       <div class="card">
         <div class="card-body d-flex flex-column" style="width: 400px">
-          <div class="mb-3">
+          <%= render 'agreement_field', 
+            name: 'Required Minimum Participants', 
+            value: agreement.minimum_participation, 
+            margin: 'mb-2'
+          %>
 
-            <% if agreement.group_remits.present? %>
-                <span class="<%= single_gr_presenter.status_badge %>">
-                  <%= single_gr_presenter.status_text %>
-                </span>
-            <% end %>
+          <%= render 'agreement_field', 
+            name: 'Total Current Participants', 
+            value: Batch.joins(group_remit: :agreement)
+              .where(insurance_status: :approved, agreements: { id: agreement.id })
+              .count, 
+            margin: 'mb-2'
+          %>
 
-          </div>
-
-          
-          <% if agreement_presenter.group_remits_submitted? %>
-            <%= render 'submitted_field', group_remit: last_group_remit %>
-          <% else %>
+          <% unless agreement.plan.acronym == 'PMFC' || agreement.anniversary_type == 'none'%>
             <%= render 'agreement_field', 
-              name: 'Min. Participants', 
-              value: agreement.minimum_participation, 
-              margin: 'mb-2'
-            %>
-
-            <% unless agreement.plan.acronym == 'PMFC' %>
-              <%= render 'agreement_field', 
-                name: 'Anniversary Date', 
-                value: agreement.anniversaries.first.present? ? date_as_month_day(agreement.anniversaries.first.anniversary_date) : 'Tentative', 
-                margin: ''
-              %>
-            <% end %>
-
-            <%= render 'agreement_field', 
-              name: 'Cooperative Service Fee', 
-              value: "#{@coop_sf}%", 
+              name: 'Anniversary Date', 
+              value: agreement.anniversaries.first.present? ? date_as_month_day(agreement.anniversaries.first.anniversary_date) : 'Tentative', 
               margin: ''
             %>
           <% end %>
 
+          <%= render 'agreement_field', 
+            name: 'Cooperative Service Fee', 
+            value: "#{@coop_sf}%", 
+            margin: ''
+          %>
           <div class="mt-4 text-center">
-
+            <!--
             <% if agreement.group_remits.present?  %>
               <%= link_to 'View Group Remit', coop_agreement_group_remit_path(@agreement, @agreement.group_remits.last), 
                 class: small_btn('warning'), 
@@ -65,21 +57,10 @@
                   class: small_btn('success'), 
                   data: { turbo: false } 
                 %>
-              <% else %>
-                <%= button_to "New Group Remit", group_remits_path, 
-                  method: :post, 
-                  params: { 
-                    agreement_id: agreement.id, 
-                    anniversary_id: nil,
-                    anniv_type: 'none' 
-                  }, 
-                  class: small_btn('success'), 
-                  data: { turbo: false } 
-                %>
               <% end %>
 
             <% end %>
-
+            -->
           </div>
         </div>
       </div>

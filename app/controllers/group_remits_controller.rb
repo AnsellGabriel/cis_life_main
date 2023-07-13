@@ -36,6 +36,7 @@ class GroupRemitsController < InheritedResources::Base
       @group_remit.set_under_review_status
     end
     
+
     respond_to do |format|
       if @group_remit.save
         # @group_remit.batches
@@ -108,8 +109,10 @@ class GroupRemitsController < InheritedResources::Base
   def create
     @agreement = Agreement.find_by(id: params[:agreement_id])
     @group_remit = @agreement.group_remits.build
+    @group_remit.effectivity_date = Date.today.beginning_of_month
     anniversary_date = set_anniversary(@agreement.anniversary_type, params[:anniversary_id])
     @group_remit.set_terms_and_expiry_date(anniversary_date)
+
 
     respond_to do |format|
       if @group_remit.save!
@@ -166,7 +169,7 @@ class GroupRemitsController < InheritedResources::Base
 
     @group_remit.payments.build(receipt: params[:file])
     @group_remit.status = :payment_verification
-    # @group_remit.effectivity_date = Date.today
+    
 
     respond_to do |format|
       if @group_remit.save!
@@ -198,7 +201,7 @@ class GroupRemitsController < InheritedResources::Base
         @group_remit.anniversary = Anniversary.find_by(id: anniv_id.to_i)
         @group_remit.anniversary.anniversary_date
       else
-        Date.today
+        Date.today.prev_month.end_of_month
       end
     end
 

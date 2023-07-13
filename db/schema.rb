@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_07_13_013914) do
+ActiveRecord::Schema[7.0].define(version: 2023_07_13_085711) do
   create_table "active_admin_comments", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.string "namespace"
     t.text "body"
@@ -363,6 +363,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_07_13_013914) do
     t.decimal "net_premium", precision: 10, scale: 2
     t.decimal "coop_commission", precision: 10, scale: 2
     t.decimal "agent_commission", precision: 10, scale: 2
+    t.boolean "main", default: false
     t.index ["agreement_id"], name: "index_group_remits_on_agreement_id"
     t.index ["anniversary_id"], name: "index_group_remits_on_anniversary_id"
   end
@@ -433,6 +434,8 @@ ActiveRecord::Schema[7.0].define(version: 2023_07_13_013914) do
     t.bigint "group_remit_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.decimal "amount", precision: 10, scale: 2
+    t.integer "status"
     t.index ["group_remit_id"], name: "index_payments_on_group_remit_id"
   end
 

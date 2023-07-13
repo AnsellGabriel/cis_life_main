@@ -182,13 +182,18 @@ class GroupRemit < ApplicationRecord
   end
 
   def set_terms_and_expiry_date(anniversary_date)
-    terms = set_terms(anniversary_date)
-    self.terms = terms <= 0 ? terms + 12 : terms
-    self.expiry_date = terms <= 0 ? anniversary_date.next_year : anniversary_date
+    if self.agreement.anniversary_type != 'none'
+      terms = set_terms(anniversary_date)
+      self.terms = terms <= 0 ? terms + 12 : terms
+      self.expiry_date = terms <= 0 ? anniversary_date.next_year : anniversary_date
+    else
+      self.terms = 12
+      self.expiry_date = anniversary_date.next_year
+    end
   end
 
   def set_terms(anniversary_date)
-    (anniversary_date.year * 12 + anniversary_date.month) - (Date.today.year * 12 + Date.today.month)
+    (anniversary_date.year * 12 + anniversary_date.month) - (self.effectivity_date.year * 12 + self.effectivity_date.month)
   end
 
   def self.expiry_dates

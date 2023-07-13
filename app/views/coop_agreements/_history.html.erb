@@ -5,38 +5,59 @@
 			<% gr_presenter = GroupRemitPresenter.new(group_remit)%>
 			<div class="card <%= @agreement.anniversary_type == 'multiple' ? 'hidden' : '' %>" data-toggler-target="toggleable" data-id="history_<%= group_remit.anniversary.nil? ? '' : dom_id(group_remit.anniversary) %>">
 				<div class="card-body <%= flex_justify_align('between', 'center') %> gap-1">
-					<div class="<%= flex_justify_align('', '', true) %> gap-3">
-						<span class="<%= gr_presenter.status_badge %>" style="max-width: 200px;">
-							<%= gr_presenter.status_text %>
-						</span>
-
-						<% if plan_acronym == 'PMFC' %>
-							<div class="text-secondary small">
-								<%= content_tag :span, "#{@cooperative.name} BATCH #{@agreement.group_remits.find_index(group_remit) + 1}" %>
+					<div class="<%= flex_justify_align('', '', true) %> gap-3" style="width: 100%">
+						<% if gr_presenter.remaining_days <= 90 && gr_presenter.remaining_days > 0%>
+							<div class="">
+								<%= content_tag :span, "#{gr_presenter.remaining_days} days until expiry", class: badge(gr_presenter.countdown_color) %>
 							</div>
-						<% else %>
-							<div class="d-flex gap-3">
-								<div class="text-secondary small">
-									<%= content_tag :span, 'Effectivity date: ' %>
-									<span> 
-
-									<% if group_remit.effectivity_date.present? %>
-										<%= date_as_month_day_year(group_remit.effectivity_date) %>
-									<% else %>
-										Tentative
-									<% end %>
-
-									</span>
+						<% end %>
+						<% if plan_acronym == 'PMFC' || @agreement.anniversary_type == 'none' %>
+							<div class="">
+								<div class="<%= flex_justify_align('between', 'center') %> mb-3">
+									<div class="<%= flex_justify_align('', 'center') %> gap-2">
+										<span class="<%= gr_presenter.status_badge %>">
+											<%= gr_presenter.status_text %>
+										</span>
+										<%= content_tag :span, "#{@agreement.moa_no} #{group_remit.effectivity_date.strftime('%B').upcase} BATCH"%>										
+									</div>
+									<%= link_to 'View', group_remit_path(group_remit), class: small_btn('outline-warning') %>
 								</div>
-								<div class="text-secondary small">
+								<div class="<%= flex_justify_align('around') %> gap-3 text-muted small">
+									
+									<div class="">
+										<%= content_tag :span, 'Effectivity date: ' %>
+										<span> 
+
+										<% if group_remit.effectivity_date.present? %>
+											<%= date_as_month_day_year(group_remit.effectivity_date) %>
+										<% else %>
+											Tentative
+										<% end %>
+
+										</span>
+									</div>
+									<div class="">
 										<%= content_tag :span, 'Expiry date: ' %>
-										<%= content_tag :span, date_as_month_day_year(group_remit.expiry_date) %>
+										<span> 
+
+											<% if group_remit.expiry_date.present? %>
+												<%= date_as_month_day_year(group_remit.expiry_date) %>
+											<% else %>
+												Tentative
+											<% end %>
+
+										</span>
+									</div>
+									<div class="">
+										<%= content_tag :span, 'Participants: ' %>
+										<span> 
+											<%= group_remit.batches.where(insurance_status: :approved).size %>
+										</span>
+									</div>
 								</div>
 							</div>
 						<% end %>
-
 					</div>
-					<%= link_to 'View', group_remit_path(group_remit), class: small_btn('secondary') %>
 				</div>
 			</div>
 		<% end %>
@@ -53,3 +74,4 @@
 
 	</div>
 <% end %>
+

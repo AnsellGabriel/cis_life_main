@@ -49,7 +49,7 @@
 									<% filed_claim = ProcessClaim.find_by(agreement_id: agreement.id, batch_id: batch.id) %>
 									<% claim_presenter = ProcessClaimPresenter.new(filed_claim) %>
 									<% if filed_claim.present? %>
-										<%= content_tag :span, 'Claims submitted', class: small_btn('success') %>
+										<%= content_tag :span, 'Claims submitted', class: 'text-success' %>
 									<% else %>
 										<%= link_to 'File Claim', new_process_claim_path(coop_member_id: @coop_member.id, agreement_id: agreement.id), class: small_btn('primary') %>
 									<% end %>
