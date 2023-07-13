@@ -1,73 +1,7 @@
 <div id="<%= dom_id process_coverage %>">
   <div class="row mb-3">
     <div class="col-6">
-      <%= content_tag :p do %>
-        <strong>Group remit:</strong>
-        <%= process_coverage.group_remit %>
-      <% end %>
-      
-      <%= content_tag :p do %>
-        <strong>MOA:</strong>
-        <%#= link_to process_coverage.group_remit.agreement.moa_no, agreement_path(id: process_coverage.group_remit.agreement) %>
-        <%= link_to process_coverage.group_remit.agreement.moa_no, show_details_agreement_path(process_coverage.group_remit.agreement), data: { turbo_frame: "remote_modal" } %>
-        <%#= link_to process_coverage.group_remit.agreement.moa_no, agreement_path(id: process_coverage.group_remit.moa,for_modal: "yes"), data: { turbo_frame: "remote_modal" } %>
-      <% end %>
-
-      <%= content_tag :p do %>
-        <strong>Agent:</strong>
-        <%= process_coverage.agent %>
-      <% end %>
-      
-      <%= content_tag :p do %>
-        <strong>Effectivity:</strong>
-        <%= month_day_year(process_coverage.effectivity) %> |
-        <strong>Expiry:</strong>
-        <%= month_day_year(process_coverage.expiry) %>
-      <% end %>
-
-      <%= content_tag :p do %>
-        <strong>Regular Count:</strong>
-        <%= @batches_o.where(age: 18..65).count %> |
-        <strong>Overage Count:</strong>
-        <%= @batches_o.where(age: 66..).count %>
-      <% end %>
-
-      <%= content_tag :p do %>
-        <strong>Minimum Participation:</strong>
-        <%= num_delimit(@process_coverage.group_remit.agreement.proposal.minimum_participation) %> |
-        <strong>Enrolled:</strong>
-        <%= num_delimit(@process_coverage.group_remit.batches.count) %> 
-      <% end %>
-      
-      <%= content_tag :p do %>
-        <strong>No Birthdate:</strong>
-        <%= @process_coverage.group_remit.batches.where(age: ..0).count %>
-      <% end %>
-      
-      <%= content_tag :p do %>
-        <% unless @life_cov.nil? %>
-          <strong>Life Coverage:</strong>
-          <%= to_currency(@life_cov) %> |
-        <% end %>
-        <strong>Status:</strong>
-        <%= process_status(@process_coverage.status) %>
-      <% end %>
-
-
-      <% if process_coverage.status == "pending" || process_coverage.status == "for_process" %>
-        <%= link_to new_process_remark_path(ref: process_coverage, pro_status: "Approve", rem_status: "Approved"), title: "Approve", class: "btn btn-sm btn-success mb-2 me-2", data: { turbo_frame: "remote_modal" } do %>
-          <%= bootstrap_icon "check-lg" %> Approve
-        <% end %>
-        <%= link_to new_process_remark_path(ref: process_coverage, pro_status: "Deny", rem_status: "Denied"), title: "Denied", class: "btn btn-sm btn-danger mb-2", data: { turbo_frame: "remote_modal" } do %>
-          <%= bootstrap_icon "x-lg" %> Deny
-        <% end %>
-      <% end %>
-
-      <%# unless process_coverage.group_remit.batches.where(insurance_status: "for_review").count == 0 %>
-        <%#= link_to "Approve All", approve_all_group_remit_batches_path(@group_remit,group_remit: process_coverage.group_remit, process_coverage: process_coverage), class: "btn btn-success", onclick: "return confirm('Are you sure?')", method: :get %>
-      <%# end %>
-      
-      
+      <%= render 'pro_cov_details', process_coverage: process_coverage %>
     </div>
     
     <div class="col-6">

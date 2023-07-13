@@ -105,7 +105,7 @@ class BatchesController < ApplicationController
     rescue NoMethodError => e
       return redirect_to group_remit_path(@group_remit), alert: "Member not found"
     end
-    
+
     Batch.process_batch(
       @batch, 
       @group_remit, 

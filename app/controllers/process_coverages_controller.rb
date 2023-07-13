@@ -1,4 +1,5 @@
 class ProcessCoveragesController < ApplicationController
+  before_action :authenticate_user!
   before_action :set_process_coverage, only: %i[ show edit update destroy approve_batch deny_batch pending_batch ]
 
   # GET /process_coverages
