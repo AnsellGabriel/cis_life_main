@@ -45,7 +45,7 @@
 <% else %>
 	<div class="text-center">
 
-		<% if plan_acronym == 'PMFC' %>
+		<% if plan_acronym == 'PMFC' || @agreement.anniversary_type == 'none'%>
 			<p class="text-muted">No remmitance yet.</p>
 		<% else %>
 			<p class="text-muted">No history yet.</p>

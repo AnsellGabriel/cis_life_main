@@ -7,12 +7,9 @@ class CoopMembersController < InheritedResources::Base
     # initalize new member for coop member modal form
     @member = Member.new
     @member.coop_members.build
-    # get all members data of the cooperative and filter it by last name, first name
-    coop_members = Member.coop_member_details(@cooperative.coop_members)
-    # byebug
+    coop_members = @cooperative.coop_members
     f_members = Member.coop_member_details(coop_members)
       .filter_by_name(params[:last_name_filter], params[:first_name_filter])
-    # # paginate members
     @pagy, @filtered_members = pagy(f_members, items: 10)
   end
 

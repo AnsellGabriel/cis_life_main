@@ -26,7 +26,8 @@ class Batch < ApplicationRecord
   enum status: {
     recent: 0,
     renewal: 1,
-    transferred: 2
+    transferred: 2,
+    reinstated: 3
   }
 
   # batch.insurance_status
@@ -76,9 +77,14 @@ class Batch < ApplicationRecord
   def self.process_batch(batch, group_remit, rank = nil, transferred = false, duration = nil)
     agreement = group_remit.agreement
     coop_member = batch.coop_member
-    renewal_member = agreement.agreements_coop_members.find_by(id: coop_member.id)
+    renewal_member = agreement.agreements_coop_members.find_by(coop_member_id: coop_member.id)
     batch.age = batch.member_details.age
-    
+
+    if agreement.anniversary_type == 'none'
+      batch.effectivity_date = Date.today.beginning_of_month
+      batch.expiry_date = Date.today.next_year.prev_month.end_of_month
+    end
+
     check_plan(agreement, batch, rank, duration)
 
     if renewal_member.present?

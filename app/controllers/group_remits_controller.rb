@@ -166,7 +166,7 @@ class GroupRemitsController < InheritedResources::Base
 
     @group_remit.payments.build(receipt: params[:file])
     @group_remit.status = :payment_verification
-    @group_remit.effectivity_date = Date.today
+    # @group_remit.effectivity_date = Date.today
 
     respond_to do |format|
       if @group_remit.save!

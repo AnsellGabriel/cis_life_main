@@ -24,12 +24,12 @@ class BatchHealthDecsController < InheritedResources::Base
     ActiveRecord::Base.transaction do
       begin
         pre_approved_health_dec = true
-        valid_health_dec_ids = HealthDec.where(valid_answer: true).pluck(:id)
-        identical = valid_health_dec_ids == question_params.keys.map(&:to_i)
+        # valid_health_dec_ids = HealthDec.where(valid_answer: true).pluck(:id)
+        # identical = valid_health_dec_ids == question_params.keys.map(&:to_i)
 
-        unless identical
-          raise ActiveRecord::Rollback, "Please answer all questions"
-        end
+        # unless identical
+        #   raise ActiveRecord::Rollback, "Please answer all questions"
+        # end
 
         question_params.each do |question_id, question_data|
           # byebug
