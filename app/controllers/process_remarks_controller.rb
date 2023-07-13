@@ -39,6 +39,13 @@ class ProcessRemarksController < ApplicationController
   # POST /process_remarks or /process_remarks.json
   def create
     # raise 'errors'
+    @process_coverage = ProcessCoverage.find(params[:process_remark][:process_coverage_id])
+    @batch_count = @process_coverage.group_remit.batches.where(batches: { insurance_status: :for_review }).count
+
+    if @batch_count > 0 
+      return redirect_to process_coverage_path(@process_coverage), alert: "Can't proceed. There are #{@batch_count} #{'coverage'.pluralize(@batch_count)} for review"
+    end
+    
     @process_remark = ProcessRemark.new(process_remark_params)
     @process_remark.user_type = current_user.userable_type
     @process_remark.user_id = current_user.userable_id

@@ -103,6 +103,7 @@ class Batch < ApplicationRecord
 
   def self.check_plan(agreement, batch, rank, duration)
     if agreement.plan.acronym == 'GYRT' || agreement.plan.acronym == 'GYRTF'
+      # batch.set_premium_and_service_fees(:principal, batch.group_remit) # model/concerns/calculate.rb
       batch.set_premium_and_service_fees(:principal, batch.group_remit) # model/concerns/calculate.rb
     elsif agreement.plan.acronym == 'GYRTBR' || agreement.plan.acronym == 'GYRTFR'
       self.determine_premium(rank, batch, batch.group_remit)

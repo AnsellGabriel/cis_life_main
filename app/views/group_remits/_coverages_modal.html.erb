@@ -16,7 +16,7 @@
         <% @agreement.agreement_benefits.includes({product_benefits: :benefit}).each do |ab| %>
           <div class="<%= flex_justify_align('between') %> text-secondary">
             <%#= content_tag :span, "#{ab.insured_type == 'principal' ? ab.insured_type.upcase : ab.insured_type.gsub('_', ' ').split(' ').drop(1).join(' ').upcase}", class: 'text-secondary', style: 'font-size: .8rem; width: 100px' %>
-            <%= content_tag :span, "#{ab.insured_type == 'principal' ? ab.insured_type.upcase : ab.name.upcase}", class: 'text-secondary', style: 'font-size: .8rem; width: 100px' %>
+            <%= content_tag :span, "#{ab.insured_type == 'principal' ? "#{ab.insured_type.upcase}(#{ab.name})" : ab.name.upcase}", class: 'text-secondary', style: 'font-size: .8rem; width: 100px' %>
             <div class="<%= flex_justify_align('between', 'center', true) %>">
 
               <% ab.product_benefits.each do |product| %>
