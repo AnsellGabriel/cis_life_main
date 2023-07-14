@@ -57,8 +57,8 @@ class BatchImportService
         next
       end
 
-      if age_not_within_range?(member, age_min_max)
-        create_denied_member(member, 'Age not within agreement\'s age range')
+      if age_not_within_range?(member, age_min_max, @group_remit.effectivity_date)
+        create_denied_member(member, 'Age not within agreement\'s age range', @group_remit.effectivity_date)
         next
       end
 
@@ -151,10 +151,10 @@ class BatchImportService
     @spreadsheet.sheet(sheet_name).parse(headers: true).delete_if { |row| row.all?(&:blank?) }
   end
 
-  def create_denied_member(member, reason)
+  def create_denied_member(member, reason, effectivity = nil)
     DeniedMember.find_or_create_by!(
       name: "#{member.first_name} #{member.middle_name} #{member.last_name}", 
-      age: member.birth_date.nil? ? 0 : member.age, 
+      age: member.birth_date.nil? ? 0 : member.age(effectivity), 
       reason: reason, 
       group_remit: @group_remit
     )
@@ -223,8 +223,8 @@ class BatchImportService
     )
   end
 
-  def age_not_within_range?(member, age_min_max)
-      member.age < age_min_max[:min_age] || member.age > age_min_max[:max_age]
+  def age_not_within_range?(member, age_min_max, effectivity_date)
+      member.age(effectivity_date) < age_min_max[:min_age] || member.age(effectivity_date) > age_min_max[:max_age]
   end
 
   def increment_denied_members_counter

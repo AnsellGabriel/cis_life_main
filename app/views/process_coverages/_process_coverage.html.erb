@@ -93,7 +93,7 @@
   <% end %>
   
 
-  <%== pagy_bootstrap_nav(@pagy_batch) if @pagy_batch.pages > 1 %>
+  
 
   <%#= content_tag :span, process_coverage.group_remit.agreement %>
   <% unless process_coverage.group_remit.batches.where(insurance_status: "for_review").count == 0 %>
@@ -320,5 +320,9 @@
     </table>
     
   <% end %>
+
+  <div class="text-end">
+    <%== pagy_bootstrap_nav(@pagy_batch) if @pagy_batch.pages > 1 %>
+  </div>
 
 </div>
