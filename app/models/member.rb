@@ -34,8 +34,12 @@ class Member < ApplicationRecord
     full_name.titleize
   end
 
-  def age
-    Date.today.year - self.birth_date.year - ((Date.today.month > self.birth_date.month || (Date.today.month == self.birth_date.month && Date.today.day >= self.birth_date.day)) ? 0 : 1)
+  def age(effectivity_date = nil)
+    if effectivity_date.nil?
+      Date.today.year - self.birth_date.year - ((Date.today.month > self.birth_date.month || (Date.today.month == self.birth_date.month && Date.today.day >= self.birth_date.day)) ? 0 : 1)
+    else
+      ((effectivity_date - self.birth_date) / 365).round
+    end
   end
 
   def coop_member_id(coop)
