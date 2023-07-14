@@ -32,7 +32,11 @@
           <tr>
 
           <th scope="row"><%= process_coverage.id %></th>
-          <td><%= process_coverage.group_remit %></td>
+          <td>
+            <% description = process_coverage.group_remit.description.nil? ? "-" : process_coverage.group_remit.description %>
+            <%= content_tag :span, process_coverage.group_remit, class: "lead" %> <br>
+            <%= content_tag :small, description, class: "fw-lighter" %>
+          </td>
           <td><%= process_coverage.agent %></td>
           <td>
             Effectivity: <%= month_day_year(process_coverage.effectivity) %> <br>
