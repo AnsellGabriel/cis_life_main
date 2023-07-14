@@ -115,8 +115,8 @@ class BatchesController < ApplicationController
     )
 
     begin
-      if member.age < @batch.agreement_benefit.min_age or member.age > @batch.agreement_benefit.max_age
-        return redirect_to group_remit_path(@group_remit), alert: "Member age must be between 18 and 65 years old."
+      if member.age(@group_remit.effectivity_date) < @batch.agreement_benefit.min_age or member.age(@group_remit.effectivity_date) > @batch.agreement_benefit.max_age
+        return redirect_to group_remit_path(@group_remit), alert: "Member age must be between #{@batch.agreement_benefit.min_age.to_i} and #{@batch.agreement_benefit.max_age.to_i} years old."
       else
         respond_to do |format|
           if @batch.save!

@@ -32,6 +32,7 @@ class GroupRemitsController < InheritedResources::Base
 
     if all_renewal
       @group_remit.set_for_payment_status
+      @group_remit.set_batches_status_renewal
     else
       @group_remit.set_under_review_status
     end

@@ -99,6 +99,13 @@ class GroupRemit < ApplicationRecord
     self.save!
   end
 
+  def set_batches_status_renewal
+    self.batches.each do |batch|
+      batch.insurance_status = :approved
+      batch.save!
+    end
+  end
+
   def coop_member_ids
     batches.pluck(:coop_member_id)
   end
