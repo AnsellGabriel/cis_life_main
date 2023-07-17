@@ -62,39 +62,9 @@ class GroupRemitsController < InheritedResources::Base
   end
 
   def show
-    @agreement = @group_remit.agreement
-    @anniversary = @group_remit.anniversary
-    # @agreement_eager = @agreement.includes([:agreement_benefits]).includes([:product_benefits])
-    containers # controller/concerns/container.rb
-    counters  # controller/concerns/counter.rb
-    # @passed_requirements = group_remit_passed_requirements?
-    batches_eager_loaded = @group_remit.batches.includes({coop_member: :member, batch_dependents: :member_dependent, batch_beneficiaries: :member_dependent}, :batch_health_decs, :agreement_benefit).order(created_at: :desc)
-
-    if params[:batch_filter].present?
-      @f_batches = batches_eager_loaded.filter_by_member_name(params[:batch_filter].upcase).order(created_at: :desc)
-    elsif params[:batch_beneficiary_filter].present?
-      @f_batches = @group_remit.batches_without_beneficiaries.order(created_at: :desc)
-    elsif params[:batch_health_dec_filter].present?
-      @f_batches = @group_remit.batches_without_health_dec.order(created_at: :desc)
-    elsif params[:rank_filter].present?
-      # case params[:rank_filter]
-      # when "BOD"
-      #   @f_batches = @group_remit.batches.joins(:agreement_benefit).where(agreement_benefits: { insured_type: 6 })
-      # when "SO"
-      #   @f_batches = @group_remit.batches.joins(:agreement_benefit).where(agreement_benefits: { insured_type: 7 })
-      # when "JO"
-      #   @f_batches = @group_remit.batches.joins(:agreement_benefit).where(agreement_benefits: { insured_type: 8 })
-      # when "RF"
-      #   @f_batches = @group_remit.batches.joins(:agreement_benefit).where(agreement_benefits: { insured_type: 9 })
-      # end
-      @f_batches = @group_remit.batches.joins(:agreement_benefit).where(agreement_benefits: params[:rank_filter] )
-    else
-      @f_batches = batches_eager_loaded
-    end
-    
-    # @group_remit.batches.includes({coop_member: :member, batch_dependents: :member_dependent, batch_beneficiaries: :member_dependent}, :batch_health_dec)
-    
-    @pagy, @batches = pagy(@f_batches, items: 10)     
+    load_data
+    load_batches
+    paginate_batches
   end
 
   def new
@@ -126,21 +96,6 @@ class GroupRemitsController < InheritedResources::Base
   end
 
   def update
-    # agreement = @group_remit.agreement
-
-    # today = Date.today
-
-    # if agreement.anniversary_type == "single" or agreement.anniversary_type == "multiple"
-    #   anniversary_date = Anniversary.find_by(id: group_remit_params[:anniversary_id]).anniversary_date
-    # else
-    #   anniversary_date = today
-    # end
-
-    # terms = (anniversary_date.year * 12 + anniversary_date.month) - (today.year * 12 + today.month)
-
-    # @group_remit.terms = terms <= 0 ? terms + 12 : terms
-    # @group_remit.expiry_date = terms <= 0 ? anniversary_date.next_year : anniversary_date
-
     respond_to do |format|
       if @group_remit.update(group_remit_params)
         format.html { redirect_to @group_remit, notice: "Group remit was successfully updated." }
@@ -198,8 +153,8 @@ class GroupRemitsController < InheritedResources::Base
       if anniversary_type == "single" || anniversary_type == "multiple"
         @group_remit.anniversary = Anniversary.find_by(id: anniv_id.to_i)
         @group_remit.anniversary.anniversary_date
-      else
-        Date.today
+      elsif anniversary_type == "none" or anniversary_type.nil?
+        Date.today.prev_month.end_of_month.next_year
       end
     end
 
@@ -209,7 +164,38 @@ class GroupRemitsController < InheritedResources::Base
       end
     end
 
-    # def group_remit_passed_requirements?
-    #   @batch_without_batch_health_dec_count > 0 || @batch_count < @agreement.proposal.minimum_participation
-    # end
+    def load_data
+      @agreement = @group_remit.agreement
+      @anniversary = @group_remit.anniversary
+      load_concerns
+    end
+
+    def load_concerns
+      containers # controller/concerns/container.rb
+      counters  # controller/concerns/counter.rb
+    end
+
+    def load_batches
+      batches_eager_loaded = @group_remit.batches.includes(
+        {coop_member: :member, batch_dependents: :member_dependent, batch_beneficiaries: :member_dependent},
+        :batch_health_decs,
+        :agreement_benefit
+      ).order(created_at: :desc)
+
+      if params[:batch_filter].present?
+        @f_batches = batches_eager_loaded.filter_by_member_name(params[:batch_filter].upcase).order(created_at: :desc)
+      elsif params[:batch_beneficiary_filter].present?
+        @f_batches = @group_remit.batches_without_beneficiaries.order(created_at: :desc)
+      elsif params[:batch_health_dec_filter].present?
+        @f_batches = @group_remit.batches_without_health_dec.order(created_at: :desc)
+      elsif params[:rank_filter].present?
+        @f_batches = @group_remit.batches.joins(:agreement_benefit).where(agreement_benefits: params[:rank_filter])
+      else
+        @f_batches = batches_eager_loaded
+      end
+    end
+
+    def paginate_batches
+      @pagy, @batches = pagy(@f_batches, items: 10)
+    end
 end
