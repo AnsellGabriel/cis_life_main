@@ -14,34 +14,42 @@
 <div class="mb-3 gap-1 <%= flex_justify_align('', 'center') %>">
   <%= link_to 'Back', coop_agreement_path(@agreement), class: small_btn('secondary') %>
 
-  <% if @group_remit.pending? || @group_remit.for_renewal? %>
+  <% if (@group_remit.pending? || @group_remit.for_renewal?) && @group_remit.type == 'Remittance' %>
     <%= button_to "Delete", group_remit_path(@group_remit), 
       method: :delete,
       data: { turbo_confirm: 'Delete group remit?'},
       class: small_btn('danger') 
     %>
     <div class="d-flex gap-1">
-
-      <%# <% unless @passed_requirements %> 
       <%= button_to 'Submit Batch', submit_group_remit_path(@group_remit), 
         method: :get,
         class: small_btn('outline-warning'), 
         data: {turbo_confirm: 'Submit group remit?' } 
       %>
-      <%# <% end %> 
        
       <%  if @group_remit.denied_members.present? %>
         <%= link_to 'Denied members', group_remit_denied_members_path(@group_remit), class: small_btn('outline-secondary') %>
       <% end %>
 
     </div>
-    
-  <% elsif @group_remit.expired? && @group_remit == @agreement.group_remits.last %>
+  <% elsif @group_remit.expired? && @group_remit.type == 'BatchRemit' %>
     <%= button_to 'Renew', renewal_group_remit_path(@group_remit),
         method: :get, 
         class: small_btn('warning'), 
         data: {turbo_confirm: 'Renew group remit?' } 
       %>
+  <% elsif @group_remit.type == 'BatchRemit' && @group_remit.effectivity_date == Date.today.beginning_of_month %>
+    <%= button_to "Add Members", group_remits_path, 
+      method: :post, 
+      params: { 
+        agreement_id: @agreement.id, 
+        anniversary_id: nil,
+        anniv_type: 'none',
+        type: 'Remittance'
+      }, 
+      class: small_btn('warning'), 
+      data: { turbo: false } 
+    %>
   <% end %>
 
 </div>
@@ -72,7 +80,7 @@
           </div>
           <div class="<%= flex_justify_align('center') %>">
             <%= content_tag :h6, "Terms", class: 'sm-secondary-text', style: "width: 150px" %>
-            <%= content_tag :h6, "#{@group_remit.terms}", class: 'sm-secondary-text', style: "width: 150px"%>
+            <%= content_tag :h6, "#{@group_remit.terms} months", class: 'sm-secondary-text', style: "width: 150px"%>
           </div>
         </div>
       </div>
@@ -84,7 +92,7 @@
           <%= render 'payment' %>
         <% end %>
 
-        <% if @group_remit.pending? || @group_remit.for_renewal? %>
+        <% if (@group_remit.pending? || @group_remit.for_renewal?) && @group_remit.type == 'Remittance' %>
             <%= turbo_frame_tag "batch_import_form" do %>
               <%= turbo_frame_tag "batch_form" do %>     
                 <div class="d-flex gap-3 mb-2">

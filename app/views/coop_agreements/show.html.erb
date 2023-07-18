@@ -11,25 +11,50 @@
           <div class="<%= flex_justify_align('between', 'center') %>">
             <div class="gap-1">
               <h6 class="card-title mb-0">
+
               <% if plan_acronym == 'PMFC' %>
                 Latest Group Remit
               <% else %>
                 <%= @agreement.moa_no %>
               <% end %>
+
               </h6>
+              <div class="small text-muted <%= flex_justify_align('', '', true) %>">
+                <%= content_tag :span, "Required Minimum Participants: #{@agreement.minimum_participation}" %>
+                <%= content_tag :span, "Current Approved Participants: " %>
+              </div>
             </div>
-            <% if plan_acronym == 'PMFC' || @agreement.anniversary_type == 'none' %>
+
+            <% if plan_acronym == 'PMFC' %>
               <%= button_to "New Batch", group_remits_path, 
                 method: :post, 
                 params: { 
                   agreement_id: @agreement.id, 
                   anniversary_id: nil,
-                  anniv_type: 'none' 
+                  anniv_type: 'none'
                 }, 
                 class: small_btn('success'), 
                 data: { turbo: false } 
               %>
+            <% elsif @agreement.anniversary_type == 'none' or @agreement.anniversary_type.nil? %>
+              <% current_batch_remit = @agreement.group_remits.find_by(type: 'BatchRemit', effectivity_date: Date.today.beginning_of_month)%>
+
+              <% unless current_batch_remit.present? %>
+                <%= button_to "New Batch", group_remits_path, 
+                  method: :post, 
+                  params: { 
+                    agreement_id: @agreement.id, 
+                    anniversary_id: nil,
+                    anniv_type: 'none',
+                    type: 'BatchRemit'
+                  }, 
+                  class: small_btn('success'), 
+                  data: { turbo: false } 
+                %>
+              <% end %>
+
             <% end %>
+
           </div>
           <hr>
           <div class="<%= flex_justify_align('center', 'center') %>">
@@ -50,7 +75,7 @@
               <div class="d-flex gap-1">
 
                 <% if plan_acronym == 'PMFC' || @agreement.anniversary_type == 'none' %>
-                  <h6 class="card-title mb-0">Group Remittances</h6>
+                  <h6 class="card-title mb-0">Remittances</h6>
                 <% else %>
                   <h6 class="card-title mb-0">History</h6>
                 <% end %>

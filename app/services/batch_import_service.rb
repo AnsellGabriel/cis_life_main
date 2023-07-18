@@ -217,10 +217,18 @@ class BatchImportService
 
   def create_batch(member, batch_hash)
     coop_member = member.coop_members.find_by(cooperative: @cooperative)
-    new_batch = @group_remit.batches.build(coop_member_id: coop_member.id)
+    new_batch = Batch.new(coop_member_id: coop_member.id)
     b_rank = @group_remit.agreement.agreement_benefits.find_by(name: batch_hash[:rank])
-    # Batch.process_batch(new_batch, @group_remit, batch_hash[:rank], batch_hash[:transferred])
-    Batch.process_batch(new_batch, @group_remit, b_rank, batch_hash[:transferred], batch_hash[:terms])
+
+    Batch.process_batch(
+      new_batch, 
+      @group_remit, 
+      b_rank, 
+      batch_hash[:transferred], 
+      batch_hash[:terms]
+    )
+    @group_remit.batches << new_batch
+
     new_batch.save ? 1 : 0
   end
 

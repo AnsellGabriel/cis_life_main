@@ -34,7 +34,8 @@
           <th scope="row"><%= process_coverage.id %></th>
           <td>
             <% description = process_coverage.group_remit.description.nil? ? "-" : process_coverage.group_remit.description %>
-            <%= content_tag :span, process_coverage.group_remit, class: "lead" %> <br>
+            <!-- temp change process_coverage.group_remit to process_coverage.group_remit.id -->
+            <%= content_tag :span, process_coverage.group_remit.id, class: "lead" %> <br>
             <%= content_tag :small, description, class: "fw-lighter" %>
           </td>
           <td><%= process_coverage.agent %></td>
@@ -44,8 +45,8 @@
           </td>
           <td><%= process_status(process_coverage.status) %></td>
           <td>
-            Total Approved Count:   <%= process_coverage.approved_count %> </br>
-            Total Approved Coverage: <%= to_currency(process_coverage.approved_total_coverage) %> </br>
+            Total Approved Count:   <%= process_coverage.approved_count %> <br>
+            Total Approved Coverage: <%= to_currency(process_coverage.approved_total_coverage) %> <br>
             Total Approved Premium: <%= to_currency(process_coverage.approved_total_prem) %>  
           </td>
           <td>

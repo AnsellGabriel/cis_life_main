@@ -23,13 +23,14 @@ class BatchDependentsController < InheritedResources::Base
 
 
   def create
-    terms = @batch.group_remit.terms
-    agreement = @batch.group_remit.agreement
+    group_remit = @batch.group_remits.find_by(id: params[:group_remit_id])
+    terms = group_remit.terms
+    agreement = group_remit.agreement
     term_insurance = agreement.plan.acronym == 'PMFC' ? true : false
     @batch_dependent = @batch.batch_dependents.new(batch_dependent_params)
     relationship = @batch_dependent.member_dependent.relationship
     insured_type = @batch_dependent.insured_type(relationship)
-    @batch_dependent.set_premium_and_service_fees(insured_type, @group_remit, term_insurance) # model/concerns/calculate.rb
+    @batch_dependent.set_premium_and_service_fees(insured_type, group_remit, term_insurance) # model/concerns/calculate.rb
 
     respond_to do |format|
       if @batch_dependent.save

@@ -1,5 +1,5 @@
 class Batch < ApplicationRecord
-  validate :unique_coop_member_in_anniversary, if: -> { group_remit.present? }
+  # validate :unique_coop_member_in_anniversary, if: -> { group_remits.present? }
 
   include Calculate
   attr_accessor :rank
@@ -16,7 +16,7 @@ class Batch < ApplicationRecord
   # validates_presence_of :effectivity_date, :expiry_date, :coop_sf_amount, :agent_sf_amount, :status, :premium, :coop_member_id
 
   # updates the batches table realtime when a new batch is created
-  after_create_commit -> { broadcast_prepend_to [ coop_member.cooperative, "batches" ], locals: { group_remit: self.group_remit, agreement: self.group_remit.agreement }, target: "batches_body" }
+  # after_create_commit -> { broadcast_prepend_to [ coop_member.cooperative, "batches" ], locals: { group_remit: self.group_remits.find_by(type: 'Remittance'), agreement: self.group_remit.agreement }, target: "batches_body" }
   # updates the batches table realtime when a batch is updated
   # after_update_commit -> { broadcast_replace_to [ coop_member.cooperative, "batches" ], locals: { group_remit: self.group_remit }, target: self }
   # updates the batches table realtime when a batch is destroyed
@@ -42,7 +42,9 @@ class Batch < ApplicationRecord
   belongs_to :member, optional: true
   scope :coop_member, -> { joins(:member).where('members.coop_member = ?', true) }
 
-  belongs_to :group_remit
+  has_many :batch_group_remits, dependent: :destroy
+  has_many :group_remits, through: :batch_group_remits
+
   belongs_to :agreement_benefit
   
   has_many :batch_health_decs, dependent: :destroy
@@ -102,33 +104,22 @@ class Batch < ApplicationRecord
   end
 
   def self.check_plan(agreement, batch, rank, duration)
+    group_remit = agreement.group_remits.find_by(type: 'Remittance')
+
     if agreement.plan.acronym == 'GYRT' || agreement.plan.acronym == 'GYRTF'
       # batch.set_premium_and_service_fees(:principal, batch.group_remit) # model/concerns/calculate.rb
-      batch.set_premium_and_service_fees(:principal, batch.group_remit) # model/concerns/calculate.rb
+      batch.set_premium_and_service_fees(:principal, group_remit) # model/concerns/calculate.rb
     elsif agreement.plan.acronym == 'GYRTBR' || agreement.plan.acronym == 'GYRTFR'
-      self.determine_premium(rank, batch, batch.group_remit)
+      self.determine_premium(rank, batch, group_remit)
     elsif agreement.plan.acronym == 'PMFC'
       batch.residency = (Date.today.year * 12 + Date.today.month) - (batch.coop_member.membership_date.year * 12 + batch.coop_member.membership_date.month)
       batch.duration = duration
-      batch.set_premium_and_service_fees(:principal, batch.group_remit, true) # model/concerns/calculate.rb
+      batch.set_premium_and_service_fees(:principal, group_remit, true) # model/concerns/calculate.rb
     end
     
   end
 
-  # def set_duration_and_residency
-  # end
-
   def self.determine_premium(rank, batch, group_remit)
-    # case rank
-    # when 'BOD'
-    #   batch.set_premium_and_service_fees(:ranking_bod, group_remit)
-    # when 'SO'
-    #   batch.set_premium_and_service_fees(:ranking_senior_officer, group_remit)
-    # when 'JO'
-    #   batch.set_premium_and_service_fees(:ranking_junior_officer, group_remit)
-    # when 'RF'
-    #   batch.set_premium_and_service_fees(:ranking_rank_and_file, group_remit)
-    # end
     batch.set_premium_and_service_fees(rank, group_remit)
   end
 
@@ -139,21 +130,21 @@ class Batch < ApplicationRecord
   end
 
   def delete_agreements_coop_members
-    agreement = self.group_remit.agreement
+    agreement = self.group_remits[0].agreement
     coop_member = self.coop_member
 
     agreement.coop_members.delete(coop_member)
   end
 
-  def unique_coop_member_in_anniversary
-    if coop_member.present? && group_remit.agreement.group_remits.joins(:anniversary, batches: :coop_member)
-            .where('coop_members.id': coop_member_id)
-            .where.not(group_remits: { id: group_remit_id })
-            .where.not(anniversaries: { id: group_remit.anniversary_id })
-            .exists?
+  # def unique_coop_member_in_anniversary
+  #   if coop_member.present? && group_remit.agreement.group_remits.joins(:anniversary, batches: :coop_member)
+  #           .where('coop_members.id': coop_member_id)
+  #           .where.not(group_remits: { id: group_remit_id })
+  #           .where.not(anniversaries: { id: group_remit.anniversary_id })
+  #           .exists?
 
-      errors.add(:coop_member_id, "already exists in another batch with a different anniversary")
-    end
-  end
+  #     errors.add(:coop_member_id, "already exists in another batch with a different anniversary")
+  #   end
+  # end
 
 end

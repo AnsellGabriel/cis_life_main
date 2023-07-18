@@ -188,21 +188,27 @@
   </div> -->
   
   <div data-controller="checkbox-select-all">
-    <div class="d-flex">
-      <%= check_box_tag 'btncheck1', '1', false, class: 'btn-check', data: { action: "change->checkbox-select-all#toggleChildren", checkbox_select_all_target: "parent" } %>
-      <%= label_tag 'btncheck1', 'Select All', class: 'btn btn-outline-primary' %>
+    <div class="row">
+      <div class="col-2">
+        <div class="d-flex">
+          <%= check_box_tag 'btncheck1', '1', false, class: 'btn-check', data: { action: "change->checkbox-select-all#toggleChildren", checkbox_select_all_target: "parent" } %>
+          <%= label_tag 'btncheck1', 'Select All', class: 'btn btn-outline-primary' %>
+        </div>
+      </div>
+
+      <div class="col-10">
+        <%= form_tag update_batch_selected_process_coverages_path(p_id: process_coverage), method: :patch do %>
+          <% unless process_coverage.status != "for_process" && process_coverage.status != "pending" %>
+            <% if process_coverage.group_remit.batches.where(insurance_status: [:pending, :for_review]).count > 0 %>
+              <div class="mb-2 text-end">
+                <%= link_to "Approve All", approve_all_group_remit_batches_path(@group_remit,group_remit: process_coverage.group_remit, process_coverage: process_coverage), class: "btn btn-success", onclick: "return confirm('Are you sure?')", method: :get %>
+                <%= submit_tag 'Approve Selected', name: 'approve', onclick: "return confirm('Are you sure?')", class: "btn btn-primary" %>
+                <%= button_tag 'Deny Selected', name: 'deny', type: "submit", onclick: "return confirm('Are you sure?')", class: "btn btn-danger" %>
+              </div>
+            <% end %>
+          <% end %>
+      </div>
     </div>
-    
-    <%= form_tag update_batch_selected_process_coverages_path(p_id: process_coverage), method: :patch do %>
-      <% unless process_coverage.status != "for_process" && process_coverage.status != "pending" %>
-        <% if process_coverage.group_remit.batches.where(insurance_status: [:pending, :for_review]).count > 0 %>
-          <div class="mb-2 text-end">
-            <%= link_to "Approve All", approve_all_group_remit_batches_path(@group_remit,group_remit: process_coverage.group_remit, process_coverage: process_coverage), class: "btn btn-success", onclick: "return confirm('Are you sure?')", method: :get %>
-            <%= submit_tag 'Approve Selected', name: 'approve', onclick: "return confirm('Are you sure?')", class: "btn btn-primary" %>
-            <%= button_tag 'Deny Selected', name: 'deny', type: "submit", onclick: "return confirm('Are you sure?')", class: "btn btn-danger" %>
-          </div>
-        <% end %>
-      <% end %>
 
       <table class="table border-dark">
         <thead class= "table-dark">
@@ -223,8 +229,8 @@
             <% @filtered_batches.each do |batch| %>
 
               <% mem_bday = batch.coop_member.member.birth_date %>
-              <% effect = batch.group_remit.effectivity_date %>
-              <% expire = batch.group_remit.expiry_date %>
+              <% effect = batch.group_remits.find_by(type: "Remittance").effectivity_date %>
+              <% expire = batch.group_remits.find_by(type: "Remittance").expiry_date %>
 
               <% if mem_bday.nil? %>
                 <% mem_age = "" %>
@@ -248,7 +254,7 @@
                   <%= insured_type(batch.agreement_benefit.insured_type_before_type_cast, batch.agreement_benefit.name) %>
                 </td>
                 <td>
-                  <% terms = (batch.group_remit.expiry_date.year * 12 + batch.group_remit.expiry_date.month) - (effect.year * 12 + effect.month) %>
+                  <% terms = (batch.group_remits.find_by(type: "Remittance").expiry_date.year * 12 + batch.group_remits.find_by(type: "Remittance").expiry_date.month) - (effect.year * 12 + effect.month) %>
                   
                   <%= process_dates("Eff", month_day_year(effect)) %> <br>
                   <%= process_dates("Exp", month_day_year(expire)) %> <br>
