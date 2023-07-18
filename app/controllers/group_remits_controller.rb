@@ -17,13 +17,12 @@ class GroupRemitsController < InheritedResources::Base
         format.html { redirect_to group_remit_path(new_group_remit), notice: "Group remit renewed" }
       end
     end
-    # byebug
   end
 
   def submit
     if @group_remit.batches.empty?
       respond_to do |format|
-        format.html { redirect_to @group_remit, alert: "Unable to submit empty batch!" }
+        format.html { redirect_to coop_agreement_group_remit_path(@group_remit.agreement, @group_remit), alert: "Unable to submit empty batch!" }
       end
       return
     end
@@ -38,7 +37,7 @@ class GroupRemitsController < InheritedResources::Base
     end
     
     respond_to do |format|
-      if @group_remit.save
+      if @group_remit.save!
         # @group_remit.batches
         @process_coverage = @group_remit.build_process_coverage
         @process_coverage.effectivity = @group_remit.effectivity_date
@@ -46,12 +45,12 @@ class GroupRemitsController < InheritedResources::Base
         @process_coverage.set_default_attributes
         
         if @process_coverage.save
-          format.html { redirect_to @group_remit, notice: "Group remit submitted" }
+          format.html { redirect_to coop_agreement_group_remit_path(@group_remit.agreement, @group_remit), notice: "Group remit submitted" }
         else
-          format.html { redirect_to @group_remit, alert: "Process Coverage not created!" }
+          format.html { redirect_to coop_agreement_group_remit_path(@group_remit.agreement, @group_remit), alert: "Process Coverage not created!" }
         end
       else
-        format.html { redirect_to @group_remit, alert: "Please see members below and complete the necessary details." }
+        format.html { redirect_to coop_agreement_group_remit_path(@group_remit.agreement, @group_remit), alert: "Please see members below and complete the necessary details." }
       end
     end
   end
@@ -81,10 +80,18 @@ class GroupRemitsController < InheritedResources::Base
     @group_remit = @agreement.group_remits.build
     anniversary_date = set_anniversary(@agreement.anniversary_type, params[:anniversary_id])
     @group_remit.set_terms_and_expiry_date(anniversary_date)
+    @group_remit.type = 'Remittance'
 
     respond_to do |format|
       if @group_remit.save!
-        format.html { redirect_to @group_remit, notice: "Group remit was successfully created." }
+
+        if params[:type] == 'BatchRemit'
+          batch_remit = @agreement.group_remits.build(type: 'BatchRemit')
+          batch_remit.set_terms_and_expiry_date(anniversary_date)
+          batch_remit.save!
+        end
+        
+        format.html { redirect_to coop_agreement_group_remit_path(@agreement, @group_remit), notice: "Group remit was successfully created." }
       else
         format.html { render :new, status: :unprocessable_entity }
       end
@@ -115,20 +122,27 @@ class GroupRemitsController < InheritedResources::Base
   end
 
   def payment
-    # byebug
     if params[:file].nil?
-      return redirect_to @group_remit, alert: "Please attach proof of payment"
+      return redirect_to coop_agreement_group_remit_path(@group_remit.agreement, @group_remit), alert: "Please attach proof of payment"
     end
 
+    agreement = @group_remit.agreement
     @group_remit.payments.build(receipt: params[:file])
     @group_remit.status = :payment_verification
     # @group_remit.effectivity_date = Date.today
 
     respond_to do |format|
       if @group_remit.save!
-        format.html { redirect_to @group_remit, notice: "Proof of payment sent" }
+        approved_batches = @group_remit.batches.where(insurance_status: :approved)
+        current_batch_remit = agreement.group_remits.find_by(type: 'BatchRemit', effectivity_date: @group_remit.effectivity_date)
+
+        current_batch_remit.batches << approved_batches
+        current_batch_remit.status = :active
+        current_batch_remit.save!
+
+        format.html { redirect_to coop_agreement_group_remit_path(@group_remit.agreement, @group_remit), notice: "Proof of payment sent" }
       else
-        format.html { redirect_to @group_remit, alert: "Invalid proof of payment" }
+        format.html { redirect_to coop_agreement_group_remit_path(@group_remit.agreement, @group_remit), alert: "Invalid proof of payment" }
       end
     end
   end

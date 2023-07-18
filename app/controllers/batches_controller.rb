@@ -77,9 +77,10 @@ class BatchesController < ApplicationController
   end
 
   def show
+    group_remit = @batch.group_remits[0]
     @batch_member = @batch.coop_member
-    @effectivity_date = @batch.group_remit.effectivity_date
-    @expiry_date = @batch.group_remit.expiry_date
+    @effectivity_date = group_remit.effectivity_date
+    @expiry_date = group_remit.expiry_date
     @beneficiaries = @batch.batch_beneficiaries
     @dependents = @batch.batch_dependents
   end
@@ -120,6 +121,7 @@ class BatchesController < ApplicationController
       else
         respond_to do |format|
           if @batch.save!
+            @group_remit.batches << @batch
             premiums_and_commissions
             containers # controller/concerns/container.rb
             counters  # controller/concerns/counter.rb

@@ -200,10 +200,10 @@
         <% unless @filtered_batches.count == 0 %>
           <%#= form_tag approve_selected_batches_path, method: :patch do %>
           <% @filtered_batches.each do |batch| %>
-
+            <% group_remit = batch.group_remits.find_by(type: 'Remittance') %>
             <% mem_bday = batch.coop_member.member.birth_date %>
-            <% effect = batch.group_remit.effectivity_date %>
-            <% expire = batch.group_remit.expiry_date %>
+            <% effect = group_remit.effectivity_date %>
+            <% expire = group_remit.expiry_date %>
 
             <% if mem_bday.nil? %>
               <% mem_age = "" %>
@@ -225,7 +225,7 @@
                 <%= insured_type(batch.agreement_benefit.insured_type_before_type_cast, batch.agreement_benefit.name) %>
               </td>
               <td>
-                <% terms = (batch.group_remit.expiry_date.year * 12 + batch.group_remit.expiry_date.month) - (effect.year * 12 + effect.month) %>
+                <% terms = (group_remit.expiry_date.year * 12 + group_remit.expiry_date.month) - (effect.year * 12 + effect.month) %>
                 
                 <%= process_dates("Eff", month_day_year(effect)) %> <br>
                 <%= process_dates("Exp", month_day_year(expire)) %> <br>
