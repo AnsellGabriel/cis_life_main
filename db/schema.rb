@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_07_18_020121) do
+ActiveRecord::Schema[7.0].define(version: 2023_07_18_081600) do
   create_table "active_admin_comments", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.string "namespace"
     t.text "body"
@@ -461,7 +461,6 @@ ActiveRecord::Schema[7.0].define(version: 2023_07_18_020121) do
   create_table "process_claims", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.bigint "cooperative_id", null: false
     t.bigint "agreement_id", null: false
-    t.bigint "batch_id", null: false
     t.date "date_incident"
     t.string "entry_type"
     t.datetime "created_at", null: false
@@ -473,9 +472,11 @@ ActiveRecord::Schema[7.0].define(version: 2023_07_18_020121) do
     t.string "claimant_name"
     t.string "relationship"
     t.integer "claim_route"
+    t.string "claimable_type", null: false
+    t.bigint "claimable_id", null: false
     t.index ["agreement_benefit_id"], name: "index_process_claims_on_agreement_benefit_id"
     t.index ["agreement_id"], name: "index_process_claims_on_agreement_id"
-    t.index ["batch_id"], name: "index_process_claims_on_batch_id"
+    t.index ["claimable_type", "claimable_id"], name: "index_process_claims_on_claimable"
     t.index ["cooperative_id"], name: "index_process_claims_on_cooperative_id"
   end
 
@@ -578,7 +579,6 @@ ActiveRecord::Schema[7.0].define(version: 2023_07_18_020121) do
   add_foreign_key "payments", "group_remits"
   add_foreign_key "process_claims", "agreement_benefits"
   add_foreign_key "process_claims", "agreements"
-  add_foreign_key "process_claims", "batches"
   add_foreign_key "process_claims", "cooperatives"
   add_foreign_key "product_benefits", "agreement_benefits"
   add_foreign_key "product_benefits", "benefits"

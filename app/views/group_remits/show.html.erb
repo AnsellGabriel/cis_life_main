@@ -21,11 +21,13 @@
       class: small_btn('danger') 
     %>
     <div class="d-flex gap-1">
-      <%= button_to 'Submit Batch', submit_group_remit_path(@group_remit), 
-        method: :get,
-        class: small_btn('outline-warning'), 
-        data: {turbo_confirm: 'Submit group remit?' } 
-      %>
+      <% if @group_remit.effectivity_date == Date.today.beginning_of_month %>
+        <%= button_to 'Submit Batch', submit_group_remit_path(@group_remit), 
+          method: :get,
+          class: small_btn('outline-warning'), 
+          data: {turbo_confirm: 'Submit group remit?' } 
+        %>
+      <% end %>
        
       <%  if @group_remit.denied_members.present? %>
         <%= link_to 'Denied members', group_remit_denied_members_path(@group_remit), class: small_btn('outline-secondary') %>
@@ -60,7 +62,7 @@
     <% if plan_acronym == 'PMFC' %>
       <%= "#{@agreement.moa_no} - BATCH #{@agreement.group_remits.find_index(@group_remit) + 1}" %>
     <% else %>
-      <%= @agreement.moa_no %>
+      <%= @group_remit %>
     <% end %>
     
   <% end %>
@@ -94,10 +96,12 @@
 
         <% if (@group_remit.pending? || @group_remit.for_renewal?) && @group_remit.type == 'Remittance' %>
             <%= turbo_frame_tag "batch_import_form" do %>
-              <%= turbo_frame_tag "batch_form" do %>     
-                <div class="d-flex gap-3 mb-2">
-                  <%= render 'group_remits/add_member' %>
-                </div>
+              <%= turbo_frame_tag "batch_form" do %>   
+                <% if @group_remit.effectivity_date == Date.today.beginning_of_month %>  
+                  <div class="d-flex gap-3 mb-2">
+                    <%= render 'group_remits/add_member' %>
+                  </div>
+                <% end %>
 
                 <% if @batch_without_beneficiaries_count > 0 %>
                   <%= content_tag :span, "Filter this batch by:", 
