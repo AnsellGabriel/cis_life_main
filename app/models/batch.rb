@@ -1,26 +1,6 @@
 class Batch < ApplicationRecord
-  # validate :unique_coop_member_in_anniversary, if: -> { group_remits.present? }
-
   include Calculate
   attr_accessor :rank
-
-  # remove association of coop_member from agreement.coop_members
-  # if batch is destroyed and status is new/recent
-  before_destroy :delete_agreements_coop_members, if: :new_status?
-
-  scope :filter_by_member_name, ->(name) {
-    joins(coop_member: :member)
-      .where("members.first_name LIKE :name OR members.last_name LIKE :name", name: "%#{name}%")
-  }
-  
-  # validates_presence_of :effectivity_date, :expiry_date, :coop_sf_amount, :agent_sf_amount, :status, :premium, :coop_member_id
-
-  # updates the batches table realtime when a new batch is created
-  # after_create_commit -> { broadcast_prepend_to [ coop_member.cooperative, "batches" ], locals: { group_remit: self.group_remits.find_by(type: 'Remittance'), agreement: self.group_remit.agreement }, target: "batches_body" }
-  # updates the batches table realtime when a batch is updated
-  # after_update_commit -> { broadcast_replace_to [ coop_member.cooperative, "batches" ], locals: { group_remit: self.group_remit }, target: self }
-  # updates the batches table realtime when a batch is destroyed
-  after_destroy_commit -> { broadcast_remove_to [ coop_member.cooperative, "batches" ], target: self }
 
   # batch.status
   enum status: {
@@ -38,54 +18,61 @@ class Batch < ApplicationRecord
     for_review: 3
   }
 
-  belongs_to :coop_member
-  belongs_to :member, optional: true
+  scope :filter_by_member_name, ->(name) {
+    joins(coop_member: :member)
+      .where("members.first_name LIKE :name OR members.last_name LIKE :name", name: "%#{name}%")
+  }
   scope :coop_member, -> { joins(:member).where('members.coop_member = ?', true) }
 
-  has_many :batch_group_remits, dependent: :destroy
-  has_many :group_remits, through: :batch_group_remits
-
+  belongs_to :coop_member
+  belongs_to :member, optional: true
   belongs_to :agreement_benefit
-  
+
+  has_many :batch_group_remits
+  has_many :group_remits, through: :batch_group_remits
   has_many :batch_health_decs, dependent: :destroy
   has_many :batch_dependents, dependent: :destroy
   has_many :member_dependents, through: :batch_dependents
   has_many :batch_beneficiaries, dependent: :destroy
   has_many :member_dependents, through: :batch_beneficiaries
   has_many :batch_remarks
-  has_many :process_claims, dependent: :destroy
+  has_many :process_claims, as: :claimable, dependent: :destroy
+
 
   def update_valid_health_dec
     self.update_attribute(:valid_health_dec, true)
     self.save!
   end
 
+
   def member_details
     coop_member.member
   end
+
 
   def dependent_ids
     batch_dependents.pluck(:member_dependent_id)
   end
 
+
   def beneficiary_ids
     batch_beneficiaries.pluck(:member_dependent_id)
   end
+
 
   def dependents_premium
     batch_dependents.sum(:premium)
   end
 
+
   def self.process_batch(batch, group_remit, rank = nil, transferred = false, duration = nil)
     agreement = group_remit.agreement
     coop_member = batch.coop_member
     renewal_member = agreement.agreements_coop_members.find_by(coop_member_id: coop_member.id)
-    batch.age = batch.member_details.age
 
-    if agreement.anniversary_type == 'none'
-      batch.effectivity_date = Date.today.beginning_of_month
-      batch.expiry_date = Date.today.next_year.prev_month.end_of_month
-    end
+    batch.age = batch.member_details.age
+    batch.effectivity_date = group_remit.effectivity_date
+    batch.expiry_date = group_remit.expiry_date
 
     check_plan(agreement, batch, rank, duration)
 
@@ -103,25 +90,29 @@ class Batch < ApplicationRecord
 
   end
 
+
   def self.check_plan(agreement, batch, rank, duration)
     group_remit = agreement.group_remits.find_by(type: 'Remittance')
+    acronym = agreement.plan.acronym
 
-    if agreement.plan.acronym == 'GYRT' || agreement.plan.acronym == 'GYRTF'
-      # batch.set_premium_and_service_fees(:principal, batch.group_remit) # model/concerns/calculate.rb
+    case acronym
+    when 'GYRT', 'GYRTF'
       batch.set_premium_and_service_fees(:principal, group_remit) # model/concerns/calculate.rb
-    elsif agreement.plan.acronym == 'GYRTBR' || agreement.plan.acronym == 'GYRTFR'
-      self.determine_premium(rank, batch, group_remit)
-    elsif agreement.plan.acronym == 'PMFC'
+    when 'GYRTBR', 'GYRTFR'
+      determine_premium(rank, batch, group_remit) # Determine premium based on rank and batch
+    when 'PMFC'
       batch.residency = (Date.today.year * 12 + Date.today.month) - (batch.coop_member.membership_date.year * 12 + batch.coop_member.membership_date.month)
       batch.duration = duration
       batch.set_premium_and_service_fees(:principal, group_remit, true) # model/concerns/calculate.rb
     end
-    
+
   end
+
 
   def self.determine_premium(rank, batch, group_remit)
     batch.set_premium_and_service_fees(rank, group_remit)
   end
+
 
   private
 
@@ -129,12 +120,12 @@ class Batch < ApplicationRecord
     self.status == "recent"
   end
 
-  def delete_agreements_coop_members
-    agreement = self.group_remits[0].agreement
-    coop_member = self.coop_member
-
-    agreement.coop_members.delete(coop_member)
-  end
+  # def delete_agreements_coop_members
+  #   agreement = self.group_remits[0].agreement
+  #   coop_member = self.coop_member
+  #   agreement.coop_members.delete(coop_member)
+  #   self.batch_group_remits.destroy_all
+  # end
 
   # def unique_coop_member_in_anniversary
   #   if coop_member.present? && group_remit.agreement.group_remits.joins(:anniversary, batches: :coop_member)

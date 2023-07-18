@@ -1,12 +1,16 @@
 class GroupRemit < ApplicationRecord
+  before_destroy :delete_associated_batches
+
   belongs_to :agreement
   belongs_to :anniversary, optional: true
-  has_many :batch_group_remits, dependent: :destroy
+
+  has_many :batch_group_remits
   has_many :batches, through: :batch_group_remits
   has_many :denied_members, dependent: :destroy
   has_many :payments, dependent: :destroy
-  accepts_nested_attributes_for :payments
   has_one :process_coverage
+
+  accepts_nested_attributes_for :payments
 
   enum status: {
     pending: 0,
@@ -42,7 +46,6 @@ class GroupRemit < ApplicationRecord
 
       if batch.member_details.age < batch.agreement_benefit.exit_age
         new_batch = batch.dup
-        # new_batch.group_remit_id = new_group_remit.id
         new_group_remit.batches << new_batch
         new_batch.age = new_batch.member_details.age
         new_batch.set_premium_and_service_fees(batch.agreement_benefit.insured_type, new_group_remit)
@@ -223,5 +226,17 @@ class GroupRemit < ApplicationRecord
     pluck(:expiry_date).map { |date| date.strftime("%m-%d") }
   end
 
+
+  private
+
+  def delete_associated_batches
+    batches.each do |batch|
+      agreement = self.agreement
+      coop_member = batch.coop_member
+      agreement.coop_members.delete(coop_member) if batch.status == 'recent'
+      batch.batch_group_remits.destroy_all
+      batch.destroy!
+    end
+  end
 end
 

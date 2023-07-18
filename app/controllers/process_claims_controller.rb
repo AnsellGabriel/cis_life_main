@@ -55,9 +55,15 @@ class ProcessClaimsController < ApplicationController
       return redirect_to new_process_claim_path, alert: "The claim cannot be processed. The incident date has passed the 5-year claim period."
     end
 
+    if params[:process_claim][:claimable_type] == "Batch"
+      @process_claim.claimable = Batch.find(params[:process_claim][:claimable_id])
+    else
+      @process_claim.claimable = BatchDependent.find(params[:process_claim][:claimable_id])
+    end
+
     respond_to do |format|
       if @process_claim.save!
-        format.html { redirect_to @process_claim, notice: "Process claim was successfully created." }
+        format.html { redirect_to member_agreements_coop_member_path(coop_member), notice: "Claims submitted" }
       else
         format.html { render :new, status: :unprocessable_entity }
       end
@@ -87,7 +93,7 @@ class ProcessClaimsController < ApplicationController
 
     # Only allow a list of trusted parameters through.
     def process_claim_params
-      params.require(:process_claim).permit(:cooperative_id, :claim_route, :agreement_id, :batch_id, :date_incident, :entry_type, :claimant_name, :claimant_email, :claimant_contact_no, :nature_of_claim, :agreement_benefit_id, :relationship, claim_documents_attributes: [:id, :document, :document_type, :_destroy])
+      params.require(:process_claim).permit(:cooperative_id, :claim_route, :agreement_id, :batch_id, :claimable_id, :claimable_type, :date_incident, :entry_type, :claimant_name, :claimant_email, :claimant_contact_no, :nature_of_claim, :agreement_benefit_id, :relationship, claim_documents_attributes: [:id, :document, :document_type, :_destroy])
     end
 
 end

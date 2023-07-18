@@ -1,7 +1,7 @@
 <% plan_acronym = @agreement.plan.acronym %>
 
 <div class="mb-3 d-flex">
-  <%= link_to 'GYRT', coop_agreements_path, class: small_btn('secondary') %>
+  <%= content_tag :h3, @agreement.plan.name %>
 </div>
 
   <div class="d-flex gap-3" data-controller="toggler">

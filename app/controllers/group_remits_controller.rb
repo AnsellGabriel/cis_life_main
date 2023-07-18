@@ -80,6 +80,7 @@ class GroupRemitsController < InheritedResources::Base
     @group_remit = @agreement.group_remits.build
     anniversary_date = set_anniversary(@agreement.anniversary_type, params[:anniversary_id])
     @group_remit.set_terms_and_expiry_date(anniversary_date)
+    @group_remit.name = "#{@agreement.moa_no} #{@group_remit.effectivity_date.strftime('%B').upcase} REMITTANCE"
     @group_remit.type = 'Remittance'
 
     respond_to do |format|
@@ -87,6 +88,7 @@ class GroupRemitsController < InheritedResources::Base
 
         if params[:type] == 'BatchRemit'
           batch_remit = @agreement.group_remits.build(type: 'BatchRemit')
+          batch_remit.name = "#{@agreement.moa_no} #{@group_remit.effectivity_date.strftime('%B').upcase} BATCH"
           batch_remit.set_terms_and_expiry_date(anniversary_date)
           batch_remit.save!
         end
@@ -114,8 +116,9 @@ class GroupRemitsController < InheritedResources::Base
 
   def destroy
     agreement = @group_remit.agreement
+
     respond_to do |format|
-      if @group_remit.destroy
+      if @group_remit.destroy!
         format.html { redirect_to coop_agreement_path(agreement), alert: "Group remit was successfully deleted." }
       end
     end
