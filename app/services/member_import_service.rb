@@ -1,7 +1,8 @@
 class MemberImportService
-    def initialize(spreadsheet, cooperative)
+    def initialize(spreadsheet, cooperative, current_user)
       @spreadsheet = spreadsheet
       @cooperative = cooperative
+      @current_user = current_user
       @required_headers = ["Birth Place", "First Name", "Middle Name", "Last Name", "Suffix", "Birthdate", "Gender", "Address", "SSS #", "TIN #", "Mobile #", "Email", "Civil Status", "Height (cm)", "Weight (kg)", "Occupation", "Employer", "Work Address", "Spouse", "Work Phone #"]
 
     end
@@ -49,21 +50,22 @@ class MemberImportService
         legal_spouse: row["Spouse"],
         work_phone_number: row["Work Phone #"]
       }
-      # byebug
+
       # Extract cooperative member data from CSV row
       coop_member_hash = {
         cooperative_id: @cooperative.id,
-        coop_branch_id: CoopBranch.find_by(name: row["Branch"].downcase).id,
+        coop_branch_id: @current_user.coop_branch_id,
         membership_date: row["Membership Date"]
-      } 
+      }
 
       # Check if a member with the same first name, last name, and birth date already exists
       member = Member.find_or_initialize_by(
         first_name: member_hash[:first_name],
+        middle_name: member_hash[:middle_name],
         last_name: member_hash[:last_name],
         birth_date: member_hash[:birth_date]
       )
-            
+
       if member.persisted?
         # check if member is already a coop member
         coop_member = member.coop_members.find_or_initialize_by(cooperative_id: @cooperative.id) 

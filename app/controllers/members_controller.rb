@@ -3,11 +3,13 @@ class MembersController < InheritedResources::Base
   before_action :check_userable_type 
 
   def import
-
+    # byebug
     import_service = CsvImportService.new(
       :member, 
       params[:file],  
-      @cooperative
+      @cooperative,
+      nil,
+      current_user.userable
     )
     import_message = import_service.import
 

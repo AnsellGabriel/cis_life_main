@@ -205,12 +205,15 @@ class GroupRemit < ApplicationRecord
   end
 
   def set_terms_and_expiry_date(anniversary_date)
+    plan = self.agreement.plan.acronym
     anniversary_type = self.agreement.anniversary_type
 
     if anniversary_type == 'none' or anniversary_type.nil?
       self.terms = 12
       self.effectivity_date = Date.today.beginning_of_month
       self.expiry_date = anniversary_date
+    elsif plan == 'PMFC'
+      self.effectivity_date = Date.today.beginning_of_month
     else
       terms = set_terms(anniversary_date)
       self.terms = terms <= 0 ? terms + 12 : terms

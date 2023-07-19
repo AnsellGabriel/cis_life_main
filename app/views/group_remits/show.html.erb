@@ -14,6 +14,14 @@
 <div class="mb-3 gap-1 <%= flex_justify_align('', 'center') %>">
   <%= link_to 'Back', coop_agreement_path(@agreement), class: small_btn('secondary') %>
 
+  <% if @agreement.plan.acronym == 'PMFC' && @group_remit.type == 'BatchRemit' && @group_remit.pending? %>
+    <%= button_to "Delete", group_remit_path(@group_remit), 
+      method: :delete,
+      data: { turbo_confirm: 'Delete group remit?'},
+      class: small_btn('danger') 
+    %>
+  <% end %>
+
   <% if (@group_remit.pending? || @group_remit.for_renewal?) && @group_remit.type == 'Remittance' %>
     <%= button_to "Delete", group_remit_path(@group_remit), 
       method: :delete,
@@ -47,7 +55,10 @@
         agreement_id: @agreement.id, 
         anniversary_id: nil,
         anniv_type: 'none',
-        type: 'Remittance'
+        type: 'Remittance',
+        group_remit: {
+          terms: @group_remit.terms
+        }
       }, 
       class: small_btn('warning'), 
       data: { turbo: false } 
@@ -58,18 +69,12 @@
 <div class="<%= flex_justify_align('', 'center') %> gap-1">
   <%= content_tag :span, gr_presenter.status_text, class: gr_presenter.status_badge %>
   <%= content_tag :h3, class: 'mb-0' do %>
-
-    <% if plan_acronym == 'PMFC' %>
-      <%= "#{@agreement.moa_no} - BATCH #{@agreement.group_remits.find_index(@group_remit) + 1}" %>
-    <% else %>
-      <%= @group_remit %>
-    <% end %>
-    
+      <%= @group_remit %>    
   <% end %>
 </div>
 <div class="<%= flex_justify_align('between', 'center') %> mb-3 gap-3">
   <div class="d-flex flex-column " style="height: 260px; width: 100%">
-    <% unless plan_acronym == 'PMFC' %>
+
       <div class="card mb-2">
         <div class="card-body text-secondary">
           <div class="<%= flex_justify_align('center') %>">
@@ -86,7 +91,7 @@
           </div>
         </div>
       </div>
-    <% end %>
+
     <div class="<%= flex_justify_align('between') %> " style="height: 100%; width: 460px;">
       <div style="width: 100%">
 

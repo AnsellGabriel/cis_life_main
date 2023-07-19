@@ -38,7 +38,6 @@ class GroupRemitsController < InheritedResources::Base
     
     respond_to do |format|
       if @group_remit.save!
-        # @group_remit.batches
         @process_coverage = @group_remit.build_process_coverage
         @process_coverage.effectivity = @group_remit.effectivity_date
         @process_coverage.expiry = @group_remit.expiry_date
@@ -49,6 +48,7 @@ class GroupRemitsController < InheritedResources::Base
         else
           format.html { redirect_to coop_agreement_group_remit_path(@group_remit.agreement, @group_remit), alert: "Process Coverage not created!" }
         end
+
       else
         format.html { redirect_to coop_agreement_group_remit_path(@group_remit.agreement, @group_remit), alert: "Please see members below and complete the necessary details." }
       end
@@ -76,21 +76,40 @@ class GroupRemitsController < InheritedResources::Base
   end
 
   def create
+    # byebug
     @agreement = Agreement.find_by(id: params[:agreement_id])
+    short_term_insurance = @agreement.plan.acronym == 'PMFC'
+
+    if short_term_insurance && params[:group_remit][:terms].blank?
+      return redirect_to coop_agreement_path(@agreement), alert: 'Please select a term duration'
+    end
+    
     @group_remit = @agreement.group_remits.build
     anniversary_date = set_anniversary(@agreement.anniversary_type, params[:anniversary_id])
     @group_remit.set_terms_and_expiry_date(anniversary_date)
-    @group_remit.name = "#{@agreement.moa_no} #{@group_remit.effectivity_date.strftime('%B').upcase} REMITTANCE"
     @group_remit.type = 'Remittance'
+
+    if short_term_insurance
+      @group_remit.terms = params[:group_remit][:terms]
+      @group_remit.name = "#{@agreement.moa_no} #{@group_remit.effectivity_date.strftime('%B').upcase} REMITTANCE - #{@group_remit.terms} MONTHS"
+    else
+      @group_remit.name = "#{@agreement.moa_no} #{@group_remit.effectivity_date.strftime('%B').upcase} REMITTANCE"
+    end
 
     respond_to do |format|
       if @group_remit.save!
 
-        if params[:type] == 'BatchRemit'
+        if params[:type] == 'BatchRemit' || short_term_insurance
           batch_remit = @agreement.group_remits.build(type: 'BatchRemit')
-          batch_remit.name = "#{@agreement.moa_no} #{@group_remit.effectivity_date.strftime('%B').upcase} BATCH"
           batch_remit.set_terms_and_expiry_date(anniversary_date)
-          batch_remit.save!
+
+          if short_term_insurance
+            batch_remit.terms = params[:group_remit][:terms]
+            batch_remit.name = "#{@agreement.moa_no} #{@group_remit.effectivity_date.strftime('%B').upcase} BATCH - #{batch_remit.terms} MONTHS"
+          else
+            batch_remit.name = "#{@agreement.moa_no} #{@group_remit.effectivity_date.strftime('%B').upcase} BATCH"
+          end
+            batch_remit.save!
         end
         
         format.html { redirect_to coop_agreement_group_remit_path(@agreement, @group_remit), notice: "Group remit was successfully created." }
@@ -170,8 +189,10 @@ class GroupRemitsController < InheritedResources::Base
       if anniversary_type == "single" || anniversary_type == "multiple"
         @group_remit.anniversary = Anniversary.find_by(id: anniv_id.to_i)
         @group_remit.anniversary.anniversary_date
-      elsif anniversary_type == "none" or anniversary_type.nil?
+      elsif (anniversary_type == "none" or anniversary_type.nil?) && @agreement.plan.acronym != 'PMFC'
         Date.today.prev_month.end_of_month.next_year
+      elsif @agreement.plan.acronym == 'PMFC'
+        Date.today.beginning_of_month + params[:group_remit][:terms].to_i.months
       end
     end
 

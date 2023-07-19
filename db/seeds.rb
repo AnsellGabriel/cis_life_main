@@ -157,7 +157,7 @@ Benefit.create!(name: 'Accidental Death & Dismemberment', description: 'Benefit 
 Benefit.create!(name: 'Burial Cash Assistance', description: 'Benefit 2 description', acronym: 'BCA')
 
 # # # # # PMFC Agreement
-Agreement.create!(moa_no: 'PMFC-MOA-00001', description: '', plan_id: 1, agent_id: 1, cooperative_id: 1, anniversary_type: 'none')
+Agreement.create!(moa_no: 'PMFC-MOA-00001', description: '', plan_id: 1, agent_id: 1, cooperative_id: 1, anniversary_type: 'none', coop_sf: 12.5, agent_sf: 10, minimum_participation: 100)
 
 # # # PMFC Agreement Benefit
 # # # for Principal (name, insured_type)
@@ -710,7 +710,7 @@ User.create!(email: 'jfc@gmail.com', password: 'password', password_confirmation
 Plan.create!(name: 'GYRT-Family Ranking', description: 'Plan 4 description', gyrt_type: 'family', acronym: 'GYRTFR')
 
 # # # #Agreement
-agreement = Agreement.create!(plan_id: 2, cooperative_id: 2, agent_id: 1, moa_no: "JFC-0001", contestability: 12, nel: 25000, nml: 5000000, anniversary_type: 'none', transferred: 0, comm_type: "Gross Commission", entry_age_from: 18, entry_age_to: 65, exit_age: 80)
+agreement = Agreement.create!(plan_id: 2, cooperative_id: 2, agent_id: 1, moa_no: "JFC-0001", contestability: 12, nel: 25000, nml: 5000000, anniversary_type: 'none', transferred: 0, comm_type: "Gross Commission", entry_age_from: 18, entry_age_to: 65, exit_age: 80, coop_sf: 12.5, agent_sf: 10, minimum_participation: 100)
 
 # # # # for Principal (name, insured_type)
 jfc_agreement = Agreement.find_by(id: 2)

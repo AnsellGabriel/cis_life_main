@@ -10,7 +10,7 @@ class BatchImportService
     @special_term_insurance = ['PMFC']
     @principal_headers = ["First Name", "Middle Name", "Last Name", "Birthdate", "Transferred?"]
     @principal_headers << "Rank" if @gyrt_ranking_plans.include?(@agreement.plan.acronym)
-    @principal_headers << "Terms" if @special_term_insurance.include?(@agreement.plan.acronym)
+    # @principal_headers << "Terms" if @special_term_insurance.include?(@agreement.plan.acronym)
     @dependent_headers = ["Member First Name", "Member Middle Name", "Member Last Name", "Member Birthdate", "Dependent First Name", "Dependent Middle Name", "Dependent Last Name", "Relationship", "Beneficiary?"]
     @dependent_headers << "Dependent?" if @agreement.plan.gyrt_type == 'family'
   end
@@ -43,12 +43,12 @@ class BatchImportService
         end
       end
 
-      if @agreement.plan.acronym == 'PMFC'
-        unless row["Terms"].present?
-          create_denied_member(member, 'Terms not present')
-          next
-        end
-      end
+      # if @agreement.plan.acronym == 'PMFC'
+      #   unless row["Terms"].present?
+      #     create_denied_member(member, 'Terms not present')
+      #     next
+      #   end
+      # end
 
       age_min_max = age_min_max_by_insured_type(agreement_benefits, batch_hash[:rank])
       
@@ -225,7 +225,7 @@ class BatchImportService
       @group_remit, 
       b_rank, 
       batch_hash[:transferred], 
-      batch_hash[:terms]
+      @group_remit.terms
     )
     @group_remit.batches << new_batch
 
