@@ -11,14 +11,14 @@
     <link href="https://unpkg.com/slim-select@latest/dist/slimselect.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.2/font/bootstrap-icons.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
-    <%= javascript_importmap_tags %>
+    <%= AssetRam::Helper.cache { javascript_importmap_tags } %>
   </head>
   <body class="bg_gradient">
     <%= render 'layouts/partials/navi' %>
     <div class="container">
       <div class="row d-flex justify-content-center">
         <div id="flash">
-          <%= render "layouts/partials/notification" %>
+          <%= AssetRam::Helper.cache { render "layouts/partials/notification" } %>
         </div>
       </div>
     </div>
