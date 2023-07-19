@@ -1,11 +1,16 @@
 class GroupRemit < ApplicationRecord
+  before_destroy :delete_associated_batches
+
   belongs_to :agreement
   belongs_to :anniversary, optional: true
-  has_many :batches, dependent: :destroy
+
+  has_many :batch_group_remits
+  has_many :batches, through: :batch_group_remits
   has_many :denied_members, dependent: :destroy
   has_many :payments, dependent: :destroy
-  accepts_nested_attributes_for :payments
   has_one :process_coverage
+
+  accepts_nested_attributes_for :payments
 
   enum status: {
     pending: 0,
@@ -25,8 +30,8 @@ class GroupRemit < ApplicationRecord
     new_group_remit = self.dup
     new_group_remit.set_terms_and_expiry_date(self.expiry_date)
     new_group_remit.expiry_date = self.expiry_date + 1.year # Assuming the renewal duration is 1 year from the current date
-    new_group_remit.status = :for_renewal
-    new_group_remit.effectivity_date = nil
+    new_group_remit.status = :for_payment
+    new_group_remit.effectivity_date = self.effectivity_date + 1.year
     new_group_remit.save
 
     agreement = new_group_remit.agreement
@@ -35,13 +40,13 @@ class GroupRemit < ApplicationRecord
 
     self.batches.includes(coop_member: :member).each do |batch|
       if batch.insurance_status == "denied"
-        removed_batches << batch
+        create_denied_member(batch.coop_member.member, 'Denied by underwriter', new_group_remit)
         next
       end
 
       if batch.member_details.age < batch.agreement_benefit.exit_age
         new_batch = batch.dup
-        new_batch.group_remit_id = new_group_remit.id
+        new_group_remit.batches << new_batch
         new_batch.age = new_batch.member_details.age
         new_batch.set_premium_and_service_fees(batch.agreement_benefit.insured_type, new_group_remit)
 
@@ -66,7 +71,7 @@ class GroupRemit < ApplicationRecord
         end
 
       else
-        removed_batches << batch
+        create_denied_member(batch.coop_member.member, 'Denied by underwriter', new_group_remit)
       end
     end
     
@@ -75,6 +80,17 @@ class GroupRemit < ApplicationRecord
       removed_batches: removed_batches
     }
   end
+
+  def create_denied_member(member, reason, group_remit, effectivity = nil)
+    DeniedMember.find_or_create_by!(
+      name: "#{member.first_name} #{member.middle_name} #{member.last_name}", 
+      age: member.birth_date.nil? ? 0 : member.age(effectivity), 
+      reason: reason, 
+      group_remit: group_remit
+    )
+  end
+
+  
 
   def set_total_premiums_and_fees
     self.gross_premium = gross_premium
@@ -189,9 +205,20 @@ class GroupRemit < ApplicationRecord
   end
 
   def set_terms_and_expiry_date(anniversary_date)
-    terms = set_terms(anniversary_date)
-    self.terms = terms <= 0 ? terms + 12 : terms
-    self.expiry_date = terms <= 0 ? anniversary_date.next_year : anniversary_date
+    plan = self.agreement.plan.acronym
+    anniversary_type = self.agreement.anniversary_type
+
+    if anniversary_type == 'none' or anniversary_type.nil?
+      self.terms = 12
+      self.effectivity_date = Date.today.beginning_of_month
+      self.expiry_date = anniversary_date
+    elsif plan == 'PMFC'
+      self.effectivity_date = Date.today.beginning_of_month
+    else
+      terms = set_terms(anniversary_date)
+      self.terms = terms <= 0 ? terms + 12 : terms
+      self.expiry_date = terms <= 0 ? anniversary_date.next_year : anniversary_date
+    end
   end
 
   def set_terms(anniversary_date)
@@ -202,5 +229,17 @@ class GroupRemit < ApplicationRecord
     pluck(:expiry_date).map { |date| date.strftime("%m-%d") }
   end
 
+
+  private
+
+  def delete_associated_batches
+    batches.each do |batch|
+      agreement = self.agreement
+      coop_member = batch.coop_member
+      agreement.coop_members.delete(coop_member) if batch.status == 'recent'
+      batch.batch_group_remits.destroy_all
+      batch.destroy!
+    end
+  end
 end
 

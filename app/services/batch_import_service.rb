@@ -8,10 +8,10 @@ class BatchImportService
     @gyrt_ranking_plans = ['GYRTBR', 'GYRTFR']
     @gyrt_family_plans = ['GYRTF', 'GYRTFR']
     @special_term_insurance = ['PMFC']
-    @principal_headers = ["First Name", "Middle Name", "Last Name", "Suffix", "Transferred?"]
+    @principal_headers = ["First Name", "Middle Name", "Last Name", "Birthdate", "Transferred?"]
     @principal_headers << "Rank" if @gyrt_ranking_plans.include?(@agreement.plan.acronym)
-    @principal_headers << "Terms" if @special_term_insurance.include?(@agreement.plan.acronym)
-    @dependent_headers = ["Member First Name", "Member Middle Name", "Member Last Name", "Dependent First Name", "Dependent Middle Name", "Dependent Last Name", "Relationship", "Beneficiary?"]
+    # @principal_headers << "Terms" if @special_term_insurance.include?(@agreement.plan.acronym)
+    @dependent_headers = ["Member First Name", "Member Middle Name", "Member Last Name", "Member Birthdate", "Dependent First Name", "Dependent Middle Name", "Dependent Last Name", "Relationship", "Beneficiary?"]
     @dependent_headers << "Dependent?" if @agreement.plan.gyrt_type == 'family'
   end
 
@@ -43,12 +43,12 @@ class BatchImportService
         end
       end
 
-      if @agreement.plan.acronym == 'PMFC'
-        unless row["Terms"].present?
-          create_denied_member(member, 'Terms not present')
-          next
-        end
-      end
+      # if @agreement.plan.acronym == 'PMFC'
+      #   unless row["Terms"].present?
+      #     create_denied_member(member, 'Terms not present')
+      #     next
+      #   end
+      # end
 
       age_min_max = age_min_max_by_insured_type(agreement_benefits, batch_hash[:rank])
       
@@ -168,28 +168,6 @@ class BatchImportService
         min_age: agreement_benefits.find_by(name: rank).min_age,
         max_age: agreement_benefits.find_by(name: rank).max_age
       }
-      # case rank
-      # when 'BOD'
-      #   {
-      #     min_age: agreement_benefits.find_by(insured_type: :ranking_bod).min_age,
-      #     max_age: agreement_benefits.find_by(insured_type: :ranking_bod).max_age
-      #   }      
-      # when 'SO'
-      #   {
-      #     min_age: agreement_benefits.find_by(insured_type: :ranking_senior_officer).min_age,
-      #     max_age: agreement_benefits.find_by(insured_type: :ranking_senior_officer).max_age
-      #   }
-      # when 'JO'
-      #   {
-      #     min_age: agreement_benefits.find_by(insured_type: :ranking_junior_officer).min_age,
-      #     max_age: agreement_benefits.find_by(insured_type: :ranking_junior_officer).max_age
-      #   }      
-      # when 'RF'
-      #   {
-      #     min_age: agreement_benefits.find_by(insured_type: :ranking_rank_and_file).min_age,
-      #     max_age: agreement_benefits.find_by(insured_type: :ranking_rank_and_file).max_age
-      #   }      
-      # end
     else
       {
         min_age: agreement_benefits.find_by(insured_type: :principal).min_age,
@@ -209,6 +187,7 @@ class BatchImportService
       middle_name: row["Middle Name"].to_s.strip.upcase,
       last_name: row["Last Name"].to_s.strip.upcase,
       suffix: row["Suffix"].to_s.strip.upcase,
+      birth_date: row["Birthdate"],
       rank: row["Rank"].to_s.present? ? row["Rank"].to_s.upcase : nil,
       terms: row["Terms"].to_s.present? ? row["Terms"].to_i : nil,
       transferred: row["Transferred?"].to_s.upcase == "TRUE"
@@ -219,7 +198,8 @@ class BatchImportService
     Member.find_or_initialize_by(
       first_name: batch_hash[:first_name],
       last_name: batch_hash[:last_name],
-      middle_name: batch_hash[:middle_name]
+      middle_name: batch_hash[:middle_name],
+      birth_date: batch_hash[:birth_date]
     )
   end
 
@@ -237,10 +217,18 @@ class BatchImportService
 
   def create_batch(member, batch_hash)
     coop_member = member.coop_members.find_by(cooperative: @cooperative)
-    new_batch = @group_remit.batches.build(coop_member_id: coop_member.id)
+    new_batch = Batch.new(coop_member_id: coop_member.id)
     b_rank = @group_remit.agreement.agreement_benefits.find_by(name: batch_hash[:rank])
-    # Batch.process_batch(new_batch, @group_remit, batch_hash[:rank], batch_hash[:transferred])
-    Batch.process_batch(new_batch, @group_remit, b_rank, batch_hash[:transferred], batch_hash[:terms])
+
+    Batch.process_batch(
+      new_batch, 
+      @group_remit, 
+      b_rank, 
+      batch_hash[:transferred], 
+      @group_remit.terms
+    )
+    @group_remit.batches << new_batch
+
     new_batch.save ? 1 : 0
   end
 

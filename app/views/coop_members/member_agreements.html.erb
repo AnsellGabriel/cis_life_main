@@ -1,10 +1,5 @@
 <%= content_tag :h3, 'Insurance Plans' %>
 
-
-
-
-
-
 <div class="row row-cols-2 row-cols-md-2 g-4 mb-3" >
 	<% @agreements.each do |agreement| %>
 
@@ -14,9 +9,10 @@
 			<% group_remit = agreement.group_remits.last %>
 		<% end %>
 		
-    	<% gr_presenter = GroupRemitPresenter.new(group_remit) %>
+    <% gr_presenter = GroupRemitPresenter.new(group_remit) %>
 		<% batch = group_remit.batches.find_by(coop_member_id: @coop_member.id) %>
 		<% benefit = batch.agreement_benefit %>
+
 		<div class="col" data-controller="toggler">
 			<div class="card">
 				<div class="card-body">
@@ -41,53 +37,15 @@
 					<div class="hidden" data-toggler-target="toggleable" data-id="<%= dom_id(agreement) %>">
 						<div class="card mb-3">
 							<div class="card-body">
-								<div class="<%= flex_justify_align('between', 'center') %> mb-3">
-									<div class="">
-										<%= content_tag :span, @coop_member.full_name.titleize, class: 'text-primary', style: 'font-size: 1.2rem; font-weight: bold' %>
-										<%= content_tag :span, "- #{benefit.name.to_s.titleize}", class: 'text-muted' %>
-									</div>
-									<% filed_claim = ProcessClaim.find_by(agreement_id: agreement.id, batch_id: batch.id) %>
-									<% claim_presenter = ProcessClaimPresenter.new(filed_claim) %>
-									<% if filed_claim.present? %>
-										<%= content_tag :span, 'Claims submitted', class: small_btn('success') %>
-									<% else %>
-										<%= link_to 'File Claim', new_process_claim_path(coop_member_id: @coop_member.id, agreement_id: agreement.id), class: small_btn('primary') %>
-									<% end %>
+								<%= render 'claims_identifier', 
+									agreement: agreement, 
+									batch: batch, 
+									coop_member: @coop_member, 
+									benefit: benefit, 
+									insured: @coop_member,
+									dependent_id: nil
+								%>
 
-								</div>
-
-								<% if filed_claim.present? %>
-									<div class="card">
-										<div class="card-body">
-											<span class="col-md-6 text-primary">Claims Tracker</span>
-											<div class="track">
-												<div class="step <%= claim_presenter.present_active_class(0) %>">
-													<span class="icon"><i class="bi bi-card-list"></i></span>
-													<span class="text text-muted"><small>Claims filed</small></span>
-												</div>
-												<div class="step <%= claim_presenter.present_active_class(2) %>">
-													<span class="icon"><i class="bi bi-window"></i></span>
-													<span class="text text-muted"><small>Processing</small></span>
-												</div>
-												<% if filed_claim.claim_route_before_type_cast == 8  %>
-													<div class="step denied">
-														<span class="icon"><i class="bi bi-shield-check"></i></span>
-														<span class="text"><small>Denied</small></span>
-													</div>
-												<% else %>
-													<div class="step <%= claim_presenter.present_active_class(6) %>">
-														<span class="icon"><i class="bi bi-shield-check"></i></span>
-														<span class="text text-muted"><small>Approved</small></span>
-													</div>
-												<div class="step <%= claim_presenter.present_active_class(7) %>">
-													<span class="icon"><i class="bi bi-cash-coin"></i></span>
-													<span class="text text-muted"><small>Payment</small></span>
-												</div>
-												<% end %>
-											</div>
-										</div>
-									</div>
-								<% end %>
 								<% if batch.batch_beneficiaries.exists? %>
 									<table class="table table-borderless table-hover border border-warning rounded mt-3">
 									<thead>
@@ -150,20 +108,15 @@
 							<% batch.batch_dependents.includes(:member_dependent, :agreement_benefit).each do |dependent| %>
 								<div class="card mb-3">
 									<div class="card-body">
-										<div class="<%= flex_justify_align('between', 'center') %>">
-											<div class="">
-												<%= content_tag :span, 
-													dependent.member_dependent.full_name.titleize, 
-													class: 'text-primary', 
-													style: 'font-size: 1.2rem; font-weight: bold' 
-												%>
-												<%= content_tag :span, 
-													"- #{dependent.agreement_benefit.insured_type.to_s.titleize}", 
-													class: 'text-muted' 
-												%>
-											</div>
-											<%= link_to 'File Claim', new_process_claim_path(coop_member_id: @coop_member.id, agreement_id: agreement.id, dependent_id: dependent.id), class: small_btn('primary') %>
-										</div>
+										<%= render 'claims_identifier', 
+											agreement: agreement, 
+											batch: dependent, 
+											coop_member: @coop_member, 
+											benefit: dependent.agreement_benefit, 
+											insured: dependent,
+											dependent_id: dependent.id
+										%>
+
 										<table class="table table-borderless table-hover">
 											<thead>
 												<tr>
@@ -172,8 +125,7 @@
 												</tr>
 											</thead>
 											<tbody>
-												<% dependent_benefits = agreement.plan.acronym == 'PMFC' ? dependent.get_term_insurance_product_benefit : dependent.product_benefits %>
-
+												<% dependent_benefits = agreement.plan.acronym == 'PMFC' ? dependent.get_term_insurance_product_benefit : dependent.agreement_benefit.product_benefits %>
 												<% dependent_benefits.includes(:benefit).each do |product| %>
 													<tr>
 														<td><small><%= product.benefit.name %></small></td>

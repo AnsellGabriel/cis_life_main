@@ -1,7 +1,7 @@
 <% plan_acronym = @agreement.plan.acronym %>
 
 <div class="mb-3 d-flex">
-  <%= link_to 'GYRT', coop_agreements_path, class: small_btn('secondary') %>
+  <%= content_tag :h3, @agreement.plan.name %>
 </div>
 
   <div class="d-flex gap-3" data-controller="toggler">
@@ -11,25 +11,53 @@
           <div class="<%= flex_justify_align('between', 'center') %>">
             <div class="gap-1">
               <h6 class="card-title mb-0">
+
               <% if plan_acronym == 'PMFC' %>
                 Latest Group Remit
               <% else %>
                 <%= @agreement.moa_no %>
               <% end %>
+
               </h6>
+              <div class="small text-muted <%= flex_justify_align('', '', true) %>">
+                <%= content_tag :span, "Required Minimum Participants: #{@agreement.minimum_participation}" %>
+                <%= content_tag :span, "Current Approved Participants: " %>
+              </div>
             </div>
-            <% if plan_acronym == 'PMFC' || @agreement.anniversary_type == 'none' %>
-              <%= button_to "New Batch", group_remits_path, 
-                method: :post, 
-                params: { 
-                  agreement_id: @agreement.id, 
-                  anniversary_id: nil,
-                  anniv_type: 'none' 
-                }, 
-                class: small_btn('success'), 
-                data: { turbo: false } 
-              %>
+
+            <% if plan_acronym == 'PMFC' %>
+              <%= simple_form_for @agreement.group_remits.new, url: group_remits_path, method: :post do |f| %>
+                <%= hidden_field_tag :agreement_id, @agreement.id %>
+                <%= hidden_field_tag :anniversary_id, nil %>
+                <%= f.input :terms, as: :select, collection: [
+                  ["3 months", 3], 
+                  ["4 months", 4], 
+                  ["5 months", 5], 
+                  ["6 months", 6], 
+                  ["9 months", 9], 
+                  ["12 months", 12]
+                ], include_blank: "Term duration", input_html: { style: "width: 250px !important" }, label: false %>
+                <%= f.button :submit, "New Batch", class: small_btn('success') %>
+              <% end %>
+            <% elsif @agreement.anniversary_type == 'none' or @agreement.anniversary_type.nil? %>
+              <% current_batch_remit = @agreement.group_remits.find_by(type: 'BatchRemit', effectivity_date: Date.today.beginning_of_month)%>
+
+              <% unless current_batch_remit.present? %>
+                <%= button_to "New Batch", group_remits_path, 
+                  method: :post, 
+                  params: { 
+                    agreement_id: @agreement.id, 
+                    anniversary_id: nil,
+                    anniv_type: 'none',
+                    type: 'BatchRemit'
+                  }, 
+                  class: small_btn('success'), 
+                  data: { turbo: false } 
+                %>
+              <% end %>
+
             <% end %>
+
           </div>
           <hr>
           <div class="<%= flex_justify_align('center', 'center') %>">
@@ -50,7 +78,7 @@
               <div class="d-flex gap-1">
 
                 <% if plan_acronym == 'PMFC' || @agreement.anniversary_type == 'none' %>
-                  <h6 class="card-title mb-0">Group Remittances</h6>
+                  <h6 class="card-title mb-0">Remittances</h6>
                 <% else %>
                   <h6 class="card-title mb-0">History</h6>
                 <% end %>

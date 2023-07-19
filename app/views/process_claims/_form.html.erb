@@ -6,12 +6,16 @@
   <% if params[:dependent_id].present? %>
     <% dependent = BatchDependent.find(params[:dependent_id]) %>
     <% batch_presenter = BatchPresenter.new(dependent, @agreement)%>
+    <% claimable = BatchDependent.find(params[:dependent_id])%>
   <% else %>
     <% batch_presenter = BatchPresenter.new(@batch, @agreement)%>
+    <% claimable = @batch%>
   <% end %>
 
 
   <div class="form-inputs mb-3 " data-controller="toggler">
+    <%= f.hidden_field :claimable_id, value: claimable.id %>
+    <%= f.hidden_field :claimable_type, value: claimable.class.name %>
     <%= f.hidden_field :cooperative_id, value: @cooperative.id %>
     <%= f.hidden_field :agreement_id, value: @agreement.id %>
     <%= f.hidden_field :batch_id, value: @batch.id %>
@@ -57,7 +61,7 @@
             label_html: {style: "width: 170px; margin: 0"},
             wrapper_html: {class: "#{flex_justify_align('', 'center')} gap-2 mb-0" } %>
             <div class="<%= flex_justify_align('center', 'center') %> mb-3">
-              <%= link_to new_group_remit_batch_beneficiary_path(@batch.group_remit, @batch, claims: true),
+              <%= link_to new_group_remit_batch_beneficiary_path(@batch.group_remits.find_by(type: 'BatchRemit'), @batch, claims: true),
                 class: small_btn('success'),
                 data: { turbo_frame: "modal" },
                 title: 'Add Beneficiary' do %>
@@ -155,7 +159,7 @@
                 label: 'Official Receipt or Billing Statement (if available)',
                 value: :official_receipt   
               %> 
-            <% when :HIB, :AMR, :AD, :TPD %>
+            <% when :HIB, :AMR, :AD, :TPD, :ADD %>
               <%= render 'required_document', 
                 form: f,
                 label: 'Medical Certificate (including date of confinement and final diagnosis)',

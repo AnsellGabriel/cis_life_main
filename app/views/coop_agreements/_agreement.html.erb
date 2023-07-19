@@ -3,8 +3,36 @@
 
   <div class="<%= flex_justify_align('', 'center', true) %> gap-3">
 
-    <% if agreement.anniversary_type != 'multiple' %>
+    <% if agreement.anniversary_type == 'none' or agreement.anniversary_type.nil? %>
 
+      <% agreement.group_remits.where(type: 'BatchRemit').each do |batch_remit| %>
+        <% gr_presenter = GroupRemitPresenter.new(batch_remit) %>
+        <div class="card">
+          <div class="card-body d-flex flex-column" style="width: 400px">
+            <div class="mb-1 <%= flex_justify_align('between', 'center') %>">
+              <div class="<%= flex_justify_align('','center') %> gap-1">
+                <span class="<%= gr_presenter.status_badge %>">
+                  <%= gr_presenter.status_text %>
+                </span>
+              </div>
+              <div class="">
+                <%= link_to 'View Batch', coop_agreement_group_remit_path(@agreement, batch_remit), 
+                  class: small_btn('warning'), 
+                  data: { turbo: false } 
+                %>
+                <%= link_to 'Remittances', '#',
+                  class: small_btn('outline-warning'),
+                  data: { action: "click->toggler#toggle", id: "history-#{batch_remit.effectivity_date}" }
+                %>
+              </div>
+            </div>
+            <%= content_tag :span, "#{batch_remit.name}", class: 'mb-1' %>
+            <%= render 'submitted_field', group_remit: batch_remit %>
+          </div>
+        </div>
+      <% end %>
+            
+    <% elsif agreement.anniversary_type != 'multiple' %>
       <% last_group_remit = agreement.group_remits.includes(batches: :batch_dependents).last %>
       <% single_gr_presenter = GroupRemitPresenter.new(last_group_remit) %>
 

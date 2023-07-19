@@ -1,0 +1,2 @@
+class Remittance < GroupRemit
+end
