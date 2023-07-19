@@ -6,7 +6,8 @@ export default class extends Controller {
   connect() {
     this.parentTarget.checked = false
     this.childTargets.map(x => x.checked = false)
-    
+
+    // this.loadCheckedStateFromLocalStorage()    
   }
   
   toggleChildren(){
@@ -24,5 +25,31 @@ export default class extends Controller {
     } else {
       this.parentTarget.checked = true
     }
+
+    // console.log("save item to local storage")
+    // this.childTargets.forEach((checkbox, index) => {
+    //   localStorage.setItem(`checkbox${index + 1}`, checkbox.checked)
+
+    // })
+
   }
+
+  // save() {
+  //   console.log("save item to local storage")
+  //   this.childTargets.forEach((checkbox, index) => {
+  //     localStorage.setItem(`checkbox${index + 1}`, checkbox.checked)
+
+  //   })
+  // }
+
+  // loadCheckedStateFromLocalStorage() {
+  //   console.log("load check state from storage")
+  //   this.childTargets.forEach((checkbox, index) => {
+  //     const checked = JSON.parse(localStorage.getItem(`checkbox${index +1}`))
+  //     if (checked !== null) {
+  //       checkbox.checked = checked
+  //     }
+  //   })
+  // }
+
 }

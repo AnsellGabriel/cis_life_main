@@ -25,23 +25,24 @@ class ProcessCoveragesController < ApplicationController
   end
 
   def update_batch_selected
-    @process_coverage = ProcessCoverage.find_by(params[:p_id])
-
+    # raise 'errors'
+    @pro_cov = ProcessCoverage.find(params[:p_id])
+    
     if params[:approve]
-      ids = params[:ids]
-  
-      Batch.where(id: ids).update_all(insurance_status: :approved)
-      @process_coverage.increment!(:approved_count, ids.length)
 
-      redirect_to process_coverage_path(@process_coverage), notice: "Selected Coverages Approved!"
+      ids = params[:ids]
+      Batch.where(id: ids).update_all(insurance_status: :approved)
+      @pro_cov.increment!(:approved_count, ids.length)
+
+      redirect_to process_coverage_path(@pro_cov), notice: "Selected Coverages Approved!"
       
     elsif params[:deny]
       ids = params[:ids]
   
       Batch.where(id: ids).update_all(insurance_status: :denied)
-      @process_coverage.increment!(:denied_count, ids.length)
+      @pro_cov.increment!(:denied_count, ids.length)
 
-      redirect_to process_coverage_path(@process_coverage), alert: "Selected Coverages Denied!"
+      redirect_to process_coverage_path(@pro_cov), alert: "Selected Coverages Denied!"
     end
     
     # redirect_to process_coverage_path(@process_coverage), notice: "Selected Coverages Approved!"
