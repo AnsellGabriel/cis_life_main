@@ -10,22 +10,22 @@
         <div class="card-body">
           <div class="<%= flex_justify_align('between', 'center') %>">
             <div class="gap-1">
-              <h6 class="card-title mb-0">
-
-              <% if plan_acronym == 'PMFC' %>
-                Latest Group Remit
-              <% else %>
+              <h6 class="card-title mb-1">
                 <%= @agreement.moa_no %>
-              <% end %>
-
               </h6>
               <div class="small text-muted <%= flex_justify_align('', '', true) %>">
+
+                <% if @agreement.anniversary_type == 'single' %>
+                  <%= content_tag :span, "Anniversary Date: #{@agreement.anniversaries[0].anniversary_date.strftime('%B %d')}" %>
+                <% end %>
+
                 <%= content_tag :span, "Required Minimum Participants: #{@agreement.minimum_participation}" %>
                 <%= content_tag :span, "Current Approved Participants: " %>
               </div>
             </div>
 
             <% if plan_acronym == 'PMFC' %>
+
               <%= simple_form_for @agreement.group_remits.new, url: group_remits_path, method: :post do |f| %>
                 <%= hidden_field_tag :agreement_id, @agreement.id %>
                 <%= hidden_field_tag :anniversary_id, nil %>
@@ -39,6 +39,7 @@
                 ], include_blank: "Term duration", input_html: { style: "width: 250px !important" }, label: false %>
                 <%= f.button :submit, "New Batch", class: small_btn('success') %>
               <% end %>
+
             <% elsif @agreement.anniversary_type == 'none' or @agreement.anniversary_type.nil? %>
               <% current_batch_remit = @agreement.group_remits.find_by(type: 'BatchRemit', effectivity_date: Date.today.beginning_of_month)%>
 
@@ -56,6 +57,22 @@
                 %>
               <% end %>
 
+            <% elsif @agreement.anniversary_type == 'single' %>
+              <% current_batch_remit = @agreement.group_remits.find_by(type: 'BatchRemit')%>
+
+              <% unless current_batch_remit.present? %>
+                <%= button_to "New Batch", group_remits_path, 
+                  method: :post, 
+                  params: { 
+                    agreement_id: @agreement.id, 
+                    anniversary_id: @agreement.anniversaries[0].id,
+                    anniv_type: 'single',
+                    type: 'BatchRemit'
+                  }, 
+                  class: small_btn('success'), 
+                  data: { turbo: false } 
+                %>
+              <% end %>
             <% end %>
 
           </div>

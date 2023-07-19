@@ -710,7 +710,12 @@ User.create!(email: 'jfc@gmail.com', password: 'password', password_confirmation
 Plan.create!(name: 'GYRT-Family Ranking', description: 'Plan 4 description', gyrt_type: 'family', acronym: 'GYRTFR')
 
 # # # #Agreement
-agreement = Agreement.create!(plan_id: 2, cooperative_id: 2, agent_id: 1, moa_no: "JFC-0001", contestability: 12, nel: 25000, nml: 5000000, anniversary_type: 'none', transferred: 0, comm_type: "Gross Commission", entry_age_from: 18, entry_age_to: 65, exit_age: 80, coop_sf: 12.5, agent_sf: 10, minimum_participation: 100)
+agreement = Agreement.create!(plan_id: 2, cooperative_id: 2, agent_id: 1, moa_no: "JFC-0001", contestability: 12, nel: 25000, nml: 5000000, anniversary_type: 'multiple', transferred: 0, comm_type: "Gross Commission", entry_age_from: 18, entry_age_to: 65, exit_age: 80, coop_sf: 12.5, agent_sf: 10, minimum_participation: 100)
+# # # # GYRT Family Multiple Anniversary
+Anniversary.create!(agreement_id: 2, anniversary_date: '2023/12/25')
+Anniversary.create!(agreement_id: 2, anniversary_date: '2023/10/25')
+Anniversary.create!(agreement_id: 2, anniversary_date: '2023/11/25')
+
 
 # # # # for Principal (name, insured_type)
 jfc_agreement = Agreement.find_by(id: 2)
