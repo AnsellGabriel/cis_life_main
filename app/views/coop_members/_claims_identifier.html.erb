@@ -1,16 +1,16 @@
 <div class="<%= flex_justify_align('between', 'center') %> mb-3">
   <div class="">
-    <%= content_tag :span, "#{coop_member&.try(:full_name)&.titleize or coop_member.member_dependent.full_name.titleize}", class: 'text-primary', style: 'font-size: 1.2rem; font-weight: bold' %>
+    <%= content_tag :span, "#{insured&.try(:full_name)&.titleize or insured.member_dependent.full_name.titleize}", class: 'text-primary', style: 'font-size: 1.2rem; font-weight: bold' %>
     <%= content_tag :span, "- #{benefit.name.to_s.titleize}", class: 'text-muted' %>
   </div>
 
   <% filed_claim = ProcessClaim.find_by(agreement_id: agreement.id, claimable_id: batch.id, claimable_type: batch.class.name) %>
   <% claim_presenter = ProcessClaimPresenter.new(filed_claim) %>
-
+  
   <% if filed_claim.present? %>
     <%= content_tag :span, 'Claims submitted', class: 'text-success' %>
   <% else %>
-    <%= link_to 'File Claim', new_process_claim_path(coop_member_id: coop_member.id, agreement_id: agreement.id), class: small_btn('primary') %>
+    <%= link_to 'File Claim', new_process_claim_path(coop_member_id: coop_member.id, agreement_id: agreement.id, dependent_id: dependent_id ), class: small_btn('primary') %>
   <% end %>
 
 </div>
