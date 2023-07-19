@@ -254,8 +254,7 @@
                   <%= insured_type(batch.agreement_benefit.insured_type_before_type_cast, batch.agreement_benefit.name) %>
                 </td>
                 <td>
-                  <!-- modified terms from (batch.group_remits.find_by(type: "Remittance").expiry_date.year * 12 + batch.group_remits.find_by(type: "Remittance").expiry_date.month) - (effect.year * 12 + effect.month) to group_remit.terms-->
-                <% terms = group_remit.terms %>
+                  <% terms = (batch.group_remit.expiry_date.year * 12 + batch.group_remit.expiry_date.month) - (effect.year * 12 + effect.month) %>
                   
                   <%= process_dates("Eff", month_day_year(effect)) %> <br>
                   <%= process_dates("Exp", month_day_year(expire)) %> <br>
