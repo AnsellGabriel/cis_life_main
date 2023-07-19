@@ -1,11 +1,11 @@
 # app/services/csv_import_service.rb
 class CsvImportService
-    def initialize(type, file, cooperative, group_remit=nil)
+    def initialize(type, file, cooperative, group_remit=nil, current_user=nil)
       @type = type
       @file = file
       @cooperative = cooperative
       @group_remit = group_remit
-      
+      @current_user = current_user
     end
   
     def import
@@ -22,7 +22,7 @@ class CsvImportService
         import_service = BatchImportService.new(spreadsheet, @group_remit, @cooperative)
         import_result = import_service.import_batches
       when :member
-        import_service = MemberImportService.new(spreadsheet, @cooperative)
+        import_service = MemberImportService.new(spreadsheet, @cooperative, @current_user)
         import_result = import_service.import_members
       end
 

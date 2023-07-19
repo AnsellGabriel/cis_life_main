@@ -9,12 +9,11 @@
         <% gr_presenter = GroupRemitPresenter.new(batch_remit) %>
         <div class="card">
           <div class="card-body d-flex flex-column" style="width: 400px">
-            <div class="mb-3 <%= flex_justify_align('between', 'center') %>">
+            <div class="mb-1 <%= flex_justify_align('between', 'center') %>">
               <div class="<%= flex_justify_align('','center') %> gap-1">
                 <span class="<%= gr_presenter.status_badge %>">
                   <%= gr_presenter.status_text %>
                 </span>
-                <%= content_tag :span, "#{batch_remit.effectivity_date.strftime('%B').upcase} BATCH" %>
               </div>
               <div class="">
                 <%= link_to 'View Batch', coop_agreement_group_remit_path(@agreement, batch_remit), 
@@ -27,11 +26,12 @@
                 %>
               </div>
             </div>
+            <%= content_tag :span, "#{batch_remit.name}", class: 'mb-1' %>
             <%= render 'submitted_field', group_remit: batch_remit %>
           </div>
         </div>
       <% end %>
-
+            
     <% elsif agreement.anniversary_type != 'multiple' %>
       <% last_group_remit = agreement.group_remits.includes(batches: :batch_dependents).last %>
       <% single_gr_presenter = GroupRemitPresenter.new(last_group_remit) %>

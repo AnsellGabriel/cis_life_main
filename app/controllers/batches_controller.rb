@@ -116,7 +116,7 @@ class BatchesController < ApplicationController
       @group_remit, 
       batch_params[:rank], 
       batch_params[:transferred],
-      batch_params[:duration]
+      @group_remit.terms
     )
 
     begin
