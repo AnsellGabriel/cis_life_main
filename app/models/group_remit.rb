@@ -96,14 +96,18 @@ class GroupRemit < ApplicationRecord
     self.gross_premium = gross_premium
     self.coop_commission = total_coop_commissions
     self.agent_commission = total_agent_commissions
-    self.net_premium = net_premium - total_agent_commissions
-    self.status = :for_payment
-    # self.effectivity_date = Date.today
+    self.net_premium = net_premium
+    
+    unless self.type == 'BatchRemit'
+      self.status = :for_payment
+    end
+
     self.save!
+    # self.effectivity_date = Date.today
   end
 
   def set_for_payment_status
-    # set_total_premiums_and_fees
+    set_total_premiums_and_fees
 
     self.status = :for_payment
     self.save!
@@ -186,7 +190,7 @@ class GroupRemit < ApplicationRecord
   end
 
   def net_premium
-    (gross_premium - total_coop_commissions) - (denied_principal_premiums + denied_dependent_premiums)
+    (gross_premium - (total_coop_commissions + total_agent_commissions) ) - (denied_principal_premiums + denied_dependent_premiums)
   end
   
   def batches_without_beneficiaries
