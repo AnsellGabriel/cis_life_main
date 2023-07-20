@@ -60,7 +60,7 @@ class ProcessCoveragesController < ApplicationController
 
   def update_batch_selected
     # raise 'errors'
-    @pro_cov = ProcessCoverage.find(params[:p_id])
+    @pro_cov = ProcessCoverage.find_by(id: params[:p_id])
     
     if params[:approve]
 
