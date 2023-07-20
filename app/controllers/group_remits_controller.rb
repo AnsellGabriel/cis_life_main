@@ -31,7 +31,7 @@ class GroupRemitsController < InheritedResources::Base
 
     if all_renewal
       @group_remit.set_for_payment_status
-      @group_remit.set_batches_status_renewal
+      @group_remit.approve_insurance_status_of_batches
     else
       @group_remit.set_under_review_status
     end
@@ -89,6 +89,10 @@ class GroupRemitsController < InheritedResources::Base
     @group_remit.set_terms_and_expiry_date(anniversary_date)
     @group_remit.type = 'Remittance'
 
+    if @agreement.anniversary_type == 'multiple' || @agreement.anniversary_type == 'single'
+      @group_remit.anniversary_id = params[:anniversary_id]
+    end
+
     set_group_remit_names_and_terms(@group_remit, short_term_insurance)
 
     respond_to do |format|
@@ -98,7 +102,12 @@ class GroupRemitsController < InheritedResources::Base
           batch_remit = @agreement.group_remits.build(type: 'BatchRemit')
           batch_remit.set_terms_and_expiry_date(anniversary_date)
           set_group_remit_names_and_terms(batch_remit, short_term_insurance)
-            batch_remit.save!
+
+          if @agreement.anniversary_type == 'multiple' || @agreement.anniversary_type == 'single'
+            batch_remit.anniversary_id = params[:anniversary_id]
+          end
+
+          batch_remit.save!
         end
         
         format.html { redirect_to coop_agreement_group_remit_path(@agreement, @group_remit), notice: "Group remit was successfully created." }
@@ -138,6 +147,7 @@ class GroupRemitsController < InheritedResources::Base
     end
 
     agreement = @group_remit.agreement
+    anniv_type = agreement.anniversary_type
     @group_remit.payments.build(receipt: params[:file])
     @group_remit.status = :payment_verification
     # @group_remit.effectivity_date = Date.today
@@ -145,7 +155,12 @@ class GroupRemitsController < InheritedResources::Base
     respond_to do |format|
       if @group_remit.save!
         approved_batches = @group_remit.batches.where(insurance_status: :approved)
-        current_batch_remit = agreement.group_remits.find_by(type: 'BatchRemit', effectivity_date: @group_remit.effectivity_date)
+
+        if anniv_type == 'none' || anniv_type.nil?
+          current_batch_remit = agreement.group_remits.find_by(type: 'BatchRemit', effectivity_date: @group_remit.effectivity_date)
+        else
+          current_batch_remit = agreement.group_remits.find_by(type: 'BatchRemit', anniversary_id: @group_remit.anniversary_id)
+        end
 
         current_batch_remit.batches << approved_batches
         current_batch_remit.status = :active

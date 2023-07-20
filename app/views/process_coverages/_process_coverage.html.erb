@@ -1,11 +1,11 @@
 <div id="<%= dom_id process_coverage %>">
   <div class="row mb-3">
     <div class="col-6">
-      <%= AssetRam::Helper.cache { render 'pro_cov_details', process_coverage: process_coverage } %>
+      <%= render 'pro_cov_details', process_coverage: process_coverage %>
     </div>
     
     <div class="col-6">
-      <%= AssetRam::Helper.cache { render "process_remarks", process_remarks: @filtered_remarks, process_coverage: process_coverage } %>
+      <%= render "process_remarks", process_remarks: @filtered_remarks, process_coverage: process_coverage %>
     </div>
   </div>
 

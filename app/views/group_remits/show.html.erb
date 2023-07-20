@@ -1,8 +1,11 @@
 <%= turbo_stream_from @cooperative, "batches" %>
+
 <% gr_presenter = GroupRemitPresenter.new(@group_remit)%>
 <% plan_acronym = @agreement.plan.acronym %>
+<% short_term_insurance = plan_acronym == 'PMFC' %>
 <% none_anniversary = @group_remit.effectivity_date == Date.today.beginning_of_month %>
 <% single_anniversary = @agreement.anniversary_type == 'single' %>
+<% multiple_anniversary = @agreement.anniversary_type == 'multiple' %>
 <% is_batch_remit = @group_remit.type == 'BatchRemit' %>
 <% is_remittance = @group_remit.type == 'Remittance' %>
 <% is_pending_renewal = @group_remit.pending? || @group_remit.for_renewal? %>
@@ -19,7 +22,7 @@
 <div class="mb-3 gap-1 <%= flex_justify_align('', 'center') %>">
   <%= link_to 'Back', coop_agreement_path(@agreement), class: small_btn('secondary') %>
 
-  <% if @agreement.plan.acronym == 'PMFC' && is_batch_remit && @group_remit.pending? %>
+  <% if short_term_insurance && is_batch_remit && @group_remit.pending? %>
     <%= button_to "Delete", group_remit_path(@group_remit), 
       method: :delete,
       data: { turbo_confirm: 'Delete group remit?'},
@@ -27,20 +30,18 @@
     %>
   <% end %>
 
-  <% if (is_pending_renewal) && is_remittance %>
+  <% if is_pending_renewal && is_remittance %>
     <%= button_to "Delete", group_remit_path(@group_remit), 
       method: :delete,
       data: { turbo_confirm: 'Delete group remit?'},
       class: small_btn('danger') 
     %>
     <div class="d-flex gap-1">
-      <% if none_anniversary || single_anniversary %>
-        <%= button_to 'Submit Batch', submit_group_remit_path(@group_remit), 
-          method: :get,
-          class: small_btn('outline-warning'), 
-          data: {turbo_confirm: 'Submit group remit?' } 
-        %>
-      <% end %>
+      <%= button_to 'Submit Batch', submit_group_remit_path(@group_remit), 
+        method: :get,
+        class: small_btn('outline-warning'), 
+        data: {turbo_confirm: 'Submit group remit?' } 
+      %>
        
       <%  if @group_remit.denied_members.present? %>
         <%= link_to 'Denied members', group_remit_denied_members_path(@group_remit), class: small_btn('outline-secondary') %>
@@ -75,6 +76,18 @@
         agreement_id: @agreement.id, 
         anniversary_id: @agreement.anniversaries[0].id,
         anniv_type: 'single',
+        type: 'Remittance'
+      }, 
+      class: small_btn('warning'), 
+      data: { turbo: false } 
+    %>
+    <% elsif is_batch_remit && multiple_anniversary %>
+    <%= button_to "Add Members", group_remits_path, 
+      method: :post, 
+      params: { 
+        agreement_id: @agreement.id, 
+        anniversary_id: @group_remit.anniversary_id,
+        anniv_type: 'multiple',
         type: 'Remittance'
       }, 
       class: small_btn('warning'), 
@@ -116,15 +129,13 @@
           <%= render 'payment' %>
         <% end %>
 
-        <% if (is_pending_renewal) && is_remittance %>
+        <% if is_pending_renewal && is_remittance %>
             <%= turbo_frame_tag "batch_import_form" do %>
               <%= turbo_frame_tag "batch_form" do %>   
-                <% if none_anniversary || single_anniversary %>  
                   <div class="d-flex gap-3 mb-2">
                     <%= render 'group_remits/add_member' %>
                   </div>
-                <% end %>
-
+                  
                 <% if @batch_without_beneficiaries_count > 0 %>
                   <%= content_tag :span, "Filter this batch by:", 
                     class: 'mb-1',  

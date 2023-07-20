@@ -115,11 +115,8 @@ class GroupRemit < ApplicationRecord
     self.save!
   end
 
-  def set_batches_status_renewal
-    self.batches.each do |batch|
-      batch.insurance_status = :approved
-      batch.save!
-    end
+  def approve_insurance_status_of_batches
+    self.batches.update_all(insurance_status: :approved)
   end
 
   def coop_member_ids
