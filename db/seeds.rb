@@ -913,11 +913,11 @@
 # end
 
 
-(1524..1710).each do |num|
-  gr = GroupRemit.find(4)
+# (1524..1710).each do |num|
+#   gr = GroupRemit.find(5)
 
-  batch = Batch.find(num)
+#   batch = Batch.find(num)
 
-  bgr = BatchGroupRemit.find_or_initialize_by(batch: batch, group_remit: gr)
-  puts "#{bgr.batch_id} - #{bgr.group_remit_id}" if bgr.save!
-end
+#   bgr = BatchGroupRemit.find_or_initialize_by(batch: batch, group_remit: gr)
+#   puts "#{bgr.batch_id} - #{bgr.group_remit_id}" if bgr.save!
+# end

@@ -11,10 +11,14 @@ export default class extends Controller {
   }
   
   toggleChildren(){
+    const label = this.element.querySelector('label[for="' + this.parentTarget.id + '"]')
+
     if (this.parentTarget.checked) {
       this.childTargets.map(x => x.checked = true)
+      label.innerText = 'Unselect All';
     } else {
       this.childTargets.map(x => x.checked = false) 
+      label.innerText = 'Select All';
     }
 
   }

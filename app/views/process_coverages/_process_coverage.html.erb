@@ -1,13 +1,13 @@
 <div id="<%= dom_id process_coverage %>">
   <div class="row mb-3">
     <div class="col-6">
-      <%= AssetRam::Helper.cache { render 'pro_cov_details', process_coverage: process_coverage } %>
+      <%= render 'pro_cov_details', process_coverage: process_coverage %>
       <%#= render 'pro_cov_details', process_coverage: process_coverage %>
     </div>
     
     <div class="col-6">
       <%#= render "process_remarks", process_remarks: @filtered_remarks, process_coverage: process_coverage %>
-      <%= AssetRam::Helper.cache { render "process_remarks", process_remarks: @filtered_remarks, process_coverage: process_coverage } %>
+      <%= render "process_remarks", process_remarks: @filtered_remarks, process_coverage: process_coverage %>
     </div>
   </div>
 
@@ -89,7 +89,7 @@
 
       <div class="row">
         <%#= render "process_coverages/agreement_benefits", process_coverage: process_coverage %>
-        <%= AssetRam::Helper.cache { render "process_coverages/agreement_benefits", process_coverage: process_coverage } %>
+        <%= render "process_coverages/agreement_benefits", process_coverage: process_coverage %>
           <%# ctr = batches.joins(:batch_dependents).where(batch_depedents: { proposal_insured }) %>
       </div>
 
@@ -188,9 +188,10 @@
   </div> -->
   
   <div data-controller="checkbox-select-all">
-    <div class="row">
+    <div class="row mb-2">
       <div class="col-2">
         <div class="d-flex">
+          <% b_name = %>
           <%= check_box_tag 'btncheck1', '1', false, class: 'btn-check', data: { action: "change->checkbox-select-all#toggleChildren", checkbox_select_all_target: "parent" } %>
           <%= label_tag 'btncheck1', 'Select All', class: 'btn btn-outline-primary' %>
         </div>
@@ -200,7 +201,7 @@
         <%= form_tag update_batch_selected_process_coverages_path(p_id: process_coverage), method: :patch do %>
           <% unless process_coverage.status != "for_process" && process_coverage.status != "pending" %>
             <% if process_coverage.group_remit.batches.where(insurance_status: [:pending, :for_review]).count > 0 %>
-              <div class="mb-2 text-end">
+              <div class="text-end">
                 <%= link_to "Approve All", approve_all_group_remit_batches_path(@group_remit,group_remit: process_coverage.group_remit, process_coverage: process_coverage), class: "btn btn-success", onclick: "return confirm('Are you sure?')", method: :get %>
                 <%= submit_tag 'Approve Selected', name: 'approve', onclick: "return confirm('Are you sure?')", class: "btn btn-primary" %>
                 <%= button_tag 'Deny Selected', name: 'deny', type: "submit", onclick: "return confirm('Are you sure?')", class: "btn btn-danger" %>
