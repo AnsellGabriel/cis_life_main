@@ -20,6 +20,10 @@ Rails.application.routes.draw do
     get :cov_list, on: :collection
     patch :update_batch_selected, on: :collection
   end
+  get 'preview', to: 'process_coverages#preview'
+  get 'download', to: 'process_coverages#download'
+  get 'process_coverages/pdf/:id', to: "process_coverages#pdf", as: 'pc_pdf'
+
   resources :coop_agreements do
     resources :group_remits
   end

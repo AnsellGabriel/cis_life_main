@@ -76,6 +76,7 @@ class GroupRemitsController < InheritedResources::Base
   end
 
   def create
+    # byebug
     @agreement = Agreement.find_by(id: params[:agreement_id])
     short_term_insurance = @agreement.plan.acronym == 'PMFC'
 

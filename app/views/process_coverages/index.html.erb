@@ -20,8 +20,8 @@
           <th>Agent</th>
           <th>Terms</th>
           <th>Status</th>
-          <th></th>
-          <th></th>
+          <th>Approved</th>
+          <th>Denied</th>
           <th></th>
 
         </tr>
@@ -35,7 +35,7 @@
           <td>
             <% description = process_coverage.group_remit.description.nil? ? "-" : process_coverage.group_remit.description %>
             <!-- temp change process_coverage.group_remit to process_coverage.group_remit.id -->
-            <%= content_tag :span, process_coverage.group_remit.id, class: "lead" %> <br>
+            <%= content_tag :span, process_coverage.group_remit.id, class: "lead" %> <%= content_tag :small, "(#{process_coverage.group_remit.type})" %> <br>
             <%= content_tag :small, description, class: "fw-lighter" %>
           </td>
           <td><%= process_coverage.agent %></td>
@@ -43,16 +43,16 @@
             Effectivity: <%= month_day_year(process_coverage.effectivity) %> <br>
             Expiry: <%= month_day_year(process_coverage.expiry) %>
           </td>
-          <td><%= process_status(process_coverage.status) %></td>
+          <td><%= process_status(process_coverage.status) %> <%= process_coverage.status %></td>
           <td>
             Total Approved Count:   <%= process_coverage.approved_count %> <br>
-            Total Approved Coverage: <%= to_currency(process_coverage.approved_total_coverage) %> <br>
-            Total Approved Premium: <%= to_currency(process_coverage.approved_total_prem) %>  
+             <!--Total Approved Coverage: <%= to_currency(process_coverage.group_remit.batches.where(insurance_status: :approved).sum(:premium)) %> <br> -->
+            Total Approved Premium: <%= to_currency(process_coverage.group_remit.batches.where(insurance_status: :approved).sum(:premium)) %>  
           </td>
           <td>
             Total Denied Count: <%= process_coverage.denied_count %> <br>
-            Total Denied Coverage: <%= process_coverage.denied_total_coverage %> <br>
-            Total Denied Premium: <%= process_coverage.denied_total_prem %>
+            <!-- Total Denied Coverage: <%= process_coverage.denied_total_coverage %> <br> -->
+            Total Denied Premium: <%= to_currency(process_coverage.group_remit.batches.where(insurance_status: :denied).sum(:premium)) %>
           </td>
       
             <td>
@@ -62,8 +62,11 @@
                 <% end %>
               <% end %>
               <%= link_to 'View', process_coverage, class: 'btn btn-secondary btn-sm' %>
-              <%= link_to 'Edit', edit_process_coverage_path(process_coverage), class: 'btn btn-secondary btn-sm' %>
-              <%= link_to "Delete", process_coverage, class: "btn btn-danger btn-sm", method: :delete, data: { "turbo-method": :delete, turbo_confirm: "Are you sure?" } %>
+              <%= link_to "Preview", preview_path %>
+              <%= link_to "Download", download_path %>
+              <%= link_to "View PDF", pc_pdf_path(process_coverage) %>
+              <%#= link_to 'Edit', edit_process_coverage_path(process_coverage), class: 'btn btn-secondary btn-sm' %>
+              <%#= link_to "Delete", process_coverage, class: "btn btn-danger btn-sm", method: :delete, data: { "turbo-method": :delete, turbo_confirm: "Are you sure?" } %>
             </td>
 
           </tr>

@@ -41,7 +41,6 @@
                 ], include_blank: "Term duration", input_html: { style: "width: 250px !important" }, label: false %>
                 <%= f.button :submit, "New Batch", class: small_btn('success') %>
               <% end %>
-
             <% elsif @agreement.anniversary_type == 'none' or @agreement.anniversary_type.nil? %>
               <% current_batch_remit = @agreement.group_remits.find_by(type: 'BatchRemit', effectivity_date: Date.today.beginning_of_month)%>
 
