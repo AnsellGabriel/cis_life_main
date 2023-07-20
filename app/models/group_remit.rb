@@ -115,11 +115,8 @@ class GroupRemit < ApplicationRecord
     self.save!
   end
 
-  def set_batches_status_renewal
-    self.batches.each do |batch|
-      batch.insurance_status = :approved
-      batch.save!
-    end
+  def approve_insurance_status_of_batches
+    self.batches.update_all(insurance_status: :approved)
   end
 
   def coop_member_ids
@@ -217,6 +214,7 @@ class GroupRemit < ApplicationRecord
     else
       terms = set_terms(anniversary_date)
       self.terms = terms <= 0 ? terms + 12 : terms
+      self.effectivity_date = Date.today
       self.expiry_date = terms <= 0 ? anniversary_date.next_year : anniversary_date
     end
   end

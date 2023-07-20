@@ -3,7 +3,14 @@
 
 		<% @agreement.group_remits.includes(:anniversary).where(type: 'Remittance').order(created_at: :desc).each do |group_remit| %>
 			<% gr_presenter = GroupRemitPresenter.new(group_remit)%>
-			<div class="card hidden" data-toggler-target="toggleable" data-id="history-<%= group_remit.effectivity_date %>">
+
+			<% if @agreement.anniversary_type == 'single' ||  @agreement.anniversary_type.nil? %>
+				<% batch_remit = @agreement.group_remits.find_by(type: 'BatchRemit', effectivity_date: group_remit.effectivity_date )%>
+			<% else %>
+				<% batch_remit = @agreement.group_remits.find_by(type: 'BatchRemit', anniversary_id: group_remit.anniversary_id )%>
+			<% end %>
+
+			<div class="card hidden" data-toggler-target="toggleable" data-id="history-<%= batch_remit.id %>">
 				<div class="card-body <%= flex_justify_align('between', 'start') %> gap-1">
 					<div class="<%= flex_justify_align('', '', true) %> gap-3">
 						<div class="">
