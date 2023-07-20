@@ -6,10 +6,6 @@
       </div>
       <div class="w-100 border my-3"></div>
       <div class="coop-block row">
-        <div class="col-3">Proposal No.</div>
-        <div class="col-9 fw-bold">
-          <%= moa.proposal.proposal_no %>
-        </div>
         <div class="w-100 mb-2"></div>
         <div class="col-3">Cooperative</div>
         <div class="col-9">
@@ -107,17 +103,17 @@
           <%= content_tag :span, "Minimum Participation", class: "lead text-primary" %>
           <%= content_tag :ul, class: "mb-2" do %>
             <%= content_tag :li do %>
-              <p><b><%= num_delimit(moa.proposal.minimum_participation) %></b> members</p>
+              <p><b><%= num_delimit(moa.minimum_participation) %></b> members</p>
             <% end %>
           <% end %>
 
           <%= content_tag :span, "Service Fee", class: "lead text-primary" %>
           <%= content_tag :ul, class: "mb-2" do %>
             <%= content_tag :li do %>
-              <p>Cooperative: <b><%= to_percent(moa.proposal.coop_sf * 100) %></b></p>
+              <p>Cooperative: <b><%= to_percent(moa.coop_sf * 100) %></b></p>
             <% end %>
             <%= content_tag :li do %>
-              <p>Marketing Agent: <b><%= to_percent(moa.proposal.agent_sf * 100) %></b></p>
+              <p>Marketing Agent: <b><%= to_percent(moa.agent_sf * 100) %></b></p>
             <% end %>
           <% end %>
 
