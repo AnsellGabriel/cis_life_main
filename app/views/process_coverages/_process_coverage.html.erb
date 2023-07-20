@@ -228,7 +228,7 @@
           <% unless @filtered_batches.count == 0 %>
             <%#= form_tag approve_selected_batches_path, method: :patch do %>
             <% @filtered_batches.each do |batch| %>
-
+              <% group_remit =  batch.group_remits.find_by(type: 'Remittance') %>
               <% mem_bday = batch.coop_member.member.birth_date %>
               <% effect = batch.group_remits.find_by(type: "Remittance").effectivity_date %>
               <% expire = batch.group_remits.find_by(type: "Remittance").expiry_date %>

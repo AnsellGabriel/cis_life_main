@@ -3,7 +3,14 @@
 
 		<% @agreement.group_remits.includes(:anniversary).where(type: 'Remittance').order(created_at: :desc).each do |group_remit| %>
 			<% gr_presenter = GroupRemitPresenter.new(group_remit)%>
-			<div class="card hidden" data-toggler-target="toggleable" data-id="history-<%= group_remit.effectivity_date %>">
+
+			<% if @agreement.anniversary_type == 'none' ||  @agreement.anniversary_type.nil? %>
+				<% batch_remit = @agreement.group_remits.find_by(type: 'BatchRemit', expiry_date: group_remit.expiry_date )%>
+			<% else %>
+				<% batch_remit = @agreement.group_remits.find_by(type: 'BatchRemit', anniversary_id: group_remit.anniversary_id )%>
+			<% end %>
+
+			<div class="card hidden" data-toggler-target="toggleable" data-id="history-<%= batch_remit.id %>">
 				<div class="card-body <%= flex_justify_align('between', 'start') %> gap-1">
 					<div class="<%= flex_justify_align('', '', true) %> gap-3">
 						<div class="">
@@ -13,11 +20,6 @@
 						</div>
 						<%= content_tag :span, "#{group_remit.name}", class: 'mb-1' %>
 
-						<% if plan_acronym == 'PMFC' %>
-							<div class="text-secondary small">
-								<%= content_tag :span, "#{@cooperative.name} BATCH #{@agreement.group_remits.find_index(group_remit) + 1}" %>
-							</div>
-						<% else %>
 							<div class="<%= flex_justify_align('center','', true) %>">
 								<div class="text-secondary small <%= flex_justify_align('between') %>" style="width: 300px">
 									<%= content_tag :span, 'Created date: ' %>
@@ -40,7 +42,6 @@
 										<%= content_tag :span, peso_currency(group_remit.net_premium) %>
 								</div>
 							</div>
-						<% end %>
 
 					</div>
 					<%= link_to 'View', group_remit_path(group_remit), class: small_btn('secondary') %>

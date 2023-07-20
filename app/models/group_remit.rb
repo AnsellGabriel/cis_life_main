@@ -96,14 +96,18 @@ class GroupRemit < ApplicationRecord
     self.gross_premium = gross_premium
     self.coop_commission = total_coop_commissions
     self.agent_commission = total_agent_commissions
-    self.net_premium = net_premium - total_agent_commissions
-    self.status = :for_payment
-    # self.effectivity_date = Date.today
+    self.net_premium = net_premium
+    
+    unless self.type == 'BatchRemit'
+      self.status = :for_payment
+    end
+
     self.save!
+    # self.effectivity_date = Date.today
   end
 
   def set_for_payment_status
-    # set_total_premiums_and_fees
+    set_total_premiums_and_fees
 
     self.status = :for_payment
     self.save!
@@ -115,11 +119,8 @@ class GroupRemit < ApplicationRecord
     self.save!
   end
 
-  def set_batches_status_renewal
-    self.batches.each do |batch|
-      batch.insurance_status = :approved
-      batch.save!
-    end
+  def approve_insurance_status_of_batches
+    self.batches.update_all(insurance_status: :approved)
   end
 
   def coop_member_ids
@@ -189,7 +190,7 @@ class GroupRemit < ApplicationRecord
   end
 
   def net_premium
-    (gross_premium - total_coop_commissions) - (denied_principal_premiums + denied_dependent_premiums)
+    (gross_premium - (total_coop_commissions + total_agent_commissions) ) - (denied_principal_premiums + denied_dependent_premiums)
   end
   
   def batches_without_beneficiaries
@@ -217,6 +218,7 @@ class GroupRemit < ApplicationRecord
     else
       terms = set_terms(anniversary_date)
       self.terms = terms <= 0 ? terms + 12 : terms
+      self.effectivity_date = Date.today
       self.expiry_date = terms <= 0 ? anniversary_date.next_year : anniversary_date
     end
   end
