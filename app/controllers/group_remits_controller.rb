@@ -30,8 +30,8 @@ class GroupRemitsController < InheritedResources::Base
     all_renewal = @group_remit.batches.all? { |batch| batch.status == "renewal" }
 
     if all_renewal
-      @group_remit.set_for_payment_status
       @group_remit.approve_insurance_status_of_batches
+      @group_remit.set_for_payment_status
     else
       @group_remit.set_under_review_status
     end
@@ -76,7 +76,6 @@ class GroupRemitsController < InheritedResources::Base
   end
 
   def create
-    # byebug
     @agreement = Agreement.find_by(id: params[:agreement_id])
     short_term_insurance = @agreement.plan.acronym == 'PMFC'
 
@@ -98,7 +97,7 @@ class GroupRemitsController < InheritedResources::Base
     respond_to do |format|
       if @group_remit.save!
 
-        if params[:type] == 'BatchRemit' || short_term_insurance
+        if params[:type] == 'BatchRemit'
           batch_remit = @agreement.group_remits.build(type: 'BatchRemit')
           batch_remit.set_terms_and_expiry_date(anniversary_date)
           set_group_remit_names_and_terms(batch_remit, short_term_insurance)
@@ -157,12 +156,13 @@ class GroupRemitsController < InheritedResources::Base
         approved_batches = @group_remit.batches.where(insurance_status: :approved)
 
         if anniv_type == 'none' || anniv_type.nil?
-          current_batch_remit = agreement.group_remits.find_by(type: 'BatchRemit', effectivity_date: @group_remit.effectivity_date)
+          current_batch_remit = agreement.group_remits.find_by(type: 'BatchRemit', expiry_date: @group_remit.expiry_date)
         else
           current_batch_remit = agreement.group_remits.find_by(type: 'BatchRemit', anniversary_id: @group_remit.anniversary_id)
         end
 
         current_batch_remit.batches << approved_batches
+        current_batch_remit.set_total_premiums_and_fees
         current_batch_remit.status = :active
         current_batch_remit.save!
 

@@ -30,6 +30,7 @@
               <%= simple_form_for @agreement.group_remits.new, url: group_remits_path, method: :post do |f| %>
                 <%= hidden_field_tag :agreement_id, @agreement.id %>
                 <%= hidden_field_tag :anniversary_id, nil %>
+                <%= hidden_field_tag :type, 'BatchRemit' %>
                 <%= f.input :terms, as: :select, collection: [
                   ["3 months", 3], 
                   ["4 months", 4], 
