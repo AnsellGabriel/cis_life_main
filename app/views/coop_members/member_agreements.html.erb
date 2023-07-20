@@ -2,12 +2,7 @@
 
 <div class="row row-cols-2 row-cols-md-2 g-4 mb-3" >
 	<% @agreements.each do |agreement| %>
-
-		<% if agreement.anniversary_type == 'multiple' %>
-			<% group_remit = agreement.group_remits.joins(batches: :coop_member).where(coop_members: { id: @coop_member.id }).order('group_remits.created_at DESC').first %>
-		<% else %>
-			<% group_remit = agreement.group_remits.last %>
-		<% end %>
+		<% group_remit = agreement.group_remits.where(type: 'BatchRemit').joins(batches: :coop_member).where(coop_members: { id: @coop_member.id }).order('group_remits.created_at DESC').first %>
 		
     <% gr_presenter = GroupRemitPresenter.new(group_remit) %>
 		<% batch = group_remit.batches.find_by(coop_member_id: @coop_member.id) %>
@@ -139,45 +134,17 @@
 											</tfoot>
 										</table>
 									<% end %>
+
 								</div>
 							</div>
 						<% end %>
-					</div>
 
-					
+					</div>
 				</div>
 			</div>
 		</div>
-
-		
-
-					<!--
-					<div class="step">
-						<span class="icon"><i class="bi bi-send"></i></span>
-						<span class="text"><small>Release</small></span>
-					</div>
-					
-				</div>
-				<br>
-				<div class="mb-3">
-					<ul class="timeline">
-						<li class="mb-3">
-							<p class="text-primary mb-1">Payment Procedure <small class="text-muted">2023-05-12 13:41:56 +0800</small></p>
-							<small>Approved by Ansell Del Ayre</small>
-						</li>
-						<li class="mb-3">
-							<p class="text-primary mb-1">Evaluation <small class="text-muted">2023-05-12 13:41:22 +0800</small></p>
-							<small>by Ansell Del Ayre</small>
-						</li>
-						<li class="mb-3">
-							<p class="text-primary mb-1">Processing <small class="text-muted">2023-05-12 13:40:48 +0800</small></p>
-							<small>by Ansell Del Ayre</small>
-						</li>
-					</ul>
-				</div>
-				-->
-
 	<% end %>
+
 </div>
 
 

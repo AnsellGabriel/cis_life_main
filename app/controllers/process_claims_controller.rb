@@ -47,8 +47,14 @@ class ProcessClaimsController < ApplicationController
     difference_in_months = (expiry_date.year * 12 + expiry_date.month) - (incident_date.year * 12 + incident_date.month) if incident_date != nil
 
     if process_claim_params[:relationship].nil?
-      @process_claim.relationship = BatchBeneficiary.find(process_claim_params[:claimant_name]).member_dependent.relationship
-      @process_claim.claimant_name = BatchBeneficiary.find(process_claim_params[:claimant_name]).member_dependent.full_name.titleize
+
+      begin
+        @process_claim.relationship = BatchBeneficiary.find(process_claim_params[:claimant_name]).member_dependent.relationship
+        @process_claim.claimant_name = BatchBeneficiary.find(process_claim_params[:claimant_name]).member_dependent.full_name.titleize
+      rescue ActiveRecord::RecordNotFound
+        return redirect_to new_process_claim_path, alert: "The claim cannot be processed. The claimant name is not found."
+      end 
+
     end
 
     if difference_in_months != nil && difference_in_months > 60
@@ -61,13 +67,18 @@ class ProcessClaimsController < ApplicationController
       @process_claim.claimable = BatchDependent.find(params[:process_claim][:claimable_id])
     end
 
-    respond_to do |format|
-      if @process_claim.save!
-        format.html { redirect_to member_agreements_coop_member_path(coop_member), notice: "Claims submitted" }
-      else
-        format.html { render :new, status: :unprocessable_entity }
+    begin
+
+      respond_to do |format|
+        if @process_claim.save!
+          format.html { redirect_to member_agreements_coop_member_path(coop_member), notice: "Claims submitted" }
+        end
       end
+
+    rescue ActiveRecord::RecordInvalid => e
+      redirect_to new_process_claim_path, alert: "The claim cannot be processed. Please check: #{e.record.errors.full_messages.join(', ')}"
     end
+    
   end
 
   # PATCH/PUT /process_claims/1
