@@ -108,3 +108,6 @@ gem 'ed25519'
 gem 'bcrypt_pbkdf'
 
 gem 'asset_ram'
+gem "prawn", "~> 2.4"
+
+gem "prawn-templates", "~> 0.1.2"

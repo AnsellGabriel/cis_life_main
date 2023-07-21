@@ -15,6 +15,9 @@ class Agreement < ApplicationRecord
     has_many :agreements_coop_members
     has_many :coop_members, through: :agreements_coop_members
 
+    def to_s
+      moa_no
+    end
     # filters anniversaries based on a given set of expiry dates
     def get_filtered_anniversaries(expiry_dates)
 			anniversaries.reject do |anniv|
