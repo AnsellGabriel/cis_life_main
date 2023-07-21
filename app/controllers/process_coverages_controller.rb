@@ -1,6 +1,6 @@
 class ProcessCoveragesController < ApplicationController
   before_action :authenticate_user!
-  before_action :set_process_coverage, only: %i[ show edit update destroy approve_batch deny_batch pending_batch ]
+  before_action :set_process_coverage, only: %i[ show edit update destroy approve_batch deny_batch pending_batch pdf ]
 
   # GET /process_coverages
   def index
@@ -10,6 +10,40 @@ class ProcessCoveragesController < ApplicationController
     @pending_process_coverages = ProcessCoverage.where(status: :pending)
     @denied_process_coverages = ProcessCoverage.where(status: :denied)
   end
+
+  def preview
+    pdf = Prawn::Document.new
+    pdf.text "This is a preview"
+    pdf.text "It only shows up in the preview route"
+    pdf.start_new_page
+    pdf.text "this is new page"
+    100.times do |i|
+      pdf.text "this is line #{i}"
+    end
+    send_data(pdf.render,
+      filename: "hello.pdf",
+      type: "application/pdf",
+      disposition: "inline")
+
+  end
+
+  def download
+    pdf = Prawn::Document.new
+    pdf.text "Hello World"
+    send_data(pdf.render,
+      filename: 'hello.pdf',
+      type: 'application/pdf')
+    
+  end
+
+  def pdf
+    pdf = PsheetPdf.new(@process_coverage, view_context)
+    send_data(pdf.render,
+      filename: "#{@process_coverage.group_remit.name}.pdf",
+      type: 'application/pdf',
+      disposition: "inline")
+  end
+  
 
   def cov_list
     # raise 'errors'
@@ -25,23 +59,24 @@ class ProcessCoveragesController < ApplicationController
   end
 
   def update_batch_selected
-    @process_coverage = ProcessCoverage.find_by(params[:p_id])
-
+    # raise 'errors'
+    @pro_cov = ProcessCoverage.find_by(id: params[:p_id])
+    
     if params[:approve]
-      ids = params[:ids]
-  
-      Batch.where(id: ids).update_all(insurance_status: :approved)
-      @process_coverage.increment!(:approved_count, ids.length)
 
-      redirect_to process_coverage_path(@process_coverage), notice: "Selected Coverages Approved!"
+      ids = params[:ids]
+      Batch.where(id: ids).update_all(insurance_status: :approved)
+      @pro_cov.increment!(:approved_count, ids.length)
+
+      redirect_to process_coverage_path(@pro_cov), notice: "Selected Coverages Approved!"
       
     elsif params[:deny]
       ids = params[:ids]
   
       Batch.where(id: ids).update_all(insurance_status: :denied)
-      @process_coverage.increment!(:denied_count, ids.length)
+      @pro_cov.increment!(:denied_count, ids.length)
 
-      redirect_to process_coverage_path(@process_coverage), alert: "Selected Coverages Denied!"
+      redirect_to process_coverage_path(@pro_cov), alert: "Selected Coverages Denied!"
     end
     
     # redirect_to process_coverage_path(@process_coverage), notice: "Selected Coverages Approved!"
