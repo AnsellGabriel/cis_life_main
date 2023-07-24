@@ -1,0 +1,9 @@
+
+<%= render @loan_insurance_batch %>
+
+<div>
+  <%= link_to "Edit", edit_loan_insurance_batch_path(@loan_insurance_batch), class: 'btn btn-primary' %> |
+  <%= link_to "Back", loan_insurance_batches_path, class: 'btn btn-primary' %>
+
+  <%= button_to "Delete", @loan_insurance_batch, method: :delete, class: 'btn btn-danger' %>
+</div>

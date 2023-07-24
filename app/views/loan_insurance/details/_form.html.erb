@@ -1,0 +1,24 @@
+
+<%= simple_form_for(@loan_insurance_detail) do |f| %>
+  <%= f.error_notification %>
+  <%= f.error_notification message: f.object.errors[:base].to_sentence if f.object.errors[:base].present? %>
+
+  <div class="form-inputs mb-3">
+    <%= f.association :batch %>
+    <%= f.input :unuse %>
+    <%= f.input :loan_amount %>
+    <%= f.input :premium_due %>
+    <%= f.input :substandard_rate %>
+    <%= f.input :terminate %>
+    <%= f.input :terinate_date %>
+    <%= f.input :reinsurance %>
+    <%= f.input :terms %>
+    <%= f.input :date_release %>
+    <%= f.input :date_mature %>
+  </div>
+
+  <div class="form-actions text-end">
+    <%= link_to "Back", loan_insurance_details_path, class: 'btn btn-secondary' %>
+    <%= f.button :submit, class: 'btn-success' %>
+  </div>
+<% end %>

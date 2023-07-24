@@ -1,0 +1,2 @@
+module LoanInsurance::BatchRemitsHelper
+end

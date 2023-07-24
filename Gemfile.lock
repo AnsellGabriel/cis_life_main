@@ -158,6 +158,11 @@ GEM
     et-orbi (1.2.7)
       tzinfo
     execjs (2.8.1)
+    factory_bot (6.2.1)
+      activesupport (>= 5.0.0)
+    factory_bot_rails (6.2.0)
+      factory_bot (~> 6.2.0)
+      railties (>= 5.0.0)
     ffaker (2.21.0)
     ffi (1.15.5)
     formtastic (4.0.0)
@@ -426,6 +431,7 @@ DEPENDENCIES
   debug
   devise
   ed25519
+  factory_bot_rails
   ffaker
   humanize
   importmap-rails
@@ -440,7 +446,7 @@ DEPENDENCIES
   redis
   requestjs-rails
   roo (~> 2.10.0)
-  rspec-rails (~> 6.0, >= 6.0.3)
+  rspec-rails
   selenium-webdriver
   sidekiq
   sidekiq-scheduler

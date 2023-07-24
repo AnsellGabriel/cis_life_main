@@ -1,0 +1,37 @@
+<%= content_tag :h1, "List of Loan Insurance Batches" %>
+
+
+<div class="text-end mb-3">
+  <%= link_to new_loan_insurance_batch_path, class: 'btn btn-primary' do %>
+    New Batch
+  <% end %>
+</div>
+
+<table class ="table table-striped">
+  <table class="table table-striped table-bordered table-hover">
+    <thead>
+      <tr>
+
+      <th>#</th>
+        <th></th>
+
+      </tr>
+    </thead>
+
+    <tbody>
+      <% @loan_insurance_batches.each do |loan_insurance_batch| %>
+        <tr>
+
+        <th scope="row"><%= loan_insurance_batch.id %></th>
+    
+          <td>
+            <%= link_to 'View', loan_insurance_batch, class: 'btn btn-secondary btn-sm' %>
+            <%= link_to 'Edit', edit_loan_insurance_batch_path(loan_insurance_batch), class: 'btn btn-secondary btn-sm' %>
+            <%= link_to "Delete", loan_insurance_batch, class: "btn btn-danger btn-sm", method: :delete, data: { "turbo-method": :delete, turbo_confirm: "Are you sure?" } %>
+          </td>
+
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+</div>
