@@ -6,8 +6,8 @@ class CreateLoanInsuranceDetails < ActiveRecord::Migration[7.0]
       t.decimal :loan_amount, precision: 10, scale: 2
       t.decimal :premium_due, precision: 10, scale: 2
       t.decimal :substandard_rate, precision: 10, scale: 2
-      t.boolean :terminate
-      t.date :terinate_date
+      t.boolean :terminated
+      t.date :terminate_date
       t.boolean :reinsurance
       t.integer :terms
       t.date :date_release

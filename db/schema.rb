@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_07_24_072513) do
+ActiveRecord::Schema[7.0].define(version: 2023_07_25_082037) do
   create_table "active_admin_comments", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.string "namespace"
     t.text "body"
@@ -401,15 +401,49 @@ ActiveRecord::Schema[7.0].define(version: 2023_07_24_072513) do
     t.decimal "loan_amount", precision: 10, scale: 2
     t.decimal "premium_due", precision: 10, scale: 2
     t.decimal "substandard_rate", precision: 10, scale: 2
-    t.boolean "terminate"
-    t.date "terinate_date"
+    t.boolean "terminated"
+    t.date "terminate_date"
     t.boolean "reinsurance"
     t.integer "terms"
     t.date "date_release"
     t.date "date_mature"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.bigint "loan_insurance_loan_id", null: false
+    t.bigint "loan_insurance_rate_id", null: false
+    t.bigint "loan_insurance_retention_id", null: false
     t.index ["batch_id"], name: "index_loan_insurance_details_on_batch_id"
+    t.index ["loan_insurance_loan_id"], name: "index_loan_insurance_details_on_loan_insurance_loan_id"
+    t.index ["loan_insurance_rate_id"], name: "index_loan_insurance_details_on_loan_insurance_rate_id"
+    t.index ["loan_insurance_retention_id"], name: "index_loan_insurance_details_on_loan_insurance_retention_id"
+  end
+
+  create_table "loan_insurance_loans", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+    t.string "name"
+    t.string "description"
+    t.bigint "cooperative_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["cooperative_id"], name: "index_loan_insurance_loans_on_cooperative_id"
+  end
+
+  create_table "loan_insurance_rates", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+    t.integer "min_age"
+    t.integer "max_age"
+    t.decimal "monthly_rate", precision: 10
+    t.decimal "annual_rate", precision: 10
+    t.decimal "daily_rate", precision: 10
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  create_table "loan_insurance_retentions", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+    t.decimal "amount", precision: 15, scale: 2
+    t.boolean "active"
+    t.date "date_activated"
+    t.date "date_deactivated"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
   end
 
   create_table "member_dependents", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
@@ -594,6 +628,10 @@ ActiveRecord::Schema[7.0].define(version: 2023_07_24_072513) do
   add_foreign_key "group_remits", "agreements"
   add_foreign_key "health_dec_subquestions", "health_decs"
   add_foreign_key "loan_insurance_details", "batches"
+  add_foreign_key "loan_insurance_details", "loan_insurance_loans"
+  add_foreign_key "loan_insurance_details", "loan_insurance_rates"
+  add_foreign_key "loan_insurance_details", "loan_insurance_retentions"
+  add_foreign_key "loan_insurance_loans", "cooperatives"
   add_foreign_key "member_dependents", "members"
   add_foreign_key "payments", "group_remits"
   add_foreign_key "process_claims", "agreement_benefits"

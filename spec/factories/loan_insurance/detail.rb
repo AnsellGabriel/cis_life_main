@@ -13,7 +13,7 @@ FactoryBot.define do
     terminated { false }
     terminate_date { nil }
     reinsurance { false }
-    date_realease { FFaker::Time.date }
+    date_release { FFaker::Time.date }
     date_mature { FFaker::Time.date + rand(1..12).years }
 
   end

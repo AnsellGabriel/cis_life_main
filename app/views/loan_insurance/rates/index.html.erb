@@ -1,0 +1,47 @@
+<%= content_tag :h1, "List of Loan Insurance Rates" %>
+
+
+<div class="text-end mb-3">
+  <%= link_to new_loan_insurance_rate_path, class: 'btn btn-primary' do %>
+    New Rate
+  <% end %>
+</div>
+
+<table class ="table table-striped">
+  <table class="table table-striped table-bordered table-hover">
+    <thead>
+      <tr>
+
+      <th>#</th>
+        <th>Min Age</th>
+        <th>Max Age</th>
+        <th>Monthly Rate</th>
+        <th>Annual Rate</th>
+        <th>Daily Rate</th>
+        <th></th>
+
+      </tr>
+    </thead>
+
+    <tbody>
+      <% @loan_insurance_rates.each do |loan_insurance_rate| %>
+        <tr>
+
+        <th scope="row"><%= loan_insurance_rate.id %></th>
+        <td><%= loan_insurance_rate.min_age %></td>
+        <td><%= loan_insurance_rate.max_age %></td>
+        <td><%= loan_insurance_rate.monthly_rate %></td>
+        <td><%= loan_insurance_rate.annual_rate %></td>
+        <td><%= loan_insurance_rate.daily_rate %></td>
+    
+          <td>
+            <%= link_to 'View', loan_insurance_rate, class: 'btn btn-secondary btn-sm' %>
+            <%= link_to 'Edit', edit_loan_insurance_rate_path(loan_insurance_rate), class: 'btn btn-secondary btn-sm' %>
+            <%= link_to "Delete", loan_insurance_rate, class: "btn btn-danger btn-sm", method: :delete, data: { "turbo-method": :delete, turbo_confirm: "Are you sure?" } %>
+          </td>
+
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+</div>

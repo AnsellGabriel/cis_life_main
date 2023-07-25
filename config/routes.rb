@@ -84,6 +84,9 @@ Rails.application.routes.draw do
   end
 
   namespace :loan_insurance do
+    resources :retentions
+    resources :rates
+    resources :loans
     resources :details
     resources :batches
     resources :batch_remits

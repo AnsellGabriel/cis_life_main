@@ -1,0 +1,9 @@
+
+<%= render @loan_insurance_retention %>
+
+<div>
+  <%= link_to "Edit", edit_loan_insurance_retention_path(@loan_insurance_retention), class: 'btn btn-primary' %> |
+  <%= link_to "Back", loan_insurance_retentions_path, class: 'btn btn-primary' %>
+
+  <%= button_to "Delete", @loan_insurance_retention, method: :delete, class: 'btn btn-danger' %>
+</div>
