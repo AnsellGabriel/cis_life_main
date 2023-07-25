@@ -3,7 +3,7 @@ FactoryBot.define do
     agreement
 
     name { "Batch Remit #{FFaker::Vehicle.vin}" }
-    effective_date { Date.today }
+    effectivity_date { Date.today }
     expiry_date { Date.today + 1.year }
     terms { 12 }
     status { 0 }

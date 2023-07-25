@@ -2,6 +2,8 @@ class Batch < ApplicationRecord
   include Calculate
   attr_accessor :rank
 
+  validates_presence_of :effectivity_date, :expiry_date, :premium, :coop_sf_amount, :age, :agent_sf_amount, :coop_member_id, :agreement_benefit_id
+
   # batch.status
   enum status: {
     recent: 0,

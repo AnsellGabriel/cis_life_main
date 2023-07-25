@@ -2,7 +2,7 @@ FactoryBot.define do
   factory :agreement do
     cooperative
     agent
-    plan_lppi
+    association :plan, factory: :plan_lppi
 
     moa_no { "MOA-#{FFaker::Vehicle.vin}" }
     nel { 25000.00 }
