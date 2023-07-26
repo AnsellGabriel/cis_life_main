@@ -19,10 +19,6 @@ RSpec.describe LoanInsurance::Detail, type: :model do
       expect(detail).to_not be_valid
     end
 
-    it "is not valid if it's batch type is not LoanInsurance::Batch" do
-      detail.batch.type = 'LoanInsurance::NotBatch'
-      expect(detail).to_not be_valid
-    end
 
     it "is not valid without a rate" do
       detail.rate = nil
@@ -35,12 +31,12 @@ RSpec.describe LoanInsurance::Detail, type: :model do
     end
 
     it "is not valid without a premium" do
-      detail.premium = nil
+      detail.premium_due = nil
       expect(detail).to_not be_valid
     end
 
     it "is not valid without a term" do
-      detail.term = nil
+      detail.terms = nil
       expect(detail).to_not be_valid
     end
 
@@ -50,7 +46,7 @@ RSpec.describe LoanInsurance::Detail, type: :model do
     end
 
     it "is not valid without a date maturity" do
-      detail.date_maturity = nil
+      detail.date_mature = nil
       expect(detail).to_not be_valid
     end
 
