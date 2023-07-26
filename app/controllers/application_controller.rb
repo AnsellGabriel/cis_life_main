@@ -1,7 +1,7 @@
 class ApplicationController < ActionController::Base
   include Pagy::Backend
 
-  before_action :set_cooperative
+  before_action :set_cooperative, :set_authority_level
 
   def root
     case current_user.userable_type
@@ -27,6 +27,15 @@ class ApplicationController < ActionController::Base
     if current_user && current_user.userable_type == 'CoopUser'
       session[:cooperative_id] ||= current_user.userable.cooperative_id
       @cooperative ||= Cooperative.find_by(id: session[:cooperative_id])
+    end
+  end
+
+  def set_authority_level
+    if current_user.nil? || current_user.user_levels.count == 0
+      session[:max_amount] = 0
+    else
+      cur_user_max_amount = current_user.user_levels.find_by(active: true).authority_level.maxAmount
+      session[:max_amount] = cur_user_max_amount.nil? ? 0 : cur_user_max_amount
     end
   end
   

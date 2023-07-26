@@ -111,6 +111,8 @@ module ApplicationHelper
 			when "approved" then content_tag(:span, "Approved", class: "text-success")
 			when "denied" then content_tag(:span, "Denied", class: "text-danger")
 			when "for_process" then content_tag(:span, "For Process", class: "text-dark")
+			when "for_head_approval" then content_tag(:span, "For Head Approval", class: "text-secondary")
+			when "for_vp_approval" then content_tag(:span, "For VP Approval", class: "text-secondary")
 		end
 	end
 

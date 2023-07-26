@@ -2,6 +2,8 @@
 require 'sidekiq/web'
 
 Rails.application.routes.draw do 
+  resources :user_levels
+  resources :authority_levels
   resources :process_claims
   resources :underwriting_routes
   resources :batch_remarks do

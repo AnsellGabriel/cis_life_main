@@ -1,0 +1,16 @@
+
+<%= simple_form_for(@user_level) do |f| %>
+  <%= f.error_notification %>
+  <%= f.error_notification message: f.object.errors[:base].to_sentence if f.object.errors[:base].present? %>
+
+  <div class="form-inputs mb-3">
+    <%= f.association :user %>
+    <%= f.association :authority_level %>
+    <%= f.input :active %>
+  </div>
+
+  <div class="form-actions text-end">
+    <%= link_to "Back", user_levels_path, class: 'btn btn-secondary' %>
+    <%= f.button :submit, class: 'btn-success' %>
+  </div>
+<% end %>
