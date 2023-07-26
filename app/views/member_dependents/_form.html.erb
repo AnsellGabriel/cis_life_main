@@ -1,3 +1,4 @@
+<% member_presenter = MemberPresenter.new(@member) %>
 
 <%= simple_form_for(@member_dependent, url: group_remit_batch_member_dependents_path) do |f| %>
   <%= f.error_notification %>
@@ -20,7 +21,7 @@
               placeholder: 'Birthdate'}, label: false %>
       </div>
       <div class="col-md-5">
-          <%= f.input :relationship, collection: ['Parent', 'Spouse', 'Child', 'Sibling'], include_blank: 'Relationship', label: false %>
+          <%= f.input :relationship, collection: member_presenter.valid_dependents, include_blank: 'Relationship', label: false %>
       </div>
     </div>
   </div>

@@ -4,9 +4,9 @@
 <% dependents = batch.batch_dependents %>
 <% if plan_acronym == 'PMFC' %>
 	<% product_benefits = batch.get_term_insurance_product_benefit %>
-	<% life_benefit = product_benefits.select {|pb| pb.benefit.acronym == "LI" } %>
+	<% life_benefit = product_benefits.select {|pb| pb.benefit.acronym == "LIFE" } %>
 <% else %>
-	<% life_benefit = batch.agreement_benefit.product_benefits.select {|pb| pb.benefit.acronym == "LI" } %>
+	<% life_benefit = batch.agreement_benefit.product_benefits.select {|pb| pb.benefit.acronym == "LIFE" } %>
 <% end %>
 
 <tr id="<%= dom_id(batch) %>">

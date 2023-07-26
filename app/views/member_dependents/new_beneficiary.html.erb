@@ -1,3 +1,5 @@
+<% member_presenter = MemberPresenter.new(@member)%>
+
 <%= turbo_frame_tag "modal" do %>
   <div class="modal-header">
     <%= content_tag :h5, 'New Beneficiary', class: "modal-title text-center", id: "staticBackdropLabel" %>
@@ -5,6 +7,10 @@
   </div>
   
   <div class="modal-body">
+    <div class="<%= flex_justify_align('','',true) %> mb-2 small text-muted">
+      <%= content_tag :span, "Civil Status: #{@member.civil_status}" %>
+      <%= content_tag :span, "Allowed beneficiaries: #{member_presenter.valid_dependents.join(', ')}" %>
+    </div>
     <%= render "beneficiary_form", member_dependent: @member_dependent %>
   </div>
 <% end %>

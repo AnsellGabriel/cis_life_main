@@ -82,7 +82,7 @@ class Batch < ApplicationRecord
         batch.status = :renewal
         renewal_member.update!(status: 'renewal')
     else
-      if agreement.transferred_date >= coop_member.membership_date
+      if !agreement.transferred_date.nil? && (agreement.transferred_date >= coop_member.membership_date)
         batch.status = :transferred
       else
         batch.status = :recent

@@ -2,6 +2,7 @@
 require 'sidekiq/web'
 
 Rails.application.routes.draw do 
+  resources :denied_dependents
  
   resources :anniversaries, :agent_groups, :departments, :agents, :coop_users, :employees, :plans, :product_benefits, :proposals
 
@@ -46,6 +47,10 @@ Rails.application.routes.draw do
   resources :coop_members do
     get :selected, on: :member
     get :member_agreements, on: :member
+  end
+
+  resources :coop_agreements do
+    resources :group_remits
   end
 
   resources :group_remits do 

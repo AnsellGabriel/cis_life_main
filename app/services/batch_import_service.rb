@@ -109,6 +109,7 @@ class BatchImportService
         dependent: row["Dependent?"]
       }
 
+
       dependent = member.member_dependents.find_or_create_by(
         first_name: dependent_hash[:first_name],
         middle_name: dependent_hash[:middle_name],
@@ -116,6 +117,7 @@ class BatchImportService
         birth_date: dependent_hash[:birth_date],
         relationship: dependent_hash[:relationship]
       )
+      
 
       if dependent_hash[:dependent].to_s.strip.upcase == 'TRUE' && @agreement.plan.gyrt_type == 'family'
         batch_dependent = batch.batch_dependents.find_or_initialize_by(
@@ -125,7 +127,9 @@ class BatchImportService
         term_insurance = @agreement.plan.acronym == 'PMFC' ? true : false
         batch_dependent.set_premium_and_service_fees(insured_type, @group_remit, term_insurance)
         batch_dependent.save
-      elsif dependent_hash[:beneficiary].to_s.strip.upcase == 'TRUE'
+      end
+
+      if dependent_hash[:beneficiary].to_s.strip.upcase == 'TRUE'
         batch_beneficiary = batch.batch_beneficiaries.find_or_create_by(member_dependent_id: dependent.id)
       end
     end

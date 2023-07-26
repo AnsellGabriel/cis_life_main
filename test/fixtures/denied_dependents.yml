@@ -1,0 +1,13 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  name: MyString
+  age: MyString
+  reason: MyString
+  group_remit: one
+
+two:
+  name: MyString
+  age: MyString
+  reason: MyString
+  group_remit: two
