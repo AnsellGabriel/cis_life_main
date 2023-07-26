@@ -117,7 +117,7 @@
             <% end %>
             <li class="nav-item dropdown">
               <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                <i class="bi bi-person-circle"></i> <small> Hi, <%= current_user.userable.get_fullname  %> </small>
+                <i class="bi bi-person-circle"></i> <small> Hello, <%= current_user.userable.get_fullname %> </small>
               </a>
               <ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
                 <li class="nav-item"> <%= link_to "Edit Account", edit_user_registration_path, class: "nav-link" %></li>

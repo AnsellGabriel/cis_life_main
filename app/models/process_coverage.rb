@@ -7,7 +7,9 @@ class ProcessCoverage < ApplicationRecord
     for_process: 0,
     pending: 1,
     approved: 2,
-    denied: 3
+    denied: 3,
+    for_head_approval: 4,
+    for_vp_approval: 5
   }
 
   def set_default_attributes

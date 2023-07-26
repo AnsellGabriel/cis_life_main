@@ -39,4 +39,11 @@
     <%= employee.department_id %>
   </p>
 
+  <% if employee.department_id == 19 || employee.id == 5 %> <!-- for ms jackie and und department -->
+    <p>
+      <strong>Authority Level:</strong>
+      <%= authority_level(employee.user.rank) %> | <%= to_currency(employee.user.user_levels.find_by(active: true).authority_level.maxAmount) %>
+    </p>
+  <% end %>
+
 </div>

@@ -22,6 +22,8 @@ class ProcessRemarksController < ApplicationController
 
     @process_status = params[:pro_status]
     @rem_status = params[:rem_status]
+    @total_life_cov = params[:total_life_cov]
+    @max_amount = params[:max_amount]
     
     @process_coverage = ProcessCoverage.find(params[:ref])
     @process_remark = @process_coverage.process_remarks.build(remark: FFaker::Lorem.sentence)
@@ -53,9 +55,8 @@ class ProcessRemarksController < ApplicationController
     respond_to do |format|
       if @process_remark.save
         if params[:process_remark][:process_status] == "Approve"
-          @process_coverage.group_remit.set_total_premiums_and_fees
 
-          format.html { redirect_to process_coverage_approve_path(process_coverage_id: params[:process_remark][:process_coverage_id])}
+          format.html { redirect_to process_coverage_approve_path(process_coverage_id: params[:process_remark][:process_coverage_id], total_life_cov: params[:process_remark][:total_life_cov], max_amount: params[:process_remark][:max_amount])}
         elsif params[:process_remark][:process_status] == "Deny"
           format.html { redirect_to process_coverage_deny_path(process_coverage_id: params[:process_remark][:process_coverage_id])}
         else

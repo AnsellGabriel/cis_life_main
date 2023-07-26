@@ -1,2 +1,3 @@
 class AuthorityLevel < ApplicationRecord
+  
 end

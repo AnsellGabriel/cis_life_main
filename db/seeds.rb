@@ -1479,10 +1479,34 @@
 #   puts "#{bgr.batch_id} - #{bgr.group_remit_id}" if bgr.save!
 # end
 
+# Authority Level
+# [
+#   ["Level 1", 50000],
+#   ["Level 2", 100000],
+#   ["Level 3", 150000],
+#   ["Level 4", 250000],
+#   ["Level 5", 500000],
+#   ["Level 6", 1000000],
+#   ["Level 7", 2000000],
+#   ["Level 8", 5000000]
+# ].each do |level|
+#   al = AuthorityLevel.find_or_initialize_by(name: level[0])
+#   al.maxAmount = level[1]
+#   puts "#{al.name} - Saved!" if al.save!
+# end
 
-[
-  ["Level 1", 50000],
-  ["Level 1", 100000],
-  ["Level 1", 1500000],
-  ["Level 1", 1500000],
-]
+spreadsheet = Roo::Spreadsheet.open("/Users/jaysonregalario/Downloads/Book1.xlsx")
+(3..spreadsheet.last_row).each do |row|
+  user = User.find_by(id: spreadsheet.cell(row, "A"))
+
+  level = case spreadsheet.cell(row, "D")
+  when "Head" then AuthorityLevel.find_by(name: "Level 6")
+  when "VP" then AuthorityLevel.find_by(name: "Level 8")
+  else
+    AuthorityLevel.find_by(name: spreadsheet.cell(row, "D"))
+  end
+
+  user_lev = UserLevel.find_or_initialize_by(user: user, authority_level: level)
+  user_lev.active = true
+  puts "#{user_lev.user.email}(#{user_lev.authority_level.maxAmount}) - Saved!" if user_lev.save!
+end
