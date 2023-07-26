@@ -9,3 +9,4 @@ dump.rdb
 /db/uploads/*
 /public/uploads/*
 db/seeds.rb
+log/development.log

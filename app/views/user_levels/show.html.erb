@@ -1,0 +1,9 @@
+
+<%= render @user_level %>
+
+<div>
+  <%= link_to "Edit", edit_user_level_path(@user_level), class: 'btn btn-primary' %> |
+  <%= link_to "Back", user_levels_path, class: 'btn btn-primary' %>
+
+  <%= button_to "Delete", @user_level, method: :delete, class: 'btn btn-danger' %>
+</div>

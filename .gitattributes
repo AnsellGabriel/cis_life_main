@@ -3,4 +3,4 @@
 db/schema.rb linguist-generated
 # Mark any vendored files as having been vendored.
 vendor/* linguist-vendored
-development.log filter=lfs diff=lfs merge=lfs -text
+# development.log filter=lfs diff=lfs merge=lfs -text

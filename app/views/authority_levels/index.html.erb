@@ -1,0 +1,41 @@
+<%= content_tag :h1, "List of Authority Levels" %>
+
+
+<div class="text-end mb-3">
+  <%= link_to new_authority_level_path, class: 'btn btn-primary' do %>
+    New Authority Level
+  <% end %>
+</div>
+
+<table class ="table table-striped">
+  <table class="table table-striped table-bordered table-hover">
+    <thead>
+      <tr>
+
+      <th>#</th>
+        <th>Name</th>
+        <th>Maxamount</th>
+        <th></th>
+
+      </tr>
+    </thead>
+
+    <tbody>
+      <% @authority_levels.each do |authority_level| %>
+        <tr>
+
+        <th scope="row"><%= authority_level.id %></th>
+        <td><%= authority_level.name %></td>
+        <td><%= authority_level.maxAmount %></td>
+    
+          <td>
+            <%= link_to 'View', authority_level, class: 'btn btn-secondary btn-sm' %>
+            <%= link_to 'Edit', edit_authority_level_path(authority_level), class: 'btn btn-secondary btn-sm' %>
+            <%= link_to "Delete", authority_level, class: "btn btn-danger btn-sm", method: :delete, data: { "turbo-method": :delete, turbo_confirm: "Are you sure?" } %>
+          </td>
+
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+</div>

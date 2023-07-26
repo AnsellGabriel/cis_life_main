@@ -1,0 +1,9 @@
+
+<%= render @authority_level %>
+
+<div>
+  <%= link_to "Edit", edit_authority_level_path(@authority_level), class: 'btn btn-primary' %> |
+  <%= link_to "Back", authority_levels_path, class: 'btn btn-primary' %>
+
+  <%= button_to "Delete", @authority_level, method: :delete, class: 'btn btn-danger' %>
+</div>
