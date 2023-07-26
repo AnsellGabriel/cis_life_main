@@ -2,8 +2,6 @@ class Batch < ApplicationRecord
   include Calculate
   attr_accessor :rank
 
-  before_destroy :delete_associated_batches
-
   # batch.status
   enum status: {
     recent: 0,
@@ -67,7 +65,7 @@ class Batch < ApplicationRecord
   end
 
 
-  def self.process_batch(batch, group_remit, rank = nil, transferred = false, duration = nil)
+  def self.process_batch(batch, group_remit, rank = nil, duration = nil)
     agreement = group_remit.agreement
     coop_member = batch.coop_member
     renewal_member = agreement.agreements_coop_members.find_by(coop_member_id: coop_member.id)
@@ -82,7 +80,7 @@ class Batch < ApplicationRecord
         batch.status = :renewal
         renewal_member.update!(status: 'renewal')
     else
-      if transferred == true || transferred == "1"
+      if agreement.transferred_date >= coop_member.membership_date
         batch.status = :transferred
       else
         batch.status = :recent
@@ -122,12 +120,7 @@ class Batch < ApplicationRecord
     self.status == "recent"
   end
 
-  def delete_associated_batches
-      agreement = self.group_remits[0].agreement
-      coop_member = self.coop_member
-      agreement.coop_members.delete(coop_member) if self.status == 'recent'
-      self.batch_group_remits.destroy_all
-  end
+
 
   # def delete_agreements_coop_members
   #   agreement = self.group_remits[0].agreement

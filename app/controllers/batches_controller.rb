@@ -116,7 +116,6 @@ class BatchesController < ApplicationController
       @batch, 
       @group_remit, 
       batch_params[:rank], 
-      batch_params[:transferred],
       @group_remit.terms
     )
 
@@ -173,6 +172,7 @@ class BatchesController < ApplicationController
         premiums_and_commissions
         containers # controller/concerns/container.rb
         counters  # controller/concerns/counter.rb
+        delete_associated_batches
         format.html {
           redirect_to group_remit_path(@group_remit), alert: 'Member removed'
         }
@@ -196,7 +196,6 @@ class BatchesController < ApplicationController
         :status, 
         :premium, 
         :coop_member_id, 
-        :transferred, 
         batch_dependents_attributes: [
           :member_dependent_id, 
           :beneficiary, 
@@ -227,4 +226,11 @@ class BatchesController < ApplicationController
         render file: "#{Rails.root}/public/404.html", status: :not_found
       end
     end
+
+    def delete_associated_batches
+      agreement = @batch.group_remits[0].agreement
+      coop_member = @batch.coop_member
+      agreement.coop_members.delete(coop_member) if @batch.status == 'recent'
+      @batch.batch_group_remits.destroy_all
+  end
 end

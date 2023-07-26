@@ -8,7 +8,7 @@ class BatchImportService
     @gyrt_ranking_plans = ['GYRTBR', 'GYRTFR']
     @gyrt_family_plans = ['GYRTF', 'GYRTFR']
     @special_term_insurance = ['PMFC']
-    @principal_headers = ["First Name", "Middle Name", "Last Name", "Birthdate", "Transferred?"]
+    @principal_headers = ["First Name", "Middle Name", "Last Name", "Birthdate"]
     @principal_headers << "Rank" if @gyrt_ranking_plans.include?(@agreement.plan.acronym)
     # @principal_headers << "Terms" if @special_term_insurance.include?(@agreement.plan.acronym)
     @dependent_headers = ["Member First Name", "Member Middle Name", "Member Last Name", "Member Birthdate", "Dependent First Name", "Dependent Middle Name", "Dependent Last Name", "Relationship", "Beneficiary?"]
@@ -189,8 +189,7 @@ class BatchImportService
       suffix: row["Suffix"].to_s.strip.upcase,
       birth_date: row["Birthdate"],
       rank: row["Rank"].to_s.present? ? row["Rank"].to_s.upcase : nil,
-      terms: row["Terms"].to_s.present? ? row["Terms"].to_i : nil,
-      transferred: row["Transferred?"].to_s.upcase == "TRUE"
+      terms: row["Terms"].to_s.present? ? row["Terms"].to_i : nil
     }
   end
   
@@ -224,7 +223,6 @@ class BatchImportService
       new_batch, 
       @group_remit, 
       b_rank, 
-      batch_hash[:transferred], 
       @group_remit.terms
     )
     @group_remit.batches << new_batch
