@@ -9,7 +9,6 @@
 <% is_batch_remit = @group_remit.type == 'BatchRemit' %>
 <% is_remittance = @group_remit.type == 'Remittance' %>
 <% is_pending_renewal = @group_remit.pending? || @group_remit.for_renewal? %>
-
 <!-- Benefits & Coverages Modal -->
 <%= render "coverages_modal" %>
 

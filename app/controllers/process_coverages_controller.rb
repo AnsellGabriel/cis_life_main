@@ -4,11 +4,18 @@ class ProcessCoveragesController < ApplicationController
 
   # GET /process_coverages
   def index
-    @process_coverages = ProcessCoverage.all
+    @process_coverages_x = ProcessCoverage.all
     @for_process_coverages = ProcessCoverage.where(status: :for_process)
     @approved_process_coverages = ProcessCoverage.where(status: :approved)
     @pending_process_coverages = ProcessCoverage.where(status: :pending)
     @denied_process_coverages = ProcessCoverage.where(status: :denied)
+
+    if params[:search].present?
+      @process_coverages = @process_coverages_x.joins(group_remit: {agreement: :cooperative}).where("group_remits.name LIKE ? OR group_remits.description LIKE ? OR agreements.moa_no LIKE ? OR cooperatives.name LIKE ?", "%#{params[:search]}%", "%#{params[:search]}%", "%#{params[:search]}%", "%#{params[:search]}%")
+    else
+      @process_coverages = @process_coverages_x
+    end
+    
   end
 
   def preview
@@ -37,7 +44,10 @@ class ProcessCoveragesController < ApplicationController
   end
 
   def pdf
-    pdf = PsheetPdf.new(@process_coverage, view_context)
+    @batches_x = @process_coverage.group_remit.batches
+    @total_life_cov = ProductBenefit.joins(agreement_benefit: :batches).where('batches.id IN (?)', @batches_x.pluck(:id)).where('product_benefits.benefit_id = ?', 1).sum(:coverage_amount)
+
+    pdf = PsheetPdf.new(@process_coverage, @total_life_cov, view_context)
     send_data(pdf.render,
       filename: "#{@process_coverage.group_remit.name}.pdf",
       type: 'application/pdf',
@@ -47,11 +57,64 @@ class ProcessCoveragesController < ApplicationController
 
   def cov_list
     # raise 'errors'
+    @current_date = params[:current_date]&.to_date
     @process_coverages = case params[:cov_type]
-      when "For Process" then ProcessCoverage.where(status: :for_process)
-      when "Approved" then ProcessCoverage.where(status: :approved)
-      when "Pending" then ProcessCoverage.where(status: :pending)
-      when "Denied" then ProcessCoverage.where(status: :denied)
+      when "For Process" 
+        if params[:date_type] == "yearly"
+          start_date = @current_date.beginning_of_year
+          end_date = @current_date.end_of_year
+          
+        elsif params[:date_type] == "monthly"
+          start_date = @current_date.beginning_of_month
+          end_date = @current_date.end_of_month
+        elsif params[:date_type] == "weekly"
+          start_date = @current_date.beginning_of_week
+          end_date = @current_date.end_of_week
+        end
+        ProcessCoverage.where(status: :for_process, created_at: start_date..end_date)
+        
+      when "Approved" 
+        if params[:date_type] == "yearly"
+          start_date = @current_date.beginning_of_year
+          end_date = @current_date.end_of_year
+          
+        elsif params[:date_type] == "monthly"
+          start_date = @current_date.beginning_of_month
+          end_date = @current_date.end_of_month
+        elsif params[:date_type] == "weekly"
+          start_date = @current_date.beginning_of_week
+          end_date = @current_date.end_of_week
+        end
+        ProcessCoverage.where(status: :approved, created_at: start_date..end_date)
+
+      when "Pending" 
+        if params[:date_type] == "yearly"
+          start_date = @current_date.beginning_of_year
+          end_date = @current_date.end_of_year
+          
+        elsif params[:date_type] == "monthly"
+          start_date = @current_date.beginning_of_month
+          end_date = @current_date.end_of_month
+        elsif params[:date_type] == "weekly"
+          start_date = @current_date.beginning_of_week
+          end_date = @current_date.end_of_week
+        end
+        ProcessCoverage.where(status: :pending, created_at: start_date..end_date)
+
+      when "Denied" 
+        if params[:date_type] == "yearly"
+          start_date = @current_date.beginning_of_year
+          end_date = @current_date.end_of_year
+          
+        elsif params[:date_type] == "monthly"
+          start_date = @current_date.beginning_of_month
+          end_date = @current_date.end_of_month
+        elsif params[:date_type] == "weekly"
+          start_date = @current_date.beginning_of_week
+          end_date = @current_date.end_of_week
+        end
+        ProcessCoverage.where(status: :denied, created_at: start_date..end_date)
+      when "head approval" then ProcessCoverage.where(status: :for_head_approval)
     end
 
     @title = params[:title]
@@ -126,7 +189,13 @@ class ProcessCoveragesController < ApplicationController
 
     # @life_cov = ProcessCoverage.includes(group_remit: { moa: { proposal:{ proposal_insureds: :proposal_insured_benefits }}}).find_by(id: @process_coverage.id).group_remit.moa.proposal.proposal_insureds.joins(:proposal_insured_benefits).where(proposal_insureds: {insured_type: 1}, proposal_insured_benefits: {benefit: 1}).pluck('proposal_insured_benefits.cov_amount').first
 
+    # @life_cov = ProcessCoverage.includes(group_remit: { agreement: { agreement_benefits: :product_benefits }}).find_by(id: @process_coverage.id).group_remit.agreement.agreement_benefits.joins(:product_benefits).where(agreement_benefits: {insured_type: 1}, product_benefits: {benefit_id: 1}).pluck('product_benefits.coverage_amount').first
+
     @life_cov = ProcessCoverage.includes(group_remit: { agreement: { agreement_benefits: :product_benefits }}).find_by(id: @process_coverage.id).group_remit.agreement.agreement_benefits.joins(:product_benefits).where(agreement_benefits: {insured_type: 1}, product_benefits: {benefit_id: 1}).pluck('product_benefits.coverage_amount').first
+
+    @batches_x = @process_coverage.group_remit.batches
+    # @total_life_cov = ProductBenefit.joins(agreement_benefit: :batch).where('batches.id IN (?)', @batches_x.pluck(:id)).where('product_benefits.benefit_id = ?', 1).sum(:coverage_amount)
+    @total_life_cov = ProductBenefit.joins(agreement_benefit: :batches).where('batches.id IN (?)', @batches_x.pluck(:id)).where('product_benefits.benefit_id = ?', 1).sum(:coverage_amount)
     
     @group_remit = @process_coverage.group_remit
     # raise 'errors'
@@ -140,13 +209,42 @@ class ProcessCoveragesController < ApplicationController
 
   def approve
     # byebug
+    @max_amount = params[:max_amount]
+    @total_life_cov = params[:total_life_cov]
+
     @process_coverage = ProcessCoverage.find_by(id: params[:process_coverage_id])
 
+    # @process_coverage.group_remit.set_total_premiums_and_fees
+
     respond_to do |format|
-      if @process_coverage.update_attribute(:status, "approved")
+      if current_user.rank == "analyst"
+        if @max_amount >= @total_life_cov
+          @process_coverage.update_attribute(:status, "approved")
+          @process_coverage.group_remit.set_total_premiums_and_fees
+          format.html { redirect_to process_coverage_path(@process_coverage), notice: "Process Coverage Approved!" }
+        else
+          @process_coverage.update_attribute(:status, "for_head_approval")
+          format.html { redirect_to process_coverage_path(@process_coverage), notice: "Process Coverage for Head Approval!" }
+        end
+      elsif current_user.rank == "head"
+        if @max_amount >= @total_life_cov
+          @process_coverage.update_attribute(:status, "approved")
+          @process_coverage.group_remit.set_total_premiums_and_fees
+          format.html { redirect_to process_coverage_path(@process_coverage), notice: "Process Coverage Approved!" }
+        else
+          @process_coverage.update_attribute(:status, "for_vp_approval")
+          format.html { redirect_to process_coverage_path(@process_coverage), notice: "Process Coverage for VP approval!" }
+        end
+      elsif current_user.rank == "senior_officer"
+        @process_coverage.update_attribute(:status, "approved")
+        @process_coverage.group_remit.set_total_premiums_and_fees
         format.html { redirect_to process_coverage_path(@process_coverage), notice: "Process Coverage Approved!" }
       end
     end
+    # if @process_coverage.update_attribute(:status, "approved")
+    #   @process_coverage.group_remit.set_total_premiums_and_fees
+    #   format.html { redirect_to process_coverage_path(@process_coverage), notice: "Process Coverage Approved!" }
+    # end
   end
   
   def deny

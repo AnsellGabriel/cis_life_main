@@ -114,3 +114,4 @@ gem 'asset_ram'
 gem "prawn", "~> 2.4"
 
 gem "prawn-templates", "~> 0.1.2"
+gem "prawn-table"

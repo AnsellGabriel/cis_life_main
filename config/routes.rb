@@ -101,6 +101,8 @@ Rails.application.routes.draw do
 
 
   #* Underwriting Module Routes
+  resources :user_levels
+  resources :authority_levels
   resources :process_claims
   resources :underwriting_routes
   resources :batch_remarks do

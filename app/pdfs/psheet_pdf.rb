@@ -1,19 +1,30 @@
 
 class PsheetPdf < Prawn::Document
   
-  def initialize(pro_cov, view)
+  def initialize(pro_cov, total_life_cov, view)
     super(
       page_size: "A4",
       page_layout: :portrait
     )
     @pro_cov = pro_cov
+    @total_life_cov = total_life_cov
     @view = view
+
+    self.font_families.update("Roboto" => {
+      :normal => Rails.root.join("app/assets/fonts/Roboto/Roboto-Regular.ttf"),
+      :italic => Rails.root.join("app/assets/fonts/Roboto/Roboto-Italic.ttf"),
+      :bold => Rails.root.join("app/assets/fonts/Roboto/Roboto-Bold.ttf"),
+      :bold_italic => Rails.root.join("app/assets/fonts/Roboto/Roboto-BoldItalic.ttf")
+      })
+
+    font "Roboto", size: 9
 
     define_grid(columns: 24, rows: 12, gutter: 10)
 
     letterhead
     title_block
-    # count_table
+    upper_part
+    count_table
   end
 
 
@@ -30,12 +41,22 @@ class PsheetPdf < Prawn::Document
     move_down 20
   end
 
-  # def count_table
-  #   table_data = [
-  #     ["Count", "Amount of Coverage", "Effectivity", "Expiry", "Premium Due"],
-  #     [@pro_cov.group_remit.batches.count, 0, @pro_cov.effectivity, @pro_cov.expiry, @pro_cov.group_remit.batches.sum(:premium)]
-  #   ]
-  #   table table_data
-  # end
+  def upper_part
+    font_size(10) { text "Group Remit ID <b>#{@pro_cov.id}</b>", inline_format: true}
+    move_down 5
+    font_size(10) { text "Group Remit Date <b>#{@pro_cov.created_at.strftime('%B %d, %Y')}</b>", inline_format: true}
+    move_down 10
+
+    font_size(10) { text "Cooperative <b><u>#{@pro_cov.group_remit.agreement.cooperative}</u></b>", inline_format: true}
+    move_down 20
+  end
+
+  def count_table
+    table_data = [
+      ["Count", "Amount of Coverage", "Effectivity", "Expiry", "Premium Due"],
+      [@pro_cov.group_remit.batches.count, @view.to_currency(@total_life_cov), @pro_cov.effectivity, @pro_cov.expiry, @view.to_currency(@pro_cov.group_remit.batches.sum(:premium))]
+    ]
+    table table_data
+  end
 
 end

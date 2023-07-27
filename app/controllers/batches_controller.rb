@@ -32,7 +32,7 @@ class BatchesController < ApplicationController
   def health_dec
     @member = @batch.member_details
     @batch_health_dec = @batch.batch_health_decs
-    @group_remit = @batch.group_remit
+    @group_remit = @batch.group_remits.find_by(type: "Remittance")
     @questionaires = BatchHealthDec.where(batch_id: @batch.id).where(answerable_type: "HealthDec")
     @subquestions = BatchHealthDec.where(batch_id: @batch.id).where(answerable_type: "HealthDecSubquestion")
 
@@ -44,7 +44,8 @@ class BatchesController < ApplicationController
     @batch_status = "test"
     @batch_status = "MD"
     @rem_status = :md_reco
-    @process_coverage = @batch.group_remit.process_coverage
+    # @process_coverage = @batch.group_remit.process_coverage
+    @process_coverage = @group_remit.process_coverage
 
   end
 

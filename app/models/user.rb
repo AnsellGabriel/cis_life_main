@@ -5,7 +5,14 @@ class User < ApplicationRecord
          :recoverable, :rememberable, :validatable
 
   belongs_to :userable, polymorphic: true
+  has_many :user_levels
 
+  enum rank: {
+    rank_and_file: 0,
+    analyst: 1,
+    head: 2,
+    senior_officer: 3
+  }
   
   attribute :admin, :boolean, default: false
   attribute :approved, :boolean, default: false

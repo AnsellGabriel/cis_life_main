@@ -96,24 +96,24 @@
               <p>Entry Age: <b><%= moa.entry_age_from %> to <%= moa.entry_age_to %></b> years old </p>
             <% end %>
             <%= content_tag :li do %>
-              <p>Exit Age: <b><%= moa.exit_age %></b> years old </p>
+              <p>Exit Age: <b><%= moa.exit_age %></b> years and <b>6</b> months old </p>
             <% end %>
           <% end %>
 
           <%= content_tag :span, "Minimum Participation", class: "lead text-primary" %>
           <%= content_tag :ul, class: "mb-2" do %>
             <%= content_tag :li do %>
-              <p><b><%= num_delimit(moa.minimum_participation) %></b> members</p>
+              <p><b><%= num_delimit(moa.minimum_participation.nil? ? 0 : moa.minimum_participation) %></b> members</p>
             <% end %>
           <% end %>
 
           <%= content_tag :span, "Service Fee", class: "lead text-primary" %>
           <%= content_tag :ul, class: "mb-2" do %>
             <%= content_tag :li do %>
-              <p>Cooperative: <b><%= to_percent(moa.coop_sf * 100) %></b></p>
+              <p>Cooperative: <b><%= to_percent((moa.coop_sf.nil? ? 0 : moa.coop_sf) * 100) %></b></p>
             <% end %>
             <%= content_tag :li do %>
-              <p>Marketing Agent: <b><%= to_percent(moa.agent_sf * 100) %></b></p>
+              <p>Marketing Agent: <b><%= to_percent((moa.agent_sf.nil? ? 0 : moa.agent_sf) * 100) %></b></p>
             <% end %>
           <% end %>
 
@@ -121,6 +121,11 @@
           <%= content_tag :ul, class: "mb-2" do %>
             <%= content_tag :li do %>
               <p>Type: <b><%= moa.anniversary_type.titleize %></b> </p>
+                <%= content_tag :ul do %>
+                  <% moa.anniversaries.each do |anniv| %>
+                    <%= content_tag :li, anniv.name %>
+                  <% end %>
+                <% end %>
             <% end %>
           <% end %>
 
@@ -138,12 +143,15 @@
             <% end %>
           <% end %>
          
-          <%= content_tag :span, "Non-Medical Limit", class: "lead text-primary" %>
-          <%= content_tag :ul, class: "mb-2" do %>
-            <%= content_tag :li do %>
-              <p><%= nel_nml(moa.nml) %></p>
+          <% unless ["GYRT","GYRTF","GYRTBR","GYRTFR"].any? { |str| moa.plan.acronym.include?(str) } %>
+            <%= content_tag :span, "Non-Medical Limit", class: "lead text-primary" %>
+            <%= content_tag :ul, class: "mb-2" do %>
+              <%= content_tag :li do %>
+                <p><%= nel_nml(moa.nml) %></p>
+              <% end %>
             <% end %>
           <% end %>
+         
 
           <%= content_tag :span, "Signed Date", class: "lead text-primary" %>
           <%= content_tag :ul, class: "mb-2" do %>

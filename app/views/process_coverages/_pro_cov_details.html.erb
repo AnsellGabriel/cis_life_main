@@ -45,23 +45,23 @@
     <% end %>
     
     <%= content_tag :p do %>
-      <% unless @life_cov.nil? %>
-        <strong>Life Coverage:</strong>
-        <%= to_currency(@life_cov) %> |
-      <% end %>
+      <strong>Total Life Coverage:</strong>
+      <%= to_currency(@total_life_cov) %> |
       <strong>Status:</strong>
       <%= process_status(@process_coverage.status) %>
     <% end %>
 
 
-    <% if process_coverage.status == "pending" || process_coverage.status == "for_process" %>
-      <%= link_to new_process_remark_path(ref: process_coverage, pro_status: "Approve", rem_status: "Approved"), title: "Approve", class: "btn btn-sm btn-success mb-2 me-2", data: { turbo_frame: "remote_modal" } do %>
-        <%= bootstrap_icon "check-lg" %> Approve
-      <% end %>
-      <%= link_to new_process_remark_path(ref: process_coverage, pro_status: "Deny", rem_status: "Denied"), title: "Denied", class: "btn btn-sm btn-danger mb-2", data: { turbo_frame: "remote_modal" } do %>
-        <%= bootstrap_icon "x-lg" %> Deny
-      <% end %>
-    <% end %>
+    <%# if process_coverage.status == "pending" || process_coverage.status == "for_process" %>
+      <div class="<%= approve_deny_button_pro_cov(current_user.rank, @process_coverage.status) %>">
+        <%= link_to new_process_remark_path(ref: process_coverage, pro_status: "Approve", rem_status: "Approved", max_amount: session[:max_amount], total_life_cov: @total_life_cov), title: "Approve", class: "btn btn-sm btn-success mb-2 me-2", data: { turbo_frame: "remote_modal" } do %>
+          <%= bootstrap_icon "check-lg" %> Approve
+        <% end %>
+        <%= link_to new_process_remark_path(ref: process_coverage, pro_status: "Deny", rem_status: "Denied"), title: "Denied", class: "btn btn-sm btn-danger mb-2", data: { turbo_frame: "remote_modal" } do %>
+          <%= bootstrap_icon "x-lg" %> Deny
+        <% end %>
+      </div>
+    <%# end %>
 
 <%# unless process_coverage.group_remit.batches.where(insurance_status: "for_review").count == 0 %>
   <%#= link_to "Approve All", approve_all_group_remit_batches_path(@group_remit,group_remit: process_coverage.group_remit, process_coverage: process_coverage), class: "btn btn-success", onclick: "return confirm('Are you sure?')", method: :get %>

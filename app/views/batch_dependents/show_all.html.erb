@@ -7,7 +7,7 @@
         <div class="card-body">
           <div class="row">
             <div class="col-sm-3">
-              <h6 class="mb-0">Policy Owner:</h6>
+              <h6 class="mb-0">Principal Policy Owner:</h6>
             </div>
             <div class="col-sm text-secondary">
               <%= "#{@batch.coop_member.member.last_name}, #{@batch.coop_member.member.first_name} #{@batch.coop_member.member.middle_name}" %>
@@ -16,13 +16,29 @@
           <br>
 
           <%= content_tag :h6, 'Dependent(s): ', class: "mb-0" %>
+          <div class="row">
+            <div class="col-sm-4 text-dark">
+              <%= content_tag :span, "Name (relationship)", class: "lead" %>
+            </div>
+            <div class="col-sm-4 text-dark">
+              <%= content_tag :span, "Birthday (age)", class: "lead" %>
+            </div>
+            <div class="col-sm-4 text-dark">
+              <%= content_tag :span, "Premium", class: "lead" %>
+            </div>
+          </div>
+          <hr>
           <% @dependents.each do |dependent| %>
             <div class="row">
-              <div class="col-sm-6 text-secondary">
+              <div class="col-sm-4 text-secondary">
                 <%= "#{dependent.member_dependent.last_name}, #{dependent.member_dependent.first_name} #{dependent.member_dependent.middle_name} (#{dependent.member_dependent.relationship})" %>
               </div>
-                <div class="col-sm-6 text-secondary">
-                Premium: <%= number_to_currency(dependent.premium, unit: "₱", precision: 2) %>
+              <div class="col-sm-4 text-secondary">
+                <% age = ((dependent.batch.group_remits.find_by(type: "Remittance").effectivity_date - dependent.member_dependent.birth_date) / 365).round %>
+                <%= "#{dependent.member_dependent.birth_date.strftime('%m/%d/%Y')} (#{age} yrs. old)" %>
+              </div>
+              <div class="col-sm-4 text-secondary">
+                <%= number_to_currency(dependent.premium, unit: "₱", precision: 2) %>
               </div>
             </div>
             <hr>
