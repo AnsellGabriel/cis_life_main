@@ -1,9 +1,16 @@
 <%= content_tag :h1, "List of Agreements" %>
 
 
-<div class="text-end mb-3">
-  <%= link_to new_agreement_path, class: 'btn btn-primary' do %>
-    New Agreement
+<div class="d-flex gap-3 flex-row-reverse mb-3">
+  <%= form_with url: agreements_path, method: :get do %>
+    <div class="form-group d-flex gap-3 text-center">
+      <%= text_field_tag 'search', nil, placeholder: 'Search...', class: "form-control", style: "width: auto", required: true %>
+      <%= submit_tag 'Search', class: "btn btn-success"%>
+      <%= link_to "View All", agreements_path, class: "btn btn-secondary" %>
+      <%= link_to new_agreement_path, class: 'btn btn-primary' do %>
+        New Agreement
+      <% end %>
+    </div>
   <% end %>
 </div>
 

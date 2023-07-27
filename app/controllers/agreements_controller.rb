@@ -3,7 +3,13 @@ class AgreementsController < ApplicationController
 
   # GET /agreements
   def index
-    @agreements = Agreement.all
+    @agreements_x = Agreement.all
+
+    if params[:search].present?
+      @agreements = @agreements_x.joins(:cooperative, :plan).where("cooperatives.name LIKE ? OR plans.name LIKE ? OR agreements.moa_no LIKE ? OR plans.acronym LIKE ?", "%#{params[:search]}%", "%#{params[:search]}%", "%#{params[:search]}%", "%#{params[:search]}%")
+    else
+      @agreements = @agreements_x
+    end
   end
 
   # GET /agreements/1
