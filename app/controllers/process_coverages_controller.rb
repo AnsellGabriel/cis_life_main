@@ -236,12 +236,15 @@ class ProcessCoveragesController < ApplicationController
           format.html { redirect_to process_coverage_path(@process_coverage), notice: "Process Coverage for VP approval!" }
         end
       elsif current_user.rank == "senior_officer"
+        @process_coverage.update_attribute(:status, "approved")
+        @process_coverage.group_remit.set_total_premiums_and_fees
+        format.html { redirect_to process_coverage_path(@process_coverage), notice: "Process Coverage Approved!" }
       end
-      # if @process_coverage.update_attribute(:status, "approved")
-      #   @process_coverage.group_remit.set_total_premiums_and_fees
-      #   format.html { redirect_to process_coverage_path(@process_coverage), notice: "Process Coverage Approved!" }
-      # end
     end
+    # if @process_coverage.update_attribute(:status, "approved")
+    #   @process_coverage.group_remit.set_total_premiums_and_fees
+    #   format.html { redirect_to process_coverage_path(@process_coverage), notice: "Process Coverage Approved!" }
+    # end
   end
   
   def deny
