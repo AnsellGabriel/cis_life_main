@@ -60,4 +60,10 @@ RSpec.configure do |config|
   config.filter_rails_from_backtrace!
   # arbitrary gems may also be filtered via:
   # config.filter_gems_from_backtrace("gem name")
+
+  config.include FactoryBot::Syntax::Methods
+  # saves failures for later inspection
+  config.example_status_persistence_file_path = 'spec/examples.txt'
+  # run only the tests with focus: true
+  config.filter_run_when_matching(focus: true)
 end

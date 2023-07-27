@@ -1,0 +1,17 @@
+
+<%= simple_form_for(@denied_dependent) do |f| %>
+  <%= f.error_notification %>
+  <%= f.error_notification message: f.object.errors[:base].to_sentence if f.object.errors[:base].present? %>
+
+  <div class="form-inputs mb-3">
+    <%= f.input :name %>
+    <%= f.input :age %>
+    <%= f.input :reason %>
+    <%= f.association :group_remit %>
+  </div>
+
+  <div class="form-actions text-end">
+    <%= link_to "Back", denied_dependents_path, class: 'btn btn-secondary' %>
+    <%= f.button :submit, class: 'btn-success' %>
+  </div>
+<% end %>

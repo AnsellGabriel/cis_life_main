@@ -1,0 +1,45 @@
+<%= content_tag :h1, "List of Denied Dependents" %>
+
+
+<div class="text-end mb-3">
+  <%= link_to new_denied_dependent_path, class: 'btn btn-primary' do %>
+    New Denied Dependent
+  <% end %>
+</div>
+
+<table class ="table table-striped">
+  <table class="table table-striped table-bordered table-hover">
+    <thead>
+      <tr>
+
+      <th>#</th>
+        <th>Name</th>
+        <th>Age</th>
+        <th>Reason</th>
+        <th>Group Remit</th>
+        <th></th>
+
+      </tr>
+    </thead>
+
+    <tbody>
+      <% @denied_dependents.each do |denied_dependent| %>
+        <tr>
+
+        <th scope="row"><%= denied_dependent.id %></th>
+        <td><%= denied_dependent.name %></td>
+        <td><%= denied_dependent.age %></td>
+        <td><%= denied_dependent.reason %></td>
+        <td><%= denied_dependent.group_remit %></td>
+    
+          <td>
+            <%= link_to 'View', denied_dependent, class: 'btn btn-secondary btn-sm' %>
+            <%= link_to 'Edit', edit_denied_dependent_path(denied_dependent), class: 'btn btn-secondary btn-sm' %>
+            <%= link_to "Delete", denied_dependent, class: "btn btn-danger btn-sm", method: :delete, data: { "turbo-method": :delete, turbo_confirm: "Are you sure?" } %>
+          </td>
+
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+</div>

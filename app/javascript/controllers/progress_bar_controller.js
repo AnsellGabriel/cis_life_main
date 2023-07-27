@@ -2,28 +2,52 @@ import { Controller } from "@hotwired/stimulus"
 
 // Connects to data-controller="progress-bar"
 export default class extends Controller {
-  static targets = ["progress"]
+  static values = {
+    url: String, // The URL to fetch the progress data from the server
+  };
+  static targets = ["progressBar", "button", "file"];
 
-  connect() {
-    let progressBar = this.progressTarget
+  intervalId = null
 
-    let progress = setInterval(() => {
-      this.update(progressBar)
-      if (progressBar.getAttribute("aria-valuenow") >= 100) {
-        clearInterval(progress)
-      }
-    }, 1000)
+  updateProgress(e) {
+    const btn = this.buttonTarget;
+    const form = btn.closest("form");
+    const file = this.fileTarget;
+
+    form.submit();
+    btn.value = "Uploading...";
+    file.disabled = true;
+    btn.disabled = true;
+
+    this.intervalId = setInterval(() => {
+
+      fetch(this.urlValue)
+        .then(response => response.json())
+        .then(data => {
+          const progress = data.progress;
+          this.updateProgressBar(progress);
+        });
+
+
+    }, 2000);
+  }
+
+  updateProgressBar(progress) {
+    const progressBar = this.progressBarTarget;
     
-    progress
+    progressBar.style.width = `${progress}%`;
+    progressBar.innerText = `${progress}%`;
+
+    if (progress >= 100) {
+      progressBar.classList.add("progress-bar-done");
+      progressBar.innerText = "Done";
+      this.stopUpdatingProgress()
+    }
   }
 
-  update(progressBar) {
-    progressBar.setAttribute("aria-valuenow", Number(progressBar.getAttribute("aria-valuenow")) + 10)
-    progressBar.style.width = progressBar.getAttribute("aria-valuenow") + "%"
-    progressBar.innerHTML = progressBar.getAttribute("aria-valuenow") + "%"
-    console.log(progressBar.getAttribute("aria-valuenow"))
+  stopUpdatingProgress() {
+    clearInterval(this.intervalId); // Clear the interval using the stored interval ID
   }
 
-  
 }
 

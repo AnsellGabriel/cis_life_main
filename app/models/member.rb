@@ -1,19 +1,20 @@
 class Member < ApplicationRecord
   before_validation :uppercase_fields
-  before_validation :format_phone_numbers
+  before_validation :validate_phone_format
   before_save :capitalize_status
 
-  VALID_PH_MOBILE_NUMBER_REGEX = /\A(09|\+639)\d{9}\z/
-  VALID_PH_LANDLINE_NUMBER_REGEX = /\A(02|03[2-9]|042|043|044|045|046|047|048|049|052|053|054|055|056|057|058|072|074|075|076|077|078)\d{7}\z/
+  # VALID_PH_MOBILE_NUMBER_REGEX = /\A(09|\+639)\d{9}\z/
+  # VALID_PH_LANDLINE_NUMBER_REGEX = /\A(02|03[2-9]|042|043|044|045|046|047|048|049|052|053|054|055|056|057|058|072|074|075|076|077|078)\d{7}\z/
 
-  validates :mobile_number, presence: true, format: { 
-    with: VALID_PH_MOBILE_NUMBER_REGEX, 
-    message: "must be a valid Philippine mobile number" 
-  }
-  validates :work_phone_number, allow_blank: true, format: { 
-    with: /\A#{VALID_PH_MOBILE_NUMBER_REGEX}|#{VALID_PH_LANDLINE_NUMBER_REGEX}\z/, 
-    message: "must be a valid Philippine mobile or landline number" 
-  }
+  validates :mobile_number, presence: true
+  # format: { 
+  #   # with: VALID_PH_MOBILE_NUMBER_REGEX, 
+  #   message: "must be a valid Philippine mobile number" 
+  # }
+  # validates :work_phone_number, allow_blank: true, format: { 
+  #   with: /\A#{VALID_PH_MOBILE_NUMBER_REGEX}|#{VALID_PH_LANDLINE_NUMBER_REGEX}\z/, 
+  #   message: "must be a valid Philippine mobile or landline number" 
+  # }
 
   validates_presence_of :last_name, :first_name, :middle_name, :birth_date, :address, :civil_status, :gender
   validates :email, format: { with: URI::MailTo::EMAIL_REGEXP }
@@ -32,6 +33,12 @@ class Member < ApplicationRecord
 
   def to_s
     full_name.titleize
+  end
+
+  def validate_phone_format
+    # Regular expression to match the valid phone number formats
+    # The phone number must start with either '09' or '+639' followed by 9 digits.
+    /^(09|\+639)\d{9}$/.match?(self.mobile_number)
   end
 
   def age(effectivity_date = nil)
@@ -64,7 +71,7 @@ class Member < ApplicationRecord
   def format_phone_number(number)
     combined_regex = /#{VALID_PH_LANDLINE_NUMBER_REGEX}|#{VALID_PH_MOBILE_NUMBER_REGEX}/
 
-    if number.match(combined_regex)
+    if !number.nil? && number.match(combined_regex)
       return number
     end
 

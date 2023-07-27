@@ -1,0 +1,84 @@
+example_id                                                           | status  | run_time        |
+-------------------------------------------------------------------- | ------- | --------------- |
+./spec/helpers/loan_insurance/batch_remits_helper_spec.rb[1:1]       | unknown |                 |
+./spec/helpers/loan_insurance/batches_helper_spec.rb[1:1]            | unknown |                 |
+./spec/helpers/loan_insurance/details_helper_spec.rb[1:1]            | unknown |                 |
+./spec/models/loan_insurance/batch_remit_spec.rb[1:1:1]              | passed  | 0.16321 seconds |
+./spec/models/loan_insurance/batch_remit_spec.rb[1:1:2]              | passed  | 0.01836 seconds |
+./spec/models/loan_insurance/batch_remit_spec.rb[1:1:3]              | passed  | 0.01845 seconds |
+./spec/models/loan_insurance/batch_remit_spec.rb[1:1:4]              | passed  | 0.02093 seconds |
+./spec/models/loan_insurance/batch_remit_spec.rb[1:1:5]              | passed  | 0.01892 seconds |
+./spec/models/loan_insurance/batch_remit_spec.rb[1:1:6]              | passed  | 0.01926 seconds |
+./spec/models/loan_insurance/batch_remit_spec.rb[1:1:7]              | passed  | 0.01833 seconds |
+./spec/models/loan_insurance/batch_remit_spec.rb[1:1:8]              | passed  | 0.02006 seconds |
+./spec/models/loan_insurance/batch_spec.rb[1:1:1]                    | passed  | 0.19316 seconds |
+./spec/models/loan_insurance/batch_spec.rb[1:1:2]                    | passed  | 0.05462 seconds |
+./spec/models/loan_insurance/batch_spec.rb[1:1:3]                    | passed  | 0.05704 seconds |
+./spec/models/loan_insurance/batch_spec.rb[1:1:4]                    | passed  | 0.05532 seconds |
+./spec/models/loan_insurance/batch_spec.rb[1:1:5]                    | passed  | 0.05524 seconds |
+./spec/models/loan_insurance/batch_spec.rb[1:1:6]                    | passed  | 0.05339 seconds |
+./spec/models/loan_insurance/batch_spec.rb[1:1:7]                    | passed  | 0.05363 seconds |
+./spec/models/loan_insurance/batch_spec.rb[1:1:8]                    | passed  | 0.05364 seconds |
+./spec/models/loan_insurance/batch_spec.rb[1:1:9]                    | passed  | 0.05307 seconds |
+./spec/models/loan_insurance/batch_spec.rb[1:1:10:1]                 | pending | 0.00002 seconds |
+./spec/models/loan_insurance/batch_spec.rb[1:1:10:2]                 | pending | 0.00001 seconds |
+./spec/models/loan_insurance/detail_spec.rb[1:1:1]                   | passed  | 0.12384 seconds |
+./spec/models/loan_insurance/detail_spec.rb[1:1:2]                   | passed  | 0.0712 seconds  |
+./spec/models/loan_insurance/detail_spec.rb[1:1:3]                   | passed  | 0.07144 seconds |
+./spec/models/loan_insurance/detail_spec.rb[1:1:4]                   | passed  | 0.0691 seconds  |
+./spec/models/loan_insurance/detail_spec.rb[1:1:5]                   | passed  | 0.06772 seconds |
+./spec/models/loan_insurance/detail_spec.rb[1:1:6]                   | passed  | 0.06725 seconds |
+./spec/models/loan_insurance/detail_spec.rb[1:1:7]                   | passed  | 0.06824 seconds |
+./spec/models/loan_insurance/detail_spec.rb[1:1:8]                   | passed  | 0.0706 seconds  |
+./spec/models/loan_insurance/detail_spec.rb[1:1:9]                   | passed  | 0.06559 seconds |
+./spec/requests/loan_insurance/batch_remits_spec.rb[1:1:1]           | unknown |                 |
+./spec/requests/loan_insurance/batch_remits_spec.rb[1:2:1]           | unknown |                 |
+./spec/requests/loan_insurance/batch_remits_spec.rb[1:3:1]           | unknown |                 |
+./spec/requests/loan_insurance/batch_remits_spec.rb[1:4:1]           | unknown |                 |
+./spec/requests/loan_insurance/batch_remits_spec.rb[1:5:1:1]         | unknown |                 |
+./spec/requests/loan_insurance/batch_remits_spec.rb[1:5:1:2]         | unknown |                 |
+./spec/requests/loan_insurance/batch_remits_spec.rb[1:5:2:1]         | unknown |                 |
+./spec/requests/loan_insurance/batch_remits_spec.rb[1:5:2:2]         | unknown |                 |
+./spec/requests/loan_insurance/batch_remits_spec.rb[1:6:1:1]         | unknown |                 |
+./spec/requests/loan_insurance/batch_remits_spec.rb[1:6:1:2]         | unknown |                 |
+./spec/requests/loan_insurance/batch_remits_spec.rb[1:6:2:1]         | unknown |                 |
+./spec/requests/loan_insurance/batch_remits_spec.rb[1:7:1]           | unknown |                 |
+./spec/requests/loan_insurance/batch_remits_spec.rb[1:7:2]           | unknown |                 |
+./spec/requests/loan_insurance/batches_spec.rb[1:1:1]                | unknown |                 |
+./spec/requests/loan_insurance/batches_spec.rb[1:2:1]                | unknown |                 |
+./spec/requests/loan_insurance/batches_spec.rb[1:3:1]                | unknown |                 |
+./spec/requests/loan_insurance/batches_spec.rb[1:4:1]                | unknown |                 |
+./spec/requests/loan_insurance/batches_spec.rb[1:5:1:1]              | unknown |                 |
+./spec/requests/loan_insurance/batches_spec.rb[1:5:1:2]              | unknown |                 |
+./spec/requests/loan_insurance/batches_spec.rb[1:5:2:1]              | unknown |                 |
+./spec/requests/loan_insurance/batches_spec.rb[1:5:2:2]              | unknown |                 |
+./spec/requests/loan_insurance/batches_spec.rb[1:6:1:1]              | unknown |                 |
+./spec/requests/loan_insurance/batches_spec.rb[1:6:1:2]              | unknown |                 |
+./spec/requests/loan_insurance/batches_spec.rb[1:6:2:1]              | unknown |                 |
+./spec/requests/loan_insurance/batches_spec.rb[1:7:1]                | unknown |                 |
+./spec/requests/loan_insurance/batches_spec.rb[1:7:2]                | unknown |                 |
+./spec/requests/loan_insurance/details_spec.rb[1:1:1]                | unknown |                 |
+./spec/requests/loan_insurance/details_spec.rb[1:2:1]                | unknown |                 |
+./spec/requests/loan_insurance/details_spec.rb[1:3:1]                | unknown |                 |
+./spec/requests/loan_insurance/details_spec.rb[1:4:1]                | unknown |                 |
+./spec/requests/loan_insurance/details_spec.rb[1:5:1:1]              | unknown |                 |
+./spec/requests/loan_insurance/details_spec.rb[1:5:1:2]              | unknown |                 |
+./spec/requests/loan_insurance/details_spec.rb[1:5:2:1]              | unknown |                 |
+./spec/requests/loan_insurance/details_spec.rb[1:5:2:2]              | unknown |                 |
+./spec/requests/loan_insurance/details_spec.rb[1:6:1:1]              | unknown |                 |
+./spec/requests/loan_insurance/details_spec.rb[1:6:1:2]              | unknown |                 |
+./spec/requests/loan_insurance/details_spec.rb[1:6:2:1]              | unknown |                 |
+./spec/requests/loan_insurance/details_spec.rb[1:7:1]                | unknown |                 |
+./spec/requests/loan_insurance/details_spec.rb[1:7:2]                | unknown |                 |
+./spec/views/loan_insurance/batch_remits/edit.html.erb_spec.rb[1:1]  | unknown |                 |
+./spec/views/loan_insurance/batch_remits/index.html.erb_spec.rb[1:1] | unknown |                 |
+./spec/views/loan_insurance/batch_remits/new.html.erb_spec.rb[1:1]   | unknown |                 |
+./spec/views/loan_insurance/batch_remits/show.html.erb_spec.rb[1:1]  | unknown |                 |
+./spec/views/loan_insurance/batches/edit.html.erb_spec.rb[1:1]       | unknown |                 |
+./spec/views/loan_insurance/batches/index.html.erb_spec.rb[1:1]      | unknown |                 |
+./spec/views/loan_insurance/batches/new.html.erb_spec.rb[1:1]        | unknown |                 |
+./spec/views/loan_insurance/batches/show.html.erb_spec.rb[1:1]       | unknown |                 |
+./spec/views/loan_insurance/details/edit.html.erb_spec.rb[1:1]       | unknown |                 |
+./spec/views/loan_insurance/details/index.html.erb_spec.rb[1:1]      | unknown |                 |
+./spec/views/loan_insurance/details/new.html.erb_spec.rb[1:1]        | unknown |                 |
+./spec/views/loan_insurance/details/show.html.erb_spec.rb[1:1]       | unknown |                 |

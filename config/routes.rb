@@ -2,34 +2,8 @@
 require 'sidekiq/web'
 
 Rails.application.routes.draw do 
-  resources :user_levels
-  resources :authority_levels
-  resources :process_claims
-  resources :underwriting_routes
-  resources :batch_remarks do
-    get :form_md, on: :member
-  end
-  resources :process_remarks do 
-    get :view_all, on: :collection
-  end
-  resources :process_coverages do 
-    get :approve_batch, on: :member
-    get :deny_batch, on: :member
-    get :pending_batch, on: :member
-    get :approve
-    get :deny
-    get :modal_remarks, on: :member
-    get :cov_list, on: :collection
-    patch :update_batch_selected, on: :collection
-  end
-  get 'preview', to: 'process_coverages#preview'
-  get 'download', to: 'process_coverages#download'
-  get 'process_coverages/pdf/:id', to: "process_coverages#pdf", as: 'pc_pdf'
-
-  resources :coop_agreements do
-    resources :group_remits
-  end
-  
+  resources :denied_dependents
+ 
   resources :anniversaries, :agent_groups, :departments, :agents, :coop_users, :employees, :plans, :product_benefits, :proposals
 
   resources :agreement_benefits do
@@ -38,6 +12,47 @@ Rails.application.routes.draw do
 
   resources :agreements do
     get :show_details, on: :member
+  end
+
+  # resources :agreement_benefits
+  # resources :plans
+  # resources :agreements
+  # resources :cooperatives
+  resources :coop_types
+  resources :geo_barangays
+  resources :geo_municipalities
+  resources :geo_provinces
+  resources :geo_regions
+  # resources :agent_groups
+  # resources :departments
+  # resources :agents
+  # resources :coop_users
+  # resources :employees
+  resources :benefits
+  # get 'pages/home'
+  # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
+  get "/progress", to: "progress#show"
+  get "/progress/update", to: "progress#update"
+
+  #* Coop Module Routes
+  resources :cooperatives do
+    get :selected, on: :member
+    resources :coop_branches
+  end
+
+  resources :members do
+    collection do
+      post :import
+    end
+  end
+
+  resources :coop_members do
+    get :selected, on: :member
+    get :member_agreements, on: :member
+  end
+
+  resources :coop_agreements do
+    resources :group_remits
   end
 
   resources :group_remits do 
@@ -75,41 +90,44 @@ Rails.application.routes.draw do
     resources :health_dec_subquestions
   end
 
-  resources :agreement_benefits
-  resources :plans
-  resources :agreements
-  resources :cooperatives
-  resources :coop_types
-  resources :geo_barangays
-  resources :geo_municipalities
-  resources :geo_provinces
-  resources :geo_regions
-  resources :agent_groups
-  resources :departments
-  resources :agents
-  resources :coop_users
-  resources :employees
-  resources :benefits
-  get 'pages/home'
-  # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
-
-  resources :cooperatives do
-    get :selected, on: :member
-    resources :coop_branches
+  namespace :loan_insurance do
+    resources :retentions
+    resources :rates
+    resources :loans
+    resources :details
+    resources :batches
+    resources :batch_remits
   end
 
-  resources :members do
-    
-    collection do
-      post :import
-    end
+
+  #* Underwriting Module Routes
+  resources :user_levels
+  resources :authority_levels
+  resources :process_claims
+  resources :underwriting_routes
+  resources :batch_remarks do
+    get :form_md, on: :member
   end
 
-  resources :coop_members do
-    get :selected, on: :member
-    get :member_agreements, on: :member
+  resources :process_remarks do 
+    get :view_all, on: :collection
   end
+  resources :process_coverages do 
+    get :approve_batch, on: :member
+    get :deny_batch, on: :member
+    get :pending_batch, on: :member
+    get :approve
+    get :deny
+    get :modal_remarks, on: :member
+    get :cov_list, on: :collection
+    patch :update_batch_selected, on: :collection
+  end
+  get 'preview', to: 'process_coverages#preview'
+  get 'download', to: 'process_coverages#download'
+  get 'process_coverages/pdf/:id', to: "process_coverages#pdf", as: 'pc_pdf'
 
+
+  #* Authentication Routes
   devise_for :admin_users, ActiveAdmin::Devise.config
   ActiveAdmin.routes(self)
 

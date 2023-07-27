@@ -1,3 +1,5 @@
+<% member_presenter = MemberPresenter.new(@member) %>
+
 <%= simple_form_for(@member_dependent, url: create_beneficiary_group_remit_batch_member_dependents_path) do |f| %>
   <%= f.error_notification %>
   <%= f.error_notification message: f.object.errors[:base].to_sentence if f.object.errors[:base].present? %>
@@ -24,13 +26,12 @@
               placeholder: 'Birthdate'}, label: false %>
       </div>
       <div class="col-md-5">
-          <%= f.input :relationship, collection: ['Parent', 'Spouse', 'Child', 'Sibling'], include_blank: 'Relationship', label: false %>
+          <%= f.input :relationship, collection: member_presenter.valid_dependents, include_blank: 'Relationship', label: false %>
       </div>
     </div>
   </div>
 
   <div class="form-actions text-end">
-    <%= f.button :submit, 'Enroll Beneficiary', class: 'btn-success' %>
 
     <% if @claims == 'true' %>
       <%= link_to "Back", new_group_remit_batch_beneficiary_path(@group_remit, @batch, claims: true), class: 'btn btn-secondary', data: {turbo_frame: "modal"} %>
@@ -38,5 +39,6 @@
       <%= link_to "Back", new_group_remit_batch_beneficiary_path(@group_remit, @batch), class: 'btn btn-secondary', data: {turbo_frame: "modal"} %>
     <% end %>
     
+    <%= f.button :submit, 'Enroll Beneficiary', class: 'btn-success' %>
   </div>
 <% end %>
