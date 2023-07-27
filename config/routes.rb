@@ -31,6 +31,8 @@ Rails.application.routes.draw do
   resources :benefits
   # get 'pages/home'
   # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
+  get "/progress", to: "progress#show"
+  get "/progress/update", to: "progress#update"
 
   #* Coop Module Routes
   resources :cooperatives do

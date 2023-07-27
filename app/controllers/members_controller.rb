@@ -3,14 +3,15 @@ class MembersController < InheritedResources::Base
   before_action :check_userable_type 
 
   def import
-    # byebug
     import_service = CsvImportService.new(
       :member, 
       params[:file],  
       @cooperative,
       nil,
-      current_user.userable
+      current_user.userable,
+      request.session
     )
+    
     import_message = import_service.import
 
     if import_message.is_a?(String)
@@ -18,6 +19,8 @@ class MembersController < InheritedResources::Base
     else
       redirect_to coop_members_path, notice: "#{import_message[:created_members_counter]} members enrolled. #{import_message[:updated_members_counter]} members updated."
     end
+
+    reset_session_progress
   end
 
   def new
@@ -89,5 +92,11 @@ class MembersController < InheritedResources::Base
       unless current_user.userable_type == 'CoopUser' || current_user.userable_type == 'Employee'
         render file: "#{Rails.root}/public/404.html", status: :not_found
       end
+    end
+
+    def reset_session_progress
+      session[:member_import_progress] = {
+        progress: 0
+      }
     end
 end

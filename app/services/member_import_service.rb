@@ -1,10 +1,11 @@
 class MemberImportService
-    def initialize(spreadsheet, cooperative, current_user)
+    def initialize(spreadsheet, cooperative, current_user, session)
       @spreadsheet = spreadsheet
       @cooperative = cooperative
       @current_user = current_user
       @required_headers = ["Birth Place", "First Name", "Middle Name", "Last Name", "Suffix", "Birthdate", "Gender", "Address", "SSS #", "TIN #", "Mobile #", "Email", "Civil Status", "Height (cm)", "Weight (kg)", "Occupation", "Employer", "Work Address", "Spouse", "Work Phone #"]
-
+      @session = session
+      
     end
 
 
@@ -16,7 +17,7 @@ class MemberImportService
     end
 
     members_spreadsheet = parse_file('Members_Data')
-
+    
     missing_headers = find_missing_headers(@required_headers, headers)
 
 
@@ -24,7 +25,8 @@ class MemberImportService
     # Initialize variables to keep track of member imports
     created_members_counter = 0
     updated_members_counter = 0
-
+    total_members = members_spreadsheet.drop(1).count
+    progress_counter = 0
     # Iterate over each row in the CSV file
     members_spreadsheet.drop(1).each do |row|
       # Extract member data from CSV row
@@ -79,6 +81,10 @@ class MemberImportService
 
         created_members_counter += 1 if new_coop_member.save!
       end
+
+      progress_counter += 1
+      update_progress(total_members, progress_counter)
+      # byebug
     end
     counters = {
         created_members_counter: created_members_counter,
@@ -102,6 +108,12 @@ class MemberImportService
 
     def find_missing_headers(required_headers, headers)
       required_headers - headers
+    end
+
+    def update_progress(total, processed_members)
+      @session[:member_import_progress] = {
+        progress: (processed_members.to_f/total.to_f) * 100,
+      }
     end
     
 end
