@@ -1495,18 +1495,86 @@
 #   puts "#{al.name} - Saved!" if al.save!
 # end
 
-spreadsheet = Roo::Spreadsheet.open("/Users/jaysonregalario/Downloads/Book1.xlsx")
-(3..spreadsheet.last_row).each do |row|
-  user = User.find_by(id: spreadsheet.cell(row, "A"))
+# spreadsheet = Roo::Spreadsheet.open("/Users/jaysonregalario/Downloads/Book1.xlsx")
+# (3..spreadsheet.last_row).each do |row|
+#   user = User.find_by(id: spreadsheet.cell(row, "A"))
 
-  level = case spreadsheet.cell(row, "D")
-  when "Head" then AuthorityLevel.find_by(name: "Level 6")
-  when "VP" then AuthorityLevel.find_by(name: "Level 8")
-  else
-    AuthorityLevel.find_by(name: spreadsheet.cell(row, "D"))
-  end
+#   level = case spreadsheet.cell(row, "D")
+#   when "Head" then AuthorityLevel.find_by(name: "Level 6")
+#   when "VP" then AuthorityLevel.find_by(name: "Level 8")
+#   else
+#     AuthorityLevel.find_by(name: spreadsheet.cell(row, "D"))
+#   end
 
-  user_lev = UserLevel.find_or_initialize_by(user: user, authority_level: level)
-  user_lev.active = true
-  puts "#{user_lev.user.email}(#{user_lev.authority_level.maxAmount}) - Saved!" if user_lev.save!
-end
+#   user_lev = UserLevel.find_or_initialize_by(user: user, authority_level: level)
+#   user_lev.active = true
+#   puts "#{user_lev.user.email}(#{user_lev.authority_level.maxAmount}) - Saved!" if user_lev.save!
+# end
+
+# [
+#   ["Good Samaritan Multi-Purpose Cooperaitve", "Region 2", "Isabela", "San Mateo"]
+# ].each do |row|
+#   coop = Cooperative.find_or_initialize_by(name: row[0])
+#   coop.region = row[1]
+#   coop.province = row[2]
+#   coop.municipality = row[3]
+
+#   puts "#{coop.name} - Saved!" if coop.save!
+# end
+
+# [
+#   ["Good Samaritan Multi-Purpose Cooperaitve", 1, 1, 50000, "Single", 18, 65, 65, 0, 0, 835]
+# ].each do |row|
+#   coop = Cooperative.find_by(name: row[0])
+
+#   agree = Agreement.find_or_initialize_by(cooperative: coop, plan_id: row[1])
+#   agree.agent_id = row[2]
+#   agree.nel = row[3]
+#   agree.anniversary_type = row[4]
+#   agree.entry_age_from = row[5]
+#   agree.entry_age_to = row[6]
+#   agree.exit_age = row[7]
+#   agree.coop_sf = row[8]
+#   agree.agent_sf = row[9]
+#   agree.minimum_participation = row[10]
+#   agree.moa_no = "MOA-#{sprintf '%05d', coop.id}"
+#   agree.proposal_id = 1
+
+#   puts "#{agree.cooperative.name}(#{agree.moa_no}) - Saved!" if agree.save!
+# end
+
+
+# [
+#   ["Principal", 1, 18, 65]
+# ].each do |row|
+  
+#   agree = Agreement.find(18)
+  
+#   ab = AgreementBenefit.find_or_initialize_by(agreement: agree, insured_type: row[1], name: row[0])
+#   ab.proposal_id = 1
+#   ab.min_age = row[2]
+#   ab.max_age = row[3]
+
+#   puts "#{ab.name} - Saved!" if ab.save!
+# end
+
+# [
+#   #[AB Id, benefit id, amount, premium]
+#   [77, 1, 55000, 225],
+#   [77, 13, 55000, 225]
+# ].each do |row|
+#   ab = AgreementBenefit.find(row[0])
+#   ben = Benefit.find(row[1])
+
+#   pb = ProductBenefit.find_or_initialize_by(agreement_benefit: ab, benefit: ben)
+#   pb.coverage_amount = row[2]
+#   pb.premium = row[3]
+
+#   puts "#{pb.agreement_benefit.name}(#{pb.benefit.name}-#{pb.coverage_amount}) -- Saved!" if pb.save!
+# end
+
+agree = Agreement.find(18)
+anniv = Anniversary.find_or_initialize_by(agreement: agree)
+anniv.name = "June 25"
+anniv.anniversary_date = "2023-05-25"
+puts "#{anniv.agreement.moa_no} (#{anniv.name}) - Saved!" if anniv.save!

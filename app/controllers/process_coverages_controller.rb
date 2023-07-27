@@ -15,6 +15,7 @@ class ProcessCoveragesController < ApplicationController
     else
       @process_coverages = @process_coverages_x
     end
+    
   end
 
   def preview
@@ -56,11 +57,64 @@ class ProcessCoveragesController < ApplicationController
 
   def cov_list
     # raise 'errors'
+    @current_date = params[:current_date]&.to_date
     @process_coverages = case params[:cov_type]
-      when "For Process" then ProcessCoverage.where(status: :for_process)
-      when "Approved" then ProcessCoverage.where(status: :approved)
-      when "Pending" then ProcessCoverage.where(status: :pending)
-      when "Denied" then ProcessCoverage.where(status: :denied)
+      when "For Process" 
+        if params[:date_type] == "yearly"
+          start_date = @current_date.beginning_of_year
+          end_date = @current_date.end_of_year
+          
+        elsif params[:date_type] == "monthly"
+          start_date = @current_date.beginning_of_month
+          end_date = @current_date.end_of_month
+        elsif params[:date_type] == "weekly"
+          start_date = @current_date.beginning_of_week
+          end_date = @current_date.end_of_week
+        end
+        ProcessCoverage.where(status: :for_process, created_at: start_date..end_date)
+        
+      when "Approved" 
+        if params[:date_type] == "yearly"
+          start_date = @current_date.beginning_of_year
+          end_date = @current_date.end_of_year
+          
+        elsif params[:date_type] == "monthly"
+          start_date = @current_date.beginning_of_month
+          end_date = @current_date.end_of_month
+        elsif params[:date_type] == "weekly"
+          start_date = @current_date.beginning_of_week
+          end_date = @current_date.end_of_week
+        end
+        ProcessCoverage.where(status: :approved, created_at: start_date..end_date)
+
+      when "Pending" 
+        if params[:date_type] == "yearly"
+          start_date = @current_date.beginning_of_year
+          end_date = @current_date.end_of_year
+          
+        elsif params[:date_type] == "monthly"
+          start_date = @current_date.beginning_of_month
+          end_date = @current_date.end_of_month
+        elsif params[:date_type] == "weekly"
+          start_date = @current_date.beginning_of_week
+          end_date = @current_date.end_of_week
+        end
+        ProcessCoverage.where(status: :pending, created_at: start_date..end_date)
+
+      when "Denied" 
+        if params[:date_type] == "yearly"
+          start_date = @current_date.beginning_of_year
+          end_date = @current_date.end_of_year
+          
+        elsif params[:date_type] == "monthly"
+          start_date = @current_date.beginning_of_month
+          end_date = @current_date.end_of_month
+        elsif params[:date_type] == "weekly"
+          start_date = @current_date.beginning_of_week
+          end_date = @current_date.end_of_week
+        end
+        ProcessCoverage.where(status: :denied, created_at: start_date..end_date)
+      when "head approval" then ProcessCoverage.where(status: :for_head_approval)
     end
 
     @title = params[:title]
