@@ -43,7 +43,10 @@ class ProcessCoveragesController < ApplicationController
   end
 
   def pdf
-    pdf = PsheetPdf.new(@process_coverage, view_context)
+    @batches_x = @process_coverage.group_remit.batches
+    @total_life_cov = ProductBenefit.joins(agreement_benefit: :batches).where('batches.id IN (?)', @batches_x.pluck(:id)).where('product_benefits.benefit_id = ?', 1).sum(:coverage_amount)
+
+    pdf = PsheetPdf.new(@process_coverage, @total_life_cov, view_context)
     send_data(pdf.render,
       filename: "#{@process_coverage.group_remit.name}.pdf",
       type: 'application/pdf',

@@ -6,6 +6,7 @@
           <th>Group Remit</th>
           <th>Agent</th>
           <th>Terms</th>
+          <th>Count</th>
           <th>Status</th>
           <th>Approved</th>
           <th>Denied</th>
@@ -31,6 +32,7 @@
             Effectivity: <%= month_day_year(process_coverage.effectivity) %> <br>
             Expiry: <%= month_day_year(process_coverage.expiry) %>
           </td>
+          <td><%= pluralize(process_coverage.group_remit.batches.count, "Member") %></td>
           <td><%= process_status(process_coverage.status) %></td>
           <td>
             Total Approved Count:   <%= process_coverage.approved_count %> <br>
