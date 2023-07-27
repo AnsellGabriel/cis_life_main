@@ -8,9 +8,9 @@
         For Process Coverages
       </div>
       <div class="card-body">
-      Year: <%= link_to pluralize(@for_process_coverages.where(created_at: ..current_date.end_of_year).count, "Coverage"), cov_list_process_coverages_path(cov_type: "For Process", title: "For Process PCs"), class: "link-dark", data: { turbo_frame: "remote_modal" } %> <br>
-      Month: <%= pluralize(@for_process_coverages.where(created_at: start_month(current_date)..end_month(current_date)).count, "Coverage") %> <br>
-      Week: <%= pluralize(@for_process_coverages.where(created_at: start_week(current_date)..end_week(current_date)).count, "Coverage") %>
+      Year: <%= link_to pluralize(@for_process_coverages.where(created_at: current_date.beginning_of_year..current_date.end_of_year).count, "Coverage"), cov_list_process_coverages_path(cov_type: "For Process", current_date: current_date, date_type: "yearly", title: "For Process PCs (Yearly)"), class: "link-dark", data: { turbo_frame: "remote_modal" } %> <br>
+      Month: <%= link_to pluralize(@for_process_coverages.where(created_at: start_month(current_date)..end_month(current_date)).count, "Coverage"), cov_list_process_coverages_path(cov_type: "For Process", current_date: current_date, date_type: "monthly", title: "For Process PCs (Monthly)"), class: "link-dark", data: { turbo_frame: "remote_modal" } %> <br>
+      Week: <%= link_to pluralize(@for_process_coverages.where(created_at: start_week(current_date)..end_week(current_date)).count, "Coverage"), cov_list_process_coverages_path(cov_type: "For Process", current_date: current_date, date_type: "weekly", title: "For Process PCs (Weekly)"), class: "link-dark", data: { turbo_frame: "remote_modal" } %>
       </div>
     </div>
   </div>
@@ -21,9 +21,9 @@
         Approved Process Coverages
       </div>
       <div class="card-body">
-      Year: <%= link_to pluralize(@approved_process_coverages.where(created_at: ..current_date.end_of_year).count, "Coverage"), cov_list_process_coverages_path(cov_type: "Approved", title: "Approved PCs"), class: "link-light", data: { turbo_frame: "remote_modal" } %> <br>
-      Month: <%= pluralize(@approved_process_coverages.where(created_at: start_month(current_date)..end_month(current_date)).count, "Coverage") %> <br>
-      Week: <%= pluralize(@approved_process_coverages.where(created_at: start_week(current_date)..end_week(current_date)).count, "Coverage") %>
+      Year: <%= link_to pluralize(@approved_process_coverages.where(created_at: ..current_date.end_of_year).count, "Coverage"), cov_list_process_coverages_path(cov_type: "Approved", current_date: current_date, date_type: "yearly", title: "Approved PCs (Yearly)"), class: "link-light", data: { turbo_frame: "remote_modal" } %> <br>
+      Month: <%= link_to pluralize(@approved_process_coverages.where(created_at: start_month(current_date)..end_month(current_date)).count, "Coverage"), cov_list_process_coverages_path(cov_type: "Approved", current_date: current_date, date_type: "monthly", title: "Approved PCs (Monthly)"), class: "link-light", data: { turbo_frame: "remote_modal" } %> <br>
+      Week: <%= link_to pluralize(@approved_process_coverages.where(created_at: start_week(current_date)..end_week(current_date)).count, "Coverage"), cov_list_process_coverages_path(cov_type: "Approved", current_date: current_date, date_type: "weekly", title: "Approved PCs (Weekly)"), class: "link-light", data: { turbo_frame: "remote_modal" } %>
       </div>
     </div>
   </div>
@@ -54,4 +54,16 @@
     </div>
   </div>
 
+</div>
+<div class="row">
+  <div class="col-3 mb-2">
+    <div class="card text-dark bg-light">
+      <div class="card-header">
+        For Head Approval
+      </div>
+      <div class="card-body">
+      <%= link_to pluralize(@process_coverages.where(status: "for_head_approval").count, "Coverage"), cov_list_process_coverages_path(cov_type: "head approval", title: "For Head Approval PCs"), class: "link-dark", data: { turbo_frame: "remote_modal" } %> <br>
+      </div>
+    </div>
+  </div>
 </div>
