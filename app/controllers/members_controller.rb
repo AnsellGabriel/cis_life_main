@@ -8,8 +8,7 @@ class MembersController < InheritedResources::Base
       params[:file],  
       @cooperative,
       nil,
-      current_user.userable,
-      request.session
+      current_user.userable
     )
     
     import_message = import_service.import

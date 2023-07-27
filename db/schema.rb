@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_07_26_052422) do
+ActiveRecord::Schema[7.0].define(version: 2023_07_27_073341) do
   create_table "active_admin_comments", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.string "namespace"
     t.text "body"
@@ -371,6 +371,14 @@ ActiveRecord::Schema[7.0].define(version: 2023_07_26_052422) do
     t.datetime "updated_at", null: false
   end
 
+  create_table "group_import_trackers", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+    t.float "progress"
+    t.bigint "group_remit_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["group_remit_id"], name: "index_group_import_trackers_on_group_remit_id"
+  end
+
   create_table "group_remits", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.string "name"
     t.text "description"
@@ -471,6 +479,14 @@ ActiveRecord::Schema[7.0].define(version: 2023_07_26_052422) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["member_id"], name: "index_member_dependents_on_member_id"
+  end
+
+  create_table "member_import_trackers", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+    t.float "progress"
+    t.bigint "coop_user_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["coop_user_id"], name: "index_member_import_trackers_on_coop_user_id"
   end
 
   create_table "members", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
@@ -641,6 +657,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_07_26_052422) do
   add_foreign_key "denied_dependents", "group_remits"
   add_foreign_key "denied_members", "group_remits"
   add_foreign_key "employees", "departments"
+  add_foreign_key "group_import_trackers", "group_remits"
   add_foreign_key "group_remits", "agreements"
   add_foreign_key "health_dec_subquestions", "health_decs"
   add_foreign_key "loan_insurance_details", "batches"
@@ -649,6 +666,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_07_26_052422) do
   add_foreign_key "loan_insurance_details", "loan_insurance_retentions"
   add_foreign_key "loan_insurance_loans", "cooperatives"
   add_foreign_key "member_dependents", "members"
+  add_foreign_key "member_import_trackers", "coop_users"
   add_foreign_key "payments", "group_remits"
   add_foreign_key "process_claims", "agreement_benefits"
   add_foreign_key "process_claims", "agreements"

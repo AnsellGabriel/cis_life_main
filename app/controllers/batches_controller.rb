@@ -27,7 +27,6 @@ class BatchesController < ApplicationController
     else
       redirect_to group_remit_path(@group_remit), notice: @import_result
     end
-
   end
 
   def health_dec

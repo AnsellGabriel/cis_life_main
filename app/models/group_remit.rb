@@ -11,6 +11,7 @@ class GroupRemit < ApplicationRecord
   has_many :denied_members, dependent: :destroy
   has_many :payments, dependent: :destroy
   has_one :process_coverage
+  has_one :group_import_tracker, dependent: :destroy
 
   accepts_nested_attributes_for :payments
 

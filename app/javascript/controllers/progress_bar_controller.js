@@ -9,10 +9,6 @@ export default class extends Controller {
 
   intervalId = null
 
-  // connect() {
-  //   console.log(this.urlValue, this.progressBarTarget)
-  // }
-
   updateProgress(e) {
     const btn = this.buttonTarget;
     const form = btn.closest("form");
@@ -23,31 +19,29 @@ export default class extends Controller {
     file.disabled = true;
     btn.disabled = true;
 
-
     this.intervalId = setInterval(() => {
+
       fetch(this.urlValue)
         .then(response => response.json())
         .then(data => {
           const progress = data.progress;
-          console.log(progress)
           this.updateProgressBar(progress);
         });
+
+
     }, 2000);
   }
 
   updateProgressBar(progress) {
     const progressBar = this.progressBarTarget;
-    // console.log(progressBar)
-    const progressPercentage = progress;
-    progressBar.style.width = `${progressPercentage}%`;
-    progressBar.innerText = `${progressPercentage}%`;
+    
+    progressBar.style.width = `${progress}%`;
+    progressBar.innerText = `${progress}%`;
 
-    if (progress == 100) {
+    if (progress >= 100) {
       progressBar.classList.add("progress-bar-done");
       progressBar.innerText = "Done";
-      // this.markImportAsComplete()
       this.stopUpdatingProgress()
-
     }
   }
 
@@ -55,15 +49,5 @@ export default class extends Controller {
     clearInterval(this.intervalId); // Clear the interval using the stored interval ID
   }
 
-  // markImportAsComplete() {
-  //   console.log("marking as complete")
-  //   fetch("/progress/update", {
-  //     method: "GET",
-  //     headers: {
-  //       "Content-Type": "application/json",
-  //       // "X-CSRF-Token": Rails.csrfToken() // Add the CSRF token to the request headers
-  //     }
-  //   });
-  // }
 }
 

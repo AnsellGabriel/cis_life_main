@@ -1,11 +1,10 @@
 class MemberImportService
-    def initialize(spreadsheet, cooperative, current_user, session)
+    def initialize(spreadsheet, cooperative, current_user)
       @spreadsheet = spreadsheet
       @cooperative = cooperative
       @current_user = current_user
-      @required_headers = ["Birth Place", "First Name", "Middle Name", "Last Name", "Suffix", "Birthdate", "Gender", "Address", "SSS #", "TIN #", "Mobile #", "Email", "Civil Status", "Height (cm)", "Weight (kg)", "Occupation", "Employer", "Work Address", "Spouse", "Work Phone #"]
-      @session = session
-      
+      @required_headers = ["Birth Place", "First Name", "Middle Name", "Last Name", "Suffix", "Birthdate", "Gender", "Address", "SSS #", "TIN #", "Mobile #", "Email", "Civil Status", "Height (cm)", "Weight (kg)", "Occupation", "Employer", "Work Address", "Spouse", "Work Phone #"]     
+      @progress = @current_user.create_member_import_tracker(progress: 0.0)
     end
 
 
@@ -109,11 +108,8 @@ class MemberImportService
     def find_missing_headers(required_headers, headers)
       required_headers - headers
     end
-
-    def update_progress(total, processed_members)
-      @session[:member_import_progress] = {
-        progress: (processed_members.to_f/total.to_f) * 100,
-      }
-    end
     
+    def update_progress(total, processed_members)
+      @progress.update(progress: (processed_members.to_f / total.to_f * 100))
+    end
 end
