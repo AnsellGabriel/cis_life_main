@@ -1,0 +1,79 @@
+<div id="<%= dom_id agreement %>">
+  <div class="card mb-3">
+    <div class="card-body">
+      <h4> <%= agreement.cooperative %> </h4>
+      <%= agreement.plan %> <br>
+      <small class="text-muted mb-3"><%= agreement.agent %>
+      </small><br>
+      <%= agreement.description %> <br>
+      <div class="row">
+        <div class="col-md-6">
+          <dl class="row mt-3">
+            <dt class="col-sm-7">Contestability Period</dt>
+            <dd class="col-sm-5"><%= agreement.contestability %></dd>
+            <dt class="col-sm-7">No Evidence Limit (NEL)</dt>
+            <dd class="col-sm-5"><%= to_currency(agreement.nel) %></dd>
+            <dt class="col-sm-7">Non Medical Limit</dt>
+            <dd class="col-sm-5"><%= to_currency(agreement.nml) %></dd>
+            <dt class="col-sm-7">Anniversary Type</dt>
+            <dd class="col-sm-5"><%= agreement.anniversary_type %></dd>
+            <dt class="col-sm-7">Commission Type</dt>
+            <dd class="col-sm-5"><%= agreement.comm_type %></dd>
+            <% if agreement.transferred %>
+              <strong class="text-primary mb-1 mt-3">Transferred</strong>
+              <dt class="col-sm-7">Date Transferred</dt>
+              <dd class="col-sm-5"><%= agreement.transferred_date %>
+                <dt class="col-sm-7">Previous Provider</dt>
+                <dd class="col-sm-5"><%= agreement.previous_provider %></dd>
+              </dd>
+            <% end %>
+            <% if agreement.claims_fund %>
+              <strong class="text-primary mb-1 mt-3">Claims Fund</strong>
+              <dt class="col-sm-7">Claims Fund Amount</dt>
+              <dd class="col-sm-5"><%= to_currency(agreement.claims_fund_amount)  %></dd>
+            <% end %>
+          </dl>
+        </div>
+        <div class="col-md-6">
+        <strong class="text-primary mb-3">Anniversary</strong>
+        <%= render 'anniversaries/show_anniversary', a: agreement %>
+        </div>
+      </div>
+    </div>
+    <div class="card-footer">
+      <%= link_to "Edit", edit_agreement_path(agreement), class: 'btn btn-sm btn-secondary' %> |
+      <%= link_to "Back", agreements_path, class: 'btn btn-sm btn-secondary' %>
+    </div>
+  </div>
+</div>
+<div class="row">
+  <% @agreement_benefits.each do |ab| %>
+    <div class="col-md-6 mb-3">
+      <div class="card">
+        <h5 class="card-header"><%= ab.name %>  <small class="text-muted"><%= ab.insured_type %></small></h5>
+        <div class="card-body">
+          <div class="text-center">
+            <table class="table">
+              <thead>
+                <tr>
+                  <th scope="col">Min Age</th>
+                  <th scope="col">Max Age</th>
+                  <th scope="col">Exit Age</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td><%= ab.min_age %></td>
+                  <td><%= ab.max_age %></td>
+                  <td><%= ab.exit_age %></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <%# SHOW PRODUCT BENEFIT %>
+          <%= render 'product_benefits/show_product_benefit', ab: ab %>
+        </div>
+      </div>
+    </div>
+  <% end %>
+</div>

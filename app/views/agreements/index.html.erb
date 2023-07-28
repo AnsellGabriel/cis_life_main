@@ -1,6 +1,4 @@
 <%= content_tag :h1, "List of Agreements" %>
-
-
 <div class="d-flex gap-3 flex-row-reverse mb-3">
   <%= form_with url: agreements_path, method: :get do %>
     <div class="form-group d-flex gap-3 text-center">
@@ -14,59 +12,45 @@
   <% end %>
 </div>
 
-<table class ="table table-striped">
-  <table class="table table-striped table-bordered table-hover">
-    <thead>
-      <tr>
-
+<table class="table table-striped table-bordered table-hover">
+  <thead>
+    <tr>
       <th>#</th>
-        <th>Plan</th>
-        <th>Cooperative</th>
+      <th>Details</th>
+      <%# <th>Cooperative</th>
         <th>Agent</th>
         <th>Moa No</th>
         <th>Contestability</th>
         <th>Nel</th>
+        <th>Nml</th>
         <th>Anniversary Type</th>
+        <th>Transferred</th>
+        <th>Transferred Date</th>
+        <th>Previous Provider</th>
         <th>Comm Type</th>
         <th>Claims Fund</th>
         <th>Entry Age From</th>
-        <th></th>
-
+        <th>Entry Age To</th>
+        <th>Exit Age</th>
+        <th></th> %>
+    </tr>
+  </thead>
+  <tbody>
+    <% @agreements.each do |agreement| %>
+      <tr>
+        <th scope="row"><%= agreement.id %></th>
+        <td> <strong> <%= agreement.cooperative %> </strong>  <br>
+          <%= agreement.plan %> <br>
+          <small class="text-muted"><%= agreement.agent %>
+          </small>
+        </td>
+        <td>
+          <%= link_to 'View', agreement, class: 'btn btn-secondary btn-sm' %>
+          <%= link_to "MOA", show_details_agreement_path(agreement), data: { turbo_frame: "remote_modal" }, class: 'btn btn-warning btn-sm' %>
+          <%= link_to 'Edit', edit_agreement_path(agreement), class: 'btn btn-secondary btn-sm' %>
+          <%= link_to "Delete", agreement, class: "btn btn-danger btn-sm", method: :delete, data: { "turbo-method": :delete, turbo_confirm: "Are you sure?" } %>
+        </td>
       </tr>
-    </thead>
-
-    <tbody>
-      <% @agreements.each do |agreement| %>
-        <tr>
-
-          <th scope="row"><%= agreement.id %></th>
-          <td><%= agreement.plan %></td>
-          <td><%= agreement.cooperative %></td>
-          <td><%= agreement.agent %></td>
-          <td><%= agreement.moa_no %></td>
-          <td><%= agreement.contestability %></td>
-          <td>
-            NEL: <%= agreement.nel %> <br>
-            NML: <%= agreement.nml %>
-          </td>
-          <td><%= agreement.anniversary_type %></td>
-          <td><%= agreement.comm_type %></td>
-          <td><%= agreement.claims_fund %></td>
-          <td>
-            Entry Age: <%= agreement.entry_age_from %> to <%= agreement.entry_age_to %> <br>
-            Exit Age: <%= agreement %>
-          </td>
-          <td>
-            <p>
-              <%= link_to 'View', agreement, class: 'btn btn-secondary btn-sm d-block mb-1' %>
-              <%= link_to "MOA", show_details_agreement_path(agreement), data: { turbo_frame: "remote_modal" }, class: 'btn btn-warning btn-sm d-block mb-1' %>
-              <%= link_to 'Edit', edit_agreement_path(agreement), class: 'btn btn-success btn-sm d-block mb-1' %>
-            </p>
-            <%#= link_to "Delete", agreement, class: "btn btn-danger btn-sm", method: :delete, data: { "turbo-method": :delete, turbo_confirm: "Are you sure?" } %>
-          </td>
-
-        </tr>
-      <% end %>
-    </tbody>
-  </table>
-</div>
+    <% end %>
+  </tbody>
+</table>

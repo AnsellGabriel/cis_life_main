@@ -1,0 +1,21 @@
+<div class="col-md-6">
+  <div class="nested-fields mb-3">
+    <%# .nested_fields %>
+    <div class="card">
+      <div class="card-body">
+        <%= f.input :name %>
+        <%= f.input :description %>
+        <%#= f.input :insured_type, collection: AgreementBenefit::insured_type %>
+        <div class="row">
+          <%= f.input :min_age, wrapper_html: { class: "col-md-4" }  %>
+          <%= f.input :max_age, wrapper_html: { class: "col-md-4" } %>
+          <%= f.input :exit_age, wrapper_html: { class: "col-md-4" } %>
+        </div>
+        <%= f.select :insured_type, options_for_select(AgreementBenefit.insured_types.keys.map { |key| [key.humanize, key] }), { prompt: 'Select Type' }, { class: 'form-control' } %>
+      </div>
+      <div class="card-footer">
+        <%= link_to_remove_association "Delete", f, class: "btn btn-sm btn-danger" %>
+      </div>
+    </div>
+  </div>
+</div>

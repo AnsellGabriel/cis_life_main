@@ -13,11 +13,22 @@ class Cooperative < ApplicationRecord
     # belongs_to :geo_province
     # belongs_to :geo_municipality
     # belongs_to :geo_barangay
+    belongs_to :coop_type, optional: true
+    belongs_to :geo_region, optional: true
+    belongs_to :geo_province, optional: true
+    belongs_to :geo_municipality, optional: true
+    belongs_to :geo_barangay, optional: true
 
     def to_s
       name
     end
     
+    def get_address 
+      geo_province.name + ', ' + geo_municipality.name + ', ' + geo_barangay.name + ', ' + 
+      "#{self.street}"
+      # "#{self.street}" + ', ' geo_barangay.name + ', ' + geo_municipality.name + ', ' + geo_province.name
+    end
+
     def unselected_coop_members(ids)
       coop_members.where.not(id: ids)
     end

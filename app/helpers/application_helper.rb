@@ -5,6 +5,10 @@ module ApplicationHelper
 		number_to_currency(amount, locale: :ph)
 	end
 
+	def to_curr(amount)
+		number_to_currency(amount, unit: "")
+	end
+
 	def start_month(val)
 		val.beginning_of_month
 	end

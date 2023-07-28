@@ -10,6 +10,7 @@ class Agreement < ApplicationRecord
     belongs_to :cooperative, optional: true
 
     has_many :agreement_benefits
+    accepts_nested_attributes_for :agreement_benefits, reject_if: :all_blank, allow_destroy: true
     has_many :group_remits
     has_many :anniversaries
     has_many :agreements_coop_members

@@ -37,9 +37,9 @@ Rails.application.routes.draw do
   #* Coop Module Routes
   resources :cooperatives do
     get :selected, on: :member
-    resources :coop_branches
   end
-
+  resources :coop_branches
+  
   resources :members do
     collection do
       post :import

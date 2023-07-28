@@ -1,0 +1,74 @@
+<div class="mb-3 d-flex">
+  <%= link_to 'MOAs', agreements_path, class: small_btn('secondary') %>
+</div>
+
+  <div class="d-flex gap-3" data-controller="toggler">
+    <div class="col-6">
+      <div class="card">
+        <div class="card-body">
+          <div class="<%= flex_justify_align('between', 'center') %>">
+            <div class="gap-1">
+              <h6 class="card-title mb-0"><%= @agreement.moa_no %></h6>
+            </div>
+          </div>
+          <hr>
+          <div class="<%= flex_justify_align('center', 'center') %>">
+            <%= render @agreement %>
+          </div>
+        </div>
+        <div class="card-footer <%= flex_justify_align('between') %>">
+          <small class="text-muted">Agent: <%= @agreement.agent.full_name %></small>
+          <small class="text-muted">Updated: <%= time_ago_in_words(@agreement.updated_at) %></small>
+        </div>
+      </div>
+    </div>
+
+      <div class="col">
+        <div class="card">
+          <div class="card-body">
+            <div class="<%= flex_justify_align('between', 'center') %>">
+              <div class="d-flex gap-1">
+                <h6 class="card-title mb-0">History</h6>
+              </div>
+            </div>
+            <hr>
+
+            <% if !@agreement.group_remits.blank? %>
+              <div class="<%= flex_justify_align('', '', true) %> gap-1">
+                <% @agreement.group_remits.each do |group_remit| %>
+                  <% gr_presenter = GroupRemitPresenter.new(group_remit)%>
+                  <div class="card <%= @agreement.anniversary_type == 'multiple' ? 'hidden' : '' %>" data-toggler-target="toggleable" data-id="history_<%= group_remit.anniversary.nil? ? '' : dom_id(group_remit.anniversary) %>">
+                    <div class="card-body <%= flex_justify_align('between', 'center') %> gap-1">
+                      <div class="<%= flex_justify_align('', 'center') %> gap-3">
+                        <span class="<%= gr_presenter.status_badge %>" style="width: auto;">
+                          <%= gr_presenter.status_text %>
+                        </span>
+                        <div class="text-secondary small">
+                          <%= content_tag :span, 'Effectivity date: ' %>
+                          <span> 
+                          <% if group_remit.effectivity_date.present? %>
+                            <%= date_as_month_day_year(group_remit.effectivity_date) %>
+                          <% else %>
+                            Tentative
+                          <% end %>
+                          </span>
+                        </div>
+                        <div class="text-secondary small">
+                            <%= content_tag :span, 'Expiry date: ' %>
+                            <%= content_tag :span, date_as_month_day_year(group_remit.expiry_date) %>
+                        </div>
+                      </div>
+                      <%= link_to 'View', group_remit_path(group_remit), class: small_btn('secondary') %>
+                    </div>
+                  </div>
+                <% end %>
+              </div>
+            <% else %>
+              <div class="text-center">
+                <p class="text-muted">No history yet.</p>
+              </div>
+            <% end %>
+          </div>
+        </div>
+      </div>
+  </div>

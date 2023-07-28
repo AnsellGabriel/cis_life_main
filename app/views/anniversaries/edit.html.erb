@@ -1,5 +1,6 @@
-<h1>Editing anniversary</h1>
+<%= render "remote_modal", title: "Edit anniversary" do %>
 
-<%= render "form", anniversary: @anniversary %>
-
-<br>
+<%#= render "form", coop_branch: @coop_branch %>
+<%= render "form", url: anniversary_path(@anniversary), meth: 'patch' %>
+<% end %>
+  
