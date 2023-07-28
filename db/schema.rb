@@ -10,8 +10,8 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_07_28_005249) do
-  create_table "active_admin_comments", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+ActiveRecord::Schema[7.0].define(version: 2023_07_27_073341) do
+  create_table "active_admin_comments", charset: "utf8mb4", force: :cascade do |t|
     t.string "namespace"
     t.text "body"
     t.string "resource_type"
@@ -297,7 +297,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_07_28_005249) do
     t.string "contact_number"
   end
 
-  create_table "denied_dependents", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+  create_table "denied_dependents", charset: "utf8mb4", force: :cascade do |t|
     t.string "name"
     t.string "age"
     t.string "reason"
@@ -311,7 +311,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_07_28_005249) do
     t.index ["group_remit_id"], name: "index_denied_dependents_on_group_remit_id"
   end
 
-  create_table "denied_members", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+  create_table "denied_members", charset: "utf8mb4", force: :cascade do |t|
     t.string "name"
     t.integer "age"
     t.string "reason"
@@ -379,7 +379,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_07_28_005249) do
     t.datetime "updated_at", null: false
   end
 
-  create_table "group_import_trackers", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+  create_table "group_import_trackers", charset: "utf8mb4", force: :cascade do |t|
     t.float "progress"
     t.bigint "group_remit_id", null: false
     t.datetime "created_at", null: false
@@ -387,7 +387,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_07_28_005249) do
     t.index ["group_remit_id"], name: "index_group_import_trackers_on_group_remit_id"
   end
 
-  create_table "group_remits", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+  create_table "group_remits", charset: "utf8mb4", force: :cascade do |t|
     t.string "name"
     t.text "description"
     t.bigint "agreement_id", null: false
@@ -425,7 +425,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_07_28_005249) do
     t.datetime "updated_at", null: false
   end
 
-  create_table "loan_insurance_details", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+  create_table "loan_insurance_details", charset: "utf8mb4", force: :cascade do |t|
     t.bigint "batch_id", null: false
     t.decimal "unuse", precision: 10, scale: 2
     t.decimal "loan_amount", precision: 10, scale: 2
@@ -448,7 +448,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_07_28_005249) do
     t.index ["loan_insurance_retention_id"], name: "index_loan_insurance_details_on_loan_insurance_retention_id"
   end
 
-  create_table "loan_insurance_loans", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+  create_table "loan_insurance_loans", charset: "utf8mb4", force: :cascade do |t|
     t.string "name"
     t.string "description"
     t.bigint "cooperative_id", null: false
@@ -457,7 +457,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_07_28_005249) do
     t.index ["cooperative_id"], name: "index_loan_insurance_loans_on_cooperative_id"
   end
 
-  create_table "loan_insurance_rates", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+  create_table "loan_insurance_rates", charset: "utf8mb4", force: :cascade do |t|
     t.integer "min_age"
     t.integer "max_age"
     t.decimal "monthly_rate", precision: 10
@@ -467,7 +467,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_07_28_005249) do
     t.datetime "updated_at", null: false
   end
 
-  create_table "loan_insurance_retentions", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+  create_table "loan_insurance_retentions", charset: "utf8mb4", force: :cascade do |t|
     t.decimal "amount", precision: 15, scale: 2
     t.boolean "active"
     t.date "date_activated"
@@ -476,7 +476,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_07_28_005249) do
     t.datetime "updated_at", null: false
   end
 
-  create_table "member_dependents", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+  create_table "member_dependents", charset: "utf8mb4", force: :cascade do |t|
     t.string "last_name"
     t.string "first_name"
     t.string "middle_name"
@@ -489,7 +489,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_07_28_005249) do
     t.index ["member_id"], name: "index_member_dependents_on_member_id"
   end
 
-  create_table "member_import_trackers", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+  create_table "member_import_trackers", charset: "utf8mb4", force: :cascade do |t|
     t.float "progress"
     t.bigint "coop_user_id", null: false
     t.datetime "created_at", null: false
@@ -497,7 +497,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_07_28_005249) do
     t.index ["coop_user_id"], name: "index_member_import_trackers_on_coop_user_id"
   end
 
-  create_table "members", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+  create_table "members", charset: "utf8mb4", force: :cascade do |t|
     t.string "last_name"
     t.string "first_name"
     t.string "middle_name"
