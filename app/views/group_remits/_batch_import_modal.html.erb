@@ -5,12 +5,12 @@
         <h5 class="modal-title text-center" id="staticBackdropLabel">Batch Import</h5>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
-      <div class="modal-body d-flex justify-content-center">
+      <div class="modal-body <%= flex_justify_align('','', true) %> gap-3" data-controller="progress-bar" data-progress-bar-url-value="<%= progress_path(group_remit_id: @group_remit.id) %>">
         <%= form_with url: import_group_remit_batches_path(@group_remit), method: :post do |form| %>
             <%= form.label :file, "For multiple members upload your csv file.", class: "form-text" %>
             <div class="d-flex gap-1  mb-1 align-items-center">
-                <%= form.file_field :file, class: "form-control", style: "width: 80%" %>
-                <%= submit_tag 'Upload', class: "btn btn-sm btn-outline-success", data: {turbo: 'false'} %>
+                <%= form.file_field :file, class: "form-control", style: "width: 80%", data: {progress_bar_target: 'file'} %>
+                <%= submit_tag 'Upload', class: "btn btn-sm btn-outline-success", data: {action: 'click->progress-bar#updateProgress', progress_bar_target: 'button'} %>
             </div>
             <!--
             <div class="progress mb-3">
@@ -18,6 +18,7 @@
             </div>
             -->
         <% end %>
+        <%= render 'layouts/partials/progress_bar' %>
       </div>
     </div>
   </div>

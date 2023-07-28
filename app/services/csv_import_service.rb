@@ -5,7 +5,7 @@ class CsvImportService
       @file = file
       @cooperative = cooperative
       @group_remit = group_remit
-      @current_user = current_user
+      @current_user = current_user      
     end
   
     def import

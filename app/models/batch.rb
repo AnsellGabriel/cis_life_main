@@ -2,6 +2,8 @@ class Batch < ApplicationRecord
   include Calculate
   attr_accessor :rank
 
+  validates_presence_of :effectivity_date, :expiry_date, :premium, :coop_sf_amount, :age, :agent_sf_amount, :coop_member_id, :agreement_benefit_id
+
   # batch.status
   enum status: {
     recent: 0,
@@ -80,7 +82,7 @@ class Batch < ApplicationRecord
         batch.status = :renewal
         renewal_member.update!(status: 'renewal')
     else
-      if agreement.transferred_date >= coop_member.membership_date
+      if !agreement.transferred_date.nil? && (agreement.transferred_date >= coop_member.membership_date)
         batch.status = :transferred
       else
         batch.status = :recent

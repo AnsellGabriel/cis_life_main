@@ -1,0 +1,59 @@
+<%= content_tag :h1, "List of Loan Insurance Details" %>
+
+
+<div class="text-end mb-3">
+  <%= link_to new_loan_insurance_detail_path, class: 'btn btn-primary' do %>
+    New Detail
+  <% end %>
+</div>
+
+<table class ="table table-striped">
+  <table class="table table-striped table-bordered table-hover">
+    <thead>
+      <tr>
+
+      <th>#</th>
+        <th>Batch</th>
+        <th>Unuse</th>
+        <th>Loan Amount</th>
+        <th>Premium Due</th>
+        <th>Substandard Rate</th>
+        <th>Terminate</th>
+        <th>Terinate Date</th>
+        <th>Reinsurance</th>
+        <th>Terms</th>
+        <th>Date Release</th>
+        <th>Date Mature</th>
+        <th></th>
+
+      </tr>
+    </thead>
+
+    <tbody>
+      <% @loan_insurance_details.each do |loan_insurance_detail| %>
+        <tr>
+
+        <th scope="row"><%= loan_insurance_detail.id %></th>
+        <td><%= loan_insurance_detail.batch %></td>
+        <td><%= loan_insurance_detail.unuse %></td>
+        <td><%= loan_insurance_detail.loan_amount %></td>
+        <td><%= loan_insurance_detail.premium_due %></td>
+        <td><%= loan_insurance_detail.substandard_rate %></td>
+        <td><%= loan_insurance_detail.terminate %></td>
+        <td><%= loan_insurance_detail.terinate_date %></td>
+        <td><%= loan_insurance_detail.reinsurance %></td>
+        <td><%= loan_insurance_detail.terms %></td>
+        <td><%= loan_insurance_detail.date_release %></td>
+        <td><%= loan_insurance_detail.date_mature %></td>
+    
+          <td>
+            <%= link_to 'View', loan_insurance_detail, class: 'btn btn-secondary btn-sm' %>
+            <%= link_to 'Edit', edit_loan_insurance_detail_path(loan_insurance_detail), class: 'btn btn-secondary btn-sm' %>
+            <%= link_to "Delete", loan_insurance_detail, class: "btn btn-danger btn-sm", method: :delete, data: { "turbo-method": :delete, turbo_confirm: "Are you sure?" } %>
+          </td>
+
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+</div>

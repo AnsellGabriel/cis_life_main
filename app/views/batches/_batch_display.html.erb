@@ -37,8 +37,8 @@
             <%= date_as_month_day_year(@expiry_date)%>
           </div>
         </div>
-        <hr class="mb-3">
         <% if @agreement.plan.acronym == 'PMFC' %>
+        <hr class="mb-3">
           <div class="row">
             <div class="col-sm">
               <h6 class="mb-0">Coop residency:</h6>
@@ -72,10 +72,10 @@
         <hr>
         <div class="row">
           <div class="col-sm-3">
-            <h6 class="mb-0">Status</h6>
+            <h6 class="mb-0">Civil Status</h6>
           </div>
           <div class="col-sm-3 text-secondary">
-            <%= batch.status == 'recent' ? 'New' : batch.status.to_s.titleize %>
+            <%= batch_member.member.civil_status %>
           </div>
 
         </div>

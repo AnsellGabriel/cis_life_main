@@ -7,6 +7,7 @@ class CoopUser < ApplicationRecord
   belongs_to :cooperative
   belongs_to :coop_branch, optional: true
   has_one :user, as: :userable, dependent: :destroy
+  has_one :member_import_tracker, dependent: :destroy
   accepts_nested_attributes_for :user
 
   def to_s

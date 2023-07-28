@@ -64,7 +64,6 @@ gem 'cocoon'
 gem 'sidekiq'
 gem 'sidekiq-scheduler'
 gem 'bullet', group: 'development'
-gem "ffaker"
 gem 'carrierwave', '~> 3.0'
 gem 'humanize'
 
@@ -72,15 +71,16 @@ gem 'humanize'
 
 group :development, :test do
   # See https://guides.rubyonrails.org/debugging_rails_applications.html#debugging-with-the-debug-gem
-  gem "debug", platforms: %i[ mri mingw x64_mingw ]
+  # gem "debug", platforms: %i[ mri mingw x64_mingw ]
   gem 'byebug'
-  gem 'rspec-rails', '~> 6.0', '>= 6.0.3'
+  gem "ffaker"
+  
+
 end
 
 group :development do
   # Use console on exceptions pages [https://github.com/rails/web-console]
   gem "web-console"
-  # gem 'ffaker'
   # gem 'byebug'
 
   # Add speed badges [https://github.com/MiniProfiler/rack-mini-profiler]
@@ -95,6 +95,9 @@ group :test do
   gem "capybara"
   gem "selenium-webdriver"
   gem "webdrivers"
+  gem "factory_bot_rails"
+  gem 'rspec-rails'
+  gem 'coderay'
 end
 
 

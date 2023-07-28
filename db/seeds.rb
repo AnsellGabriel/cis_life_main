@@ -42,10 +42,7 @@
 # Plan.create!(name: 'GYRT-Family Ranking', description: 'Plan 4 description', gyrt_type: 'family', acronym: 'GYRTFR')
 
 
-# Benefit
-# Benefit.create!(name: 'Life', description: 'Benefit 1 description', abbreviation: 'LIFE')
-# Benefit.create!(name: 'Accidental Death & Dismemberment', description: 'Benefit 2 description', abbreviation: 'ADD')
-# Benefit.create!(name: 'Accidental Death & Dismemberment', description: 'Benefit 2 description', abbreviation: 'ADD')
+
 
 
 
@@ -120,7 +117,6 @@
 
 # # # HealthDec.create!(question: "Do you drink alcohol?", active: true, with_details: true, valid_answer: false)
 # # # HealthDecSubquestion.create!(question: "Please state whether beer, wine, or spirits; and your average daily consumption", health_dec_id: 6)
-
 
 
 # # ######################## PMFC seed data
@@ -1245,166 +1241,173 @@
 #     end
 #   end
 # end
+# AgentGroup
+AgentGroup.create!(name: 'Marketing', description: 'Marketing Group')
+# # Agent
+Agent.create!(first_name: 'Rullian', middle_name: 'Postrano', last_name: 'Rong', agent_group_id: 1)
+# Benefit
+Benefit.create!(name: 'Life', description: 'Benefit 1 description', acronym: 'LIFE')
+Benefit.create!(name: 'Accidental Death & Dismemberment', description: 'Benefit 2 description', acronym: 'ADD')
+Benefit.create!(name: 'Burial Cash Assistance', description: 'Benefit 2 description', acronym: 'BCA')
+
+# # # JFC COOP Import
+coop = Cooperative.find_or_initialize_by(name: "Jollibee Foods Corporation Employees Multi-Purpose Cooperative")
+coop.region = "NCR"
+coop.province = 'Metro Manila'
+coop.municipality = 'Pasig City'
+coop.cooperative_type = 'Multi-Purpose'
+coop.street = 'Jollibee Plaza, Ortigas Center'
+coop.email = 'JFC@coop.com'
+coop.save!
+
+CoopBranch.create!(name: "JFC Branch 1", cooperative_id: 1, region: "Region 1", province: "Province 1", municipality: "Municipality 1", barangay: "Barangay 1", street: "Street 1", contact_details: "09123456789")
 
 
-# # # # JFC COOP Import
-# coop = Cooperative.find_or_initialize_by(name: "Jollibee Foods Corporation Employees Multi-Purpose Cooperative")
-# coop.region = "NCR"
-# coop.province = 'Metro Manila'
-# coop.municipality = 'Pasig City'
-# coop.cooperative_type = 'Multi-Purpose'
-# coop.street = 'Jollibee Plaza, Ortigas Center'
-# coop.email = 'JFC@coop.com'
-# coop.save!
+# # # # Coop User
+CoopUser.create!(first_name: 'Cherry', last_name: 'Gonzales', middle_name: 'P', birthdate: FFaker::Time.date, mobile_number: '09948423385', coop_branch_id: 1, cooperative_id: 1)
+User.create!(email: 'jfc@gmail.com', password: 'password', password_confirmation: 'password',  approved: true, userable_id: 1, userable_type: 'CoopUser')
 
-# CoopBranch.create!(name: "JFC Branch 1", cooperative_id: 2, region: "Region 1", province: "Province 1", municipality: "Municipality 1", barangay: "Barangay 1", street: "Street 1", contact_details: "09123456789")
+Plan.create!(name: 'GYRT-Family Ranking', description: 'Plan 4 description', gyrt_type: 'family', acronym: 'GYRTFR')
 
+# # # #Agreement
+agreement = Agreement.create!(plan_id: 1, cooperative_id: 1, agent_id: 1, moa_no: "JFC-0001", contestability: 12, nel: 25_000, nml: 5_000_000, anniversary_type: 'none', transferred: 0, comm_type: "Gross Commission", entry_age_from: 18, entry_age_to: 65, exit_age: 80, coop_sf: 10, agent_sf: 5, minimum_participation: 100)
 
-# # # # # Coop User
-# CoopUser.create!(first_name: 'Cherry', last_name: 'Gonzales', middle_name: 'P', birthdate: FFaker::Time.date, mobile_number: '09948423385', coop_branch_id: 2, cooperative_id: 2)
-# User.create!(email: 'jfc@gmail.com', password: 'password', password_confirmation: 'password',  approved: true, userable_id: 2, userable_type: 'CoopUser')
-
-# Plan.create!(name: 'GYRT-Family Ranking', description: 'Plan 4 description', gyrt_type: 'family', acronym: 'GYRTFR')
-
-# # # # #Agreement
-# agreement = Agreement.create!(plan_id: 2, cooperative_id: 2, agent_id: 1, moa_no: "JFC-0001", contestability: 12, nel: 25000, nml: 5000000, anniversary_type: 'none', transferred: 0, comm_type: "Gross Commission", entry_age_from: 18, entry_age_to: 65, exit_age: 80, coop_sf: 12.5, agent_sf: 10, minimum_participation: 100)
-
-# # # # # for Principal (name, insured_type)
-# jfc_agreement = Agreement.find_by(id: 2)
-# [
-#   ['Option 1', 9
-#   ],
-#   ['Option 2', 9
-#   ],
-#   ['Option 3', 8
-#   ],
-#   ['Option 4', 7
-#   ],
-#   ['Option 5', 6
-#   ]
-# ].each do |ab|
-#   agree_ben = AgreementBenefit.find_or_initialize_by(agreement_id: jfc_agreement.id, name: ab[0])
-#   agree_ben.min_age = jfc_agreement.entry_age_from
-#   agree_ben.max_age = jfc_agreement.entry_age_to
-#   agree_ben.exit_age = jfc_agreement.exit_age
-#   agree_ben.insured_type = ab[1]
-#   puts "#{ab[0]} - Done!" if agree_ben.save!
+# # # # for Principal (name, insured_type)
+jfc_agreement = Agreement.find_by(id: 1)
+[
+  ['Option 1', 9
+  ],
+  ['Option 2', 9
+  ],
+  ['Option 3', 8
+  ],
+  ['Option 4', 7
+  ],
+  ['Option 5', 6
+  ]
+].each do |ab|
+  agree_ben = AgreementBenefit.find_or_initialize_by(agreement_id: jfc_agreement.id, name: ab[0])
+  agree_ben.min_age = jfc_agreement.entry_age_from
+  agree_ben.max_age = jfc_agreement.entry_age_to
+  agree_ben.exit_age = jfc_agreement.exit_age
+  agree_ben.insured_type = ab[1]
+  puts "#{ab[0]} - Done!" if agree_ben.save!
   
-# end
+end
 
-# # # #Product Benefit
-# [
-# #   Option 1
-#   [6, 'LI', 50000, 155],
-#   [6, 'ADD', 50000, 155],
-#   [6, 'BCA', 5000, 25],
-#   #Option 2
-#   [7, 'LI', 200000, 615],
-#   [7, 'ADD', 200000, 615],
-#   [7, 'BCA', 20000, 100],
-#   #Option 3
-#   [8, 'LI', 400000, 1225],
-#   [8, 'ADD', 400000, 1225],
-#   [8, 'BCA', 20000, 100],
-#   #Option 4
-#   [9, 'LI', 1000000, 3967.5],
-#   [9, 'ADD', 1000000, 3967.5],
-#   [9, 'BCA', 20000, 100],
-#   #Option 5
-#   [10, 'LI', 2000000, 8422.5],
-#   [10, 'ADD', 2000000, 8422.5],
-#   [10, 'BCA', 20000, 100]
-# ].each do |option|
-#   benefit = Benefit.find_by(acronym: option[1])
-#   prod_ben = ProductBenefit.find_or_initialize_by(agreement_benefit_id: option[0], benefit_id: benefit.id)
-#   prod_ben.coverage_amount = option[2]
-#   prod_ben.premium = option[3]
-#   puts "#{prod_ben.agreement_benefit.name}(#{prod_ben.benefit.name}) - Done" if prod_ben.save!
-# end
+# # #Product Benefit
+[
+#   Option 1
+  [1, 'LIFE', 50000, 155],
+  [1, 'ADD', 50000, 155],
+  [1, 'BCA', 5000, 25],
+  #Option 2
+  [2, 'LIFE', 200000, 615],
+  [2, 'ADD', 200000, 615],
+  [2, 'BCA', 20000, 100],
+  #Option 3
+  [3, 'LIFE', 400000, 1225],
+  [3, 'ADD', 400000, 1225],
+  [3, 'BCA', 20000, 100],
+  #Option 4
+  [4, 'LIFE', 1000000, 3467.5],
+  [4, 'ADD', 1000000, 3467.5],
+  [4, 'BCA', 20000, 100],
+  #Option 5
+  [5, 'LIFE', 2000000, 8422.5],
+  [5, 'ADD', 2000000, 8422.5],
+  [5, 'BCA', 20000, 100]
+].each do |option|
+  benefit = Benefit.find_by(acronym: option[1])
+  prod_ben = ProductBenefit.find_or_initialize_by(agreement_benefit_id: option[0], benefit_id: benefit.id)
+  prod_ben.coverage_amount = option[2]
+  prod_ben.premium = option[3]
+  puts "#{prod_ben.agreement_benefit.name}(#{prod_ben.benefit.name}) - Done" if prod_ben.save!
+end
 
 
-# # # # JFC Dependents
+# # # JFC Dependents
 
-# agreement = Agreement.find_by(id: 2)
+agreement = Agreement.find_by(id: 1)
 
-# [
-#   ['Dependent-Spouse 1', 2, 18, 65], #23
-#   ['Dependent-Spouse 2', 2, 18, 65], #27
-#   ['Dependent-Spouse 3', 2, 18, 65], #28
-#   ['Dependent-Parent 1', 3, 18, 65], #24
-#   ['Dependent-Parent 2', 3, 18, 65], #29
-#   ['Dependent-Parent 3', 3, 18, 65], #30
-#   ['Dependent-Child 1', 4, 3, 21], #25
-#   ['Dependent-Child 2', 4, 3, 21], #31
-#   ['Dependent-Child 3', 4, 3, 21], #32
-#   ['Dependent-Sibling 1', 5, 3, 21], #26
-#   ['Dependent-Sibling 2', 5, 3, 21], #33
-#   ['Dependent-Sibling 3', 5, 3, 21] #34
-# ].each do |dep|
-#   agree_ben = AgreementBenefit.find_or_initialize_by(agreement_id: agreement.id, name: dep[0])
-#   agree_ben.min_age = dep[2]
-#   agree_ben.max_age = dep[3]
-#   agree_ben.exit_age = dep[3]
-#   agree_ben.insured_type = dep[1]
-#   puts "#{dep[0]} - Done!" if agree_ben.save!
-# end
+[
+  ['Dependent-Spouse 1', 2, 18, 65], #23
+  ['Dependent-Spouse 2', 2, 18, 65], #27
+  ['Dependent-Spouse 3', 2, 18, 65], #28
+  ['Dependent-Parent 1', 3, 18, 65], #24
+  ['Dependent-Parent 2', 3, 18, 65], #29
+  ['Dependent-Parent 3', 3, 18, 65], #30
+  ['Dependent-Child 1', 4, 3, 21], #25
+  ['Dependent-Child 2', 4, 3, 21], #31
+  ['Dependent-Child 3', 4, 3, 21], #32
+  ['Dependent-Sibling 1', 5, 3, 21], #26
+  ['Dependent-Sibling 2', 5, 3, 21], #33
+  ['Dependent-Sibling 3', 5, 3, 21] #34
+].each do |dep|
+  agree_ben = AgreementBenefit.find_or_initialize_by(agreement_id: agreement.id, name: dep[0])
+  agree_ben.min_age = dep[2]
+  agree_ben.max_age = dep[3]
+  agree_ben.exit_age = dep[3]
+  agree_ben.insured_type = dep[1]
+  puts "#{dep[0]} - Done!" if agree_ben.save!
+end
 
-# [
-#   #spouse option 1
-#   [11, "LI", 50000, 240],
-#   [11, "ADD", 50000, 240],
-#   [11, "BCA", 5000, 25],
-#   #spouse option 2
-#   [12, "LI", 200000, 955],
-#   [12, "ADD", 200000, 955],
-#   [12, "BCA", 20000, 100],
-#   #spouse option 3
-#   [13, "LI", 400000, 1875],
-#   [13, "ADD", 400000, 1875],
-#   [13, "BCA", 20000, 100],
-#   #parent option 1
-#   [14, "LI", 50000, 240],
-#   [14, "ADD", 50000, 240],
-#   [14, "BCA", 5000, 25],
-#   #parent option 2
-#   [15, "LI", 200000, 955],
-#   [15, "ADD", 200000, 955],
-#   [15, "BCA", 20000, 100],
-#   #parent option 3
-#   [16, "LI", 400000, 1875],
-#   [16, "ADD", 400000, 1875],
-#   [16, "BCA", 20000, 100],
-#   #child option 1
-#   [17, "LI", 50000, 60],
-#   [17, "ADD", 50000, 60],
-#   [17, "BCA", 5000, 25],
-#   #child option 2
-#   [18, "LI", 200000, 235],
-#   [18, "ADD", 200000, 235],
-#   [18, "BCA", 20000, 100],
-#   #child option 3
-#   [19, "LI", 400000, 497.5],
-#   [19, "ADD", 400000, 497.5],
-#   [19, "BCA", 20000, 100],
-#   #sibling option 1
-#   [20, "LI", 50000, 60],
-#   [20, "ADD", 50000, 60],
-#   [20, "BCA", 5000, 25],
-#   #sibling option 2
-#   [21, "LI", 200000, 235],
-#   [21, "ADD", 200000, 235],
-#   [21, "BCA", 20000, 100],
-#   #sibling option 3
-#   [22, "LI", 400000, 497.5],
-#   [22, "ADD", 400000, 497.5],
-#   [22, "BCA", 20000, 100],
-# ].each do |option|
-#   benefit = Benefit.find_by(acronym: option[1])
-#   prod_ben = ProductBenefit.find_or_initialize_by(agreement_benefit_id: option[0], benefit_id: benefit.id)
-#   prod_ben.coverage_amount = option[2]
-#   prod_ben.premium = option[3]
-#   puts "#{prod_ben.agreement_benefit.name}(#{prod_ben.benefit.name}) - Done" if prod_ben.save!
-# end
+[
+  #spouse option 1
+  [6, "LIFE", 50000, 240],
+  [6, "ADD", 50000, 240],
+  [6, "BCA", 5000, 25],
+  #spouse option 2
+  [7, "LIFE", 200000, 955],
+  [7, "ADD", 200000, 955],
+  [7, "BCA", 20000, 100],
+  #spouse option 3
+  [8, "LIFE", 400000, 1875],
+  [8, "ADD", 400000, 1875],
+  [8, "BCA", 20000, 100],
+  #parent option 1
+  [9, "LIFE", 50000, 240],
+  [9, "ADD", 50000, 240],
+  [9, "BCA", 5000, 25],
+  #parent option 2
+  [10, "LIFE", 200000, 955],
+  [10, "ADD", 200000, 955],
+  [10, "BCA", 20000, 100],
+  #parent option 3
+  [11, "LIFE", 400000, 1875],
+  [11, "ADD", 400000, 1875],
+  [11, "BCA", 20000, 100],
+  #child option 1
+  [12, "LIFE", 50000, 60],
+  [12, "ADD", 50000, 60],
+  [12, "BCA", 5000, 25],
+  #child option 2
+  [13, "LIFE", 200000, 235],
+  [13, "ADD", 200000, 235],
+  [13, "BCA", 20000, 100],
+  #child option 3
+  [14, "LIFE", 400000, 497.5],
+  [14, "ADD", 400000, 497.5],
+  [14, "BCA", 20000, 100],
+  #sibling option 1
+  [15, "LIFE", 50000, 60],
+  [15, "ADD", 50000, 60],
+  [15, "BCA", 5000, 25],
+  #sibling option 2
+  [16, "LIFE", 200000, 235],
+  [16, "ADD", 200000, 235],
+  [16, "BCA", 20000, 100],
+  #sibling option 3
+  [17, "LIFE", 400000, 497.5],
+  [17, "ADD", 400000, 497.5],
+  [17, "BCA", 20000, 100],
+].each do |option|
+  benefit = Benefit.find_by(acronym: option[1])
+  prod_ben = ProductBenefit.find_or_initialize_by(agreement_benefit_id: option[0], benefit_id: benefit.id)
+  prod_ben.coverage_amount = option[2]
+  prod_ben.premium = option[3]
+  puts "#{prod_ben.agreement_benefit.name}(#{prod_ben.benefit.name}) - Done" if prod_ben.save!
+end
 
 # Department.create!(name: 'Underwriting')
 # # # # # Coop User
