@@ -16,6 +16,7 @@ class BatchHealthDecsController < InheritedResources::Base
 
   def create
     @member = @batch.member_details
+    @group_remit = params[:group_remit_id]
     @batch_health_dec = @batch
     @questionaire = HealthDec.where(active: true)
     # Retrieve the form data from params
@@ -69,15 +70,13 @@ class BatchHealthDecsController < InheritedResources::Base
         end
 
         ActiveRecord::Base.connection.commit_db_transaction
-
         
-
-        redirect_to health_dec_group_remit_batch_path(@batch.group_remit, @batch), notice: "Health declaration saved!"
+        redirect_to health_dec_group_remit_batch_path(@group_remit, @batch), notice: "Health declaration saved!"
         
       rescue ActiveRecord::Rollback => e
         flash[:error] = e.message
         respond_to do |format|
-          format.html { redirect_to new_group_remit_batch_health_declaration_path(@batch.group_remit, @batch) }
+          format.html { redirect_to new_group_remit_batch_health_declaration_path(@group_remit, @batch) }
           format.turbo_stream { render turbo_stream: turbo_stream.update('error_notif', partial: 'layouts/notification') }
         end
     

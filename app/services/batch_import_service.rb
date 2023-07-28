@@ -42,18 +42,53 @@ class BatchImportService
     principal_spreadsheet.drop(1).each do |row|
       batch_hash = extract_batch_data(row)
       member = find_or_initialize_member(batch_hash)
+    
+      if @gyrt_ranking_plans.include?(@agreement.plan.acronym)
+        unless row["Rank"].present?
+          progress_counter += 1
+          update_progress(total_members, progress_counter)
+          create_denied_member(member, 'Rank not present')
+          next
+        end
+      end
+
+      # if @agreement.plan.acronym == 'PMFC'
+      #   unless row["Terms"].present?
+      #     create_denied_member(member, 'Terms not present')
+      #     next
+      #   end
+      # end
+      
       age_min_max = age_min_max_by_insured_type(agreement_benefits, batch_hash[:rank])
-    
-      check_rank_and_age(member, age_min_max)
-    
+
+      unless member.persisted?
+        create_denied_member(member, 'Unenrolled member.')
+        progress_counter += 1
+        update_progress(total_members, progress_counter)
+        next
+      end
+
+      if age_not_within_range?(member, age_min_max, @group_remit.effectivity_date)
+        create_denied_member(member, 'Age not within agreement\'s age range', @group_remit.effectivity_date)
+        progress_counter += 1
+        update_progress(total_members, progress_counter)
+        next
+      end
+      
       duplicate_member = find_duplicate_member(member)
     
       if duplicate_member
         # add_duplicate_member(member)
-        create_and_update_progress(member, 'Member already exists in the batch.')
+        create_denied_member(member, 'Member already exist in the batch.')
+        progress_counter += 1
+        update_progress(total_members, progress_counter)
+        next
       else
-        create_and_update_progress(member)
+        @added_members_counter += create_batch(member, batch_hash)
       end
+
+      progress_counter += 1
+      update_progress(total_members, progress_counter)
     end
 
     dependent_spreadsheet.drop(1).each do |row|
@@ -101,13 +136,15 @@ class BatchImportService
       )
       
 
-      if dependent_hash[:dependent].to_s.strip.upcase == 'TRUE' && @agreement.plan.gyrt_type == 'family'
+      if dependent_hash[:dependent].to_s.strip.upcase == 'TRUE' && @agreement.plan.gyrt_type == 'family' && batch.agreement_benefit.with_dependent?
         batch_dependent = batch.batch_dependents.find_or_initialize_by(
           member_dependent_id: dependent.id,
         )
-        insured_type = batch_dependent.insured_type(dependent[:relationship])
+        insured_type = batch_dependent.insured_type(dependent.relationship)
+        dependent_agreement_benefits = @agreement.agreement_benefits.where("name LIKE ?", "%#{batch.agreement_benefit.name}%").find_by(insured_type: insured_type)
         term_insurance = @agreement.plan.acronym == 'PMFC' ? true : false
-        batch_dependent.set_premium_and_service_fees(insured_type, @group_remit, term_insurance)
+
+        batch_dependent.set_premium_and_service_fees(dependent_agreement_benefits, @group_remit, term_insurance)
         batch_dependent.save
       end
 
@@ -230,33 +267,5 @@ class BatchImportService
     end
   
     nil
-  end
-
-  def create_and_update_progress(member, error_message = nil)
-    if error_message
-      create_denied_member(member, error_message)
-    else
-      @added_members_counter += create_batch(member, batch_hash)
-    end
-  
-    progress_counter += 1
-    update_progress(total_members, progress_counter)
-  end
-  
-  def check_rank_and_age(member, age_min_max)
-    if @gyrt_ranking_plans.include?(@agreement.plan.acronym) && !row["Rank"].present?
-      create_and_update_progress(member, 'Rank not present')
-      next
-    end
-  
-    unless member.persisted?
-      create_and_update_progress(member, 'Unenrolled member.')
-      next
-    end
-  
-    if age_not_within_range?(member, age_min_max, @group_remit.effectivity_date)
-      create_and_update_progress(member, 'Age not within agreement\'s age range', @group_remit.effectivity_date)
-      next
-    end
   end
 end

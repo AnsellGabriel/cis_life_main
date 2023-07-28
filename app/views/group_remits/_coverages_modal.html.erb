@@ -7,7 +7,7 @@
       </div>
       <div class="modal-body">
         <div class="accordion" id="accordionExample">
-          <% @agreement.agreement_benefits.includes({product_benefits: :benefit}).each do |ab| %>
+          <% @agreement.agreement_benefits.where.not(insured_type: 2..5).includes({product_benefits: :benefit}).each do |ab| %>
             <div class="accordion-item">
               <h2 class="accordion-header" id="heading<%= dom_id(ab) %>">
                 <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapse<%= dom_id(ab) %>" aria-expanded="true" aria-controls="collapse<%= dom_id(ab) %>">
@@ -16,30 +16,12 @@
               </h2>
               <div id="collapse<%= dom_id(ab) %>" class="accordion-collapse collapse" aria-labelledby="heading<%= dom_id(ab) %>" data-bs-parent="#accordionExample">
                 <div class="accordion-body">
-                  <table class="table table-hover">
-                    <thead>
-                      <tr>
-                        <th scope="col" class="small">Benefit</th>
-                        <th scope="col" class="small">Coverage Amount</th>
-                        <th scope="col" class="small">Premium</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      <% ab.product_benefits.each do |product| %>
-                        <tr>
-                          <td>
-                            <%= content_tag :span, "#{product.benefit.name}", class: 'sm-secondary-text text-center', style: "width: 100px;"%>
-                          </td>
-                          <td>
-                            <%= content_tag :span, "#{number_to_currency(product.coverage_amount, unit: '₱', precision: 2)}", class: 'sm-secondary-text text-center', style: "width: 150px;"%>
-                          </td>
-                          <td>
-                            <%= content_tag :span, "#{number_to_currency(product.premium, unit: '₱', precision: 2)}", class: 'sm-secondary-text text-center', style: "width: 100px;"%>
-                          </td>
-                        </tr>
-                      <% end %>
-                    </tbody>
-                  </table>
+                  <caption class="lead">Principal</caption>
+                  <%= render 'benefits_table', ab: ab %>
+                  <% @agreement.agreement_benefits.where("name LIKE ?", "%#{ab.name}%").drop(1).each do |db| %>
+                    <caption class="lead"><%= db.name %></caption>
+                    <%= render 'benefits_table', ab: db %>
+                  <% end %>
                 </div>
               </div>
             </div>

@@ -225,6 +225,7 @@
         </thead>
         <tbody>
           <%# group_remit.batches.each do |batch| %>
+          <% terms = process_coverage.group_remit.terms %>
           <% unless @filtered_batches.count == 0 %>
             <%#= form_tag approve_selected_batches_path, method: :patch do %>
             <% @filtered_batches.each do |batch| %>
@@ -255,7 +256,7 @@
                   <%= insured_type(batch.agreement_benefit.insured_type_before_type_cast, batch.agreement_benefit.name) %>
                 </td>
                 <td>
-                  <% terms = (batch.group_remits.find_by(type: "Remittance").expiry_date.year * 12 + batch.group_remits.find_by(type: "Remittance").expiry_date.month) - (effect.year * 12 + effect.month) %>
+                  <%# terms = (batch.group_remits.find_by(type: "Remittance").expiry_date.year * 12 + batch.group_remits.find_by(type: "Remittance").expiry_date.month) - (effect.year * 12 + effect.month) %>
                   
                   <%= process_dates("Eff", month_day_year(effect)) %> <br>
                   <%= process_dates("Exp", month_day_year(expire)) %> <br>
