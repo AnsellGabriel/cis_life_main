@@ -27,10 +27,14 @@ class BatchDependentsController < InheritedResources::Base
     terms = group_remit.terms
     agreement = group_remit.agreement
     term_insurance = agreement.plan.acronym == 'PMFC' ? true : false
+    
     @batch_dependent = @batch.batch_dependents.new(batch_dependent_params)
     relationship = @batch_dependent.member_dependent.relationship
     insured_type = @batch_dependent.insured_type(relationship)
-    @batch_dependent.set_premium_and_service_fees(insured_type, group_remit, term_insurance) # model/concerns/calculate.rb
+
+    dependent_agreement_benefits = agreement.agreement_benefits.where("name LIKE ?", "%#{@batch.agreement_benefit.name}%").find_by(insured_type: insured_type)
+
+    @batch_dependent.set_premium_and_service_fees(dependent_agreement_benefits, group_remit, term_insurance) # model/concerns/calculate.rb
 
     respond_to do |format|
       if @batch_dependent.save
@@ -51,7 +55,7 @@ class BatchDependentsController < InheritedResources::Base
 
   private
     def batch_dependent_params
-      params.require(:batch_dependent).permit(:batch_id, :premium, :member_dependent_id, :is_beneficiary, :is_dependent)
+      params.require(:batch_dependent).permit(:member_dependent_id)
     end
 
     def set_group_remit_batch
