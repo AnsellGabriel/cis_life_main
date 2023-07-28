@@ -12,6 +12,7 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.2/font/bootstrap-icons.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
     <%= AssetRam::Helper.cache { javascript_importmap_tags } %>
+    <%= javascript_include_tag "jquery" %>
   </head>
   <body class="bg_gradient">
     <%= render 'layouts/partials/navi' %>
