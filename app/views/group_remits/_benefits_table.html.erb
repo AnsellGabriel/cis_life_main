@@ -1,0 +1,32 @@
+<table class="table table-hover">
+  <thead>
+    <tr>
+      <th scope="col" class="small">Benefit</th>
+      <th scope="col" class="small">Coverage</th>
+      <th scope="col" class="small">Premium</th>
+    </tr>
+  </thead>
+  <tbody>
+    <% ab.product_benefits.each do |product| %>
+      <tr>
+        <td>
+          <%= content_tag :span, "#{product.benefit.name}", class: 'sm-secondary-text text-center', style: "width: 100px;"%>
+        </td>
+        <td>
+          <%= content_tag :span, "#{number_to_currency(product.coverage_amount, unit: '₱', precision: 2)}", class: 'sm-secondary-text text-center', style: "width: 150px;"%>
+        </td>
+        <td>
+          <%= content_tag :span, "#{number_to_currency(product.premium, unit: '₱', precision: 2)}", class: 'sm-secondary-text text-center', style: "width: 100px;"%>
+        </td>
+      </tr>
+    <% end %>
+    <tr>
+      <td>
+        <%= content_tag :span, "Total Premium", class: 'sm-secondary-text text-center', style: "width: 100px;"%>
+      </td>
+      <td class="text-end" >
+        <%= content_tag :span, "#{number_to_currency(ab.product_benefits.sum(:premium), unit: '₱', precision: 2)}", class: 'sm-secondary-text text-center', style: "width: 100px;"%>
+      </td>
+    </tr>
+  </tbody>
+</table>

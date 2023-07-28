@@ -1,10 +1,14 @@
 class AgreementBenefit < ApplicationRecord
-	validates_presence_of :name, :min_age, :max_age, :insured_type
+	validates_presence_of :name, :min_age, :max_age, :insured_type, :with_dependent
 
   has_many :batches
   has_many :batch_dependents
   has_many :product_benefits
   has_many :prcoess_claims
+  belongs_to :agreement, optional: true
+  belongs_to :plan, optional: true
+  belongs_to :proposal, optional: true
+#   belongs_to :option, optional: true
 
 #   belongs_to :agreement
 #   belongs_to :proposal
@@ -23,10 +27,7 @@ class AgreementBenefit < ApplicationRecord
     ranking_rank_and_file: 9
   }
   
-  belongs_to :agreement, optional: true
-  belongs_to :plan, optional: true
-  belongs_to :proposal, optional: true
-#   belongs_to :option, optional: true
+  
 
-  InsuredType = ["Principal", "Dependent"]
+  # InsuredType = ["Principal", "Dependent"]
 end

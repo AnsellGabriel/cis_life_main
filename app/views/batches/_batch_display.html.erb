@@ -1,3 +1,5 @@
+<% batch_presenter = BatchPresenter.new(batch) %>
+
 <div class="row <%= flex_justify_align('center') %>" >
   <div class="col-md-10" style="margin: auto;">
     <div class="card mb-3">
@@ -21,6 +23,23 @@
           <div class="col-sm-2 text-secondary">
             <%= "#{batch_member.member.last_name}, #{batch_member.member.suffix}" %>
           </div>
+        </div>
+        <hr>
+        <div class="row">
+          <div class="col-sm-3">
+            <h6 class="mb-0">Civil Status</h6>
+          </div>
+          <div class="col-sm-3 text-secondary">
+            <%= batch_member.member.civil_status %>
+          </div>
+          <% if @agreement.plan.gyrt_type == 'family' %>
+            <div class="col-sm-3">
+              <h6 class="mb-0">Rank</h6>
+            </div>
+            <div class="col-sm-3 text-secondary">
+              <%= batch_presenter.capitalized_insured_type %>
+            </div>
+          <% end %>
         </div>
         <hr>
         <div class="row">
@@ -69,23 +88,13 @@
             <%= peso_currency(batch.coop_sf_amount) %>
           </div>
         </div>
-        <hr>
-        <div class="row">
-          <div class="col-sm-3">
-            <h6 class="mb-0">Civil Status</h6>
-          </div>
-          <div class="col-sm-3 text-secondary">
-            <%= batch_member.member.civil_status %>
-          </div>
-
-        </div>
       </div>
     </div>
   </div>
 </div>
 
 <div class="row <%= flex_justify_align('center') %>">
-  <% if @agreement.plan.gyrt_type.present? && @agreement.plan.gyrt_type == 'basic' %>
+  <% if (@agreement.plan.gyrt_type.present? && @agreement.plan.gyrt_type == 'basic') || !@batch.agreement_benefit.with_dependent? %>
     <div class="col-md-10" style="margin: auto;">
   <% else %>
     <div class="col-md-4" style="margin-left: auto;">
@@ -93,7 +102,7 @@
     <div class="card mb-3">
       <div class="card-body">
         <div class="row"> 
-          <% if @agreement.plan.gyrt_type.present? && @agreement.plan.gyrt_type == 'basic' %>
+          <% if (@agreement.plan.gyrt_type.present? && @agreement.plan.gyrt_type == 'basic') || !@batch.agreement_benefit.with_dependent? %>
             <div class="col-sm-12 <%= flex_justify_align('', 'center') %> gap-2">
           <% else %>
             <div class="col-sm-12 <%= flex_justify_align('center', 'center') %> gap-2">
@@ -180,7 +189,7 @@
     </div>
   </div>
 
-  <% if @agreement.plan.gyrt_type.present? && @agreement.plan.gyrt_type == 'family' %>
+  <% if @agreement.plan.gyrt_type.present? && @agreement.plan.gyrt_type == 'family' && @batch.agreement_benefit.with_dependent? %>
     <div class="col-md-6" style="margin-right: auto;">
       <div class="card mb-3">
         <div class="card-body">
