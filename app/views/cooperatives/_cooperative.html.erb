@@ -1,32 +1,31 @@
 <div id="<%= dom_id cooperative %>">
-  <p>
-    <strong>Name:</strong>
-    <%= cooperative.name %>
-  </p>
-
-  <p>
-    <strong>Region:</strong>
-    <%= cooperative.region %>
-  </p>
-
-  <p>
-    <strong>Province:</strong>
-    <%= cooperative.province %>
-  </p>
-
-  <p>
-    <strong>Municipality:</strong>
-    <%= cooperative.municipality %>
-  </p>
-
-  <p>
-    <strong>Barangay:</strong>
-    <%= cooperative.barangay %>
-  </p>
-
-  <p>
-    <strong>Contact details:</strong>
-    <%= cooperative.contact_details %>
-  </p>
-
+  <div class="card mb-3">
+    <div class="card-body">
+      <h4 class="text-primary">
+        <%= cooperative.name %>
+      </h4>
+      <p>
+        <strong>Address:</strong>
+        <%= cooperative.get_address %>
+      </p>
+      <strong>Contact details:</strong>
+      <%= cooperative.contact_details %> | <%= cooperative.email %>
+    </p>
+    <p>
+      <strong> TIN: </strong> <%= cooperative.tin %> | <strong> Registration no.: </strong> <%= cooperative.registration_no %>
+    </p>
+  </div>
+  <div class="card-footer">
+    <%= link_to "Edit", edit_cooperative_path(cooperative), class: "btn btn-secondary btn-sm" %>
+    <%= link_to "Back", cooperatives_path, class: "btn btn-secondary btn-sm" %>
+    <%#= link_to "Delete", cooperative, class: "btn btn-danger btn-sm", method: :delete, data: { "turbo-method": :delete, turbo_confirm: "Are you sure?" } %>
+  </div>
+</div>
+<div class="card">
+  <h4 class="card-header">Branches</h4>
+  <div class="card-body">
+    
+    <%= render 'coop_branches/show_coop_branch', c: cooperative %>
+  </div>
+</div>
 </div>

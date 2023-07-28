@@ -1,5 +1,4 @@
-<h1>New product benefit</h1>
-
-<%= render "form", product_benefit: @product_benefit %>
-
-<br>
+<%= render "remote_modal", title: "New benefit" do %>
+  <%#= render "form", product_benefit: @product_benefit %>
+  <%= render "form", url: product_benefits_path(v: @agreement_benefit), meth: 'post' %>
+<% end %>

@@ -16,19 +16,31 @@
       <%= f.input :nml, wrapper_html: { class: "col-md-2" } %>
     </div>
     <div class="row">
-      <%= f.input :entry_age_from, wrapper_html: { class: "col-md-2"} %>
-      <%= f.input :entry_age_to, wrapper_html: { class: "col-md-2"} %>
-      <%= f.input :exit_age, wrapper_html: { class: "col-md-2"} %>
+      <%= f.input :claims_fund, wrapper_html: { class: "col-md-2" } %>
+      <%= f.input :claims_fund_amount, wrapper_html: { class: "col-md-3" } %>
     </div>
     <div class="row">
-      <%= f.input :claims_fund, wrapper_html: { class: "col-md-3" } %>
-      <%= f.input :transferred, wrapper_html: { class: "col-md-3" } %>
+      <%= f.input :transferred, wrapper_html: { class: "col-md-2" } %>
+      <%#= f.input :transferred_date, wrapper_html: { class: "col-md-3" } %>
+      <%= f.input :transferred_date, as: :string, wrapper_html: { class: "col-3" }, input_html: { data: { controller: "flatpickr",
+          flatpickr_min_date: Time.zone.now,
+          flatpickr_next_arrow: "Next",
+          flatpickr_prev_arrow: "Prev" } } %>
+      <%= f.input :previous_provider, wrapper_html: { class: "col-md-5" } %>
     </div>
-    <div class="row">
-      <%= f.input :transferred_date, wrapper_html: { class: "col-md-3" } %>
-      <%= f.input :previous_provider, wrapper_html: { class: "col-md-3" } %>
+    <%#= f.association :proposal, input_html: { data: { controller: "ts--select" } }  %>
+    <hr>
+    <h4 class="text-primary">Agreement Benefits</h4>
+    <div class="agreement_benefits">
+      <div class="row">
+        <%= f.fields_for :agreement_benefits do |ab| %>
+          <%# <div class="col-md-6"> %>
+            <%= render 'agreement_benefit_fields', f: ab %>
+          <%# </div> %>
+        <% end %>
+      </div>
     </div>
-    <%= f.association :proposal, input_html: { data: { controller: "ts--select" } }  %>
+    <%= link_to_add_association "Add benefit", f, :agreement_benefits, data: {association_insertion_node: '.agreement_benefits', association_insertion_method: :append}, class: "btn btn-primary" %>
   </div>
   <br>
   <div class="form-actions text-end">

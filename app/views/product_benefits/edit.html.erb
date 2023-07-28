@@ -1,5 +1,5 @@
-<h1>Editing product benefit</h1>
-
-<%= render "form", product_benefit: @product_benefit %>
-
-<br>
+<%= render "remote_modal", title: "Edit benefit" do %>
+<%#= render "form", coop_branch: @coop_branch %>
+<%= render "form", url: product_benefit_path(@product_benefit), meth: 'patch' %>
+<% end %>
+  

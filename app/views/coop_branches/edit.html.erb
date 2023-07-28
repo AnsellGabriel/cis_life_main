@@ -1,5 +1,7 @@
-<h1>Editing coop branch</h1>
 
-<%= render "form", coop_branch: @coop_branch %>
+<%= render "remote_modal", title: "Edit branch" do %>
 
-<br>
+<%#= render "form", coop_branch: @coop_branch %>
+<%= render "form", url: coop_branch_path(@coop_branch), meth: 'patch' %>
+<% end %>
+  

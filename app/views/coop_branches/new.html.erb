@@ -1,5 +1,6 @@
-<h1>New coop branch</h1>
+<%= render "remote_modal", title: "New branch" do %>
 
-<%= render "form", coop_branch: @coop_branch %>
+  <%#= render "form", coop_branch: @coop_branch %>
+  <%= render "form", url: coop_branches_path(v: @cooperative), meth: 'post' %>
+<% end %>
 
-<br>

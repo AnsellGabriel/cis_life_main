@@ -1,20 +1,20 @@
-
-<%= simple_form_for(@product_benefit) do |f| %>
-  <%= f.error_notification %>
-  <%= f.error_notification message: f.object.errors[:base].to_sentence if f.object.errors[:base].present? %>
-
-  <div class="form-inputs mb-3">
-    <%= f.association :benefit %>
-    <%= f.association :agreement_benefit %>
-    <%= f.input :coverage_amount %>
-    <%= f.input :premium %>
-    <%= f.input :duration, placeholder: "In months, ex: 0,3,6,9" %>
-    <%= f.input :residency_floor %>
-    <%= f.input :residency_ceiling %>
-  </div>
-
-  <div class="form-actions text-end">
-    <%= link_to "Back", product_benefits_path, class: 'btn btn-secondary' %>
-    <%= f.button :submit, class: 'btn-success' %>
-  </div>
-<% end %>
+<%= simple_form_for(@product_benefit, url: url, method: meth) do |f| %>
+  <%#= simple_form_for(@product_benefit) do |f| %>
+    <%= f.error_notification %>
+    <%= f.error_notification message: f.object.errors[:base].to_sentence if f.object.errors[:base].present? %>
+    <div class="form-inputs mb-3">
+      <%= f.association :benefit %>
+      <%#= f.association :agreement_benefit %>
+      <div class="row">
+        <%= f.input :coverage_amount, wrapper_html: { class: "col-md-8" } %>
+        <%= f.input :premium, wrapper_html: { class: "col-md-4" } %>
+        <%= f.input :duration, placeholder: "In months, ex: 0,3,6,9", wrapper_html: { class: "col-md-4" } %>
+        <%= f.input :residency_floor, wrapper_html: { class: "col-md-4" } %>
+        <%= f.input :residency_ceiling, wrapper_html: { class: "col-md-4" } %>
+      </div>
+    </div>
+    <div class="form-actions text-end">
+      <%= link_to "Back", :back, class: 'btn btn-secondary' %>
+      <%= f.button :submit, class: 'btn-success' %>
+    </div>
+  <% end %>

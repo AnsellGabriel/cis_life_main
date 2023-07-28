@@ -1,0 +1,40 @@
+
+<div class="table-responsive">
+  <table class="table table-hover">
+    <thead>
+      <tr>
+        <th>Benefit</th>
+        <th class="text-end">Coverage</th>
+        <th class="text-end">Premium</th>
+        <th><div class="text-center">
+  <%= link_to new_product_benefit_path(v: ab), class: 'btn btn-sm btn-primary', data: { turbo_frame: "remote_modal" } do %>
+    <i class="bi bi-plus-square"></i> Add Benefit
+  <% end %>
+</div></th>
+      </tr>
+    </thead>
+    <tbody>
+      <% ab.product_benefits.order(coverage_amount: :desc).each do |product_benefit| %>
+        <tr>
+          <td><small><%= product_benefit.benefit %></small></td>
+          
+            <td class="text-end"><%= to_curr(product_benefit.coverage_amount) %></td>
+            <td class="text-end"><%= to_curr(product_benefit.premium) %></td>
+
+          <td class="text-center">
+            <%#= link_to 'View', product_benefit, class: 'btn btn-secondary btn-sm' %>
+            <%= link_to '<i class="bi bi-pencil-square"></i>'.html_safe, edit_product_benefit_path(product_benefit), class: 'btn btn-secondary btn-sm', data: { turbo_frame: "remote_modal" } %>
+            <%#= link_to '<i class="bi bi-trash3"></i>'.html_safe, product_benefit, method: :delete, data: { confirm: 'Are you sure?' }, class: 'btn btn-danger btn-sm' %>
+            <%= link_to '<i class="bi bi-trash3"></i>'.html_safe, product_benefit, data: { turbo_method: :delete, turbo_confirm: 'Are you sure?' }, class: 'btn btn-danger btn-sm' %>
+          </td>
+        </tr>
+      <% end %>
+      <tr class="table-secondary">
+        <td><small>Total Premium</small></td>
+        <td></td>
+        <td class="text-primary text-end"><%= to_curr(ab.product_benefits.sum(:premium)) %></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+</div>
