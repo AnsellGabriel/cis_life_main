@@ -122,8 +122,6 @@ class Batch < ApplicationRecord
     self.status == "recent"
   end
 
-
-
   # def delete_agreements_coop_members
   #   agreement = self.group_remits[0].agreement
   #   coop_member = self.coop_member

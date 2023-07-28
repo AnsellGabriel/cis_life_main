@@ -37,12 +37,12 @@ class MemberDependent < ApplicationRecord
   
   def validate_relationship  
     allowed_relationships = case self.member.civil_status
-                            when "Married"
-                              ['Spouse', 'Child']
-                            when "Single"
-                              ['Parent', 'Sibling']
-                            else
-                              ['Parent', 'Child', 'Sibling']
+                              when "Married"
+                                ['Spouse', 'Child']
+                              when "Single"
+                                ['Parent', 'Sibling']
+                              else
+                                ['Parent', 'Child', 'Sibling']
                             end
   
     unless allowed_relationships.include?(self.relationship) 
