@@ -26,7 +26,11 @@ class ProcessRemarksController < ApplicationController
     @max_amount = params[:max_amount]
     
     @process_coverage = ProcessCoverage.find(params[:ref])
-    @process_remark = @process_coverage.process_remarks.build(remark: FFaker::Lorem.sentence)
+    if Rails.env.development?
+      @process_remark = @process_coverage.process_remarks.build(remark: FFaker::Lorem.sentence)
+    else
+      @process_remark = @process_coverage.process_remarks.build
+    end
   end
 
   def view_all
