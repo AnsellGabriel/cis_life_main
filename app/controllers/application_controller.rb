@@ -11,7 +11,7 @@ class ApplicationController < ActionController::Base
       redirect_to coop_members_path	
     when "Employee"
       case current_user.userable.department_id
-      when 17
+      when 17, 13
         redirect_to process_coverages_path
       else
         redirect_to employees_path
