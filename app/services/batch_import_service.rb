@@ -102,7 +102,7 @@ class BatchImportService
       member = find_or_initialize_member(member_name)
 
 
-      if member.nil?
+      unless member.persisted?
         progress_counter += 1
         update_progress(total_members, progress_counter)
         next

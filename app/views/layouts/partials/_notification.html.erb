@@ -8,7 +8,7 @@
   data-transition-leave-to="opacity-0 translate-x-6"
 >
   <% flash.each do |flash_type, message| %>
-    <div class="alert alert-<%= flash_type == 'notice' ? 'success' : 'danger' %> text-center">
+    <div class="alert alert-<%= flash_type == 'notice' ? 'success' : 'danger' %> text-center ps-6 pe-6">
       <%= message %>
     </div>
   <% end %>

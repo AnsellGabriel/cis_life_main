@@ -39,7 +39,7 @@ class BatchDependentsController < InheritedResources::Base
 
     respond_to do |format|
       if @batch_dependent.save
-        format.html { redirect_to group_remit_batch_path(@group_remit, @batch), notice: "Batch dependent was successfully created." }
+        format.html { redirect_to group_remit_batch_path(@group_remit, @batch), notice: "Dependent successfully added" }
       else
         format.html { redirect_to group_remit_batch_path(@group_remit, @batch), alert: @batch_dependent.errors.full_messages.join(', ') }
       end
@@ -49,7 +49,7 @@ class BatchDependentsController < InheritedResources::Base
   def destroy    
     respond_to do |format|
       if @batch_dependent.destroy
-        format.html { redirect_to group_remit_batch_path(@group_remit, @batch), alert: "Batch dependent was successfully destroyed." }
+        format.html { redirect_to group_remit_batch_path(@group_remit, @batch), alert: "Dependent removed" }
       end
     end
   end

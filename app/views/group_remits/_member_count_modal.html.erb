@@ -13,11 +13,29 @@
         </div>
 
         <% @agreement.agreement_benefits.includes({product_benefits: :benefit}).each do |ab| %>
+
+          <% if ab.batches.size == 0 && ab.batch_dependents.size == 0 %>
+            <% next %>
+          <% end %>
+
           <div class="<%= flex_justify_align('around', 'center') %> text-secondary">
-            <%#= content_tag :span, "#{ab.insured_type == 'principal' ? ab.insured_type.upcase : ab.insured_type.gsub('_', ' ').split(' ').drop(1).join(' ').upcase}", class: 'text-secondary', style: 'font-size: .8rem; width: 150px;' %>
-            <%= content_tag :span, "#{ab.insured_type == 'principal' ? "#{ab.insured_type.upcase} (#{ab.name})" : ab.name.upcase}", class: 'text-secondary', style: 'font-size: .8rem; width: 150px;' %>
+            <%= content_tag :span, "#{ab.insured_type == 'principal' ? "#{ab.insured_type.upcase} (#{ab.name})" : ab.name.upcase}", 
+              class: 'text-secondary', 
+              style: 'font-size: .8rem; width: 150px;'
+            %>
             
-            <%= content_tag :span, "#{@group_remit.batches.where(agreement_benefit_id: ab.id).length}", class: 'text-secondary text-center', style: 'font-size: .8rem; width: 150px;' %>
+            <% if ab.batches.size > 0 %>
+              <%= content_tag :span, "#{ab.batches.size}", 
+                class: 'text-secondary text-center', 
+                style: 'font-size: .8rem; width: 150px;' 
+              %>
+            <% elsif ab.batch_dependents.size > 0 %>
+              <%= content_tag :span, "#{ab.batch_dependents.size}", 
+                class: 'text-secondary text-center', 
+                style: 'font-size: .8rem; width: 150px;' 
+              %>
+            <% end %>
+
           </div>
         <% end %>
 

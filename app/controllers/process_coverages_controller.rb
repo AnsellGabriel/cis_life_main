@@ -213,8 +213,8 @@ class ProcessCoveragesController < ApplicationController
     @total_life_cov = params[:total_life_cov]
 
     @process_coverage = ProcessCoverage.find_by(id: params[:process_coverage_id])
-
-    # @process_coverage.group_remit.set_total_premiums_and_fees
+    # compute group remit total premiums, fees and set status to :for_payment
+    @process_coverage.group_remit.set_total_premiums_and_fees
 
     respond_to do |format|
       if current_user.rank == "analyst"

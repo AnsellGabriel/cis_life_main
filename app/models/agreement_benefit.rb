@@ -1,5 +1,5 @@
 class AgreementBenefit < ApplicationRecord
-	validates_presence_of :name, :min_age, :max_age, :insured_type, :with_dependent
+	validates_presence_of :name, :min_age, :max_age, :insured_type # :with_dependent
 
   has_many :batches
   has_many :batch_dependents
