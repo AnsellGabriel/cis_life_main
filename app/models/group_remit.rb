@@ -192,6 +192,10 @@ class GroupRemit < ApplicationRecord
     batches.where(insurance_status: :approved).sum(:agent_sf_amount)
   end
 
+  def coop_net_premium
+    (gross_premium - total_coop_commissions ) - (denied_principal_premiums + denied_dependent_premiums)
+  end
+
   def net_premium
     (gross_premium - (total_coop_commissions + total_agent_commissions) ) - (denied_principal_premiums + denied_dependent_premiums)
   end

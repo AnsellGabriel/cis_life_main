@@ -1,5 +1,5 @@
 <%= turbo_stream_from @cooperative, "batches" %>
-
+<% console %>
 <% gr_presenter = GroupRemitPresenter.new(@group_remit)%>
 <% plan_acronym = @agreement.plan.acronym %>
 <% short_term_insurance = plan_acronym == 'PMFC' %>

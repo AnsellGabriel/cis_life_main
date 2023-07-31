@@ -1,12 +1,22 @@
+<% batch_remits = @agreement.group_remits.where(type: 'BatchRemit') %>
+<% covered_members = [] %>
+
+<% batch_remits.map do |remit|%>
+  <% covered_members << CoopMember.joins(:batches)
+                            .where(batches: { id: remit.batches })
+                            .distinct %>
+<% end %>
+
+<% allowed_members =  @coop_members - covered_members[0] %>
+
 <%= simple_form_for(@batch, url: group_remit_batches_path) do |f| %>
   <%= f.error_notification %>
   <%= f.error_notification message: f.object.errors[:base].to_sentence if f.object.errors[:base].present? %>
   <div class="form-inputs">
-    
     <div class="row d-flex align-items-start">
       <div class="d-flex align-items-center gap-1" data-controller="batch" >
         <%= f.association :coop_member, 
-        collection: @coop_members, 
+        collection: allowed_members, 
         include_blank: "Search member",
         input_html: { 
           style: "width: 250px !important",
@@ -14,9 +24,6 @@
           data: {  
             controller: "slim-select" }  
           }, label: false %>
-          <!--
-          <%= f.input  :transferred, as: :boolean, label: "Transferred?" %>
-          -->
       </div>
       <div class="d-flex gap-1 align-items-center">
 

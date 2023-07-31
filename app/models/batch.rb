@@ -70,7 +70,7 @@ class Batch < ApplicationRecord
   def self.process_batch(batch, group_remit, rank = nil, duration = nil)
     agreement = group_remit.agreement
     coop_member = batch.coop_member
-    existing_coverage = agreement.coop_members.find_by(coop_member_id: coop_member.id)
+    existing_coverages = agreement.agreements_coop_members.find_by(coop_member_id: coop_member.id)
 
     batch.age = batch.member_details.age
     batch.effectivity_date = agreement.anniversary_type == 'single' ? Date.today : group_remit.effectivity_date
@@ -78,9 +78,9 @@ class Batch < ApplicationRecord
 
     check_plan(agreement, batch, rank, duration)
 
-    if existing_coverage.present?
+    if existing_coverages.present?
         batch.status = :renewal
-        existing_coverage.update!(status: 'renewal')
+        existing_coverages.update!(status: 'renewal')
     else
       if !agreement.transferred_date.nil? && (agreement.transferred_date >= coop_member.membership_date)
         batch.status = :transferred

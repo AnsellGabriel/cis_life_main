@@ -155,6 +155,9 @@ class GroupRemitsController < InheritedResources::Base
     respond_to do |format|
       if @group_remit.save!
         approved_batches = @group_remit.batches.where(insurance_status: :approved)
+        approved_members = CoopMember.joins(:batches)
+                            .where(batches: { id: approved_batches })
+                            .distinct
 
         if anniv_type == 'none' || anniv_type.nil?
           current_batch_remit = agreement.group_remits.find_by(type: 'BatchRemit', expiry_date: @group_remit.expiry_date)
@@ -162,6 +165,7 @@ class GroupRemitsController < InheritedResources::Base
           current_batch_remit = agreement.group_remits.find_by(type: 'BatchRemit', anniversary_id: @group_remit.anniversary_id)
         end
 
+        agreement.coop_members << approved_members
         current_batch_remit.batches << approved_batches
         current_batch_remit.set_total_premiums_and_fees
         current_batch_remit.status = :active
