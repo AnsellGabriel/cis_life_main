@@ -1,45 +1,41 @@
-<%= content_tag :h1, "List of Process Claims" %>
-
-
+<%= content_tag :h1, "List of Claims filed" %>
 <div class="text-end mb-3">
   <%= link_to new_process_claim_path, class: 'btn btn-primary' do %>
-    New Process Claim
+    New Claim
   <% end %>
 </div>
-
 <table class ="table table-striped">
   <table class="table table-striped table-bordered table-hover">
     <thead>
       <tr>
-
-      <th>#</th>
-        <th>Cooperative</th>
-        <th>Agreement</th>
-        <th>Batch</th>
-        <th>Date Incident</th>
-        <th>Entry Type</th>
+        <th>ID</th>
+        <th>Claims details</th>
+        <th>Plan & Date</th>
         <th></th>
-
       </tr>
     </thead>
-
     <tbody>
       <% @process_claims.each do |process_claim| %>
         <tr>
-
-        <th scope="row"><%= process_claim.id %></th>
-        <td><%= process_claim.cooperative %></td>
-        <td><%= process_claim.agreement %></td>
-        <td><%= process_claim.batch %></td>
-        <td><%= process_claim.date_incident %></td>
-        <td><%= process_claim.entry_type %></td>
-    
-          <td>
-            <%= link_to 'View', process_claim, class: 'btn btn-secondary btn-sm' %>
-            <%= link_to 'Edit', edit_process_claim_path(process_claim), class: 'btn btn-secondary btn-sm' %>
-            <%= link_to "Delete", process_claim, class: "btn btn-danger btn-sm", method: :delete, data: { "turbo-method": :delete, turbo_confirm: "Are you sure?" } %>
+          <td><%= process_claim.id %></td>
+          <td><strong><%= process_claim.get_fullname %></strong> <br><small><%= process_claim.cooperative %> <%= process_claim.coop_branch %></small><br>
+            <small><%= process_claim.agent %> </small><br>
+            <span class="badge text-dark bg-info"><%= process_claim.entry_type %></span> <span class="badge bg-warning text-dark"><%= process_claim.status %></span>
+            <span class="badge bg-warning text-dark"><%= process_claim.claim_route %></span>
           </td>
-
+          <td><strong><%= process_claim.plan %></strong> <small class="text-muted"><%= process_claim.unit %> </small> <br>
+          <small>Date filed: <%= process_claim.date_filed %> <br>
+          Date Incident: <%= process_claim.date_incident %> <br>
+          </small>
+          Claim amount: <%= to_curr(process_claim.get_benefit_claim_total(process_claim)) %>
+          </td>
+          
+          <td>
+            <%= link_to "View", evaluate_process_claim_path(process_claim.id), class: "btn btn-warning btn-sm" %>
+            <%= link_to 'Edit', process_claim, class: 'btn btn-secondary btn-sm' unless process_claim.approval %>
+            <%#= link_to 'Edit', edit_process_claim_path(process_claim), class: 'btn' %>
+            <%#= link_to 'Delete', process_claim, method: :delete, data: { confirm: 'Are you sure?' }, class: 'btn' %>
+          </td>
         </tr>
       <% end %>
     </tbody>
