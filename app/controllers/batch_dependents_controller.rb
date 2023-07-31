@@ -34,13 +34,14 @@ class BatchDependentsController < InheritedResources::Base
 
     dependent_agreement_benefits = agreement.agreement_benefits.where("name LIKE ?", "%#{@batch.agreement_benefit.name}%").find_by(insured_type: insured_type)
 
+
     @batch_dependent.set_premium_and_service_fees(dependent_agreement_benefits, group_remit, term_insurance) # model/concerns/calculate.rb
 
     respond_to do |format|
       if @batch_dependent.save
-        format.html { redirect_to group_remit_batch_path(@group_remit, @batch), notice: "Batch dependent was successfully created." }
+        format.html { redirect_to group_remit_batch_path(@group_remit, @batch), notice: "Dependent successfully added" }
       else
-        format.html { render :new, status: :unprocessable_entity }
+        format.html { redirect_to group_remit_batch_path(@group_remit, @batch), alert: @batch_dependent.errors.full_messages.join(', ') }
       end
     end
   end
@@ -48,7 +49,7 @@ class BatchDependentsController < InheritedResources::Base
   def destroy    
     respond_to do |format|
       if @batch_dependent.destroy
-        format.html { redirect_to group_remit_batch_path(@group_remit, @batch), alert: "Batch dependent was successfully destroyed." }
+        format.html { redirect_to group_remit_batch_path(@group_remit, @batch), alert: "Dependent removed" }
       end
     end
   end
