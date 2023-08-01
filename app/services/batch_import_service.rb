@@ -26,15 +26,26 @@ class BatchImportService
 
     # Principal batch import section
     principal_headers = extract_headers(@spreadsheet, 'Principal')
+
+    if principal_headers.nil?
+      return "Incorrect/Missing sheet name: Principal"
+    end
+
     principal_spreadsheet = parse_file('Principal')
     missing_principal_headers = check_missing_headers('Principal', @principal_headers, principal_headers)
-    return missing_principal_headers if missing_principal_headers
+    return missing_principal_headers if missing_principal_headers.any?
+
 
     # Dependent batch import section
     dependent_headers = extract_headers(@spreadsheet, 'Member_Dependents')
+
+    if dependent_headers.nil?
+      return "Incorrect/Missing sheet name: Member_Dependents"
+    end
+    
     dependent_spreadsheet = parse_file('Member_Dependents')
     missing_dependent_headers = check_missing_headers('Member_Dependents', @dependent_headers, dependent_headers)
-    return missing_dependent_headers if missing_dependent_headers
+    return missing_dependent_headers if missing_dependent_headers.any?
 
     total_members = principal_spreadsheet.drop(1).count + dependent_spreadsheet.drop(1).count
     progress_counter = 0
@@ -77,6 +88,13 @@ class BatchImportService
       # end
       
       age_min_max = age_min_max_by_insured_type(agreement_benefits, batch_hash[:rank])
+
+      if age_min_max.nil?
+        create_denied_member(member, "'#{batch_hash[:rank]}' - option not found in the agreement")
+        progress_counter += 1
+        update_progress(total_members, progress_counter)
+        next
+      end
 
       if age_not_within_range?(member, age_min_max, @group_remit.effectivity_date)
         create_denied_member(member, 'Age not within agreement\'s age range', @group_remit.effectivity_date)
@@ -188,7 +206,11 @@ class BatchImportService
   end
 
   def extract_headers(spreadsheet, sheet_name)
-    spreadsheet.sheet(sheet_name).row(1).compact.map(&:strip)
+    begin
+      spreadsheet.sheet(sheet_name).row(1).compact.map(&:strip)
+    rescue RangeError
+      return nil
+    end
   end
 
   def parse_file(sheet_name)
@@ -206,6 +228,9 @@ class BatchImportService
   end
 
   def age_min_max_by_insured_type(agreement_benefits, rank)
+    if agreement_benefits.find_by(name: rank).nil?
+      return nil
+    end
     
     if @gyrt_ranking_plans.include?(@agreement.plan.acronym)
       {
