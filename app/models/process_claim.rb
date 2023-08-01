@@ -4,7 +4,7 @@ class ProcessClaim < ApplicationRecord
   validates_presence_of :cooperative_id, :agreement_id, :batch_id, :date_incident, :entry_type, :claimant_email, :claimant_contact_no, :nature_of_claim
 
   enum nature_of_claim: {
-    LI: 0, # Life
+    LIFE: 0, # Life
     HIB: 1, # Hospital Income Benefit 
     AMR: 2, # Accidental Medical Reimbursement
     AD: 3, # Accidental Dismemberment
