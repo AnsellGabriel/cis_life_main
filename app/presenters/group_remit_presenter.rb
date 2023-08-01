@@ -3,6 +3,38 @@ class GroupRemitPresenter
 		@group_remit = group_remit
 	end
 
+	def is_none_anniversary?
+		@group_remit.agreement.anniversary_type == 'none' || @group_remit.agreement.anniversary_type.nil?
+	end
+
+	def is_single_anniversary?
+		@group_remit.agreement.anniversary_type == 'single'
+	end
+
+	def is_multiple_anniversary?
+		@group_remit.agreement.anniversary_type == 'multiple'
+	end
+
+	def is_batch_remit?
+		@group_remit.type == 'BatchRemit'
+	end
+
+	def is_remittance?
+		@group_remit.type == 'Remittance'
+	end
+
+	def is_pending_or_renewal?
+		@group_remit.pending? || @group_remit.for_renewal?
+	end
+
+	def is_expired?
+		@group_remit.expired?
+	end
+
+	def is_for_payment?
+		@group_remit.for_payment?
+	end
+
 	def remaining_days
 		(@group_remit.expiry_date - Date.today).to_i
 	end

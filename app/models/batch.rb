@@ -76,7 +76,7 @@ class Batch < ApplicationRecord
     batch.effectivity_date = agreement.anniversary_type == 'single' ? Date.today : group_remit.effectivity_date
     batch.expiry_date = group_remit.expiry_date
 
-    check_plan(agreement, batch, rank, duration)
+    check_plan(agreement, batch, rank, duration, group_remit)
 
     if existing_coverages.present?
         batch.status = :renewal
@@ -92,8 +92,7 @@ class Batch < ApplicationRecord
   end
 
 
-  def self.check_plan(agreement, batch, rank, duration)
-    group_remit = agreement.group_remits.find_by(type: 'Remittance')
+  def self.check_plan(agreement, batch, rank, duration, group_remit)
     acronym = agreement.plan.acronym
 
     case acronym
