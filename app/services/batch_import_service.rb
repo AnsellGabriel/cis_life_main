@@ -33,7 +33,7 @@ class BatchImportService
 
     principal_spreadsheet = parse_file('Principal')
     missing_principal_headers = check_missing_headers('Principal', @principal_headers, principal_headers)
-    return missing_principal_headers if missing_principal_headers.any?
+    return missing_principal_headers if missing_principal_headers
 
 
     # Dependent batch import section
@@ -45,7 +45,7 @@ class BatchImportService
     
     dependent_spreadsheet = parse_file('Member_Dependents')
     missing_dependent_headers = check_missing_headers('Member_Dependents', @dependent_headers, dependent_headers)
-    return missing_dependent_headers if missing_dependent_headers.any?
+    return missing_dependent_headers if missing_dependent_headers
 
     total_members = principal_spreadsheet.drop(1).count + dependent_spreadsheet.drop(1).count
     progress_counter = 0
