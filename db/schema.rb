@@ -10,8 +10,8 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_08_01_002918) do
-  create_table "active_admin_comments", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+ActiveRecord::Schema[7.0].define(version: 2023_08_01_053625) do
+  create_table "active_admin_comments", charset: "utf8mb4", force: :cascade do |t|
     t.string "namespace"
     t.text "body"
     t.string "resource_type"
@@ -595,7 +595,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_08_01_002918) do
   create_table "process_remarks", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.bigint "process_coverage_id"
     t.text "remark"
-    t.string "status"
+    t.integer "status"
     t.string "user_type"
     t.bigint "user_id"
     t.datetime "created_at", null: false
