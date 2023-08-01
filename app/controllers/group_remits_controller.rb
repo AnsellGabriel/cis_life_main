@@ -94,7 +94,7 @@ class GroupRemitsController < InheritedResources::Base
     end
 
     set_group_remit_names_and_terms(@group_remit, short_term_insurance)
-
+    
     respond_to do |format|
       if @group_remit.save!
 
@@ -108,6 +108,9 @@ class GroupRemitsController < InheritedResources::Base
           end
 
           batch_remit.save!
+          @group_remit.update!(batch_remit_id: batch_remit.id)
+        else
+          @group_remit.update!(batch_remit_id: params[:batch_remit_id])
         end
         
         format.html { redirect_to coop_agreement_group_remit_path(@agreement, @group_remit), notice: "Group remit was successfully created." }
@@ -159,13 +162,8 @@ class GroupRemitsController < InheritedResources::Base
                             .where(batches: { id: approved_batches })
                             .distinct
 
-        if anniv_type == 'none' || anniv_type.nil?
-          current_batch_remit = agreement.group_remits.find_by(type: 'BatchRemit', expiry_date: @group_remit.expiry_date)
-        else
-          current_batch_remit = agreement.group_remits.find_by(type: 'BatchRemit', anniversary_id: @group_remit.anniversary_id)
-        end
-
         agreement.coop_members << approved_members
+        current_batch_remit = GroupRemit.find(@group_remit.batch_remit_id)
         current_batch_remit.batches << approved_batches
         current_batch_remit.set_total_premiums_and_fees
         current_batch_remit.status = :active

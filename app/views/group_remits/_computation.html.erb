@@ -26,6 +26,9 @@
       <div class="d-flex gap-3">
         <div style="width: 100%">
           <div class="text-secondary d-flex justify-content-between">
+            <%= content_tag :span, "This section will update once reiewing process is completed", style: "font-size: .7rem" %>
+          </div>
+          <div class="text-secondary d-flex justify-content-between">
             <%= content_tag :span, "#{@agreement.coop_sf}% Coop service fee", style: "font-size: .8rem" %>
             <%= content_tag :span, "(#{number_to_currency(group_remit.total_coop_commissions, unit: "₱", precision: 2)})", style: "font-size: .8rem; color: var(--bs-green)"%>
           </div>      
