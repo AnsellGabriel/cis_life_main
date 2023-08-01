@@ -6,8 +6,13 @@ class Users::RegistrationsController < Devise::RegistrationsController
 
   # GET /resource/sign_up
   def new
-    @agent = Agent.new(last_name: FFaker::Name.last_name, first_name: FFaker::Name.first_name, middle_name: FFaker::Name.last_name, mobile_number: FFaker::PhoneNumber)
+
     # new instance of the "User" class associated with the "Agent" instance.
+    if Rails.env.development?
+      @agent = Agent.new(last_name: FFaker::Name.last_name, first_name: FFaker::Name.first_name, middle_name: FFaker::Name.last_name, mobile_number: FFaker::PhoneNumber)
+    else
+      @agent = Agent.new()
+    end
     @agent.build_user
 
     @coop_user = CoopUser.new()
@@ -15,8 +20,12 @@ class Users::RegistrationsController < Devise::RegistrationsController
     # new instance of the "User" class associated with the "Coop" instance.
     @coop_user.build_user
 
-    @employee = Employee.new(last_name: FFaker::Name.last_name, first_name: FFaker::Name.first_name, middle_name: FFaker::Name.last_name, employee_number: FFaker::Number, mobile_number: FFaker::PhoneNumber, designation: FFaker::String)
     # new instance of the "User" class associated with the "Employee" instance.
+    if Rails.env.development?
+      @employee = Employee.new(last_name: FFaker::Name.last_name, first_name: FFaker::Name.first_name, middle_name: FFaker::Name.last_name, employee_number: FFaker::Number, mobile_number: FFaker::PhoneNumber, designation: FFaker::String)
+    else
+      @employee = Employee.new()
+    end
     @employee.build_user
   end
 
