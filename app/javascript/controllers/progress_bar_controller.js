@@ -29,7 +29,7 @@ export default class extends Controller {
         });
 
 
-    }, 2000);
+    }, 1000);
   }
 
   updateProgressBar(progress) {
