@@ -14,9 +14,6 @@
           <%= text_field_tag 'search', nil, placeholder: 'Search...', class: "form-control", style: "width: auto", required: true %>
           <%= submit_tag 'Search', class: "btn btn-success"%>
           <%= link_to "View All", process_coverages_path, class: "btn btn-secondary" %>
-          <%= link_to new_process_coverage_path, class: 'btn btn-primary' do %>
-            New Process Coverage
-          <% end %>
         </div>
       <% end %>
     </div>
