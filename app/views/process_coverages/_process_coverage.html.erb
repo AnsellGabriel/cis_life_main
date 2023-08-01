@@ -198,7 +198,7 @@
       </div>
 
       <div class="col-10">
-        <%= form_tag update_batch_selected_process_coverages_path(p_id: process_coverage), method: :patch do %>
+        <%= form_tag update_batch_selected_process_coverages_path(p_id: process_coverage, b_ids: []), method: :patch do %>
           <% unless process_coverage.status != "for_process" && process_coverage.status != "pending" %>
             <% if process_coverage.group_remit.batches.where(insurance_status: [:pending, :for_review]).count > 0 %>
               <div class="text-end">
@@ -244,7 +244,7 @@
                 <td>
                   <% unless batch.insurance_status == "approved" || batch.insurance_status == "denied" %>
                     <%#= check_box_tag "id-#{batch.id}", batch.id, false, data: { checkbox_select_all_target: "child", action: "change->checkbox-select-all#toggleParent" } %>
-                    <%= check_box_tag "ids[]", batch.id, false, data: { checkbox_select_all_target: "child", action: "change->checkbox-select-all#toggleParent" } %>
+                    <%= check_box_tag "b_ids[]", batch.id, false, data: { checkbox_select_all_target: "child", action: "change->checkbox-select-all#toggleParent" } %>
 
                   <% end %>
                 </td>
@@ -310,13 +310,13 @@
                       <%# end %>
                   <div class="<%= batch_buttons(current_user.rank, batch.insurance_status) %>">
                     <%= link_to approve_batch_process_coverage_path(batch: batch), onclick: "return confirm('Are you sure?')", method: :get, title: "Approve", class: "btn btn-sm btn-success mb-1" do %>
-                      <%= AssetRam::Helper.cache { bootstrap_icon "check-lg" } %>
+                      <%= bootstrap_icon "check-lg" %>
                     <% end %>
                     <%= link_to new_batch_remark_path(ref: batch, pro_cov: process_coverage, batch_status: "Pending"), title: "Pending", class: "btn btn-sm btn-secondary mb-1", data: { turbo_frame: "remote_modal" } do %>
-                      <%= AssetRam::Helper.cache { bootstrap_icon "arrow-clockwise" } %>
+                      <%= bootstrap_icon "arrow-clockwise" %>
                     <% end %>
                     <%= link_to new_batch_remark_path(ref: batch, pro_cov: process_coverage, batch_status: "Deny"), title: "Deny", class: "btn btn-sm btn-danger mb-1", data: { turbo_frame: "remote_modal" } do %>
-                      <%= AssetRam::Helper.cache { bootstrap_icon "x-lg" } %>
+                      <%= bootstrap_icon "x-lg" %>
                     <% end %>
                   </div>
                     <%# end %>
@@ -325,7 +325,7 @@
                       <%#= link_to batch_health_dec_path(id: batch.batch_health_dec.id, b_id: batch.batch_health_dec, for_modal: "yes", pro_id: process_coverage), title: "For MD Review", class: "btn btn-sm btn-warning mb-1", remote: true, data: { turbo_frame: "remote_modal" } do %>
                       <%#= link_to group_remit_batch_health_declaration_path(@group_remit,batch,group_remit: @group_remit, batch: batch,id: batch.batch_health_decs.id, b_id: batch.batch_health_decs, for_modal: "yes", pro_id: process_coverage), title: "For MD Review", class: "btn btn-sm btn-warning mb-1", remote: true, data: { turbo_frame: "remote_modal" } do %>
                       <%= link_to health_dec_group_remit_batch_path(@group_remit, batch, for_und: true), class: "btn btn-sm btn-warning mb-1", data: { turbo_frame: "modal-xl" } do %>
-                        <%= AssetRam::Helper.cache { bootstrap_icon "file-earmark-medical" } %>
+                        <%= bootstrap_icon "file-earmark-medical" %>
                       <% end %>
                     <% end %>
                 </td>
@@ -341,7 +341,7 @@
             <% end %>
             <%# end %>
 
-            <% else %>
+          <% else %>
               <tr class="text-center">
                 <td colspan=8>
                   <%= content_tag :span, "NO RECORD(S)", class: "lead fw-bold" %>
@@ -352,7 +352,7 @@
         </tbody>
       </table>
       
-    <% end %>
+      <% end %>
   </div>
 
   <div class="text-end">

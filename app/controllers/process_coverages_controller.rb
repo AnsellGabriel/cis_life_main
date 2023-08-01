@@ -124,17 +124,16 @@ class ProcessCoveragesController < ApplicationController
   def update_batch_selected
     # raise 'errors'
     @pro_cov = ProcessCoverage.find_by(id: params[:p_id])
+    ids = params[:b_ids]
     
     if params[:approve]
 
-      ids = params[:ids]
       Batch.where(id: ids).update_all(insurance_status: :approved)
       @pro_cov.increment!(:approved_count, ids.length)
 
       redirect_to process_coverage_path(@pro_cov), notice: "Selected Coverages Approved!"
       
     elsif params[:deny]
-      ids = params[:ids]
   
       Batch.where(id: ids).update_all(insurance_status: :denied)
       @pro_cov.increment!(:denied_count, ids.length)
@@ -208,7 +207,7 @@ class ProcessCoveragesController < ApplicationController
   end
 
   def approve
-    # byebug
+    # raise 'errors'
     @max_amount = params[:max_amount]
     @total_life_cov = params[:total_life_cov]
 
@@ -333,6 +332,6 @@ class ProcessCoveragesController < ApplicationController
 
     # Only allow a list of trusted parameters through.
     def process_coverage_params
-      params.require(:process_coverage).permit(:group_remit_id, :agent_id, :effectivity, :expiry, :status, :approved_count, :approved_total_coverage, :approved_total_prem, :denied_count, :denied_total_coverage, :denied_total_prem)
+    params.require(:process_coverage).permit(:group_remit_id, :agent_id, :effectivity, :expiry, :status, :approved_count, :approved_total_coverage, :approved_total_prem, :denied_count, :denied_total_coverage, :denied_total_prem)
     end
 end
