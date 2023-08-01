@@ -50,9 +50,15 @@ class BatchImportService
         next
       end
 
-      # coop_member = @cooperative.coop_members.find_by(member_id: member.id)
-      # existing_coverage = @agreement.agreements_coop_member.find_by(coop_member_id: coop_member.id)
+      coop_member = @cooperative.coop_members.find_by(member_id: member.id)
+      without_coverage_member = @cooperative.unselected_coop_members(@agreement.group_remits.joins(:batches).pluck(:coop_member_id)).find_by(id: coop_member.id)
 
+      if without_coverage_member.nil?
+        create_denied_member(member, 'Member already exist in other batch or remittance')
+        progress_counter += 1
+        update_progress(total_members, progress_counter)
+        next
+      end
 
       if @gyrt_ranking_plans.include?(@agreement.plan.acronym)
         unless row["Rank"].present?
@@ -91,6 +97,8 @@ class BatchImportService
         @added_members_counter += create_batch(member, batch_hash)
       end
 
+      
+
       progress_counter += 1
       update_progress(total_members, progress_counter)
     end
@@ -114,7 +122,7 @@ class BatchImportService
       coop_member = @cooperative.coop_members.find_by(member_id: member.id)
       batch = @group_remit.batches.find_by(coop_member_id: coop_member.id)
 
-      if member.nil?
+      if member.nil? || batch.nil?
         progress_counter += 1
         update_progress(total_members, progress_counter)
         next
