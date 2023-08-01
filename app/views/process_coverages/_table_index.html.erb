@@ -54,7 +54,9 @@
               <%= link_to 'View', process_coverage, data: { turbo: false }, class: 'btn btn-secondary btn-sm' %>
               <%#= link_to "Preview", preview_path %>
               <%#= link_to "Download", download_path %>
-              <%= link_to "View PDF", pc_pdf_path(process_coverage), class: "btn btn-warning btn-sm mt-2" %>
+              <% if process_coverage.status == "approved" %>
+                <%= link_to "View PDF", pc_pdf_path(process_coverage), class: "btn btn-warning btn-sm mt-2" %>
+              <% end %>
               <%#= link_to 'Edit', edit_process_coverage_path(process_coverage), class: 'btn btn-secondary btn-sm' %>
               <%#= link_to "Delete", process_coverage, class: "btn btn-danger btn-sm", method: :delete, data: { "turbo-method": :delete, turbo_confirm: "Are you sure?" } %>
             </td>
