@@ -19,11 +19,28 @@ class ProcessRemarksController < ApplicationController
     else
       "Add Remark"
     end
-
-    @process_status = params[:pro_status]
-    @rem_status = params[:rem_status]
+    
     @total_life_cov = params[:total_life_cov]
     @max_amount = params[:max_amount]
+    @process_status = params[:pro_status]
+
+    if current_user.rank == "analyst"
+      if @max_amount >= @total_life_cov
+        @rem_status = "approved"
+      else
+        @rem_status = "for_head_approval"
+      end
+    elsif current_user.rank == "head"
+      if @max_amount >= @total_life_cov
+        @rem_status = "approved"
+      else
+        @rem_status = "for_vp_approval"
+      end
+    elsif current_user.rank == "senior_officer"
+        @rem_status = "approved"
+    end
+
+    # @rem_status = params[:rem_status]
     
     @process_coverage = ProcessCoverage.find(params[:ref])
     if Rails.env.development?
