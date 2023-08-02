@@ -36,7 +36,7 @@ class GroupRemitPresenter
 	end
 
 	def remaining_days
-		(@group_remit.expiry_date - Date.today).to_i
+		remaining_days = (@group_remit.expiry_date - Date.today).to_i
 	end
 
 	def countdown_color
