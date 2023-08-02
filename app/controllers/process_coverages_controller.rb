@@ -4,17 +4,34 @@ class ProcessCoveragesController < ApplicationController
 
   # GET /process_coverages
   def index
-    @process_coverages_x = ProcessCoverage.all
-    @for_process_coverages = ProcessCoverage.where(status: :for_process)
-    @approved_process_coverages = ProcessCoverage.where(status: :approved)
-    @pending_process_coverages = ProcessCoverage.where(status: :pending)
-    @denied_process_coverages = ProcessCoverage.where(status: :denied)
 
-    if params[:search].present?
-      @process_coverages = @process_coverages_x.joins(group_remit: {agreement: :cooperative}).where("group_remits.name LIKE ? OR group_remits.description LIKE ? OR agreements.moa_no LIKE ? OR cooperatives.name LIKE ?", "%#{params[:search]}%", "%#{params[:search]}%", "%#{params[:search]}%", "%#{params[:search]}%")
+    if current_user.rank == "head" || current_user.rank == "senior_officer"
+      @process_coverages_x = ProcessCoverage.all
+      @for_process_coverages = ProcessCoverage.where(status: :for_process)
+      @approved_process_coverages = ProcessCoverage.where(status: :approved)
+      @pending_process_coverages = ProcessCoverage.where(status: :pending)
+      @denied_process_coverages = ProcessCoverage.where(status: :denied)
+
+      if params[:search].present?
+        @process_coverages = @process_coverages_x.joins(group_remit: {agreement: :cooperative}).where("group_remits.name LIKE ? OR group_remits.description LIKE ? OR agreements.moa_no LIKE ? OR cooperatives.name LIKE ?", "%#{params[:search]}%", "%#{params[:search]}%", "%#{params[:search]}%", "%#{params[:search]}%")
+      else
+        @process_coverages = @process_coverages_x
+      end
     else
-      @process_coverages = @process_coverages_x
+      @process_coverages_x = ProcessCoverage.joins(group_remit: { agreement: :emp_agreements }).where( emp_agreements: { employee_id: current_user.userable_id })
+
+      if params[:search].present?
+        @process_coverages = @process_coverages_x.joins("INNER JOIN cooperatives ON cooperatives.id = agreements.cooperative_id").where("group_remits.name LIKE ? OR group_remits.description LIKE ? OR agreements.moa_no LIKE ? OR cooperatives.name LIKE ?", "%#{params[:search]}%", "%#{params[:search]}%", "%#{params[:search]}%", "%#{params[:search]}%")
+      else
+        @process_coverages = @process_coverages_x
+      end
     end
+
+    # if params[:search].present?
+    #   @process_coverages = @process_coverages_x.joins(group_remit: {agreement: :cooperative}).where("group_remits.name LIKE ? OR group_remits.description LIKE ? OR agreements.moa_no LIKE ? OR cooperatives.name LIKE ?", "%#{params[:search]}%", "%#{params[:search]}%", "%#{params[:search]}%", "%#{params[:search]}%")
+    # else
+    #   @process_coverages = @process_coverages_x
+    # end
     
   end
 

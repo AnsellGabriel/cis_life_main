@@ -10,6 +10,8 @@ class Agreement < ApplicationRecord
     belongs_to :cooperative, optional: true
 
     has_many :agreement_benefits
+    has_many :emp_agreements
+    has_many :employees, through: :emp_agreements
     accepts_nested_attributes_for :agreement_benefits, reject_if: :all_blank, allow_destroy: true
     has_many :group_remits
     has_many :anniversaries
@@ -18,6 +20,10 @@ class Agreement < ApplicationRecord
 
     def to_s
       moa_no
+    end
+
+    def coop_name
+      self.cooperative.name
     end
     # filters anniversaries based on a given set of expiry dates
     def get_filtered_anniversaries(expiry_dates)
