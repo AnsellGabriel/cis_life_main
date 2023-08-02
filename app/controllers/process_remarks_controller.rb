@@ -65,8 +65,10 @@ class ProcessRemarksController < ApplicationController
     @process_coverage = ProcessCoverage.find(params[:process_remark][:process_coverage_id])
     @batch_count = @process_coverage.group_remit.batches.where(batches: { insurance_status: :for_review }).count
 
-    if @batch_count > 0 
-      return redirect_to process_coverage_path(@process_coverage), alert: "Can't proceed. There are #{@batch_count} #{'coverage'.pluralize(@batch_count)} for review"
+    unless params[:process_remark][:process_status].nil?
+      if @batch_count > 0
+        return redirect_to process_coverage_path(@process_coverage), alert: "Can't proceed. There are #{@batch_count} #{'coverage'.pluralize(@batch_count)} for review"
+      end
     end
     
     @process_remark = ProcessRemark.new(process_remark_params)
