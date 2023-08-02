@@ -17,6 +17,14 @@ class User < ApplicationRecord
   attribute :admin, :boolean, default: false
   attribute :approved, :boolean, default: false
 
+  def to_s
+    "#{userable.last_name}, #{userable.first_name}"
+  end
+
+  def user_id
+    id
+  end
+
   # Override Devise method to prevent login if not approved
   def active_for_authentication?
     super && approved?

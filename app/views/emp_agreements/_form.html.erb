@@ -1,0 +1,15 @@
+
+<%= simple_form_for(@emp_agreement) do |f| %>
+  <%= f.error_notification %>
+  <%= f.error_notification message: f.object.errors[:base].to_sentence if f.object.errors[:base].present? %>
+
+  <div class="form-inputs mb-3">
+    <%= f.association :employee, collection: Employee.joins(:user).where(department_id: 17, user: { rank: 1 }) %>
+    <%= f.association :agreement, label_method: :coop_name %>
+  </div>
+
+  <div class="form-actions text-end">
+    <%= link_to "Back", emp_agreements_path, class: 'btn btn-secondary' %>
+    <%= f.button :submit, class: 'btn-success' %>
+  </div>
+<% end %>
