@@ -5,7 +5,7 @@
 
   <div class="form-inputs mb-3">
     <%= f.association :employee, collection: Employee.joins(:user).where(department_id: 17, user: { rank: 1 }) %>
-    <%= f.association :agreement, label_method: :coop_name %>
+    <%= f.association :agreement, label_method: :coop_name, order: :coop_name %>
   </div>
 
   <div class="form-actions text-end">
