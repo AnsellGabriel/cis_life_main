@@ -12,6 +12,14 @@ class ProcessCoverage < ApplicationRecord
     for_vp_approval: 5
   }
 
+  enum und_route: {
+    for_analyst_review: 0,
+    for_head_review: 1,
+    for_vp_review: 2,
+    pc_approved: 3,
+    pc_denied: 4
+  }
+
   def set_default_attributes
     self.status = :for_process
     self.approved_count = 0

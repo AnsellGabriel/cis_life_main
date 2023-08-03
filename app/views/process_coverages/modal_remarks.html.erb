@@ -1,5 +1,6 @@
 <%= @batch %>
 
 <%= render "remote_modal", title: "Remarks" do %>
-  <%= render 'batch_remarks', batch: @batch %>
+  <%= render 'batch_remarks', batch: @batch, process_coverage: @process_coverage %>
 <% end %>
+

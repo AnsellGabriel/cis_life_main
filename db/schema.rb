@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_08_02_012059) do
+ActiveRecord::Schema[7.0].define(version: 2023_08_03_033358) do
   create_table "active_admin_comments", charset: "utf8mb4", force: :cascade do |t|
     t.string "namespace"
     t.text "body"
@@ -599,10 +599,10 @@ ActiveRecord::Schema[7.0].define(version: 2023_08_02_012059) do
     t.decimal "denied_total_prem", precision: 20, scale: 4
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.bigint "underwriting_route_id"
+    t.integer "und_route"
     t.index ["agent_id"], name: "index_process_coverages_on_agent_id"
     t.index ["group_remit_id"], name: "index_process_coverages_on_group_remit_id"
-    t.index ["underwriting_route_id"], name: "index_process_coverages_on_underwriting_route_id"
+    t.index ["und_route"], name: "index_process_coverages_on_und_route"
   end
 
   create_table "process_remarks", charset: "utf8mb4", force: :cascade do |t|

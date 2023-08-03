@@ -35,12 +35,14 @@
           <td><%= pluralize(process_coverage.group_remit.batches.count, "Member") %></td>
           <td><%= process_status(process_coverage.status) %></td>
           <td>
-            Total Approved Count:   <%= process_coverage.approved_count %> <br>
+           <!--  Total Approved Count:   <%= process_coverage.approved_count %> <br> -->
+            Total Approved Count:   <%= process_coverage.group_remit.batches.where(insurance_status: :approved).count %> <br>
              <!--Total Approved Coverage: <%= to_currency(process_coverage.group_remit.batches.where(insurance_status: :approved).sum(:premium)) %> <br> -->
             Total Approved Premium: <%= to_currency(process_coverage.group_remit.batches.where(insurance_status: :approved).sum(:premium)) %>  
           </td>
           <td>
-            Total Denied Count: <%= process_coverage.denied_count %> <br>
+            Total Denied Count: <%= process_coverage.group_remit.batches.where(insurance_status: :denied).count %> <br>
+            <!-- Total Denied Count: <%= process_coverage.denied_count %> <br> -->
             <!-- Total Denied Coverage: <%= process_coverage.denied_total_coverage %> <br> -->
             Total Denied Premium: <%= to_currency(process_coverage.group_remit.batches.where(insurance_status: :denied).sum(:premium)) %>
           </td>
