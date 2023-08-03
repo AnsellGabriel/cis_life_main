@@ -308,17 +308,26 @@
                       <%#= link_to deny_batch_process_coverage_path(batch: batch), title: "Deny", class: "btn btn-sm btn-danger" do %>
                         <%#= bootstrap_icon "x-lg" %>
                       <%# end %>
-                  <div class="<%= batch_buttons(current_user.rank, batch.insurance_status) %>">
-                    <%= link_to approve_batch_process_coverage_path(batch: batch), onclick: "return confirm('Are you sure?')", method: :get, title: "Approve", class: "btn btn-sm btn-success mb-1" do %>
-                      <%= bootstrap_icon "check-lg" %>
-                    <% end %>
-                    <%= link_to new_batch_remark_path(ref: batch, pro_cov: process_coverage, batch_status: "Pending"), title: "Pending", class: "btn btn-sm btn-secondary mb-1", data: { turbo_frame: "remote_modal" } do %>
-                      <%= bootstrap_icon "arrow-clockwise" %>
-                    <% end %>
-                    <%= link_to new_batch_remark_path(ref: batch, pro_cov: process_coverage, batch_status: "Deny"), title: "Deny", class: "btn btn-sm btn-danger mb-1", data: { turbo_frame: "remote_modal" } do %>
-                      <%= bootstrap_icon "x-lg" %>
-                    <% end %>
-                  </div>
+                  <% unless process_coverage.approved? %>
+                  
+                    <div class="<%= batch_buttons(current_user.rank, batch.insurance_status) %>">
+                      <%= link_to approve_batch_process_coverage_path(batch: batch), onclick: "return confirm('Are you sure?')", method: :get, title: "Approve", class: "btn btn-sm btn-success mb-1" do %>
+                        <%= bootstrap_icon "check-lg" %>
+                      <% end %>
+                      <%= link_to new_batch_remark_path(ref: batch, pro_cov: process_coverage, batch_status: "Pending"), title: "Pending", class: "btn btn-sm btn-secondary mb-1", data: { turbo_frame: "remote_modal" } do %>
+                        <%= bootstrap_icon "arrow-clockwise" %>
+                      <% end %>
+                      <%= link_to new_batch_remark_path(ref: batch, pro_cov: process_coverage, batch_status: "Deny"), title: "Deny", class: "btn btn-sm btn-danger mb-1", data: { turbo_frame: "remote_modal" } do %>
+                        <%= bootstrap_icon "x-lg" %>
+                      <% end %>
+                    </div>
+                    <div class="<%= reconsider_button(current_user.rank, batch.insurance_status) %>">
+                      <%= link_to reconsider_batch_process_coverage_path(batch: batch), onclick: "return confirm('Are you sure?')", method: :get, class: "btn btn-sm btn-warning mb-1" do %>
+                        <%= bootstrap_icon "arrow-repeat" %>
+                      <% end %>
+                    </div>
+                    
+                  <% end %>
                     <%# end %>
                   <%# end %>
                   <% if batch.batch_health_decs.present? %>

@@ -34,5 +34,16 @@ module ProcessCoveragesHelper
       "d-inline"
     end
   end
+
+  def reconsider_button(rank, batch_status)
+    if rank == "analyst"
+      case batch_status
+        when "approved", "denied" then "d-inline"
+        when "pending", "for_review" then "d-none"
+      end
+    else
+      "d-none"
+    end
+  end
   
 end

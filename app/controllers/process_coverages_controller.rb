@@ -1,6 +1,6 @@
 class ProcessCoveragesController < ApplicationController
   before_action :authenticate_user!
-  before_action :set_process_coverage, only: %i[ show edit update destroy approve_batch deny_batch pending_batch pdf ]
+  before_action :set_process_coverage, only: %i[ show edit update destroy approve_batch deny_batch pending_batch reconsider_batch pdf ]
 
   # GET /process_coverages
   def index
@@ -17,7 +17,7 @@ class ProcessCoveragesController < ApplicationController
       else
         @process_coverages = @process_coverages_x
       end
-    else
+    elsif current_user.analyst?
       @process_coverages_x = ProcessCoverage.joins(group_remit: { agreement: :emp_agreements }).where( emp_agreements: { employee_id: current_user.userable_id })
 
       if params[:search].present?
@@ -25,6 +25,8 @@ class ProcessCoveragesController < ApplicationController
       else
         @process_coverages = @process_coverages_x
       end
+    else
+      @process_coverages_x = ProcessCoverage.all
     end
 
     # if params[:search].present?
@@ -307,8 +309,19 @@ class ProcessCoveragesController < ApplicationController
     end
   end
 
+  def reconsider_batch
+    @batch = Batch.find(params[:batch])
+
+    respond_to do |format|
+      if @batch.update_attribute(:insurance_status, 3)
+        format.html { redirect_to process_coverage_path(@process_coverage), notice: "Batch updated to For Review!" }
+      end
+    end
+  end
+
   def modal_remarks
     @batch = Batch.find(params[:batch])
+    @process_coverage = ProcessCoverage.find(params[:id])
   end
 
   # GET /process_coverages/1/edit

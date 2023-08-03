@@ -1,4 +1,9 @@
-<h1>Underwriting Head</h1>
+<% if current_user.head? %>
+  <h1>Underwriting Head</h1>
+<% elsif current_user.senior_officer? %>
+  <%= content_tag :h1, current_user.userable.designation %>
+<% end %>
+
 
 <div class="row">
   <% current_date = Time.now %>

@@ -10,7 +10,7 @@
     <% @process_remarks.order(created_at: :desc).each do |pr| %>
       <%= content_tag :div, class: "d-flex justify-content-between align-items-center" do %>
         <%= content_tag :p, class: "mb-1" do %>
-          <%= pr.user %> <%= content_tag :small, "- #{time_ago_in_words(pr.created_at)} ago" %>
+          <%= pr.user %> <%= content_tag :small, "- #{time_ago_in_words(pr.created_at)} ago" %>  <%= remarks_status(pr.status) %>
         <% end %>
       <% end %>
         <%= content_tag :p, pr.remark, class: "small mb-0 fst-italic" %>
