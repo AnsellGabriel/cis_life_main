@@ -31,11 +31,16 @@ class GroupRemit < ApplicationRecord
 
   def renew
     new_group_remit = self.dup
-    new_group_remit.set_terms_and_expiry_date(self.expiry_date)
-    new_group_remit.expiry_date = self.expiry_date + 1.year # Assuming the renewal duration is 1 year from the current date
-    new_group_remit.status = :for_payment
-    new_group_remit.effectivity_date = self.effectivity_date + 1.year
-    new_group_remit.save
+    new_group_remit.set_terms_and_expiry_date(self.expiry_date + 1.year)
+    # new_group_remit.expiry_date = self.expiry_date + 1.year # Assuming the renewal duration is 1 year from the current date
+    new_group_remit.status = :for_renewal
+    new_group_remit.type = "Remittance"
+    new_group_remit.batch_remit_id = self.id
+    self.status = :for_renewal
+    self.set_terms_and_expiry_date(self.expiry_date + 1.year)
+    self.save!
+    # new_group_remit.effectivity_date = self.effectivity_date + 1.year
+    new_group_remit.save!
 
     agreement = new_group_remit.agreement
 
@@ -51,7 +56,7 @@ class GroupRemit < ApplicationRecord
         new_batch = batch.dup
         new_group_remit.batches << new_batch
         new_batch.age = new_batch.member_details.age
-        new_batch.set_premium_and_service_fees(batch.agreement_benefit.insured_type, new_group_remit)
+        new_batch.set_premium_and_service_fees(batch.agreement_benefit, new_group_remit)
 
         difference_in_months = (Date.today.year - batch.created_at.year) * 12 + (Date.today.month - batch.created_at.month)
         # byebug
@@ -63,18 +68,19 @@ class GroupRemit < ApplicationRecord
           batch.batch_dependents.each do |dependent|
             new_dependent = dependent.dup
             new_dependent.batch_id = new_batch.id
-            new_dependent.save
+            new_dependent.set_premium_and_service_fees(dependent.agreement_benefit, new_group_remit)
+            new_dependent.save!
           end
         end
 
         batch.batch_beneficiaries.each do |beneficiary|
           new_beneficiary = beneficiary.dup
           new_beneficiary.batch_id = new_batch.id
-          new_beneficiary.save
+          new_beneficiary.save!
         end
 
       else
-        create_denied_member(batch.coop_member.member, 'Denied by underwriter', new_group_remit)
+        create_denied_member(batch.coop_member.member, "The member\'s age meets the agreement\'s exit age #{batch.agreement_benefit.exit_age}", new_group_remit)
       end
     end
     

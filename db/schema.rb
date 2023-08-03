@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_08_01_002918) do
+ActiveRecord::Schema[7.0].define(version: 2023_08_03_005757) do
   create_table "active_admin_comments", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.string "namespace"
     t.text "body"
@@ -310,6 +310,15 @@ ActiveRecord::Schema[7.0].define(version: 2023_08_01_002918) do
     t.datetime "updated_at", null: false
     t.index ["batch_id"], name: "index_denied_dependents_on_batch_id"
     t.index ["group_remit_id"], name: "index_denied_dependents_on_group_remit_id"
+  end
+
+  create_table "denied_enrollees", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+    t.string "name"
+    t.string "reason"
+    t.bigint "cooperative_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["cooperative_id"], name: "index_denied_enrollees_on_cooperative_id"
   end
 
   create_table "denied_members", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
@@ -676,6 +685,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_08_01_002918) do
   add_foreign_key "coop_users", "cooperatives"
   add_foreign_key "denied_dependents", "batches"
   add_foreign_key "denied_dependents", "group_remits"
+  add_foreign_key "denied_enrollees", "cooperatives"
   add_foreign_key "denied_members", "group_remits"
   add_foreign_key "employees", "departments"
   add_foreign_key "group_import_trackers", "group_remits"

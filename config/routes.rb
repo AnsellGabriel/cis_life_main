@@ -51,6 +51,8 @@ Rails.application.routes.draw do
     get :member_agreements, on: :member
   end
 
+  resources :denied_enrollees, only: [:index, :destroy]
+
   resources :coop_agreements do
     resources :group_remits
   end
