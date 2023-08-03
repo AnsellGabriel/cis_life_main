@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_08_03_005757) do
+ActiveRecord::Schema[7.0].define(version: 2023_08_03_025411) do
   create_table "active_admin_comments", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.string "namespace"
     t.text "body"
@@ -109,6 +109,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_08_03_005757) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.date "expiry"
+    t.date "effectivity"
     t.index ["agreement_id"], name: "index_agreements_coop_members_on_agreement_id"
     t.index ["coop_member_id"], name: "index_agreements_coop_members_on_coop_member_id"
   end
@@ -203,8 +204,9 @@ ActiveRecord::Schema[7.0].define(version: 2023_08_03_005757) do
     t.boolean "below_nel", default: false
     t.integer "duration"
     t.integer "residency"
-    t.integer "batch_remit_id"
     t.string "type"
+    t.date "previous_effectivity_date"
+    t.date "previous_expiry_date"
     t.index ["agreement_benefit_id"], name: "index_batches_on_agreement_benefit_id"
     t.index ["coop_member_id"], name: "index_batches_on_coop_member_id"
   end

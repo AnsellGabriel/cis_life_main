@@ -24,7 +24,7 @@
     %>
   <% end %>
 
-  <% if gr_presenter.is_pending_or_renewal? && gr_presenter.is_remittance? %>
+  <% if gr_presenter.is_pending? && gr_presenter.is_remittance? %>
     <%= button_to "Delete", group_remit_path(@group_remit), 
       method: :delete,
       data: { turbo_confirm: 'Delete group remit?'},
