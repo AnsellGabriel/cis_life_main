@@ -1,20 +1,39 @@
 class ProcessCoveragesController < ApplicationController
   before_action :authenticate_user!
-  before_action :set_process_coverage, only: %i[ show edit update destroy approve_batch deny_batch pending_batch pdf ]
+  before_action :set_process_coverage, only: %i[ show edit update destroy approve_batch deny_batch pending_batch reconsider_batch pdf ]
 
   # GET /process_coverages
   def index
-    @process_coverages_x = ProcessCoverage.all
-    @for_process_coverages = ProcessCoverage.where(status: :for_process)
-    @approved_process_coverages = ProcessCoverage.where(status: :approved)
-    @pending_process_coverages = ProcessCoverage.where(status: :pending)
-    @denied_process_coverages = ProcessCoverage.where(status: :denied)
 
-    if params[:search].present?
-      @process_coverages = @process_coverages_x.joins(group_remit: {agreement: :cooperative}).where("group_remits.name LIKE ? OR group_remits.description LIKE ? OR agreements.moa_no LIKE ? OR cooperatives.name LIKE ?", "%#{params[:search]}%", "%#{params[:search]}%", "%#{params[:search]}%", "%#{params[:search]}%")
+    if current_user.rank == "head" || current_user.rank == "senior_officer"
+      @process_coverages_x = ProcessCoverage.all
+      @for_process_coverages = ProcessCoverage.where(status: :for_process)
+      @approved_process_coverages = ProcessCoverage.where(status: :approved)
+      @pending_process_coverages = ProcessCoverage.where(status: :pending)
+      @denied_process_coverages = ProcessCoverage.where(status: :denied)
+
+      if params[:search].present?
+        @process_coverages = @process_coverages_x.joins(group_remit: {agreement: :cooperative}).where("group_remits.name LIKE ? OR group_remits.description LIKE ? OR agreements.moa_no LIKE ? OR cooperatives.name LIKE ?", "%#{params[:search]}%", "%#{params[:search]}%", "%#{params[:search]}%", "%#{params[:search]}%")
+      else
+        @process_coverages = @process_coverages_x
+      end
+    elsif current_user.analyst?
+      @process_coverages_x = ProcessCoverage.joins(group_remit: { agreement: :emp_agreements }).where( emp_agreements: { employee_id: current_user.userable_id })
+
+      if params[:search].present?
+        @process_coverages = @process_coverages_x.joins("INNER JOIN cooperatives ON cooperatives.id = agreements.cooperative_id").where("group_remits.name LIKE ? OR group_remits.description LIKE ? OR agreements.moa_no LIKE ? OR cooperatives.name LIKE ?", "%#{params[:search]}%", "%#{params[:search]}%", "%#{params[:search]}%", "%#{params[:search]}%")
+      else
+        @process_coverages = @process_coverages_x
+      end
     else
-      @process_coverages = @process_coverages_x
+      @process_coverages_x = ProcessCoverage.all
     end
+
+    # if params[:search].present?
+    #   @process_coverages = @process_coverages_x.joins(group_remit: {agreement: :cooperative}).where("group_remits.name LIKE ? OR group_remits.description LIKE ? OR agreements.moa_no LIKE ? OR cooperatives.name LIKE ?", "%#{params[:search]}%", "%#{params[:search]}%", "%#{params[:search]}%", "%#{params[:search]}%")
+    # else
+    #   @process_coverages = @process_coverages_x
+    # end
     
   end
 
@@ -124,17 +143,16 @@ class ProcessCoveragesController < ApplicationController
   def update_batch_selected
     # raise 'errors'
     @pro_cov = ProcessCoverage.find_by(id: params[:p_id])
+    ids = params[:b_ids]
     
     if params[:approve]
 
-      ids = params[:ids]
       Batch.where(id: ids).update_all(insurance_status: :approved)
       @pro_cov.increment!(:approved_count, ids.length)
 
       redirect_to process_coverage_path(@pro_cov), notice: "Selected Coverages Approved!"
       
     elsif params[:deny]
-      ids = params[:ids]
   
       Batch.where(id: ids).update_all(insurance_status: :denied)
       @pro_cov.increment!(:denied_count, ids.length)
@@ -208,7 +226,7 @@ class ProcessCoveragesController < ApplicationController
   end
 
   def approve
-    # byebug
+    # raise 'errors'
     @max_amount = params[:max_amount]
     @total_life_cov = params[:total_life_cov]
 
@@ -291,8 +309,19 @@ class ProcessCoveragesController < ApplicationController
     end
   end
 
+  def reconsider_batch
+    @batch = Batch.find(params[:batch])
+
+    respond_to do |format|
+      if @batch.update_attribute(:insurance_status, 3)
+        format.html { redirect_to process_coverage_path(@process_coverage), notice: "Batch updated to For Review!" }
+      end
+    end
+  end
+
   def modal_remarks
     @batch = Batch.find(params[:batch])
+    @process_coverage = ProcessCoverage.find(params[:id])
   end
 
   # GET /process_coverages/1/edit
@@ -333,6 +362,6 @@ class ProcessCoveragesController < ApplicationController
 
     # Only allow a list of trusted parameters through.
     def process_coverage_params
-      params.require(:process_coverage).permit(:group_remit_id, :agent_id, :effectivity, :expiry, :status, :approved_count, :approved_total_coverage, :approved_total_prem, :denied_count, :denied_total_coverage, :denied_total_prem)
+    params.require(:process_coverage).permit(:group_remit_id, :agent_id, :effectivity, :expiry, :status, :approved_count, :approved_total_coverage, :approved_total_prem, :denied_count, :denied_total_coverage, :denied_total_prem)
     end
 end

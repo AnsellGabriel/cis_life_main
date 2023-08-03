@@ -9,3 +9,4 @@
 
   <%= content_tag :hr %>
 <% end %>
+  <%= link_to "New Remark", new_batch_remark_path(ref: batch, pro_cov: process_coverage, batch_status: "New"), class: "btn btn-sm btn-primary", data: { turbo_frame: "remote_modal" } %>

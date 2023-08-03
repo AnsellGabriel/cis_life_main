@@ -19,11 +19,28 @@ class ProcessRemarksController < ApplicationController
     else
       "Add Remark"
     end
-
-    @process_status = params[:pro_status]
-    @rem_status = params[:rem_status]
+    
     @total_life_cov = params[:total_life_cov]
     @max_amount = params[:max_amount]
+    @process_status = params[:pro_status]
+
+    if current_user.rank == "analyst"
+      if @max_amount >= @total_life_cov
+        @rem_status = "approved"
+      else
+        @rem_status = "for_head_approval"
+      end
+    elsif current_user.rank == "head"
+      if @max_amount >= @total_life_cov
+        @rem_status = "approved"
+      else
+        @rem_status = "for_vp_approval"
+      end
+    elsif current_user.rank == "senior_officer"
+        @rem_status = "approved"
+    end
+
+    # @rem_status = params[:rem_status]
     
     @process_coverage = ProcessCoverage.find(params[:ref])
     if Rails.env.development?
@@ -48,14 +65,18 @@ class ProcessRemarksController < ApplicationController
     @process_coverage = ProcessCoverage.find(params[:process_remark][:process_coverage_id])
     @batch_count = @process_coverage.group_remit.batches.where(batches: { insurance_status: :for_review }).count
 
-    if @batch_count > 0 
-      return redirect_to process_coverage_path(@process_coverage), alert: "Can't proceed. There are #{@batch_count} #{'coverage'.pluralize(@batch_count)} for review"
+    unless params[:process_remark][:process_status].nil? || params[:process_remark][:process_status].empty?
+      if @batch_count > 0
+        return redirect_to process_coverage_path(@process_coverage), alert: "Can't proceed. There are #{@batch_count} #{'coverage'.pluralize(@batch_count)} for review"
+      end
+    else
+      params[:process_remark][:status] = ""
     end
     
     @process_remark = ProcessRemark.new(process_remark_params)
     @process_remark.user_type = current_user.userable_type
     @process_remark.user_id = current_user.userable_id
-
+    # raise 'errors'
     respond_to do |format|
       if @process_remark.save
         if params[:process_remark][:process_status] == "Approve"

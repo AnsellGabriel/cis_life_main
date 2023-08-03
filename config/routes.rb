@@ -2,6 +2,7 @@
 require 'sidekiq/web'
 
 Rails.application.routes.draw do 
+  resources :emp_agreements
   # resources :denied_dependents
  
   resources :anniversaries, :agent_groups, :departments, :agents, :coop_users, :employees, :plans, :product_benefits
@@ -118,6 +119,7 @@ Rails.application.routes.draw do
     get :approve_batch, on: :member
     get :deny_batch, on: :member
     get :pending_batch, on: :member
+    get :reconsider_batch, on: :member
     get :approve
     get :deny
     get :modal_remarks, on: :member

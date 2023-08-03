@@ -27,7 +27,7 @@
   <div class="card-footer">
     <div class="row">
       <div class="col">
-        <%= link_to "Add Remarks", new_process_remark_path(ref: process_coverage), class: "btn btn-outline-primary mb-2 btn-sm", data: { turbo_frame: "remote_modal" } %>
+        <%= link_to "Add Remarks", new_process_remark_path(ref: process_coverage, max_amount: session[:max_amount], total_life_cov: @total_life_cov), class: "btn btn-outline-primary mb-2 btn-sm", data: { turbo_frame: "remote_modal" } %>
         <%= link_to "View All", view_all_process_remarks_path(process_coverage: process_coverage), class: "btn btn-outline-secondary mb-2 btn-sm", data: { turbo_frame: "remote_modal" } %>
       </div>
       <div class="col">

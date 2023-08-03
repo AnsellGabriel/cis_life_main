@@ -17,6 +17,7 @@ class BatchRemarksController < ApplicationController
       when "Pending" then "Pending Batch"
       when "Deny" then "Deny Batch"
       when "MD" then "Med Dir"
+      when "New" then "New Remark" 
     end
 
     @batch_status = params[:batch_status]
@@ -68,6 +69,8 @@ class BatchRemarksController < ApplicationController
           format.html { redirect_to pending_batch_process_coverage_path(id: @process_coverage.id, batch: @batch)}
         elsif params[:batch_remark][:batch_status] == "Deny"
           format.html { redirect_to deny_batch_process_coverage_path(id: @process_coverage.id, batch: @batch)}
+        elsif params[:batch_remark][:batch_status] == "New"
+          format.html { redirect_to process_coverage_path(@process_coverage), notice: "Batch remark created."}
         elsif params[:batch_remark][:batch_status] == "MD"
           # byebug
           format.html { redirect_to all_health_decs_group_remit_batches_path(@batch.group_remit.process_coverage), notice: "Recommendation created." } 
