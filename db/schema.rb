@@ -113,6 +113,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_08_03_033358) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.date "expiry"
+    t.date "effectivity"
     t.index ["agreement_id"], name: "index_agreements_coop_members_on_agreement_id"
     t.index ["coop_member_id"], name: "index_agreements_coop_members_on_coop_member_id"
   end
@@ -207,8 +208,9 @@ ActiveRecord::Schema[7.0].define(version: 2023_08_03_033358) do
     t.boolean "below_nel", default: false
     t.integer "duration"
     t.integer "residency"
-    t.integer "batch_remit_id"
     t.string "type"
+    t.date "previous_effectivity_date"
+    t.date "previous_expiry_date"
     t.index ["agreement_benefit_id"], name: "index_batches_on_agreement_benefit_id"
     t.index ["coop_member_id"], name: "index_batches_on_coop_member_id"
   end
@@ -703,6 +705,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_08_03_033358) do
   add_foreign_key "coop_users", "cooperatives"
   add_foreign_key "denied_dependents", "batches"
   add_foreign_key "denied_dependents", "group_remits"
+  add_foreign_key "denied_enrollees", "cooperatives"
   add_foreign_key "denied_members", "group_remits"
   add_foreign_key "employees", "departments"
   add_foreign_key "group_import_trackers", "group_remits"
