@@ -134,6 +134,7 @@ class ProcessCoveragesController < ApplicationController
         end
         ProcessCoverage.where(status: :denied, created_at: start_date..end_date)
       when "head approval" then ProcessCoverage.where(status: :for_head_approval)
+      when "vp approval" then ProcessCoverage.where(status: :for_head_approval)
     end
 
     @title = params[:title]

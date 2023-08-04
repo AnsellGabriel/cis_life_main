@@ -78,7 +78,7 @@
           For VP Approval
         </div>
         <div class="card-body">
-        <%= link_to pluralize(@process_coverages.where(status: "for_vp_approval").count, "Coverage"), cov_list_process_coverages_path(cov_type: "head approval", title: "For Head Approval PCs"), class: "link-dark", data: { turbo_frame: "remote_modal" } %> <br>
+        <%= link_to pluralize(@process_coverages.where(status: "for_vp_approval").count, "Coverage"), cov_list_process_coverages_path(cov_type: "vp approval", title: "For Head Approval PCs"), class: "link-dark", data: { turbo_frame: "remote_modal" } %> <br>
         </div>
       </div>
     <% end %>

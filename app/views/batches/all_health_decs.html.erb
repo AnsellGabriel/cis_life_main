@@ -10,11 +10,12 @@
   <tbody>
     <% unless @batches.count == 0 %>
       <% @batches.each do |batch| %>
+        <% group_remit = batch.group_remits.find_by(type: "Remittance") %>
         <tr>
           <td><%= batch.id %></td>
           <td><%= batch.coop_member %></td>
           <td>
-            <%= link_to "View", health_dec_group_remit_batch_path(batch.group_remit, batch, for_und: true, md: true), class: "btn btn-sm btn-warning mb-1", data: { turbo_frame: "modal-xl" } %>
+            <%= link_to "View", health_dec_group_remit_batch_path(group_remit, batch, for_und: true, md: true), class: "btn btn-sm btn-warning mb-1", data: { turbo_frame: "modal-xl" } %>
           </td>
         </tr>
       <% end %>
