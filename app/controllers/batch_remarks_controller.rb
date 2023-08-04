@@ -73,7 +73,8 @@ class BatchRemarksController < ApplicationController
           format.html { redirect_to process_coverage_path(@process_coverage), notice: "Batch remark created."}
         elsif params[:batch_remark][:batch_status] == "MD"
           # byebug
-          format.html { redirect_to all_health_decs_group_remit_batches_path(@batch.group_remit.process_coverage), notice: "Recommendation created." } 
+          @group_remit = @batch.group_remits.find_by(type: "Remittance")
+          format.html { redirect_to all_health_decs_group_remit_batches_path(@group_remit.process_coverage), notice: "Recommendation created." } 
         else
           format.html { redirect_to batch_remark_url(@batch_remark), notice: "Batch remark was successfully created." }
           format.json { render :show, status: :created, location: @batch_remark }
