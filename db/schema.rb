@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_07_31_065859) do
+ActiveRecord::Schema[7.0].define(version: 2023_08_03_054347) do
   create_table "active_admin_comments", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.string "namespace"
     t.text "body"
@@ -112,6 +112,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_07_31_065859) do
     t.string "status"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.date "expiry"
     t.index ["agreement_id"], name: "index_agreements_coop_members_on_agreement_id"
     t.index ["coop_member_id"], name: "index_agreements_coop_members_on_coop_member_id"
   end
@@ -250,7 +251,15 @@ ActiveRecord::Schema[7.0].define(version: 2023_07_31_065859) do
     t.string "street"
     t.string "email"
     t.string "branch_head"
+    t.bigint "geo_region_id"
+    t.bigint "geo_province_id"
+    t.bigint "geo_municipality_id"
+    t.bigint "geo_barangay_id"
     t.index ["cooperative_id"], name: "index_coop_branches_on_cooperative_id"
+    t.index ["geo_barangay_id"], name: "index_coop_branches_on_geo_barangay_id"
+    t.index ["geo_municipality_id"], name: "index_coop_branches_on_geo_municipality_id"
+    t.index ["geo_province_id"], name: "index_coop_branches_on_geo_province_id"
+    t.index ["geo_region_id"], name: "index_coop_branches_on_geo_region_id"
   end
 
   create_table "coop_members", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
@@ -636,6 +645,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_07_31_065859) do
     t.integer "residency_floor"
     t.integer "residency_ceiling"
     t.string "benefit_type"
+    t.boolean "main"
     t.index ["agreement_benefit_id"], name: "index_product_benefits_on_agreement_benefit_id"
     t.index ["benefit_id"], name: "index_product_benefits_on_benefit_id"
   end

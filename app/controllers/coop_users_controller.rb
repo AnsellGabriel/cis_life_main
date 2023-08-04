@@ -6,7 +6,9 @@ class CoopUsersController < ApplicationController
   
   # GET /coop_users or /coop_users.json
   def index
-    @coop_users = CoopUser.all
+    # @coop_users = CoopUser.all
+    @f_employees = CoopUser.all
+    @pagy, @coop_users = pagy(@f_employees, items: 20)
   end
 
   # GET /coop_users/1 or /coop_users/1.json

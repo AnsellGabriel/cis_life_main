@@ -16,7 +16,7 @@
     <tbody>
       <% ab.product_benefits.order(coverage_amount: :desc).each do |product_benefit| %>
         <tr>
-          <td><small><%= product_benefit.benefit %></small></td>
+          <td><small><%= product_benefit.benefit %> <span class="badge rounded-pill text-bg-primary"><%= "Main" if product_benefit.main %></span></small></td>
           
             <td class="text-end"><%= to_curr(product_benefit.coverage_amount) %></td>
             <td class="text-end"><%= to_curr(product_benefit.premium) %></td>

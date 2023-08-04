@@ -107,7 +107,7 @@ class BatchesController < ApplicationController
 
     begin
       member = coop_member.member
-    rescue NoMethodError => e
+    rescue NoMethodError => e # if member is not found
       return redirect_to group_remit_path(@group_remit), alert: "Member not found"
     end
 
@@ -121,7 +121,9 @@ class BatchesController < ApplicationController
     begin
 
       if member.age(@group_remit.effectivity_date) < @batch.agreement_benefit.min_age or member.age(@group_remit.effectivity_date) > @batch.agreement_benefit.max_age
+
         return redirect_to group_remit_path(@group_remit), alert: "Member age must be between #{@batch.agreement_benefit.min_age.to_i} and #{@batch.agreement_benefit.max_age.to_i} years old."
+
       else
         respond_to do |format|
           if @batch.save!

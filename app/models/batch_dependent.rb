@@ -1,5 +1,6 @@
 class BatchDependent < ApplicationRecord
   include Calculate
+  validate :validate_age
 
   belongs_to :batch
   belongs_to :member_dependent
@@ -15,5 +16,13 @@ class BatchDependent < ApplicationRecord
       'Child' => 4,
       'Sibling' => 5
     }[relationship]
+  end
+
+  def validate_age
+    age = self.member_dependent.age 
+
+    if age < self.agreement_benefit.min_age || age > self.agreement_benefit.max_age
+      errors.add(:age, "must be between #{self.agreement_benefit.min_age.to_i} and #{self.agreement_benefit.max_age.to_i}. Dependent's age is #{age}")
+    end
   end
 end

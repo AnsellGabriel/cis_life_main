@@ -6,6 +6,9 @@ Rails.application.routes.draw do
  
   resources :anniversaries, :agent_groups, :departments, :agents, :coop_users, :employees, :plans, :product_benefits
 
+  resources :user do 
+    get :approved, on: :member
+  end
   resources :agreement_benefits do
     get :selected, on: :member
   end

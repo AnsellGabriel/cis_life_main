@@ -72,7 +72,7 @@
             </a>
             <ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
               <%= link_to "Agreement", agreements_path, class: "dropdown-item" %>
-              <%= link_to "Plans", new_plan_path, class: "dropdown-item" %>
+              <%= link_to "Plans", plans_path, class: "dropdown-item" %>
               <%# <%= link_to "Benefits", benefits_path, class: "dropdown-item" %>
               <%#= link_to "Benefits", benefits_path, class: "dropdown-item" %>
               <%#= link_to "Causes", causes_path, class: "dropdown-item" %>
@@ -93,7 +93,7 @@
               <%= link_to "Employees", employees_path, class: "dropdown-item" %>
               <%= link_to "Cooperative User", coop_users_path, class: "dropdown-item" %>
               <%= link_to "Agents", agents_path, class: "dropdown-item" %>
-              <%#= link_to "Branch", branches_path, class: "dropdown-item" %>
+              <%= link_to "Pending Users", user_index_path, class: "dropdown-item" %>
               <%#= link_to "Authority Level", authority_levels_path, class: "dropdown-item" %>
               <%#= link_to "Claim routes", claim_routes_path, class: "dropdown-item" %>
             </ul>

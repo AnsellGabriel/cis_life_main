@@ -6,11 +6,19 @@
       <div class="card mb-3">
         <div class="card-body">
           <div class="row">
-            <div class="col-sm-3">
+            <div class="col-sm-6">
               <h6 class="mb-0">Principal Policy Owner:</h6>
             </div>
-            <div class="col-sm text-secondary">
+            <div class="col-sm-6 text-secondary">
               <%= "#{@batch.coop_member.member.last_name}, #{@batch.coop_member.member.first_name} #{@batch.coop_member.member.middle_name}" %>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-sm-6">
+              <h6 class="mb-0">Civil Status:</h6>
+            </div>
+            <div class="col-sm-6 text-secondary">
+              <%= "#{@batch.coop_member.member.civil_status}" %>
             </div>
           </div>
           <br>

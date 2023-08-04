@@ -13,12 +13,7 @@
       <tr>
 
       <th>ID</th>
-        <th>Last Name</th>
-        <th>First Name</th>
-        <th>Middle Name</th>
-        <th>Birthdate</th>
-        <th>Mobile Number</th>
-        <th>Agent Group</th>
+        <th>Details</th>
         <th></th>
 
       </tr>
@@ -29,17 +24,14 @@
         <tr>
 
         <td><%= agent.id %></td>
-        <td><%= agent.last_name %></td>
-        <td><%= agent.first_name %></td>
-        <td><%= agent.middle_name %></td>
-        <td><%= agent.birthdate %></td>
-        <td><%= agent.mobile_number %></td>
-        <td><%= agent.agent_group %></td>
+        <td> <strong> <%= agent %> </strong> <br>
+        <small><%= agent.mobile_number %> | <%= agent.agent_group %></small>
+        </td>
     
           <td>
-            <%= link_to 'View', agent, class: 'btn' %>
-            <%= link_to 'Edit', edit_agent_path(agent), class: 'btn' %>
-            <%= link_to 'Delete', agent, method: :delete, data: { confirm: 'Are you sure?' }, class: 'btn' %>
+            <%= link_to 'View', agent, class: 'btn btn-sm btn-secondary' %>
+            <%= link_to 'Edit', edit_agent_path(agent), class: 'btn btn-sm btn-secondary' %>
+            <%= link_to 'Delete', agent, method: :delete, data: { confirm: 'Are you sure?' }, class: 'btn btn-sm btn-secondary' %>
           </td>
 
         </tr>

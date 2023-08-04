@@ -42,7 +42,18 @@ class BatchImportService
     principal_spreadsheet.drop(1).each do |row|
       batch_hash = extract_batch_data(row)
       member = find_or_initialize_member(batch_hash)
-    
+      
+      unless member.persisted?
+        create_denied_member(member, 'Unenrolled member.')
+        progress_counter += 1
+        update_progress(total_members, progress_counter)
+        next
+      end
+
+      # coop_member = @cooperative.coop_members.find_by(member_id: member.id)
+      # existing_coverage = @agreement.agreements_coop_member.find_by(coop_member_id: coop_member.id)
+
+
       if @gyrt_ranking_plans.include?(@agreement.plan.acronym)
         unless row["Rank"].present?
           progress_counter += 1
@@ -60,13 +71,6 @@ class BatchImportService
       # end
       
       age_min_max = age_min_max_by_insured_type(agreement_benefits, batch_hash[:rank])
-
-      unless member.persisted?
-        create_denied_member(member, 'Unenrolled member.')
-        progress_counter += 1
-        update_progress(total_members, progress_counter)
-        next
-      end
 
       if age_not_within_range?(member, age_min_max, @group_remit.effectivity_date)
         create_denied_member(member, 'Age not within agreement\'s age range', @group_remit.effectivity_date)
@@ -99,9 +103,9 @@ class BatchImportService
         birth_date: row["Member Birthdate"]
       }
     
-      member = Member.find_by(member_name)
+      member = find_or_initialize_member(member_name)
 
-      if member.nil?
+      unless member.persisted?
         progress_counter += 1
         update_progress(total_members, progress_counter)
         next
@@ -126,14 +130,20 @@ class BatchImportService
         dependent: row["Dependent?"]
       }
 
-
-      dependent = member.member_dependents.find_or_create_by(
-        first_name: dependent_hash[:first_name],
-        middle_name: dependent_hash[:middle_name],
-        last_name: dependent_hash[:last_name],
-        birth_date: dependent_hash[:birth_date],
-        relationship: dependent_hash[:relationship]
-      )
+      begin
+        dependent = member.member_dependents.find_or_create_by(
+          first_name: dependent_hash[:first_name],
+          middle_name: dependent_hash[:middle_name],
+          last_name: dependent_hash[:last_name],
+          birth_date: dependent_hash[:birth_date],
+          relationship: dependent_hash[:relationship]
+        )
+        dependent.save!
+      rescue ActiveRecord::RecordInvalid
+        progress_counter += 1
+        update_progress(total_members, progress_counter)
+        next
+      end
       
 
       if dependent_hash[:dependent].to_s.strip.upcase == 'TRUE' && @agreement.plan.gyrt_type == 'family' && batch.agreement_benefit.with_dependent?
@@ -220,7 +230,7 @@ class BatchImportService
   end
   
   def find_or_initialize_member(batch_hash)
-    Member.find_or_initialize_by(
+    @cooperative.members.find_or_initialize_by(
       first_name: batch_hash[:first_name],
       last_name: batch_hash[:last_name],
       middle_name: batch_hash[:middle_name],
