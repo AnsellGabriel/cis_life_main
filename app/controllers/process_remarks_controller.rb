@@ -16,31 +16,39 @@ class ProcessRemarksController < ApplicationController
     @title = case params[:pro_status]
     when "Approve" then "Process Approval"
     when "Deny" then "Process Denial"
+    when "Reprocess" then "Reprocess"
     else
       "Add Remark"
     end
     
-    @total_life_cov = params[:total_life_cov]
-    @max_amount = params[:max_amount]
     @process_status = params[:pro_status]
+    @total_life_cov = params[:total_life_cov].to_i
+    @max_amount = params[:max_amount].to_i
+    @total_net_prem = params[:total_net_prem].to_i
 
-    if current_user.rank == "analyst"
-      if @max_amount >= @total_life_cov
-        @rem_status = "approved"
-      else
-        @rem_status = "for_head_approval"
+    if @process_status == "Approve" || @process_status == "Deny"
+
+      if current_user.rank == "analyst"
+        if @max_amount >= @total_net_prem
+          @rem_status = "approved"
+        else
+          @rem_status = "for_head_approval"
+        end
+      elsif current_user.rank == "head"
+        if @max_amount >= @total_net_prem
+          @rem_status = "approved"
+        else
+          @rem_status = "for_vp_approval"
+        end
+      elsif current_user.rank == "senior_officer"
+          @rem_status = "approved"
       end
-    elsif current_user.rank == "head"
-      if @max_amount >= @total_life_cov
-        @rem_status = "approved"
-      else
-        @rem_status = "for_vp_approval"
-      end
-    elsif current_user.rank == "senior_officer"
-        @rem_status = "approved"
+
+    else
+      @rem_status = params[:rem_status]
     end
 
-    # @rem_status = params[:rem_status]
+
     
     @process_coverage = ProcessCoverage.find(params[:ref])
     if Rails.env.development?
@@ -81,9 +89,11 @@ class ProcessRemarksController < ApplicationController
       if @process_remark.save
         if params[:process_remark][:process_status] == "Approve"
 
-          format.html { redirect_to process_coverage_approve_path(process_coverage_id: params[:process_remark][:process_coverage_id], total_life_cov: params[:process_remark][:total_life_cov], max_amount: params[:process_remark][:max_amount])}
+          format.html { redirect_to process_coverage_approve_path(process_coverage_id: params[:process_remark][:process_coverage_id], total_life_cov: params[:process_remark][:total_life_cov], max_amount: params[:process_remark][:max_amount], total_net_prem: params[:process_remark][:total_net_prem])}
         elsif params[:process_remark][:process_status] == "Deny"
           format.html { redirect_to process_coverage_deny_path(process_coverage_id: params[:process_remark][:process_coverage_id])}
+        elsif params[:process_remark][:process_status] == "Reprocess"
+          format.html { redirect_to process_coverage_reprocess_path(process_coverage_id: params[:process_remark][:process_coverage_id])}
         else
           format.html { redirect_to process_coverage_url(params[:process_remark][:process_coverage_id]), notice: "Process remark was successfully created." }
           format.json { render :show, status: :created, location: @process_remark }

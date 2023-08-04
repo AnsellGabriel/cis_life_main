@@ -5,11 +5,14 @@
 
   <div class="form-inputs mb-3">
     <%= f.association :employee, collection: Employee.joins(:user).where(department_id: 17, user: { rank: 1 }) %>
-    <%= f.association :agreement, label_method: :coop_name, order: :coop_name %>
+    <%= f.association :agreement, label_method: :coop_name, order: :coop_name, disabled: val %>
+    <% if val == true %>
+      <%= f.association :agreement, label_method: :coop_name, order: :coop_name, as: :hidden %>
+    <% end %>
   </div>
 
   <div class="form-actions text-end">
     <%= link_to "Back", emp_agreements_path, class: 'btn btn-secondary' %>
-    <%= f.button :submit, class: 'btn-success' %>
+    <%= f.button :submit, "Submit", class: 'btn-success' %>
   </div>
 <% end %>

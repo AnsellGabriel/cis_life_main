@@ -321,7 +321,7 @@
                         <%= bootstrap_icon "x-lg" %>
                       <% end %>
                     </div>
-                    <div class="<%= reconsider_button(current_user.rank, batch.insurance_status) %>">
+                    <div class="<%= reconsider_button(current_user.rank, batch.insurance_status, process_coverage.status) %>">
                       <%= link_to reconsider_batch_process_coverage_path(batch: batch), onclick: "return confirm('Are you sure?')", method: :get, class: "btn btn-sm btn-warning mb-1" do %>
                         <%= bootstrap_icon "arrow-repeat" %>
                       <% end %>

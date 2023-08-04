@@ -6,13 +6,27 @@ class EmpAgreementsController < ApplicationController
     @emp_agreements = EmpAgreement.all
   end
 
+  def transfer_index
+    @emp_agreements = EmpAgreement.all
+  end
+
+  def transfer
+    @emp_agreement = EmpAgreement.new
+  end
+  
+
   # GET /emp_agreements/1
   def show
   end
 
   # GET /emp_agreements/new
   def new
-    @emp_agreement = EmpAgreement.new
+    if params[:agreement].nil?
+      @emp_agreement = EmpAgreement.new
+    else
+      @agreement = Agreement.find_by(id: params[:agreement])
+      @emp_agreement = EmpAgreement.new(agreement: @agreement)
+    end
   end
 
   # GET /emp_agreements/1/edit

@@ -117,6 +117,7 @@ module ApplicationHelper
 			when "for_process" then content_tag(:span, "For Process", class: "text-dark")
 			when "for_head_approval" then content_tag(:span, "For Head Approval", class: "text-secondary")
 			when "for_vp_approval" then content_tag(:span, "For VP Approval", class: "text-secondary")
+			when "reprocess" then content_tag(:span, "Reprocess", class: "text-warning")
 		end
 	end
 
@@ -127,6 +128,7 @@ module ApplicationHelper
 			when "denied" then content_tag(:span, "Denied", class: "badge rounded-pill bg-danger")
 			when "for_head_approval" then content_tag(:span, "For Head Approval", class: "badge rounded-pill bg-secondary")
 			when "for_vp_approval" then content_tag(:span, "For VP Approval", class: "badge rounded-pill bg-secondary")
+			when "reprocess" then content_tag(:span, "For Reprocess", class: "badge rounded-pill bg-warning")
 		end
 	end
 

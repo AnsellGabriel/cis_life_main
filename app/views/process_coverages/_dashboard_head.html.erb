@@ -36,12 +36,12 @@
   <div class="col-3 mb-2">
     <div class="card text-white bg-secondary">
       <div class="card-header">
-        Pending Process Coverages
+        Reprocess Coverages
       </div>
       <div class="card-body">
-      Year: <%= link_to pluralize(@pending_process_coverages.where(created_at: current_date.beginning_of_year..current_date.end_of_year).count, "Coverage"), cov_list_process_coverages_path(cov_type: "Pending", title: "Pending PCs"), class: "link-light", data: { turbo_frame: "remote_modal" } %> <br>
-      Month: <%= pluralize(@pending_process_coverages.where(created_at: start_month(current_date)..end_month(current_date)).count, "Coverage") %> <br>
-      Week: <%= pluralize(@pending_process_coverages.where(created_at: start_week(current_date)..end_week(current_date.end_of_year)).count, "Coverage") %>
+      Year: <%= link_to pluralize(@reprocess_coverages.where(created_at: current_date.beginning_of_year..current_date.end_of_year).count, "Coverage"), cov_list_process_coverages_path(cov_type: "Reconsider", title: "Pending PCs"), class: "link-light", data: { turbo_frame: "remote_modal" } %> <br>
+      Month: <%= pluralize(@reprocess_coverages.where(created_at: start_month(current_date)..end_month(current_date)).count, "Coverage") %> <br>
+      Week: <%= pluralize(@reprocess_coverages.where(created_at: start_week(current_date)..end_week(current_date.end_of_year)).count, "Coverage") %>
       </div>
     </div>
   </div>
