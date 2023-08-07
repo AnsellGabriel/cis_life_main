@@ -27,6 +27,10 @@ class GroupRemitPresenter
 		@group_remit.pending? || @group_remit.for_renewal?
 	end
 
+	def is_pending?
+		@group_remit.pending?
+	end
+
 	def is_expired?
 		@group_remit.expired?
 	end
@@ -36,7 +40,7 @@ class GroupRemitPresenter
 	end
 
 	def remaining_days
-		(@group_remit.expiry_date - Date.today).to_i
+		remaining_days = (@group_remit.expiry_date - Date.today).to_i
 	end
 
 	def countdown_color

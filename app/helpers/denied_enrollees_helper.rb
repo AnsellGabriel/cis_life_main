@@ -1,0 +1,2 @@
+module DeniedEnrolleesHelper
+end

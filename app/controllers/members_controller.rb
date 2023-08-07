@@ -16,7 +16,7 @@ class MembersController < InheritedResources::Base
     if import_message.is_a?(String)
       redirect_to coop_members_path, alert: import_message
     else
-      redirect_to coop_members_path, notice: "#{import_message[:created_members_counter]} members enrolled. #{import_message[:updated_members_counter]} members updated."
+      redirect_to coop_members_path, notice: "#{import_message[:created_members_counter]} members enrolled. #{import_message[:updated_members_counter]} members updated. #{import_message[:denied_enrollees_counter]} members denied."
     end
 
     reset_session_progress

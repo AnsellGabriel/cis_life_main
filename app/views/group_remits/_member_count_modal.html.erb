@@ -13,24 +13,28 @@
         </div>
 
         <% @agreement.agreement_benefits.includes({product_benefits: :benefit}).each do |ab| %>
+          <% batches = @group_remit.batches.where(agreement_benefit: ab) %>
+          <% batch_dependents = BatchDependent.where(agreement_benefit: ab).joins(batch: :group_remits).joins(batch: :group_remits).where(group_remits: { id: @group_remit.id }) %>
 
-          <% if ab.batches.size == 0 && ab.batch_dependents.size == 0 %>
+          <% if batches.size == 0 && batch_dependents.size == 0%>
             <% next %>
           <% end %>
 
+
+
           <div class="<%= flex_justify_align('around', 'center') %> text-secondary">
-            <%= content_tag :span, "#{ab.insured_type == 'principal' ? "#{ab.insured_type.upcase} (#{ab.name})" : ab.name.upcase}", 
+            <%= content_tag :span, "#{ab.name.upcase}", 
               class: 'text-secondary', 
               style: 'font-size: .8rem; width: 150px;'
             %>
             
             <% if ab.batches.size > 0 %>
-              <%= content_tag :span, "#{ab.batches.size}", 
+              <%= content_tag :span, "#{batches.size}", 
                 class: 'text-secondary text-center', 
                 style: 'font-size: .8rem; width: 150px;' 
               %>
             <% elsif ab.batch_dependents.size > 0 %>
-              <%= content_tag :span, "#{ab.batch_dependents.size}", 
+              <%= content_tag :span, "#{batch_dependents.size}", 
                 class: 'text-secondary text-center', 
                 style: 'font-size: .8rem; width: 150px;' 
               %>

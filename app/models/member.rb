@@ -6,7 +6,7 @@ class Member < ApplicationRecord
   # VALID_PH_MOBILE_NUMBER_REGEX = /\A(09|\+639)\d{9}\z/
   # VALID_PH_LANDLINE_NUMBER_REGEX = /\A(02|03[2-9]|042|043|044|045|046|047|048|049|052|053|054|055|056|057|058|072|074|075|076|077|078)\d{7}\z/
 
-  validates :mobile_number, presence: true
+  # validates :mobile_number, presence: true
   # format: { 
   #   # with: VALID_PH_MOBILE_NUMBER_REGEX, 
   #   message: "must be a valid Philippine mobile number" 
@@ -16,8 +16,8 @@ class Member < ApplicationRecord
   #   message: "must be a valid Philippine mobile or landline number" 
   # }
 
-  validates_presence_of :last_name, :first_name, :middle_name, :birth_date, :address, :civil_status, :gender
-  validates :email, format: { with: URI::MailTo::EMAIL_REGEXP }
+  validates_presence_of :last_name, :first_name, :middle_name, :birth_date, :civil_status, :gender
+  # validates :email, format: { with: URI::MailTo::EMAIL_REGEXP }
 
   # belongs_to :coop_branch
 
@@ -61,7 +61,6 @@ class Member < ApplicationRecord
   def capitalize_status
     self.civil_status = self.civil_status.titleize
   end
-
   
   def format_phone_numbers
     self.mobile_number = format_phone_number(self.mobile_number)
@@ -88,14 +87,12 @@ class Member < ApplicationRecord
   
 
   def uppercase_fields
-    self.last_name = self.last_name.strip.upcase
-    self.first_name = self.first_name.strip.upcase
-    self.middle_name = self.middle_name.strip.upcase
+    self.last_name = self.last_name == nil ? '' : self.last_name.strip.upcase
+    self.first_name = self.first_name == nil ? '' : self.first_name.strip.upcase
+    self.middle_name = self.middle_name == nil ? '' : self.middle_name.strip.upcase
     self.suffix = self.suffix == nil ? '' : self.suffix.strip.upcase
     # repeat the above line for each field you want to make all caps
   end
-
-  
 
   def self.coop_member_details(coop_members)
     includes(coop_members: :coop_branch).where(coop_members: { id: coop_members.ids }).order(:last_name)
