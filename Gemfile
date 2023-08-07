@@ -116,3 +116,5 @@ gem "prawn", "~> 2.4"
 
 gem "prawn-templates", "~> 0.1.2"
 gem "prawn-table"
+
+gem "audited", "~> 5.3"
