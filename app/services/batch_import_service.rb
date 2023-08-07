@@ -180,7 +180,9 @@ class BatchImportService
           member_dependent_id: dependent.id,
         )
         insured_type = batch_dependent.insured_type(dependent.relationship)
-        dependent_agreement_benefits = @agreement.agreement_benefits.where("name LIKE ?", "%#{batch.agreement_benefit.name}%").find_by(insured_type: insured_type)
+        # dependent_agreement_benefits = @agreement.agreement_benefits.where("name LIKE ?", "%#{batch.agreement_benefit.name}%").find_by(insured_type: insured_type)
+        dependent_agreement_benefits = @agreement.agreement_benefits.find_by(insured_type: insured_type)
+
         term_insurance = @agreement.plan.acronym == 'PMFC' ? true : false
 
         batch_dependent.set_premium_and_service_fees(dependent_agreement_benefits, @group_remit, term_insurance)
