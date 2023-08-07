@@ -162,7 +162,7 @@ class GroupRemitsController < InheritedResources::Base
                             .where(batches: { id: approved_batches })
                             .distinct
 
-        agreement.coop_members << approved_members
+        # agreement.coop_members << approved_members
         current_batch_remit = GroupRemit.find(@group_remit.batch_remit_id)
         current_batch_remit.batches << approved_batches
         current_batch_remit.set_total_premiums_and_fees
@@ -235,6 +235,17 @@ class GroupRemitsController < InheritedResources::Base
         @f_batches = @group_remit.batches_without_health_dec.order(created_at: :desc)
       elsif params[:rank_filter].present?
         @f_batches = @group_remit.batches.joins(:agreement_benefit).where(agreement_benefits: params[:rank_filter])
+      elsif params[:insurance_status].present?
+        case params[:insurance_status]
+        when 'approved'
+          @f_batches = batches_eager_loaded.where(insurance_status: :approved)
+        when 'pending'
+          @f_batches = batches_eager_loaded.where(insurance_status: :pending)
+        when 'denied'
+          @f_batches = batches_eager_loaded.where(insurance_status: :denied)
+        when 'for_review'
+          @f_batches = batches_eager_loaded.where(insurance_status: :for_review)
+        end
       else
         @f_batches = batches_eager_loaded
       end

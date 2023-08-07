@@ -73,7 +73,7 @@ class MembersController < InheritedResources::Base
     respond_to do |format|
       if @member.update(member_params)
         format.html { 
-          redirect_to coop_member_path(@coop_member),
+          redirect_to coop_members_path,
           notice: "Member was successfully updated." }
       else
         format.html { render :new, status: :unprocessable_entity }
@@ -84,7 +84,7 @@ class MembersController < InheritedResources::Base
   private
 
     def member_params
-      params.require(:member).permit(:birth_place, :address, :sss_no, :tin_no, :civil_status, :legal_spouse, :height, :weight, :occupation, :employer, :work_address, :work_phone_number, :last_name, :first_name, :middle_name, :suffix, :email, :mobile_number, :birth_date, :gender, coop_members_attributes: [:id, :cooperative_id, :coop_branch_id, :membership_date, :transferred, :_destroy])
+      params.require(:member).permit(:birth_place, :address, :sss_no, :tin_no, :civil_status, :legal_spouse, :height, :weight, :occupation, :employer, :work_address, :work_phone_number, :last_name, :first_name, :middle_name, :suffix, :email, :mobile_number, :birth_date, :gender, coop_members_attributes: [:id, :cooperative_id, :coop_branch_id, :membership_date, :deceased, :_destroy])
     end
 
     def check_userable_type

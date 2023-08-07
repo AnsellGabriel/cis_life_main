@@ -101,6 +101,9 @@
           <td>
             <div class="">
               <%= content_tag :span, "#{coop_member.full_name}" %>
+              <% if coop_member.deceased? %>
+                <%= content_tag :span, 'DECEASED', class: badge('danger') %>
+              <% end %>
               <div class="d-flex align-items-center gap-1"> 
                 <div class="">
                   <i class="bi bi-phone"></i>
@@ -116,7 +119,7 @@
           </td>
           <td><%= coop_member.coop_branch.name.titleize %></td>
           <td>
-            <% if coop_member.agreements.exists? %>
+            <% if coop_member.batches.joins(:group_remits).where(group_remits: { type: 'BatchRemit' }).exists? %>
               <%= link_to 'Insurance', member_agreements_coop_member_path(coop_member), class: 'btn btn-sm btn-primary' %>
             <% end %>
             <%= link_to 'Details', coop_member_path(coop_member), class: 'btn btn-sm btn-primary', data: {turbo_frame: 'modal-xl'} %>

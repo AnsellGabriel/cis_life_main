@@ -199,6 +199,12 @@
       <% end %>
 
       </div>
+      <div class="">
+        <%= link_to 'Approved', group_remit_path(@group_remit, insurance_status: :approved), class: "btn btn-sm btn-warning" %>
+        <%= link_to 'Denied', group_remit_path(@group_remit, insurance_status: :denied), class: "btn btn-sm btn-danger" %>
+        <%= link_to 'Pending', group_remit_path(@group_remit, insurance_status: :pending), class: "btn btn-sm btn-secondary" %>
+        <%= link_to 'For Review', group_remit_path(@group_remit, insurance_status: :for_review), class: "btn btn-sm btn-outline-secondary" %>
+      </div>
   <% else %>
     <div class="<%= flex_justify_align('end', 'center') %> gap-1">
   <% end %>
