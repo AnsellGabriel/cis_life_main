@@ -1,4 +1,5 @@
 class ApplicationController < ActionController::Base
+  add_flash_types :warning
   include Pagy::Backend
 
   before_action :set_cooperative, :set_authority_level

@@ -51,16 +51,27 @@
       <%= process_status(@process_coverage.status) %>
     <% end %>
 
+    <%= content_tag :p do %>
+      <strong>Total Net Premium:</strong>
+      <%= to_currency(@total_net_prem) %>
+    <% end %>
+
 
     <%# if process_coverage.status == "pending" || process_coverage.status == "for_process" %>
       <div class="<%= approve_deny_button_pro_cov(current_user.rank, @process_coverage.status) %>">
-        <%= link_to new_process_remark_path(ref: process_coverage, pro_status: "Approve", rem_status: "Approved", max_amount: session[:max_amount], total_life_cov: @total_life_cov), title: "Approve", class: "btn btn-sm btn-success mb-2 me-2", data: { turbo_frame: "remote_modal" } do %>
+        <%= link_to new_process_remark_path(ref: process_coverage, pro_status: "Approve", rem_status: "approved", max_amount: session[:max_amount], total_life_cov: @total_life_cov, total_net_prem: @total_net_prem), title: "Approve", class: "btn btn-sm btn-success mb-2 me-2", data: { turbo_frame: "remote_modal" } do %>
           <%= bootstrap_icon "check-lg" %> Approve
         <% end %>
-        <%= link_to new_process_remark_path(ref: process_coverage, pro_status: "Deny", rem_status: "Denied"), title: "Denied", class: "btn btn-sm btn-danger mb-2", data: { turbo_frame: "remote_modal" } do %>
+        <%= link_to new_process_remark_path(ref: process_coverage, pro_status: "Deny", rem_status: "denied"), title: "Denied", class: "btn btn-sm btn-danger mb-2", data: { turbo_frame: "remote_modal" } do %>
           <%= bootstrap_icon "x-lg" %> Deny
         <% end %>
       </div>
+
+      <% if current_user.analyst? && (process_coverage.approved? || process_coverage.denied?)%>
+        <%= link_to new_process_remark_path(ref: process_coverage, pro_status: "Reprocess", rem_status: "reprocess"), title: "Reprocess", class: "btn btn-sm btn-warning mb-2", data: { turbo_frame: "remote_modal" } do %>
+          <%= bootstrap_icon "arrow-repeat" %> Reprocess
+        <% end %>
+      <% end %>
     <%# end %>
 
 <%# unless process_coverage.group_remit.batches.where(insurance_status: "for_review").count == 0 %>

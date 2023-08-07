@@ -124,13 +124,18 @@ module ApplicationHelper
 			when "for_process" then content_tag(:span, "For Process", class: "text-dark")
 			when "for_head_approval" then content_tag(:span, "For Head Approval", class: "text-secondary")
 			when "for_vp_approval" then content_tag(:span, "For VP Approval", class: "text-secondary")
+			when "reprocess" then content_tag(:span, "Reprocess", class: "text-warning")
 		end
 	end
 
 	def remarks_status(val)
 		case val
-			when "Approved" then content_tag(:span, val, class: "badge rounded-pill bg-success")
-			when "Denied" then content_tag(:span, val, class: "badge rounded-pill bg-danger")
+			when "pending" then content_tag(:span, "Pending", class: "badge rounded-pill bg-secondary")
+			when "approved" then content_tag(:span, "Approved", class: "badge rounded-pill bg-success")
+			when "denied" then content_tag(:span, "Denied", class: "badge rounded-pill bg-danger")
+			when "for_head_approval" then content_tag(:span, "For Head Approval", class: "badge rounded-pill bg-secondary")
+			when "for_vp_approval" then content_tag(:span, "For VP Approval", class: "badge rounded-pill bg-secondary")
+			when "reprocess" then content_tag(:span, "For Reprocess", class: "badge rounded-pill bg-warning")
 		end
 	end
 

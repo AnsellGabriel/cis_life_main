@@ -54,6 +54,11 @@
             bs_target: "#batchEnrollment"
           }%>
       </div>
+      <%  if @cooperative.denied_enrollees.present? %>
+        <div class="">
+          <%= link_to 'Denied enrollees', denied_enrollees_path, class: small_btn('outline-secondary') %>
+        </div>
+      <% end %>
     </div>
   </div>
 

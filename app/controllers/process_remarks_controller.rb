@@ -16,14 +16,39 @@ class ProcessRemarksController < ApplicationController
     @title = case params[:pro_status]
     when "Approve" then "Process Approval"
     when "Deny" then "Process Denial"
+    when "Reprocess" then "Reprocess"
     else
       "Add Remark"
     end
-
+    
     @process_status = params[:pro_status]
-    @rem_status = params[:rem_status]
-    @total_life_cov = params[:total_life_cov]
-    @max_amount = params[:max_amount]
+    @total_life_cov = params[:total_life_cov].to_i
+    @max_amount = params[:max_amount].to_i
+    @total_net_prem = params[:total_net_prem].to_i
+
+    if @process_status == "Approve" || @process_status == "Deny"
+
+      if current_user.rank == "analyst"
+        if @max_amount >= @total_net_prem
+          @rem_status = "approved"
+        else
+          @rem_status = "for_head_approval"
+        end
+      elsif current_user.rank == "head"
+        if @max_amount >= @total_net_prem
+          @rem_status = "approved"
+        else
+          @rem_status = "for_vp_approval"
+        end
+      elsif current_user.rank == "senior_officer"
+          @rem_status = "approved"
+      end
+
+    else
+      @rem_status = params[:rem_status]
+    end
+
+
     
     @process_coverage = ProcessCoverage.find(params[:ref])
     if Rails.env.development?
@@ -48,21 +73,27 @@ class ProcessRemarksController < ApplicationController
     @process_coverage = ProcessCoverage.find(params[:process_remark][:process_coverage_id])
     @batch_count = @process_coverage.group_remit.batches.where(batches: { insurance_status: :for_review }).count
 
-    if @batch_count > 0 
-      return redirect_to process_coverage_path(@process_coverage), alert: "Can't proceed. There are #{@batch_count} #{'coverage'.pluralize(@batch_count)} for review"
+    unless params[:process_remark][:process_status].nil? || params[:process_remark][:process_status].empty?
+      if @batch_count > 0
+        return redirect_to process_coverage_path(@process_coverage), alert: "Can't proceed. There are #{@batch_count} #{'coverage'.pluralize(@batch_count)} for review"
+      end
+    else
+      params[:process_remark][:status] = ""
     end
     
     @process_remark = ProcessRemark.new(process_remark_params)
     @process_remark.user_type = current_user.userable_type
     @process_remark.user_id = current_user.userable_id
-
+    # raise 'errors'
     respond_to do |format|
       if @process_remark.save
         if params[:process_remark][:process_status] == "Approve"
 
-          format.html { redirect_to process_coverage_approve_path(process_coverage_id: params[:process_remark][:process_coverage_id], total_life_cov: params[:process_remark][:total_life_cov], max_amount: params[:process_remark][:max_amount])}
+          format.html { redirect_to process_coverage_approve_path(process_coverage_id: params[:process_remark][:process_coverage_id], total_life_cov: params[:process_remark][:total_life_cov], max_amount: params[:process_remark][:max_amount], total_net_prem: params[:process_remark][:total_net_prem])}
         elsif params[:process_remark][:process_status] == "Deny"
           format.html { redirect_to process_coverage_deny_path(process_coverage_id: params[:process_remark][:process_coverage_id])}
+        elsif params[:process_remark][:process_status] == "Reprocess"
+          format.html { redirect_to process_coverage_reprocess_path(process_coverage_id: params[:process_remark][:process_coverage_id])}
         else
           format.html { redirect_to process_coverage_url(params[:process_remark][:process_coverage_id]), notice: "Process remark was successfully created." }
           format.json { render :show, status: :created, location: @process_remark }

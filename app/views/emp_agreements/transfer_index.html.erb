@@ -1,0 +1,26 @@
+<h1>Hi</h1>
+
+
+<table class="table">
+  <thead>
+    <th>Cooperative</th>
+    <th>Plan</th>
+    <th></th>
+  </thead>
+  <tbody>
+    <% @emp_agreements.group_by(&:employee).each do |emp, agreements| %>
+      <tr>
+        <%= content_tag :td, colspan: 3, class: "bg-dark" do %>
+          <%= content_tag :p, emp, class: "lead text-white mb-0" %>
+        <% end %>
+      </tr>
+      <% agreements.each do |a| %>
+        <tr>
+          <td><%= a.agreement.cooperative %></td>
+          <td><%= a.agreement.plan %></td>
+          <td><%= link_to "Transfer", new_emp_agreement_path(agreement: a.agreement), class: "btn btn-sm btn-success" %></td>
+        </tr>
+      <% end %>
+    <% end %>
+  </tbody>
+</table>

@@ -34,6 +34,9 @@ class BatchDependentsController < InheritedResources::Base
 
     dependent_agreement_benefits = agreement.agreement_benefits.where("name LIKE ?", "%#{@batch.agreement_benefit.name}%").find_by(insured_type: insured_type)
 
+    unless dependent_agreement_benefits.present?
+      dependent_agreement_benefits = agreement.agreement_benefits.find_by(insured_type: insured_type)
+    end
 
     @batch_dependent.set_premium_and_service_fees(dependent_agreement_benefits, group_remit, term_insurance) # model/concerns/calculate.rb
 

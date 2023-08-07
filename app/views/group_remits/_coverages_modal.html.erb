@@ -11,7 +11,7 @@
             <div class="accordion-item">
               <h2 class="accordion-header" id="heading<%= dom_id(ab) %>">
                 <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapse<%= dom_id(ab) %>" aria-expanded="true" aria-controls="collapse<%= dom_id(ab) %>">
-                  <%= content_tag :span, "#{ab.insured_type == 'principal' ? "#{ab.insured_type.upcase}(#{ab.name})" : ab.name.upcase}", class: 'text-secondary small' %>
+                  <%= content_tag :span, "#{ab.name.upcase}", class: 'text-secondary small' %>
                 </button>
               </h2>
               <div id="collapse<%= dom_id(ab) %>" class="accordion-collapse collapse" aria-labelledby="heading<%= dom_id(ab) %>" data-bs-parent="#accordionExample">

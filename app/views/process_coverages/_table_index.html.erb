@@ -43,10 +43,12 @@
                   <%= link_to "MD", all_health_decs_group_remit_batches_path(pc.group_remit), class: "btn btn-secondary" %>
                 <% end %>
               <% end %>
-              <%= link_to 'View', pc, class: 'btn btn-secondary btn-sm' %>
+              <%= link_to 'View', process_coverage, data: { turbo: false }, class: 'btn btn-secondary btn-sm' %>
               <%#= link_to "Preview", preview_path %>
               <%#= link_to "Download", download_path %>
-              <%= link_to "View PDF", pc_pdf_path(pc), class: "btn btn-warning btn-sm" %>
+              <% if process_coverage.status == "approved" %>
+                <%= link_to "View PDF", pc_pdf_path(process_coverage), class: "btn btn-warning btn-sm mt-2" %>
+              <% end %>
               <%#= link_to 'Edit', edit_process_coverage_path(process_coverage), class: 'btn btn-secondary btn-sm' %>
               <%#= link_to "Delete", process_coverage, class: "btn btn-danger btn-sm", method: :delete, data: { "turbo-method": :delete, turbo_confirm: "Are you sure?" } %>
             </td>

@@ -7,6 +7,7 @@ class Cooperative < ApplicationRecord
     
     has_many :agreements
     has_many :group_remits
+    has_many :denied_enrollees
 
     # belongs_to :coop_type
     # belongs_to :geo_region

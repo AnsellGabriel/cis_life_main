@@ -86,13 +86,19 @@ class BatchesController < ApplicationController
   end
 
   def new
-    @coop_members = @cooperative.unselected_coop_members(@group_remit.coop_member_ids)
-    @batch = @group_remit.batches.new(
-      effectivity_date: FFaker::Time.date, 
-      expiry_date: FFaker::Time.date, 
-      active: true, 
-      status: :recent
-    )
+    @coop_members = @cooperative.unselected_coop_members(@agreement.group_remits.joins(:batches).pluck(:coop_member_id))
+    
+    if Rails.env.development?
+      @batch = @group_remit.batches.new(
+        effectivity_date: FFaker::Time.date , 
+        expiry_date: FFaker::Time.date, 
+        active: true, 
+        status: :recent
+      )
+    else
+      @batch = @group_remit.batches.new
+    end
+    
   end
 
   def create
@@ -167,13 +173,19 @@ class BatchesController < ApplicationController
   end
 
   def destroy
+    agreement = @batch.group_remits[0].agreement
+    coop_member = @batch.coop_member
+    agreement_member = agreement.agreements_coop_members.find_by(coop_member_id: coop_member.id)
+
+    @batch.batch_group_remits.destroy_all
+    agreement.coop_members.delete(coop_member) if @batch.recent?
     respond_to do |format|
 
       if @batch.destroy
         premiums_and_commissions
         containers # controller/concerns/container.rb
         counters  # controller/concerns/counter.rb
-        delete_associated_batches
+        # delete_associated_batches
         format.html {
           redirect_to group_remit_path(@group_remit), alert: 'Member removed'
         }

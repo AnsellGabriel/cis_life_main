@@ -24,16 +24,17 @@ class MemberImportService
     # Initialize variables to keep track of member imports
     created_members_counter = 0
     updated_members_counter = 0
+    denied_enrollees_counter = 0
     total_members = members_spreadsheet.drop(1).count
     progress_counter = 0
     # Iterate over each row in the CSV file
     members_spreadsheet.drop(1).each do |row|
       # Extract member data from CSV row
       member_hash = {
-        last_name: row["Last Name"].strip.upcase,
-        first_name: row["First Name"].strip.upcase,
-        middle_name: row["Middle Name"].strip.upcase,
-        suffix: row["Suffix"].strip.upcase,
+        last_name: row["Last Name"] == nil ? nil : row["Last Name"].strip.upcase,
+        first_name: row["First Name"] == nil ? nil : row["First Name"].strip.upcase,
+        middle_name: row["Middle Name"] == nil ? nil : row["Middle Name"].strip.upcase,
+        suffix: row["Suffix"] == nil ? nil : row["Suffix"].strip.upcase,
         birth_place: row["Birth Place"],
         birth_date: row["Birthdate"],
         gender: row["Gender"],
@@ -60,9 +61,8 @@ class MemberImportService
       }
 
       # Check if a member with the same first name, last name, and birth date already exists
-      member = Member.find_or_initialize_by(
+      member = @cooperative.members.find_or_initialize_by(
         first_name: member_hash[:first_name],
-        middle_name: member_hash[:middle_name],
         last_name: member_hash[:last_name],
         birth_date: member_hash[:birth_date]
       )
@@ -76,7 +76,15 @@ class MemberImportService
       else
         # If a member does not exist, create a new record
         new_member = Member.create(member_hash)
-        new_coop_member = new_member.coop_members.create(coop_member_hash) if new_member.save!
+        begin
+          new_coop_member = new_member.coop_members.create(coop_member_hash) if new_member.save!
+        rescue ActiveRecord::RecordInvalid => e
+          create_denied_enrollee(row["First Name"], row["Middle Name"], row["Last Name"], e.message)
+          denied_enrollees_counter += 1
+          progress_counter += 1
+          update_progress(total_members, progress_counter)
+          next
+        end
 
         created_members_counter += 1 if new_coop_member.save!
       end
@@ -87,7 +95,8 @@ class MemberImportService
     end
     counters = {
         created_members_counter: created_members_counter,
-        updated_members_counter: updated_members_counter
+        updated_members_counter: updated_members_counter,
+        denied_enrollees_counter: denied_enrollees_counter
       }
     end
 
@@ -111,5 +120,13 @@ class MemberImportService
     
     def update_progress(total, processed_members)
       @progress.update(progress: (processed_members.to_f / total.to_f * 100))
+    end
+
+    def create_denied_enrollee(first_name, middle_name, last_name, reason)
+      denied_enrollee = DeniedEnrollee.create(
+        name: "#{first_name} #{middle_name} #{last_name}",
+        reason: reason,
+        cooperative_id: @cooperative.id
+      )
     end
 end

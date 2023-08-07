@@ -1,0 +1,13 @@
+
+<div class="card">
+  <% if @agreement.nil? %>
+    <h5 class="card-header">New emp agreement</h5>
+    <% val = false %>
+  <% else %>
+    <h5 class="card-header">Transfer <%= "#{@agreement.cooperative} - #{@agreement.plan}" %></h5>
+    <% val = true %>
+  <% end %>
+  <div class="card-body">
+    <%= render "form", emp_agreement: @emp_agreement, val: val %>
+  </div>
+</div>

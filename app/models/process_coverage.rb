@@ -9,7 +9,17 @@ class ProcessCoverage < ApplicationRecord
     approved: 2,
     denied: 3,
     for_head_approval: 4,
-    for_vp_approval: 5
+    for_vp_approval: 5,
+    reprocess: 6
+  }
+
+  enum und_route: {
+    for_analyst_review: 0,
+    for_head_review: 1,
+    for_vp_review: 2,
+    pc_approved: 3,
+    pc_denied: 4,
+    pc_reprocessed: 5
   }
 
   def set_default_attributes
