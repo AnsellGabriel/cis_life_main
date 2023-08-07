@@ -439,6 +439,7 @@ DEPENDENCIES
   humanize
   importmap-rails
   jquery-rails
+  matrix (~> 0.4.2)
   mysql2 (~> 0.5)
   pagy
   prawn (~> 2.4)

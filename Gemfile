@@ -118,3 +118,5 @@ gem "prawn-templates", "~> 0.1.2"
 gem "prawn-table"
 
 gem "audited", "~> 5.3"
+
+gem "matrix", "~> 0.4.2"
