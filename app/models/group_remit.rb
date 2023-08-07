@@ -53,16 +53,28 @@ class GroupRemit < ApplicationRecord
       # end
 
       if batch.member_details.age < batch.agreement_benefit.exit_age
-        new_batch = batch.dup
-        new_group_remit.batches << new_batch
-        new_batch.age = new_batch.member_details.age
-        new_batch.set_premium_and_service_fees(batch.agreement_benefit, new_group_remit)
+        new_batch = Batch.new(coop_member_id: batch.coop_member.id)
+        b_rank = batch.agreement_benefit
 
-        difference_in_months = (Date.today.year - batch.created_at.year) * 12 + (Date.today.month - batch.created_at.month)
+        Batch.process_batch(
+          new_batch, 
+          new_group_remit, 
+          b_rank, 
+          new_group_remit.terms
+        )
+        new_group_remit.batches << new_batch
+
+        # new_batch = batch.dup
+        # new_group_remit.batches << new_batch
+        # new_batch.age = new_batch.member_details.age
+        # new_batch.set_premium_and_service_fees(batch.agreement_benefit, new_group_remit)
+
+        # difference_in_months = (Date.today.year - batch.created_at.year) * 12 + (Date.today.month - batch.created_at.month)
+        # # byebug
+        # new_batch.status = difference_in_months < 12 ? :recent : :renewal
         # byebug
-        new_batch.status = difference_in_months < 12 ? :recent : :renewal
         new_batch.insurance_status = :approved
-        new_batch.save
+        new_batch.save!
 
         if batch.batch_dependents.present?
           batch.batch_dependents.each do |dependent|
