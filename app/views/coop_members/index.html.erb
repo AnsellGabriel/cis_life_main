@@ -95,17 +95,13 @@
           <th scope="row" ><%= coop_member.id %></th>
           <td>
             <div class="">
-              <%= content_tag :span, "#{coop_member.full_name}" %>
+              <%= content_tag :strong, "#{coop_member.get_fullname}" %> <%= content_tag :small, "#{member.birth_date.strftime('%b %d, %y')}", class: "text-muted" %>
               <div class="d-flex align-items-center gap-1"> 
-                <div class="">
-                  <i class="bi bi-phone"></i>
-                  <%= content_tag :span, "#{member.mobile_number}", class: "sm-secondary-text text-muted" %>
-                </div>
-                <div class="">|</div>
-                <div class="">
-                  <i class="bi bi-envelope"></i>
-                  <%= content_tag :span, "#{member.email}", class: "text-muted sm-secondary-text" %>
-                </div>
+                  <span class="sm-secondary-text text-muted"><i class="bi bi-phone"></i> <%= member.mobile_number %> </span> |
+                  <span class="sm-secondary-text text-muted"><i class="bi bi-envelope"></i> <%= member.email %> </span>
+                  
+                  <%#= content_tag :span, "#{member.mobile_number}", class: "sm-secondary-text text-muted" %>
+     
               </div>
             </div>
           </td>
@@ -116,6 +112,7 @@
             <% end %>
             <%= link_to 'Details', coop_member_path(coop_member), class: 'btn btn-sm btn-primary', data: {turbo_frame: 'modal-xl'} %>
             <%= link_to 'Edit', edit_member_path(member), class: 'btn btn-sm btn-secondary', data: {turbo_frame: 'modal-xl'} %>
+            <%= link_to 'Coverage', show_insurance_coop_member_path(coop_member), class: 'btn btn-sm btn-secondary' %>
           </td>
 
         </tr>

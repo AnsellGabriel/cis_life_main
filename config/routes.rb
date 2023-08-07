@@ -52,6 +52,7 @@ Rails.application.routes.draw do
   resources :coop_members do
     get :selected, on: :member
     get :member_agreements, on: :member
+    get :show_insurance, on: :member
   end
 
   resources :coop_agreements do

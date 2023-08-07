@@ -100,6 +100,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_08_03_054347) do
     t.decimal "coop_sf", precision: 10, scale: 2
     t.decimal "agent_sf", precision: 10, scale: 2
     t.integer "minimum_participation"
+    t.decimal "claims_fund_amount", precision: 10, scale: 2
     t.index ["agent_id"], name: "index_agreements_on_agent_id"
     t.index ["cooperative_id"], name: "index_agreements_on_cooperative_id"
     t.index ["plan_id"], name: "index_agreements_on_plan_id"
@@ -112,6 +113,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_08_03_054347) do
     t.string "status"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.date "effectivity"
     t.date "expiry"
     t.index ["agreement_id"], name: "index_agreements_coop_members_on_agreement_id"
     t.index ["coop_member_id"], name: "index_agreements_coop_members_on_coop_member_id"
@@ -207,8 +209,9 @@ ActiveRecord::Schema[7.0].define(version: 2023_08_03_054347) do
     t.boolean "below_nel", default: false
     t.integer "duration"
     t.integer "residency"
-    t.integer "batch_remit_id"
     t.string "type"
+    t.date "previous_effectivity_date"
+    t.date "previous_expiry_date"
     t.index ["agreement_benefit_id"], name: "index_batches_on_agreement_benefit_id"
     t.index ["coop_member_id"], name: "index_batches_on_coop_member_id"
   end
@@ -315,6 +318,8 @@ ActiveRecord::Schema[7.0].define(version: 2023_08_03_054347) do
     t.bigint "geo_province_id"
     t.bigint "geo_municipality_id"
     t.bigint "geo_barangay_id"
+    t.bigint "coop_type_id"
+    t.index ["coop_type_id"], name: "index_cooperatives_on_coop_type_id"
     t.index ["geo_barangay_id"], name: "index_cooperatives_on_geo_barangay_id"
     t.index ["geo_municipality_id"], name: "index_cooperatives_on_geo_municipality_id"
     t.index ["geo_province_id"], name: "index_cooperatives_on_geo_province_id"
@@ -335,6 +340,15 @@ ActiveRecord::Schema[7.0].define(version: 2023_08_03_054347) do
     t.index ["group_remit_id"], name: "index_denied_dependents_on_group_remit_id"
   end
 
+  create_table "denied_enrollees", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+    t.string "name"
+    t.string "reason"
+    t.bigint "cooperative_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["cooperative_id"], name: "index_denied_enrollees_on_cooperative_id"
+  end
+
   create_table "denied_members", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.string "name"
     t.integer "age"
@@ -350,6 +364,15 @@ ActiveRecord::Schema[7.0].define(version: 2023_08_03_054347) do
     t.text "description"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+  end
+
+  create_table "emp_agreements", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+    t.bigint "employee_id"
+    t.bigint "agreement_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["agreement_id"], name: "index_emp_agreements_on_agreement_id"
+    t.index ["employee_id"], name: "index_emp_agreements_on_employee_id"
   end
 
   create_table "employees", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
@@ -427,6 +450,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_08_03_054347) do
     t.decimal "coop_commission", precision: 10, scale: 2
     t.decimal "agent_commission", precision: 10, scale: 2
     t.string "type"
+    t.integer "batch_remit_id"
     t.index ["agreement_id"], name: "index_group_remits_on_agreement_id"
     t.index ["anniversary_id"], name: "index_group_remits_on_anniversary_id"
   end
@@ -608,16 +632,16 @@ ActiveRecord::Schema[7.0].define(version: 2023_08_03_054347) do
     t.decimal "denied_total_prem", precision: 20, scale: 4
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.bigint "underwriting_route_id"
+    t.integer "und_route"
     t.index ["agent_id"], name: "index_process_coverages_on_agent_id"
     t.index ["group_remit_id"], name: "index_process_coverages_on_group_remit_id"
-    t.index ["underwriting_route_id"], name: "index_process_coverages_on_underwriting_route_id"
+    t.index ["und_route"], name: "index_process_coverages_on_und_route"
   end
 
   create_table "process_remarks", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.bigint "process_coverage_id"
     t.text "remark"
-    t.string "status"
+    t.integer "status"
     t.string "user_type"
     t.bigint "user_id"
     t.datetime "created_at", null: false
@@ -728,6 +752,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_08_03_054347) do
   add_foreign_key "coop_users", "cooperatives"
   add_foreign_key "denied_dependents", "batches"
   add_foreign_key "denied_dependents", "group_remits"
+  add_foreign_key "denied_enrollees", "cooperatives"
   add_foreign_key "denied_members", "group_remits"
   add_foreign_key "employees", "departments"
   add_foreign_key "group_import_trackers", "group_remits"
