@@ -58,6 +58,7 @@
                 </a>
                 <ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
                   <%= link_to "Process", process_coverages_path, class: "dropdown-item" %>
+                  <%= link_to "Medical Director", med_directors_home_path, class: "dropdown-item" %>
                   <%#= link_to "Evaluate", view_evaluate_process_claims_path(c: 4), class: "dropdown-item" if current_user.authority_level_id == 3 %>
                   <%#= link_to "VP Evaluation", view_evaluate_process_claims_path(c: 5), class: "dropdown-item" if current_user.authority_level_id == 3 %>
                   <%#= link_to "Reconsider", view_reconsider_process_claims_path, class: "dropdown-item"  if current_user.authority_level_id == 3 %>
@@ -73,6 +74,7 @@
               <ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
                 <%= link_to "Agreement", agreements_path, class: "dropdown-item" %>
                 <%= link_to "EmpAgreement", emp_agreements_path, class: "dropdown-item" %>
+                <%= link_to "Approver", emp_approvers_path, class: "dropdown-item" %>
                 <%= link_to "Authority Levels", authority_levels_path, class: "dropdown-item" %>
                 <%= link_to "Plans", new_plan_path, class: "dropdown-item" %>
                 <%# <%= link_to "Benefits", benefits_path, class: "dropdown-item" %>

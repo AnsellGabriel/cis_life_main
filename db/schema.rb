@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_08_07_075750) do
+ActiveRecord::Schema[7.0].define(version: 2023_08_08_052400) do
   create_table "active_admin_comments", charset: "utf8mb4", force: :cascade do |t|
     t.string "namespace"
     t.text "body"
@@ -349,10 +349,18 @@ ActiveRecord::Schema[7.0].define(version: 2023_08_07_075750) do
     t.bigint "agreement_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.bigint "approver_id"
+    t.boolean "active", default: true
     t.index ["agreement_id"], name: "index_emp_agreements_on_agreement_id"
-    t.index ["approver_id"], name: "index_emp_agreements_on_approver_id"
     t.index ["employee_id"], name: "index_emp_agreements_on_employee_id"
+  end
+
+  create_table "emp_approvers", charset: "utf8mb4", force: :cascade do |t|
+    t.bigint "employee_id"
+    t.bigint "approver_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["approver_id"], name: "index_emp_approvers_on_approver_id"
+    t.index ["employee_id"], name: "index_emp_approvers_on_employee_id"
   end
 
   create_table "employees", charset: "utf8mb4", force: :cascade do |t|
@@ -718,7 +726,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_08_07_075750) do
   add_foreign_key "denied_dependents", "group_remits"
   add_foreign_key "denied_enrollees", "cooperatives"
   add_foreign_key "denied_members", "group_remits"
-  add_foreign_key "emp_agreements", "employees", column: "approver_id"
+  add_foreign_key "emp_approvers", "employees", column: "approver_id"
   add_foreign_key "employees", "departments"
   add_foreign_key "group_import_trackers", "group_remits"
   add_foreign_key "group_remits", "agreements"

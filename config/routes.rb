@@ -2,6 +2,7 @@
 require 'sidekiq/web'
 
 Rails.application.routes.draw do 
+  resources :emp_approvers
   get 'med_directors/home'
   get 'med_director/index'
   

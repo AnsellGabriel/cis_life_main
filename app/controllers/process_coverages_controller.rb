@@ -5,7 +5,8 @@ class ProcessCoveragesController < ApplicationController
   # GET /process_coverages
   def index
 
-    if current_user.rank == "head" || current_user.rank == "senior_officer"
+    if current_user.rank == "senior_officer"
+      @process_coverages_x = ProcessCoverage.all
       @process_coverages_x = ProcessCoverage.all
       @for_process_coverages = ProcessCoverage.where(status: :for_process)
       @approved_process_coverages = ProcessCoverage.where(status: :approved)
@@ -18,8 +19,25 @@ class ProcessCoveragesController < ApplicationController
       else
         @process_coverages = @process_coverages_x
       end
+      
+    elsif current_user.rank == "head" 
+      # @process_coverages_x = ProcessCoverage.joins(group_remit: { agreement: :emp_agreements }).where( emp_agreements: { approver_id: current_user.userable_id, active: true })
+      @process_coverages_x = ProcessCoverage.joins(group_remit: { agreement: { emp_agreements: {employee: :emp_approver} } }).where( emp_approver: { approver_id: current_user.userable_id }, emp_agreements: { active: true})
+      # @process_coverages_x = ProcessCoverage.all
+      @for_process_coverages = @process_coverages_x.where(status: :for_process)
+      @approved_process_coverages = @process_coverages_x.where(status: :approved)
+      # @pending_process_coverages = ProcessCoverage.where(status: :pending)
+      @reprocess_coverages = @process_coverages_x.where(status: :reprocess)
+      @denied_process_coverages = @process_coverages_x.where(status: :denied)
+
+      if params[:search].present?
+        @process_coverages = @process_coverages_x.joins(group_remit: {agreement: :cooperative}).where("group_remits.name LIKE ? OR group_remits.description LIKE ? OR agreements.moa_no LIKE ? OR cooperatives.name LIKE ?", "%#{params[:search]}%", "%#{params[:search]}%", "%#{params[:search]}%", "%#{params[:search]}%")
+      else
+        @process_coverages = @process_coverages_x
+      end
+
     elsif current_user.analyst?
-      @process_coverages_x = ProcessCoverage.joins(group_remit: { agreement: :emp_agreements }).where( emp_agreements: { employee_id: current_user.userable_id })
+      @process_coverages_x = ProcessCoverage.joins(group_remit: { agreement: :emp_agreements }).where( emp_agreements: { employee_id: current_user.userable_id, active: true })
 
       if params[:search].present?
         @process_coverages = @process_coverages_x.joins("INNER JOIN cooperatives ON cooperatives.id = agreements.cooperative_id").where("group_remits.name LIKE ? OR group_remits.description LIKE ? OR agreements.moa_no LIKE ? OR cooperatives.name LIKE ?", "%#{params[:search]}%", "%#{params[:search]}%", "%#{params[:search]}%", "%#{params[:search]}%")

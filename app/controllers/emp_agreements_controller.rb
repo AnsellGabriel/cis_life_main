@@ -27,7 +27,7 @@ class EmpAgreementsController < ApplicationController
 
   # GET /emp_agreements/1/edit
   def edit
-    unless params[:agreement].nil?
+    # unless params[:agreement].nil?
 
     # end
   end
