@@ -13,6 +13,11 @@ class CoopMember < ApplicationRecord
     "#{full_name.titleize}"
   end
 
+  def get_fullname 
+    # first_letters = member.middle_name.split.map { |word| word[0] }
+    member.last_name.titleize + ', ' + member.first_name.titleize + ' ' + member.middle_name.chr + '. ' + member.suffix
+  end
+
   def set_full_name
     self.full_name = "#{member.last_name}, #{member.first_name} #{member.middle_name}"
   end

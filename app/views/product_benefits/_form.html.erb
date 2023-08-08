@@ -4,6 +4,9 @@
     <%= f.error_notification message: f.object.errors[:base].to_sentence if f.object.errors[:base].present? %>
     <div class="form-inputs mb-3">
       <%= f.association :benefit %>
+      <div class="form-check form-switch mt-3">
+      <%= f.input :main %>
+      </div>
       <%#= f.association :agreement_benefit %>
       <div class="row">
         <%= f.input :coverage_amount, wrapper_html: { class: "col-md-8" } %>

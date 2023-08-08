@@ -26,6 +26,10 @@ class ProcessClaimsController < ApplicationController
 
   end
 
+  def new_coop 
+    @process_claim = ProcessClaim.new
+  end
+
   # GET /process_claims/1/edit
   def edit
   end

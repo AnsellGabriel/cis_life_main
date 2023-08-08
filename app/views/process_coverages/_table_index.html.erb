@@ -1,56 +1,46 @@
-<table class="table table-striped table-bordered table-hover">
+<table class="table table-bordered table-hover">
       <thead>
         <tr>
 
-        <th>#</th>
+        <th></th>
           <th>Group Remit</th>
-          <th>Agent</th>
-          <th>Terms</th>
-          <th>Count</th>
-          <th>Status</th>
-          <th>Approved</th>
-          <th>Denied</th>
+          <th>Effectivity</th>
+          <th>Expiry</th>
+          <%# <th>Terms</th> %>
+          <%# <th>Count</th> %>
+          <th>Summary</th>
           <th></th>
 
         </tr>
       </thead>
 
       <tbody>
-        <% process_coverages.each do |process_coverage| %>
+        <% process_coverages.each do |pc| %>
           <tr>
 
-          <th scope="row"><%= process_coverage.id %></th>
+          <td scope="row" class="text-center"><small><%= pc.group_remit.agreement.plan.acronym %><%= pc.id %></small> <br>
+          <small><%= process_status(pc.status) %></small> <br>
+          <small class="fw-lighter"><%= pc.created_at.strftime('%b %d, %y') %></small> </td>
           <td>
-            <% description = process_coverage.group_remit.description.nil? ? "-" : process_coverage.group_remit.description %>
             <!-- temp change process_coverage.group_remit to process_coverage.group_remit.id -->
-            <%= content_tag :span, process_coverage.group_remit.agreement.cooperative, class: "lead" %> <%= content_tag :small, "(#{process_coverage.group_remit.agreement.plan.acronym})", class: "fw-bold" %> <br>
-            <%= content_tag :span, process_coverage.group_remit.id, class: "lead" %> <%= content_tag :small, "(#{process_coverage.group_remit.type})" %> <br>
-            <%= content_tag :small, description, class: "fw-lighter" %>
+            <strong> <%= pc.group_remit.agreement.cooperative %> </strong> <%= content_tag :small, "#{pc.group_remit.agreement.cooperative.acronym}", class: "text-primary" %> <br>
+            <%= pc.agent %> <br>
+            <%= content_tag :small, pc.group_remit.agreement.plan, class: "fw-lighter" %>
           </td>
-          <td><%= process_coverage.agent %></td>
-          <td>
-            Effectivity: <%= month_day_year(process_coverage.effectivity) %> <br>
-            Expiry: <%= month_day_year(process_coverage.expiry) %>
-          </td>
-          <td><%= pluralize(process_coverage.group_remit.batches.count, "Member") %></td>
-          <td><%= process_status(process_coverage.status) %></td>
-          <td>
-           <!--  Total Approved Count:   <%= process_coverage.approved_count %> <br> -->
-            Total Approved Count:   <%= process_coverage.group_remit.batches.where(insurance_status: :approved).count %> <br>
-             <!--Total Approved Coverage: <%= to_currency(process_coverage.group_remit.batches.where(insurance_status: :approved).sum(:premium)) %> <br> -->
-            Total Approved Premium: <%= to_currency(process_coverage.group_remit.batches.where(insurance_status: :approved).sum(:premium)) %>  
-          </td>
-          <td>
-            Total Denied Count: <%= process_coverage.group_remit.batches.where(insurance_status: :denied).count %> <br>
-            <!-- Total Denied Count: <%= process_coverage.denied_count %> <br> -->
-            <!-- Total Denied Coverage: <%= process_coverage.denied_total_coverage %> <br> -->
-            Total Denied Premium: <%= to_currency(process_coverage.group_remit.batches.where(insurance_status: :denied).sum(:premium)) %>
-          </td>
+          <td><%= month_day_year(pc.effectivity) %></td>
+          <td><%= month_day_year(pc.expiry) %></td>
+          <%# <td></td> %>
+          <% sum_prem = pc.group_remit.batches.sum(:premium) %>
+          <td class="text-end"><%= pluralize(pc.group_remit.batches.count, "Members") %> <br>
+          <small>Premium <%= to_curr(sum_prem) %></small> <br>
+          <small>Net <%= to_curr(sum_prem - pc.group_remit.batches.sum(:coop_sf_amount)) %></small>
+           </td>
+         
       
             <td>
               <% if current_user.userable_type == "Employee" %>
                 <% if current_user.userable.designation == "Medical Director" %>
-                  <%= link_to "MD", all_health_decs_group_remit_batches_path(process_coverage.group_remit), class: "btn btn-secondary" %>
+                  <%= link_to "MD", all_health_decs_group_remit_batches_path(pc.group_remit), class: "btn btn-secondary" %>
                 <% end %>
               <% end %>
               <%= link_to 'View', process_coverage, data: { turbo: false }, class: 'btn btn-secondary btn-sm' %>

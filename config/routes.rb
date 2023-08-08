@@ -12,6 +12,9 @@ Rails.application.routes.draw do
  
   resources :anniversaries, :agent_groups, :departments, :agents, :coop_users, :employees, :plans, :product_benefits
 
+  resources :user do 
+    get :approved, on: :member
+  end
   resources :agreement_benefits do
     get :selected, on: :member
   end
@@ -55,6 +58,7 @@ Rails.application.routes.draw do
   resources :coop_members do
     get :selected, on: :member
     get :member_agreements, on: :member
+    get :show_insurance, on: :member
   end
 
   resources :denied_enrollees, only: [:index, :destroy]
