@@ -100,10 +100,12 @@
           <th scope="row" ><%= coop_member.id %></th>
           <td>
             <div class="">
-              <%= content_tag :span, "#{coop_member.full_name}" %>
-              <% if coop_member.deceased? %>
-                <%= content_tag :span, 'DECEASED', class: badge('danger') %>
-              <% end %>
+              <div class="<%= flex_justify_align('','center') %> gap-2">
+                <%= content_tag :span, "#{coop_member.full_name}" %>
+                <% if coop_member.deceased? %>
+                  <%= content_tag :span, 'DECEASED', class: badge('danger') %>
+                <% end %>
+              </div>
               <div class="d-flex align-items-center gap-1"> 
                 <div class="">
                   <i class="bi bi-phone"></i>

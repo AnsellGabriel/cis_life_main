@@ -36,6 +36,8 @@ class GroupRemitsController < InheritedResources::Base
       @group_remit.set_under_review_status
     end
     
+    @group_remit.date_submitted = Date.today
+    
     respond_to do |format|
       if @group_remit.save!
         @process_coverage = @group_remit.build_process_coverage
