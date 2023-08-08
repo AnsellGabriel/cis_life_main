@@ -9,6 +9,7 @@
     <% if val == true %>
       <%= f.association :agreement, label_method: :coop_name, order: :coop_name, as: :hidden %>
     <% end %>
+    <%= f.association :approver, collection: Employee.joins(:user).where(department_id: 17, user: { rank: 2}) %>
   </div>
 
   <div class="form-actions text-end">

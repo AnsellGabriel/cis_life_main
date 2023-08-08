@@ -9,10 +9,6 @@ class EmpAgreementsController < ApplicationController
   def transfer_index
     @emp_agreements = EmpAgreement.all
   end
-
-  def transfer
-    @emp_agreement = EmpAgreement.new
-  end
   
 
   # GET /emp_agreements/1
@@ -31,6 +27,9 @@ class EmpAgreementsController < ApplicationController
 
   # GET /emp_agreements/1/edit
   def edit
+    unless params[:agreement].nil?
+
+    # end
   end
 
   # POST /emp_agreements
