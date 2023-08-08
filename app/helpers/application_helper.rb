@@ -83,6 +83,7 @@ module ApplicationHelper
 			when "recent" then content_tag(:span, "NEW", class: "badge bg-primary")
 			when "transferred" then content_tag(:span, "TRANSFERRED", class: "badge bg-secondary")
 			when "renewal" then content_tag(:span, "RENEWAL", class: "badge bg-success")
+			when "reinstated" then content_tag(:span, "REINSTATED", class: "badge bg-success")
 		end
 	end
 

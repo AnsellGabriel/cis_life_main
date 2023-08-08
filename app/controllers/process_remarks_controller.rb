@@ -100,13 +100,13 @@ class ProcessRemarksController < ApplicationController
         end
         # format.html { redirect_back fallback_location:, notice: "Process remark was successfully created." }
         
-        agreement = @process_coverage.group_remit.agreement
+        # agreement = @process_coverage.group_remit.agreement
 
-        if agreement.anniversary_type == 'none' or agreement.anniversary_type.nil?
-          current_batch_remit = agreement.group_remits.find_by(type: 'BatchRemit', effectivity_date: Date.today.beginning_of_month)
-          approved_batches = @process_coverage.group_remit.batches.where(insurance_status: :approved)
-          approved_batches.update_all(batch_remit_id: current_batch_remit.id)
-        end
+        # if agreement.anniversary_type == 'none' or agreement.anniversary_type.nil?
+        #   current_batch_remit = agreement.group_remits.find_by(type: 'BatchRemit', effectivity_date: Date.today.beginning_of_month)
+        #   approved_batches = @process_coverage.group_remit.batches.where(insurance_status: :approved)
+        #   approved_batches.update_all(batch_remit_id: current_batch_remit.id)
+        # end
       else
         format.html { render :new, status: :unprocessable_entity }
         format.json { render json: @process_remark.errors, status: :unprocessable_entity }

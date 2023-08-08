@@ -46,7 +46,7 @@ class GroupRemit < ApplicationRecord
 
     removed_batches = [] # To store the batches that are removed from the renewal
 
-    self.batches.includes(coop_member: :member).each do |batch|
+    self.batches.includes(coop_member: :member).where(insurance_status: :approved).each do |batch|
       # if batch.insurance_status == "denied"
       #   create_denied_member(batch.coop_member.member, 'Denied by underwriter', new_group_remit)
       #   next
@@ -62,8 +62,9 @@ class GroupRemit < ApplicationRecord
           b_rank, 
           new_group_remit.terms
         )
-        new_group_remit.batches << new_batch
 
+        new_group_remit.batches << new_batch
+        
         # new_batch = batch.dup
         # new_group_remit.batches << new_batch
         # new_batch.age = new_batch.member_details.age
@@ -73,7 +74,7 @@ class GroupRemit < ApplicationRecord
         # # byebug
         # new_batch.status = difference_in_months < 12 ? :recent : :renewal
         # byebug
-        new_batch.insurance_status = :approved
+        new_batch.insurance_status = :for_review
         new_batch.save!
 
         if batch.batch_dependents.present?

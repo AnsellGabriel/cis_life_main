@@ -6,7 +6,7 @@
 		class: small_btn('primary') 
 	%>
 
-	<% if group_remit.pending? && batch.recent? %>
+	<% if (group_remit.pending? || group_remit.for_renewal?) && group_remit.instance_of?(Remittance)%>
 
 		<% if batch.recent? && batch.batch_health_decs.blank? && life_benefit[0].coverage_amount > agreement.nel %>
 			<%= link_to new_group_remit_batch_health_declaration_path(group_remit, batch),
