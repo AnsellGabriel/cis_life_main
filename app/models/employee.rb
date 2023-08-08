@@ -1,9 +1,13 @@
 class Employee < ApplicationRecord
   belongs_to :department
+  has_one :emp_approver
   has_many :emp_agreements
   has_many :agreements, through: :emp_agreements
   has_one :user, as: :userable, dependent: :destroy
   accepts_nested_attributes_for :user
+
+  ANALYSTS = Employee.joins(:user).where(department_id: 17, user: { rank: 1 })
+  HEADS = Employee.joins(:user).where(department_id: 17, user: { rank: 2 })
 
   def to_s
     get_fullname

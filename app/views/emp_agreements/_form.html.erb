@@ -4,16 +4,19 @@
   <%= f.error_notification message: f.object.errors[:base].to_sentence if f.object.errors[:base].present? %>
 
   <div class="form-inputs mb-3">
-    <%= f.association :employee, collection: Employee.joins(:user).where(department_id: 17, user: { rank: 1 }) %>
+    <%= f.association :employee, collection: Employee::ANALYSTS %>
     <%= f.association :agreement, label_method: :coop_name, order: :coop_name, disabled: val %>
     <% if val == true %>
       <%= f.association :agreement, label_method: :coop_name, order: :coop_name, as: :hidden %>
+      <%= f.input :old_emp_agreement, input_html: { value: @old_emp_agreement.id }, as: :hidden %>
     <% end %>
-    <%= f.association :approver, collection: Employee.joins(:user).where(department_id: 17, user: { rank: 2}) %>
+    <div class="form-check form-switch">
+      <%= f.input :active, label: "Active?", disabled: val %>
+    </div>
   </div>
 
   <div class="form-actions text-end">
-    <%= link_to "Back", emp_agreements_path, class: 'btn btn-secondary' %>
+    <%= link_to "Back", :back, class: 'btn btn-secondary' %>
     <%= f.button :submit, "Submit", class: 'btn-success' %>
   </div>
 <% end %>
