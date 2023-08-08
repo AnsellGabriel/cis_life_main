@@ -4,6 +4,7 @@ class User < ApplicationRecord
   devise :database_authenticatable, :registerable,
          :recoverable, :rememberable, :validatable
 
+  belongs_to :coop_user, optional: true
   belongs_to :userable, polymorphic: true
   has_many :user_levels
 

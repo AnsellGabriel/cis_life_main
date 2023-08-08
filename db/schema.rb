@@ -100,6 +100,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_08_08_052400) do
     t.decimal "coop_sf", precision: 10, scale: 2
     t.decimal "agent_sf", precision: 10, scale: 2
     t.integer "minimum_participation"
+    t.decimal "claims_fund_amount", precision: 10, scale: 2
     t.index ["agent_id"], name: "index_agreements_on_agent_id"
     t.index ["cooperative_id"], name: "index_agreements_on_cooperative_id"
     t.index ["plan_id"], name: "index_agreements_on_plan_id"
@@ -223,7 +224,14 @@ ActiveRecord::Schema[7.0].define(version: 2023_08_08_052400) do
     t.datetime "updated_at", null: false
   end
 
-  create_table "claim_documents", charset: "utf8mb4", force: :cascade do |t|
+  create_table "causes", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+    t.string "name"
+    t.string "description"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  create_table "claim_documents", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.bigint "process_claim_id", null: false
     t.string "document"
     t.integer "document_type"
@@ -246,7 +254,15 @@ ActiveRecord::Schema[7.0].define(version: 2023_08_08_052400) do
     t.string "street"
     t.string "email"
     t.string "branch_head"
+    t.bigint "geo_region_id"
+    t.bigint "geo_province_id"
+    t.bigint "geo_municipality_id"
+    t.bigint "geo_barangay_id"
     t.index ["cooperative_id"], name: "index_coop_branches_on_cooperative_id"
+    t.index ["geo_barangay_id"], name: "index_coop_branches_on_geo_barangay_id"
+    t.index ["geo_municipality_id"], name: "index_coop_branches_on_geo_municipality_id"
+    t.index ["geo_province_id"], name: "index_coop_branches_on_geo_province_id"
+    t.index ["geo_region_id"], name: "index_coop_branches_on_geo_region_id"
   end
 
   create_table "coop_members", charset: "utf8mb4", force: :cascade do |t|
@@ -287,10 +303,6 @@ ActiveRecord::Schema[7.0].define(version: 2023_08_08_052400) do
 
   create_table "cooperatives", charset: "utf8mb4", force: :cascade do |t|
     t.string "name"
-    t.string "region"
-    t.string "province"
-    t.string "municipality"
-    t.string "barangay"
     t.string "contact_details"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
@@ -302,6 +314,16 @@ ActiveRecord::Schema[7.0].define(version: 2023_08_08_052400) do
     t.string "street"
     t.string "email"
     t.string "contact_number"
+    t.bigint "geo_region_id"
+    t.bigint "geo_province_id"
+    t.bigint "geo_municipality_id"
+    t.bigint "geo_barangay_id"
+    t.bigint "coop_type_id"
+    t.index ["coop_type_id"], name: "index_cooperatives_on_coop_type_id"
+    t.index ["geo_barangay_id"], name: "index_cooperatives_on_geo_barangay_id"
+    t.index ["geo_municipality_id"], name: "index_cooperatives_on_geo_municipality_id"
+    t.index ["geo_province_id"], name: "index_cooperatives_on_geo_province_id"
+    t.index ["geo_region_id"], name: "index_cooperatives_on_geo_region_id"
   end
 
   create_table "denied_dependents", charset: "utf8mb4", force: :cascade do |t|
@@ -638,7 +660,15 @@ ActiveRecord::Schema[7.0].define(version: 2023_08_08_052400) do
     t.index ["user_type", "user_id"], name: "index_process_remarks_on_user"
   end
 
-  create_table "product_benefits", charset: "utf8mb4", force: :cascade do |t|
+  create_table "process_routes", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+    t.string "name"
+    t.string "department"
+    t.string "description"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  create_table "product_benefits", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.decimal "coverage_amount", precision: 10, scale: 2
     t.decimal "premium", precision: 10, scale: 2
     t.bigint "agreement_benefit_id", null: false
@@ -649,6 +679,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_08_08_052400) do
     t.integer "residency_floor"
     t.integer "residency_ceiling"
     t.string "benefit_type"
+    t.boolean "main"
     t.index ["agreement_benefit_id"], name: "index_product_benefits_on_agreement_benefit_id"
     t.index ["benefit_id"], name: "index_product_benefits_on_benefit_id"
   end
