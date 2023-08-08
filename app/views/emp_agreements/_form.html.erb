@@ -8,9 +8,10 @@
     <%= f.association :agreement, label_method: :coop_name, order: :coop_name, disabled: val %>
     <% if val == true %>
       <%= f.association :agreement, label_method: :coop_name, order: :coop_name, as: :hidden %>
+      <%= f.input :old_emp_agreement, input_html: { value: @old_emp_agreement.id }, as: :hidden %>
     <% end %>
     <div class="form-check form-switch">
-      <%= f.input :active, label: "Active?" %>
+      <%= f.input :active, label: "Active?", disabled: val %>
     </div>
   </div>
 

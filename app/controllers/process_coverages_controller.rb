@@ -235,11 +235,12 @@ class ProcessCoveragesController < ApplicationController
     @batches_x = @process_coverage.group_remit.batches
     # @total_life_cov = ProductBenefit.joins(agreement_benefit: :batch).where('batches.id IN (?)', @batches_x.pluck(:id)).where('product_benefits.benefit_id = ?', 1).sum(:coverage_amount)
     @total_life_cov = ProductBenefit.joins(agreement_benefit: :batches).where('batches.id IN (?)', @batches_x.pluck(:id)).where('product_benefits.benefit_id = ?', 1).sum(:coverage_amount)
-    @total_net_prem = @process_coverage.group_remit.batches.where(insurance_status: "approved").sum(:premium)
+
+    @total_net_prem = @process_coverage.group_remit.batches.where(insurance_status: "approved").sum(:premium) - (@process_coverage.group_remit.batches.where(insurance_status: "approved").sum(:coop_sf_amount) + @process_coverage.group_remit.batches.where(insurance_status: "approved").sum(:agent_sf_amount))
     
     @group_remit = @process_coverage.group_remit
     # raise 'errors'
-    puts "#{@life_cov} ********************************"
+    puts "#{@total_net_prem} ********************************"
   end
 
   # GET /process_coverages/new

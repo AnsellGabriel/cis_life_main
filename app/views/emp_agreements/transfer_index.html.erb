@@ -17,12 +17,13 @@
       <% agreements.each do |a| %>
         <tr>
           <td>
+            <%= a.id %>
             <%= a.agreement.cooperative %> <%= ea_badge_pill(a.active) %> <br />
             <%= a.agreement.plan %>
           </td>
           <td><%= a.employee.emp_approver.approver %></td>
           <td>
-            <%= link_to "Transfer", new_emp_agreement_path(agreement: a.agreement), class: "btn btn-sm btn-success" %>
+            <%= link_to "Transfer", new_emp_agreement_path(agreement: a.agreement, old_emp_agreement: a), class: "btn btn-sm btn-success" %>
             <%#= link_to "Change", edit_emp_a(a, for_change: true), class: "btn btn-sm btn-secondary" %>
           </td>
         </tr>

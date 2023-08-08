@@ -10,6 +10,7 @@
           <th>Status</th>
           <th>Approved</th>
           <th>Denied</th>
+          <th>Processor</th>
           <th></th>
 
         </tr>
@@ -46,22 +47,24 @@
             <!-- Total Denied Coverage: <%= process_coverage.denied_total_coverage %> <br> -->
             Total Denied Premium: <%= to_currency(process_coverage.group_remit.batches.where(insurance_status: :denied).sum(:premium)) %>
           </td>
-      
-            <td>
-              <% if current_user.userable_type == "Employee" %>
-                <% if current_user.userable.designation == "Medical Director" %>
-                  <%= link_to "MD", all_health_decs_group_remit_batches_path(process_coverage.group_remit), class: "btn btn-secondary" %>
-                <% end %>
+          <td>
+            <%= process_coverage.group_remit.agreement.emp_agreements.empty? ? "-" : process_coverage.group_remit.agreement.emp_agreements.first.employee %>
+          </td>
+          <td>
+            <% if current_user.userable_type == "Employee" %>
+              <% if current_user.userable.designation == "Medical Director" %>
+                <%= link_to "MD", all_health_decs_group_remit_batches_path(process_coverage.group_remit), class: "btn btn-secondary" %>
               <% end %>
-              <%= link_to 'View', process_coverage, data: { turbo: false }, class: 'btn btn-secondary btn-sm' %>
-              <%#= link_to "Preview", preview_path %>
-              <%#= link_to "Download", download_path %>
-              <% if process_coverage.status == "approved" %>
-                <%= link_to "View PDF", pc_pdf_path(process_coverage), class: "btn btn-warning btn-sm mt-2" %>
-              <% end %>
-              <%#= link_to 'Edit', edit_process_coverage_path(process_coverage), class: 'btn btn-secondary btn-sm' %>
-              <%#= link_to "Delete", process_coverage, class: "btn btn-danger btn-sm", method: :delete, data: { "turbo-method": :delete, turbo_confirm: "Are you sure?" } %>
-            </td>
+            <% end %>
+            <%= link_to 'View', process_coverage, data: { turbo: false }, class: 'btn btn-secondary btn-sm' %>
+            <%#= link_to "Preview", preview_path %>
+            <%#= link_to "Download", download_path %>
+            <% if process_coverage.status == "approved" %>
+              <%= link_to "View PDF", pc_pdf_path(process_coverage), class: "btn btn-warning btn-sm mt-2" %>
+            <% end %>
+            <%#= link_to 'Edit', edit_process_coverage_path(process_coverage), class: 'btn btn-secondary btn-sm' %>
+            <%#= link_to "Delete", process_coverage, class: "btn btn-danger btn-sm", method: :delete, data: { "turbo-method": :delete, turbo_confirm: "Are you sure?" } %>
+          </td>
 
           </tr>
         <% end %>

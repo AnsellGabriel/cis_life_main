@@ -17,9 +17,11 @@ class EmpAgreementsController < ApplicationController
 
   # GET /emp_agreements/new
   def new
+    # raise 'errors'
     if params[:agreement].nil?
       @emp_agreement = EmpAgreement.new
     else
+      @old_emp_agreement = EmpAgreement.find(params[:old_emp_agreement])
       @agreement = Agreement.find_by(id: params[:agreement])
       @emp_agreement = EmpAgreement.new(agreement: @agreement)
     end
@@ -34,9 +36,14 @@ class EmpAgreementsController < ApplicationController
 
   # POST /emp_agreements
   def create
+    # raise 'errors'
     @emp_agreement = EmpAgreement.new(emp_agreement_params)
+    @old_emp_agreement = EmpAgreement.find_by(id: params[:emp_agreement][:old_emp_agreement])
 
     if @emp_agreement.save
+      unless @old_emp_agreement.nil?
+        @old_emp_agreement.update_attribute(:active, false)
+      end
       redirect_to @emp_agreement, notice: "Emp agreement was successfully created."
     else
       render :new, status: :unprocessable_entity
@@ -45,7 +52,8 @@ class EmpAgreementsController < ApplicationController
 
   # PATCH/PUT /emp_agreements/1
   def update
-    if @emp_agreement.update(emp_agreement_params)
+    # raise 'errors'
+    if @emp_agreement.update!(emp_agreement_params)
       redirect_to @emp_agreement, notice: "Emp agreement was successfully updated."
     else
       render :edit, status: :unprocessable_entity
@@ -66,6 +74,6 @@ class EmpAgreementsController < ApplicationController
 
     # Only allow a list of trusted parameters through.
     def emp_agreement_params
-      params.require(:emp_agreement).permit(:employee_id, :agreement_id)
+      params.require(:emp_agreement).permit(:employee_id, :agreement_id, :active)
     end
 end
