@@ -11,7 +11,8 @@ class User < ApplicationRecord
     rank_and_file: 0,
     analyst: 1,
     head: 2,
-    senior_officer: 3
+    senior_officer: 3,
+    medical_director: 4
   }
   
   attribute :admin, :boolean, default: false

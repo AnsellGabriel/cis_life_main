@@ -2,6 +2,9 @@
 require 'sidekiq/web'
 
 Rails.application.routes.draw do 
+  get 'med_directors/home'
+  get 'med_director/index'
+  
   resources :emp_agreements do 
     get :transfer_index, on: :collection
   end
