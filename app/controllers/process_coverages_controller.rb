@@ -26,6 +26,7 @@ class ProcessCoveragesController < ApplicationController
       else
         @process_coverages = @process_coverages_x
       end
+      
     else
       @process_coverages_x = ProcessCoverage.all
     end

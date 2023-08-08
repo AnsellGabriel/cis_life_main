@@ -1,7 +1,7 @@
 
-<%# if current_user.userable_type == "Employee" %>
-  <% unless current_user.rank == "analyst" %>
-    <%#= render "process_coverages/dashboard_head" %>
+<% if current_user.userable_type == "Employee" %>
+  <% if current_user.senior_officer? || current_user.head? %>
+    <%= render "process_coverages/dashboard_head" %>
     <div class="mt-3">
       <div class="d-flex gap-3 flex-row-reverse mb-3">
         <%= form_with url: process_coverages_path, method: :get do %>
@@ -14,7 +14,7 @@
       </div>
       <%= render "process_coverages/table_index", process_coverages: @process_coverages %>
     </div>
-  <% else %>
+  <% elsif current_user.analyst? %>
     <%= content_tag :h1, "List of Process Coverages" %>
 
     <div class="d-flex gap-3 flex-row-reverse mb-3">
@@ -28,10 +28,8 @@
     </div>
 
     <%= render "process_coverages/table_index", process_coverages: @process_coverages %>
-
   <% end %>
-  
-<%# end %>
+<% end %>
 
 <%#= console %>
 

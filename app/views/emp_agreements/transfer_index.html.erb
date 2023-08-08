@@ -5,12 +5,13 @@
   <thead>
     <th>Cooperative</th>
     <th>Plan</th>
+    <th>Approver</th>
     <th></th>
   </thead>
   <tbody>
     <% @emp_agreements.group_by(&:employee).each do |emp, agreements| %>
       <tr>
-        <%= content_tag :td, colspan: 3, class: "bg-dark" do %>
+        <%= content_tag :td, colspan: 4, class: "bg-dark" do %>
           <%= content_tag :p, emp, class: "lead text-white mb-0" %>
         <% end %>
       </tr>
@@ -18,7 +19,11 @@
         <tr>
           <td><%= a.agreement.cooperative %></td>
           <td><%= a.agreement.plan %></td>
-          <td><%= link_to "Transfer", new_emp_agreement_path(agreement: a.agreement), class: "btn btn-sm btn-success" %></td>
+          <td><%= a.approver %></td>
+          <td>
+            <%= link_to "Transfer", new_emp_agreement_path(agreement: a.agreement), class: "btn btn-sm btn-success" %>
+            <%= link_to "Change", new_emp_agreement_path(agreement: a.agreement), class: "btn btn-sm btn-secondary" %>
+          </td>
         </tr>
       <% end %>
     <% end %>
