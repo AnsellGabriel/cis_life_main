@@ -1,12 +1,12 @@
 <% plan_acronym = agreement.plan.acronym %>
 <% member = batch.coop_member.member %>
-<% beneficiaries = batch.batch_beneficiaries %>
+<% beneficiaries = batch.batch_beneficiaries %>"
 <% dependents = batch.batch_dependents %>
 <% if plan_acronym == 'PMFC' %>
 	<% product_benefits = batch.get_term_insurance_product_benefit %>
 	<% life_benefit = product_benefits.select {|pb| pb.benefit.acronym == "LIFE" } %>
 <% else %>
-	<% life_benefit = batch.agreement_benefit.product_benefits.select {|pb| pb.benefit.acronym == "LIFE" } %>
+	<% life_benefit = batch.agreement_benefit.product_benefits.select {|pb| pb.benefit.acronym == "LIFE" || pb.benefit.acronym == "LI" } %>
 <% end %>
 
 <tr id="<%= dom_id(batch) %>">

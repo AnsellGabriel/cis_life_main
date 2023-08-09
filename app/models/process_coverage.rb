@@ -1,6 +1,7 @@
 class ProcessCoverage < ApplicationRecord
   belongs_to :group_remit
   belongs_to :agent, optional: true
+  belongs_to :processor, class_name: "Employee"
   has_many :process_remarks
 
   enum status: {
@@ -10,7 +11,9 @@ class ProcessCoverage < ApplicationRecord
     denied: 3,
     for_head_approval: 4,
     for_vp_approval: 5,
-    reprocess: 6
+    reprocess: 6,
+    reprocess_approval: 7,
+    
   }
 
   enum und_route: {
