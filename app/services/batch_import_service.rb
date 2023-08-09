@@ -1,9 +1,10 @@
 class BatchImportService
-  def initialize(spreadsheet, group_remit, cooperative)
+  def initialize(spreadsheet, group_remit, cooperative, current_user)
     @spreadsheet = spreadsheet
     @group_remit = group_remit
     @cooperative = cooperative  
     @agreement = @group_remit.agreement
+    @current_user = current_user
 
     @gyrt_plans = ['GYRT', 'GYRTF']
     @gyrt_ranking_plans = ['GYRTBR', 'GYRTFR']
@@ -99,12 +100,12 @@ class BatchImportService
         next
       end
 
-      if age_not_within_range?(member, age_min_max, @group_remit.effectivity_date)
-        create_denied_member(member, 'Age not within agreement\'s age range', @group_remit.effectivity_date)
-        progress_counter += 1
-        update_progress(total_members, progress_counter)
-        next
-      end
+      # if age_not_within_range?(member, age_min_max, @group_remit.effectivity_date)
+      #   create_denied_member(member, 'Age not within agreement\'s age range', @group_remit.effectivity_date)
+      #   progress_counter += 1
+      #   update_progress(total_members, progress_counter)
+      #   next
+      # end
       
       duplicate_member = find_duplicate_member(member)
     
@@ -282,9 +283,9 @@ class BatchImportService
     )
   end
 
-  def age_not_within_range?(member, age_min_max, effectivity_date)
-      member.age(effectivity_date) < age_min_max[:min_age] || member.age(effectivity_date) > age_min_max[:max_age]
-  end
+  # def age_not_within_range?(member, age_min_max, effectivity_date)
+  #     member.age(effectivity_date) < age_min_max[:min_age] || member.age(effectivity_date) > age_min_max[:max_age]
+  # end
 
   def increment_denied_members_counter
     @denied_members_counter += 1
@@ -305,6 +306,19 @@ class BatchImportService
       b_rank, 
       @group_remit.terms
     )
+
+    if member.age(@group_remit.effectivity_date) < new_batch.agreement_benefit.min_age or member.age(@group_remit.effectivity_date) > new_batch.agreement_benefit.max_age
+
+      new_batch.insurance_status = :denied
+
+      if member.age(@group_remit.effectivity_date) > new_batch.agreement_benefit.max_age
+        new_batch.batch_remarks.build(remark: "Member age is over the maximum age limit of the plan.", status: :denied, user_type: 'CoopUser', user_id: @current_user.id)
+      else
+        new_batch.batch_remarks.build(remark: "Member age is below the minimum age limit of the plan.", status: :denied, user_type: 'CoopUser', user_id: @current_user.id)
+      end
+
+    end
+
     @group_remit.batches << new_batch
 
     new_batch.save ? 1 : 0
