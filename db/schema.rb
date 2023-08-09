@@ -267,6 +267,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_08_09_014419) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.string "full_name"
+    t.boolean "deceased", default: false
     t.index ["coop_branch_id"], name: "index_coop_members_on_coop_branch_id"
     t.index ["cooperative_id"], name: "index_coop_members_on_cooperative_id"
     t.index ["member_id"], name: "index_coop_members_on_member_id"
@@ -454,6 +455,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_08_09_014419) do
     t.decimal "agent_commission", precision: 10, scale: 2
     t.string "type"
     t.integer "batch_remit_id"
+    t.date "date_submitted"
     t.index ["agreement_id"], name: "index_group_remits_on_agreement_id"
     t.index ["anniversary_id"], name: "index_group_remits_on_anniversary_id"
   end

@@ -27,6 +27,10 @@ class GroupRemitPresenter
 		@group_remit.pending? || @group_remit.for_renewal?
 	end
 
+	def is_for_renewal?
+		@group_remit.for_renewal?
+	end
+
 	def is_pending?
 		@group_remit.pending?
 	end

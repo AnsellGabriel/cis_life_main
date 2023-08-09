@@ -18,6 +18,7 @@ class BatchRemarksController < ApplicationController
       when "Deny" then "Deny Batch"
       when "MD" then "Med Dir"
       when "New" then "New Remark" 
+      when "For reconsideration" then "Request for reconsideration"
     end
 
     @batch_status = params[:batch_status]
@@ -26,6 +27,7 @@ class BatchRemarksController < ApplicationController
       when "Pending" then :pending
       when "Deny" then :denied
       when "MD" then :md_reco
+      when "For reconsideration" then :request
     end
 
     @process_coverage = params[:pro_cov]
@@ -75,6 +77,10 @@ class BatchRemarksController < ApplicationController
           # byebug
           @group_remit = @batch.group_remits.find_by(type: "Remittance")
           format.html { redirect_to all_health_decs_group_remit_batches_path(@group_remit.process_coverage), notice: "Recommendation created." } 
+        elsif params[:batch_remark][:batch_status] == "For reconsideration"
+          @batch.update(insurance_status: :for_reconsideration)
+          @group_remit = @batch.group_remits.find_by(type: "Remittance")
+          format.html { redirect_to group_remit_path(@group_remit), notice: "Request saved" } 
         else
           format.html { redirect_to batch_remark_url(@batch_remark), notice: "Batch remark was successfully created." }
           format.json { render :show, status: :created, location: @batch_remark }

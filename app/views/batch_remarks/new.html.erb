@@ -1,9 +1,24 @@
-
+<!--
 <div class="card">
-  <h5 class="card-header">New batch remark</h5>
+  
   <div class="card-body">
     <%= render "remote_modal", title: @title do %>
-      <%= render "form", batch_remark: @batch_remark %>
     <% end %>
   </div>
 </div>
+-->
+
+<%= turbo_frame_tag "modal" do %>
+  <div class="modal-header">
+    <% if params[:coop] %>
+      <h5 class="card-header">Request for reconsideration</h5>
+    <% else %>
+      <h5 class="card-header">New batch remark</h5>
+    <% end %>   
+   <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+  </div>
+  
+  <div class="modal-body">
+    <%= render "form", batch_remark: @batch_remark %>
+  </div>
+<% end %>
