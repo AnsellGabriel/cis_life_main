@@ -25,8 +25,10 @@ class Cooperative < ApplicationRecord
     end
     
     def get_address 
-      geo_province.name + ', ' + geo_municipality.name + ', ' + geo_barangay.name + ', ' + 
-      "#{self.street}"
+      unless geo_province_id.nil? && geo_municipality_id.nil? && geo_barangay_id.nil? 
+        geo_province.name + ', ' + geo_municipality.name + ', ' + geo_barangay.name + ', ' + 
+        "#{self.street}"
+      end
       # "#{self.street}" + ', ' geo_barangay.name + ', ' + geo_municipality.name + ', ' + geo_province.name
     end
 

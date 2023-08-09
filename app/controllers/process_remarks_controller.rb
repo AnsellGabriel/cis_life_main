@@ -103,7 +103,8 @@ class ProcessRemarksController < ApplicationController
         # agreement = @process_coverage.group_remit.agreement
 
         # if agreement.anniversary_type == 'none' or agreement.anniversary_type.nil?
-        #   current_batch_remit = agreement.group_remits.find_by(type: 'BatchRemit', effectivity_date: Date.today.beginning_of_month)
+        #   # current_batch_remit = agreement.group_remits.find_by(type: 'BatchRemit', effectivity_date: Date.today.beginning_of_month)
+        #   current_batch_remit = agreement.group_remits.find_by(type: 'BatchRemit')
         #   approved_batches = @process_coverage.group_remit.batches.where(insurance_status: :approved)
         #   approved_batches.update_all(batch_remit_id: current_batch_remit.id)
         # end

@@ -1,12 +1,9 @@
-<%= content_tag :h1, "List of Process Claims" %>
-
-
+<%= content_tag :h1, "List of Claims filed" %>
 <div class="text-end mb-3">
   <%= link_to new_process_claim_path, class: 'btn btn-primary' do %>
-    New Process Claim
+    New Claim
   <% end %>
 </div>
-
 <table class ="table table-striped">
   <table class="table table-striped table-bordered table-hover">
     <thead>
@@ -19,10 +16,8 @@
         <th>Date Incident</th>
         <th>Entry Type</th>
         <th></th>
-
       </tr>
     </thead>
-
     <tbody>
       <% @process_claims.each do |process_claim| %>
         <tr>
@@ -35,11 +30,11 @@
         <td><%= process_claim.entry_type %></td>
     
           <td>
-            <%= link_to 'View', process_claim, class: 'btn btn-secondary btn-sm' %>
-            <%= link_to 'Edit', edit_process_claim_path(process_claim), class: 'btn btn-secondary btn-sm' %>
-            <%= link_to "Delete", process_claim, class: "btn btn-danger btn-sm", method: :delete, data: { "turbo-method": :delete, turbo_confirm: "Are you sure?" } %>
+            <%= link_to "View", evaluate_process_claim_path(process_claim.id), class: "btn btn-warning btn-sm" %>
+            <%= link_to 'Edit', process_claim, class: 'btn btn-secondary btn-sm' unless process_claim.approval %>
+            <%#= link_to 'Edit', edit_process_claim_path(process_claim), class: 'btn' %>
+            <%#= link_to 'Delete', process_claim, method: :delete, data: { confirm: 'Are you sure?' }, class: 'btn' %>
           </td>
-
         </tr>
       <% end %>
     </tbody>

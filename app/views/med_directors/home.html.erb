@@ -1,0 +1,29 @@
+<h1>Medical Director Homepage</h1>
+<p>Find me in app/views/med_directors/home.html.erb</p>
+
+<table class ="table table-striped">
+  <table class="table table-striped table-bordered table-hover">
+    <thead>
+      <tr>
+        <th>Process Coverage</th>
+        <th>Group Remit</th>
+        <th></th>
+
+      </tr>
+    </thead>
+
+    <tbody>
+      <% @group_remits.each do |group_remit| %>
+        <tr>
+
+          <td><%= group_remit.process_coverage %></td>
+          <td><%= group_remit.id %></td>
+    
+          <td>
+            <%= link_to 'View', all_health_decs_group_remit_batches_path(group_remit), class: 'btn btn-secondary btn-sm' %>
+          </td>
+
+        </tr>
+      <% end %>
+    </tbody>
+  </table>

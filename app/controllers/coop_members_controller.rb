@@ -1,7 +1,7 @@
 class CoopMembersController < InheritedResources::Base
   before_action :authenticate_user!
   before_action :check_userable_type
-  before_action :set_coop_member, only: %i[show edit update destroy selected member_agreements]
+  before_action :set_coop_member, only: %i[show edit update destroy selected member_agreements show_insurance]
 
   def index
     # initalize new member for coop member modal form
@@ -63,6 +63,10 @@ class CoopMembersController < InheritedResources::Base
   def member_agreements
     # byebug
     @agreements = @coop_member.agreements.includes(:plan)
+  end
+
+  def show_insurance 
+    @batch = Batch.where(coop_member: @coop_member)
   end
 
   private

@@ -58,7 +58,7 @@ class ProductBenefitsController < InheritedResources::Base
       @agreement_benefit = AgreementBenefit.find(@product_benefit.agreement_benefit.id)
     end
     def product_benefit_params
-      params.require(:product_benefit).permit(:coverage_amount, :premium, :agreement_benefit_id, :benefit_id, :duration, :residency_floor, :residency_ceiling)
+      params.require(:product_benefit).permit(:coverage_amount, :premium, :agreement_benefit_id, :benefit_id, :duration, :residency_floor, :residency_ceiling, :main)
     end
   # private
 

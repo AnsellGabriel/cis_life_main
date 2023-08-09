@@ -4,21 +4,28 @@
 <table class="table">
   <thead>
     <th>Cooperative</th>
-    <th>Plan</th>
+    <th>Approver</th>
     <th></th>
   </thead>
   <tbody>
     <% @emp_agreements.group_by(&:employee).each do |emp, agreements| %>
       <tr>
-        <%= content_tag :td, colspan: 3, class: "bg-dark" do %>
+        <%= content_tag :td, colspan: 4, class: "bg-dark" do %>
           <%= content_tag :p, emp, class: "lead text-white mb-0" %>
         <% end %>
       </tr>
       <% agreements.each do |a| %>
         <tr>
-          <td><%= a.agreement.cooperative %></td>
-          <td><%= a.agreement.plan %></td>
-          <td><%= link_to "Transfer", new_emp_agreement_path(agreement: a.agreement), class: "btn btn-sm btn-success" %></td>
+          <td>
+            <%= a.id %>
+            <%= a.agreement.cooperative %> <%= ea_badge_pill(a.active) %> <br />
+            <%= a.agreement.plan %>
+          </td>
+          <td><%= a.employee.emp_approver.approver %></td>
+          <td>
+            <%= link_to "Transfer", new_emp_agreement_path(agreement: a.agreement, old_emp_agreement: a), class: "btn btn-sm btn-success" %>
+            <%#= link_to "Change", edit_emp_a(a, for_change: true), class: "btn btn-sm btn-secondary" %>
+          </td>
         </tr>
       <% end %>
     <% end %>

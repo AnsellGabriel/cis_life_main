@@ -1,0 +1,9 @@
+
+<%= render @emp_approver %>
+
+<div>
+  <%= link_to "Edit", edit_emp_approver_path(@emp_approver), class: 'btn btn-primary' %> |
+  <%= link_to "Back", emp_approvers_path, class: 'btn btn-primary' %>
+
+  <%= button_to "Delete", @emp_approver, method: :delete, class: 'btn btn-danger' %>
+</div>
