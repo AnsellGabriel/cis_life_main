@@ -22,7 +22,7 @@ class ProcessCoveragesController < ApplicationController
       
     elsif current_user.rank == "head" 
       # @process_coverages_x = ProcessCoverage.joins(group_remit: { agreement: :emp_agreements }).where( emp_agreements: { approver_id: current_user.userable_id, active: true })
-      @process_coverages_x = ProcessCoverage.joins(group_remit: { agreement: { emp_agreements: {employee: :emp_approver} } }).where( emp_approver: { approver_id: current_user.userable_id }, emp_agreements: { active: true})
+      @process_coverages_x = ProcessCoverage.joins(group_remit: { agreement: { emp_agreements: {employee: :emp_approver} } }).where( emp_approver: { approver_id: current_user.userable_id }, emp_agreements: { active: true })
       # @process_coverages_x = ProcessCoverage.all
       @for_process_coverages = @process_coverages_x.where(status: :for_process)
       @approved_process_coverages = @process_coverages_x.where(status: :approved)
@@ -37,8 +37,9 @@ class ProcessCoveragesController < ApplicationController
       end
 
     elsif current_user.analyst?
-      @process_coverages_x = ProcessCoverage.joins(group_remit: { agreement: :emp_agreements }).where( emp_agreements: { employee_id: current_user.userable_id, active: true })
-
+      # @process_coverages_x = ProcessCoverage.joins(group_remit: { agreement: :emp_agreements }).where( emp_agreements: { employee_id: current_user.userable_id, active: true })
+      @process_coverages_x = ProcessCoverage.joins(group_remit: { agreement: :emp_agreements }).where(processor: current_user.userable_id)
+      
       if params[:search].present?
         @process_coverages = @process_coverages_x.joins("INNER JOIN cooperatives ON cooperatives.id = agreements.cooperative_id").where("group_remits.name LIKE ? OR group_remits.description LIKE ? OR agreements.moa_no LIKE ? OR cooperatives.name LIKE ?", "%#{params[:search]}%", "%#{params[:search]}%", "%#{params[:search]}%", "%#{params[:search]}%")
       else
@@ -47,6 +48,13 @@ class ProcessCoveragesController < ApplicationController
       
     else
       @process_coverages_x = ProcessCoverage.all
+    end
+
+    @analysts_x = Employee::ANALYSTS
+    if current_user.senior_officer?
+      @analysts = @analysts_x.joins(:emp_approver)
+    elsif current_user.head?
+      @analysts = @analysts_x.joins(:emp_approver).where(emp_approver: { approver: current_user.userable_id })
     end
 
     # if params[:search].present?
@@ -110,7 +118,12 @@ class ProcessCoveragesController < ApplicationController
           start_date = @current_date.beginning_of_week
           end_date = @current_date.end_of_week
         end
-        ProcessCoverage.where(status: :for_process, created_at: start_date..end_date)
+        # ProcessCoverage.where(status: :for_process, created_at: start_date..end_date)
+        if current_user.head?
+          ProcessCoverage.joins(group_remit: { agreement: { emp_agreements: {employee: :emp_approver} } }).where( emp_approver: { approver_id: current_user.userable_id }, emp_agreements: { active: true}).where(status: :for_process, created_at: start_date..end_date)
+        elsif current_user.senior_officer?
+          ProcessCoverage.where(status: :for_process, created_at: start_date..end_date)
+        end
         
       when "Approved" 
         if params[:date_type] == "yearly"
@@ -124,7 +137,12 @@ class ProcessCoveragesController < ApplicationController
           start_date = @current_date.beginning_of_week
           end_date = @current_date.end_of_week
         end
-        ProcessCoverage.where(status: :approved, created_at: start_date..end_date)
+        # ProcessCoverage.where(status: :approved, created_at: start_date..end_date)
+        if current_user.head?
+          ProcessCoverage.joins(group_remit: { agreement: { emp_agreements: {employee: :emp_approver} } }).where( emp_approver: { approver_id: current_user.userable_id }, emp_agreements: { active: true}).where(status: :approved, created_at: start_date..end_date)
+        elsif current_user.senior_officer?
+          ProcessCoverage.where(status: :approved, created_at: start_date..end_date)
+        end
 
       when "Reconsider" 
         if params[:date_type] == "yearly"
@@ -138,7 +156,12 @@ class ProcessCoveragesController < ApplicationController
           start_date = @current_date.beginning_of_week
           end_date = @current_date.end_of_week
         end
-        ProcessCoverage.where(status: :for_reconsider, created_at: start_date..end_date)
+        # ProcessCoverage.where(status: :for_reconsider, created_at: start_date..end_date)
+        if current_user.head?
+          ProcessCoverage.joins(group_remit: { agreement: { emp_agreements: {employee: :emp_approver} } }).where( emp_approver: { approver_id: current_user.userable_id }, emp_agreements: { active: true}).where(status: :reprocess, created_at: start_date..end_date)
+        elsif current_user.senior_officer?
+          ProcessCoverage.where(status: :reprocess, created_at: start_date..end_date)
+        end
 
       when "Denied" 
         if params[:date_type] == "yearly"
@@ -152,7 +175,11 @@ class ProcessCoveragesController < ApplicationController
           start_date = @current_date.beginning_of_week
           end_date = @current_date.end_of_week
         end
-        ProcessCoverage.where(status: :denied, created_at: start_date..end_date)
+        if current_user.head?
+          ProcessCoverage.joins(group_remit: { agreement: { emp_agreements: {employee: :emp_approver} } }).where( emp_approver: { approver_id: current_user.userable_id }, emp_agreements: { active: true}).where(status: :denied, created_at: start_date..end_date)
+        elsif current_user.senior_officer?
+          ProcessCoverage.where(status: :denied, created_at: start_date..end_date)
+        end
       when "head approval" then ProcessCoverage.where(status: :for_head_approval)
       when "vp approval" then ProcessCoverage.where(status: :for_head_approval)
     end

@@ -1,8 +1,8 @@
-<% if current_user.head? %>
-  <h1>Underwriting Head</h1>
-<% elsif current_user.senior_officer? %>
-  <%= content_tag :h1, current_user.userable.designation %>
-<% end %>
+<%# if current_user.head? %>
+  <%#= content_tag :h1, "Underwriting Head" %>
+<%# elsif current_user.senior_officer? %>
+  <%#= content_tag :h1, current_user.userable.designation %>
+<%# end %>
 
 
 <div class="row">
@@ -34,12 +34,12 @@
   </div>
 
   <div class="col-3 mb-2">
-    <div class="card text-white bg-secondary">
+    <div class="card text-dark bg-warning">
       <div class="card-header">
         Reprocess Coverages
       </div>
       <div class="card-body">
-      Year: <%= link_to pluralize(@reprocess_coverages.where(created_at: current_date.beginning_of_year..current_date.end_of_year).count, "Coverage"), cov_list_process_coverages_path(cov_type: "Reconsider", title: "Pending PCs"), class: "link-light", data: { turbo_frame: "remote_modal" } %> <br>
+      Year: <%= link_to pluralize(@reprocess_coverages.where(created_at: current_date.beginning_of_year..current_date.end_of_year).count, "Coverage"), cov_list_process_coverages_path(cov_type: "Reconsider", title: "Reconsidered PCs"), class: "link-dark", data: { turbo_frame: "remote_modal" } %> <br>
       Month: <%= pluralize(@reprocess_coverages.where(created_at: start_month(current_date)..end_month(current_date)).count, "Coverage") %> <br>
       Week: <%= pluralize(@reprocess_coverages.where(created_at: start_week(current_date)..end_week(current_date.end_of_year)).count, "Coverage") %>
       </div>
