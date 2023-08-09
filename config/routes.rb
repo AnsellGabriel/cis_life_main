@@ -68,6 +68,7 @@ Rails.application.routes.draw do
     get :renewal, on: :member
     resources :batches do
       get :health_dec, on: :member
+      get :modal_remarks, on: :member
       collection do
         post :import
         get :approve_all

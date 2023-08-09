@@ -7,7 +7,7 @@
 	%>
 
 	<% if batch.batch_remarks.exists? %>
-		<%= link_to "Remarks", modal_remarks_process_coverage_path(group_remit.process_coverage, batch: batch, coop: true), data: { turbo_frame: "remote_modal" }, class: small_btn('danger') %>
+		<%= link_to "Remarks", modal_remarks_group_remit_batch_path(group_remit, batch), data: { turbo_frame: "modal" }, class: small_btn('danger') %>
 	<% end %>
 
 	<% if (group_remit.pending? || group_remit.for_renewal?) && group_remit.instance_of?(Remittance)%>

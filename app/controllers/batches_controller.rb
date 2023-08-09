@@ -128,22 +128,31 @@ class BatchesController < ApplicationController
 
       if member.age(@group_remit.effectivity_date) < @batch.agreement_benefit.min_age or member.age(@group_remit.effectivity_date) > @batch.agreement_benefit.max_age
 
-        return redirect_to group_remit_path(@group_remit), alert: "Member age must be between #{@batch.agreement_benefit.min_age.to_i} and #{@batch.agreement_benefit.max_age.to_i} years old."
+        # return redirect_to group_remit_path(@group_remit), alert: "Member age must be between #{@batch.agreement_benefit.min_age.to_i} and #{@batch.agreement_benefit.max_age.to_i} years old."
+        @batch.insurance_status = :denied
+        if member.age(@group_remit.effectivity_date) > @batch.agreement_benefit.max_age
+          @batch.batch_remarks.build(remark: "Member age is over the maximum age limit of the plan.", status: :denied, user_type: 'CoopUser', user_id: current_user.id)
+        else
+          @batch.batch_remarks.build(remark: "Member age is below the minimum age limit of the plan.", status: :denied, user_type: 'CoopUser', user_id: current_user.id)
+        end
+      end
 
-      else
-        respond_to do |format|
-          if @batch.save!
-            @group_remit.batches << @batch
+      respond_to do |format|
+        if @batch.save!
+          @group_remit.batches << @batch
 
-            premiums_and_commissions
-            containers # controller/concerns/container.rb
-            counters  # controller/concerns/counter.rb
+          premiums_and_commissions
+          containers # controller/concerns/container.rb
+          counters  # controller/concerns/counter.rb
 
-            format.html { 
-              redirect_to group_remit_path(@group_remit)
-              flash[:notice] = "Member successfully added"
-            }
-          end
+          format.html { 
+            redirect_to group_remit_path(@group_remit)
+            if @batch.denied?
+              flash[:alert] = "Member denied. Please check the denied remarks."
+            else
+              flash[:notice] = "Member successfully added."
+            end
+          }
         end
       end
       
@@ -196,6 +205,10 @@ class BatchesController < ApplicationController
       end
       
     end  
+  end
+
+  def modal_remarks
+    @batch = Batch.find(params[:id])
   end
 
   private

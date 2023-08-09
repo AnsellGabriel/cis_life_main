@@ -2,15 +2,18 @@
     <%= content_tag :span, 'DECEASED', class: badge('danger') %>
 <% end %>
 
-<% if batch.insurance_status == 'for_review' %>
+<% if batch.for_review? %>
     <span class="<%= badge('secondary') %>">For review</span>
-<% elsif batch.insurance_status == 'pending' %>
+<% elsif batch.pending? %>
     <span class="<%= badge('warning') %> text-dark">Pending</span>
-<% elsif batch.insurance_status == 'approved' %>
+<% elsif batch.approved? %>
     <span class="<%= badge('success') %>">Approved</span>
-<% elsif batch.insurance_status == 'denied' %>
+<% elsif batch.denied? %>
     <span class="<%= badge('danger') %>">Denied</span>
+<% elsif batch.for_reconsideration? %>
+    <span class="<%= badge('warning text-dark') %>">For reconsideration</span>
 <% end %>
+
 <% if batch.recent? %>
     <span class="<%= badge('success') %>">New</span>
 <% else %>
