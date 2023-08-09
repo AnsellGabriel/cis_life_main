@@ -1,8 +1,11 @@
-
 <% batch.batch_remarks.order(created_at: :desc).each do |rem| %>
   <%= content_tag :div, class: "d-flex justify-content-between align-items-center" do %>
     <%= content_tag :p, class: "mb-1" do %>
-      <%= rem.denied? && rem.user_type == 'CoopUser' ? 'System' : rem.user %> 
+      <% if rem.user_type == 'CoopUser' %>
+        <%= rem.request? ? "#{rem.user} (COOP)" : 'System' %>
+      <% else %>
+        <%= rem.user %> 
+      <% end %>
       <%= content_tag :small, "- #{time_ago_in_words(rem.created_at)} ago" %> 
       <%= batch_rem_status(rem.status) %>
     <% end %>
@@ -11,6 +14,7 @@
 
   <%= content_tag :hr %>
 <% end %>
-  <%# <%= link_to "New Remark", new_batch_remark_path(ref: batch, pro_cov: process_coverage, batch_status: "New"), class: "btn btn-sm btn-primary", data: { turbo_frame: "remote_modal" } %> 
 
-  <%= link_to "New Remark", new_batch_remark_path(ref: batch, pro_cov: process_coverage, batch_status: "New"), class: "btn btn-sm btn-primary", data: { turbo_frame: "modal" } %>
+<% if @group_remit.pending? || @group_remit.for_renewal? %>
+  <%= link_to "Request reconsideration", new_batch_remark_path(ref: batch, batch_status: "For reconsideration", coop: true), class: "btn btn-sm btn-primary", data: { turbo_frame: "modal" } %>
+<% end %>

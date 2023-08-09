@@ -82,6 +82,7 @@ module ApplicationHelper
 			when "pending" then content_tag(:span, "Pending", class: "lead text-dark")
 			when "approved" then content_tag(:span, "Approved", class: "lead text-success")
 			when "denied" then content_tag(:span, "Denied", class: "lead text-danger")
+			when "for_reconsideration" then content_tag(:span, "For Reconsideration", class: "lead text-primary")
 		end
 	end
 
@@ -90,6 +91,7 @@ module ApplicationHelper
 			when "recent" then content_tag(:span, "NEW", class: "badge bg-primary")
 			when "transferred" then content_tag(:span, "TRANSFERRED", class: "badge bg-secondary")
 			when "renewal" then content_tag(:span, "RENEWAL", class: "badge bg-success")
+			when "reinstated" then content_tag(:span, "REINSTATED", class: "badge bg-success")
 		end
 	end
 
@@ -155,6 +157,7 @@ module ApplicationHelper
 			when "pending" then content_tag(:span, "Pending", class: "badge rounded-pill bg-secondary")
 			when "denied" then content_tag(:span, "Denied", class: "badge rounded-pill bg-danger")
 			when "md_reco" then content_tag(:span, "M.D Recommendation", class: "badge rounded-pill bg-warning")
+			when "request" then content_tag(:span, "Requesting for reconsideration", class: "badge rounded-pill bg-warning text-dark")
 		end
 	end
 

@@ -9,7 +9,8 @@ class BatchRemark < ApplicationRecord
   enum status: {
     pending: 0,
     denied: 1,
-    md_reco: 2
+    md_reco: 2,
+    request: 3
   }
 
 end

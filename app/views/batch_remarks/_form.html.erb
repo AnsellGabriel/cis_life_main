@@ -13,7 +13,15 @@
   </div>
 
   <div class="form-actions text-end">
-    <%= link_to "Back", batch_remarks_path, class: 'btn btn-secondary' %>
-    <%= f.button :submit, class: 'btn-success' %>
+
+    <% if params[:coop] %>
+      <%= f.button :submit, "Create Request",class: 'btn-success' %>
+      <%= link_to "Back", modal_remarks_group_remit_batch_path(@batch.group_remits.find_by(type: 'Remittance'), @batch), class: 'btn btn-secondary', data: { turbo_frame: "modal" } %>
+    <% else %>
+      <%# <%= link_to "Back", batch_remarks_path, class: 'btn btn-secondary' %> 
+      <%= link_to "Back", modal_remarks_process_coverage_path(@process_coverage, batch: @batch), class: 'btn btn-secondary', data: { turbo_frame: "modal" } %>
+      <%= f.button :submit, class: 'btn-success' %>
+    <% end %>
+
   </div>
 <% end %>

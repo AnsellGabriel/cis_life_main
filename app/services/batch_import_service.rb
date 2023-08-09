@@ -227,12 +227,14 @@ class BatchImportService
   end
 
   def create_denied_member(member, reason, effectivity = nil)
-    DeniedMember.find_or_create_by!(
+    denied_member = DeniedMember.find_or_create_by!(
       name: "#{member.first_name} #{member.middle_name} #{member.last_name}", 
       age: member.birth_date.nil? ? 0 : member.age(effectivity), 
-      reason: reason, 
       group_remit: @group_remit
     )
+    denied_member.reason = reason
+    denied_member.save!
+
     increment_denied_members_counter
   end
 
