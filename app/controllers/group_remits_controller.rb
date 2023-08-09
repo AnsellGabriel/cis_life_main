@@ -168,7 +168,7 @@ class GroupRemitsController < InheritedResources::Base
         current_batch_remit = GroupRemit.find(@group_remit.batch_remit_id)
         duplicate_batches = current_batch_remit.batch_group_remits.joins(:batch).where(batch: {coop_member_id: approved_members})
         current_batch_remit.batch_group_remits.destroy(duplicate_batches)
-        current_batch_remit.batches << approved_batches unless current_batch_remit.batches.include?(approved_batches)
+        current_batch_remit.batches << approved_batches 
         current_batch_remit.set_total_premiums_and_fees
         current_batch_remit.status = :active
         current_batch_remit.save!

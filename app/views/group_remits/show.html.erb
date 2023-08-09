@@ -50,7 +50,7 @@
         class: small_btn('warning'), 
         data: {turbo_confirm: 'Renew group remit?' } 
       %>
-  <% elsif !gr_presenter.is_pending_or_renewal? && gr_presenter.is_batch_remit? && gr_presenter.is_none_anniversary? %>
+  <% elsif !gr_presenter.is_for_renewal? && gr_presenter.is_batch_remit? && gr_presenter.is_none_anniversary? && have_remittance %>
     <%= button_to "Add Members", group_remits_path, 
       method: :post, 
       params: { 
@@ -66,7 +66,7 @@
       class: small_btn('warning'), 
       data: { turbo: false } 
     %>
-  <% elsif !gr_presenter.is_pending_or_renewal? && gr_presenter.is_batch_remit? && gr_presenter.is_single_anniversary? %>
+  <% elsif !gr_presenter.is_for_renewal? && gr_presenter.is_batch_remit? && gr_presenter.is_single_anniversary? %>
     <%= button_to "Add Members", group_remits_path, 
       method: :post, 
       params: { 
@@ -79,7 +79,7 @@
       class: small_btn('warning'), 
       data: { turbo: false } 
     %>
-    <% elsif !gr_presenter.is_pending_or_renewal? && gr_presenter.is_batch_remit? && gr_presenter.is_multiple_anniversary? %>
+    <% elsif !gr_presenter.is_for_renewal? && gr_presenter.is_batch_remit? && gr_presenter.is_multiple_anniversary? %>
     <%= button_to "Add Members", group_remits_path, 
       method: :post, 
       params: { 
@@ -201,19 +201,41 @@
 
   <% if ['GYRTBR','GYRTFR'].include?(plan_acronym) %>
     <div class="<%= flex_justify_align('between', 'center') %> gap-1">
-      <div class="d-flex gap-1">
+      <div class="d-flex gap-3">
 
-      <% @group_remit.agreement.agreement_benefits.where.not(insured_type: 2..5).each do |a_benefit| %>
-        <%= link_to a_benefit.name, group_remit_path(@group_remit, rank_filter: a_benefit), class: "btn btn-sm btn-warning" %>
-      <% end %>
+        <% @group_remit.agreement.agreement_benefits.where.not(insured_type: 2..5).each do |a_benefit| %>
+          <%= link_to group_remit_path(@group_remit, rank_filter: a_benefit), class: "btn btn-sm btn-warning position-relative" do %>
+            <%= a_benefit.name %>
+            <% unless @group_remit.batches.where(agreement_benefit: a_benefit).size <= 0 %>
+              <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-primary">
+                <%= @group_remit.batches.where(agreement_benefit: a_benefit).size < 100 ? @group_remit.batches.where(agreement_benefit: a_benefit).size : '99+'%>
+              </span>
+            <% end %>
+          <% end %>
+        <% end %>
 
       </div>
-      <div class="">
-        <%= link_to 'Approved', group_remit_path(@group_remit, insurance_status: :approved), class: "btn btn-sm btn-success" %>
-        <%= link_to 'Denied', group_remit_path(@group_remit, insurance_status: :denied), class: "btn btn-sm btn-danger" %>
-        <%= link_to 'Pending', group_remit_path(@group_remit, insurance_status: :pending), class: "btn btn-sm btn-secondary" %>
-        <%= link_to 'For Review', group_remit_path(@group_remit, insurance_status: :for_review), class: "btn btn-sm btn-outline-secondary" %>
+      <div class="d-flex gap-3">
+        <% status_mappings = {
+            approved: { label: "Approved", class: "btn-success" },
+            denied: { label: "Denied", class: "btn-danger" },
+            pending: { label: "Pending", class: "btn-secondary" },
+            for_review: { label: "For Review", class: "btn-outline-secondary" }
+          } %>
+
+        <% status_mappings.each do |status, attributes| %>
+          <% batches = @group_remit.batches.send(status) %>
+          <%= link_to group_remit_path(@group_remit, insurance_status: status), class: "btn btn-sm #{attributes[:class]} position-relative" do %>
+            <%= attributes[:label] %>
+            <% unless batches.size.zero? %>
+              <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-primary">
+                <%= batches.size >= 100 ? '99+' :  batches.size %>
+              </span>
+            <% end %>
+          <% end %>
+        <% end %>
       </div>
+
   <% else %>
     <div class="<%= flex_justify_align('end', 'center') %> gap-1">
   <% end %>
