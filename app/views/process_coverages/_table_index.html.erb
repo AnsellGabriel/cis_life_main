@@ -1,23 +1,23 @@
 <table class="table table-bordered table-hover">
-      <thead>
-        <tr>
+  <thead>
+    <tr>
 
-        <th></th>
-          <th>Group Remit</th>
-          <th>Effectivity</th>
-          <th>Expiry</th>
-          <%# <th>Terms</th> %>
-          <%# <th>Count</th> %>
-          <th>Summary</th>
-          <th>Processor</th>
-          <th></th>
+    <th></th>
+      <th>Group Remit</th>
+      <th>Effectivity</th>
+      <th>Expiry</th>
+      <%# <th>Terms</th> %>
+      <%# <th>Count</th> %>
+      <th>Summary</th>
+      <th>Processor</th>
+      <th></th>
 
-        </tr>
-      </thead>
+    </tr>
+  </thead>
 
-      <tbody>
-        <% process_coverages.each do |pc| %>
-          <tr>
+  <tbody>
+    <% process_coverages.each do |pc| %>
+      <tr>
 
           <td scope="row" class="text-center"><small><%= pc.group_remit.agreement.plan.acronym %><%= pc.id %></small> <br>
           <small><%= process_status(pc.status) %></small> <br>
@@ -59,7 +59,7 @@
             <%#= link_to "Delete", process_coverage, class: "btn btn-danger btn-sm", method: :delete, data: { "turbo-method": :delete, turbo_confirm: "Are you sure?" } %>
           </td>
 
-          </tr>
-        <% end %>
-      </tbody>
-    </table>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
