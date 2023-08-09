@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_08_08_052400) do
+ActiveRecord::Schema[7.0].define(version: 2023_08_09_014419) do
   create_table "active_admin_comments", charset: "utf8mb4", force: :cascade do |t|
     t.string "namespace"
     t.text "body"
@@ -224,14 +224,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_08_08_052400) do
     t.datetime "updated_at", null: false
   end
 
-  create_table "causes", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
-    t.string "name"
-    t.string "description"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-  end
-
-  create_table "claim_documents", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+  create_table "claim_documents", charset: "utf8mb4", force: :cascade do |t|
     t.bigint "process_claim_id", null: false
     t.string "document"
     t.integer "document_type"
@@ -643,8 +636,10 @@ ActiveRecord::Schema[7.0].define(version: 2023_08_08_052400) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.integer "und_route"
+    t.bigint "processor_id"
     t.index ["agent_id"], name: "index_process_coverages_on_agent_id"
     t.index ["group_remit_id"], name: "index_process_coverages_on_group_remit_id"
+    t.index ["processor_id"], name: "index_process_coverages_on_processor_id"
     t.index ["und_route"], name: "index_process_coverages_on_und_route"
   end
 
@@ -660,15 +655,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_08_08_052400) do
     t.index ["user_type", "user_id"], name: "index_process_remarks_on_user"
   end
 
-  create_table "process_routes", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
-    t.string "name"
-    t.string "department"
-    t.string "description"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-  end
-
-  create_table "product_benefits", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+  create_table "product_benefits", charset: "utf8mb4", force: :cascade do |t|
     t.decimal "coverage_amount", precision: 10, scale: 2
     t.decimal "premium", precision: 10, scale: 2
     t.bigint "agreement_benefit_id", null: false
@@ -773,6 +760,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_08_08_052400) do
   add_foreign_key "process_claims", "agreement_benefits"
   add_foreign_key "process_claims", "agreements"
   add_foreign_key "process_claims", "cooperatives"
+  add_foreign_key "process_coverages", "employees", column: "processor_id"
   add_foreign_key "product_benefits", "agreement_benefits"
   add_foreign_key "product_benefits", "benefits"
   add_foreign_key "proposals", "cooperatives"

@@ -41,12 +41,15 @@ class GroupRemitsController < InheritedResources::Base
         @process_coverage = @group_remit.build_process_coverage
         @process_coverage.effectivity = @group_remit.effectivity_date
         @process_coverage.expiry = @group_remit.expiry_date
+        @process_coverage.processor_id  = @group_remit.agreement.emp_agreements.find_by(agreement: @group_remit.agreement, active: true).employee_id
         @process_coverage.set_default_attributes
-        
+        # raise 'errors'
         if @process_coverage.save
           format.html { redirect_to coop_agreement_group_remit_path(@group_remit.agreement, @group_remit), notice: "Group remit submitted" }
         else
           format.html { redirect_to coop_agreement_group_remit_path(@group_remit.agreement, @group_remit), alert: "Process Coverage not created!" }
+          @group_remit.status = :pending
+          @group_remit.save!
         end
 
       else
