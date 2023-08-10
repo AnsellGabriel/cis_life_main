@@ -201,7 +201,7 @@
 
   <% if ['GYRTBR','GYRTFR'].include?(plan_acronym) %>
     <div class="<%= flex_justify_align('between', 'center') %> gap-1">
-      <div class="d-flex gap-3">
+      <div class="d-flex gap-2">
 
         <% @group_remit.agreement.agreement_benefits.where.not(insured_type: 2..5).each do |a_benefit| %>
           <%= link_to group_remit_path(@group_remit, rank_filter: a_benefit), class: "btn btn-sm btn-warning position-relative" do %>
@@ -215,11 +215,12 @@
         <% end %>
 
       </div>
-      <div class="d-flex gap-3">
+      <div class="d-flex gap-2">
         <% status_mappings = {
             approved: { label: "Approved", class: "btn-success" },
             denied: { label: "Denied", class: "btn-danger" },
             pending: { label: "Pending", class: "btn-secondary" },
+            for_reconsideration: {label: 'Request', class: 'btn-warning'},
             for_review: { label: "For Review", class: "btn-outline-secondary" }
           } %>
 

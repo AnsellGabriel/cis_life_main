@@ -12,7 +12,8 @@ class BatchesController < ApplicationController
       :batch, 
       params[:file], 
       @cooperative, 
-      @group_remit
+      @group_remit,
+      current_user
     )
 
     @import_result = import_service.import
