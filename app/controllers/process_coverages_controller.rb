@@ -288,7 +288,7 @@ class ProcessCoveragesController < ApplicationController
     
     @batch.set_premium_and_sf_for_reconsider(@group_remit, @premium)
     @batch.insurance_status = :pending
-    @batch.batch_remarks.build(remark: "Adjusted Premium set.", status: :pending, user_type: 'Employee', user_id: current_user.userable.id)
+    @batch.batch_remarks.build(remark: "Adjusted Premium set. Premium: #{@batch.premium}", status: :pending, user_type: 'Employee', user_id: current_user.userable.id)
 
     respond_to do |format|
       if @batch.save!
