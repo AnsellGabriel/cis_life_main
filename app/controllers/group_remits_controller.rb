@@ -254,7 +254,7 @@ class GroupRemitsController < InheritedResources::Base
         when 'for_review'
           @f_batches = batches_eager_loaded.where(insurance_status: :for_review)
         when 'for_reconsideration'
-          @f_batches = batches_eager_loaded.where(insurance_status: :for_reconsideration)
+          @f_batches = batches_eager_loaded.where(status: :for_reconsideration)
         end
       else
         @f_batches = batches_eager_loaded

@@ -116,7 +116,7 @@ class BatchImportService
         update_progress(total_members, progress_counter)
         next
       else
-        @added_members_counter += create_batch(member, batch_hash)
+        create_batch(member, batch_hash)
       end
 
       
@@ -312,16 +312,18 @@ class BatchImportService
       new_batch.insurance_status = :denied
 
       if member.age(@group_remit.effectivity_date) > new_batch.agreement_benefit.max_age
-        new_batch.batch_remarks.build(remark: "Member age is over the maximum age limit of the plan.", status: :denied, user_type: 'CoopUser', user_id: @current_user.id)
+        new_batch.batch_remarks.build(remark: "Member age is over the maximum age limit of the plan.", status: :denied, user_type: 'CoopUser', user_id: @current_user.userable.id)
       else
-        new_batch.batch_remarks.build(remark: "Member age is below the minimum age limit of the plan.", status: :denied, user_type: 'CoopUser', user_id: @current_user.id)
+        new_batch.batch_remarks.build(remark: "Member age is below the minimum age limit of the plan.", status: :denied, user_type: 'CoopUser', user_id: @current_user.userable.id)
       end
 
     end
 
     @group_remit.batches << new_batch
 
-    new_batch.save ? 1 : 0
+    new_batch.save!
+
+    new_batch.denied? ? @denied_members_counter += 1 : @added_members_counter += 1
   end
 
   def update_progress(total, processed_members)
