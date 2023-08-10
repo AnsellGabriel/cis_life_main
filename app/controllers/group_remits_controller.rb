@@ -9,7 +9,7 @@ class GroupRemitsController < InheritedResources::Base
 
   def renewal
     @group_remit = GroupRemit.find_by(id: params[:id])
-    renewal_result = @group_remit.renew
+    renewal_result = @group_remit.renew(current_user)
     new_group_remit = renewal_result[:new_group_remit]
 
     respond_to do |format|

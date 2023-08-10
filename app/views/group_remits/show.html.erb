@@ -50,7 +50,7 @@
         class: small_btn('warning'), 
         data: {turbo_confirm: 'Renew group remit?' } 
       %>
-  <% elsif !gr_presenter.is_for_renewal? && gr_presenter.is_batch_remit? && gr_presenter.is_none_anniversary? && have_remittance %>
+  <% elsif !gr_presenter.is_for_renewal? && gr_presenter.is_batch_remit? && gr_presenter.is_none_anniversary? %>
     <%= button_to "Add Members", group_remits_path, 
       method: :post, 
       params: { 
@@ -239,7 +239,7 @@
               <%= batches.size >= 100 ? '99+' :  batches.size %>
             </span>
           <% end %>
-          
+
         <% end %>
       <% end %>
     </div>
