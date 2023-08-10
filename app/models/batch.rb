@@ -38,7 +38,7 @@ class Batch < ApplicationRecord
   has_many :member_dependents, through: :batch_dependents
   has_many :batch_beneficiaries, dependent: :destroy
   has_many :member_dependents, through: :batch_beneficiaries
-  has_many :batch_remarks
+  has_many :batch_remarks, dependent: :destroy
   has_many :process_claims, as: :claimable, dependent: :destroy
 
 
