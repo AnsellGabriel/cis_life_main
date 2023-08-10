@@ -233,7 +233,7 @@ class ProcessCoveragesController < ApplicationController
       when "regular_new" then @batches_o.where(age: 18..65, status: 0)
       when "regular_ren" then @batches_o.where(age: 18..65, status: 1)
       when "overage" then @batches_o.where(age: 66..)
-      when "reconsider" then @batches_o.where(insurance_status: :for_reconsideration)
+      when "reconsider" then @batches_o.where(status: :for_reconsideration)
         # when "health_decs" then @batches_o.joins(:batch_health_decs)
       when "health_decs" then @batches_o.joins(:batch_health_decs).where(batches: { valid_health_dec: false }).distinct
         # when "health_decs" then @batches_o.joins(:batch_health_dec).where.not(batch_health_decs: { health_dec_question_id: nil })
@@ -287,6 +287,8 @@ class ProcessCoveragesController < ApplicationController
     @group_remit = @process_coverage.group_remit
     
     @batch.set_premium_and_sf_for_reconsider(@group_remit, @premium)
+    @batch.insurance_status = :pending
+    @batch.batch_remarks.build(remark: "Adjusted Premium set.", status: :pending, user_type: 'Employee', user_id: current_user.userable.id)
 
     respond_to do |format|
       if @batch.save!
