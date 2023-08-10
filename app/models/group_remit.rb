@@ -29,12 +29,13 @@ class GroupRemit < ApplicationRecord
     name
   end
 
-  def renew
+  def renew(current_user)
     new_group_remit = self.dup
     new_group_remit.set_terms_and_expiry_date(self.expiry_date + 1.year)
     # new_group_remit.expiry_date = self.expiry_date + 1.year # Assuming the renewal duration is 1 year from the current date
     new_group_remit.status = :for_renewal
     new_group_remit.type = "Remittance"
+    new_group_remit.name = "#{self.name} Renewal"
     new_group_remit.batch_remit_id = self.id
     self.status = :for_renewal
     self.set_terms_and_expiry_date(self.expiry_date + 1.year)
@@ -47,8 +48,11 @@ class GroupRemit < ApplicationRecord
     removed_batches = [] # To store the batches that are removed from the renewal
 
     self.batches.includes(coop_member: :member).where(insurance_status: :approved).each do |batch|
+      existing_coverage = agreement.agreements_coop_members.find_by(coop_member_id: batch.coop_member.id)
+      
       new_batch = Batch.new(coop_member_id: batch.coop_member.id)
       b_rank = batch.agreement_benefit
+
 
       Batch.process_batch(
         new_batch, 
@@ -56,18 +60,18 @@ class GroupRemit < ApplicationRecord
         b_rank, 
         new_group_remit.terms
       )
-
+      
       new_group_remit.batches << new_batch
 
-      if new_batch.member_details.age(new_group_remit.effectivity_date) < new_batch.agreement_benefit.min_age or new_batch.member_details.age(new_group_remit.effectivity_date) > new_batch.agreement_benefit.max_age
-        new_batch.insurance_status = :denied
-        
-        if new_batch.member_details.age(new_group_remit.effectivity_date) > new_batch.agreement_benefit.max_age
-          new_batch.batch_remarks.build!(remark: "Member age is over the maximum age limit of the plan.", status: :denied, user_type: 'CoopUser', user_id: current_user.userable.id)
-        else
-          new_batch.batch_remarks.build!(remark: "Member age is below the minimum age limit of the plan.", status: :denied, user_type: 'CoopUser', user_id: current_user.userable.id)
-        end
 
+      if new_batch.member_details.age(new_group_remit.effectivity_date) >= new_batch.agreement_benefit.exit_age
+        new_batch.insurance_status = :denied
+        new_batch.batch_remarks.build(
+          remark: "Member age is over the maximum age limit of the plan.", 
+          status: :denied, 
+          user_type: 'CoopUser', 
+          user_id: current_user.userable.id
+        )
       else
         new_batch.insurance_status = :for_review
       end
