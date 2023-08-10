@@ -1,0 +1,10 @@
+<%= @batch.coop_member %> <br>
+<%= @process_coverage %>
+
+
+<%= simple_form_for @process_coverage, url: update_batch_prem_process_coverage_path(), method: :post do |f| %>
+  <%= f.input :batch, input_html: { value: @batch.id } %>
+  <%= f.input :premium %>
+  
+  <%= f.button :submit, class: "btn btn-sm btn-success" %>
+<% end %>
