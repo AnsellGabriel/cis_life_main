@@ -13,7 +13,7 @@
     <% if params[:coop] || ( !params[:batch_remark].nil? && params[:batch_remark][:batch_status] == 'For reconsideration' ) %>
       <div class="<% flex_justify_align('','',true) %>">
         <h5 class="card-header">Request for reconsideration</h5>
-        <%= content_tag :span, '(Please state the specific reason of the request)', class: 'text-muted', style: 'font-size: .8rem' %>
+        <%= content_tag :span, 'Please make sure that health declaration form is completed and state the specific reason of the request', class: 'text-muted', style: 'font-size: .8rem' %>
       </div>
     <% else %>
       <h5 class="card-header">New batch remark</h5>

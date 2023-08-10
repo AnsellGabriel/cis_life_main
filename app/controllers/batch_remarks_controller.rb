@@ -83,7 +83,7 @@ class BatchRemarksController < ApplicationController
           @group_remit = @batch.group_remits.find_by(type: "Remittance")
           format.html { redirect_to all_health_decs_group_remit_batches_path(@group_remit.process_coverage), notice: "Recommendation created." } 
         elsif params[:batch_remark][:batch_status] == "For reconsideration"
-          @batch.update(insurance_status: :for_reconsideration)
+          @batch.update(status: :for_reconsideration)
           @group_remit = @batch.group_remits.find_by(type: "Remittance")
           format.html { redirect_to group_remit_path(@group_remit), notice: "Request saved" } 
         else

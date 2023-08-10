@@ -20,11 +20,7 @@ class BatchesController < ApplicationController
     
     if @import_result.is_a?(Hash)
       notice = "#{@import_result[:added_members_counter]} members successfully added. #{@import_result[:denied_members_counter]} members denied."
-      if @import_result[:denied_members_counter] > 0
-        redirect_to group_remit_denied_members_path(@group_remit), notice: notice
-      else
-        redirect_to group_remit_path(@group_remit), notice: notice
-      end
+      redirect_to group_remit_path(@group_remit), notice: notice
     else
       redirect_to group_remit_path(@group_remit), notice: @import_result
     end
@@ -132,9 +128,9 @@ class BatchesController < ApplicationController
         # return redirect_to group_remit_path(@group_remit), alert: "Member age must be between #{@batch.agreement_benefit.min_age.to_i} and #{@batch.agreement_benefit.max_age.to_i} years old."
         @batch.insurance_status = :denied
         if member.age(@group_remit.effectivity_date) > @batch.agreement_benefit.max_age
-          @batch.batch_remarks.build(remark: "Member age is over the maximum age limit of the plan.", status: :denied, user_type: 'CoopUser', user_id: current_user.id)
+          @batch.batch_remarks.build(remark: "Member age is over the maximum age limit of the plan.", status: :denied, user_type: 'CoopUser', user_id: current_user.userable.id)
         else
-          @batch.batch_remarks.build(remark: "Member age is below the minimum age limit of the plan.", status: :denied, user_type: 'CoopUser', user_id: current_user.id)
+          @batch.batch_remarks.build(remark: "Member age is below the minimum age limit of the plan.", status: :denied, user_type: 'CoopUser', user_id: current_user.userable.id)
         end
       end
 
