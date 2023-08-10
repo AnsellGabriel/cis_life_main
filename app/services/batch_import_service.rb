@@ -312,9 +312,9 @@ class BatchImportService
       new_batch.insurance_status = :denied
 
       if member.age(@group_remit.effectivity_date) > new_batch.agreement_benefit.max_age
-        new_batch.batch_remarks.build(remark: "Member age is over the maximum age limit of the plan.", status: :denied, user_type: 'CoopUser', user_id: @current_user.id)
+        new_batch.batch_remarks.build(remark: "Member age is over the maximum age limit of the plan.", status: :denied, user_type: 'CoopUser', user_id: @current_user.userable.id)
       else
-        new_batch.batch_remarks.build(remark: "Member age is below the minimum age limit of the plan.", status: :denied, user_type: 'CoopUser', user_id: @current_user.id)
+        new_batch.batch_remarks.build(remark: "Member age is below the minimum age limit of the plan.", status: :denied, user_type: 'CoopUser', user_id: @current_user.userable.id)
       end
 
     end
