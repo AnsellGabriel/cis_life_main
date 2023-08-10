@@ -1,4 +1,5 @@
 class ProcessCoverage < ApplicationRecord
+  attr_accessor :premium
   belongs_to :group_remit
   belongs_to :agent, optional: true
   belongs_to :processor, class_name: "Employee"

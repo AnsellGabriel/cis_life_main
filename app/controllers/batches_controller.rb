@@ -132,9 +132,9 @@ class BatchesController < ApplicationController
         # return redirect_to group_remit_path(@group_remit), alert: "Member age must be between #{@batch.agreement_benefit.min_age.to_i} and #{@batch.agreement_benefit.max_age.to_i} years old."
         @batch.insurance_status = :denied
         if member.age(@group_remit.effectivity_date) > @batch.agreement_benefit.max_age
-          @batch.batch_remarks.build(remark: "Member age is over the maximum age limit of the plan.", status: :denied, user_type: 'CoopUser', user_id: current_user.id)
+          @batch.batch_remarks.build(remark: "Member age is over the maximum age limit of the plan.", status: :denied, user_type: 'CoopUser', user_id: current_user.userable_id)
         else
-          @batch.batch_remarks.build(remark: "Member age is below the minimum age limit of the plan.", status: :denied, user_type: 'CoopUser', user_id: current_user.id)
+          @batch.batch_remarks.build(remark: "Member age is below the minimum age limit of the plan.", status: :denied, user_type: 'CoopUser', user_id: current_user.userable_id)
         end
       end
 
