@@ -19,6 +19,12 @@ module Calculate
 			end
 		end
 
+		def set_premium_and_sf_for_reconsider(group_remit, premium)
+			self.premium = premium
+			self.coop_sf_amount = calculate_service_fee(group_remit.get_coop_sf, self.premium)
+			self.agent_sf_amount = calculate_service_fee(group_remit.get_agent_sf, self.premium)
+		end
+
 		def calculate_premium_and_fees(premium, group_remit)
 			self.premium = calculate_premium(premium, group_remit.terms)
 			self.coop_sf_amount = calculate_service_fee(group_remit.get_coop_sf, self.premium)

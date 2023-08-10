@@ -1,6 +1,6 @@
 class ProcessCoveragesController < ApplicationController
   before_action :authenticate_user!
-  before_action :set_process_coverage, only: %i[ show edit update destroy approve_batch deny_batch pending_batch reconsider_batch pdf ]
+  before_action :set_process_coverage, only: %i[ show edit update destroy approve_batch deny_batch pending_batch reconsider_batch pdf set_premium_batch update_batch_prem ]
 
   # GET /process_coverages
   def index
@@ -233,6 +233,7 @@ class ProcessCoveragesController < ApplicationController
       when "regular_new" then @batches_o.where(age: 18..65, status: 0)
       when "regular_ren" then @batches_o.where(age: 18..65, status: 1)
       when "overage" then @batches_o.where(age: 66..)
+      when "reconsider" then @batches_o.where(status: :for_reconsideration)
         # when "health_decs" then @batches_o.joins(:batch_health_decs)
       when "health_decs" then @batches_o.joins(:batch_health_decs).where(batches: { valid_health_dec: false }).distinct
         # when "health_decs" then @batches_o.joins(:batch_health_dec).where.not(batch_health_decs: { health_dec_question_id: nil })
@@ -275,6 +276,29 @@ class ProcessCoveragesController < ApplicationController
     @process_coverage = ProcessCoverage.new
   end
 
+  def set_premium_batch
+    @batch = Batch.find(params[:batch])
+  end
+
+  def update_batch_prem
+    # raise 'errors'
+    @batch = Batch.find_by(id: params[:process_coverage][:batch])
+    @premium = params[:process_coverage][:premium].to_d
+    @group_remit = @process_coverage.group_remit
+    
+    @batch.set_premium_and_sf_for_reconsider(@group_remit, @premium)
+    @batch.insurance_status = :pending
+    @batch.batch_remarks.build(remark: "Adjusted Premium set. Premium: #{@batch.premium}", status: :pending, user_type: 'Employee', user_id: current_user.userable.id)
+
+    respond_to do |format|
+      if @batch.save!
+        # @group_remit.set_total_premiums_and_fees
+        format.html { redirect_to @process_coverage, notice: "Batch Premium Updated!"}
+      end
+    end
+
+  end
+
   def approve
     @max_amount = params[:max_amount].to_i
     @total_life_cov = params[:total_life_cov].to_i
@@ -283,7 +307,7 @@ class ProcessCoveragesController < ApplicationController
     
     @process_coverage = ProcessCoverage.find_by(id: params[:process_coverage_id])
     # compute group remit total premiums, fees and set status to :for_payment
-    @process_coverage.group_remit.set_total_premiums_and_fees
+    # @process_coverage.group_remit.set_total_premiums_and_fees
 
     respond_to do |format|
       if current_user.rank == "analyst"
