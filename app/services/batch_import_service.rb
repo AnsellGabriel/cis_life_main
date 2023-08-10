@@ -116,7 +116,7 @@ class BatchImportService
         update_progress(total_members, progress_counter)
         next
       else
-        @added_members_counter += create_batch(member, batch_hash)
+        create_batch(member, batch_hash)
       end
 
       
@@ -321,7 +321,9 @@ class BatchImportService
 
     @group_remit.batches << new_batch
 
-    new_batch.save ? 1 : 0
+    new_batch.save!
+
+    new_batch.denied? ? @denied_members_counter += 1 : @added_members_counter += 1
   end
 
   def update_progress(total, processed_members)
