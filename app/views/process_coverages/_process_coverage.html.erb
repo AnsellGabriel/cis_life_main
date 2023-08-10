@@ -331,7 +331,7 @@
                     </div>
 
                     <% if current_user.head? && batch.status == "for_reconsideration" && batch.insurance_status == "denied" %>
-                      <%= link_to set_premium_batch_process_coverage_path(batch: batch), onclick: "return confirm('Are you sure?')", method: :get, class: "btn btn-sm btn-info mb-1" do %>
+                      <%= link_to set_premium_batch_process_coverage_path(batch: batch), onclick: "return confirm('Are you sure?')", method: :get, class: "btn btn-sm btn-info mb-1", data: { turbo_frame: "modal" } do %>
                         <%= bootstrap_icon "coin" %>
                       <% end %>
                     <% end %>
