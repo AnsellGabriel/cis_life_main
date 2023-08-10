@@ -215,31 +215,31 @@
         <% end %>
 
       </div>
-      <div class="d-flex gap-2">
-        <% status_mappings = {
-            approved: { label: "Approved", class: "btn-success" },
-            denied: { label: "Denied", class: "btn-danger" },
-            pending: { label: "Pending", class: "btn-secondary" },
-            for_reconsideration: {label: 'Request', class: 'btn-warning'},
-            for_review: { label: "For Review", class: "btn-outline-secondary" }
-          } %>
-
-        <% status_mappings.each do |status, attributes| %>
-          <% batches = @group_remit.batches.send(status) %>
-          <%= link_to group_remit_path(@group_remit, insurance_status: status), class: "btn btn-sm #{attributes[:class]} position-relative" do %>
-            <%= attributes[:label] %>
-            <% unless batches.size.zero? %>
-              <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-primary">
-                <%= batches.size >= 100 ? '99+' :  batches.size %>
-              </span>
-            <% end %>
-          <% end %>
-        <% end %>
-      </div>
-
   <% else %>
-    <div class="<%= flex_justify_align('end', 'center') %> gap-1">
+    <div class="<%= flex_justify_align('between', 'center') %> gap-1">
   <% end %>
+
+  <div class="d-flex gap-2">
+    <% status_mappings = {
+        approved: { label: "Approved", class: "btn-success" },
+        denied: { label: "Denied", class: "btn-danger" },
+        pending: { label: "Pending", class: "btn-secondary" },
+        for_reconsideration: {label: 'Request', class: 'btn-warning'},
+        for_review: { label: "For Review", class: "btn-outline-secondary" }
+      } %>
+
+    <% status_mappings.each do |status, attributes| %>
+      <% batches = @group_remit.batches.send(status) %>
+      <%= link_to group_remit_path(@group_remit, insurance_status: status), class: "btn btn-sm #{attributes[:class]} position-relative" do %>
+        <%= attributes[:label] %>
+        <% unless batches.size.zero? %>
+          <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-primary">
+            <%= batches.size >= 100 ? '99+' :  batches.size %>
+          </span>
+        <% end %>
+      <% end %>
+    <% end %>
+  </div>
   
   <div class="d-flex gap-1">
     <%= form_with url: group_remit_path(@group_remit), method: :get do %>
