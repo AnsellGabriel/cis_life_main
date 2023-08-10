@@ -307,13 +307,13 @@ class ProcessCoveragesController < ApplicationController
     
     @process_coverage = ProcessCoverage.find_by(id: params[:process_coverage_id])
     # compute group remit total premiums, fees and set status to :for_payment
-    # @process_coverage.group_remit.set_total_premiums_and_fees
+    @process_coverage.group_remit.set_total_premiums_and_fees
 
     respond_to do |format|
       if current_user.rank == "analyst"
         if @max_amount >= @total_net_prem
           @process_coverage.update_attribute(:status, "approved")
-          @process_coverage.group_remit.set_total_premiums_and_fees
+          # @process_coverage.group_remit.set_total_premiums_and_fees
           format.html { redirect_to process_coverage_path(@process_coverage), notice: "Process Coverage Approved!" }
         else
           @process_coverage.update_attribute(:status, "for_head_approval")
@@ -322,7 +322,7 @@ class ProcessCoveragesController < ApplicationController
       elsif current_user.rank == "head"
         if @max_amount >= @total_net_prem
           @process_coverage.update_attribute(:status, "approved")
-          @process_coverage.group_remit.set_total_premiums_and_fees
+          # @process_coverage.group_remit.set_total_premiums_and_fees
           format.html { redirect_to process_coverage_path(@process_coverage), notice: "Process Coverage Approved!" }
         else
           @process_coverage.update_attribute(:status, "for_vp_approval")
@@ -330,7 +330,7 @@ class ProcessCoveragesController < ApplicationController
         end
       elsif current_user.rank == "senior_officer"
         @process_coverage.update_attribute(:status, "approved")
-        @process_coverage.group_remit.set_total_premiums_and_fees
+        # @process_coverage.group_remit.set_total_premiums_and_fees
         format.html { redirect_to process_coverage_path(@process_coverage), notice: "Process Coverage Approved!" }
       end
     end
