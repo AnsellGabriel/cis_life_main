@@ -138,6 +138,7 @@ class BatchesController < ApplicationController
         end
       end
 
+      # raise 'errors'
       respond_to do |format|
         if @batch.save!
           @group_remit.batches << @batch
@@ -156,11 +157,10 @@ class BatchesController < ApplicationController
           }
         end
       end
-      
     rescue NoMethodError => e
-      return redirect_to group_remit_path(@group_remit), alert: e.message
+      return redirect_to group_remit_path(@group_remit), alert: e#.message
     rescue ActiveRecord::RecordInvalid => e
-      return redirect_to group_remit_path(@group_remit), alert: e.message.gsub!(/\AValidation failed:\s?/, '')
+      return redirect_to group_remit_path(@group_remit), alert: e#.message.gsub!(/\AValidation failed:\s?/, '')
     end
 
   end

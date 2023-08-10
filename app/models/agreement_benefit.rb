@@ -16,8 +16,8 @@ class AgreementBenefit < ApplicationRecord
 
 
   enum insured_type: { 
-    Principal: 1, 
-    Dependent_spouse: 2,
+    principal: 1, 
+    dependent_spouse: 2,
     dependent_parent: 3,
     dependent_children: 4,
     dependent_sibling: 5,
