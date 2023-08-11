@@ -39,10 +39,10 @@ class EmpAgreementsController < ApplicationController
     # raise 'errors'
     @emp_agreement = EmpAgreement.new(emp_agreement_params)
     @old_emp_agreement = EmpAgreement.find_by(id: params[:emp_agreement][:old_emp_agreement])
-
     if @emp_agreement.save
       unless @old_emp_agreement.nil?
         @old_emp_agreement.update_attribute(:active, false)
+        @emp_agreement.update_attribute(:category_type, "sub_approver")
       end
       redirect_to @emp_agreement, notice: "Emp agreement was successfully created."
     else
@@ -74,6 +74,6 @@ class EmpAgreementsController < ApplicationController
 
     # Only allow a list of trusted parameters through.
     def emp_agreement_params
-      params.require(:emp_agreement).permit(:employee_id, :agreement_id, :active)
+      params.require(:emp_agreement).permit(:employee_id, :agreement_id, :active, :category_type)
     end
 end

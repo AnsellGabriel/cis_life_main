@@ -414,6 +414,8 @@ class ProcessCoveragesController < ApplicationController
 
   def modal_remarks
     @batch = Batch.find(params[:batch])
+    @batch_remarks = @batch.batch_remarks
+    # @pagy_br, @filtered_br = pagy(@batch_remarks, items: 3, page_param: :b_remarks)
     @process_coverage = ProcessCoverage.find(params[:id])
   end
 
