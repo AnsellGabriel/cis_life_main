@@ -1,5 +1,6 @@
 
 <% batch.batch_remarks.order(created_at: :desc).each do |rem| %>
+<%# batch_remarks.order(created_at: :desc).each do |rem| %>
   <%= content_tag :div, class: "d-flex justify-content-between align-items-center" do %>
     <%= content_tag :p, class: "mb-1" do %>
       <%= rem.denied? && rem.user_type == 'CoopUser' ? 'System' : rem.user %> 
@@ -13,4 +14,4 @@
 <% end %>
   <%# <%= link_to "New Remark", new_batch_remark_path(ref: batch, pro_cov: process_coverage, batch_status: "New"), class: "btn btn-sm btn-primary", data: { turbo_frame: "remote_modal" } %> 
 
-  <%= link_to "New Remark", new_batch_remark_path(ref: batch, pro_cov: process_coverage, batch_status: "New"), class: "btn btn-sm btn-primary", data: { turbo_frame: "modal" } %>
+<%= link_to "New Remark", new_batch_remark_path(ref: batch, pro_cov: process_coverage, batch_status: "New"), class: "btn btn-sm btn-primary", data: { turbo_frame: "modal" } %>

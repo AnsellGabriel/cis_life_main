@@ -26,6 +26,7 @@ class PsheetPdf < Prawn::Document
     upper_part
     count_table
     denied_table
+    signatories
   end
 
 
@@ -52,9 +53,9 @@ class PsheetPdf < Prawn::Document
     font_size(10) { text "Cooperative <b><u>#{@pro_cov.group_remit.agreement.cooperative}</u></b>", inline_format: true}
     move_down 10
 
-    muni = @pro_cov.group_remit.agreement.cooperative.municipality
-    prov = @pro_cov.group_remit.agreement.cooperative.province
-    reg = @pro_cov.group_remit.agreement.cooperative.region
+    muni = @pro_cov.group_remit.agreement.cooperative.geo_municipality
+    prov = @pro_cov.group_remit.agreement.cooperative.geo_province
+    reg = @pro_cov.group_remit.agreement.cooperative.geo_region
     font_size(10) { text "Address <b><u>#{muni}, #{prov}, #{reg}</u></b>", inline_format: true}
     
 
@@ -64,7 +65,7 @@ class PsheetPdf < Prawn::Document
   def count_table
     table_data = [
       ["Count", "Amount of Coverage", "Effectivity", "Expiry", "Premium Due"],
-      [@pro_cov.group_remit.batches.count, @view.to_currency(@total_life_cov), @pro_cov.effectivity, @pro_cov.expiry, @view.to_currency(@pro_cov.group_remit.batches.sum(:premium))]
+      [@pro_cov.group_remit.batches.count, @view.to_currency(@total_life_cov), @pro_cov.effectivity.strftime('%m/%d/%Y'), @pro_cov.expiry.strftime('%m/%d/%Y'), @view.to_currency(@pro_cov.group_remit.batches.sum(:premium))]
     ]
     
     table table_data, position: :center
@@ -85,6 +86,24 @@ class PsheetPdf < Prawn::Document
     ]
 
     table table_data
+  end
+
+  def signatories
+    move_down 30
+
+    font_size(10) { text "Processed by:", inline_format: true}
+
+    move_down 10
+
+    font_size(10) { text "<b>#{@pro_cov.processor.signed_fullname}</b>", inline_format: true}
+
+    move_down 30
+
+    font_size(10) { text "Approved by:", inline_format: true}
+
+    move_down 10
+
+    font_size(10) { text "<b>#{@pro_cov.processor.emp_approver.approver.signed_fullname}</b>", inline_format: true}
   end
 
 end

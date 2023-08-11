@@ -10,6 +10,7 @@
       <%= f.association :agreement, label_method: :coop_name, order: :coop_name, as: :hidden %>
       <%= f.input :old_emp_agreement, input_html: { value: @old_emp_agreement.id }, as: :hidden %>
     <% end %>
+    <%= f.input :category_type, collection: EmpAgreement.category_types.keys.map { |type| [type.humanize.titleize, type] }, disabled: val %>
     <div class="form-check form-switch">
       <%= f.input :active, label: "Active?", disabled: val %>
     </div>

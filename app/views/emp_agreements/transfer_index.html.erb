@@ -5,6 +5,7 @@
   <thead>
     <th>Cooperative</th>
     <th>Approver</th>
+    <th>Type</th>
     <th></th>
   </thead>
   <tbody>
@@ -22,6 +23,7 @@
             <%= a.agreement.plan %>
           </td>
           <td><%= a.employee.emp_approver.approver %></td>
+          <td><%= cat_type(a.category_type) %></td>
           <td>
             <%= link_to "Transfer", new_emp_agreement_path(agreement: a.agreement, old_emp_agreement: a), class: "btn btn-sm btn-success" %>
             <%#= link_to "Change", edit_emp_a(a, for_change: true), class: "btn btn-sm btn-secondary" %>

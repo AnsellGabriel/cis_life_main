@@ -350,7 +350,14 @@
                 </td>
                 <td>
                   <% if batch.batch_remarks.count == 0 %>
-                    <%= content_tag :small, "No Remarks" %>
+                    <%= content_tag :small do %>
+                      <% if batch.insurance_status == "approved" %>
+                        No Remark(s)
+                      <% else %>
+                        <%= link_to "No Remark(s)", new_batch_remark_path(ref: batch, pro_cov: process_coverage, batch_status: "New"), class: "text-dark", data: { turbo_frame: "modal" } %>
+                      <% end %>
+                      
+                    <% end %>
                   <% else %>              
                     <%= link_to "View Remarks", modal_remarks_process_coverage_path(process_coverage, batch: batch), data: { turbo_frame: "modal" } %>
                   <% end %>
