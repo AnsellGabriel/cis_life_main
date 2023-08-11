@@ -51,6 +51,8 @@ class GroupRemit < ApplicationRecord
       existing_coverage = agreement.agreements_coop_members.find_by(coop_member_id: batch.coop_member.id)
       
       new_batch = Batch.new(coop_member_id: batch.coop_member.id)
+      new_batch.previous_effectivity_date = batch.effectivity_date
+      new_batch.previous_expiry_date = batch.expiry_date
       b_rank = batch.agreement_benefit
 
 

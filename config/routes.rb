@@ -113,6 +113,9 @@ Rails.application.routes.draw do
     resources :batch_remits
   end
 
+  get 'insurance/accept', as: 'accept_insurance'
+  # get 'insurance/reject', as: 'reject_insurance'
+  get 'insurance/terminate', as: 'terminate_insurance'
 
   #* Underwriting Module Routes
   resources :user_levels
