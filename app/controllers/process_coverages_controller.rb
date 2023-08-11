@@ -294,6 +294,7 @@ class ProcessCoveragesController < ApplicationController
     respond_to do |format|
       if @batch.save!
         # @group_remit.set_total_premiums_and_fees
+        @group_remit.update(status: :with_pending_members) 
         format.html { redirect_to process_coverage_path(@process_coverage, search: 'reconsider'), notice: "Batch Premium Updated!"}
       end
     end

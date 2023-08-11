@@ -188,6 +188,11 @@ class BatchesController < ApplicationController
     respond_to do |format|
 
       if @batch.destroy
+        
+        if params[:reconsider].present? && params[:reconsider]
+          @group_remit.process_coverage.update(status: :reconsiderations_processed)
+        end
+
         premiums_and_commissions
         containers # controller/concerns/container.rb
         counters  # controller/concerns/counter.rb

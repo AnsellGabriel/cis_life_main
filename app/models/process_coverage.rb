@@ -15,7 +15,7 @@ class ProcessCoverage < ApplicationRecord
     for_vp_approval: 5,
     reprocess: 6,
     reprocess_approval: 7,
-    
+    reconsiderations_processed: 8
   }
 
   enum und_route: {

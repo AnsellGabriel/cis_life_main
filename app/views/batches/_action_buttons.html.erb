@@ -11,7 +11,7 @@
 			data: {turbo_method: :get, turbo_confirm: "Accept insurance with adjusted premium of #{peso_currency(batch.premium)}?" , turbo_frame: "_top"}, 
 			class: small_btn('success') 
 		%>
-		<%= button_to group_remit_batch_path(group_remit, batch), 
+		<%= button_to group_remit_batch_path(group_remit, batch, reconsider: true), 
 				method: :delete,
 				form: { 
 				data: { turbo_frame: "_top", 

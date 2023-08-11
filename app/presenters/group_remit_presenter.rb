@@ -75,7 +75,7 @@ class GroupRemitPresenter
 			"badge bg-warning text-dark"
 		when "active"
 			"badge bg-success"
-		when "expired"
+		when "expired", "with_pending_members"
 			"badge bg-danger"
 		when "for_payment", "payment_verification"
 			"badge bg-primary"
@@ -98,6 +98,8 @@ class GroupRemitPresenter
 			"For payment"
 		when "payment_verification"
 			"For payment verification"
+		when "with_pending_members"
+			"Pending members"
 		end
 	end
 
