@@ -38,7 +38,10 @@
            </td>
            <td>
             <%#= pc.group_remit.agreement.emp_agreements.empty? ? "-" : pc.group_remit.agreement.emp_agreements.find_by(active: true).employee %>
-            <%= pc.processor.nil? ? pc.group_remit.agreement.emp_agreements.find_by(active: true).employee : pc.processor %>
+            <%= pc.processor.nil? ? pc.group_remit.agreement.emp_agreements.find_by(active: true).employee : pc.processor %> <br>
+            <%= content_tag :span do %>
+              <%= content_tag :small, "Approver: #{pc.approver}", class: "badge text-dark" %>
+            <% end %>
            </td>
          
       

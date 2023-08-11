@@ -3,6 +3,7 @@ class ProcessCoverage < ApplicationRecord
   belongs_to :group_remit
   belongs_to :agent, optional: true
   belongs_to :processor, class_name: "Employee"
+  belongs_to :approver, class_name: "Employee"
   has_many :process_remarks
 
   enum status: {
