@@ -1,10 +1,15 @@
 @import "bootstrap";
-body {
+html, body {
+    height: 100%;
     font-family: 'Roboto', sans-serif;
 }
 
 .bg_gradient {
-    background: linear-gradient(60deg, rgb(181, 178, 192) 0%, rgb(230, 233, 223) 0%, rgb(252, 255, 255) 100%);
+    background: linear-gradient(60deg, rgb(226, 228, 231) 0%, rgb(230, 233, 223) 0%, rgb(241, 244, 244) 100%);
     background-repeat: no-repeat;
     background-attachment: fixed;
 }
+
+// .footer {
+//     background: linear-gradient(to bottom, rgb(245, 247, 250) 0%, rgb(230, 233, 223) 0%, rgb(58, 114, 244));
+// }

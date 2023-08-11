@@ -20,7 +20,7 @@
     <%= f.hidden_field :agreement_id, value: @agreement.id %>
     <%= f.hidden_field :batch_id, value: @batch.id %>
     <%= f.hidden_field :agreement_benefit_id, value: batch_presenter.present_agreement_benefit.id %>
-    <%= f.hidden_field :claim_route, value: :cooperative_filed %>
+    <%= f.hidden_field :claim_route, value: :cooperative_filed  %>
 
     <%= f.hidden_field :entry_type, value: "coop" %>
     <div class="row <%= flex_justify_align('between', 'center') %>">

@@ -15,6 +15,10 @@ class Member < ApplicationRecord
   #   with: /\A#{VALID_PH_MOBILE_NUMBER_REGEX}|#{VALID_PH_LANDLINE_NUMBER_REGEX}\z/, 
   #   message: "must be a valid Philippine mobile or landline number" 
   # }
+  belongs_to :geo_region, optional: true
+  belongs_to :geo_province, optional: true
+  belongs_to :geo_municipality, optional: true
+  belongs_to :geo_barangay, optional: true
 
   validates_presence_of :last_name, :first_name, :middle_name, :birth_date, :civil_status, :gender
   # validates :email, format: { with: URI::MailTo::EMAIL_REGEXP }

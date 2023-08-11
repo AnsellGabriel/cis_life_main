@@ -115,7 +115,12 @@ Rails.application.routes.draw do
   #* Underwriting Module Routes
   resources :user_levels
   resources :authority_levels
-  resources :process_claims
+  resources :process_claims do
+    get :new_coop, to: 'process_claims#new_coop', on: :collection
+    post :create_coop, to: 'process_claims#create_coop', on: :collection
+    get :index_coop, to: 'process_claims#index_coop', on: :collection
+    get :show_coop, on: :member
+  end
   resources :underwriting_routes
   resources :batch_remarks do
     get :form_md, on: :member

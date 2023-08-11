@@ -1,9 +1,14 @@
 class ProcessClaimsController < ApplicationController
-  before_action :set_process_claim, only: %i[ show edit update destroy ]
+  before_action :set_process_claim, only: %i[ show edit update destroy show_coop ]
 
   # GET /process_claims
   def index
     @process_claims = ProcessClaim.all
+  end
+  
+  def index_coop
+    @process_claims = ProcessClaim.where(cooperative: @cooperative)
+
   end
 
   # GET /process_claims/1
@@ -11,6 +16,9 @@ class ProcessClaimsController < ApplicationController
     
   end
 
+  def show_coop 
+    @agreement_benefit = AgreementBenefit.where(agreement: @process_claim.agreement)
+  end
   # GET /process_claims/new
   def new
     @process_claim = ProcessClaim.new
@@ -26,8 +34,32 @@ class ProcessClaimsController < ApplicationController
 
   end
 
-  def new_coop 
+  def new_coop
     @process_claim = ProcessClaim.new
+    @process_claim.agreement = Agreement.find(params[:a])
+    @process_claim.agreement_benefit = AgreementBenefit.find(params[:ab])
+    @coop_member = CoopMember.find(params[:cm])
+    @process_claim.claimable = @coop_member
+    @process_claim.cooperative = @coop_member.cooperative
+    # raise "error"
+  end
+
+  def create_coop 
+    @process_claim = ProcessClaim.new(process_claim_params)
+    @process_claim.entry_type = "coop"
+    @process_claim.claim_route = :cooperative_entry
+    # raise "error"
+    respond_to do |format|
+      if @process_claim.save!
+        # format.html { redirect_to cooperative_coop_branches_path, notice: "Coop branch was successfully created." }
+        format.html { redirect_back fallback_location: @process_claim, notice: "Claims was successfully added." }
+        format.json { render :show, status: :created, location: @anniversary }
+      else
+        format.html { render :new_coop, status: :unprocessable_entity }
+        format.json { render json: @process_claim.errors, status: :unprocessable_entity }
+        # format.turbo_stream { render :form_update, status: :unprocessable_entity }
+      end
+    end
   end
 
   # GET /process_claims/1/edit

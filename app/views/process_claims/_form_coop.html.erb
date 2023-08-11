@@ -1,0 +1,61 @@
+<%= simple_form_for(@process_claim, url: url, method: meth) do |f| %>
+<%= f.error_notification %> 
+<%= f.error_notification message: f.object.errors[:base].to_sentence if f.object.errors[:base].present? %>
+  <%# <div class="row"> %>
+  <%# <div class="col-md-6"> %>
+  <div class="card mb-3">
+    <h5 class="card-header">Member Details</h5>
+    <div class="card-body">
+      <dl class="row">
+        <dt class="col-sm-4">Insurance:</dt>
+        <dd class="col-sm-8"><%= @process_claim.agreement.plan %></dd>
+        <dt class="col-sm-4">Type</dt>
+        <dd class="col-sm-8"><%= @process_claim.claimable_type %></dd>
+        <dt class="col-sm-4">Name:</dt>
+        <dd class="col-sm-8 text-primary"><%= @process_claim.claimable.get_fullname %></dd>
+        <dt class="col-sm-4">Birthdate</dt>
+        <dd class="col-sm-8"> <%= to_shortdate(@process_claim.claimable.member.birth_date) %></dd>
+        <dt class="col-sm-4">Branch:</dt>
+        <dd class="col-sm-8"><%= @process_claim.claimable.coop_branch %></dd>
+        <dt class="col-sm-4">Mobile number:</dt>
+        <dd class="col-sm-8"><%= @process_claim.claimable.member.mobile_number %></dd>
+        <dt class="col-sm-4">Email:</dt>
+        <dd class="col-sm-8"><%= @process_claim.claimable.member.email %> </dd>
+      </dl>
+       <%= f.input :date_incident, as: :string, input_html: {data: {
+              controller: "flatpickr",
+              flatpickr_max_date: Time.zone.now,
+              flatpickr_next_arrow: "Next",
+              flatpickr_prev_arrow: "Prev"},
+              class: 'text-center'},
+              label: "Incident Date : ",
+              wrapper_html: {class: flex_justify_align('start', 'center')},
+              label_html: {style: "width: 170px; margin: 0"} %>
+      
+    </div>
+  </div>
+  <%# </div> %>
+  <%# <div class="col-md-6"> %>
+  <div class="card mb-3">
+    <h5 class="card-header">Claimant Details</h5>
+    <div class="card-body">
+      <%= f.hidden_field :agreement_id %>
+      <%= f.hidden_field :cooperative_id %>
+      <%= f.hidden_field :claimable_id %>
+      <%= f.hidden_field :claimable_type %>
+      <%= f.hidden_field :agreement_benefit_id %>
+      <%= f.hidden_field :entry_type, value: "coop" %>
+      <%= f.input :claimant_name, label: "Name" %>
+      <label>Relationship</label>
+      <%= f.select :relationship, options_for_select(ProcessClaim.claimant_relations.keys.map { |key| [key.humanize, key] }), { prompt: '' }, { class: 'form-control' } %>
+      <%#= f.input :relationship, label: "Relationship with the Insured" %>
+      <%= f.input :claimant_contact_no, label: "Contact Number" %>
+      <%= f.input :claimant_email, label: "Email" %>
+    </div>
+    <div class="card-footer text-end">
+      <%= f.button :submit, 'Submit Claim', class: 'btn-success' %>
+    </div>
+  </div>
+  <%# </div> %>
+  <%# </div> %>
+<% end %>
