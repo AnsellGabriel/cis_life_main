@@ -39,9 +39,9 @@
         Reprocess Coverages
       </div>
       <div class="card-body">
-      Year: <%= link_to pluralize(@reprocess_coverages.where(created_at: current_date.beginning_of_year..current_date.end_of_year).count, "Coverage"), cov_list_process_coverages_path(cov_type: "Reconsider", title: "Reconsidered PCs"), class: "link-dark", data: { turbo_frame: "remote_modal" } %> <br>
-      Month: <%= pluralize(@reprocess_coverages.where(created_at: start_month(current_date)..end_month(current_date)).count, "Coverage") %> <br>
-      Week: <%= pluralize(@reprocess_coverages.where(created_at: start_week(current_date)..end_week(current_date.end_of_year)).count, "Coverage") %>
+      Year: <%= link_to pluralize(@reprocess_coverages.where(created_at: current_date.beginning_of_year..current_date.end_of_year).count, "Coverage"), cov_list_process_coverages_path(cov_type: "Reconsider", current_date: current_date, date_type: "yearly", title: "Reconsidered PCs (Yearly)"), class: "link-dark", data: { turbo_frame: "remote_modal" } %> <br>
+      Month: <%= link_to pluralize(@reprocess_coverages.where(created_at: start_month(current_date)..end_month(current_date)).count, "Coverage"), cov_list_process_coverages_path(cov_type: "Reconsider", current_date: current_date, date_type: "monthly", title: "Reconsidered PCs (Monthly)"), class: "link-dark", data: { turbo_frame: "remote_modal" } %> <br>
+      Week: <%= link_to pluralize(@reprocess_coverages.where(created_at: start_week(current_date)..end_week(current_date.end_of_year)).count, "Coverage"), cov_list_process_coverages_path(cov_type: "Reconsider", current_date: current_date, date_type: "weekly", title: "Reconsidered PCs (Weekly)"), class: "link-dark", data: { turbo_frame: "remote_modal" } %>
       </div>
     </div>
   </div>
@@ -52,9 +52,9 @@
         Denied Process Coverages
       </div>
       <div class="card-body">
-      Year: <%= link_to pluralize(@denied_process_coverages.where(created_at: current_date.beginning_of_year..current_date.end_of_year).count, "Coverage"), cov_list_process_coverages_path(cov_type: "Denied", title: "Denied PCs"), class: "link-light", data: { turbo_frame: "remote_modal" } %> <br>
-      Month: <%= pluralize(@denied_process_coverages.where(created_at: start_month(current_date)..end_month(current_date)).count, "Coverage") %> <br>
-      Week: <%= pluralize(@denied_process_coverages.where(created_at: start_week(current_date)..end_week(current_date.end_of_year)).count, "Coverage") %>
+      Year: <%= link_to pluralize(@denied_process_coverages.where(created_at: current_date.beginning_of_year..current_date.end_of_year).count, "Coverage"), cov_list_process_coverages_path(cov_type: "Denied", current_date: current_date, date_type: "yearly", title: "Denied PCs (Yearly)"), class: "link-light", data: { turbo_frame: "remote_modal" } %> <br>
+      Month: <%=link_to pluralize(@denied_process_coverages.where(created_at: start_month(current_date)..end_month(current_date)).count, "Coverage"), cov_list_process_coverages_path(cov_type: "Denied", current_date: current_date, date_type: "monthly", title: "Denied PCs (Monthly)"), class: "link-light", data: { turbo_frame: "remote_modal" } %> <br>
+      Week: <%=link_to pluralize(@denied_process_coverages.where(created_at: start_week(current_date)..end_week(current_date.end_of_year)).count, "Coverage"), cov_list_process_coverages_path(cov_type: "Denied", current_date: current_date, date_type: "weekly", title: "Denied PCs (Weekly)"), class: "link-light", data: { turbo_frame: "remote_modal" } %>
       </div>
     </div>
   </div>
