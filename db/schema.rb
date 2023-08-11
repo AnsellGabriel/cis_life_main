@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_08_10_081218) do
+ActiveRecord::Schema[7.0].define(version: 2023_08_11_025944) do
   create_table "active_admin_comments", charset: "utf8mb4", force: :cascade do |t|
     t.string "namespace"
     t.text "body"
@@ -640,7 +640,9 @@ ActiveRecord::Schema[7.0].define(version: 2023_08_10_081218) do
     t.datetime "updated_at", null: false
     t.integer "und_route"
     t.bigint "processor_id"
+    t.bigint "approver_id"
     t.index ["agent_id"], name: "index_process_coverages_on_agent_id"
+    t.index ["approver_id"], name: "index_process_coverages_on_approver_id"
     t.index ["group_remit_id"], name: "index_process_coverages_on_group_remit_id"
     t.index ["processor_id"], name: "index_process_coverages_on_processor_id"
     t.index ["und_route"], name: "index_process_coverages_on_und_route"
@@ -763,6 +765,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_08_10_081218) do
   add_foreign_key "process_claims", "agreement_benefits"
   add_foreign_key "process_claims", "agreements"
   add_foreign_key "process_claims", "cooperatives"
+  add_foreign_key "process_coverages", "employees", column: "approver_id"
   add_foreign_key "process_coverages", "employees", column: "processor_id"
   add_foreign_key "product_benefits", "agreement_benefits"
   add_foreign_key "product_benefits", "benefits"
