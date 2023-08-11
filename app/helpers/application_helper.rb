@@ -128,6 +128,7 @@ module ApplicationHelper
 			when "for_head_approval" then content_tag(:span, "For Head Approval", class: "text-secondary")
 			when "for_vp_approval" then content_tag(:span, "For VP Approval", class: "text-secondary")
 			when "reprocess" then content_tag(:span, "Reprocess", class: "text-warning")
+			when "reconsiderations_processed" then content_tag(:span, "Reconsiderations Processed", class: "text-warning")
 		end
 	end
 

@@ -22,7 +22,8 @@ class GroupRemit < ApplicationRecord
     payment_verification: 3,
     active: 4,
     for_renewal: 5,
-    expired: 6
+    expired: 6,
+    with_pending_members: 7
   }
 
   def to_s
