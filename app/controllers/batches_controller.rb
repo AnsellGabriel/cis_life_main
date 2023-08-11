@@ -208,9 +208,9 @@ class BatchesController < ApplicationController
     @batch = Batch.find(params[:id])
   end
 
-  def terminate_insurance
+  # def terminate_insurance
     
-  end
+  # end
 
   private
     def batch_params
