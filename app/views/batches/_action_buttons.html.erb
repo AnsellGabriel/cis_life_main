@@ -49,7 +49,7 @@
 			<% end %>
 		<% end %>
 
-		<% if batch.renewal? %>
+		<% if batch.renewal? && !batch.denied? %>
 			<%= link_to 'Terminate Insurance', terminate_insurance_path(group_remit: group_remit, batch: batch),
 				data: {turbo_method: :get, turbo_confirm: "Terminate #{batch.coop_member.full_name}'s insurance?" , turbo_frame: "_top"}, 
 				class: small_btn('danger') 
