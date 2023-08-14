@@ -5,19 +5,19 @@
           <% unless @principal_count == 0 %>
             <div class="text-secondary d-flex justify-content-between">
               <%= content_tag :span, "Principal Premiums", style: "font-size: .8rem" %>
-              <%= content_tag :span, "#{number_to_currency((group_remit.total_principal_premium), unit: "₱", precision: 2)}", style: "font-size: .8rem; color: var(--bs-blue);" %>
+              <%= content_tag :span, "#{to_curr(group_remit.total_principal_premium)}", style: "font-size: .8rem; color: var(--bs-blue);" %>
             </div>
             <% unless @dependent_count == 0 %>
               <div class="text-secondary d-flex justify-content-between">
                 <%= content_tag :span, "Dependent Premiums", style: "font-size: .8rem" %>
-                <%= content_tag :span, "#{number_to_currency((group_remit.total_dependent_premiums), unit: "₱", precision: 2)}", style: "font-size: .8rem; color: var(--bs-blue);" %>
+                <%= content_tag :span, "#{to_curr(group_remit.total_dependent_premiums)}", style: "font-size: .8rem; color: var(--bs-blue);" %>
               </div>
             <% end %>
           <% end %>
           <hr>
           <div class="text-secondary d-flex justify-content-between">
             <%= content_tag :span, "Gross Premium", style: "font-size: .8rem" %>
-            <%= content_tag :span, "#{number_to_currency(group_remit.gross_premium, unit: "₱", precision: 2)}", style: "color: var(--bs-blue); font-size: .8rem"%>
+            <%= content_tag :span, "#{to_curr(group_remit.gross_premium)}", style: "color: var(--bs-blue); font-size: .8rem"%>
           </div>
           <hr>
         </div>
@@ -30,16 +30,16 @@
           </div>
           <div class="text-secondary d-flex justify-content-between">
             <%= content_tag :span, "#{@agreement.coop_sf}% Coop service fee", style: "font-size: .8rem" %>
-            <%= content_tag :span, "(#{number_to_currency(group_remit.total_coop_commissions, unit: "₱", precision: 2)})", style: "font-size: .8rem; color: var(--bs-green)"%>
+            <%= content_tag :span, "(#{to_curr(group_remit.total_coop_commissions)})", style: "font-size: .8rem; color: var(--bs-green)"%>
           </div>      
           <div class="text-secondary d-flex justify-content-between">
             <%= content_tag :span, "Denied Principal Premiums", style: "font-size: .8rem" %>
-            <%= content_tag :span, "(#{number_to_currency(group_remit.denied_principal_premiums, unit: "₱", precision: 2)})", style: "font-size: .8rem; color: var(--bs-red)"%>
+            <%= content_tag :span, "(#{to_curr(group_remit.denied_principal_premiums)})", style: "font-size: .8rem; color: var(--bs-red)"%>
           </div>       
           <% if @agreement.plan.gyrt_type == 'family' %>
             <div class="text-secondary d-flex justify-content-between">
               <%= content_tag :span, "Denied Dependent Premiums", style: "font-size: .8rem" %>
-              <%= content_tag :span, "(#{number_to_currency(group_remit.denied_dependent_premiums, unit: "₱", precision: 2)})", style: "font-size: .8rem; color: var(--bs-red)"%>
+              <%= content_tag :span, "(#{to_curr(group_remit.denied_dependent_premiums)})", style: "font-size: .8rem; color: var(--bs-red)"%>
             </div>   
           <% end %>
         </div>

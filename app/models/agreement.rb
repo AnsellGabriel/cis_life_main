@@ -1,5 +1,6 @@
 class Agreement < ApplicationRecord    
     scope :filtered_by_moa_no, -> (filter) { where("moa_no LIKE ?", "%#{filter}%") }
+    
 
     Comm_type = ["Gross Commission", "Net Commission"]
     Anniversary = ["Single", "Multiple", "12 Months"]
@@ -46,5 +47,13 @@ class Agreement < ApplicationRecord
 
     def batches
       
+    end
+
+    def is_term_insurance?
+      plan.acronym == 'PMFC' ? true : false
+    end
+
+    def self.filtered(params)
+      joins(:cooperative, :plan).where("cooperatives.name LIKE ? OR plans.name LIKE ? OR agreements.moa_no LIKE ? OR plans.acronym LIKE ?", "%#{params}%", "%#{params}%", "%#{params}%", "%#{params}%")
     end
 end

@@ -1,15 +1,13 @@
 class ApplicationController < ActionController::Base
-  add_flash_types :warning
   include Pagy::Backend
 
+  add_flash_types :warning
   before_action :set_cooperative, :set_authority_level
 
   def root
     case current_user.userable_type
-    when "Agent"
-      redirect_to agents_path
-    when "CoopUser"
-      redirect_to coop_members_path	
+    when "Agent" then redirect_to agents_path
+    when "CoopUser" then redirect_to coop_members_path	
     when "Employee"
       if current_user.medical_director?
         redirect_to med_directors_home_path
@@ -21,14 +19,12 @@ class ApplicationController < ActionController::Base
           redirect_to employees_path
         end
       end
-
     else
       super
     end
   end
 
   private
-
   def set_cooperative
     if current_user && current_user.userable_type == 'CoopUser'
       session[:cooperative_id] ||= current_user.userable.cooperative_id
@@ -44,7 +40,6 @@ class ApplicationController < ActionController::Base
       session[:max_amount] = cur_user_max_amount.nil? ? 0 : cur_user_max_amount
     end
   end
-  
   
   protected
   # Overwriting the sign_out redirect path method for unapproved users
