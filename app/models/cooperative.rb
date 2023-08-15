@@ -39,8 +39,6 @@ class Cooperative < ApplicationRecord
     def get_fulladdress
       "#{municipality}, #{province}, #{region}"
     end
-    
-    
 
     def coop_member_details
 		  coop_members.includes(:member).order('members.last_name')

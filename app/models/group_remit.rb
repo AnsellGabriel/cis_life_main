@@ -30,6 +30,7 @@ class GroupRemit < ApplicationRecord
     name
   end
 
+  #* group remit renewal
   def renew(current_user)
     new_group_remit = self.dup
     new_group_remit.set_terms_and_expiry_date(self.expiry_date + 1.year)
@@ -112,7 +113,31 @@ class GroupRemit < ApplicationRecord
     )
   end
 
-  
+  #* group remit creation
+  def self.process_group_remit(group_remit, anniversary_date, anniv_id, terms = nil)
+    group_remit.set_terms_and_expiry_date(anniversary_date)
+    agreement = group_remit.agreement
+
+    if agreement.anniversary_type == 'multiple' || agreement.anniversary_type == 'single'
+      group_remit.anniversary_id = params[:anniversary_id]
+    end
+
+    set_group_remit_names_and_terms(group_remit, terms)
+  end
+
+  def self.set_group_remit_names_and_terms(group_remit, terms = nil)
+    remit_name = group_remit.instance_of?(BatchRemit) ? 'BATCH' : 'REMITTANCE'
+    agreement = group_remit.agreement
+
+    if agreement.is_term_insurance?
+      group_remit.terms = terms
+      group_remit.name = "#{agreement.moa_no} #{group_remit.effectivity_date.strftime('%B').upcase} #{remit_name} - #{group_remit.terms} MONTHS"
+    elsif agreement.anniversary_type == 'none' or agreement.anniversary_type.nil?
+      group_remit.name = "#{agreement.moa_no} #{group_remit.effectivity_date.strftime('%B').upcase} #{remit_name}"
+    else 
+      group_remit.name = "#{agreement.moa_no} #{remit_name}"
+    end
+  end
 
   def set_total_premiums_and_fees
     self.gross_premium = gross_premium
@@ -262,6 +287,9 @@ class GroupRemit < ApplicationRecord
     pluck(:expiry_date).map { |date| date.strftime("%m-%d") }
   end
 
+  def batches_all_renewal?
+    batches.all? { |batch| batch.status == "renewal" }
+  end
 
   private
 

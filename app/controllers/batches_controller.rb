@@ -99,7 +99,6 @@ class BatchesController < ApplicationController
   end
 
   def create
-    # raise 'errors'
     if @agreement.plan.acronym == 'GYRTFR' && params[:batch][:rank].empty?
       return redirect_to group_remit_path(@group_remit), alert: "Rank is required"
     end
@@ -166,7 +165,6 @@ class BatchesController < ApplicationController
   end
 
   def update
-
     respond_to do |format|
       if @batch.update(batch_params)
         format.html { 

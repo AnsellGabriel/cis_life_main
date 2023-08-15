@@ -27,6 +27,7 @@ class Batch < ApplicationRecord
       .where("members.first_name LIKE :name OR members.last_name LIKE :name", name: "%#{name}%")
   }
   scope :coop_member, -> { joins(:member).where('members.coop_member = ?', true) }
+  scope :approved, -> { where(insurance_status: :approved) }
 
   belongs_to :coop_member
   belongs_to :member, optional: true

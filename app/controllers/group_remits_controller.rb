@@ -24,12 +24,11 @@ class GroupRemitsController < InheritedResources::Base
       respond_to do |format|
         format.html { redirect_to coop_agreement_group_remit_path(@group_remit.agreement, @group_remit), alert: "Unable to submit empty batch!" }
       end
+
       return
     end
 
-    all_renewal = @group_remit.batches.all? { |batch| batch.status == "renewal" }
-
-    if all_renewal
+    if @group_remit.batches_all_renewal?
       @group_remit.approve_insurance_status_of_batches
       @group_remit.set_for_payment_status
     else
@@ -82,38 +81,28 @@ class GroupRemitsController < InheritedResources::Base
   end
 
   def create
-    # byebug
     @agreement = Agreement.find_by(id: params[:agreement_id])
-    short_term_insurance = @agreement.plan.acronym == 'PMFC'
 
-    if short_term_insurance && params[:group_remit][:terms].blank?
+    if @agreement.is_term_insurance? && params[:group_remit][:terms].blank?
       return redirect_to coop_agreement_path(@agreement), alert: 'Please select a term duration'
     end
     
-    @group_remit = @agreement.group_remits.build
+    @group_remit = @agreement.group_remits.build(type: 'Remittance')
     anniversary_date = set_anniversary(@agreement.anniversary_type, params[:anniversary_id])
-    @group_remit.set_terms_and_expiry_date(anniversary_date)
-    @group_remit.type = 'Remittance'
+    terms = params[:group_remit][:terms] if params[:group_remit].present?
 
-    if @agreement.anniversary_type == 'multiple' || @agreement.anniversary_type == 'single'
-      @group_remit.anniversary_id = params[:anniversary_id]
-    end
-
-    set_group_remit_names_and_terms(@group_remit, short_term_insurance)
+    GroupRemit.process_group_remit(@group_remit, anniversary_date, params[:anniversary_id], terms)
     
     respond_to do |format|
       if @group_remit.save!
 
         if params[:type] == 'BatchRemit'
           batch_remit = @agreement.group_remits.build(type: 'BatchRemit')
-          batch_remit.set_terms_and_expiry_date(anniversary_date)
-          set_group_remit_names_and_terms(batch_remit, short_term_insurance)
 
-          if @agreement.anniversary_type == 'multiple' || @agreement.anniversary_type == 'single'
-            batch_remit.anniversary_id = params[:anniversary_id]
-          end
+          GroupRemit.process_group_remit(batch_remit, anniversary_date, params[:anniversary_id], terms)
 
           batch_remit.save!
+
           @group_remit.update!(batch_remit_id: batch_remit.id)
         else
           @group_remit.update!(batch_remit_id: params[:batch_remit_id])
@@ -159,25 +148,17 @@ class GroupRemitsController < InheritedResources::Base
     anniv_type = agreement.anniversary_type
     @group_remit.payments.build(receipt: params[:file])
     @group_remit.status = :payment_verification
-    # @group_remit.effectivity_date = Date.today
 
     respond_to do |format|
       if @group_remit.save!
-        approved_batches = @group_remit.batches.where(insurance_status: :approved)
-        approved_members = CoopMember.joins(:batches)
-                            .where(batches: { id: approved_batches })
-                            .distinct.pluck(:id)
-        
-        # agreement.coop_members << approved_members
-        current_batch_remit = GroupRemit.find(@group_remit.batch_remit_id)
-        duplicate_batches = current_batch_remit.batch_group_remits.joins(:batch).where(batch: {coop_member_id: approved_members})
-        current_batch_remit.batch_group_remits.destroy(duplicate_batches)
-        current_batch_remit.batches << approved_batches 
-        current_batch_remit.set_total_premiums_and_fees
-        current_batch_remit.status = :active
-        current_batch_remit.save!
-        # byebug
-        
+        approved_batches = @group_remit.batches.approved
+        approved_members = CoopMember.approved_members(approved_batches) 
+        current_batch_remit = BatchRemit.find(@group_remit.batch_remit_id)
+        duplicate_batches = current_batch_remit.batch_group_remits.existing_members(approved_members)
+
+        BatchRemit.process_batch_remit(current_batch_remit, duplicate_batches, approved_batches)
+
+        current_batch_remit.save!        
         format.html { redirect_to coop_agreement_group_remit_path(@group_remit.agreement, @group_remit), notice: "Proof of payment sent" }
       else
         format.html { redirect_to coop_agreement_group_remit_path(@group_remit.agreement, @group_remit), alert: "Invalid proof of payment" }
@@ -264,18 +245,5 @@ class GroupRemitsController < InheritedResources::Base
 
     def paginate_batches
       @pagy, @batches = pagy(@f_batches, items: 10)
-    end
-
-    def set_group_remit_names_and_terms(group_remit, short_term_insurance)
-      remit_name = group_remit.type == 'BatchRemit' ? 'BATCH' : 'REMITTANCE'
-      
-      if short_term_insurance
-        group_remit.terms = params[:group_remit][:terms]
-        group_remit.name = "#{@agreement.moa_no} #{group_remit.effectivity_date.strftime('%B').upcase} #{remit_name} - #{group_remit.terms} MONTHS"
-      elsif @agreement.anniversary_type == 'none' or @agreement.anniversary_type.nil?
-        group_remit.name = "#{@agreement.moa_no} #{group_remit.effectivity_date.strftime('%B').upcase} #{remit_name}"
-      else 
-        group_remit.name = "#{@agreement.moa_no} #{remit_name}"
-      end
     end
 end
