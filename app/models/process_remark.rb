@@ -1,6 +1,8 @@
 class ProcessRemark < ApplicationRecord
   belongs_to :process_coverage
   belongs_to :user, polymorphic: true
+  
+  audited associated_with: :process_coverage
 
   enum status: {
     pending: 0,
