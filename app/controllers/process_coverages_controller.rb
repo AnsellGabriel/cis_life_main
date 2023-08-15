@@ -357,11 +357,13 @@ class ProcessCoveragesController < ApplicationController
 
     respond_to do |format|
       if current_user.analyst?
-        if @process_coverage.update_attribute(:status, "reprocess")
+        # if @process_coverage.update_attribute(:status, "reprocess")
+        if @process_coverage.update_attribute(:status, "reprocess_request")
           format.html { redirect_to process_coverage_path(@process_coverage), warning: "Reprocess request submitted!" }
         end
       elsif current_user.head? || current_user.senior_officer?
-        if @process_coverage.update_attribute(:status, "for_review")
+        # if @process_coverage.update_attribute(:status, "for_review")
+        if @process_coverage.update_attribute(:status, "reprocess_approval")
           format.html { redirect_to process_coverage_path(@process_coverage), notice: "Reprocess Coverage approved!" }
         end
       else
