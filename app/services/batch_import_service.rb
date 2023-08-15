@@ -240,11 +240,11 @@ class BatchImportService
   end
 
   def age_min_max_by_insured_type(agreement_benefits, rank)
-    if agreement_benefits.find_by(name: rank).nil?
-      return nil
-    end
-    
     if @gyrt_ranking_plans.include?(@agreement.plan.acronym)
+      if agreement_benefits.find_by(name: rank).nil?
+        return nil
+      end
+      
       {
         min_age: agreement_benefits.find_by(name: rank).min_age,
         max_age: agreement_benefits.find_by(name: rank).max_age

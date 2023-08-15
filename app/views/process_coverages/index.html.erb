@@ -3,6 +3,7 @@
   <% if current_user.senior_officer? || current_user.head? %>
     <%= render "process_coverages/dashboard_head" %>
     <%= render "process_coverages/analysts_inventory" %>
+
     <br>
     <div class="mt-3">
       <div class="d-flex gap-3 flex-row-reverse mb-3">
@@ -11,6 +12,12 @@
             <%= text_field_tag 'search', nil, placeholder: 'Search...', class: "form-control", style: "width: auto", required: true %>
             <%= submit_tag 'Search', class: "btn btn-success"%>
             <%= link_to "View All", process_coverages_path, class: "btn btn-secondary" %>
+            <%= content_tag :button, "Analyst Inventory", 
+                class: small_btn('outline-success'), 
+                data: {bs_toggle: "modal",
+                  bs_target: "#benefitsModal"
+                }
+            %>
           </div>
         <% end %>
       </div>
