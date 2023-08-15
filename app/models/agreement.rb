@@ -1,7 +1,6 @@
 class Agreement < ApplicationRecord    
-    scope :filtered_by_moa_no, -> (filter) { where("moa_no LIKE ?", "%#{filter}%") }
+    scope :with_moa_like, -> (filter) { where("moa_no LIKE ?", "%#{filter}%") }
     
-
     Comm_type = ["Gross Commission", "Net Commission"]
     Anniversary = ["Single", "Multiple", "12 Months"]
 
@@ -13,11 +12,11 @@ class Agreement < ApplicationRecord
     has_many :agreement_benefits
     has_many :emp_agreements
     has_many :employees, through: :emp_agreements
-    accepts_nested_attributes_for :agreement_benefits, reject_if: :all_blank, allow_destroy: true
     has_many :group_remits
     has_many :anniversaries
     has_many :agreements_coop_members
     has_many :coop_members, through: :agreements_coop_members
+    accepts_nested_attributes_for :agreement_benefits, reject_if: :all_blank, allow_destroy: true
 
     def to_s
       moa_no
@@ -34,19 +33,15 @@ class Agreement < ApplicationRecord
 		end
 
     def active_group_remits
-      group_remits.map { |gr| gr if gr.status == 'active'}
+      group_remits.select { |gr| gr.active? }
     end
 
     def expired_group_remits
-      group_remits.map { |gr| gr if gr.status == 'expired'}
+      group_remits.select { |gr| gr.expired? }
     end
 
     def renewed_group_remits
       group_remits.where(status: :renewed)
-    end
-
-    def batches
-      
     end
 
     def is_term_insurance?

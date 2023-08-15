@@ -45,6 +45,6 @@ class Cooperative < ApplicationRecord
     end
 
     def filtered_agreements(filter)
-    	agreements.filtered_by_moa_no(filter).includes({anniversaries: :group_remits}, :agent, :group_remits).order(updated_at: :desc)
+    	agreements.with_moa_like(filter).includes({anniversaries: :group_remits}, :agent, :group_remits).order(updated_at: :desc)
     end
 end

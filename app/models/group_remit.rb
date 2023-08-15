@@ -5,14 +5,12 @@ class GroupRemit < ApplicationRecord
 
   belongs_to :agreement
   belongs_to :anniversary, optional: true
-
   has_many :batch_group_remits
   has_many :batches, through: :batch_group_remits
   has_many :denied_members, dependent: :destroy
   has_many :payments, dependent: :destroy
   has_one :process_coverage, dependent: :destroy
   has_one :group_import_tracker, dependent: :destroy
-
   accepts_nested_attributes_for :payments
 
   enum status: {
@@ -49,14 +47,13 @@ class GroupRemit < ApplicationRecord
 
     removed_batches = [] # To store the batches that are removed from the renewal
 
-    self.batches.includes(coop_member: :member).where(insurance_status: :approved).each do |batch|
+    self.batches.includes(coop_member: :member).approved.each do |batch|
       existing_coverage = agreement.agreements_coop_members.find_by(coop_member_id: batch.coop_member.id)
       
       new_batch = Batch.new(coop_member_id: batch.coop_member.id)
       new_batch.previous_effectivity_date = batch.effectivity_date
       new_batch.previous_expiry_date = batch.expiry_date
       b_rank = batch.agreement_benefit
-
 
       Batch.process_batch(
         new_batch, 
@@ -66,7 +63,6 @@ class GroupRemit < ApplicationRecord
       )
       
       new_group_remit.batches << new_batch
-
 
       if new_batch.member_details.age(new_group_remit.effectivity_date) >= new_batch.agreement_benefit.exit_age
         new_batch.insurance_status = :denied
@@ -102,15 +98,6 @@ class GroupRemit < ApplicationRecord
       new_group_remit: new_group_remit,
       removed_batches: removed_batches
     }
-  end
-
-  def create_denied_member(member, reason, group_remit, effectivity = nil)
-    DeniedMember.find_or_create_by!(
-      name: "#{member.first_name} #{member.middle_name} #{member.last_name}", 
-      age: member.birth_date.nil? ? 0 : member.age(effectivity), 
-      reason: reason, 
-      group_remit: group_remit
-    )
   end
 
   #* group remit creation
@@ -196,12 +183,12 @@ class GroupRemit < ApplicationRecord
   end
 
   def dependent_coop_commissions
-    batches.where(insurance_status: :approved).includes(:batch_dependents).sum {|batch| batch.batch_dependents.sum(&:coop_sf_amount) }
+    batches.approved.includes(:batch_dependents).sum {|batch| batch.batch_dependents.sum(&:coop_sf_amount) }
   end
 
   def dependent_agent_commissions
     # batches.joins(:batch_dependents).sum('batch_dependents.agent_sf_amount')
-    batches.where(insurance_status: :approved).includes(:batch_dependents).sum {|batch| batch.batch_dependents.sum(&:agent_sf_amount) }
+    batches.approved.includes(:batch_dependents).sum {|batch| batch.batch_dependents.sum(&:agent_sf_amount) }
   end
 
   def total_principal_premium
@@ -209,11 +196,11 @@ class GroupRemit < ApplicationRecord
   end
 
   def denied_principal_premiums
-    batches.where(insurance_status: :denied).to_a.sum(&:premium)
+    batches.denied.to_a.sum(&:premium)
   end
 
   def denied_dependent_premiums
-    batches.where(insurance_status: :denied).includes(:batch_dependents).sum {|batch| batch.batch_dependents.sum(&:premium) }
+    batches.denied.includes(:batch_dependents).sum {|batch| batch.batch_dependents.sum(&:premium) }
   end
 
   def gross_premium
@@ -221,7 +208,7 @@ class GroupRemit < ApplicationRecord
   end
 
   def coop_commissions
-    batches.where(insurance_status: :approved).sum(:coop_sf_amount)
+    batches.approved.sum(:coop_sf_amount)
   end
 
   def total_coop_commissions
@@ -233,7 +220,7 @@ class GroupRemit < ApplicationRecord
   end
 
   def agent_commissions
-    batches.where(insurance_status: :approved).sum(:agent_sf_amount)
+    batches.approved.sum(:agent_sf_amount)
   end
 
   def coop_net_premium
@@ -249,7 +236,7 @@ class GroupRemit < ApplicationRecord
   end
 
   def batches_without_health_dec
-    batches.where(status: :recent).where.not(id: self.batches.joins(:batch_health_decs).select(:id))
+    batches.recent.where.not(id: self.batches.joins(:batch_health_decs).select(:id))
   end
 
   def all_batches_have_beneficiaries?

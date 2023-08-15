@@ -19,7 +19,6 @@ class MembersController < InheritedResources::Base
       redirect_to coop_members_path, notice: "#{import_message[:created_members_counter]} members enrolled. #{import_message[:updated_members_counter]} members updated. #{import_message[:denied_enrollees_counter]} members denied."
     end
 
-    reset_session_progress
   end
 
   def new
@@ -82,7 +81,6 @@ class MembersController < InheritedResources::Base
   end
   
   private
-
     def member_params
       params.require(:member).permit(:birth_place, :address, :sss_no, :tin_no, :civil_status, :legal_spouse, :height, :weight, :occupation, :employer, :work_address, :work_phone_number, :last_name, :first_name, :middle_name, :suffix, :email, :mobile_number, :birth_date, :gender, coop_members_attributes: [:id, :cooperative_id, :coop_branch_id, :membership_date, :deceased, :_destroy])
     end
@@ -91,11 +89,5 @@ class MembersController < InheritedResources::Base
       unless current_user.userable_type == 'CoopUser' || current_user.userable_type == 'Employee'
         render file: "#{Rails.root}/public/404.html", status: :not_found
       end
-    end
-
-    def reset_session_progress
-      session[:member_import_progress] = {
-        progress: 0
-      }
     end
 end

@@ -105,12 +105,9 @@ class Batch < ApplicationRecord
 
   end
 
-
-
   def self.determine_premium(rank, batch, group_remit)
     batch.set_premium_and_service_fees(rank, group_remit)
   end
-
 
   private
 
@@ -172,23 +169,4 @@ class Batch < ApplicationRecord
       self.status = :renewal
     end
   end
-
-  # def delete_agreements_coop_members
-  #   agreement = self.group_remits[0].agreement
-  #   coop_member = self.coop_member
-  #   agreement.coop_members.delete(coop_member)
-  #   self.batch_group_remits.destroy_all
-  # end
-
-  # def unique_coop_member_in_anniversary
-  #   if coop_member.present? && group_remit.agreement.group_remits.joins(:anniversary, batches: :coop_member)
-  #           .where('coop_members.id': coop_member_id)
-  #           .where.not(group_remits: { id: group_remit_id })
-  #           .where.not(anniversaries: { id: group_remit.anniversary_id })
-  #           .exists?
-
-  #     errors.add(:coop_member_id, "already exists in another batch with a different anniversary")
-  #   end
-  # end
-
 end
