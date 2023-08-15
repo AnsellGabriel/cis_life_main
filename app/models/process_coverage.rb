@@ -6,6 +6,9 @@ class ProcessCoverage < ApplicationRecord
   belongs_to :approver, class_name: "Employee"
   has_many :process_remarks
 
+  # audited
+  # has_associated_audits
+
   enum status: {
     for_process: 0,
     pending: 1,
