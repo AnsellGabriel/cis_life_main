@@ -16,7 +16,7 @@ class ProcessRemarksController < ApplicationController
     @title = case params[:pro_status]
     when "Approve" then "Process Approval"
     when "Deny" then "Process Denial"
-    when "Reprocess" then "Reprocess"
+    when "Reprocess" then "Request for Reprocess"
     else
       "Add Remark"
     end

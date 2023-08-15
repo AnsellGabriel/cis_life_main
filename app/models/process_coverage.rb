@@ -13,8 +13,9 @@ class ProcessCoverage < ApplicationRecord
     denied: 3,
     for_head_approval: 4,
     for_vp_approval: 5,
-    reprocess: 6,
-    reprocess_approval: 7,
+    reprocess: 6, # done reprocessing
+    reprocess_approved: 7, # able to reprocess by UA
+    reprocess_request: 9, # UA request to reprocess
     reconsiderations_processed: 8
   }
 

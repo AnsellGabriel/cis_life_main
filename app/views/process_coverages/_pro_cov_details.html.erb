@@ -72,6 +72,13 @@
           <%= bootstrap_icon "arrow-repeat" %> Reprocess
         <% end %>
       <% end %>
+
+      <% if (current_user.head? || current_user.senior_officer?) && (process_coverage.reprocess_request?) %>
+        <%= link_to new_process_remark_path(ref: process_coverage, pro_status: "Reprocess", rem_status: "reprocess_approval"), title: "Reprocess", class: "btn btn-sm btn-warning mb-2", data: { turbo_frame: "remote_modal" } do %>
+          <%= bootstrap_icon "arrow-repeat" %> Approve Reprocess
+        <% end %>
+      <% end %>
+       
     <%# end %>
 
 <%# unless process_coverage.group_remit.batches.where(insurance_status: "for_review").count == 0 %>

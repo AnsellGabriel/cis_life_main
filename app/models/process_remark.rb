@@ -8,7 +8,8 @@ class ProcessRemark < ApplicationRecord
     denied: 2,
     for_head_approval: 3,
     for_vp_approval: 4,
-    reprocess: 5
+    reprocess: 5,
+    reprocess_approved: 6
   }
 
 end
