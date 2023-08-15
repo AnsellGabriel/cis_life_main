@@ -163,6 +163,16 @@ class Batch < ApplicationRecord
     self.status == "recent"
   end
 
+  def accept_insurance
+    self.insurance_status = :approved
+
+    if self.previous_effectivity_date.nil? || self.previous_effectivity_date.empty?
+      self.status = :recent
+    else
+      self.status = :renewal
+    end
+  end
+
   # def delete_agreements_coop_members
   #   agreement = self.group_remits[0].agreement
   #   coop_member = self.coop_member
