@@ -41,7 +41,7 @@ class BatchDependentsController < InheritedResources::Base
     # model/concerns/calculate.rb
     @batch_dependent.set_premium_and_service_fees(dependent_agreement_benefits, group_remit, agreement.is_term_insurance?) 
 
-    if @batch_dependent.save!
+    if @batch_dependent.save
       redirect_to group_remit_batch_path(@group_remit, @batch), notice: "Dependent successfully added" 
     else
       redirect_to group_remit_batch_path(@group_remit, @batch), alert: @batch_dependent.errors.full_messages.join(', ') 
