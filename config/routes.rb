@@ -44,7 +44,11 @@ Rails.application.routes.draw do
   get "/progress", to: "progress#show"
   get "/progress/update", to: "progress#update"
 
-  #* Coop Module Routes
+  #* Coop Module 
+  namespace :coop do
+    get 'dashboard', to: 'dashboard#index'
+  end
+
   resources :cooperatives do
     get :selected, on: :member
   end

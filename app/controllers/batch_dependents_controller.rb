@@ -30,6 +30,7 @@ class BatchDependentsController < InheritedResources::Base
     rescue NoMethodError
       return redirect_to group_remit_batch_path(@group_remit, @batch), alert: 'Please choose a dependent'
     end
+    
     #! dependent agreement benefits' prefix must be principal agreement benefit's name
     dependent_agreement_benefits = agreement.agreement_benefits
                                     .with_name_like(@batch.agreement_benefit.name)
