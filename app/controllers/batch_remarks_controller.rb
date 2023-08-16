@@ -1,4 +1,5 @@
 class BatchRemarksController < ApplicationController
+  before_action :authenticate_user!
   before_action :set_batch_remark, only: %i[ show edit update destroy ]
 
   # GET /batch_remarks

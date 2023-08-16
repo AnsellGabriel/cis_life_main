@@ -1,4 +1,5 @@
 class EmpAgreementsController < ApplicationController
+  before_action :authenticate_user!
   before_action :set_emp_agreement, only: %i[ show edit update destroy ]
 
   # GET /emp_agreements

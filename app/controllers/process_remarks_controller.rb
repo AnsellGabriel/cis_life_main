@@ -1,4 +1,5 @@
 class ProcessRemarksController < ApplicationController
+  before_action :authenticate_user!
   before_action :set_process_remark, only: %i[ show edit update destroy ]
 
   # GET /process_remarks
