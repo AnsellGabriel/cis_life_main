@@ -1,4 +1,5 @@
 class EmpAgreementsController < ApplicationController
+  before_action :authenticate_user!
   before_action :set_emp_agreement, only: %i[ show edit update destroy ]
 
   # GET /emp_agreements
@@ -43,6 +44,9 @@ class EmpAgreementsController < ApplicationController
       unless @old_emp_agreement.nil?
         @old_emp_agreement.update_attribute(:active, false)
         @emp_agreement.update_attribute(:category_type, "sub_approver")
+
+        @process_coverages = ProcessCoverage.joins(group_remit: {agreement: :emp_agreements}).where(status: :for_process, agreement: { id: @old_emp_agreement.agreement })
+        @process_coverages.update(processor: @emp_agreement.employee, approver: @emp_agreement.employee.emp_approver.approver)
       end
       redirect_to @emp_agreement, notice: "Emp agreement was successfully created."
     else

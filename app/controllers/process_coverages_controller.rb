@@ -364,7 +364,8 @@ class ProcessCoveragesController < ApplicationController
         end
       elsif current_user.head? || current_user.senior_officer?
         # if @process_coverage.update_attribute(:status, "for_review")
-        if @process_coverage.update_attribute(:status, "reprocess_approval")
+        if @process_coverage.update_attribute(:status, "reprocess_approved")
+          @process_coverage.update(reprocess: true)
           format.html { redirect_to process_coverage_path(@process_coverage), notice: "Reprocess Coverage approved!" }
         end
       else
