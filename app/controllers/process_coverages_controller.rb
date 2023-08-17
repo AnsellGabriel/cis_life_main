@@ -12,6 +12,7 @@ class ProcessCoveragesController < ApplicationController
       @approved_process_coverages = ProcessCoverage.where(status: :approved)
       # @pending_process_coverages = ProcessCoverage.where(status: :pending)
       @reprocess_coverages = ProcessCoverage.where(status: :reprocess)
+      @reassess_coverages = ProcessCoverage.where(status: :reassess)
       @denied_process_coverages = ProcessCoverage.where(status: :denied)
 
       if params[:search].present?
@@ -30,6 +31,7 @@ class ProcessCoveragesController < ApplicationController
       @approved_process_coverages = @process_coverages_x.where(status: :approved)
       # @pending_process_coverages = ProcessCoverage.where(status: :pending)
       @reprocess_coverages = @process_coverages_x.where(status: :reprocess)
+      @reassess_coverages = ProcessCoverage.where(status: :reassess)
       @denied_process_coverages = @process_coverages_x.where(status: :denied)
 
       if params[:search].present?
@@ -163,6 +165,25 @@ class ProcessCoveragesController < ApplicationController
           ProcessCoverage.joins(group_remit: { agreement: { emp_agreements: {employee: :emp_approver} } }).where( emp_approver: { approver_id: current_user.userable_id }, emp_agreements: { active: true}).where(status: :reprocess, created_at: start_date..end_date)
         elsif current_user.senior_officer?
           ProcessCoverage.where(status: :reprocess, created_at: start_date..end_date)
+        end
+
+      when "Reassess" 
+        if params[:date_type] == "yearly"
+          start_date = @current_date.beginning_of_year
+          end_date = @current_date.end_of_year
+          
+        elsif params[:date_type] == "monthly"
+          start_date = @current_date.beginning_of_month
+          end_date = @current_date.end_of_month
+        elsif params[:date_type] == "weekly"
+          start_date = @current_date.beginning_of_week
+          end_date = @current_date.end_of_week
+        end
+        # ProcessCoverage.where(status: :for_reconsider, created_at: start_date..end_date)
+        if current_user.head?
+          ProcessCoverage.joins(group_remit: { agreement: { emp_agreements: {employee: :emp_approver} } }).where( emp_approver: { approver_id: current_user.userable_id }, emp_agreements: { active: true}).where(status: :reassess, created_at: start_date..end_date)
+        elsif current_user.senior_officer?
+          ProcessCoverage.where(status: :reassess, created_at: start_date..end_date)
         end
 
       when "Denied" 
@@ -349,6 +370,15 @@ class ProcessCoveragesController < ApplicationController
     respond_to do |format|
       if @process_coverage.update_attribute(:status, "denied")
         format.html { redirect_to process_coverage_path(@process_coverage), alert: "Process Coverage Denied!" }
+      end
+    end
+  end
+
+  def reassess
+    @process_coverage = ProcessCoverage.find_by(id: params[:process_coverage_id])
+    respond_to do |format|
+      if @process_coverage.update_attribute(:status, "reassess")
+        format.html { redirect_to process_coverage_path(@process_coverage), notice: "Process Coverage For Reassessment!" }
       end
     end
   end

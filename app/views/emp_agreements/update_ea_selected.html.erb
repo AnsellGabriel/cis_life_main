@@ -1,0 +1,18 @@
+<%#= @emp_agreements.count %>
+<%= turbo_frame_tag "modal" do %>
+  <div class="modal-header">
+    <%= content_tag :h5, 'Transfer Agreements', class: "modal-title", id: "staticBackdropLabel" %>
+    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+  </div>
+
+  <div class="modal-body">
+    <%= simple_form_for @emp_agreements, url: transfer_agreements_emp_agreements_path(ids: @ids), method: :patch do |f| %>
+      <%# @emp_agreements.each do |emp_agreement| %>
+      <%= f.input :employee_id, as: :select, label: 'Select Underwriting Analyst', collection: Employee::ANALYSTS %>
+      <%# end %>
+      <%#= f.input :emp_agreements, as: :hidden, input_html: {value: }%>
+      <%= f.button :submit, "Transfer", data: {turbo: false}, class: "btn btn-primary" %>
+    <% end %>
+  </div>
+
+<% end %>

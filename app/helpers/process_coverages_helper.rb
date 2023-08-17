@@ -27,7 +27,7 @@ module ProcessCoveragesHelper
 
   def batch_buttons(rank, status, pc_stat=nil)
     if rank == "analyst"
-      if pc_stat == "reprocess_approved"
+      if pc_stat == "reprocess_approved" || pc_stat == "reassess"
         "d-inline"
       else
         case status

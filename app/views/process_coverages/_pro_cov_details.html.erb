@@ -64,9 +64,16 @@
         <%= link_to new_process_remark_path(ref: process_coverage, pro_status: "Approve", rem_status: "approved", max_amount: session[:max_amount], total_life_cov: @total_life_cov, total_net_prem: @total_net_prem), title: "Approve", class: "btn btn-sm btn-success mb-2 me-2", data: { turbo_frame: "remote_modal" } do %>
           <%= bootstrap_icon "check-lg" %> Approve
         <% end %>
-        <%= link_to new_process_remark_path(ref: process_coverage, pro_status: "Deny", rem_status: "denied"), title: "Denied", class: "btn btn-sm btn-danger mb-2", data: { turbo_frame: "remote_modal" } do %>
+        <%= link_to new_process_remark_path(ref: process_coverage, pro_status: "Deny", rem_status: "denied"), title: "Denied", class: "btn btn-sm btn-danger mb-2 me-2", data: { turbo_frame: "remote_modal" } do %>
           <%= bootstrap_icon "x-lg" %> Deny
         <% end %>
+        
+        <% if current_user.head? && process_coverage.for_head_approval? %>
+          <%= link_to new_process_remark_path(ref: process_coverage, pro_status: "Reassess", rem_status: "reassess"), title: "Reassess", class: "btn btn-sm btn-primary mb-2", data: { turbo_frame: "remote_modal" } do %>
+            <%= bootstrap_icon "pencil-square" %> Re-assessment
+          <% end %>
+        <% end %>
+        
       </div>
 
       <% if current_user.analyst? && (process_coverage.approved? || process_coverage.denied?) %>

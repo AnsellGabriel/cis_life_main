@@ -19,7 +19,8 @@ class ProcessCoverage < ApplicationRecord
     reprocess: 6, # done reprocessing
     reprocess_approved: 7, # able to reprocess by UA
     reprocess_request: 9, # UA request to reprocess
-    reconsiderations_processed: 8
+    reconsiderations_processed: 8,
+    reassess: 10 # Reaassessment
   }
 
   enum und_route: {
