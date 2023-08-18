@@ -23,7 +23,7 @@ class ProcessCoverage < ApplicationRecord
     reconsiderations_processed: 8,
     reassess: 10 # Reaassessment
   }
-  FILTERED_STATUSES = statuses.select { |key, value| [0, 1].include?(value) }.keys
+  FILTERED_STATUSES = statuses.select { |key, value| [0, 2, 3, 10].include?(value) }.keys
 
   enum und_route: {
     for_analyst_review: 0,
