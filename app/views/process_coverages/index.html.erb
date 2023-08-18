@@ -18,7 +18,12 @@
             <div id="collapseTwo" class="accordion-collapse collapse" aria-labelledby="headingTwo" data-bs-parent="#accordionExample">
               <div class="accordion-body">
                 <%= form_with url: process_coverages_path, builder: SimpleForm::FormBuilder, method: :get do |f| %>
-                  <% analysts = Employee::ANALYSTS.map { |analyst| [analyst.signed_fullname, analyst.id] } %>
+                  <% if current_user.senior_officer? %>
+                    <% analysts = Employee::ANALYSTS.map { |analyst| [analyst.signed_fullname, analyst.id] } %>
+                  <% else %>
+                    <% analysts = Employee::ANALYSTS.joins(:emp_approver).where(emp_approver: { approver: current_user.userable_id }) %>  
+                  <% end %>
+
                   <% process_types = ProcessCoverage::FILTERED_STATUSES %>
                   <div class="row">
                     <%= f.input :emp_id, as: :select, label: "Select UA", collection: analysts, input_html: { class: "form-select" }, wrapper_html: { class: "col-md-3" } %>
