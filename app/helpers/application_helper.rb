@@ -131,6 +131,7 @@ module ApplicationHelper
 			when "reprocess_request" then content_tag(:span, "Request for Reprocess", class: "text-secondary")
 			when "reprocess_approved" then content_tag(:span, "Request for Reprocess Approved", class: "text-warning")
 			when "reconsiderations_processed" then content_tag(:span, "Reconsiderations Processed", class: "text-warning")
+			when "reassess" then content_tag(:span, "For Re-assessment", class: "text-primary")
 		end
 	end
 
@@ -139,6 +140,7 @@ module ApplicationHelper
 			when "pending" then content_tag(:span, "Pending", class: "badge rounded-pill bg-secondary")
 			when "approved" then content_tag(:span, "Approved", class: "badge rounded-pill bg-success")
 			when "denied" then content_tag(:span, "Denied", class: "badge rounded-pill bg-danger")
+			when "reassess" then content_tag(:span, "For Re-assessment", class: "badge rounded-pill bg-primary")
 			when "for_head_approval" then content_tag(:span, "For Head Approval", class: "badge rounded-pill bg-secondary")
 			when "for_vp_approval" then content_tag(:span, "For VP Approval", class: "badge rounded-pill bg-secondary")
 			when "reprocess" then content_tag(:span, "Reprocessed", class: "badge rounded-pill bg-warning")

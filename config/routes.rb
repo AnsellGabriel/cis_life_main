@@ -8,6 +8,8 @@ Rails.application.routes.draw do
   
   resources :emp_agreements do 
     get :transfer_index, on: :collection
+    get :update_ea_selected, on: :collection
+    patch :transfer_agreements, on: :collection
   end
   # resources :denied_dependents
  
@@ -138,6 +140,7 @@ Rails.application.routes.draw do
     post :update_batch_prem, on: :member
     get :approve
     get :deny
+    get :reassess
     get :reprocess
     get :modal_remarks, on: :member
     get :cov_list, on: :collection
