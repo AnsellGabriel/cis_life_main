@@ -120,3 +120,5 @@ gem "prawn-table"
 gem "audited", "~> 5.3"
 
 gem "matrix", "~> 0.4.2"
+
+gem "pry", "~> 0.14.2"

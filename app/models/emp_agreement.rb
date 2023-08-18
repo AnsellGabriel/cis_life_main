@@ -1,5 +1,6 @@
 class EmpAgreement < ApplicationRecord
   attr_accessor :old_emp_agreement
+  # attr_accessor :employee_id
 
   belongs_to :employee
   belongs_to :agreement

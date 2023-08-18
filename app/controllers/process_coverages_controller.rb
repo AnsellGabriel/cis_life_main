@@ -4,7 +4,7 @@ class ProcessCoveragesController < ApplicationController
 
   # GET /process_coverages
   def index
-
+    # raise 'errors'
     if current_user.rank == "senior_officer"
       @process_coverages_x = ProcessCoverage.all
       @process_coverages_x = ProcessCoverage.all
@@ -12,6 +12,7 @@ class ProcessCoveragesController < ApplicationController
       @approved_process_coverages = ProcessCoverage.where(status: :approved)
       # @pending_process_coverages = ProcessCoverage.where(status: :pending)
       @reprocess_coverages = ProcessCoverage.where(status: :reprocess)
+      @reassess_coverages = ProcessCoverage.where(status: :reassess)
       @denied_process_coverages = ProcessCoverage.where(status: :denied)
 
       if params[:search].present?
@@ -19,16 +20,25 @@ class ProcessCoveragesController < ApplicationController
       else
         @process_coverages = @process_coverages_x
       end
+
+      if params[:emp_id].present?
+        # raise 'errors'
+        date_from = params[:date_from]
+        date_to = params[:date_to]
+        @process_coverages = @process_coverages_x.where(processor_id: params[:emp_id], status: :for_process, created_at: date_from..date_to)
+      end
       
     elsif current_user.rank == "head" 
       # @process_coverages_x = ProcessCoverage.joins(group_remit: { agreement: :emp_agreements }).where( emp_agreements: { approver_id: current_user.userable_id, active: true })
       # @process_coverages_x = ProcessCoverage.joins(group_remit: { agreement: { emp_agreements: {employee: :emp_approver} } }).where( emp_approver: { approver_id: current_user.userable_id }, emp_agreements: { active: true })
-      @process_coverages_x = ProcessCoverage.joins(group_remit: { agreement: { emp_agreements: {employee: :emp_approver} } }).where(approver: current_user.userable_id)
+      # @process_coverages_x = ProcessCoverage.joins(group_remit: { agreement: { emp_agreements: {employee: :emp_approver} } }).where(approver: current_user.userable_id)
+      @process_coverages_x = ProcessCoverage.joins(group_remit: :agreement).where(approver: current_user.userable_id)
       # @process_coverages_x = ProcessCoverage.all
       @for_process_coverages = @process_coverages_x.where(status: :for_process)
       @approved_process_coverages = @process_coverages_x.where(status: :approved)
       # @pending_process_coverages = ProcessCoverage.where(status: :pending)
       @reprocess_coverages = @process_coverages_x.where(status: :reprocess)
+      @reassess_coverages = ProcessCoverage.where(status: :reassess)
       @denied_process_coverages = @process_coverages_x.where(status: :denied)
 
       if params[:search].present?
@@ -37,9 +47,16 @@ class ProcessCoveragesController < ApplicationController
         @process_coverages = @process_coverages_x
       end
 
+      if params[:emp_id].present?
+        # raise 'errors'
+        date_from = params[:date_from]
+        date_to = params[:date_to]
+        @process_coverages = @process_coverages_x.where(processor_id: params[:emp_id], created_at: date_from..date_to)
+      end
+
     elsif current_user.analyst?
       # @process_coverages_x = ProcessCoverage.joins(group_remit: { agreement: :emp_agreements }).where( emp_agreements: { employee_id: current_user.userable_id, active: true })
-      @process_coverages_x = ProcessCoverage.joins(group_remit: { agreement: :emp_agreements }).where(processor: current_user.userable_id)
+      @process_coverages_x = ProcessCoverage.joins(group_remit: :agreement).where(processor: current_user.userable_id)
       
       if params[:search].present?
         @process_coverages = @process_coverages_x.joins("INNER JOIN cooperatives ON cooperatives.id = agreements.cooperative_id").where("group_remits.name LIKE ? OR group_remits.description LIKE ? OR agreements.moa_no LIKE ? OR cooperatives.name LIKE ?", "%#{params[:search]}%", "%#{params[:search]}%", "%#{params[:search]}%", "%#{params[:search]}%")
@@ -162,6 +179,25 @@ class ProcessCoveragesController < ApplicationController
           ProcessCoverage.joins(group_remit: { agreement: { emp_agreements: {employee: :emp_approver} } }).where( emp_approver: { approver_id: current_user.userable_id }, emp_agreements: { active: true}).where(status: :reprocess, created_at: start_date..end_date)
         elsif current_user.senior_officer?
           ProcessCoverage.where(status: :reprocess, created_at: start_date..end_date)
+        end
+
+      when "Reassess" 
+        if params[:date_type] == "yearly"
+          start_date = @current_date.beginning_of_year
+          end_date = @current_date.end_of_year
+          
+        elsif params[:date_type] == "monthly"
+          start_date = @current_date.beginning_of_month
+          end_date = @current_date.end_of_month
+        elsif params[:date_type] == "weekly"
+          start_date = @current_date.beginning_of_week
+          end_date = @current_date.end_of_week
+        end
+        # ProcessCoverage.where(status: :for_reconsider, created_at: start_date..end_date)
+        if current_user.head?
+          ProcessCoverage.joins(group_remit: { agreement: { emp_agreements: {employee: :emp_approver} } }).where( emp_approver: { approver_id: current_user.userable_id }, emp_agreements: { active: true}).where(status: :reassess, created_at: start_date..end_date)
+        elsif current_user.senior_officer?
+          ProcessCoverage.where(status: :reassess, created_at: start_date..end_date)
         end
 
       when "Denied" 
@@ -352,6 +388,15 @@ class ProcessCoveragesController < ApplicationController
     end
   end
 
+  def reassess
+    @process_coverage = ProcessCoverage.find_by(id: params[:process_coverage_id])
+    respond_to do |format|
+      if @process_coverage.update_attribute(:status, "reassess")
+        format.html { redirect_to process_coverage_path(@process_coverage), notice: "Process Coverage For Reassessment!" }
+      end
+    end
+  end
+
   def reprocess
     @process_coverage = ProcessCoverage.find_by(id: params[:process_coverage_id])
 
@@ -363,7 +408,8 @@ class ProcessCoveragesController < ApplicationController
         end
       elsif current_user.head? || current_user.senior_officer?
         # if @process_coverage.update_attribute(:status, "for_review")
-        if @process_coverage.update_attribute(:status, "reprocess_approval")
+        if @process_coverage.update_attribute(:status, "reprocess_approved")
+          @process_coverage.update(reprocess: true)
           format.html { redirect_to process_coverage_path(@process_coverage), notice: "Reprocess Coverage approved!" }
         end
       else

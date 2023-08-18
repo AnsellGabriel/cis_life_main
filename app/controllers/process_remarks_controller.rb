@@ -1,4 +1,5 @@
 class ProcessRemarksController < ApplicationController
+  before_action :authenticate_user!
   before_action :set_process_remark, only: %i[ show edit update destroy ]
 
   # GET /process_remarks
@@ -16,6 +17,7 @@ class ProcessRemarksController < ApplicationController
     @title = case params[:pro_status]
     when "Approve" then "Process Approval"
     when "Deny" then "Process Denial"
+    when "Reassess" then "Process for Reassessment"
     when "Reprocess" then "Request for Reprocess"
     else
       "Add Remark"
@@ -92,6 +94,8 @@ class ProcessRemarksController < ApplicationController
           format.html { redirect_to process_coverage_approve_path(process_coverage_id: params[:process_remark][:process_coverage_id], total_life_cov: params[:process_remark][:total_life_cov], max_amount: params[:process_remark][:max_amount], total_net_prem: params[:process_remark][:total_net_prem])}
         elsif params[:process_remark][:process_status] == "Deny"
           format.html { redirect_to process_coverage_deny_path(process_coverage_id: params[:process_remark][:process_coverage_id])}
+        elsif params[:process_remark][:process_status] == "Reassess"
+          format.html { redirect_to process_coverage_reassess_path(process_coverage_id: params[:process_remark][:process_coverage_id])}
         elsif params[:process_remark][:process_status] == "Reprocess"
           format.html { redirect_to process_coverage_reprocess_path(process_coverage_id: params[:process_remark][:process_coverage_id])}
         else
