@@ -4,7 +4,7 @@ class ProcessCoveragesController < ApplicationController
 
   # GET /process_coverages
   def index
-
+    # raise 'errors'
     if current_user.rank == "senior_officer"
       @process_coverages_x = ProcessCoverage.all
       @process_coverages_x = ProcessCoverage.all
@@ -19,6 +19,13 @@ class ProcessCoveragesController < ApplicationController
         @process_coverages = @process_coverages_x.joins(group_remit: {agreement: :cooperative}).where("group_remits.name LIKE ? OR group_remits.description LIKE ? OR agreements.moa_no LIKE ? OR cooperatives.name LIKE ?", "%#{params[:search]}%", "%#{params[:search]}%", "%#{params[:search]}%", "%#{params[:search]}%")
       else
         @process_coverages = @process_coverages_x
+      end
+
+      if params[:emp_id].present?
+        # raise 'errors'
+        date_from = params[:date_from]
+        date_to = params[:date_to]
+        @process_coverages = @process_coverages_x.where(processor_id: params[:emp_id], status: :for_process, created_at: date_from..date_to)
       end
       
     elsif current_user.rank == "head" 
@@ -38,6 +45,13 @@ class ProcessCoveragesController < ApplicationController
         @process_coverages = @process_coverages_x.joins(group_remit: {agreement: :cooperative}).where("group_remits.name LIKE ? OR group_remits.description LIKE ? OR agreements.moa_no LIKE ? OR cooperatives.name LIKE ?", "%#{params[:search]}%", "%#{params[:search]}%", "%#{params[:search]}%", "%#{params[:search]}%")
       else
         @process_coverages = @process_coverages_x
+      end
+
+      if params[:emp_id].present?
+        # raise 'errors'
+        date_from = params[:date_from]
+        date_to = params[:date_to]
+        @process_coverages = @process_coverages_x.where(processor_id: params[:emp_id], created_at: date_from..date_to)
       end
 
     elsif current_user.analyst?

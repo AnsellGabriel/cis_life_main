@@ -9,6 +9,7 @@ class ProcessCoverage < ApplicationRecord
   # audited
   # has_associated_audits
 
+  
   enum status: {
     for_process: 0,
     pending: 1,
@@ -22,6 +23,7 @@ class ProcessCoverage < ApplicationRecord
     reconsiderations_processed: 8,
     reassess: 10 # Reaassessment
   }
+  FILTERED_STATUSES = statuses.select { |key, value| [0, 1].include?(value) }.keys
 
   enum und_route: {
     for_analyst_review: 0,
