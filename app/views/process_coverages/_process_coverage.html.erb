@@ -250,7 +250,7 @@
                   <% end %>
                 </td>
                 <td>
-                  <%= link_to batch.coop_member.member, batch.coop_member, class: "link-primary", data: { turbo_frame: "modal-xl" } %> <br> 
+                  <%= link_to batch.coop_member.member, show_insurance_coop_member_path(batch.coop_member), class: "link-primary", data: { turbo_frame: "modal-xl" } %> <br> 
                   <%= content_tag :small, "Age: #{mem_age}" %> <br>
                   <%= content_tag :small, mem_bday.nil? ? "No Birthday" : "Birthday: #{mem_bday.strftime('%b-%d-%Y')}", class: "text-secondary" %> <br>
                   <%= batch_status(batch.status) %>  <br>
