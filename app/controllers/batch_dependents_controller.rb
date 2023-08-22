@@ -2,7 +2,7 @@ class BatchDependentsController < InheritedResources::Base
   before_action :authenticate_user!
   before_action :check_userable_type
   before_action :set_group_remit_batch, only: %i[new create]
-  before_action :set_dependent, only: %i[show edit update destroy]
+  before_action :set_dependent, only: %i[show edit update destroy health_dec]
 
   def show
     @dependent = @batch_dependent.member_dependent
@@ -53,6 +53,26 @@ class BatchDependentsController < InheritedResources::Base
     if @batch_dependent.destroy!
       redirect_to group_remit_batch_path(@group_remit, @batch), alert: "Dependent removed" 
     end
+  end
+
+  def health_dec
+    @dependent = @batch_dependent.member_dependent
+    @dependent_health_dec = @batch_dependent.dependent_health_decs
+    @group_remit = @batch_dependent.batch.group_remits.find_by(type: "Remittance")
+    @questionaires = DependentHealthDec.where(batch_dependent_id: @batch_dependent.id).where(answerable_type: "HealthDec")
+    @subquestions = DependentHealthDec.where(batch_dependent_id: @batch_dependent.id).where(answerable_type: "HealthDecSubquestion")
+
+    @for_und = params[:for_und]
+    # @md = params[:md]
+
+    # # Medical Director Remarks
+    # @batch_remark = @batch.batch_remarks.build
+    # @batch_status = "test"
+    # @batch_status = "MD"
+    # @rem_status = :md_reco
+    # # @process_coverage = @batch.group_remit.process_coverage
+    # @process_coverage = @group_remit.process_coverage
+
   end
 
   private

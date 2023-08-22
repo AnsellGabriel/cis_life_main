@@ -1,59 +1,66 @@
-<%= render 'remote_modal', title: @title do %>
+<%= turbo_frame_tag 'modal-xl' do %>
+  <div class="modal-header">
+      <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+  </div>
 
-  <div class="row d-flex fustify-content-center" >
-
-    <div class="col-md-8" style="margin: auto;">
-      <div class="card mb-3">
-        <div class="card-body">
-          <div class="row">
-            <div class="col-sm-6">
-              <h6 class="mb-0">Principal Policy Owner:</h6>
-            </div>
-            <div class="col-sm-6 text-secondary">
-              <%= "#{@batch.coop_member.member.last_name}, #{@batch.coop_member.member.first_name} #{@batch.coop_member.member.middle_name}" %>
-            </div>
-          </div>
-          <div class="row">
-            <div class="col-sm-6">
-              <h6 class="mb-0">Civil Status:</h6>
-            </div>
-            <div class="col-sm-6 text-secondary">
-              <%= "#{@batch.coop_member.member.civil_status}" %>
-            </div>
-          </div>
-          <br>
-
-          <%= content_tag :h6, 'Dependent(s): ', class: "mb-0" %>
-          <div class="row">
-            <div class="col-sm-4 text-dark">
-              <%= content_tag :span, "Name (relationship)", class: "lead" %>
-            </div>
-            <div class="col-sm-4 text-dark">
-              <%= content_tag :span, "Birthday (age)", class: "lead" %>
-            </div>
-            <div class="col-sm-4 text-dark">
-              <%= content_tag :span, "Premium", class: "lead" %>
-            </div>
-          </div>
-          <hr>
-          <% @dependents.each do |dependent| %>
+  <div class="modal-body">
+    <div class="row d-flex fustify-content-center mt-3" >
+      <div class="col-md-8" style="margin: auto;">
+        <div class="card mb-3">
+          <div class="card-body">
             <div class="row">
-              <div class="col-sm-4 text-secondary">
-                <%= "#{dependent.member_dependent.last_name}, #{dependent.member_dependent.first_name} #{dependent.member_dependent.middle_name} (#{dependent.member_dependent.relationship})" %>
+              <div class="col-sm-6">
+                <h6 class="mb-0">Principal Policy Owner:</h6>
               </div>
-              <div class="col-sm-4 text-secondary">
-                <% age = ((dependent.batch.group_remits.find_by(type: "Remittance").effectivity_date - dependent.member_dependent.birth_date) / 365).round %>
-                <%= "#{dependent.member_dependent.birth_date.strftime('%m/%d/%Y')} (#{age} yrs. old)" %>
+              <div class="col-sm-6 text-secondary">
+                <%= "#{@batch.coop_member.member.last_name}, #{@batch.coop_member.member.first_name} #{@batch.coop_member.member.middle_name}" %>
               </div>
-              <div class="col-sm-4 text-secondary">
-                <%= number_to_currency(dependent.premium, unit: "₱", precision: 2) %>
+            </div>
+            <div class="row">
+              <div class="col-sm-6">
+                <h6 class="mb-0">Civil Status:</h6>
+              </div>
+              <div class="col-sm-6 text-secondary">
+                <%= "#{@batch.coop_member.member.civil_status}" %>
+              </div>
+            </div>
+            <br>
+
+            <%= content_tag :h6, 'Dependent(s): ', class: "mb-0" %>
+            <div class="row">
+              <div class="col-sm-3 text-dark">
+                <%= content_tag :span, "Name (relationship)", class: "lead" %>
+              </div>
+              <div class="col-sm-3 text-dark">
+                <%= content_tag :span, "Birthday (age)", class: "lead" %>
+              </div>
+              <div class="col-sm-3 text-dark">
+                <%= content_tag :span, "Premium", class: "lead" %>
               </div>
             </div>
             <hr>
-          <% end %>
+            <% @dependents.each do |dependent| %>
+              <div class="row">
+                <div class="col-sm-3 text-secondary">
+                  <%= "#{dependent.member_dependent.last_name}, #{dependent.member_dependent.first_name} #{dependent.member_dependent.middle_name} (#{dependent.member_dependent.relationship})" %>
+                </div>
+                <div class="col-sm-3 text-secondary">
+                  <% age = ((dependent.batch.group_remits.find_by(type: "Remittance").effectivity_date - dependent.member_dependent.birth_date) / 365).round %>
+                  <%= "#{dependent.member_dependent.birth_date.strftime('%m/%d/%Y')} (#{age} yrs. old)" %>
+                </div>
+                <div class="col-sm-3 text-secondary">
+                  <%= number_to_currency(dependent.premium, unit: "₱", precision: 2) %>
+                </div>
+                <div class="col-sm-3 text-secondary">
+                  <%= link_to "Health Dec", health_dec_group_remit_batch_dependent_path(@group_remit, @batch, dependent, for_und: true) %>
+                </div>
+              </div>
+              <hr>
+            <% end %>
 
-          <%# if batch_dependent.is_dependent? %>
-          <%# end %>
+            <%# if batch_dependent.is_dependent? %>
+            <%# end %>
+          </div>
         </div>
       </div>
     </div>

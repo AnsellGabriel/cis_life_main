@@ -16,8 +16,9 @@ class BatchHealthDecsController < InheritedResources::Base
   end
 
   def create    
-    result = BatchHealthDec.process_health_declaration(@batch, params[:question])
-
+    health_dec = HealthDeclarationService.new(@batch, params[:question])
+    result = health_dec.process_health_declaration
+    
     if result == true
       redirect_to health_dec_group_remit_batch_path(@group_remit, @batch), notice: "Health declaration saved!"
     elsif result.is_a?(String)       

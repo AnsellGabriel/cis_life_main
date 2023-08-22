@@ -88,8 +88,10 @@ Rails.application.routes.draw do
       end
       # get :approve_selected, on: :collection
       # get :approve_all, on: :collection
-      resources :batch_health_decs, as: 'health_declarations'
+      resources :batch_health_decs, as: 'health_declarations' 
+      resources :dependent_health_decs, as: 'dep_health_declarations'
       resources :batch_dependents, as: 'dependents' do
+        get :health_dec, on: :member
         collection do
           get :show_all
         end

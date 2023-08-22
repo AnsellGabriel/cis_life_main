@@ -15,6 +15,9 @@
 <!-- Member's count Modal -->
 <%= render "member_count_modal" %>
 
+<div class="">
+  <%= link_to 'GYRT', coop_agreement_path(@agreement), class: small_btn('secondary') %>
+</div>
 
 <div class="<%= flex_justify_align('', 'center') %> gap-3">
   <%= content_tag :span, gr_presenter.status_text, class: gr_presenter.status_badge %>

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_08_18_032110) do
+ActiveRecord::Schema[7.0].define(version: 2023_08_22_015519) do
   create_table "active_admin_comments", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.string "namespace"
     t.text "body"
@@ -149,6 +149,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_08_18_032110) do
     t.decimal "coop_sf_amount", precision: 10, scale: 2
     t.decimal "agent_sf_amount", precision: 10, scale: 2
     t.bigint "agreement_benefit_id", null: false
+    t.boolean "valid_health_dec"
     t.index ["agreement_benefit_id"], name: "index_batch_dependents_on_agreement_benefit_id"
     t.index ["batch_id"], name: "index_batch_dependents_on_batch_id"
     t.index ["member_dependent_id"], name: "index_batch_dependents_on_member_dependent_id"
@@ -353,6 +354,17 @@ ActiveRecord::Schema[7.0].define(version: 2023_08_18_032110) do
     t.text "description"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+  end
+
+  create_table "dependent_health_decs", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+    t.bigint "batch_dependent_id", null: false
+    t.text "answer"
+    t.string "answerable_type", null: false
+    t.bigint "answerable_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["answerable_type", "answerable_id"], name: "index_dependent_health_decs_on_answerable"
+    t.index ["batch_dependent_id"], name: "index_dependent_health_decs_on_batch_dependent_id"
   end
 
   create_table "emp_agreements", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
@@ -761,6 +773,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_08_18_032110) do
   add_foreign_key "denied_dependents", "group_remits"
   add_foreign_key "denied_enrollees", "cooperatives"
   add_foreign_key "denied_members", "group_remits"
+  add_foreign_key "dependent_health_decs", "batch_dependents"
   add_foreign_key "emp_approvers", "employees", column: "approver_id"
   add_foreign_key "employees", "departments"
   add_foreign_key "group_import_trackers", "group_remits"
