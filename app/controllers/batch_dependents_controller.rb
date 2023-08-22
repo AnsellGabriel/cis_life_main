@@ -26,7 +26,7 @@ class BatchDependentsController < InheritedResources::Base
     agreement = group_remit.agreement
 
     begin
-      insured_type = initialize_dependent_and_insured_type
+      insured_type = initialize_dependent_and_insured_type 
     rescue NoMethodError
       return redirect_to group_remit_batch_path(@group_remit, @batch), alert: 'Please choose a dependent'
     end

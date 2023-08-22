@@ -1,0 +1,2 @@
+module LoanInsuranceHelper
+end

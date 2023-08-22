@@ -1,11 +1,13 @@
 <%= turbo_stream_from @cooperative, "batches" %>
-
+<% agreement_presenter = AgreementPresenter.new(@agreement) %>
 <% gr_presenter = GroupRemitPresenter.new(@group_remit)%>
 <% plan_acronym = @agreement.plan.acronym %>
 <% short_term_insurance = plan_acronym == 'PMFC' %>
 
 <!-- Benefits & Coverages Modal -->
-<%= render "coverages_modal" %>
+<% if ['GYRT'].include?(agreement_presenter.plan_acronym) %>
+  <%= render "coverages_modal" %>
+<% end %>
 
 <!-- Batch Import Modal -->
 <%= render "batch_import_modal" %>
@@ -13,94 +15,98 @@
 <!-- Member's count Modal -->
 <%= render "member_count_modal" %>
 
-<div class="mb-3 gap-1 <%= flex_justify_align('', 'center') %>">
-  <%= link_to 'Back', coop_agreement_path(@agreement), class: small_btn('secondary') %>
 
-  <% if short_term_insurance && gr_presenter.is_batch_remit? && gr_presenter.is_pending_or_renewal? %>
-    <%= button_to "Delete", group_remit_path(@group_remit), 
-      method: :delete,
-      data: { turbo_confirm: 'Delete group remit?'},
-      class: small_btn('danger') 
-    %>
-  <% end %>
-
-  <% if gr_presenter.is_pending_or_renewal? && gr_presenter.is_remittance? %>
-    <% unless gr_presenter.is_for_renewal? %>
-      <%= button_to "Delete", group_remit_path(@group_remit), 
-        method: :delete,
-        data: { turbo_confirm: 'Delete group remit?'},
-        class: small_btn('danger') 
-      %>
-    <% end %>
-    <div class="d-flex gap-1">
-      <%= button_to 'Submit Batch', submit_group_remit_path(@group_remit), 
-        method: :get,
-        class: small_btn('outline-warning'), 
-        data: {turbo_confirm: 'Submit group remit?' } 
-      %>
-       
-      <%  if @group_remit.denied_members.present? %>
-        <%= link_to 'Denied members', group_remit_denied_members_path(@group_remit), class: small_btn('outline-secondary') %>
-      <% end %>
-
-    </div>
-  <% elsif gr_presenter.is_expired? && gr_presenter.is_batch_remit? %>
-    <%= button_to 'Renew', renewal_group_remit_path(@group_remit),
-        method: :get, 
-        class: small_btn('warning'), 
-        data: {turbo_confirm: 'Renew group remit?' } 
-      %>
-  <% elsif !gr_presenter.is_for_renewal? && gr_presenter.is_batch_remit? && gr_presenter.is_none_anniversary? && @group_remit.effectivity_date == Date.today.beginning_of_month %>
-    <%= button_to "Add Members", group_remits_path, 
-      method: :post, 
-      params: { 
-        agreement_id: @agreement.id,
-        anniversary_id: nil,
-        anniv_type: 'none',
-        type: 'Remittance',
-        batch_remit_id: @group_remit.id,
-        group_remit: {
-          terms: @group_remit.terms
-        }
-      }, 
-      class: small_btn('warning'), 
-      data: { turbo: false } 
-    %>
-  <% elsif !gr_presenter.is_for_renewal? && gr_presenter.is_batch_remit? && gr_presenter.is_single_anniversary? %>
-    <%= button_to "Add Members", group_remits_path, 
-      method: :post, 
-      params: { 
-        agreement_id: @agreement.id, 
-        anniversary_id: @agreement.anniversaries[0].id,
-        batch_remit_id: @group_remit.id,
-        anniv_type: 'single',
-        type: 'Remittance'
-      }, 
-      class: small_btn('warning'), 
-      data: { turbo: false } 
-    %>
-    <% elsif !gr_presenter.is_for_renewal? && gr_presenter.is_batch_remit? && gr_presenter.is_multiple_anniversary? %>
-    <%= button_to "Add Members", group_remits_path, 
-      method: :post, 
-      params: { 
-        agreement_id: @agreement.id, 
-        anniversary_id: @group_remit.anniversary_id,
-        batch_remit_id: @group_remit.id,
-        anniv_type: 'multiple',
-        type: 'Remittance'
-      }, 
-      class: small_btn('warning'), 
-      data: { turbo: false } 
-    %>
-  <% end %>
-
-</div>
-<div class="<%= flex_justify_align('', 'center') %> gap-1">
+<div class="<%= flex_justify_align('', 'center') %> gap-3">
   <%= content_tag :span, gr_presenter.status_text, class: gr_presenter.status_badge %>
-  <%= content_tag :h3, class: 'mb-0' do %>
+  <%= content_tag :h3, class: 'mb-0 text-primary' do %>
       <%= @group_remit %>    
   <% end %>
+
+  <div class="mb-0 gap-1 <%= flex_justify_align('', 'center') %>">
+    <% if gr_presenter.is_pending_or_renewal? && gr_presenter.is_remittance? %>
+      
+      <div class="d-flex gap-1">
+        <%= button_to 'Submit', submit_group_remit_path(@group_remit), 
+          method: :get,
+          class: small_btn('success'), 
+          data: {turbo_confirm: 'Submit group remit?' } 
+        %>
+        
+        <%  if @group_remit.denied_members.present? %>
+          <%= link_to 'Denied members', group_remit_denied_members_path(@group_remit), class: small_btn('outline-secondary') %>
+        <% end %>
+
+      </div>
+
+      <% unless gr_presenter.is_for_renewal? %>
+        <%= button_to "Delete", group_remit_path(@group_remit), 
+          method: :delete,
+          data: { turbo_confirm: 'Delete group remit?'},
+          class: small_btn('danger') 
+        %>
+      <% end %>
+
+      <% if short_term_insurance && gr_presenter.is_batch_remit? && gr_presenter.is_pending_or_renewal? %>
+        <%= button_to "Delete", group_remit_path(@group_remit), 
+          method: :delete,
+          data: { turbo_confirm: 'Delete group remit?'},
+          class: small_btn('danger') 
+        %>
+      <% end %>
+
+    <% elsif gr_presenter.is_expired? && gr_presenter.is_batch_remit? %>
+      <%= button_to 'Renew', renewal_group_remit_path(@group_remit),
+          method: :get, 
+          class: small_btn('warning'), 
+          data: {turbo_confirm: 'Renew group remit?' } 
+        %>
+    <% elsif !gr_presenter.is_for_renewal? && gr_presenter.is_batch_remit? && gr_presenter.is_none_anniversary? && @group_remit.effectivity_date == Date.today.beginning_of_month %>
+      <%= button_to "Add Members", group_remits_path, 
+        method: :post, 
+        params: { 
+          agreement_id: @agreement.id,
+          anniversary_id: nil,
+          anniv_type: 'none',
+          type: 'Remittance',
+          batch_remit_id: @group_remit.id,
+          group_remit: {
+            terms: @group_remit.terms
+          }
+        }, 
+        class: small_btn('outline-primary'), 
+        data: { turbo: false } 
+      %>
+    <% elsif !gr_presenter.is_for_renewal? && gr_presenter.is_batch_remit? && gr_presenter.is_single_anniversary? %>
+      <%= button_to "Add Members", group_remits_path, 
+        method: :post, 
+        params: { 
+          agreement_id: @agreement.id, 
+          anniversary_id: @agreement.anniversaries[0].id,
+          batch_remit_id: @group_remit.id,
+          anniv_type: 'single',
+          type: 'Remittance'
+        }, 
+        class: small_btn('outline-primary'), 
+        data: { turbo: false } 
+      %>
+      <% elsif !gr_presenter.is_for_renewal? && gr_presenter.is_batch_remit? && gr_presenter.is_multiple_anniversary? %>
+      <%= button_to "Add Members", group_remits_path, 
+        method: :post, 
+        params: { 
+          agreement_id: @agreement.id, 
+          anniversary_id: @group_remit.anniversary_id,
+          batch_remit_id: @group_remit.id,
+          anniv_type: 'multiple',
+          type: 'Remittance'
+        }, 
+        class: small_btn('outline-primary'), 
+        data: { turbo: false } 
+      %>
+    <% end %>
+
+  </div>
 </div>
+
 <div class="<%= flex_justify_align('between', 'center') %> mb-3 gap-3">
   <div class="d-flex flex-column " style="height: 260px; width: 100%">
 
@@ -177,16 +183,16 @@
   <div class="card" style="height: 260px; width: 100%">
     <div class="card-body <%= flex_justify_align('around', '', true) %> ">
       <div class="<%= flex_justify_align('center') %>">
-        <%= content_tag :h6, "#{@agreement.plan.name}"%>
+        <%= content_tag :h6, "#{@agreement.plan.name}", class: 'text-primary' %>
       </div>
       <%= content_tag :button, "Benefits & Coverages", 
-        class: small_btn('outline-success'), 
+        class: small_btn('outline-primary'), 
         data: {bs_toggle: "modal",
           bs_target: "#benefitsModal"
         }
       %>
       <%= content_tag :button, "Insured Count", 
-        class: small_btn('outline-success'), 
+        class: small_btn('outline-primary'), 
         data: {bs_toggle: "modal",
           bs_target: "#insuredType"
         }

@@ -2,7 +2,7 @@ class Batch < ApplicationRecord
   include Calculate
   attr_accessor :rank
 
-  validates_presence_of :effectivity_date, :expiry_date, :premium, :coop_sf_amount, :age, :agent_sf_amount, :coop_member_id, :agreement_benefit_id
+  validates_presence_of :effectivity_date, :expiry_date, :premium, :coop_sf_amount, :age, :agent_sf_amount, :coop_member_id
 
   # batch.status
   enum status: {
@@ -31,7 +31,7 @@ class Batch < ApplicationRecord
 
   belongs_to :coop_member
   belongs_to :member, optional: true
-  belongs_to :agreement_benefit
+  belongs_to :agreement_benefit, optional: true
 
   has_many :batch_group_remits
   has_many :group_remits, through: :batch_group_remits
@@ -42,7 +42,6 @@ class Batch < ApplicationRecord
   has_many :member_dependents, through: :batch_beneficiaries
   has_many :batch_remarks, dependent: :destroy
   has_many :process_claims, as: :claimable, dependent: :destroy
-
 
   def update_valid_health_dec
     self.update_attribute(:valid_health_dec, true)

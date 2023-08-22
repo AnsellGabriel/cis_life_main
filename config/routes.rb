@@ -115,8 +115,10 @@ Rails.application.routes.draw do
     resources :details
     resources :batches
     resources :batch_remits
+    resources :group_remits
   end
 
+  # get 'loan_insurance', to: 'loan_insurance#index'
   get 'insurance/accept', as: 'accept_insurance'
   # get 'insurance/reject', as: 'reject_insurance'
   get 'insurance/terminate', as: 'terminate_insurance'

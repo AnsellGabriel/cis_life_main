@@ -7,7 +7,7 @@ class ApplicationController < ActionController::Base
   def root
     case current_user.userable_type
     when "Agent" then redirect_to agents_path
-    when "CoopUser" then redirect_to coop_members_path	
+    when "CoopUser" then redirect_to coop_dashboard_path	
     when "Employee"
       if current_user.medical_director?
         redirect_to med_directors_home_path

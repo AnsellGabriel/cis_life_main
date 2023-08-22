@@ -1,0 +1,42 @@
+<div class="mb-2">
+  <%= link_to 'Dashboard', coop_dashboard_path, class: "#{small_btn('secondary')}" %>
+</div>
+
+<div class="card col-md-8 mb-3">
+  <div class="card-body <%= flex_justify_align('between') %>">
+    <div class="">
+      <h6 class="card-title mb-1 text-primary <%= flex_justify_align('between', 'center') %>">
+        <%= 'Loan Payment Protection Insurance' %>
+      </h6>
+      <div class="small text-muted <%= flex_justify_align('', '', true) %>">
+        <%= content_tag :span, "Required Minimum Participants: #{@agreement.minimum_participation}" %>
+        <%= content_tag :span, "Current Approved Participants: #{@agreement.group_remits.where(type: 'BatchRemit', status: :active).joins(:batches).size
+    }" %>
+      </div>
+    </div>
+    <%= turbo_frame_tag "new_batch" do %>
+      <%= link_to 'New Batch', new_loan_insurance_group_remit_path, class: small_btn('primary'), data: { turbo_frame: "new_batch" } %>
+    <% end %>
+  </div>
+</div>
+
+<table class="table table-hover">
+    <thead>
+      <tr class="table-dark">
+
+        <th class="col-1" scope="col">ID</th>
+        <th class="col-5" scope="col">Name</th>
+        <th class="col-3" scope="col">Total Premium</th>
+        <th class="col-3" scope="col">Actions</th>
+
+      </tr>
+    </thead>
+
+    <tbody id="batches_body">
+      <% if @group_remits.exists? %>
+        <%= render @group_remits %>
+      <% else %>
+        <td class="text-center">NO RECORD</td>
+      <% end %>
+    </tbody>
+  </table>

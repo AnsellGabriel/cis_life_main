@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_08_11_025944) do
+ActiveRecord::Schema[7.0].define(version: 2023_08_18_032110) do
   create_table "active_admin_comments", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.string "namespace"
     t.text "body"
@@ -205,7 +205,6 @@ ActiveRecord::Schema[7.0].define(version: 2023_08_11_025944) do
     t.boolean "below_nel", default: false
     t.integer "duration"
     t.integer "residency"
-    t.string "type"
     t.date "previous_effectivity_date"
     t.date "previous_expiry_date"
     t.index ["agreement_benefit_id"], name: "index_batches_on_agreement_benefit_id"
@@ -475,6 +474,35 @@ ActiveRecord::Schema[7.0].define(version: 2023_08_11_025944) do
     t.datetime "updated_at", null: false
   end
 
+  create_table "loan_insurance_batches", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+    t.bigint "coop_member_id", null: false
+    t.bigint "group_remit_id", null: false
+    t.integer "age"
+    t.date "effectivity_date"
+    t.date "expiry_date"
+    t.date "date_release"
+    t.date "date_mature"
+    t.integer "terms"
+    t.decimal "unused", precision: 10, scale: 2
+    t.decimal "premium", precision: 10, scale: 2
+    t.decimal "premium_due", precision: 10, scale: 2
+    t.decimal "coop_sf_amount", precision: 10, scale: 2
+    t.decimal "agent_sf_amount", precision: 10, scale: 2
+    t.boolean "valid_health_dec"
+    t.decimal "loan_amount", precision: 10, scale: 2
+    t.bigint "loan_insurance_rate_id", null: false
+    t.boolean "reinsurance"
+    t.bigint "loan_insurance_retention_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.bigint "loan_insurance_loan_id", null: false
+    t.index ["coop_member_id"], name: "index_loan_insurance_batches_on_coop_member_id"
+    t.index ["group_remit_id"], name: "index_loan_insurance_batches_on_group_remit_id"
+    t.index ["loan_insurance_loan_id"], name: "index_loan_insurance_batches_on_loan_insurance_loan_id"
+    t.index ["loan_insurance_rate_id"], name: "index_loan_insurance_batches_on_loan_insurance_rate_id"
+    t.index ["loan_insurance_retention_id"], name: "index_loan_insurance_batches_on_loan_insurance_retention_id"
+  end
+
   create_table "loan_insurance_details", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.bigint "batch_id", null: false
     t.decimal "unuse", precision: 10, scale: 2
@@ -510,11 +538,13 @@ ActiveRecord::Schema[7.0].define(version: 2023_08_11_025944) do
   create_table "loan_insurance_rates", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.integer "min_age"
     t.integer "max_age"
-    t.decimal "monthly_rate", precision: 10
-    t.decimal "annual_rate", precision: 10
-    t.decimal "daily_rate", precision: 10
+    t.decimal "monthly_rate", precision: 5, scale: 2
+    t.decimal "annual_rate", precision: 5, scale: 2
+    t.decimal "daily_rate", precision: 5, scale: 2
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.bigint "agreement_id", null: false
+    t.index ["agreement_id"], name: "index_loan_insurance_rates_on_agreement_id"
   end
 
   create_table "loan_insurance_retentions", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
@@ -736,11 +766,17 @@ ActiveRecord::Schema[7.0].define(version: 2023_08_11_025944) do
   add_foreign_key "group_import_trackers", "group_remits"
   add_foreign_key "group_remits", "agreements"
   add_foreign_key "health_dec_subquestions", "health_decs"
+  add_foreign_key "loan_insurance_batches", "coop_members"
+  add_foreign_key "loan_insurance_batches", "group_remits"
+  add_foreign_key "loan_insurance_batches", "loan_insurance_loans"
+  add_foreign_key "loan_insurance_batches", "loan_insurance_rates"
+  add_foreign_key "loan_insurance_batches", "loan_insurance_retentions"
   add_foreign_key "loan_insurance_details", "batches"
   add_foreign_key "loan_insurance_details", "loan_insurance_loans"
   add_foreign_key "loan_insurance_details", "loan_insurance_rates"
   add_foreign_key "loan_insurance_details", "loan_insurance_retentions"
   add_foreign_key "loan_insurance_loans", "cooperatives"
+  add_foreign_key "loan_insurance_rates", "agreements"
   add_foreign_key "member_dependents", "members"
   add_foreign_key "member_import_trackers", "coop_users"
   add_foreign_key "payments", "group_remits"
