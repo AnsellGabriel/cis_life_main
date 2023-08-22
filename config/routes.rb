@@ -2,6 +2,14 @@
 require 'sidekiq/web'
 
 Rails.application.routes.draw do 
+  get 'claim_remarks/new'
+  get 'claim_remarks/edit'
+  get 'claim_remarks/destroy'
+  get 'claim_remark/new'
+  get 'claim_remark/edit'
+  get 'claim_coverages/new'
+  get 'claim_coverages/edit'
+  resources :causes
   resources :emp_approvers
   get 'med_directors/home'
   get 'med_director/index'
@@ -13,7 +21,7 @@ Rails.application.routes.draw do
   end
   # resources :denied_dependents
  
-  resources :anniversaries, :agent_groups, :departments, :agents, :coop_users, :employees, :plans, :product_benefits
+  resources :anniversaries, :agent_groups, :departments, :agents, :coop_users, :employees, :plans, :product_benefits, :claim_benefits, :claim_remarks
 
   resources :user do 
     get :approved, on: :member
@@ -122,7 +130,16 @@ Rails.application.routes.draw do
   #* Underwriting Module Routes
   resources :user_levels
   resources :authority_levels
-  resources :process_claims
+  resources :process_claims do
+    get :new_coop, to: 'process_claims#new_coop', on: :collection
+    post :create_coop, to: 'process_claims#create_coop', on: :collection
+    get :index_coop, to: 'process_claims#index_coop', on: :collection
+    get :index_show, on: :collection
+    get :show_coop, on: :member
+    get :claim_route, on: :member
+    get :claims_file, on: :member
+    get :claim_process, on: :member
+  end
   resources :underwriting_routes
   resources :batch_remarks do
     get :form_md, on: :member

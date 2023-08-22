@@ -1,0 +1,34 @@
+<div class="row">
+  <div class="col-md-6">
+    <%= render 'claims_detail' %>
+    <div class="card">
+        <h5 class="card-header">Claimant details</h5>
+      <div class="card-body">
+        <dl class="row">
+          <dt class="col-sm-4">Name</dt>
+          <dd class="col-sm-8"><%= @process_claim.claimant_name %></dd>
+          <dt class="col-sm-4">Relation</dt>
+          <dd class="col-sm-8"><%= @process_claim.relationship %></dd>
+          <dt class="col-sm-4">Contact</dt>
+          <dd class="col-sm-8"><%= @process_claim.claimant_contact_no %></dd>
+          <dt class="col-sm-4">Email</dt>
+          <dd class="col-sm-8"><%= @process_claim.claimant_email %></dd>
+        </dl>
+      </div>
+    </div>
+    </div>
+    
+  <div class="col-md-6">
+    <div class="text-end mb-3">
+    <%= link_to "Back", :back, class: 'btn btn-secondary btn-lg' %>
+    <%= link_to "Submit Claims", claim_route_process_claim_path(@process_claim, p: 1), class: "btn btn-success btn-lg" if @process_claim.file_claim? %>
+    <%= link_to "Cancel Submit", claim_route_process_claim_path(@process_claim, p: 0), class: "btn btn-warning btn-lg" if @process_claim.submitted? %>
+    <%= link_to "Claims Filed", claim_route_process_claim_path(@process_claim, p: 2), class: "btn btn-warning btn-lg" if @process_claim.submitted? %>
+    </div>
+    <div class="card">
+      <div class="card-body">
+        <%= render 'show_claim_track' %>
+      </div>
+    </div>
+  </div>
+</div>
