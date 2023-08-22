@@ -84,7 +84,7 @@ class MembersController < InheritedResources::Base
   private
 
     def member_params
-      params.require(:member).permit(:birth_place, :address, :sss_no, :tin_no, :civil_status, :legal_spouse, :height, :weight, :occupation, :employer, :work_address, :work_phone_number, :last_name, :first_name, :middle_name, :suffix, :email, :mobile_number, :birth_date, :gender, :geo_region_id, :geo_province:id, :geo_municipality_id, :geo_barangay_id,
+      params.require(:member).permit(:birth_place, :address, :sss_no, :tin_no, :civil_status, :legal_spouse, :height, :weight, :occupation, :employer, :work_address, :work_phone_number, :last_name, :first_name, :middle_name, :suffix, :email, :mobile_number, :birth_date, :gender, :geo_region_id, :geo_province_id, :geo_municipality_id, :geo_barangay_id,
         coop_members_attributes: [:id, :cooperative_id, :coop_branch_id, :membership_date, :transferred, :_destroy])
     end
 
