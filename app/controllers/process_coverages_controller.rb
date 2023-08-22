@@ -56,12 +56,19 @@ class ProcessCoveragesController < ApplicationController
 
     elsif current_user.analyst?
       # @process_coverages_x = ProcessCoverage.joins(group_remit: { agreement: :emp_agreements }).where( emp_agreements: { employee_id: current_user.userable_id, active: true })
-      @process_coverages_x = ProcessCoverage.joins(group_remit: :agreement).where(processor: current_user.userable_id)
+      @process_coverages_x = ProcessCoverage.joins(group_remit: {agreement: :plan}).where(processor: current_user.userable_id)
       
       if params[:search].present?
-        @process_coverages = @process_coverages_x.joins("INNER JOIN cooperatives ON cooperatives.id = agreements.cooperative_id").where("group_remits.name LIKE ? OR group_remits.description LIKE ? OR agreements.moa_no LIKE ? OR cooperatives.name LIKE ?", "%#{params[:search]}%", "%#{params[:search]}%", "%#{params[:search]}%", "%#{params[:search]}%")
+        @process_coverages = @process_coverages_x.joins("INNER JOIN cooperatives ON cooperatives.id = agreements.cooperative_id").where("group_remits.name LIKE ? OR group_remits.description LIKE ? OR agreements.moa_no LIKE ? OR cooperatives.name LIKE ? OR agreements.description LIKE ? OR plans.name LIKE ? OR plans.acronym LIKE ?", "%#{params[:search]}%", "%#{params[:search]}%", "%#{params[:search]}%", "%#{params[:search]}%", "%#{params[:search]}%", "%#{params[:search]}%", "%#{params[:search]}%")
       else
         @process_coverages = @process_coverages_x
+      end
+
+      if params[:emp_id].present?
+        # raise 'errors'
+        date_from = params[:date_from]
+        date_to = params[:date_to]
+        @process_coverages = @process_coverages_x.where(processor_id: params[:emp_id], status: params[:process_type], created_at: date_from..date_to)
       end
       
     else

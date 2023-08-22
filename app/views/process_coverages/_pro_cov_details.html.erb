@@ -2,16 +2,24 @@
   <div class="card-body">
 
     <%= content_tag :p do %>
+      <strong>Cooperative:</strong>
+      <%= process_coverage.group_remit.agreement.cooperative %>
+    <% end %>
+
+    <%= content_tag :p do %>
       <strong>Group remit:</strong>
-      <%= process_coverage.group_remit %>
+      <%= process_coverage.group_remit %> |
+      <strong>MOA:</strong>
+      <%#= link_to process_coverage.group_remit.agreement.moa_no, agreement_path(id: process_coverage.group_remit.agreement) %>
+      <%= link_to process_coverage.group_remit.agreement.moa_no, show_details_agreement_path(process_coverage.group_remit.agreement), data: { turbo_frame: "remote_modal" } %>
     <% end %>
     
-    <%= content_tag :p do %>
+    <!-- <%= content_tag :p do %>
       <strong>MOA:</strong>
       <%#= link_to process_coverage.group_remit.agreement.moa_no, agreement_path(id: process_coverage.group_remit.agreement) %>
       <%= link_to process_coverage.group_remit.agreement.moa_no, show_details_agreement_path(process_coverage.group_remit.agreement), data: { turbo_frame: "remote_modal" } %>
       <%#= link_to process_coverage.group_remit.agreement.moa_no, agreement_path(id: process_coverage.group_remit.moa,for_modal: "yes"), data: { turbo_frame: "remote_modal" } %>
-    <% end %>
+    <% end %> --> 
 
     <%= content_tag :p do %>
       <strong>Agent:</strong>
