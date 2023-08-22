@@ -1,0 +1,13 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  process_claim: one
+  benefit: one
+  amount: 9.99
+  status: MyString
+
+two:
+  process_claim: two
+  benefit: two
+  amount: 9.99
+  status: MyString
