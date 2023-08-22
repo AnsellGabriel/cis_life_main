@@ -1,0 +1,15 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  acd: MyString
+  ucd: MyString
+  osccd: MyString
+  icd: MyString
+  process_claim: one
+
+two:
+  acd: MyString
+  ucd: MyString
+  osccd: MyString
+  icd: MyString
+  process_claim: two

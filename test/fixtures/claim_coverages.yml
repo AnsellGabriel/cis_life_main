@@ -1,0 +1,15 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  process_claim: one
+  coverageable: one
+  coverageable_type: Coverageable
+  amount_benefit: 9.99
+  coverage_type: MyString
+
+two:
+  process_claim: two
+  coverageable: two
+  coverageable_type: Coverageable
+  amount_benefit: 9.99
+  coverage_type: MyString

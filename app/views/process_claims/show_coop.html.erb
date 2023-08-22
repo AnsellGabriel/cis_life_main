@@ -1,46 +1,6 @@
 <div class="row">
   <div class="col-md-6">
-    <div class="card mb-3">
-      <h5 class="card-header">Member Details</h5>
-      <div class="card-body">
-        <dl class="row">
-          <dt class="col-sm-4">Insurance:</dt>
-          <dd class="col-sm-8"><%= @process_claim.agreement.plan %></dd>
-          <dt class="col-sm-4">Type</dt>
-          <dd class="col-sm-8"><%= @process_claim.claimable_type %></dd>
-          <dt class="col-sm-4">Name:</dt>
-          <dd class="col-sm-8 text-primary"><%= @process_claim.claimable.get_fullname %></dd>
-          <dt class="col-sm-4">Birthdate</dt>
-          <dd class="col-sm-8"> <%= to_shortdate(@process_claim.claimable.member.birth_date) %></dd>
-          <dt class="col-sm-4">Branch:</dt>
-          <dd class="col-sm-8"><%= @process_claim.claimable.coop_branch %></dd>
-          <dt class="col-sm-4">Mobile number:</dt>
-          <dd class="col-sm-8"><%= @process_claim.claimable.member.mobile_number %></dd>
-          <dt class="col-sm-4">Email:</dt>
-          <dd class="col-sm-8"><%= @process_claim.claimable.member.email %> </dd>
-          <dt class="col-sm-4">Date Incident:</dt>
-          <dd class="col-sm-8"><%= to_shortdate(@process_claim.date_incident) %> </dd>
-        </dl>
-      </div>
-    </div>
-  </div>
-  <div class="col-md-6">
-    <div class="card mb-3">
-      <h5 class="card-header">Benefits</h5>
-      <div class="card-body">
-        <table class="table align-middle">
-          <tbody>
-            <% @ProdBenefit = ProductBenefit.where(agreement_benefit: @process_claim.agreement_benefit) %>
-            <% @ProdBenefit.each do |pb| %>
-              <tr>
-                <td><small><%= pb.benefit %></small></td>
-                <td class="text-end"><small><%= to_curr(pb.coverage_amount) %></small></td>
-              </tr>
-            <% end %>
-          </tbody>
-        </table>
-      </div>
-    </div>
+    <%= render 'claims_detail' %>
     <div class="card">
         <h5 class="card-header">Claimant details</h5>
       <div class="card-body">
@@ -54,6 +14,20 @@
           <dt class="col-sm-4">Email</dt>
           <dd class="col-sm-8"><%= @process_claim.claimant_email %></dd>
         </dl>
+      </div>
+    </div>
+    </div>
+    
+  <div class="col-md-6">
+    <div class="text-end mb-3">
+    <%= link_to "Back", :back, class: 'btn btn-secondary btn-lg' %>
+    <%= link_to "Submit Claims", claim_route_process_claim_path(@process_claim, p: 1), class: "btn btn-success btn-lg" if @process_claim.file_claim? %>
+    <%= link_to "Cancel Submit", claim_route_process_claim_path(@process_claim, p: 0), class: "btn btn-warning btn-lg" if @process_claim.submitted? %>
+    <%= link_to "Claims Filed", claim_route_process_claim_path(@process_claim, p: 2), class: "btn btn-warning btn-lg" if @process_claim.submitted? %>
+    </div>
+    <div class="card">
+      <div class="card-body">
+        <%= render 'show_claim_track' %>
       </div>
     </div>
   </div>

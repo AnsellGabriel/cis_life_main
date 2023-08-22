@@ -20,7 +20,7 @@
         <td><strong><%= process_claim.claimable %></strong> <br>
         <%= process_claim.agreement.plan %> <br>
         <small>Date Incident <%= to_shortdate(process_claim.date_incident) %></small> <br>
-        <small class="text-primary"><%= process_claim.claim_route %></small> </td>
+        <small class="text-primary"><%= process_claim.display_route(process_claim.claim_route) %></small> </td>
         <td><%= process_claim.claimant_name %> <br>
         <small><%= process_claim.relationship %></small> <br>
         <small><%= process_claim.claimant_email %> | <%= process_claim.claimant_contact_no %></small> </td>
@@ -29,7 +29,7 @@
     
           <td>
             <%= link_to "View", show_coop_process_claim_path(process_claim), class: "btn btn-warning btn-sm" %>
-            <%= link_to 'Edit', edit_process_claim_path(process_claim), class: 'btn btn-secondary btn-sm' %>
+            <%= link_to 'Edit', claims_file_process_claim_path(process_claim), class: 'btn btn-secondary btn-sm' unless process_claim.submitted? %>
             <%#= link_to 'Edit', edit_process_claim_path(process_claim), class: 'btn' %>
             <%#= link_to 'Delete', process_claim, method: :delete, data: { confirm: 'Are you sure?' }, class: 'btn' %>
           </td>

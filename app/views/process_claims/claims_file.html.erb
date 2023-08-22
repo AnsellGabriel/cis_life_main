@@ -1,0 +1,54 @@
+<%= simple_form_for(@process_claim) do |f| %>
+  <%= f.error_notification %>
+  <%= f.error_notification message: f.object.errors[:base].to_sentence if f.object.errors[:base].present? %>
+  <div class="text-end mb-3">
+    <%= link_to "Back", index_show_process_claims_path(p: 2), class: "btn btn-secondary btn-lg" %>
+    <%= link_to "Process Claims", claim_route_process_claim_path(@process_claim, p: 3), class: "btn btn-warning btn-lg" if @process_claim.claim_filed? %>
+    <%= f.button :submit, 'Save Claim', class: 'btn-success btn-lg' %>
+  </div>
+  <div class="row">
+    <div class="col-md-6">
+        <%= render 'claims_detail' %>
+        <div class="card">
+        <h5 class="card-header">Cause of Claims</h5>
+        <div class="card-body">
+            <div class="row">
+              <%= f.association :cause, prompt: "Select a cause", collection: Cause.order(:name), wrapper_html: { class: 'col-md-6' } %>
+              <%= f.input :date_file, label: "Date Filed", as: :string, wrapper_html: { class: "col-md-6" }, 
+                  input_html: { data: { controller: "flatpickr",
+                  flatpickr_max_date: Time.zone.now,
+                  flatpickr_next_arrow: "Next",
+                  flatpickr_prev_arrow: "Prev" } } %>
+            </div>
+            <%= f.simple_fields_for :claim_cause do |cc| %>
+              
+                    <%= cc.input :acd, label: "ACD" %>
+                    <%= cc.input :ucd, label: "UCD" %>
+                    <%= cc.input :icd, label: "ICD" %>
+                    <%= cc.input :osccd, label: "OSCCD" %>
+              
+          <%#= render 'question_fields', f: builder %>
+            <% end %>
+        </div>
+        </div>
+    </div>
+    <div class="col-md-6">
+      <div class="card mb-3">
+        <div class="card-body">
+          <div class="row">
+            <div class="col-md-6">
+              <h4 class="text-primary">Claims Benefit</h4>
+            </div>
+            <div class="col-md-6">
+              <div class="text-end">
+                <%= link_to '<i class="bi bi-plus-square"></i> Add Benefit'.html_safe, new_claim_benefit_path(v: @process_claim), class: "btn btn-primary btn-sm mb-3", data: { turbo_frame: "remote_modal" } %>
+              </div>
+            </div>
+          </div>
+          <%= render 'claim_benefits/show_benefit' %>
+          <%= render 'claim_coverages/show_coverages' %>
+        </div>
+      </div>
+    </div>
+  </div>
+<% end %>
