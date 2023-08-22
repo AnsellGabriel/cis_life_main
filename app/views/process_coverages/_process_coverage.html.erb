@@ -118,6 +118,7 @@
               <%= link_to "18-65 Renewal", process_coverage_path(process_coverage, search: "regular_ren"), class: "btn btn-sm btn-outline-primary mb-1" %>
               <%= link_to "Overage", process_coverage_path(process_coverage, search: "overage"), class: "btn btn-sm btn-outline-warning mb-1"  %>
               <%= link_to "w/ Health Dec", process_coverage_path(process_coverage, search: "health_decs"), class: "btn btn-sm btn-outline-secondary mb-1"  %>
+              <%= link_to "For Reconsider", process_coverage_path(process_coverage, search: "reconsider"), class: "btn btn-sm btn-outline-info mb-1"  %>
               <%= link_to "View All", process_coverage_path(process_coverage), class: "btn btn-sm btn-outline-success mb-1"  %>
               <hr>
               <% @insured_types2.each do |type| %>
@@ -199,7 +200,7 @@
 
       <div class="col-10">
         <%= form_tag update_batch_selected_process_coverages_path(p_id: process_coverage, b_ids: []), method: :patch do %>
-          <% unless process_coverage.status != "for_process" && process_coverage.status != "pending" %>
+          <% if ['for_process', 'pending', 'reconsiderations_processed'].include?(process_coverage.status) %>
             <% if process_coverage.group_remit.batches.where(insurance_status: [:pending, :for_review]).count > 0 %>
               <div class="text-end">
                 <%= link_to "Approve All", approve_all_group_remit_batches_path(@group_remit,group_remit: process_coverage.group_remit, process_coverage: process_coverage), class: "btn btn-success", onclick: "return confirm('Are you sure?')", method: :get %>
@@ -308,16 +309,18 @@
                       <%#= link_to deny_batch_process_coverage_path(batch: batch), title: "Deny", class: "btn btn-sm btn-danger" do %>
                         <%#= bootstrap_icon "x-lg" %>
                       <%# end %>
-                  <% unless process_coverage.approved? %>
+                  <% unless process_coverage.approved? && process_coverage.reprocess_approved? %>
                   
-                    <div class="<%= batch_buttons(current_user.rank, batch.insurance_status) %>">
+                    <div class="<%= batch_buttons(current_user.rank, batch.insurance_status, process_coverage.status) %>">
                       <%= link_to approve_batch_process_coverage_path(batch: batch), onclick: "return confirm('Are you sure?')", method: :get, title: "Approve", class: "btn btn-sm btn-success mb-1" do %>
                         <%= bootstrap_icon "check-lg" %>
                       <% end %>
-                      <%= link_to new_batch_remark_path(ref: batch, pro_cov: process_coverage, batch_status: "Pending"), title: "Pending", class: "btn btn-sm btn-secondary mb-1", data: { turbo_frame: "remote_modal" } do %>
+                      <%# <%= link_to new_batch_remark_path(ref: batch, pro_cov: process_coverage, batch_status: "Pending"), title: "Pending", class: "btn btn-sm btn-secondary mb-1", data: { turbo_frame: "remote_modal" } do %> 
+                      <%= link_to new_batch_remark_path(ref: batch, pro_cov: process_coverage, batch_status: "Pending"), title: "Pending", class: "btn btn-sm btn-secondary mb-1", data: { turbo_frame: "modal" } do %>
                         <%= bootstrap_icon "arrow-clockwise" %>
                       <% end %>
-                      <%= link_to new_batch_remark_path(ref: batch, pro_cov: process_coverage, batch_status: "Deny"), title: "Deny", class: "btn btn-sm btn-danger mb-1", data: { turbo_frame: "remote_modal" } do %>
+                      <%# <%= link_to new_batch_remark_path(ref: batch, pro_cov: process_coverage, batch_status: "Deny"), title: "Deny", class: "btn btn-sm btn-danger mb-1", data: { turbo_frame: "remote_modal" } do %> 
+                      <%= link_to new_batch_remark_path(ref: batch, pro_cov: process_coverage, batch_status: "Deny"), title: "Deny", class: "btn btn-sm btn-danger mb-1", data: { turbo_frame: "modal" } do %>
                         <%= bootstrap_icon "x-lg" %>
                       <% end %>
                     </div>
@@ -326,6 +329,13 @@
                         <%= bootstrap_icon "arrow-repeat" %>
                       <% end %>
                     </div>
+
+                    <% if current_user.head? && batch.status == "for_reconsideration" && batch.insurance_status == "denied" %>
+                      <%= link_to set_premium_batch_process_coverage_path(batch: batch), onclick: "return confirm('Are you sure?')", method: :get, class: "btn btn-sm btn-info mb-1", data: { turbo_frame: "modal" } do %>
+                        <%= bootstrap_icon "coin" %>
+                      <% end %>
+                    <% end %>
+                    
                     
                   <% end %>
                     <%# end %>
@@ -340,9 +350,16 @@
                 </td>
                 <td>
                   <% if batch.batch_remarks.count == 0 %>
-                    <%= content_tag :small, "No Remarks" %>
+                    <%= content_tag :small do %>
+                      <% if batch.insurance_status == "approved" %>
+                        No Remark(s)
+                      <% else %>
+                        <%= link_to "No Remark(s)", new_batch_remark_path(ref: batch, pro_cov: process_coverage, batch_status: "New"), class: "text-dark", data: { turbo_frame: "modal" } %>
+                      <% end %>
+                      
+                    <% end %>
                   <% else %>              
-                    <%= link_to "View Remarks", modal_remarks_process_coverage_path(process_coverage, batch: batch), data: { turbo_frame: "remote_modal" } %>
+                    <%= link_to "View Remarks", modal_remarks_process_coverage_path(process_coverage, batch: batch), data: { turbo_frame: "modal" } %>
                   <% end %>
                   
                 </td>
@@ -369,3 +386,5 @@
   </div>
 
 </div>
+
+<%#= console %>

@@ -9,7 +9,7 @@ class GroupRemitsController < InheritedResources::Base
 
   def renewal
     @group_remit = GroupRemit.find_by(id: params[:id])
-    renewal_result = @group_remit.renew
+    renewal_result = @group_remit.renew(current_user)
     new_group_remit = renewal_result[:new_group_remit]
 
     respond_to do |format|
@@ -36,17 +36,23 @@ class GroupRemitsController < InheritedResources::Base
       @group_remit.set_under_review_status
     end
     
+    @group_remit.date_submitted = Date.today
+    
     respond_to do |format|
       if @group_remit.save!
         @process_coverage = @group_remit.build_process_coverage
         @process_coverage.effectivity = @group_remit.effectivity_date
         @process_coverage.expiry = @group_remit.expiry_date
+        @process_coverage.processor_id  = @group_remit.agreement.emp_agreements.find_by(agreement: @group_remit.agreement, active: true).employee_id
+        @process_coverage.approver_id  = @group_remit.agreement.emp_agreements.find_by(agreement: @group_remit.agreement, active: true).employee.emp_approver.approver_id
         @process_coverage.set_default_attributes
-        
+        # raise 'errors'
         if @process_coverage.save
           format.html { redirect_to coop_agreement_group_remit_path(@group_remit.agreement, @group_remit), notice: "Group remit submitted" }
         else
           format.html { redirect_to coop_agreement_group_remit_path(@group_remit.agreement, @group_remit), alert: "Process Coverage not created!" }
+          @group_remit.status = :pending
+          @group_remit.save!
         end
 
       else
@@ -160,15 +166,18 @@ class GroupRemitsController < InheritedResources::Base
         approved_batches = @group_remit.batches.where(insurance_status: :approved)
         approved_members = CoopMember.joins(:batches)
                             .where(batches: { id: approved_batches })
-                            .distinct
-
-        agreement.coop_members << approved_members
+                            .distinct.pluck(:id)
+        
+        # agreement.coop_members << approved_members
         current_batch_remit = GroupRemit.find(@group_remit.batch_remit_id)
-        current_batch_remit.batches << approved_batches
+        duplicate_batches = current_batch_remit.batch_group_remits.joins(:batch).where(batch: {coop_member_id: approved_members})
+        current_batch_remit.batch_group_remits.destroy(duplicate_batches)
+        current_batch_remit.batches << approved_batches 
         current_batch_remit.set_total_premiums_and_fees
         current_batch_remit.status = :active
         current_batch_remit.save!
-
+        # byebug
+        
         format.html { redirect_to coop_agreement_group_remit_path(@group_remit.agreement, @group_remit), notice: "Proof of payment sent" }
       else
         format.html { redirect_to coop_agreement_group_remit_path(@group_remit.agreement, @group_remit), alert: "Invalid proof of payment" }
@@ -235,6 +244,19 @@ class GroupRemitsController < InheritedResources::Base
         @f_batches = @group_remit.batches_without_health_dec.order(created_at: :desc)
       elsif params[:rank_filter].present?
         @f_batches = @group_remit.batches.joins(:agreement_benefit).where(agreement_benefits: params[:rank_filter])
+      elsif params[:insurance_status].present?
+        case params[:insurance_status]
+        when 'approved'
+          @f_batches = batches_eager_loaded.where(insurance_status: :approved)
+        when 'pending'
+          @f_batches = batches_eager_loaded.where(insurance_status: :pending)
+        when 'denied'
+          @f_batches = batches_eager_loaded.where(insurance_status: :denied)
+        when 'for_review'
+          @f_batches = batches_eager_loaded.where(insurance_status: :for_review)
+        when 'for_reconsideration'
+          @f_batches = batches_eager_loaded.where(status: :for_reconsideration)
+        end
       else
         @f_batches = batches_eager_loaded
       end

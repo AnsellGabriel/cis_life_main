@@ -319,6 +319,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_08_18_060515) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.string "full_name"
+    t.boolean "deceased", default: false
     t.index ["coop_branch_id"], name: "index_coop_members_on_coop_branch_id"
     t.index ["cooperative_id"], name: "index_coop_members_on_cooperative_id"
     t.index ["member_id"], name: "index_coop_members_on_member_id"
@@ -416,13 +417,22 @@ ActiveRecord::Schema[7.0].define(version: 2023_08_18_060515) do
     t.bigint "agreement_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.bigint "approver_id"
+    t.boolean "active", default: true
+    t.integer "category_type"
     t.index ["agreement_id"], name: "index_emp_agreements_on_agreement_id"
-    t.index ["approver_id"], name: "index_emp_agreements_on_approver_id"
     t.index ["employee_id"], name: "index_emp_agreements_on_employee_id"
   end
 
-  create_table "employees", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+  create_table "emp_approvers", charset: "utf8mb4", force: :cascade do |t|
+    t.bigint "employee_id"
+    t.bigint "approver_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["approver_id"], name: "index_emp_approvers_on_approver_id"
+    t.index ["employee_id"], name: "index_emp_approvers_on_employee_id"
+  end
+
+  create_table "employees", charset: "utf8mb4", force: :cascade do |t|
     t.string "last_name"
     t.string "first_name"
     t.string "middle_name"
@@ -498,6 +508,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_08_18_060515) do
     t.decimal "agent_commission", precision: 10, scale: 2
     t.string "type"
     t.integer "batch_remit_id"
+    t.date "date_submitted"
     t.index ["agreement_id"], name: "index_group_remits_on_agreement_id"
     t.index ["anniversary_id"], name: "index_group_remits_on_anniversary_id"
   end
@@ -692,8 +703,13 @@ ActiveRecord::Schema[7.0].define(version: 2023_08_18_060515) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.integer "und_route"
+    t.bigint "processor_id"
+    t.bigint "approver_id"
+    t.boolean "reprocess"
     t.index ["agent_id"], name: "index_process_coverages_on_agent_id"
+    t.index ["approver_id"], name: "index_process_coverages_on_approver_id"
     t.index ["group_remit_id"], name: "index_process_coverages_on_group_remit_id"
+    t.index ["processor_id"], name: "index_process_coverages_on_processor_id"
     t.index ["und_route"], name: "index_process_coverages_on_und_route"
   end
 
@@ -828,7 +844,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_08_18_060515) do
   add_foreign_key "denied_dependents", "group_remits"
   add_foreign_key "denied_enrollees", "cooperatives"
   add_foreign_key "denied_members", "group_remits"
-  add_foreign_key "emp_agreements", "employees", column: "approver_id"
+  add_foreign_key "emp_approvers", "employees", column: "approver_id"
   add_foreign_key "employees", "departments"
   add_foreign_key "group_import_trackers", "group_remits"
   add_foreign_key "group_remits", "agreements"
@@ -844,6 +860,8 @@ ActiveRecord::Schema[7.0].define(version: 2023_08_18_060515) do
   add_foreign_key "process_claims", "agreement_benefits"
   add_foreign_key "process_claims", "agreements"
   add_foreign_key "process_claims", "cooperatives"
+  add_foreign_key "process_coverages", "employees", column: "approver_id"
+  add_foreign_key "process_coverages", "employees", column: "processor_id"
   add_foreign_key "process_tracks", "users"
   add_foreign_key "product_benefits", "agreement_benefits"
   add_foreign_key "product_benefits", "benefits"

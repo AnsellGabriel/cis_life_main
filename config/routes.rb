@@ -10,11 +10,14 @@ Rails.application.routes.draw do
   get 'claim_coverages/new'
   get 'claim_coverages/edit'
   resources :causes
+  resources :emp_approvers
   get 'med_directors/home'
   get 'med_director/index'
   
   resources :emp_agreements do 
     get :transfer_index, on: :collection
+    get :update_ea_selected, on: :collection
+    patch :transfer_agreements, on: :collection
   end
   # resources :denied_dependents
  
@@ -83,6 +86,7 @@ Rails.application.routes.draw do
     get :renewal, on: :member
     resources :batches do
       get :health_dec, on: :member
+      get :modal_remarks, on: :member
       collection do
         post :import
         get :approve_all
@@ -119,6 +123,9 @@ Rails.application.routes.draw do
     resources :batch_remits
   end
 
+  get 'insurance/accept', as: 'accept_insurance'
+  # get 'insurance/reject', as: 'reject_insurance'
+  get 'insurance/terminate', as: 'terminate_insurance'
 
   #* Underwriting Module Routes
   resources :user_levels
@@ -146,8 +153,11 @@ Rails.application.routes.draw do
     get :deny_batch, on: :member
     get :pending_batch, on: :member
     get :reconsider_batch, on: :member
+    get :set_premium_batch, on: :member
+    post :update_batch_prem, on: :member
     get :approve
     get :deny
+    get :reassess
     get :reprocess
     get :modal_remarks, on: :member
     get :cov_list, on: :collection

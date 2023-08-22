@@ -1,4 +1,5 @@
 class ProcessRemarksController < ApplicationController
+  before_action :authenticate_user!
   before_action :set_process_remark, only: %i[ show edit update destroy ]
 
   # GET /process_remarks
@@ -16,7 +17,8 @@ class ProcessRemarksController < ApplicationController
     @title = case params[:pro_status]
     when "Approve" then "Process Approval"
     when "Deny" then "Process Denial"
-    when "Reprocess" then "Reprocess"
+    when "Reassess" then "Process for Reassessment"
+    when "Reprocess" then "Request for Reprocess"
     else
       "Add Remark"
     end
@@ -71,11 +73,11 @@ class ProcessRemarksController < ApplicationController
   def create
     # raise 'errors'
     @process_coverage = ProcessCoverage.find(params[:process_remark][:process_coverage_id])
-    @batch_count = @process_coverage.group_remit.batches.where(batches: { insurance_status: :for_review }).count
+    @batch_count = @process_coverage.group_remit.batches.where(batches: { insurance_status: [:for_review, :pending] }).count
 
     unless params[:process_remark][:process_status].nil? || params[:process_remark][:process_status].empty?
       if @batch_count > 0
-        return redirect_to process_coverage_path(@process_coverage), alert: "Can't proceed. There are #{@batch_count} #{'coverage'.pluralize(@batch_count)} for review"
+        return redirect_to process_coverage_path(@process_coverage), alert: "Can't proceed. There are #{@batch_count} #{'coverage'.pluralize(@batch_count)} for review or pending"
       end
     else
       params[:process_remark][:status] = ""
@@ -92,6 +94,8 @@ class ProcessRemarksController < ApplicationController
           format.html { redirect_to process_coverage_approve_path(process_coverage_id: params[:process_remark][:process_coverage_id], total_life_cov: params[:process_remark][:total_life_cov], max_amount: params[:process_remark][:max_amount], total_net_prem: params[:process_remark][:total_net_prem])}
         elsif params[:process_remark][:process_status] == "Deny"
           format.html { redirect_to process_coverage_deny_path(process_coverage_id: params[:process_remark][:process_coverage_id])}
+        elsif params[:process_remark][:process_status] == "Reassess"
+          format.html { redirect_to process_coverage_reassess_path(process_coverage_id: params[:process_remark][:process_coverage_id])}
         elsif params[:process_remark][:process_status] == "Reprocess"
           format.html { redirect_to process_coverage_reprocess_path(process_coverage_id: params[:process_remark][:process_coverage_id])}
         else
@@ -100,13 +104,14 @@ class ProcessRemarksController < ApplicationController
         end
         # format.html { redirect_back fallback_location:, notice: "Process remark was successfully created." }
         
-        agreement = @process_coverage.group_remit.agreement
+        # agreement = @process_coverage.group_remit.agreement
 
-        if agreement.anniversary_type == 'none' or agreement.anniversary_type.nil?
-          current_batch_remit = agreement.group_remits.find_by(type: 'BatchRemit', effectivity_date: Date.today.beginning_of_month)
-          approved_batches = @process_coverage.group_remit.batches.where(insurance_status: :approved)
-          approved_batches.update_all(batch_remit_id: current_batch_remit.id)
-        end
+        # if agreement.anniversary_type == 'none' or agreement.anniversary_type.nil?
+        #   # current_batch_remit = agreement.group_remits.find_by(type: 'BatchRemit', effectivity_date: Date.today.beginning_of_month)
+        #   current_batch_remit = agreement.group_remits.find_by(type: 'BatchRemit')
+        #   approved_batches = @process_coverage.group_remit.batches.where(insurance_status: :approved)
+        #   approved_batches.update_all(batch_remit_id: current_batch_remit.id)
+        # end
       else
         format.html { render :new, status: :unprocessable_entity }
         format.json { render json: @process_remark.errors, status: :unprocessable_entity }

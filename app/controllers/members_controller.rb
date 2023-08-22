@@ -73,7 +73,7 @@ class MembersController < InheritedResources::Base
     respond_to do |format|
       if @member.update(member_params)
         format.html { 
-          redirect_to coop_member_path(@coop_member),
+          redirect_to coop_members_path,
           notice: "Member was successfully updated." }
       else
         format.html { render :new, status: :unprocessable_entity }

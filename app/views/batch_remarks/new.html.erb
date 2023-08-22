@@ -1,9 +1,27 @@
-
+<!--
 <div class="card">
-  <h5 class="card-header">New batch remark</h5>
+  
   <div class="card-body">
     <%= render "remote_modal", title: @title do %>
-      <%= render "form", batch_remark: @batch_remark %>
     <% end %>
   </div>
 </div>
+-->
+
+<%= turbo_frame_tag "modal" do %>
+  <div class="modal-header">
+    <% if params[:coop] || ( !params[:batch_remark].nil? && params[:batch_remark][:batch_status] == 'For reconsideration' ) %>
+      <div class="<% flex_justify_align('','',true) %>">
+        <h5 class="card-header">Request for reconsideration</h5>
+        <%= content_tag :span, 'Please make sure that health declaration form is completed and state the specific reason of the request', class: 'text-muted', style: 'font-size: .8rem' %>
+      </div>
+    <% else %>
+      <h5 class="card-header">New batch remark</h5>
+    <% end %>   
+   <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+  </div>
+  
+  <div class="modal-body">
+    <%= render "form", batch_remark: @batch_remark %>
+  </div>
+<% end %>

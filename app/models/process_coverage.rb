@@ -1,8 +1,15 @@
 class ProcessCoverage < ApplicationRecord
+  attr_accessor :premium
   belongs_to :group_remit
   belongs_to :agent, optional: true
+  belongs_to :processor, class_name: "Employee"
+  belongs_to :approver, class_name: "Employee"
   has_many :process_remarks
 
+  # audited
+  # has_associated_audits
+
+  
   enum status: {
     for_process: 0,
     pending: 1,
@@ -10,8 +17,13 @@ class ProcessCoverage < ApplicationRecord
     denied: 3,
     for_head_approval: 4,
     for_vp_approval: 5,
-    reprocess: 6
+    reprocess: 6, # done reprocessing
+    reprocess_approved: 7, # able to reprocess by UA
+    reprocess_request: 9, # UA request to reprocess
+    reconsiderations_processed: 8,
+    reassess: 10 # Reaassessment
   }
+  FILTERED_STATUSES = statuses.select { |key, value| [0, 2, 3, 10].include?(value) }.keys
 
   enum und_route: {
     for_analyst_review: 0,

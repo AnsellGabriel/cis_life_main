@@ -5,7 +5,11 @@
 
   <div class="form-inputs mb-3">
     <%= f.association :batch, as: :hidden %>
-    <%= f.input :remark %>
+    <% if params[:coop] || ( !params[:batch_remark].nil? && params[:batch_remark][:batch_status] == 'For reconsideration' ) %>
+          <%= f.input :remark, label: 'Reason' %>
+    <% else %>
+      <%= f.input :remark %>
+    <% end %>
     <%= f.input :status, input_html: { value: @rem_status }, as: :hidden %>
     <%#= f.association :user %>
     <%= f.input :batch_status, input_html: { value: @batch_status }, as: :hidden %>
@@ -13,7 +17,15 @@
   </div>
 
   <div class="form-actions text-end">
-    <%= link_to "Back", batch_remarks_path, class: 'btn btn-secondary' %>
-    <%= f.button :submit, class: 'btn-success' %>
+
+    <% if params[:coop] || ( !params[:batch_remark].nil? && params[:batch_remark][:batch_status] == 'For reconsideration' ) %>
+      <%= f.button :submit, "Create Request",class: 'btn-success', data: {turbo: false} %>
+      <%= link_to "Back", modal_remarks_group_remit_batch_path(@batch.group_remits.find_by(type: 'Remittance'), @batch), class: 'btn btn-secondary', data: { turbo_frame: "modal" } %>
+    <% else %>
+      <%# <%= link_to "Back", batch_remarks_path, class: 'btn btn-secondary' %> 
+      <%= link_to "Back", modal_remarks_process_coverage_path(@process_coverage, batch: @batch), class: 'btn btn-secondary', data: { turbo_frame: "modal" } %>
+      <%= f.button :submit, class: 'btn-success', data: {turbo: false} %>
+    <% end %>
+
   </div>
 <% end %>

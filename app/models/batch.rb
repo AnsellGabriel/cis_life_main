@@ -9,7 +9,9 @@ class Batch < ApplicationRecord
     recent: 0,
     renewal: 1,
     transferred: 2,
-    reinstated: 3
+    reinstated: 3,
+    for_reconsideration: 4,
+    terminated: 5,
   }
 
   # batch.insurance_status
@@ -37,7 +39,7 @@ class Batch < ApplicationRecord
   has_many :member_dependents, through: :batch_dependents
   has_many :batch_beneficiaries, dependent: :destroy
   has_many :member_dependents, through: :batch_beneficiaries
-  has_many :batch_remarks
+  has_many :batch_remarks, dependent: :destroy
   has_many :process_claims, as: :claimable, dependent: :destroy
   has_many :claim_coverages, as: :coverageable, dependent: :destroy
 
@@ -78,7 +80,7 @@ class Batch < ApplicationRecord
     check_plan(agreement, batch, rank, duration, group_remit)
 
     if existing_coverages.present?
-      update_batch_and_existing_coverage(batch, existing_coverages)
+      update_batch_and_existing_coverage(batch, existing_coverages, group_remit)
     else
       create_new_batch_coverage(agreement, coop_member, batch )
     end
@@ -111,7 +113,7 @@ class Batch < ApplicationRecord
 
   private
 
-  def self.update_batch_and_existing_coverage(batch, existing_coverages)
+  def self.update_batch_and_existing_coverage(batch, existing_coverages, group_remit)
     coverage_expiry = existing_coverages.expiry
     today = Date.today
 
@@ -124,7 +126,7 @@ class Batch < ApplicationRecord
         expiry: batch.expiry_date, 
         effectivity: batch.effectivity_date
       )
-    elsif existing_coverages.expiry <= Date.today
+    elsif group_remit.for_renewal? || existing_coverages.expiry <= Date.today
       batch.status = :renewal
       existing_coverages.update!(
         status: 'renewal', 

@@ -12,18 +12,15 @@ class BatchesController < ApplicationController
       :batch, 
       params[:file], 
       @cooperative, 
-      @group_remit
+      @group_remit,
+      current_user
     )
 
     @import_result = import_service.import
     
     if @import_result.is_a?(Hash)
       notice = "#{@import_result[:added_members_counter]} members successfully added. #{@import_result[:denied_members_counter]} members denied."
-      if @import_result[:denied_members_counter] > 0
-        redirect_to group_remit_denied_members_path(@group_remit), notice: notice
-      else
-        redirect_to group_remit_path(@group_remit), notice: notice
-      end
+      redirect_to group_remit_path(@group_remit), notice: notice
     else
       redirect_to group_remit_path(@group_remit), notice: @import_result
     end
@@ -128,29 +125,38 @@ class BatchesController < ApplicationController
 
       if member.age(@group_remit.effectivity_date) < @batch.agreement_benefit.min_age or member.age(@group_remit.effectivity_date) > @batch.agreement_benefit.max_age
 
-        return redirect_to group_remit_path(@group_remit), alert: "Member age must be between #{@batch.agreement_benefit.min_age.to_i} and #{@batch.agreement_benefit.max_age.to_i} years old."
-
-      else
-        respond_to do |format|
-          if @batch.save!
-            @group_remit.batches << @batch
-
-            premiums_and_commissions
-            containers # controller/concerns/container.rb
-            counters  # controller/concerns/counter.rb
-
-            format.html { 
-              redirect_to group_remit_path(@group_remit)
-              flash[:notice] = "Member successfully added"
-            }
-          end
+        # return redirect_to group_remit_path(@group_remit), alert: "Member age must be between #{@batch.agreement_benefit.min_age.to_i} and #{@batch.agreement_benefit.max_age.to_i} years old."
+        @batch.insurance_status = :denied
+        if member.age(@group_remit.effectivity_date) > @batch.agreement_benefit.max_age
+          @batch.batch_remarks.build(remark: "Member age is over the maximum age limit of the plan.", status: :denied, user_type: 'CoopUser', user_id: current_user.userable.id)
+        else
+          @batch.batch_remarks.build(remark: "Member age is below the minimum age limit of the plan.", status: :denied, user_type: 'CoopUser', user_id: current_user.userable.id)
         end
       end
-      
+
+      # raise 'errors'
+      respond_to do |format|
+        if @batch.save!
+          @group_remit.batches << @batch
+
+          premiums_and_commissions
+          containers # controller/concerns/container.rb
+          counters  # controller/concerns/counter.rb
+
+          format.html { 
+            redirect_to group_remit_path(@group_remit)
+            if @batch.denied?
+              flash[:alert] = "Member denied. Please check the denied remarks."
+            else
+              flash[:notice] = "Member successfully added."
+            end
+          }
+        end
+      end
     rescue NoMethodError => e
-      return redirect_to group_remit_path(@group_remit), alert: e.message
+      return redirect_to group_remit_path(@group_remit), alert: e#.message
     rescue ActiveRecord::RecordInvalid => e
-      return redirect_to group_remit_path(@group_remit), alert: e.message.gsub!(/\AValidation failed:\s?/, '')
+      return redirect_to group_remit_path(@group_remit), alert: e#.message.gsub!(/\AValidation failed:\s?/, '')
     end
 
   end
@@ -182,6 +188,11 @@ class BatchesController < ApplicationController
     respond_to do |format|
 
       if @batch.destroy
+        
+        if params[:reconsider].present? && params[:reconsider]
+          @group_remit.process_coverage.update(status: :reconsiderations_processed)
+        end
+
         premiums_and_commissions
         containers # controller/concerns/container.rb
         counters  # controller/concerns/counter.rb
@@ -197,6 +208,14 @@ class BatchesController < ApplicationController
       
     end  
   end
+
+  def modal_remarks
+    @batch = Batch.find(params[:id])
+  end
+
+  # def terminate_insurance
+    
+  # end
 
   private
     def batch_params

@@ -1,0 +1,15 @@
+
+<%= simple_form_for(@emp_approver) do |f| %>
+  <%= f.error_notification %>
+  <%= f.error_notification message: f.object.errors[:base].to_sentence if f.object.errors[:base].present? %>
+
+  <div class="form-inputs mb-3">
+    <%= f.association :employee, collection: Employee::ANALYSTS %>
+    <%= f.association :approver, collection: Employee::HEADS %>
+  </div>
+
+  <div class="form-actions text-end">
+    <%= link_to "Back", emp_approvers_path, class: 'btn btn-secondary' %>
+    <%= f.button :submit, class: 'btn-success' %>
+  </div>
+<% end %>

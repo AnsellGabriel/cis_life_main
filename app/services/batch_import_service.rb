@@ -1,9 +1,10 @@
 class BatchImportService
-  def initialize(spreadsheet, group_remit, cooperative)
+  def initialize(spreadsheet, group_remit, cooperative, current_user)
     @spreadsheet = spreadsheet
     @group_remit = group_remit
     @cooperative = cooperative  
     @agreement = @group_remit.agreement
+    @current_user = current_user
 
     @gyrt_plans = ['GYRT', 'GYRTF']
     @gyrt_ranking_plans = ['GYRTBR', 'GYRTFR']
@@ -99,12 +100,12 @@ class BatchImportService
         next
       end
 
-      if age_not_within_range?(member, age_min_max, @group_remit.effectivity_date)
-        create_denied_member(member, 'Age not within agreement\'s age range', @group_remit.effectivity_date)
-        progress_counter += 1
-        update_progress(total_members, progress_counter)
-        next
-      end
+      # if age_not_within_range?(member, age_min_max, @group_remit.effectivity_date)
+      #   create_denied_member(member, 'Age not within agreement\'s age range', @group_remit.effectivity_date)
+      #   progress_counter += 1
+      #   update_progress(total_members, progress_counter)
+      #   next
+      # end
       
       duplicate_member = find_duplicate_member(member)
     
@@ -115,7 +116,7 @@ class BatchImportService
         update_progress(total_members, progress_counter)
         next
       else
-        @added_members_counter += create_batch(member, batch_hash)
+        create_batch(member, batch_hash)
       end
 
       
@@ -227,21 +228,23 @@ class BatchImportService
   end
 
   def create_denied_member(member, reason, effectivity = nil)
-    DeniedMember.find_or_create_by!(
+    denied_member = DeniedMember.find_or_create_by!(
       name: "#{member.first_name} #{member.middle_name} #{member.last_name}", 
       age: member.birth_date.nil? ? 0 : member.age(effectivity), 
-      reason: reason, 
       group_remit: @group_remit
     )
+    denied_member.reason = reason
+    denied_member.save!
+
     increment_denied_members_counter
   end
 
   def age_min_max_by_insured_type(agreement_benefits, rank)
-    if agreement_benefits.find_by(name: rank).nil?
-      return nil
-    end
-    
     if @gyrt_ranking_plans.include?(@agreement.plan.acronym)
+      if agreement_benefits.find_by(name: rank).nil?
+        return nil
+      end
+      
       {
         min_age: agreement_benefits.find_by(name: rank).min_age,
         max_age: agreement_benefits.find_by(name: rank).max_age
@@ -280,9 +283,9 @@ class BatchImportService
     )
   end
 
-  def age_not_within_range?(member, age_min_max, effectivity_date)
-      member.age(effectivity_date) < age_min_max[:min_age] || member.age(effectivity_date) > age_min_max[:max_age]
-  end
+  # def age_not_within_range?(member, age_min_max, effectivity_date)
+  #     member.age(effectivity_date) < age_min_max[:min_age] || member.age(effectivity_date) > age_min_max[:max_age]
+  # end
 
   def increment_denied_members_counter
     @denied_members_counter += 1
@@ -303,9 +306,24 @@ class BatchImportService
       b_rank, 
       @group_remit.terms
     )
+
+    if member.age(@group_remit.effectivity_date) < new_batch.agreement_benefit.min_age or member.age(@group_remit.effectivity_date) > new_batch.agreement_benefit.max_age
+
+      new_batch.insurance_status = :denied
+
+      if member.age(@group_remit.effectivity_date) > new_batch.agreement_benefit.max_age
+        new_batch.batch_remarks.build(remark: "Member age is over the maximum age limit of the plan.", status: :denied, user_type: 'CoopUser', user_id: @current_user.userable.id)
+      else
+        new_batch.batch_remarks.build(remark: "Member age is below the minimum age limit of the plan.", status: :denied, user_type: 'CoopUser', user_id: @current_user.userable.id)
+      end
+
+    end
+
     @group_remit.batches << new_batch
 
-    new_batch.save ? 1 : 0
+    new_batch.save!
+
+    new_batch.denied? ? @denied_members_counter += 1 : @added_members_counter += 1
   end
 
   def update_progress(total, processed_members)

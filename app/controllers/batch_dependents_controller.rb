@@ -28,9 +28,15 @@ class BatchDependentsController < InheritedResources::Base
     agreement = group_remit.agreement
     term_insurance = agreement.plan.acronym == 'PMFC' ? true : false
     
-    @batch_dependent = @batch.batch_dependents.new(batch_dependent_params)
-    relationship = @batch_dependent.member_dependent.relationship
-    insured_type = @batch_dependent.insured_type(relationship)
+    begin
+      @batch_dependent = @batch.batch_dependents.new(batch_dependent_params)
+      relationship = @batch_dependent.member_dependent.relationship
+      insured_type = @batch_dependent.insured_type(relationship)
+    rescue NoMethodError
+      respond_to do |format|
+        format.html { return redirect_to group_remit_batch_path(@group_remit, @batch), alert: 'Please choose a dependent'}
+      end
+    end
 
     dependent_agreement_benefits = agreement.agreement_benefits.where("name LIKE ?", "%#{@batch.agreement_benefit.name}%").find_by(insured_type: insured_type)
 

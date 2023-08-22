@@ -10,7 +10,7 @@ class GroupRemit < ApplicationRecord
   has_many :batches, through: :batch_group_remits
   has_many :denied_members, dependent: :destroy
   has_many :payments, dependent: :destroy
-  has_one :process_coverage
+  has_one :process_coverage, dependent: :destroy
   has_one :group_import_tracker, dependent: :destroy
 
   accepts_nested_attributes_for :payments
@@ -22,19 +22,21 @@ class GroupRemit < ApplicationRecord
     payment_verification: 3,
     active: 4,
     for_renewal: 5,
-    expired: 6
+    expired: 6,
+    with_pending_members: 7
   }
 
   def to_s
     name
   end
 
-  def renew
+  def renew(current_user)
     new_group_remit = self.dup
     new_group_remit.set_terms_and_expiry_date(self.expiry_date + 1.year)
     # new_group_remit.expiry_date = self.expiry_date + 1.year # Assuming the renewal duration is 1 year from the current date
     new_group_remit.status = :for_renewal
     new_group_remit.type = "Remittance"
+    new_group_remit.name = "#{self.name} Renewal"
     new_group_remit.batch_remit_id = self.id
     self.status = :for_renewal
     self.set_terms_and_expiry_date(self.expiry_date + 1.year)
@@ -46,41 +48,52 @@ class GroupRemit < ApplicationRecord
 
     removed_batches = [] # To store the batches that are removed from the renewal
 
-    self.batches.includes(coop_member: :member).each do |batch|
-      # if batch.insurance_status == "denied"
-      #   create_denied_member(batch.coop_member.member, 'Denied by underwriter', new_group_remit)
-      #   next
-      # end
+    self.batches.includes(coop_member: :member).where(insurance_status: :approved).each do |batch|
+      existing_coverage = agreement.agreements_coop_members.find_by(coop_member_id: batch.coop_member.id)
+      
+      new_batch = Batch.new(coop_member_id: batch.coop_member.id)
+      new_batch.previous_effectivity_date = batch.effectivity_date
+      new_batch.previous_expiry_date = batch.expiry_date
+      b_rank = batch.agreement_benefit
 
-      if batch.member_details.age < batch.agreement_benefit.exit_age
-        new_batch = batch.dup
-        new_group_remit.batches << new_batch
-        new_batch.age = new_batch.member_details.age
-        new_batch.set_premium_and_service_fees(batch.agreement_benefit, new_group_remit)
 
-        difference_in_months = (Date.today.year - batch.created_at.year) * 12 + (Date.today.month - batch.created_at.month)
-        # byebug
-        new_batch.status = difference_in_months < 12 ? :recent : :renewal
-        new_batch.insurance_status = :approved
-        new_batch.save
+      Batch.process_batch(
+        new_batch, 
+        new_group_remit, 
+        b_rank, 
+        new_group_remit.terms
+      )
+      
+      new_group_remit.batches << new_batch
 
-        if batch.batch_dependents.present?
-          batch.batch_dependents.each do |dependent|
-            new_dependent = dependent.dup
-            new_dependent.batch_id = new_batch.id
-            new_dependent.set_premium_and_service_fees(dependent.agreement_benefit, new_group_remit)
-            new_dependent.save!
-          end
-        end
 
-        batch.batch_beneficiaries.each do |beneficiary|
-          new_beneficiary = beneficiary.dup
-          new_beneficiary.batch_id = new_batch.id
-          new_beneficiary.save!
-        end
-
+      if new_batch.member_details.age(new_group_remit.effectivity_date) >= new_batch.agreement_benefit.exit_age
+        new_batch.insurance_status = :denied
+        new_batch.batch_remarks.build(
+          remark: "Member age is over the maximum age limit of the plan.", 
+          status: :denied, 
+          user_type: 'CoopUser', 
+          user_id: current_user.userable.id
+        )
       else
-        create_denied_member(batch.coop_member.member, "The member\'s age meets the agreement\'s exit age #{batch.agreement_benefit.exit_age}", new_group_remit)
+        new_batch.insurance_status = :for_review
+      end
+      
+      new_batch.save!
+
+      if batch.batch_dependents.present?
+        batch.batch_dependents.each do |dependent|
+          new_dependent = dependent.dup
+          new_dependent.batch_id = new_batch.id
+          new_dependent.set_premium_and_service_fees(dependent.agreement_benefit, new_group_remit)
+          new_dependent.save!
+        end
+      end
+
+      batch.batch_beneficiaries.each do |beneficiary|
+        new_beneficiary = beneficiary.dup
+        new_beneficiary.batch_id = new_batch.id
+        new_beneficiary.save!
       end
     end
     

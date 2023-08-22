@@ -1,4 +1,5 @@
 class BatchRemarksController < ApplicationController
+  before_action :authenticate_user!
   before_action :set_batch_remark, only: %i[ show edit update destroy ]
 
   # GET /batch_remarks
@@ -12,12 +13,15 @@ class BatchRemarksController < ApplicationController
 
   # GET /batch_remarks/new
   def new
+    @batch = Batch.find(params[:ref])
+    @batch_remark = @batch.batch_remarks.build
     # @batch_remark = BatchRemark.new
     @title = case params[:batch_status]
       when "Pending" then "Pending Batch"
       when "Deny" then "Deny Batch"
       when "MD" then "Med Dir"
       when "New" then "New Remark" 
+      when "For reconsideration" then "Request for reconsideration"
     end
 
     @batch_status = params[:batch_status]
@@ -26,12 +30,11 @@ class BatchRemarksController < ApplicationController
       when "Pending" then :pending
       when "Deny" then :denied
       when "MD" then :md_reco
+      when "For reconsideration" then :request
     end
 
     @process_coverage = params[:pro_cov]
 
-    @batch = Batch.find(params[:ref])
-    @batch_remark = @batch.batch_remarks.build
   end
 
   def form_md
@@ -62,7 +65,13 @@ class BatchRemarksController < ApplicationController
     @process_coverage = ProcessCoverage.find_by(id: params[:batch_remark][:process_coverage])
 
     respond_to do |format|
-      
+      if @batch_remark.remark.empty? && @batch_remark.batch_status == "For reconsideration"
+        @group_remit = @batch.group_remits.find_by(type: "Remittance")
+        format.html { return redirect_to group_remit_path(@group_remit), alert: "Unable to create empty request" }
+      elsif @batch_remark.remark.empty?
+        format.html { return redirect_to process_coverage_path(@process_coverage), alert: "Unable to create empty request."}
+      end
+
       if @batch_remark.save
         # redirect_to @batch_remark, notice: "Batch remark was successfully created."
         if params[:batch_remark][:batch_status] == "Pending"
@@ -72,17 +81,27 @@ class BatchRemarksController < ApplicationController
         elsif params[:batch_remark][:batch_status] == "New"
           format.html { redirect_to process_coverage_path(@process_coverage), notice: "Batch remark created."}
         elsif params[:batch_remark][:batch_status] == "MD"
-          # byebug
           @group_remit = @batch.group_remits.find_by(type: "Remittance")
           format.html { redirect_to all_health_decs_group_remit_batches_path(@group_remit.process_coverage), notice: "Recommendation created." } 
+        elsif params[:batch_remark][:batch_status] == "For reconsideration"
+          @batch.update(status: :for_reconsideration)
+          @group_remit = @batch.group_remits.find_by(type: "Remittance")
+          format.html { redirect_to group_remit_path(@group_remit, insurance_status: :denied), notice: "Request saved" } 
         else
           format.html { redirect_to batch_remark_url(@batch_remark), notice: "Batch remark was successfully created." }
           format.json { render :show, status: :created, location: @batch_remark }
         end
+
       else
-        format.html { render :new, status: :unprocessable_entity }
-        format.json { render json: @batch_remark.errors, status: :unprocessable_entity }
-        format.turbo_stream { render :form_update, status: :unprocessable_entity }
+
+        if params[:batch_remark][:batch_status] == "For reconsideration"
+          format.html { render :new, status: :unprocessable_entity }
+        else
+          format.html { render :new, status: :unprocessable_entity }
+          format.json { render json: @batch_remark.errors, status: :unprocessable_entity }
+          format.turbo_stream { render :form_update, status: :unprocessable_entity }
+        end
+
       end
 
     end
@@ -114,3 +133,5 @@ class BatchRemarksController < ApplicationController
       params.require(:batch_remark).permit(:batch_id, :remark, :status, :user_id, :user_type, :batch_status, :process_coverage)
     end
 end
+
+
