@@ -21,6 +21,7 @@ class UserLevelsController < ApplicationController
 
   # POST /user_levels
   def create
+    # raise 'errors'
     @user_level = UserLevel.new(user_level_params)
 
     if @user_level.save
