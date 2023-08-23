@@ -110,7 +110,7 @@
             </h2>
             <div id="collapse2" class="accordion-collapse collapse" aria-labelledby="heading2" data-bs-parent="#accordionExample1">
               <div class="accordion-body">
-                <%= form_with url: process_coverages_path, method: :get do %>
+                <!-- <%= form_with url: process_coverages_path, method: :get do %>
                   <div class="d-flex justify-content-between align-items-center mb-3">
                     <div class="d-flex gap-3 text-center">
                       <%= text_field_tag 'search', nil, placeholder: 'Search...', class: "form-control", style: "width: auto", required: true %>
@@ -118,6 +118,13 @@
                       <%= link_to "View All", process_coverages_path, class: "btn btn-secondary" %>
                     </div>
                   </div>
+                <% end %> -->
+                <%= form_with url: process_coverages_path, builder: SimpleForm::FormBuilder, method: :get do |f| %>
+                  <%= f.input :search, placeholder: 'Search...', label: false, style: "width: auto" %>
+                  <%= f.submit 'Search', class: "btn btn-success"%>
+                  <%#= text_field_tag 'search', nil, placeholder: 'Search...', class: "form-control", style: "width: auto", required: true %>
+                  <%#= submit_tag 'Search', class: "btn btn-success" %>
+                  <%= link_to "View All", process_coverages_path, class: "btn btn-secondary" %>
                 <% end %>
               </div>
             </div>
@@ -130,7 +137,7 @@
             </h2>
             <div id="collapse3" class="accordion-collapse collapse" aria-labelledby="heading3" data-bs-parent="#accordionExample1">
               <div class="accordion-body">
-                <%= render "process_coverages/ua_inventory2", process_coverages: @process_coverages %>
+                <%= render "process_coverages/ua_inventory2", process_coverages: @process_coverages_x %>
               </div>
             </div>
           </div>
