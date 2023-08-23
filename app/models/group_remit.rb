@@ -182,16 +182,15 @@ class GroupRemit < ApplicationRecord
   end
 
   def total_dependent_premiums
-    batches.includes(:batch_dependents).sum {|batch| batch.batch_dependents.sum(&:premium) }
+    batches.includes(:batch_dependents).sum {|batch| batch.batch_dependents.approved.sum(&:premium) }
   end
 
   def dependent_coop_commissions
-    batches.approved.includes(:batch_dependents).sum {|batch| batch.batch_dependents.sum(&:coop_sf_amount) }
+    batches.approved.includes(:batch_dependents).sum {|batch| batch.batch_dependents.approved.sum(&:coop_sf_amount) }
   end
 
   def dependent_agent_commissions
-    # batches.joins(:batch_dependents).sum('batch_dependents.agent_sf_amount')
-    batches.approved.includes(:batch_dependents).sum {|batch| batch.batch_dependents.sum(&:agent_sf_amount) }
+    batches.approved.includes(:batch_dependents).sum {|batch| batch.batch_dependents.approved.sum(&:agent_sf_amount) }
   end
 
   def total_principal_premium
@@ -203,7 +202,8 @@ class GroupRemit < ApplicationRecord
   end
 
   def denied_dependent_premiums
-    batches.denied.includes(:batch_dependents).sum {|batch| batch.batch_dependents.sum(&:premium) }
+    (batches.denied.includes(:batch_dependents).sum {|batch| batch.batch_dependents.sum(&:premium) }) + 
+    (batches.where.not(insurance_status: :denied).includes(:batch_dependents).sum {|batch| batch.batch_dependents.denied.sum(&:premium) })
   end
 
   def gross_premium

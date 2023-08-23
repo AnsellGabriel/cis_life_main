@@ -74,10 +74,14 @@
 					<% else %>
 						<div class="d-flex flex-column mb-1">
 							<% dependents.each do |d| %>
-								<%= content_tag :span, "#{d.member_dependent.last_name}, #{d.member_dependent.first_name} #{d.member_dependent.middle_name}", 
-									class: "text-secondary", 
-									style: "font-size: .7rem;" 
-								%>
+								<% d_presenter = DependentPresenter.new(d)%>
+								<div class="<%= flex_justify_align('','center') %> gap-1">
+									<%= content_tag :span, "#{d.insurance_status.titleize}", class: d_presenter.status_badge %>									
+									<%= content_tag :span, "#{d.member_dependent.last_name}, #{d.member_dependent.first_name} #{d.member_dependent.middle_name}", 
+										class: "text-secondary", 
+										style: "font-size: .7rem;" 
+									%>
+								</div>
 							<% end %>
 						</div>
 					<% end %>

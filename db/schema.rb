@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_08_23_014743) do
+ActiveRecord::Schema[7.0].define(version: 2023_08_23_035247) do
   create_table "active_admin_comments", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.string "namespace"
     t.text "body"
@@ -98,6 +98,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_08_23_014743) do
     t.decimal "agent_sf", precision: 10, scale: 2
     t.integer "minimum_participation"
     t.decimal "claims_fund_amount", precision: 10, scale: 2
+    t.boolean "reconsiderable", default: false
     t.index ["agent_id"], name: "index_agreements_on_agent_id"
     t.index ["cooperative_id"], name: "index_agreements_on_cooperative_id"
     t.index ["plan_id"], name: "index_agreements_on_plan_id"
