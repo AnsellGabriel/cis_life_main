@@ -5,13 +5,13 @@ module ProcessCoveragesHelper
       
       case status
         when "for_process", "pending" then "d-inline"
-        when "approved", "for_head_approval", "for_vp_approval", "denied", "reprocess" then "d-none"
+        when "approved", "for_head_approval", "for_vp_approval", "denied", "reprocess", "reprocess_request" then "d-none"
       end
 
     elsif rank == "head" 
       
       case status 
-        when "for_vp_approval", "approved", "reprocess" then "d-none"
+        when "for_vp_approval", "approved", "reprocess", "reprocess_request" then "d-none"
         when "for_head_approval" then "d-inline"
       end
 
@@ -25,11 +25,15 @@ module ProcessCoveragesHelper
     end
   end
 
-  def batch_buttons(rank, status)
+  def batch_buttons(rank, status, pc_stat=nil)
     if rank == "analyst"
-      case status
-        when "approved", "denied" then "d-none"
-        when "pending", "for_review" then "d-inline"
+      if pc_stat == "reprocess_approved" || pc_stat == "reassess"
+        "d-inline"
+      else
+        case status
+          when "approved", "denied" then "d-none"
+          when "pending", "for_review" then "d-inline"
+        end
       end
     elsif rank == "head" || rank == "senior_officer"
       "d-inline"
@@ -48,6 +52,14 @@ module ProcessCoveragesHelper
       end
     else
       "d-none"
+    end
+  end
+
+  def reprocess_stat(val=nil)
+    case val
+    when true then content_tag :span, "YES", class: "text-success"
+    else
+      content_tag :span, "NO", class: "text-secondary"
     end
   end
   

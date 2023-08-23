@@ -1,0 +1,15 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  description: MyString
+  route_id: 1
+  user: one
+  trackable: one
+  trackable_type: Trackable
+
+two:
+  description: MyString
+  route_id: 1
+  user: two
+  trackable: two
+  trackable_type: Trackable

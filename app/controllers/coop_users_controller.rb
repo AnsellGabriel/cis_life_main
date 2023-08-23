@@ -74,7 +74,8 @@ class CoopUsersController < ApplicationController
 
     # Only allow a list of trusted parameters through.
     def coop_user_params
-      params.require(:coop_user).permit(:last_name, :first_name, :middle_name, :birthdate, :mobile_number, :designation, :cooperative_id, :coop_branch_id, user_attributes: [:email, :password, :password_confirmation, :userable_type, :userable_id])
+      params.require(:coop_user).permit(:last_name, :first_name, :middle_name, :birthdate, :mobile_number, :designation, :cooperative_id, :coop_branch_id, 
+        user_attributes: [:email, :password, :password_confirmation, :userable_type, :userable_id])
     end
 
     def check_userable_type

@@ -1,0 +1,64 @@
+<div class="row">
+    <div class="col-md-6">
+        <%= render 'claims_detail' %>
+        <div class="card">
+            <h5 class="card-header">Claimant details</h5>
+            <div class="card-body">
+                <dl class="row">
+                <dt class="col-sm-4">Name</dt>
+                <dd class="col-sm-8"><%= @process_claim.claimant_name %></dd>
+                <dt class="col-sm-4">Relation</dt>
+                <dd class="col-sm-8"><%= @process_claim.relationship %></dd>
+                <dt class="col-sm-4">Contact</dt>
+                <dd class="col-sm-8"><%= @process_claim.claimant_contact_no %></dd>
+                <dt class="col-sm-4">Email</dt>
+                <dd class="col-sm-8"><%= @process_claim.claimant_email %></dd>
+                </dl>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-6">
+      <div class="card">
+        <div class="card-header">
+          <%#= render 'action_button' %>
+          <p>Your authority level is upto <%#= to_curr(@authority.max_authority) %> </p>
+        </div>
+        <div class="card-body">
+          <%#= link_to "Evaluate", evaluate_process_claim_path(@process_claim.id), class: "btn btn-warning" %>
+          <div class="row">
+            <div class="col-md-6">
+              <h4 class="text-primary">Claims Benefit</h4>
+            </div>
+            <div class="col-md-6">
+              <div class="text-end">
+                <%#= link_to '<i class="bi bi-plus-square"></i> Add Benefit'.html_safe, new_claim_benefit_path(v: @process_claim), class: "btn btn-primary btn-sm mb-3", data: { turbo_frame: "remote_modal" } %>
+              </div>
+            </div>
+          </div>
+          <%= render 'claim_benefits/show_benefit' %>
+        </div>
+      </div>
+    </div>
+</div>
+<div class="row">
+<div class="col-md-6">
+      <div class="card">
+        <div class="card-body">
+          <div class="row">
+            <h4 class="col-md-6 text-primary">Recommendation</h4>
+            <div class="col-md-6 text-end">
+              <%= link_to '<i class="bi bi-chat-left-text"></i> Add Remark'.html_safe, new_claim_remark_path(v: @process_claim, s: ""), class: "btn btn-primary mb-3", data: { turbo_frame: "remote_modal" } %>
+            </div>
+          </div>
+          <%= render 'claim_remarks/show_remark' %>
+        </div>
+      </div>
+    </div>
+<div class="col-md-6">
+    <div class="card">
+      <div class="card-body">
+        <%= render 'show_claim_track' %>
+      </div>
+    </div>
+  </div>
+</div>

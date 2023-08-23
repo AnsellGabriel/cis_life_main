@@ -14,7 +14,7 @@
     <%= javascript_importmap_tags %>
     <%= javascript_include_tag "jquery" %>
   </head>
-  <body class="bg_gradient">
+  <body class="d-flex flex-column bg_gradient">
     <%= render 'layouts/partials/navi' %>
     <div class="container">
       <div class="row d-flex justify-content-center">
@@ -23,7 +23,7 @@
         </div>
       </div>
     </div>
-    <div class="container">
+    <div class="container mb-3">
       <%= yield %>
       <%= turbo_frame_tag "remote_modal", target: "_top" %>
     </div>
@@ -46,5 +46,6 @@
         </div>
       </div>
     </div>
+    <%= render 'layouts/partials/footer' %>
   </body>
 </html>

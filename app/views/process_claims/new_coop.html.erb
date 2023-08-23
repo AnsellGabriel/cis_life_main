@@ -1,5 +1,5 @@
 
-  <h5 class="card-header text-center"><%= @agreement.plan.name %> Claim Form</h5>
-  <div class="card-body col-md-10" style="margin: auto">
-    <%= render "form", process_claim: @process_claim %>
+  
+  <div class="col-md-6" style="margin: auto">
+    <%= render "form_coop", url: create_coop_process_claims_path(v: @process_claim, cm: @coop_member), meth: 'post' %>
   </div>

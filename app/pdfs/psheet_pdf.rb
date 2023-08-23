@@ -57,6 +57,12 @@ class PsheetPdf < Prawn::Document
     prov = @pro_cov.group_remit.agreement.cooperative.geo_province
     reg = @pro_cov.group_remit.agreement.cooperative.geo_region
     font_size(10) { text "Address <b><u>#{muni}, #{prov}, #{reg}</u></b>", inline_format: true}
+    move_down 10
+
+    font_size(10) { text "Agent: <b><u>#{@pro_cov.agent}</u></b>", inline_format: true}
+    move_down 10
+
+    font_size(10) { text "Insurance Plan: <b><u>#{@pro_cov.group_remit.agreement.plan}</u></b>", inline_format: true}
     
 
     move_down 20

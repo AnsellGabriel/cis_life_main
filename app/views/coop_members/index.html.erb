@@ -1,5 +1,3 @@
-
-
 <!-- New Member form Modal -->
 <div class="modal fade" id="batchEnrollment" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
   <div class="modal-dialog">
@@ -9,7 +7,6 @@
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body <%= flex_justify_align('','', true) %> gap-3" data-controller="progress-bar" data-progress-bar-url-value="<%= progress_path(coop_user_id: current_user.userable.id) %>">
-
         <%= form_with url: import_members_path, method: :post do |form| %>
           <%= form.label :file, "For multiple enrollment upload your csv file.", class: "form-text" %>
           <div class="d-flex gap-3">
@@ -27,13 +24,11 @@
             %>
           </div>
         <% end %>
-
         <%= render 'layouts/partials/progress_bar' %>
       </div>
     </div>
   </div>
 </div>
-
 <!-- Button trigger for New Member Enrollment -->
 <div class="d-flex justify-content-between align-items-center">
   <div class="d-flex align-items-center gap-3">
@@ -46,7 +41,6 @@
             turbo_frame: "modal-xl"
           } %>
       </div>
-
       <div class="mb-1">
         <%= content_tag :button, "Batch Enrollment", 
           class: "btn btn-sm btn-warning", 
@@ -61,7 +55,6 @@
       <% end %>
     </div>
   </div>
-
   <div class="d-flex align-items-center gap-1">
     <%= form_with url: coop_members_path, method: :get do %>
       <div class="form-group d-flex gap-3">
@@ -70,12 +63,9 @@
         <%= submit_tag 'Filter', class: "btn btn-sm btn-dark" %>
       </div>
     <% end %>
-
     <%= link_to "All", coop_members_path, class: "#{small_btn('outline-dark')} d-flex align-items-center", style: 'height: 38px;' %>
   </div>
 </div>
-
-
 <div class="table table-striped">
   <table class="table table-striped table-bordered table-hover align-middle">
     <thead>
@@ -86,7 +76,6 @@
         <th scope="col" >Actions</th>
       </tr>
     </thead>
-
     <tbody>
       <td colspan="12" class="text-center">
         <% if @filtered_members.blank? %>
@@ -95,43 +84,37 @@
       </td>
       <% @filtered_members.each do |member| %>
         <% coop_member = member.coop_members.find_by(cooperative_id: @cooperative.id)%>
-        
         <tr>
           <th scope="row" ><%= coop_member.id %></th>
           <td>
             <div class="">
               <div class="<%= flex_justify_align('','center') %> gap-2">
-                <%# <%= content_tag :span, "#{coop_member.full_name}" %> 
+                <%# <%= content_tag :span, "#{coop_member.full_name}" %>
                 <% if coop_member.deceased? %>
                   <%= content_tag :span, 'DECEASED', class: badge('danger') %>
                 <% end %>
               </div>
               <%= content_tag :strong, "#{coop_member.get_fullname}" %> <%= content_tag :small, "#{member.birth_date.strftime('%b %d, %y')}", class: "text-muted" %>
-              <div class="d-flex align-items-center gap-1"> 
-                  <span class="sm-secondary-text text-muted"><i class="bi bi-phone"></i> <%= member.mobile_number %> </span> |
-                  <span class="sm-secondary-text text-muted"><i class="bi bi-envelope"></i> <%= member.email %> </span>
-                  
-                  <%#= content_tag :span, "#{member.mobile_number}", class: "sm-secondary-text text-muted" %>
-     
+              <div class="d-flex align-items-center gap-1">
+                <span class="sm-secondary-text text-muted"><i class="bi bi-phone"></i> <%= member.mobile_number %> </span> |
+                <span class="sm-secondary-text text-muted"><i class="bi bi-envelope"></i> <%= member.email %> </span>
+                <%#= content_tag :span, "#{member.mobile_number}", class: "sm-secondary-text text-muted" %>
               </div>
             </div>
           </td>
           <td><%= coop_member.coop_branch.name.titleize %></td>
           <td>
-            
             <%= link_to 'Details', coop_member_path(coop_member), class: 'btn btn-sm btn-primary', data: {turbo_frame: 'modal-xl'} %>
             <%= link_to 'Edit', edit_member_path(member), class: 'btn btn-sm btn-secondary', data: {turbo_frame: 'modal-xl'} %>
             <% if coop_member.batches.joins(:group_remits).where(group_remits: { type: 'BatchRemit' }).exists? %>
               <%= link_to 'Coverage', show_insurance_coop_member_path(coop_member), class: 'btn btn-sm btn-secondary' %>
               <%= link_to 'Insurance', member_agreements_coop_member_path(coop_member), class: 'btn btn-sm btn-primary' %>
             <% end %>
-            <%# <%= link_to 'Coverage', show_insurance_coop_member_path(coop_member), class: 'btn btn-sm btn-secondary' %> 
+            <%# <%= link_to 'Coverage', show_insurance_coop_member_path(coop_member), class: 'btn btn-sm btn-secondary' %>
           </td>
-
         </tr>
       <% end %>
     </tbody>
   </table>
 </div>
-
 <%== pagy_bootstrap_nav(@pagy) %>

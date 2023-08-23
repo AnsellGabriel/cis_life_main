@@ -1,4 +1,5 @@
 class EmpApproversController < ApplicationController
+  before_action :authenticate_user!
   before_action :set_emp_approver, only: %i[ show edit update destroy ]
 
   # GET /emp_approvers
