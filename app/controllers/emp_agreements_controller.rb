@@ -88,17 +88,23 @@ class EmpAgreementsController < ApplicationController
 
   def transfer_agreements
     # raise 'errors'
-    @analyst = Employee.find_by(id: params[:emp_agreement][:employee_id])
-    ids = params[:ids]
-    ids.each do |id|
-      @old_emp_agreement = EmpAgreement.find_by(id: id)
-      @old_emp_agreement.update_attribute(:active, false)
 
-      @emp_agreement = EmpAgreement.new(employee: @analyst, agreement: @old_emp_agreement.agreement, active: true, category_type: 1)
-      @emp_agreement.save!
+    if params[:ids].nil? || params[:ids].count < 0
+      redirect_to transfer_index_emp_agreements_path, alert: "Please select emp agreements to transfer!"
+    else
+      @analyst = Employee.find_by(id: params[:emp_agreement][:employee_id])
+      ids = params[:ids]
+      ids.each do |id|
+        @old_emp_agreement = EmpAgreement.find_by(id: id)
+        @old_emp_agreement.update_attribute(:active, false)
+  
+        @emp_agreement = EmpAgreement.new(employee: @analyst, agreement: @old_emp_agreement.agreement, active: true, category_type: 1)
+        @emp_agreement.save!
+      end
+  
+      redirect_to transfer_index_emp_agreements_path, notice: "Selected Agreements are successfully transferred."
     end
 
-    redirect_to transfer_index_emp_agreements_path, notice: "Selected Agreements are successfully transferred."
   end
 
   private
