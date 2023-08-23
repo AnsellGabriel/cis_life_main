@@ -18,6 +18,7 @@ Rails.application.routes.draw do
     get :transfer_index, on: :collection
     get :update_ea_selected, on: :collection
     patch :transfer_agreements, on: :collection
+    get :inactive_sub, on: :member
   end
   # resources :denied_dependents
  
