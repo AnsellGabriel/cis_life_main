@@ -90,11 +90,13 @@
                     <%= f.input :date_from, as: :string, label: "From", input_html: { data: { controller: "flatpickr",
                         flatpickr_max_date: Time.zone.now,
                         flatpickr_next_arrow: "Next",
-                        flatpickr_prev_arrow: "Prev" } }, wrapper_html: { class: "col-md-4"} %>
+                        flatpickr_prev_arrow: "Prev",
+                        flatpickr_date_format: "m-d-Y" } }, wrapper_html: { class: "col-md-4"} %>
                     <%= f.input :date_to, as: :string, label: "To", input_html: { data: { controller: "flatpickr",
                         flatpickr_max_date: Time.zone.now,
                         flatpickr_next_arrow: "Next",
-                        flatpickr_prev_arrow: "Prev" } }, wrapper_html: { class: "col-md-4"} %>
+                        flatpickr_prev_arrow: "Prev",
+                        flatpickr_date_format: "m-d-Y" } }, wrapper_html: { class: "col-md-4"} %>
                     <%= f.input :process_type, as: :select, collection: process_types, wrapper_html: { class: "col-md-4"} %>
                   </div>
                   <%= f.submit "Filter", class: small_btn('outline-primary') %>
