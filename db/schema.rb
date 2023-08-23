@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_08_22_015519) do
+ActiveRecord::Schema[7.0].define(version: 2023_08_23_014743) do
   create_table "active_admin_comments", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.string "namespace"
     t.text "body"
@@ -149,7 +149,8 @@ ActiveRecord::Schema[7.0].define(version: 2023_08_22_015519) do
     t.decimal "coop_sf_amount", precision: 10, scale: 2
     t.decimal "agent_sf_amount", precision: 10, scale: 2
     t.bigint "agreement_benefit_id", null: false
-    t.boolean "valid_health_dec"
+    t.boolean "valid_health_dec", default: false
+    t.integer "insurance_status", default: 3
     t.index ["agreement_benefit_id"], name: "index_batch_dependents_on_agreement_benefit_id"
     t.index ["batch_id"], name: "index_batch_dependents_on_batch_id"
     t.index ["member_dependent_id"], name: "index_batch_dependents_on_member_dependent_id"
@@ -367,6 +368,17 @@ ActiveRecord::Schema[7.0].define(version: 2023_08_22_015519) do
     t.index ["batch_dependent_id"], name: "index_dependent_health_decs_on_batch_dependent_id"
   end
 
+  create_table "dependent_remarks", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+    t.bigint "batch_dependent_id", null: false
+    t.text "remark"
+    t.integer "status"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.bigint "user_id", null: false
+    t.index ["batch_dependent_id"], name: "index_dependent_remarks_on_batch_dependent_id"
+    t.index ["user_id"], name: "index_dependent_remarks_on_user_id"
+  end
+
   create_table "emp_agreements", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.bigint "employee_id"
     t.bigint "agreement_id"
@@ -500,7 +512,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_08_22_015519) do
     t.decimal "premium_due", precision: 10, scale: 2
     t.decimal "coop_sf_amount", precision: 10, scale: 2
     t.decimal "agent_sf_amount", precision: 10, scale: 2
-    t.boolean "valid_health_dec"
+    t.boolean "valid_health_dec", default: false
     t.decimal "loan_amount", precision: 10, scale: 2
     t.bigint "loan_insurance_rate_id", null: false
     t.boolean "reinsurance"
@@ -774,6 +786,8 @@ ActiveRecord::Schema[7.0].define(version: 2023_08_22_015519) do
   add_foreign_key "denied_enrollees", "cooperatives"
   add_foreign_key "denied_members", "group_remits"
   add_foreign_key "dependent_health_decs", "batch_dependents"
+  add_foreign_key "dependent_remarks", "batch_dependents"
+  add_foreign_key "dependent_remarks", "users"
   add_foreign_key "emp_approvers", "employees", column: "approver_id"
   add_foreign_key "employees", "departments"
   add_foreign_key "group_import_trackers", "group_remits"

@@ -215,7 +215,6 @@ class ProcessCoveragesController < ApplicationController
 
   # GET /process_coverages/1
   def show
-
     @insured_types = @process_coverage.group_remit.agreement.agreement_benefits.insured_types.symbolize_keys.values
     @insured_types2 = @process_coverage.group_remit.agreement.agreement_benefits
     puts "insured type id: #{@insured_types}"
@@ -378,6 +377,19 @@ class ProcessCoveragesController < ApplicationController
       if @batch.update_attribute(:insurance_status, 0)
         @process_coverage.increment!(:approved_count)
         format.html { redirect_to process_coverage_path(@process_coverage), notice: "Batch Approved!" }
+      end
+    end
+  end
+
+  def approve_dependent
+    @dependent = BatchDependent.find(params[:dependent])
+    @batch = @dependent.batch
+    @group_remit = @batch.group_remits.find(params[:group_remit_id])
+
+    respond_to do |format|
+      if @dependent.update_attribute(:insurance_status, 0)
+        format.html { redirect_to show_all_group_remit_batch_dependents_path(@group_remit, @batch, process_coverage: params[:id]), notice: "Dependent Approved!" }
+        format.turbo_stream { render turbo_stream: turbo_stream.update('approved_message', partial: 'layouts/notification') }
       end
     end
   end

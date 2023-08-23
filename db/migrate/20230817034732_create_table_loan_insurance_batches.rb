@@ -14,7 +14,7 @@ class CreateTableLoanInsuranceBatches < ActiveRecord::Migration[7.0]
       t.decimal :premium_due, precision: 10, scale: 2
       t.decimal :coop_fee, precision: 10, scale: 2
       t.decimal :agent_fee, precision: 10, scale: 2
-      t.boolean :valid_health_dec
+      t.boolean :valid_health_dec, default: false
       t.decimal :loan_amount, precision: 10, scale: 2
       t.references :loan_insurance_rate, null: false, foreign_key: true
       t.boolean :reinsurance

@@ -133,12 +133,14 @@ Rails.application.routes.draw do
   resources :batch_remarks do
     get :form_md, on: :member
   end
+  resources :dependent_remarks
 
   resources :process_remarks do 
     get :view_all, on: :collection
   end
   resources :process_coverages do 
     get :approve_batch, on: :member
+    get :approve_dependent, on: :member
     get :deny_batch, on: :member
     get :pending_batch, on: :member
     get :reconsider_batch, on: :member
