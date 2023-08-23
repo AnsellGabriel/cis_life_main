@@ -1,0 +1,88 @@
+<table class="table">
+  <thead>
+    <th></th>
+    <th>Day</th>
+    <th>Week</th>
+    <th>Month</th>
+    <th>Year</th>
+  </thead>
+  <tbody>
+    <% current_date = Time.now %>
+    <tr>
+      <td class="lead text-secondary">For Process</td>
+      <!-- Day -->
+      <% start_day = current_date.beginning_of_day %>
+      <% end_day = current_date.end_of_day %>
+      <td><%= process_coverages.where(status: :for_process, created_at: start_day..end_day).count %></td>
+      <!-- Week -->
+      <% start_week = current_date.beginning_of_week %>
+      <% end_week = current_date.end_of_week %>
+      <td><%= process_coverages.where(status: :for_process, created_at: start_week..end_week).count %></td>
+      <!-- Month -->
+      <% start_month = current_date.beginning_of_month %>
+      <% end_month = current_date.end_of_month %>
+      <td><%= process_coverages.where(status: :for_process, created_at: start_month..end_month).count %></td>
+      <!-- Year -->
+      <% start_year = current_date.beginning_of_year %>
+      <% end_year = current_date.end_of_year %>
+      <td><%= process_coverages.where(status: :for_process, created_at: start_year..end_year).count %></td>
+    </tr>
+    <tr>
+      <td class="lead text-success">Approved</td>
+      <!-- Day -->
+      <% start_day = current_date.beginning_of_day %>
+      <% end_day = current_date.end_of_day %>
+      <td><%= process_coverages.where(status: :approved, created_at: start_day..end_day).count %></td>
+      <!-- Week -->
+      <% start_week = current_date.beginning_of_week %>
+      <% end_week = current_date.end_of_week %>
+      <td><%= process_coverages.where(status: :approved, created_at: start_week..end_week).count %></td>
+      <!-- Month -->
+      <% start_month = current_date.beginning_of_month %>
+      <% end_month = current_date.end_of_month %>
+      <td><%= process_coverages.where(status: :approved, created_at: start_month..end_month).count %></td>
+      <!-- Year -->
+      <% start_year = current_date.beginning_of_year %>
+      <% end_year = current_date.end_of_year %>
+      <td><%= process_coverages.where(status: :approved, created_at: start_year..end_year).count %></td>
+    </tr>
+    <tr>
+      <td class="lead text-danger">Denied</td>
+      <!-- Day -->
+      <% start_day = current_date.beginning_of_day %>
+      <% end_day = current_date.end_of_day %>
+      <td><%= process_coverages.where(status: :denied, created_at: start_day..end_day).count %></td>
+      <!-- Week -->
+      <% start_week = current_date.beginning_of_week %>
+      <% end_week = current_date.end_of_week %>
+      <td><%= process_coverages.where(status: :denied, created_at: start_week..end_week).count %></td>
+      <!-- Month -->
+      <% start_month = current_date.beginning_of_month %>
+      <% end_month = current_date.end_of_month %>
+      <td><%= process_coverages.where(status: :denied, created_at: start_month..end_month).count %></td>
+      <!-- Year -->
+      <% start_year = current_date.beginning_of_year %>
+      <% end_year = current_date.end_of_year %>
+      <td><%= process_coverages.where(status: :denied, created_at: start_year..end_year).count %></td>
+    </tr>
+    <tr>
+      <td class="lead text-primary">Total Received</td>
+      <!-- Day -->
+      <% start_day = current_date.beginning_of_day %>
+      <% end_day = current_date.end_of_day %>
+      <td><%= process_coverages.where(created_at: start_day..end_day).count %></td>
+      <!-- Week -->
+      <% start_week = current_date.beginning_of_week %>
+      <% end_week = current_date.end_of_week %>
+      <td><%= process_coverages.where(created_at: start_week..end_week).count %></td>
+      <!-- Month -->
+      <% start_month = current_date.beginning_of_month %>
+      <% end_month = current_date.end_of_month %>
+      <td><%= process_coverages.where(created_at: start_month..end_month).count %></td>
+      <!-- Year -->
+      <% start_year = current_date.beginning_of_year %>
+      <% end_year = current_date.end_of_year %>
+      <td><%= process_coverages.where(created_at: start_year..end_year).count %></td>
+    </tr>
+  </tbody>
+</table>
