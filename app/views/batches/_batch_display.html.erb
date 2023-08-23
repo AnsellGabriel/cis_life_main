@@ -244,6 +244,7 @@
             <hr>
           <% end %>
           <% @dependents.each do |d| %>
+            <% d_presenter = DependentPresenter.new(d) %>
             <div class="row mb-1">
               <div class="d-flex align-items-center">
                 <div class="col-sm-1">
@@ -258,11 +259,21 @@
                       style: "font-size: .8rem" do %>
                       <i class="bi bi-x-lg"></i>
                     <% end %>
+
+                    <% if (@batch.recent? || @batch.for_reconsideration?) && d.dependent_health_decs.blank? %>
+                      <%= link_to new_group_remit_batch_dep_health_declaration_path(@group_remit, @batch, batch_dependent_id: d.id),
+                        class: small_btn('warning'), 
+                        title: 'Health Declaration Form',
+                        data: { turbo_frame: "modal-xl" } do %> 
+                        <i class="bi bi-file-earmark-medical"></i>
+                      <% end %>
+                    <% end %>
                   <% end %>
                 </div>
-                <div class="col-sm-3 text-secondary">
+                <div class="col-sm-3 text-secondary <%= flex_justify_align('start', 'baseline', true) %> gap-1">
+                  <%= content_tag :span, "#{d.insurance_status.titleize}", class: d_presenter.status_badge %>
                   <%= content_tag :h6, "#{d.member_dependent.last_name}, #{d.member_dependent.first_name} #{d.member_dependent.middle_name}", 
-                    class: "mb-0 text-center", 
+                    class: "mb-0", 
                     style: "font-size: .8rem" 
                   %>
                 </div>

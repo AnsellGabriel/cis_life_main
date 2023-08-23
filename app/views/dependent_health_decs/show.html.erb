@@ -1,0 +1,14 @@
+
+
+<%= turbo_frame_tag "modal-xl" do %>
+  <div class="modal-header">
+    <%= content_tag :h5, "Health Declaration - #{@dependent.last_name}, #{@dependent.first_name} #{@dependent.middle_name}", class: "modal-title", id: "staticBackdropLabel" %>
+    <%= link_to group_remit_path(@group_remit), data: {turbo: false} do %>
+      <button type="button" class="btn-close" aria-label="Close"></button>
+    <% end %>
+  </div>
+  
+  <div class="modal-body">
+    <%= render @batch_health_dec %>
+  </div>
+<% end %>

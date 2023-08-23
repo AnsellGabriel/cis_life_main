@@ -5,15 +5,12 @@ class CoopAgreementsController < ApplicationController
 
   # GET /agreements
   def index
-    # @agreements = Agreement.all
     @agreements = @cooperative.filtered_agreements(params[:agreement_filter])
-
   end
 
   # GET /agreements/1
   def show
     @group_remits_eager = @agreement.group_remits.joins(:anniversary)
-    # @group_remits = @agreement.group_remits.order(created_at: :desc)
     @coop_sf = @agreement.coop_sf
     @filtered_anniversaries = @agreement.get_filtered_anniversaries(@agreement.group_remits.expiry_dates)
   end

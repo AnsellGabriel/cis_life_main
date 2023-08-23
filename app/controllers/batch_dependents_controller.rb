@@ -2,7 +2,7 @@ class BatchDependentsController < InheritedResources::Base
   before_action :authenticate_user!
   before_action :check_userable_type
   before_action :set_group_remit_batch, only: %i[new create]
-  before_action :set_dependent, only: %i[show edit update destroy]
+  before_action :set_dependent, only: %i[show edit update destroy health_dec]
 
   def show
     @dependent = @batch_dependent.member_dependent
@@ -21,46 +21,58 @@ class BatchDependentsController < InheritedResources::Base
     @dependents = @batch.batch_dependents
   end
 
-
   def create
     group_remit = @batch.group_remits.find_by(id: params[:group_remit_id])
-    terms = group_remit.terms
     agreement = group_remit.agreement
-    term_insurance = agreement.plan.acronym == 'PMFC' ? true : false
-    
-    begin
-      @batch_dependent = @batch.batch_dependents.new(batch_dependent_params)
-      relationship = @batch_dependent.member_dependent.relationship
-      insured_type = @batch_dependent.insured_type(relationship)
-    rescue NoMethodError
-      respond_to do |format|
-        format.html { return redirect_to group_remit_batch_path(@group_remit, @batch), alert: 'Please choose a dependent'}
-      end
-    end
 
-    dependent_agreement_benefits = agreement.agreement_benefits.where("name LIKE ?", "%#{@batch.agreement_benefit.name}%").find_by(insured_type: insured_type)
+    begin
+      insured_type = initialize_dependent_and_insured_type 
+    rescue NoMethodError
+      return redirect_to group_remit_batch_path(@group_remit, @batch), alert: 'Please choose a dependent'
+    end
+    
+    #! dependent agreement benefits' prefix must be principal agreement benefit's name
+    dependent_agreement_benefits = agreement.agreement_benefits
+                                    .with_name_like(@batch.agreement_benefit.name)
+                                    .find_by(insured_type: insured_type)
 
     unless dependent_agreement_benefits.present?
       dependent_agreement_benefits = agreement.agreement_benefits.find_by(insured_type: insured_type)
     end
+    # model/concerns/calculate.rb
+    @batch_dependent.set_premium_and_service_fees(dependent_agreement_benefits, group_remit, agreement.is_term_insurance?) 
 
-    @batch_dependent.set_premium_and_service_fees(dependent_agreement_benefits, group_remit, term_insurance) # model/concerns/calculate.rb
-
-    respond_to do |format|
-      if @batch_dependent.save
-        format.html { redirect_to group_remit_batch_path(@group_remit, @batch), notice: "Dependent successfully added" }
-      else
-        format.html { redirect_to group_remit_batch_path(@group_remit, @batch), alert: @batch_dependent.errors.full_messages.join(', ') }
-      end
+    if @batch_dependent.save
+      redirect_to group_remit_batch_path(@group_remit, @batch), notice: "Dependent successfully added" 
+    else
+      redirect_to group_remit_batch_path(@group_remit, @batch), alert: @batch_dependent.errors.full_messages.join(', ') 
     end
   end
 
   def destroy    
-    respond_to do |format|
-      if @batch_dependent.destroy
-        format.html { redirect_to group_remit_batch_path(@group_remit, @batch), alert: "Dependent removed" }
-      end
+    if @batch_dependent.destroy!
+      redirect_to group_remit_batch_path(@group_remit, @batch), alert: "Dependent removed" 
     end
+  end
+
+  def health_dec
+    @dependent = @batch_dependent.member_dependent
+    @dependent_health_dec = @batch_dependent.dependent_health_decs
+    @group_remit = @batch_dependent.batch.group_remits.find_by(type: "Remittance")
+    @questionaires = DependentHealthDec.where(batch_dependent_id: @batch_dependent.id).where(answerable_type: "HealthDec")
+    @subquestions = DependentHealthDec.where(batch_dependent_id: @batch_dependent.id).where(answerable_type: "HealthDecSubquestion")
+
+    @for_und = params[:for_und]
+    # @md = params[:md]
+
+    # # Medical Director Remarks
+    # @batch_remark = @batch.batch_remarks.build
+    # @batch_status = "test"
+    # @batch_status = "MD"
+    # @rem_status = :md_reco
+    # # @process_coverage = @batch.group_remit.process_coverage
+    # @process_coverage = @group_remit.process_coverage
+
   end
 
   private
@@ -82,6 +94,12 @@ class BatchDependentsController < InheritedResources::Base
       unless current_user.userable_type == 'CoopUser' || current_user.userable_type == 'Employee'
         render file: "#{Rails.root}/public/404.html", status: :not_found
       end
+    end
+
+    def initialize_dependent_and_insured_type
+      @batch_dependent = @batch.batch_dependents.new(batch_dependent_params)
+      relationship = @batch_dependent.member_dependent.relationship
+      insured_type = @batch_dependent.insured_type(relationship)
     end
 
 end

@@ -6,7 +6,7 @@ class AgreementsController < ApplicationController
     @agreements_x = Agreement.all
 
     if params[:search].present?
-      @agreements = @agreements_x.joins(:cooperative, :plan).where("cooperatives.name LIKE ? OR plans.name LIKE ? OR agreements.moa_no LIKE ? OR plans.acronym LIKE ?", "%#{params[:search]}%", "%#{params[:search]}%", "%#{params[:search]}%", "%#{params[:search]}%")
+      @agreements = @agreements_x.filtered(params[:search])
     else
       @agreements = @agreements_x
     end
@@ -28,11 +28,7 @@ class AgreementsController < ApplicationController
     @agreement.agreement_benefits.build
     set_dummy_value
   end
-  def set_dummy_value 
-    @agreement.contestability = 12
-    @agreement.nel  = 25000
-    @agreement.nml = 5000000
-  end
+  
   # GET /agreements/1/edit
   def edit
   end
@@ -76,5 +72,11 @@ class AgreementsController < ApplicationController
       params.require(:agreement).permit(:plan_id, :cooperative_id, :agent_id, :moa_no, :contestability, :nel, :nml, :anniversary_type, :transferred, :transferred_date, :previous_provider, :comm_type, :claims_fund, :claims_fund_amount, :entry_age_from, :entry_age_to, :exit_age, 
         agreement_benefits_attributes: [:id, :name, :description, :min_age, :max_age, :exit_age, :insured_type, :_destroy],
         anniversaries_attributes: [:id, :name, :anniversary_date, :_destroy])
+    end
+
+    def set_dummy_value 
+      @agreement.contestability = 12
+      @agreement.nel  = 25000
+      @agreement.nml = 5000000
     end
 end

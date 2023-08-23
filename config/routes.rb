@@ -55,7 +55,11 @@ Rails.application.routes.draw do
   get "/progress", to: "progress#show"
   get "/progress/update", to: "progress#update"
 
-  #* Coop Module Routes
+  #* Coop Module 
+  namespace :coop do
+    get 'dashboard', to: 'dashboard#index'
+  end
+
   resources :cooperatives do
     get :selected, on: :member
   end
@@ -95,8 +99,10 @@ Rails.application.routes.draw do
       end
       # get :approve_selected, on: :collection
       # get :approve_all, on: :collection
-      resources :batch_health_decs, as: 'health_declarations'
+      resources :batch_health_decs, as: 'health_declarations' 
+      resources :dependent_health_decs, as: 'dep_health_declarations'
       resources :batch_dependents, as: 'dependents' do
+        get :health_dec, on: :member
         collection do
           get :show_all
         end
@@ -122,8 +128,10 @@ Rails.application.routes.draw do
     resources :details
     resources :batches
     resources :batch_remits
+    resources :group_remits
   end
 
+  # get 'loan_insurance', to: 'loan_insurance#index'
   get 'insurance/accept', as: 'accept_insurance'
   # get 'insurance/reject', as: 'reject_insurance'
   get 'insurance/terminate', as: 'terminate_insurance'
@@ -145,12 +153,14 @@ Rails.application.routes.draw do
   resources :batch_remarks do
     get :form_md, on: :member
   end
+  resources :dependent_remarks
 
   resources :process_remarks do 
     get :view_all, on: :collection
   end
   resources :process_coverages do 
     get :approve_batch, on: :member
+    get :approve_dependent, on: :member
     get :deny_batch, on: :member
     get :pending_batch, on: :member
     get :reconsider_batch, on: :member

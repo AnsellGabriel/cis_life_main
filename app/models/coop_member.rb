@@ -2,6 +2,11 @@ class CoopMember < ApplicationRecord
   before_save :set_full_name
   validates_presence_of :coop_branch_id, :membership_date, :cooperative_id
 
+  scope :approved_members, -> (approved_batches) {joins(:batches)
+    .where(batches: { id: approved_batches })
+    .distinct.pluck(:id)
+  }
+
   belongs_to :cooperative
   belongs_to :coop_branch
   belongs_to :member

@@ -2,7 +2,7 @@ class Batch < ApplicationRecord
   include Calculate
   attr_accessor :rank
 
-  validates_presence_of :effectivity_date, :expiry_date, :premium, :coop_sf_amount, :age, :agent_sf_amount, :coop_member_id, :agreement_benefit_id
+  validates_presence_of :effectivity_date, :expiry_date, :premium, :coop_sf_amount, :age, :agent_sf_amount, :coop_member_id
 
   # batch.status
   enum status: {
@@ -27,10 +27,11 @@ class Batch < ApplicationRecord
       .where("members.first_name LIKE :name OR members.last_name LIKE :name", name: "%#{name}%")
   }
   scope :coop_member, -> { joins(:member).where('members.coop_member = ?', true) }
+  scope :approved, -> { where(insurance_status: :approved) }
 
   belongs_to :coop_member
   belongs_to :member, optional: true
-  belongs_to :agreement_benefit
+  belongs_to :agreement_benefit, optional: true
 
   has_many :batch_group_remits
   has_many :group_remits, through: :batch_group_remits
@@ -65,7 +66,7 @@ class Batch < ApplicationRecord
 
 
   def dependents_premium
-    batch_dependents.sum(:premium)
+    batch_dependents.approved.sum(:premium)
   end
 
 
@@ -104,12 +105,9 @@ class Batch < ApplicationRecord
 
   end
 
-
-
   def self.determine_premium(rank, batch, group_remit)
     batch.set_premium_and_service_fees(rank, group_remit)
   end
-
 
   private
 
@@ -162,22 +160,13 @@ class Batch < ApplicationRecord
     self.status == "recent"
   end
 
-  # def delete_agreements_coop_members
-  #   agreement = self.group_remits[0].agreement
-  #   coop_member = self.coop_member
-  #   agreement.coop_members.delete(coop_member)
-  #   self.batch_group_remits.destroy_all
-  # end
+  def accept_insurance
+    self.insurance_status = :approved
 
-  # def unique_coop_member_in_anniversary
-  #   if coop_member.present? && group_remit.agreement.group_remits.joins(:anniversary, batches: :coop_member)
-  #           .where('coop_members.id': coop_member_id)
-  #           .where.not(group_remits: { id: group_remit_id })
-  #           .where.not(anniversaries: { id: group_remit.anniversary_id })
-  #           .exists?
-
-  #     errors.add(:coop_member_id, "already exists in another batch with a different anniversary")
-  #   end
-  # end
-
+    if self.previous_effectivity_date.nil? || self.previous_effectivity_date.empty?
+      self.status = :recent
+    else
+      self.status = :renewal
+    end
+  end
 end

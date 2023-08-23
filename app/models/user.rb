@@ -7,6 +7,7 @@ class User < ApplicationRecord
   belongs_to :coop_user, optional: true
   belongs_to :userable, polymorphic: true
   has_many :user_levels
+  has_many :dependent_remarks
 
   enum rank: {
     rank_and_file: 0,

@@ -1,10 +1,10 @@
 class CoopBranch < ApplicationRecord
   before_save :to_upcase
 
-  belongs_to :cooperative
-  belongs_to :coop_type, optional: true
   has_many :coop_users
   has_many :coop_members
+  belongs_to :cooperative
+  belongs_to :coop_type, optional: true
   belongs_to :geo_region, optional: true
   belongs_to :geo_province, optional: true
   belongs_to :geo_municipality, optional: true
@@ -13,7 +13,6 @@ class CoopBranch < ApplicationRecord
   def to_s 
     name
   end
-
 
   def get_address 
     unless geo_province_id.nil? && geo_municipality_id.nil? && geo_barangay_id.nil? 

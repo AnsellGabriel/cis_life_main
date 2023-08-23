@@ -1,7 +1,8 @@
-
-<div class="card">
-  <h5 class="card-header">New batch</h5>
-  <div class="card-body">
-    <%= render "form", loan_insurance_batch: @loan_insurance_batch %>
+<%= turbo_frame_tag 'batch_form' do %>
+  <div class="card">
+    <div class="card-body">
+      <%= render "form", batch: @batch %>
+    </div>
   </div>
-</div>
+<% end %>
+

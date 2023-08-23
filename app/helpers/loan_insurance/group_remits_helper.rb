@@ -1,0 +1,2 @@
+module LoanInsurance::GroupRemitsHelper
+end

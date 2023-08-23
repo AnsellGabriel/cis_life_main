@@ -15,6 +15,6 @@
   <%= content_tag :hr %>
 <% end %>
 
-<% if @group_remit.pending? || @group_remit.for_renewal? %>
+<% if (@group_remit.pending? || @group_remit.for_renewal?) && @agreement.reconsiderable? %>
   <%= link_to "Request reconsideration", new_batch_remark_path(ref: batch, batch_status: "For reconsideration", coop: true), class: "btn btn-sm btn-primary", data: { turbo_frame: "modal" } %>
 <% end %>

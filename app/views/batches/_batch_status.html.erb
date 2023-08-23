@@ -1,3 +1,5 @@
+<%batch_presenter = BatchPresenter.new(batch)%>
+
 <% if batch.coop_member.deceased? %>
     <%= content_tag :span, 'DECEASED', class: badge('danger') %>
 <% end %>
@@ -18,4 +20,10 @@
     <span class="<%= badge('success') %>">New</span>
 <% else %>
     <span class="<%= badge('warning') %> text-dark"><%= batch.status.to_s.titleize %></span>
+<% end %>
+
+<% if agreement.plan.acronym == 'GYRTBR' || agreement.plan.acronym == 'GYRTFR'%>
+    <span class="badge bg-info text-dark">
+            <%= batch_presenter.capitalized_insured_type %>
+    </span>
 <% end %>

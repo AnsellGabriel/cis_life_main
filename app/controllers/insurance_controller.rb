@@ -2,13 +2,7 @@ class InsuranceController < ApplicationController
   before_action :set_variables, only: [:accept, :terminate]
 
   def accept
-    @batch.insurance_status = :approved
-
-    if @batch.previous_effectivity_date.nil? || @batch.previous_effectivity_date.empty?
-      @batch.status = :recent
-    else
-      @batch.status = :renewal
-    end
+    @batch.accept_insurance
 
     respond_to do |format|
       if @batch.save!

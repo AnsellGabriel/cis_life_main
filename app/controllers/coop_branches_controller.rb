@@ -23,19 +23,7 @@ class CoopBranchesController < ApplicationController
     @coop_branch = @cooperative.coop_branches.build
     default_values
   end
-  def default_values 
-    @geo_region = GeoRegion.all
-    @coop_branch.geo_region_id = @geo_region.shuffle.first.id
-    @geo_province = GeoProvince.where(geo_region_id: @cooperative.geo_region_id)
-    @coop_branch.geo_province_id = @geo_province.shuffle.first.id
-    @geo_municipality = GeoMunicipality.where(geo_province_id: @cooperative.geo_province_id)
-    @coop_branch.geo_municipality_id = @geo_municipality.shuffle.first.id
-     @geo_barangay = GeoBarangay.where(geo_municipality_id: @cooperative.geo_municipality_id)
-     @coop_branch.geo_barangay_id = @geo_barangay.shuffle.first.id
-    @coop_branch.street = FFaker::Address.neighborhood
-    @coop_branch.name = @coop_branch.street
-    @coop_branch.contact_details = FFaker::PhoneNumber.phone_number
-  end
+  
   # GET /coop_branches/1/edit
   def edit
   end
@@ -103,4 +91,18 @@ class CoopBranchesController < ApplicationController
     #     render file: "#{Rails.root}/public/404.html", status: :not_found
     #   end
     # end
+
+    def default_values 
+      @geo_region = GeoRegion.all
+      @coop_branch.geo_region_id = @geo_region.shuffle.first.id
+      @geo_province = GeoProvince.where(geo_region_id: @cooperative.geo_region_id)
+      @coop_branch.geo_province_id = @geo_province.shuffle.first.id
+      @geo_municipality = GeoMunicipality.where(geo_province_id: @cooperative.geo_province_id)
+      @coop_branch.geo_municipality_id = @geo_municipality.shuffle.first.id
+      @geo_barangay = GeoBarangay.where(geo_municipality_id: @cooperative.geo_municipality_id)
+      @coop_branch.geo_barangay_id = @geo_barangay.shuffle.first.id
+      @coop_branch.street = FFaker::Address.neighborhood
+      @coop_branch.name = @coop_branch.street
+      @coop_branch.contact_details = FFaker::PhoneNumber.phone_number
+    end
 end

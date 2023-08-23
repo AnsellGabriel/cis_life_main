@@ -1,0 +1,62 @@
+
+<%= simple_form_for(dependent_health_dec, url: group_remit_batch_dep_health_declarations_path(batch_dependent_id: @batch_dependent.id)) do |f| %>
+  <%= f.error_notification %>
+  <%= f.error_notification message: f.object.errors[:base].to_sentence if f.object.errors[:base].present? %>
+  
+  <div class="form-inputs mb-3 d-flex flex-column-reverse">
+    <table class="table table-bordered">
+      <thead>
+        <tr>
+          <th scope="col"></th>
+          <th scope="col" class="col-11">Questionnaire</th>
+          <th scope="col" class="col-1">Answer</th>
+        </tr>
+      </thead>
+      <tbody>
+  
+        <% @questionaire.each_with_index do |q, index| %>
+        
+          <% if q.health_dec_subquestions.present? %>
+            <tr data-controller='questionaire'>
+          <% else %>
+            <tr>
+          <% end %>
+
+            <td><%= index + 1 %></td>
+            <td>
+              <p><%= q.question %></p>
+              <% if q.health_dec_subquestions.present? %>
+                <div class="d-none" data-questionaire-target="container">
+                <% q.health_dec_subquestions.each do |sub| %>
+                    <p><%= sub.question %></p>
+                    <input type="text" class="form-control mb-1" name="question[<%= q.id %>][subquestion][<%= sub.id %>][value]" data-questionaire-target="input">
+                <% end %>
+                </div>
+              <% end %>
+            </td>
+            <td style="vertical-align: middle">
+              <div class="d-flex gap-2">
+                <div class="">
+                  <input type="radio" value="true" name="question[<%= q.id %>][answer]" data-questionaire-target="answer" data-action="change->questionaire#showContainer">
+                  <label name="question_<%= q.id %>">Yes</label>
+                </div>
+                <div class="">
+                  <input type="radio" value="false" name="question[<%= q.id %>][answer]" data-questionaire-target="answer" data-action="change->questionaire#showContainer">
+                  <label name="question_<%= q.id %>">No</label>
+                </div>
+              </div>
+            </td>
+          </tr>
+        <% end %>
+
+
+
+      </tbody>
+      <div class="form-actions text-center">
+        <%= f.button :submit, 'Submit', class: 'btn-success' %>
+      </div>
+    </table>
+  </div>
+
+  
+<% end %>

@@ -1,6 +1,8 @@
 class AgreementBenefit < ApplicationRecord
 	validates_presence_of :name, :min_age, :max_age, :insured_type # :with_dependent
 
+  scope :with_name_like, -> (name) { where("name LIKE ?", "%#{name}%") }
+
   has_many :batches
   has_many :batch_dependents
   has_many :product_benefits
@@ -27,7 +29,6 @@ class AgreementBenefit < ApplicationRecord
     ranking_rank_and_file: 9
   }
   
-  
-
   # InsuredType = ["Principal", "Dependent"]
+
 end

@@ -15,11 +15,13 @@
       <tbody>
   
         <% @questionaire.each_with_index do |q, index| %>
+        
           <% if q.health_dec_subquestions.present? %>
             <tr data-controller='questionaire'>
           <% else %>
             <tr>
           <% end %>
+
             <td><%= index + 1 %></td>
             <td>
               <p><%= q.question %></p>

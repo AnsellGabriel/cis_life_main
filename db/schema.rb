@@ -101,6 +101,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_08_18_060515) do
     t.decimal "agent_sf", precision: 10, scale: 2
     t.integer "minimum_participation"
     t.decimal "claims_fund_amount", precision: 10, scale: 2
+    t.boolean "reconsiderable", default: false
     t.index ["agent_id"], name: "index_agreements_on_agent_id"
     t.index ["cooperative_id"], name: "index_agreements_on_cooperative_id"
     t.index ["plan_id"], name: "index_agreements_on_plan_id"
@@ -153,6 +154,8 @@ ActiveRecord::Schema[7.0].define(version: 2023_08_18_060515) do
     t.decimal "coop_sf_amount", precision: 10, scale: 2
     t.decimal "agent_sf_amount", precision: 10, scale: 2
     t.bigint "agreement_benefit_id", null: false
+    t.boolean "valid_health_dec", default: false
+    t.integer "insurance_status", default: 3
     t.index ["agreement_benefit_id"], name: "index_batch_dependents_on_agreement_benefit_id"
     t.index ["batch_id"], name: "index_batch_dependents_on_batch_id"
     t.index ["member_dependent_id"], name: "index_batch_dependents_on_member_dependent_id"
@@ -209,7 +212,6 @@ ActiveRecord::Schema[7.0].define(version: 2023_08_18_060515) do
     t.boolean "below_nel", default: false
     t.integer "duration"
     t.integer "residency"
-    t.string "type"
     t.date "previous_effectivity_date"
     t.date "previous_expiry_date"
     t.index ["agreement_benefit_id"], name: "index_batches_on_agreement_benefit_id"
@@ -412,6 +414,29 @@ ActiveRecord::Schema[7.0].define(version: 2023_08_18_060515) do
     t.datetime "updated_at", null: false
   end
 
+  create_table "dependent_health_decs", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+    t.bigint "batch_dependent_id", null: false
+    t.text "answer"
+    t.string "answerable_type", null: false
+    t.bigint "answerable_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["answerable_type", "answerable_id"], name: "index_dependent_health_decs_on_answerable"
+    t.index ["batch_dependent_id"], name: "index_dependent_health_decs_on_batch_dependent_id"
+  end
+
+  create_table "dependent_remarks", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+    t.bigint "batch_dependent_id", null: false
+    t.text "remark"
+    t.integer "status"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.bigint "user_id", null: false
+    t.index ["batch_dependent_id"], name: "index_dependent_remarks_on_batch_dependent_id"
+    t.index ["user_id"], name: "index_dependent_remarks_on_user_id"
+  end
+
+
   create_table "emp_agreements", charset: "utf8mb4", force: :cascade do |t|
     t.bigint "employee_id"
     t.bigint "agreement_id"
@@ -531,6 +556,35 @@ ActiveRecord::Schema[7.0].define(version: 2023_08_18_060515) do
     t.datetime "updated_at", null: false
   end
 
+  create_table "loan_insurance_batches", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+    t.bigint "coop_member_id", null: false
+    t.bigint "group_remit_id", null: false
+    t.integer "age"
+    t.date "effectivity_date"
+    t.date "expiry_date"
+    t.date "date_release"
+    t.date "date_mature"
+    t.integer "terms"
+    t.decimal "unused", precision: 10, scale: 2
+    t.decimal "premium", precision: 10, scale: 2
+    t.decimal "premium_due", precision: 10, scale: 2
+    t.decimal "coop_sf_amount", precision: 10, scale: 2
+    t.decimal "agent_sf_amount", precision: 10, scale: 2
+    t.boolean "valid_health_dec", default: false
+    t.decimal "loan_amount", precision: 10, scale: 2
+    t.bigint "loan_insurance_rate_id", null: false
+    t.boolean "reinsurance"
+    t.bigint "loan_insurance_retention_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.bigint "loan_insurance_loan_id", null: false
+    t.index ["coop_member_id"], name: "index_loan_insurance_batches_on_coop_member_id"
+    t.index ["group_remit_id"], name: "index_loan_insurance_batches_on_group_remit_id"
+    t.index ["loan_insurance_loan_id"], name: "index_loan_insurance_batches_on_loan_insurance_loan_id"
+    t.index ["loan_insurance_rate_id"], name: "index_loan_insurance_batches_on_loan_insurance_rate_id"
+    t.index ["loan_insurance_retention_id"], name: "index_loan_insurance_batches_on_loan_insurance_retention_id"
+  end
+
   create_table "loan_insurance_details", charset: "utf8mb4", force: :cascade do |t|
     t.bigint "batch_id", null: false
     t.decimal "unuse", precision: 10, scale: 2
@@ -566,11 +620,13 @@ ActiveRecord::Schema[7.0].define(version: 2023_08_18_060515) do
   create_table "loan_insurance_rates", charset: "utf8mb4", force: :cascade do |t|
     t.integer "min_age"
     t.integer "max_age"
-    t.decimal "monthly_rate", precision: 10
-    t.decimal "annual_rate", precision: 10
-    t.decimal "daily_rate", precision: 10
+    t.decimal "monthly_rate", precision: 5, scale: 2
+    t.decimal "annual_rate", precision: 5, scale: 2
+    t.decimal "daily_rate", precision: 5, scale: 2
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.bigint "agreement_id", null: false
+    t.index ["agreement_id"], name: "index_loan_insurance_rates_on_agreement_id"
   end
 
   create_table "loan_insurance_retentions", charset: "utf8mb4", force: :cascade do |t|
@@ -829,16 +885,25 @@ ActiveRecord::Schema[7.0].define(version: 2023_08_18_060515) do
   add_foreign_key "denied_dependents", "group_remits"
   add_foreign_key "denied_enrollees", "cooperatives"
   add_foreign_key "denied_members", "group_remits"
+  add_foreign_key "dependent_health_decs", "batch_dependents"
+  add_foreign_key "dependent_remarks", "batch_dependents"
+  add_foreign_key "dependent_remarks", "users"
   add_foreign_key "emp_approvers", "employees", column: "approver_id"
   add_foreign_key "employees", "departments"
   add_foreign_key "group_import_trackers", "group_remits"
   add_foreign_key "group_remits", "agreements"
   add_foreign_key "health_dec_subquestions", "health_decs"
+  add_foreign_key "loan_insurance_batches", "coop_members"
+  add_foreign_key "loan_insurance_batches", "group_remits"
+  add_foreign_key "loan_insurance_batches", "loan_insurance_loans"
+  add_foreign_key "loan_insurance_batches", "loan_insurance_rates"
+  add_foreign_key "loan_insurance_batches", "loan_insurance_retentions"
   add_foreign_key "loan_insurance_details", "batches"
   add_foreign_key "loan_insurance_details", "loan_insurance_loans"
   add_foreign_key "loan_insurance_details", "loan_insurance_rates"
   add_foreign_key "loan_insurance_details", "loan_insurance_retentions"
   add_foreign_key "loan_insurance_loans", "cooperatives"
+  add_foreign_key "loan_insurance_rates", "agreements"
   add_foreign_key "member_dependents", "members"
   add_foreign_key "member_import_trackers", "coop_users"
   add_foreign_key "payments", "group_remits"
