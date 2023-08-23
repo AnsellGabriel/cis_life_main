@@ -75,6 +75,17 @@ class EmpAgreementsController < ApplicationController
     @emp_agreements = EmpAgreement.where(id: @ids).build
   end
 
+  def inactive_sub
+    # raise 'errors'
+    @emp_agreement = EmpAgreement.find(params[:id])
+    @main_ea_approver = EmpAgreement.find_by(agreement: @emp_agreement.agreement, category_type: :main_approver)
+
+    if @emp_agreement.update(active: false)
+      @main_ea_approver.update(active: true)
+      redirect_to transfer_index_emp_agreements_path, notice: "Sub Approver inactive. Main Approver set to active."
+    end
+  end
+
   def transfer_agreements
     # raise 'errors'
     @analyst = Employee.find_by(id: params[:emp_agreement][:employee_id])
