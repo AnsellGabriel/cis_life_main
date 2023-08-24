@@ -1,0 +1,11 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  claim_type: one
+  benefit: one
+  required: false
+
+two:
+  claim_type: two
+  benefit: two
+  required: false

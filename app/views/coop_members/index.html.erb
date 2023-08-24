@@ -121,8 +121,8 @@
             
             <%= link_to 'Details', coop_member_path(coop_member), class: 'btn btn-sm btn-primary', data: {turbo_frame: 'modal-xl'} %>
             <%= link_to 'Edit', edit_member_path(member), class: 'btn btn-sm btn-secondary', data: {turbo_frame: 'modal-xl'} %>
-            <% if coop_member.batches.joins(:group_remits).where(group_remits: { type: 'BatchRemit' }).exists? %>
               <%= link_to 'Coverage', show_insurance_coop_member_path(coop_member), class: 'btn btn-sm btn-secondary' %>
+            <% if coop_member.batches.joins(:group_remits).where(group_remits: { type: 'BatchRemit' }).exists? %>
               <%= link_to 'Insurance', member_agreements_coop_member_path(coop_member), class: 'btn btn-sm btn-primary' %>
             <% end %>
             <%# <%= link_to 'Coverage', show_insurance_coop_member_path(coop_member), class: 'btn btn-sm btn-secondary' %> 

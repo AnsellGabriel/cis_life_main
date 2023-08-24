@@ -3,7 +3,7 @@ class CreateClaimRemarks < ActiveRecord::Migration[7.0]
     create_table :claim_remarks do |t|
       t.references :process_claim, null: false, foreign_key: true
       t.references :user, null: false, foreign_key: true
-      t.string :status
+      t.integer :status
       t.text :remark
 
       t.timestamps

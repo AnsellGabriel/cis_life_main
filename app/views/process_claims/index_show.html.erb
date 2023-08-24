@@ -1,4 +1,4 @@
-<%= content_tag :h4, "List of #{@display} claims" %>
+<%= content_tag :h4, "Claims #{@display}", class:"text-primary" %>
 <table class ="table table-striped">
   <table class="table table-striped table-bordered table-hover">
     <thead>
@@ -27,10 +27,11 @@
         <%= content_tag :small, "Date Filed: #{to_shortdate(process_claim.date_file)}" unless process_claim.date_file.nil? %></td>
         <%# <td><%= process_claim.batch %>
           <td>
-            <%= link_to "View", show_coop_process_claim_path(process_claim), class: "btn btn-warning btn-sm" unless process_claim.processing? %>
-            <%= link_to "View", claim_process_process_claim_path(process_claim), class: "btn btn-warning btn-sm" if process_claim.processing? %>
-            
-            <%= link_to 'Edit', claims_file_process_claim_path(process_claim), class: 'btn btn-secondary btn-sm' if process_claim.claim_filed? %>
+            <% if process_claim.submitted? || process_claim.claim_filed? %>
+              <%= link_to "View", show_coop_process_claim_path(process_claim), class: "btn btn-warning btn-sm"  %>
+            <% else %>
+              <%= link_to "View", claim_process_process_claim_path(process_claim), class: "btn btn-warning btn-sm"  %>
+            <% end %>
           </td>
         </tr>
       <% end %>

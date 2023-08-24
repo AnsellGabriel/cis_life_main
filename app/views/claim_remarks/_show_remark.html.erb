@@ -6,7 +6,7 @@
           <td>
             <figure>
               <blockquote class="blockquote text-primary">
-                <small><%= claim_remark.user %> <span class="badge bg-warning text-dark"><%= claim_remark.status %></span></small>
+                <small><%= claim_remark.user %> <span class="badge rounded-pill bg-warning text-dark"><%= claim_remark.status.to_s.humanize %></span></small>
               </blockquote>
               <figcaption class="blockquote-footer">
                 <cite title="Source Title"><%= claim_remark.created_at %></cite>

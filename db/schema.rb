@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_08_18_060515) do
+ActiveRecord::Schema[7.0].define(version: 2023_08_24_032153) do
   create_table "active_admin_comments", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.string "namespace"
     t.text "body"
@@ -277,12 +277,38 @@ ActiveRecord::Schema[7.0].define(version: 2023_08_18_060515) do
   create_table "claim_remarks", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.bigint "process_claim_id", null: false
     t.bigint "user_id", null: false
-    t.string "status"
+    t.integer "status"
     t.text "remark"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["process_claim_id"], name: "index_claim_remarks_on_process_claim_id"
     t.index ["user_id"], name: "index_claim_remarks_on_user_id"
+  end
+
+  create_table "claim_type_benefits", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+    t.bigint "claim_type_id"
+    t.bigint "benefit_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["benefit_id"], name: "index_claim_type_benefits_on_benefit_id"
+    t.index ["claim_type_id"], name: "index_claim_type_benefits_on_claim_type_id"
+  end
+
+  create_table "claim_type_documents", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+    t.bigint "claim_type_id"
+    t.bigint "document_id"
+    t.boolean "required"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["claim_type_id"], name: "index_claim_type_documents_on_claim_type_id"
+    t.index ["document_id"], name: "index_claim_type_documents_on_document_id"
+  end
+
+  create_table "claim_types", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+    t.string "name"
+    t.text "description"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
   end
 
   create_table "coop_branches", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
@@ -412,6 +438,13 @@ ActiveRecord::Schema[7.0].define(version: 2023_08_18_060515) do
     t.datetime "updated_at", null: false
   end
 
+  create_table "documents", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+    t.string "name"
+    t.text "description"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
   create_table "emp_agreements", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.bigint "employee_id"
     t.bigint "agreement_id"
@@ -423,7 +456,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_08_18_060515) do
     t.index ["employee_id"], name: "index_emp_agreements_on_employee_id"
   end
 
-  create_table "emp_approvers", charset: "utf8mb4", force: :cascade do |t|
+  create_table "emp_approvers", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.bigint "employee_id"
     t.bigint "approver_id"
     t.datetime "created_at", null: false
@@ -432,7 +465,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_08_18_060515) do
     t.index ["employee_id"], name: "index_emp_approvers_on_employee_id"
   end
 
-  create_table "employees", charset: "utf8mb4", force: :cascade do |t|
+  create_table "employees", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.string "last_name"
     t.string "first_name"
     t.string "middle_name"
@@ -681,9 +714,11 @@ ActiveRecord::Schema[7.0].define(version: 2023_08_18_060515) do
     t.boolean "processing"
     t.boolean "approval"
     t.boolean "payment"
+    t.bigint "claim_type_id"
     t.index ["agreement_benefit_id"], name: "index_process_claims_on_agreement_benefit_id"
     t.index ["agreement_id"], name: "index_process_claims_on_agreement_id"
     t.index ["cause_id"], name: "index_process_claims_on_cause_id"
+    t.index ["claim_type_id"], name: "index_process_claims_on_claim_type_id"
     t.index ["claimable_type", "claimable_id"], name: "index_process_claims_on_claimable"
     t.index ["cooperative_id"], name: "index_process_claims_on_cooperative_id"
   end

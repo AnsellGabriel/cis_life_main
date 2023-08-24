@@ -1,0 +1,74 @@
+<div class="card mb-3">
+  <ul class="nav nav-tabs">
+    <li class="nav-item" role="presentation">
+      <button class="nav-link active" data-bs-toggle="tab" id="home-tab" type="button" data-bs-target="#home" role="tab" aria-controls="home" aria-current="page">Cause of Claim</button>
+    </li>
+    <li class="nav-item" role="presentation">
+      <button class="nav-link" data-bs-toggle="tab" id="coverage-tab" type="button" data-bs-target="#coverage" role="tab" aria-controls="coverage">Coverage</button>
+    </li>
+    <li class="nav-item" role="presentation">
+      <button class="nav-link" data-bs-toggle="tab" id="confine-tab" type="button" data-bs-target="#confine" role="tab" aria-controls="confine">Confinement</button>
+    </li>
+    <li class="nav-item" role="presentation">
+      <button class="nav-link" data-bs-toggle="tab" id="beneficiary-tab" type="button" data-bs-target="#beneficiary" role="tab" aria-controls="contact">Beneficiary & Distribution</button>
+    </li>
+  </ul>
+  <div class="tab-content container mt-3" id="myTabControl">
+    <div class="tab-pane fade show active" role="tabpanel" id="home" aria-labelledby="home-tab">
+      <%= render 'show_cause' %>
+    </div>
+    <div class="tab-pane fade show" role="tabpanel" id="coverage" aria-labelledby="coverage-tab">
+      <div class="row">
+        <h4 class="col-md-6 text-primary">Claim Coverages</h4>
+        <div class="col-md-6 text-end">
+          <%#= link_to '<i class="bi bi-plus-square"></i> New item'.html_safe, new_claim_coverage_path(v: @process_claim), class: "btn btn-primary mb-3", data: { turbo_frame: "remote_modal" }  unless params[:action] == 'evaluate' %>
+        </div>
+      </div>
+      <%= render 'claim_coverages/show_coverages' %>
+    </div>
+    <div class="tab-pane fade show" role="tabpanel" id="beneficiary" aria-labelledby="beneficiary-tab">
+      <div class="row">
+        <div class="col-md-6">
+          <div class="row">
+            <h4 class="col-md-6 text-primary">Beneficiary</h4>
+            <div class="col-md-6 text-end">
+              <%#= link_to '<i class="bi bi-plus-square"></i> Add Beneficiary'.html_safe, new_claim_beneficiary_path(v: @process_claim), class: "btn btn-primary mb-3", data: { turbo_frame: "remote_modal" }  unless params[:action] == 'evaluate' %>
+            </div>
+          </div>
+          <%#= render 'claim_beneficiaries/show_beneficiaries' %>
+        </div>
+        <div class="col-md-6">
+          <div class="row">
+            <h4 class="col-md-6 text-primary">Distribution</h4>
+            <div class="col-md-6 text-end">
+              <%#= link_to '<i class="bi bi-plus-square"></i> Add Distribution'.html_safe, new_claim_distribution_path(v: @process_claim), class: "btn btn-primary mb-3", data: { turbo_frame: "remote_modal" } unless params[:action] == 'evaluate' %>
+            </div>
+          </div>
+          <%#= render 'claim_distributions/show_distribution' %>
+        </div>
+      </div>
+    </div>
+    <div class="tab-pane fade show" role="tabpanel" id="confine" aria-labelledby="confine-tab">
+      <div class="row">
+        <h4 class="col-md-6 text-primary">Claim Confinement</h4>
+        <div class="col-md-6 text-end">
+          <%#= link_to '<i class="bi bi-plus-square"></i> Add Confinement'.html_safe, new_claim_confinement_path(v: @process_claim), class: "btn btn-primary mb-3", data: { turbo_frame: "remote_modal" } unless params[:action] == 'evaluate' %>
+        </div>
+      </div>
+      <%#= render 'claim_confinements/show_confinement' %>
+    </div>
+    <%# <div class="tab-pane fade show" role="tabpanel" id="coverage" aria-labelledby="coverage-tab">
+        <div class="row">
+          <h3 class="col-md-6">Claims Coverage</h3>
+          <div class="col-md-6 text-end"> %>
+    <%#= link_to '<i class="bi bi-plus-square"></i> New item'.html_safe, new_claim_coverage_path(v: @process_claim), class: "btn btn-primary mb-3", data: { turbo_frame: "remote_modal" } %>
+    <%# </div>
+        </div> %>
+    <%#= render 'claim_coverages/show_coverage' %>
+    <%# </div> %>
+    <div class="tab-pane fade show" role="tabpanel" id="contact" aria-labelledby="contact-tab">
+      <h3>Contact us</h3>
+      <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Possimus nesciunt alias numquam ut officia laudantium velit minima, quos labore, obcaecati laborum voluptas nostrum excepturi ipsam sed deserunt. Amet, aspernatur, magni?</p>
+    </div>
+  </div>
+</div>
