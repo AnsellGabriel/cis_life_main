@@ -163,10 +163,10 @@ class ProcessClaimsController < ApplicationController
   end
 
   def import_product_benefit 
-    # @product_benefit = ProductBenefit.where(agreement_benefit: @process_claim.agreement_benefit)
-    # @product_benefit.each do | pb |
-    #   @process_claim.claim_benefits.create(process_claim_id: @process_claim.id, benefit_id: pb.benefit_id, amount: pb.coverage_amount)
-    # end
+    @product_benefit = ProductBenefit.where(agreement_benefit: @process_claim.agreement_benefit)
+    @product_benefit.each do | pb |
+      @process_claim.claim_benefits.create(process_claim_id: @process_claim.id, benefit_id: pb.benefit_id, amount: pb.coverage_amount)
+    end
     @batch = Batch.where(coop_member: @process_claim.claimable, agreement_benefit: @process_claim.agreement_benefit)
     @batch.each do |b|
       @process_claim.claim_coverages.create(process_claim: @process_claim, coverageable: b)
@@ -202,7 +202,7 @@ class ProcessClaimsController < ApplicationController
 
     # Only allow a list of trusted parameters through.
     def process_claim_params
-      params.require(:process_claim).permit(:cooperative_id, :claim_route, :agreement_id, :batch_id, :claimable_id, :cause_id, :date_file, :claim_filed, :processing, :approval, :payment, :claimable_type, :date_incident, :entry_type, :claimant_name, :claimant_email, :claimant_contact_no, :nature_of_claim, :agreement_benefit_id, :relationship, 
+      params.require(:process_claim).permit(:cooperative_id, :claim_route, :agreement_id, :batch_id, :claimable_id, :cause_id, :claim_type_id, :date_file, :claim_filed, :processing, :approval, :payment, :claimable_type, :date_incident, :entry_type, :claimant_name, :claimant_email, :claimant_contact_no, :nature_of_claim, :agreement_benefit_id, :relationship, 
         claim_documents_attributes: [:id, :document, :document_type, :_destroy],
         process_tracks_attributes: [:id, :description, :route_id, :trackable_type, :trackable_id ],
         claim_benefits_param: [:id, :benefit_id, :amount, :status],

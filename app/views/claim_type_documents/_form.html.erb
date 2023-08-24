@@ -1,0 +1,19 @@
+
+<%= simple_form_for(@claim_type_document, url: url, method: meth) do |f| %>
+  <%= f.error_notification %>
+  <%= f.error_notification message: f.object.errors[:base].to_sentence if f.object.errors[:base].present? %>
+
+  <div class="form-inputs">
+    <%= f.association :document %>
+    <div class="form-check form-switch mt-3">
+      <%= f.input :required %>
+      </div>
+    
+    <%#= f.input :status,collection: ClaimBenefit::Status, prompt: "Select a status" %>
+  </div>
+  <br>
+  <div class="form-actions text-end">
+    <%= link_to "Back", :back, class: 'btn btn-secondary' %>
+    <%= f.button :submit, 'Save', class: "btn btn-success" %>
+  </div>
+<% end %>

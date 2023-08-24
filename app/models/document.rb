@@ -1,5 +1,4 @@
-class Cause < ApplicationRecord
-
+class Document < ApplicationRecord
     def to_s 
         name
     end
