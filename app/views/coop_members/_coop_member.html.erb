@@ -1,7 +1,8 @@
 <div class="col-md-10">
   <div class="card mb-3">
     <div class="card-body">
-      <% if @coop_member.deceased? %>
+      <%#= binding.pry %>
+      <% if coop_member.deceased? %>
         <div class="row">
           <div class="text-danger">DECEASED</div>
         </div>
@@ -33,7 +34,7 @@
           <h6 class="mb-0">Cooperative</h6>
         </div>
         <div class="col-sm-9 text-secondary">
-          <%= "#{coop_member.cooperative.name}, #{coop_member.coop_branch.name}" %>        
+          <%= "#{coop_member.cooperative.name}, #{coop_member.coop_branch.name}" %>
         </div>
       </div>
       <hr class="mb-3">

@@ -1,5 +1,6 @@
 class ProcessCoveragesController < ApplicationController
   before_action :authenticate_user!
+  before_action :check_emp_department
   before_action :set_process_coverage, only: %i[ show edit update destroy approve_batch deny_batch pending_batch reconsider_batch pdf set_premium_batch update_batch_prem ]
 
   # GET /process_coverages
@@ -527,5 +528,11 @@ class ProcessCoveragesController < ApplicationController
     # Only allow a list of trusted parameters through.
     def process_coverage_params
     params.require(:process_coverage).permit(:group_remit_id, :agent_id, :effectivity, :expiry, :status, :approved_count, :approved_total_coverage, :approved_total_prem, :denied_count, :denied_total_coverage, :denied_total_prem)
+    end
+
+    def check_emp_department
+      unless (current_user.userable_type == 'Employee' && current_user.userable.department_id == 17) || current_user.senior_officer? #check if underwriting
+        render file: "#{Rails.root}/public/404.html", status: :not_found
+      end
     end
 end
