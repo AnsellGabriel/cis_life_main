@@ -279,7 +279,7 @@
                             <%#= link_to deny_batch_process_coverage_path(batch: batch), title: "Deny", class: "btn btn-sm btn-danger" do %>
                               <%#= bootstrap_icon "x-lg" %>
                               <%# end %>
-                              <% unless process_coverage.approved? && process_coverage.reprocess_approved? %>
+                              <% unless process_coverage.approved? || process_coverage.reprocess_approved? %>
                                 <div class="<%= batch_buttons(current_user.rank, batch.insurance_status, process_coverage.status) %>">
                                   <%= link_to approve_batch_process_coverage_path(batch: batch), onclick: "return confirm('Are you sure?')", method: :get, title: "Approve", class: "btn btn-sm btn-success mb-1" do %>
                                     <%= bootstrap_icon "check-lg" %>
