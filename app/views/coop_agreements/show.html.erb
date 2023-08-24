@@ -1,7 +1,8 @@
 <% plan_acronym = @agreement.plan.acronym %>
+<%= link_to 'Dashboard', coop_dashboard_path, class: "#{small_btn('secondary')} mb-2" %>
 
-<div class="mb-3 d-flex">
-  <%= content_tag :h3, @agreement.plan.name %>
+<div class="mb-3 d-flex text-primary">
+  <%= content_tag :h4, @agreement.plan.name %>
 </div>
 
   <div class="d-flex gap-3" data-controller="toggler">
@@ -10,7 +11,7 @@
         <div class="card-body">
           <div class="<%= flex_justify_align('between', 'center') %>">
             <div class="gap-1">
-              <h6 class="card-title mb-1">
+              <h6 class="card-title mb-1 text-primary">
                 <%= @agreement.moa_no %>
               </h6>
               <div class="small text-muted <%= flex_justify_align('', '', true) %>">
@@ -26,21 +27,7 @@
             </div>
 
             <% if plan_acronym == 'PMFC' %>
-
-              <%= simple_form_for @agreement.group_remits.new, url: group_remits_path, method: :post do |f| %>
-                <%= hidden_field_tag :agreement_id, @agreement.id %>
-                <%= hidden_field_tag :anniversary_id, nil %>
-                <%= hidden_field_tag :type, 'BatchRemit' %>
-                <%= f.input :terms, as: :select, collection: [
-                  ["3 months", 3], 
-                  ["4 months", 4], 
-                  ["5 months", 5], 
-                  ["6 months", 6], 
-                  ["9 months", 9], 
-                  ["12 months", 12]
-                ], include_blank: "Term duration", input_html: { style: "width: 250px !important" }, label: false %>
-                <%= f.button :submit, "New Batch", class: small_btn('success') %>
-              <% end %>
+              <%= render 'terms_button', agreement: @agreement %>
             <% elsif @agreement.anniversary_type == 'none' or @agreement.anniversary_type.nil? %>
               <% current_batch_remit = @agreement.group_remits.find_by(type: 'BatchRemit', effectivity_date: Date.today.beginning_of_month)%>
 
@@ -94,7 +81,7 @@
           <div class="card-body">
             <div class="<%= flex_justify_align('between', 'center') %>">
               <div class="d-flex gap-1">
-                  <h6 class="card-title mb-0">Remittances</h6>
+                  <h6 class="card-title mb-0 text-primary">Remittances</h6>
               </div>
             </div>
             <hr>

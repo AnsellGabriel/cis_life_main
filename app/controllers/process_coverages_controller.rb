@@ -1,5 +1,6 @@
 class ProcessCoveragesController < ApplicationController
   before_action :authenticate_user!
+  before_action :check_emp_department
   before_action :set_process_coverage, only: %i[ show edit update destroy approve_batch deny_batch pending_batch reconsider_batch pdf set_premium_batch update_batch_prem ]
 
   # GET /process_coverages
@@ -56,12 +57,19 @@ class ProcessCoveragesController < ApplicationController
 
     elsif current_user.analyst?
       # @process_coverages_x = ProcessCoverage.joins(group_remit: { agreement: :emp_agreements }).where( emp_agreements: { employee_id: current_user.userable_id, active: true })
-      @process_coverages_x = ProcessCoverage.joins(group_remit: :agreement).where(processor: current_user.userable_id)
+      @process_coverages_x = ProcessCoverage.joins(group_remit: {agreement: :plan}).where(processor: current_user.userable_id)
       
       if params[:search].present?
-        @process_coverages = @process_coverages_x.joins("INNER JOIN cooperatives ON cooperatives.id = agreements.cooperative_id").where("group_remits.name LIKE ? OR group_remits.description LIKE ? OR agreements.moa_no LIKE ? OR cooperatives.name LIKE ?", "%#{params[:search]}%", "%#{params[:search]}%", "%#{params[:search]}%", "%#{params[:search]}%")
+        @process_coverages = @process_coverages_x.joins("INNER JOIN cooperatives ON cooperatives.id = agreements.cooperative_id").where("group_remits.name LIKE ? OR group_remits.description LIKE ? OR agreements.moa_no LIKE ? OR cooperatives.name LIKE ? OR agreements.description LIKE ? OR plans.name LIKE ? OR plans.acronym LIKE ?", "%#{params[:search]}%", "%#{params[:search]}%", "%#{params[:search]}%", "%#{params[:search]}%", "%#{params[:search]}%", "%#{params[:search]}%", "%#{params[:search]}%")
       else
         @process_coverages = @process_coverages_x
+      end
+
+      if params[:emp_id].present?
+        # raise 'errors'
+        date_from = Date.strptime(params[:date_from], '%m-%d-%Y')
+        date_to = Date.strptime(params[:date_to], '%m-%d-%Y')
+        @process_coverages = @process_coverages_x.where(processor_id: params[:emp_id], status: params[:process_type], created_at: date_from..date_to)
       end
       
     else
@@ -251,7 +259,6 @@ class ProcessCoveragesController < ApplicationController
 
   # GET /process_coverages/1
   def show
-
     @insured_types = @process_coverage.group_remit.agreement.agreement_benefits.insured_types.symbolize_keys.values
     @insured_types2 = @process_coverage.group_remit.agreement.agreement_benefits
     puts "insured type id: #{@insured_types}"
@@ -430,6 +437,19 @@ class ProcessCoveragesController < ApplicationController
     end
   end
 
+  def approve_dependent
+    @dependent = BatchDependent.find(params[:dependent])
+    @batch = @dependent.batch
+    @group_remit = @batch.group_remits.find(params[:group_remit_id])
+
+    respond_to do |format|
+      if @dependent.update_attribute(:insurance_status, 0)
+        format.html { redirect_to show_all_group_remit_batch_dependents_path(@group_remit, @batch, process_coverage: params[:id]), notice: "Dependent Approved!" }
+        format.turbo_stream { render turbo_stream: turbo_stream.update('approved_message', partial: 'layouts/notification') }
+      end
+    end
+  end
+
   def pending_batch
     # raise 'errors'
     @batch = Batch.find(params[:batch])
@@ -508,5 +528,11 @@ class ProcessCoveragesController < ApplicationController
     # Only allow a list of trusted parameters through.
     def process_coverage_params
     params.require(:process_coverage).permit(:group_remit_id, :agent_id, :effectivity, :expiry, :status, :approved_count, :approved_total_coverage, :approved_total_prem, :denied_count, :denied_total_coverage, :denied_total_prem)
+    end
+
+    def check_emp_department
+      unless (current_user.userable_type == 'Employee' && current_user.userable.department_id == 17) || current_user.senior_officer? #check if underwriting
+        render file: "#{Rails.root}/public/404.html", status: :not_found
+      end
     end
 end

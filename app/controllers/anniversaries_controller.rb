@@ -35,6 +35,7 @@ class AnniversariesController < InheritedResources::Base
   def edit 
 
   end
+
   def update 
     respond_to do |format|
       if @anniversary.update(anniversary_params)
@@ -47,6 +48,7 @@ class AnniversariesController < InheritedResources::Base
       end
     end
   end
+
   def destroy 
     @anniversary.destroy
     respond_to do |format|
@@ -60,13 +62,16 @@ class AnniversariesController < InheritedResources::Base
     # def anniversary_params
     #   params.require(:anniversary).permit(:name, :anniversary_date, :agreement_id)
     # end
+
     def set_anniversary
       @anniversary = Anniversary.find(params[:id])
       @agreement = Agreement.find(@anniversary.agreement.id)
     end
+
     def anniversary_params
       params.require(:anniversary).permit(:name, :anniversary_date, :agreement_id)
     end
+    
     # def check_userable_type
     #   unless current_user.userable_type == 'CoopUser'
     #     render file: "#{Rails.root}/public/404.html", status: :not_found

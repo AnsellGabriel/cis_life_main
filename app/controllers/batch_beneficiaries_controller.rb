@@ -13,40 +13,33 @@ class BatchBeneficiariesController < InheritedResources::Base
     @member = @batch.member_details
     @beneficiaries = @member.unselected_dependents(@batch.beneficiary_ids)
     @claims = params[:claims]
-
   end
 
   def create
     @batch_beneficiary = @batch.batch_beneficiaries.new(batch_beneficiary_params)
-    respond_to do |format|
-      begin
-        if @batch_beneficiary.save!
-          
-          if batch_beneficiary_params[:claims]
-            format.html { redirect_to new_process_claim_path(coop_member_id: @batch.coop_member, agreement_id: @group_remit.agreement), notice: "Beneficiary successfully added" }
-          else
-            format.html { redirect_to group_remit_batch_path(@group_remit, @batch), notice: "Beneficiary successfully added" }
-          end
-          
+
+    begin
+      if @batch_beneficiary.save!
+        if batch_beneficiary_params[:claims]
+          redirect_to new_process_claim_path(coop_member_id: @batch.coop_member, agreement_id: @group_remit.agreement), notice: "Beneficiary successfully added" 
         else
-          format.html { render :new, status: :unprocessable_entity }
+          redirect_to group_remit_batch_path(@group_remit, @batch), notice: "Beneficiary successfully added" 
         end
-      rescue ActiveRecord::RecordInvalid => e
-        format.html { redirect_to group_remit_batch_path(@group_remit, @batch), alert: 'Please choose a beneficiary'}
+      else
+        render :new, status: :unprocessable_entity
       end
+    rescue ActiveRecord::RecordInvalid => e
+      redirect_to group_remit_batch_path(@group_remit, @batch), alert: 'Please choose a beneficiary'
     end
   end
 
   def destroy    
-    respond_to do |format|
-      if @batch_beneficiary.destroy
-        format.html { redirect_to group_remit_batch_path(@group_remit, @batch), alert: "Beneficiary removed" }
-      end
+    if @batch_beneficiary.destroy
+      redirect_to group_remit_batch_path(@group_remit, @batch), alert: "Beneficiary removed" 
     end
   end
 
   private
-
     def batch_beneficiary_params
       params.require(:batch_beneficiary).permit(:batch_id, :member_dependent_id, :claims)
     end

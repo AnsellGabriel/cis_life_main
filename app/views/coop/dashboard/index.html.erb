@@ -1,0 +1,71 @@
+<%= content_tag :h4, @cooperative.name, class: 'text-primary mb-3' %>
+<div class="d-flex">
+  <div class="col-md-6">
+    <div class="d-flex gap-2">
+      <%= render 'counter_box', title: 'Total members', count: @cooperative.coop_members.size %>
+      <% @cooperative.agreements.each do |a| %>
+        <% presenter = AgreementPresenter.new(a) %>
+        <%= render 'counter_box', title: "Enrolled in #{presenter.plan_acronym}", count: presenter.batch_remit_batches_count %>
+      <% end %>
+    </div>
+
+    <div class="card mb-3">
+      <div class="card-header text-primary">
+        <%= content_tag :h6, 'Cooperative Information', class: 'mb-0' %>
+      </div>
+      <div class="card-body <%= flex_justify_align('between','center') %>">
+        <div class="ps-3 col-md-9">
+          <%= content_tag :p, "Address: 10/F Jollibee Plaza Building, Emerald Ave., Ortigas Center, Pasig City 1600", class: 'card-text' %>
+          <%= content_tag :p, "Contact number: #{@cooperative.contact_number}", class: 'card-text' %>
+          <%= content_tag :p, "Email: #{@cooperative.email}", class: 'card-text' %>
+        </div>
+      </div>
+    </div>
+
+    <div class="card mb-3">
+      <div class="card-header text-primary">
+        <%= content_tag :h6, 'Insurance Plans', class: 'mb-0' %>
+      </div>
+      <div class="card-body">
+        <% @cooperative.agreements.each do |a| %>
+          <% presenter = AgreementPresenter.new(a) %>
+          <div class="card">
+            <%= link_to presenter.insurance_path, style: 'color: black' do %>
+              <div class="card-body <%= flex_justify_align('between','center') %> gap-3">
+                <div class="">
+                  <div class="text-primary d-flex gap-1 mb-1">
+                    <%= content_tag :h6, a.plan.name, class: 'mb-1 text-primary' %>
+                    <%= content_tag :p, "(#{a.plan.description})", class: 'text-muted mb-0', style: 'font-size: .8rem' %>
+                  </div>
+                  <div class="<%= flex_justify_align('', '', true) %> ps-3 col-md-9">
+
+                    <% if ['single', 'multiple'].include?(a.anniversary_type) %>
+                      <div class="d-flex gap-2">
+                        <%= content_tag :span, "Anniversary day#{a.anniversary_type == 'multiple' ? '(s)' : '' }: ", class: 'card-text' %>
+                          <%= content_tag :span, presenter.anniversary_dates, class: 'card-text' %>
+                      </div>
+                    <% end %>
+                    
+                    <%= content_tag :span, "Entry age: #{a.entry_age_from} - #{a.entry_age_to} years old", class: 'card-text' %>
+                    <%= content_tag :span, "Exit age: #{a.exit_age} years old", class: 'card-text mb-2' %>
+                  </div>
+                </div>
+              </div>
+            <% end %>
+          </div>
+        <% end %>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-md-6">
+    <div class="card col-md-11" style="margin: auto">
+      <div class="card-header text-primary">
+        <%= content_tag :h6, 'Notifications', class: 'mb-0' %>
+      </div>
+      <div class="card-body <%= flex_justify_align('between','center') %>">
+        <%= content_tag :span, 'No notifications' %>
+      </div>
+    </div>
+  </div>
+</div>

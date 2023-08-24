@@ -1,0 +1,13 @@
+
+<%remarks.order(created_at: :desc).each do |r| %>
+  <%= content_tag :div, class: "d-flex justify-content-between align-items-center" do %>
+    <%= content_tag :p, class: "mb-1" do %>
+      <%= r.user %> 
+      <%= content_tag :small, "- #{time_ago_in_words(r.created_at)} ago" %> 
+      <%= batch_rem_status(r.status) %>
+    <% end %>
+  <% end %>
+  <%= content_tag :p, r.remark, class: "small mb-0 fst-italic" %>
+
+  <%= content_tag :hr %>
+<% end %>

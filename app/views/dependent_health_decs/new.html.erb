@@ -1,0 +1,12 @@
+<%= turbo_frame_tag "modal-xl" do %>
+  <div class="modal-header">
+    <%= content_tag :h5, "Health Declaration - #{@dependent.last_name}, #{@dependent.first_name} #{@dependent.middle_name}", class: "modal-title", id: "staticBackdropLabel" %>
+    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+  </div>
+  
+  <div class="modal-body">
+    <div id="error_notif"></div>
+    <span class="text-secondary"><small><i>(Please answer all questions honestly before submitting the form)<i></small></span>
+    <%= render "form", dependent_health_dec: @batch_dependent_health_dec %>
+  </div>
+<% end %>

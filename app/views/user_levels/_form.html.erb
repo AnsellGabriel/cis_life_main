@@ -5,7 +5,8 @@
 
   <div class="form-inputs mb-3">
     <%= f.association :user %>
-    <%= f.association :authority_level %>
+    <% authority_levels = AuthorityLevel.all.map { |au| [to_currency(au.maxAmount ), au.id] } %>
+    <%= f.association :authority_level, collection: authority_levels, prompt: "Select Authority Level" %>
     <%= f.input :active %>
   </div>
 

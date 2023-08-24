@@ -1,0 +1,64 @@
+
+
+<%= turbo_frame_tag "modal-xl" do %>
+  <div class="modal-header">
+    <%= content_tag :h5, "Health Declaration - #{@dependent.last_name}, #{@dependent.first_name} #{@dependent.middle_name}", class: "modal-title", id: "staticBackdropLabel" %>
+    <% unless @for_und.present? %>
+      <%= link_to group_remit_batch_path(@group_remit, @batch), data: {turbo: false} do %>
+        <button type="button" class="btn-close" aria-label="Close"></button>
+      <% end %>
+    <% else %>
+      <%= link_to show_all_group_remit_batch_dependents_path(@group_remit, @batch) do %>
+        <button type="button" class="btn-close" aria-label="Close"></button>
+      <% end %>
+    <% end %>
+  </div>
+  
+  <div class="modal-body">
+    <% if @md.present? %>
+      <%= render 'coop_members/coop_member', member: @batch.coop_member.member, coop_member: @batch.coop_member %>
+    <% end %> 
+    <table class="table table-bordered">
+      <thead>
+        <tr>
+          <th scope="col"></th>
+          <th scope="col" class="col-11">Questionnaire</th>
+          <th scope="col" class="col-1">Answer</th>
+        </tr>
+      </thead>
+      <tbody>
+  
+        <% @questionaires.each_with_index do |q, index| %>
+          <tr>
+            <td><%= index+1 %></td>
+            <td>
+              <p><%= q.answerable.question %></p>
+              <% if q.answerable.health_dec_subquestions.present? %>
+                <% @subquestions.map do |sub| %>
+                  <% if sub.answerable.health_dec.id == q.answerable.id %>
+                    <p><%= sub.answerable.question %></p>
+                    <input value="<%= sub.answer %>" class="form-control" readonly disabled>
+                  <% end %>
+                <% end %>
+              <% end %>
+            </td>
+            <td>
+              <%= q.answer == "true" ? 'Yes' : 'No' %>
+            </td>
+          </tr>
+        <% end %>
+
+
+
+      </tbody>
+    </table>
+  </div>
+<% end %>
+  <%#= @batch %>
+<% if @md.present? %>
+  <% if @batch.batch_remarks.where(status: 2).count <= 0 %>
+    <%= render "batch_remarks/form_md", locals: { batch_remark: @batch_remark }  %>
+  <% else %>
+    <%= content_tag :h3, @batch.batch_remarks.where(status: 2).first.remark %>
+  <% end %>
+<% end %>

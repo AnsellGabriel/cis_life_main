@@ -1,0 +1,2 @@
+module Coop::DashboardHelper
+end

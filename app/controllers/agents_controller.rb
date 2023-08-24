@@ -30,7 +30,10 @@ class AgentsController < ApplicationController
 
     respond_to do |format|
       if @agent.save
-        format.html { redirect_to unauthenticated_root_path, notice: "Account created successfully. Please wait for the admin to approve your account."}
+        format.html { 
+          redirect_to unauthenticated_root_path, 
+          notice: "Account created successfully. Please wait for the admin to approve your account."
+        }
       else
         format.html { render :new, status: :unprocessable_entity }
       end

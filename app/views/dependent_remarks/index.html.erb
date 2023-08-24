@@ -1,0 +1,12 @@
+<%= turbo_frame_tag "modal-xl" do %>
+  <div class="modal-header">
+    <%= content_tag :h5, 'Remarks', class: "modal-title", id: "staticBackdropLabel" %>
+    <%= link_to  show_all_group_remit_batch_dependents_path(params[:group_remit_id], params[:batch_id], process_coverage: params[:process_coverage_id] ) do %>
+      <button type="button" class="btn-close" aria-label="Close"></button>
+    <% end %>
+  </div>
+  
+  <div class="modal-body">
+    <%= render 'dependent_remarks', remarks: @remarks %>
+  </div>
+<% end %>

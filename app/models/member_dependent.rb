@@ -7,10 +7,8 @@ class MemberDependent < ApplicationRecord
   validate :validate_relationship
 
   belongs_to :member
-
   has_many :batch_dependents, dependent: :destroy
   has_many :batches, through: :batch_dependents
-
   has_many :batch_beneficiaries, dependent: :destroy
   has_many :batches, through: :batch_beneficiaries
 

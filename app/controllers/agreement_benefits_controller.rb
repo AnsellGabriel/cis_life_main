@@ -21,10 +21,7 @@ class AgreementBenefitsController < ApplicationController
     # raise "errors"
     default_value
   end
-  def default_value 
-    @agreement_benefit.min_age = 18
-    @agreement_benefit.max_age = 65
-  end
+  
 
   # GET /agreement_benefits/1/edit
   def edit
@@ -71,6 +68,11 @@ class AgreementBenefitsController < ApplicationController
         product_benefits_param: [:id, :coverage_amount, :premium, :agreement_benefit_id, :benefit_id, :duration, :residency_floor, :residency_ceiling])
     end
 
+    def default_value 
+      @agreement_benefit.min_age = 18
+      @agreement_benefit.max_age = 65
+    end
+    
     # def check_userable_type
     #   unless current_user.userable_type == 'CoopUser'
     #     render file: "#{Rails.root}/public/404.html", status: :not_found

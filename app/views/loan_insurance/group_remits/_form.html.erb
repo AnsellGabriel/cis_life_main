@@ -1,0 +1,12 @@
+<%= simple_form_for(@group_remit, url: loan_insurance_group_remits_path) do |f| %>
+  <%= f.error_notification %>
+  <%= f.error_notification message: f.object.errors[:base].to_sentence if f.object.errors[:base].present? %>
+
+  <div class="form-inputs <%= flex_justify_align('center', 'center') %> gap-2">
+    <div class="d-flex gap-3 <%= flex_justify_align('center', 'center') %>">
+        <%= f.input :name, label: false, placeholder: 'Batch Name', wrapper_html: {style: 'margin-bottom: 0!important'} %>
+    </div>
+    <%= f.button :submit, 'Confirm', class: "#{small_btn('primary')} mb-0", data: {turbo: false} %>
+    <%= link_to 'Cancel', loan_insurance_group_remits_path, class: small_btn('danger') %>
+  </div>
+<% end %>
