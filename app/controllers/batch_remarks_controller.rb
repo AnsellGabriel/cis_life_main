@@ -64,47 +64,54 @@ class BatchRemarksController < ApplicationController
     @batch = Batch.find_by(id: params[:batch_remark][:batch_id])
     @process_coverage = ProcessCoverage.find_by(id: params[:batch_remark][:process_coverage])
 
-    respond_to do |format|
-      if @batch_remark.remark.empty? && @batch_remark.batch_status == "For reconsideration"
-        @group_remit = @batch.group_remits.find_by(type: "Remittance")
-        format.html { return redirect_to group_remit_path(@group_remit), alert: "Unable to create empty request" }
-      elsif @batch_remark.remark.empty?
-        format.html { return redirect_to process_coverage_path(@process_coverage), alert: "Unable to create empty request."}
-      end
+    if params[:batch_remark][:status] == "denied" && (@batch.batch_dependents.for_review.count > 0 || @batch.batch_dependents.pending.count > 0)
+      redirect_to process_coverage_path(@process_coverage), alert: "Please check pending and/or for review dependent(s) for that coverage."
+    else
 
-      if @batch_remark.save
-        # redirect_to @batch_remark, notice: "Batch remark was successfully created."
-        if params[:batch_remark][:batch_status] == "Pending"
-          format.html { redirect_to pending_batch_process_coverage_path(id: @process_coverage.id, batch: @batch)}
-        elsif params[:batch_remark][:batch_status] == "Deny"
-          format.html { redirect_to deny_batch_process_coverage_path(id: @process_coverage.id, batch: @batch)}
-        elsif params[:batch_remark][:batch_status] == "New"
-          format.html { redirect_to process_coverage_path(@process_coverage), notice: "Batch remark created."}
-        elsif params[:batch_remark][:batch_status] == "MD"
+      respond_to do |format|
+        if @batch_remark.remark.empty? && @batch_remark.batch_status == "For reconsideration"
           @group_remit = @batch.group_remits.find_by(type: "Remittance")
-          format.html { redirect_to all_health_decs_group_remit_batches_path(@group_remit.process_coverage), notice: "Recommendation created." } 
-        elsif params[:batch_remark][:batch_status] == "For reconsideration"
-          @batch.update(status: :for_reconsideration)
-          @group_remit = @batch.group_remits.find_by(type: "Remittance")
-          format.html { redirect_to group_remit_path(@group_remit, insurance_status: :denied), notice: "Request saved" } 
-        else
-          format.html { redirect_to batch_remark_url(@batch_remark), notice: "Batch remark was successfully created." }
-          format.json { render :show, status: :created, location: @batch_remark }
+          format.html { return redirect_to group_remit_path(@group_remit), alert: "Unable to create empty request" }
+        elsif @batch_remark.remark.empty?
+          format.html { return redirect_to process_coverage_path(@process_coverage), alert: "Unable to create empty request."}
         end
-
-      else
-
-        if params[:batch_remark][:batch_status] == "For reconsideration"
-          format.html { render :new, status: :unprocessable_entity }
+  
+        if @batch_remark.save
+          # redirect_to @batch_remark, notice: "Batch remark was successfully created."
+          if params[:batch_remark][:batch_status] == "Pending"
+            format.html { redirect_to pending_batch_process_coverage_path(id: @process_coverage.id, batch: @batch)}
+          elsif params[:batch_remark][:batch_status] == "Deny"
+            format.html { redirect_to deny_batch_process_coverage_path(id: @process_coverage.id, batch: @batch)}
+          elsif params[:batch_remark][:batch_status] == "New"
+            format.html { redirect_to process_coverage_path(@process_coverage), notice: "Batch remark created."}
+          elsif params[:batch_remark][:batch_status] == "MD"
+            @group_remit = @batch.group_remits.find_by(type: "Remittance")
+            format.html { redirect_to all_health_decs_group_remit_batches_path(@group_remit.process_coverage), notice: "Recommendation created." } 
+          elsif params[:batch_remark][:batch_status] == "For reconsideration"
+            @batch.update(status: :for_reconsideration)
+            @group_remit = @batch.group_remits.find_by(type: "Remittance")
+            format.html { redirect_to group_remit_path(@group_remit, insurance_status: :denied), notice: "Request saved" } 
+          else
+            format.html { redirect_to batch_remark_url(@batch_remark), notice: "Batch remark was successfully created." }
+            format.json { render :show, status: :created, location: @batch_remark }
+          end
+  
         else
-          format.html { render :new, status: :unprocessable_entity }
-          format.json { render json: @batch_remark.errors, status: :unprocessable_entity }
-          format.turbo_stream { render :form_update, status: :unprocessable_entity }
+  
+          if params[:batch_remark][:batch_status] == "For reconsideration"
+            format.html { render :new, status: :unprocessable_entity }
+          else
+            format.html { render :new, status: :unprocessable_entity }
+            format.json { render json: @batch_remark.errors, status: :unprocessable_entity }
+            format.turbo_stream { render :form_update, status: :unprocessable_entity }
+          end
+  
         end
-
+  
       end
 
     end
+
   end
 
   # PATCH/PUT /batch_remarks/1

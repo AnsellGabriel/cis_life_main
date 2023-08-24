@@ -308,8 +308,14 @@ class ProcessCoveragesController < ApplicationController
     # @total_life_cov = ProductBenefit.joins(agreement_benefit: :batch).where('batches.id IN (?)', @batches_x.pluck(:id)).where('product_benefits.benefit_id = ?', 1).sum(:coverage_amount)
     @total_life_cov = ProductBenefit.joins(agreement_benefit: :batches).where('batches.id IN (?)', @batches_x.pluck(:id)).where('product_benefits.benefit_id = ?', 1).sum(:coverage_amount)
 
-    @total_net_prem = @process_coverage.group_remit.batches.where(insurance_status: "approved").sum(:premium) - (@process_coverage.group_remit.batches.where(insurance_status: "approved").sum(:coop_sf_amount) + @process_coverage.group_remit.batches.where(insurance_status: "approved").sum(:agent_sf_amount))
+    #principal premium
+    @principal_net_prem = @process_coverage.group_remit.batches.where(insurance_status: "approved").sum(:premium) - (@process_coverage.group_remit.batches.where(insurance_status: "approved").sum(:coop_sf_amount) + @process_coverage.group_remit.batches.where(insurance_status: "approved").sum(:agent_sf_amount))
     
+    #dependent premium
+    @batch_dependents_net_prem = BatchDependent.joins(batch: { batch_group_remits: :group_remit}).where(group_remits: {id: @process_coverage.group_remit_id}).where(insurance_status: :approved).sum(:premium) - (BatchDependent.joins(batch: { batch_group_remits: :group_remit}).where(group_remits: {id: @process_coverage.group_remit_id}).where(insurance_status: :approved).sum(:coop_sf_amount) + BatchDependent.joins(batch: { batch_group_remits: :group_remit}).where(group_remits: {id: @process_coverage.group_remit_id}).where(insurance_status: :approved).sum(:agent_sf_amount))
+    
+    @total_net_prem = @principal_net_prem + @batch_dependents_net_prem
+
     @group_remit = @process_coverage.group_remit
     # raise 'errors'
     puts "#{@total_net_prem} ********************************"
@@ -430,11 +436,17 @@ class ProcessCoveragesController < ApplicationController
     @batch = Batch.find(params[:batch])
 
     respond_to do |format|
-      if @batch.update_attribute(:insurance_status, 0)
-        @process_coverage.increment!(:approved_count)
-        format.html { redirect_to process_coverage_path(@process_coverage), notice: "Batch Approved!" }
+      if @batch.batch_dependents.for_review.count > 0 || @batch.batch_dependents.pending.count > 0
+        format.html { redirect_to process_coverage_path(@process_coverage), alert: "Please check pending and/or for review dependent(s) for that coverage." }
+      else
+        if @batch.update_attribute(:insurance_status, 0)
+          @process_coverage.increment!(:approved_count)
+          format.html { redirect_to process_coverage_path(@process_coverage), notice: "Batch Approved!" }
+        end
       end
+
     end
+
   end
 
   def approve_dependent
@@ -464,10 +476,14 @@ class ProcessCoveragesController < ApplicationController
   def deny_batch
     @batch = Batch.find(params[:batch])
 
-    respond_to do |format|
-      if @batch.update_attribute(:insurance_status, 1)
-        @process_coverage.increment!(:denied_count)
-        format.html { redirect_to process_coverage_path(@process_coverage), alert: "Batch Denied!" }
+    if @batch.batch_dependents.for_review.count > 0 || @batch.batch_dependents.pending.count > 0
+      redirect_to process_coverage_path(@process_coverage), alert: "Please check pending and/or for review dependent(s) for that coverage."
+    else
+      respond_to do |format|
+        if @batch.update_attribute(:insurance_status, 1)
+          @process_coverage.increment!(:denied_count)
+          format.html { redirect_to process_coverage_path(@process_coverage), alert: "Batch Denied!" }
+        end
       end
     end
   end
