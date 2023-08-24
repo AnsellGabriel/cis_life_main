@@ -1,4 +1,5 @@
 class AgreementBenefit < ApplicationRecord
+  before_save :upcase_name
 	validates_presence_of :name, :min_age, :max_age, :insured_type # :with_dependent
 
   scope :with_name_like, -> (name) { where("name LIKE ?", "%#{name}%") }
@@ -29,6 +30,7 @@ class AgreementBenefit < ApplicationRecord
     ranking_rank_and_file: 9
   }
   
-  # InsuredType = ["Principal", "Dependent"]
-
+  def upcase_name
+    self.name = self.name.upcase
+  end
 end
