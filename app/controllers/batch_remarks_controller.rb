@@ -90,7 +90,7 @@ class BatchRemarksController < ApplicationController
           elsif params[:batch_remark][:batch_status] == "For reconsideration"
             @batch.update(status: :for_reconsideration)
             @group_remit = @batch.group_remits.find_by(type: "Remittance")
-            format.html { redirect_to group_remit_path(@group_remit, insurance_status: :denied), notice: "Request saved" } 
+            format.html { redirect_to modal_remarks_group_remit_batch_path(@group_remit, @batch, insurance_status: :denied) } 
           else
             format.html { redirect_to batch_remark_url(@batch_remark), notice: "Batch remark was successfully created." }
             format.json { render :show, status: :created, location: @batch_remark }
