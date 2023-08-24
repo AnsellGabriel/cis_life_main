@@ -456,7 +456,7 @@ class ProcessCoveragesController < ApplicationController
 
     respond_to do |format|
       if @dependent.update_attribute(:insurance_status, 0)
-        format.html { redirect_to show_all_group_remit_batch_dependents_path(@group_remit, @batch, process_coverage: params[:id]), notice: "Dependent Approved!" }
+        format.html { redirect_to show_all_group_remit_batch_dependents_path(@group_remit, @batch, process_coverage_id: params[:id]), notice: "Dependent Approved!" }
         format.turbo_stream { render turbo_stream: turbo_stream.update('approved_message', partial: 'layouts/notification') }
       end
     end

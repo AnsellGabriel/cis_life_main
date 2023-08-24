@@ -26,6 +26,15 @@
 		<%= link_to "Remarks", modal_remarks_group_remit_batch_path(group_remit, batch), data: { turbo_frame: "modal" }, class: small_btn('danger') %>
 	<% end %>
 
+	<% if batch.batch_health_decs.exists? %>
+		<%= link_to health_dec_group_remit_batch_path(group_remit, batch, for_und: true), 
+			class: small_btn('primary'), 
+			title: 'Health Declaration Form',
+			data: { turbo_frame: "modal-xl" } do %>
+			<i class="bi bi-file-earmark-medical"></i>
+		<% end %>
+	<% end %>
+
 	<% if (group_remit.pending? || group_remit.for_renewal?) && group_remit.instance_of?(Remittance)%>
 
 		<% if (batch.recent? || batch.for_reconsideration?) && batch.batch_health_decs.blank? && life_benefit[0].coverage_amount > agreement.nel %>
