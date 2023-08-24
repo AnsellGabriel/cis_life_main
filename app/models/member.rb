@@ -1,7 +1,6 @@
 class Member < ApplicationRecord
   before_validation :uppercase_fields
   before_validation :validate_phone_format
-  before_save :capitalize_status
 
   # VALID_PH_MOBILE_NUMBER_REGEX = /\A(09|\+639)\d{9}\z/
   # VALID_PH_LANDLINE_NUMBER_REGEX = /\A(02|03[2-9]|042|043|044|045|046|047|048|049|052|053|054|055|056|057|058|072|074|075|076|077|078)\d{7}\z/
@@ -62,10 +61,7 @@ class Member < ApplicationRecord
   end
 
   private
-  def capitalize_status
-    self.civil_status = self.civil_status.titleize
-  end
-  
+
   def format_phone_numbers
     self.mobile_number = format_phone_number(self.mobile_number)
     self.work_phone_number = format_phone_number(self.work_phone_number)
@@ -95,7 +91,7 @@ class Member < ApplicationRecord
     self.first_name = self.first_name == nil ? '' : self.first_name.strip.upcase
     self.middle_name = self.middle_name == nil ? '' : self.middle_name.strip.upcase
     self.suffix = self.suffix == nil ? '' : self.suffix.strip.upcase
-    # repeat the above line for each field you want to make all caps
+    self.civil_status = self.civil_status.strip.upcase
   end
 
   def self.coop_member_details(coop_members)
