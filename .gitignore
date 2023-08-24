@@ -12,3 +12,4 @@ dump.rdb
 /public/uploads/*
 db/seeds.rb
 log/development.log
+/config/database.yml

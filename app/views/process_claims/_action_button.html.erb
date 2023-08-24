@@ -1,0 +1,5 @@
+<div class="mb-3">
+    <%= link_to '<i class="bi bi-clipboard-plus"></i> For Evaluation'.html_safe, claim_route_process_claim_path(p: 4), class: "btn btn-primary" if @process_claim.processing? %>
+    <%= link_to '<i class="bi bi-clipboard-plus"></i> For VP Evaluation'.html_safe, claim_route_process_claim_path(p: 5), class: "btn btn-primary" if @process_claim.evaluation? %>
+    <%= link_to '<i class="bi bi-clipboard-plus"></i> For Evaluation'.html_safe, claim_route_process_claim_path(p: 6), class: "btn btn-primary" if @process_claim.vp_evaluation? %>
+</div>

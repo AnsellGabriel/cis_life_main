@@ -1,7 +1,11 @@
 <%= turbo_frame_tag "modal-xl" do %>
   <div class="card">
     <div class="card-header">
-      <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      <% if @for_modal.present? %>
+        <div class="text-end">
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+      <% end %>
       <%= content_tag :h5, 'Coverage of', class: "text-muted" %>
       <%= content_tag :h3, @coop_member.get_fullname, class: "text-primary" %>
     </div>
@@ -54,7 +58,9 @@
       </table>
     </div>
     <div class="card-footer">
-      <%= link_to "Back", :back, class: 'btn btn-secondary' %>
+      <% unless @for_modal.present? %>
+        <%= link_to "Back", :back, class: 'btn btn-secondary' %>
+      <% end %>
     </div>
   </div>
 <% end %>

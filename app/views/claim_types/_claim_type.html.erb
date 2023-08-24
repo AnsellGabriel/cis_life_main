@@ -1,0 +1,25 @@
+<div id="<%= dom_id claim_type %>">
+
+<div class="card">
+  <div class="card-header">
+    <h3><%= claim_type.name %></h3>
+    <%= claim_type.description %>
+  </div>
+  <div class="card-body">
+    <div class="row">
+      <div class="col-md-6">
+        <%= render 'claim_type_documents/show_claim_type_documents' %>
+      </div>
+      <div class="col-md-6">
+        <%= render 'claim_type_benefits/show_claim_type_benefits' %>
+      </div>
+      
+    </div>
+  </div>
+  <div class="card-footer">
+  <%= link_to "Edit", edit_claim_type_path(@claim_type), class: 'btn btn-primary' %> |
+  <%= link_to "Back", claim_types_path, class: 'btn btn-primary' %>
+  </div>
+</div>
+
+</div>

@@ -66,6 +66,9 @@ class CoopMembersController < InheritedResources::Base
   end
 
   def show_insurance 
+    # binding.pry
+    @for_modal = params[:pro_cov].present? ? true : false
+        
     @batch = Batch.where(coop_member: @coop_member)
   end
 

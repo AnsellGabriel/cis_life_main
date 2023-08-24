@@ -43,11 +43,15 @@
                   Claims
                 </a>
                 <ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
-                  <%#= link_to "Process", process_claims_path, class: "dropdown-item" %>
-                  <%#= link_to "Evaluate", view_evaluate_process_claims_path(c: 4), class: "dropdown-item" if current_user.authority_level_id == 3 %>
-                  <%#= link_to "VP Evaluation", view_evaluate_process_claims_path(c: 5), class: "dropdown-item" if current_user.authority_level_id == 3 %>
-                  <%#= link_to "Reconsider", view_reconsider_process_claims_path, class: "dropdown-item"  if current_user.authority_level_id == 3 %>
-                  <%#= link_to "Request for payment", root_path, class: "dropdown-item" %>
+                  <%= link_to "Submitted", index_show_process_claims_path(p: 1), class: "dropdown-item" %>
+                  <%= link_to "Claims Filed", index_show_process_claims_path(p: 2), class: "dropdown-item" %>
+                  <%= link_to "Processing", index_show_process_claims_path(p: 3), class: "dropdown-item" %>
+                  <%= link_to "Evaluation", index_show_process_claims_path(p: 4), class: "dropdown-item" %>
+                  <%= link_to "VP Evaluation", index_show_process_claims_path(p: 5), class: "dropdown-item" %>
+                  <%= link_to "President Evaluation", index_show_process_claims_path(p: 6), class: "dropdown-item" %>
+                  <li><hr class="dropdown-divider"></li>
+                  <%= link_to "Documents", documents_path, class: "dropdown-item" %>
+                  <%= link_to "Claim Type", claim_types_path, class: "dropdown-item" %>
                 </ul>
               </li>
             <%# end %>

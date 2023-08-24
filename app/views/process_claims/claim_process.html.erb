@@ -1,3 +1,4 @@
+<%= render 'action_button' %>
 <div class="row">
     <div class="col-md-6">
         <%= render 'claims_detail' %>
@@ -20,9 +21,17 @@
     <div class="col-md-6">
       <div class="card">
         <div class="card-header">
-          <%#= render 'action_button' %>
-          <p>Your authority level is upto <%#= to_curr(@authority.max_authority) %> </p>
+          <dl class="row">
+          <dt class="col-sm-4">Date filed</dt>
+          <dd class="col-sm-8"><%= to_shortdate(@process_claim.date_file) %></dd>
+          <dt class="col-sm-4">Cooperative</dt>
+          <dd class="col-sm-8"><%= @process_claim.cooperative %></dd>
+          <dt class="col-sm-4">Authority Level</dt>
+          <dd class="col-sm-8"></dd>
+          </dl>
         </div>
+      </div>
+      <div class="card">
         <div class="card-body">
           <%#= link_to "Evaluate", evaluate_process_claim_path(@process_claim.id), class: "btn btn-warning" %>
           <div class="row">
@@ -40,6 +49,7 @@
       </div>
     </div>
 </div>
+<%= render 'tabs' %>
 <div class="row">
 <div class="col-md-6">
       <div class="card">
