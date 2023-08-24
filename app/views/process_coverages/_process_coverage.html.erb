@@ -258,7 +258,7 @@
                             <%#= link_to "#{dep.member_dependent} (#{dep.agreement_benefit.name}) - #{to_currency(dep.premium)}", group_remit_batch_dependent_path(@group_remit, batch, dep, modal: true), data: { turbo_frame: "remote_modal" } %> <br>
                             <%# end %>
                             <%# end %>
-                            <%= link_to "View Dependent(s)", show_all_group_remit_batch_dependents_path(@group_remit, batch, process_coverage: process_coverage.id ), data: { turbo_frame: "modal-xl" } %>
+                            <%= link_to "View Dependent(s)", show_all_group_remit_batch_dependents_path(@group_remit, batch, process_coverage_id: process_coverage.id ), data: { turbo_frame: "modal-xl" } %>
                           <% else %>
                             <%= content_tag :p, "No Dependent(s).", class: "small" %>
                           <% end %>

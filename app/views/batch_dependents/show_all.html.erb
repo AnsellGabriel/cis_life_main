@@ -59,7 +59,7 @@
                 </div>
                 <div class="col-sm-3 text-secondary">
                   
-                  <%= link_to approve_dependent_process_coverage_path(params[:process_coverage], dependent: dependent, group_remit_id: params[:group_remit_id]), 
+                  <%= link_to approve_dependent_process_coverage_path(params[:process_coverage_id], dependent: dependent, group_remit_id: params[:group_remit_id]), 
                     onclick: "return confirm('Are you sure?')", 
                     method: :get, 
                     title: "Approve", 
@@ -67,20 +67,20 @@
                     <%= bootstrap_icon "check-lg" %>
                   <% end %>
 
-                  <%= link_to new_dependent_remark_path(group_remit_id: params[:group_remit_id], process_coverage_id: params[:process_coverage], batch_dependent_id: dependent.id, status: :pending), title: "Pending", class: "btn btn-sm btn-secondary mb-1", data: { turbo_frame: "modal-xl" } do %>
+                  <%= link_to new_dependent_remark_path(group_remit_id: params[:group_remit_id], process_coverage_id: params[:process_coverage_id], batch_dependent_id: dependent.id, status: :pending), title: "Pending", class: "btn btn-sm btn-secondary mb-1", data: { turbo_frame: "modal-xl" } do %>
                     <%= bootstrap_icon "arrow-clockwise" %>
                   <% end %>
 
-                  <%= link_to new_dependent_remark_path(group_remit_id: params[:group_remit_id], process_coverage_id: params[:process_coverage], batch_dependent_id: dependent.id, status: :denied), title: "Deny", class: "btn btn-sm btn-danger mb-1", data: { turbo_frame: "modal-xl" } do %>
+                  <%= link_to new_dependent_remark_path(group_remit_id: params[:group_remit_id], process_coverage_id: params[:process_coverage_id], batch_dependent_id: dependent.id, status: :denied), title: "Deny", class: "btn btn-sm btn-danger mb-1", data: { turbo_frame: "modal-xl" } do %>
                     <%= bootstrap_icon "x-lg" %>
                   <% end %>
 
                   <% if dependent.dependent_remarks.exists? %>
-                    <%= link_to 'Remarks', dependent_remarks_path(batch_dependent_id: dependent.id, group_remit_id: @group_remit.id, batch_id: @batch.id, process_coverage_id: params[:process_coverage]), class: small_btn('warning'), data: {turbo_frame: "modal-xl"} %>
+                    <%= link_to 'Remarks', dependent_remarks_path(batch_dependent_id: dependent.id, group_remit_id: @group_remit.id, batch_id: @batch.id, process_coverage_id: params[:process_coverage_id]), class: small_btn('warning'), data: {turbo_frame: "modal-xl"} %>
                   <% end %>
 
                   <% if dependent.dependent_health_decs.exists? %>
-                    <%= link_to health_dec_group_remit_batch_dependent_path(@group_remit, @batch, dependent, for_und: true), 
+                    <%= link_to health_dec_group_remit_batch_dependent_path(@group_remit, @batch, dependent, for_und: true, process_coverage_id: params[:process_coverage_id]), 
                     class: small_btn('warning'), 
 				            title: 'Health Declaration Form' do %>
                       <i class="bi bi-file-earmark-medical"></i>

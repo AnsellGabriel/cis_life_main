@@ -10,8 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-
-ActiveRecord::Schema[7.0].define(version: 2023_08_18_060515) do
+ActiveRecord::Schema[7.0].define(version: 2023_08_24_034930) do
   create_table "active_admin_comments", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.string "namespace"
     t.text "body"
@@ -310,7 +309,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_08_18_060515) do
     t.datetime "updated_at", null: false
   end
 
-  create_table "coop_branches", charset: "utf8mb4", force: :cascade do |t|
+  create_table "coop_branches", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.string "name"
     t.string "region"
     t.string "province"
@@ -437,14 +436,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_08_18_060515) do
     t.datetime "updated_at", null: false
   end
 
-  create_table "documents", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
-    t.string "name"
-    t.text "description"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-  end
-
-  create_table "dependent_health_decs", charset: "utf8mb4", force: :cascade do |t|
+  create_table "dependent_health_decs", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.bigint "batch_dependent_id", null: false
     t.text "answer"
     t.string "answerable_type", null: false
@@ -455,7 +447,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_08_18_060515) do
     t.index ["batch_dependent_id"], name: "index_dependent_health_decs_on_batch_dependent_id"
   end
 
-  create_table "dependent_remarks", charset: "utf8mb4", force: :cascade do |t|
+  create_table "dependent_remarks", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.bigint "batch_dependent_id", null: false
     t.text "remark"
     t.integer "status"
@@ -467,8 +459,14 @@ ActiveRecord::Schema[7.0].define(version: 2023_08_18_060515) do
     t.index ["userable_type", "userable_id"], name: "index_dependent_remarks_on_userable"
   end
 
+  create_table "documents", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+    t.string "name"
+    t.text "description"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
 
-  create_table "emp_agreements", charset: "utf8mb4", force: :cascade do |t|
+  create_table "emp_agreements", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.bigint "employee_id"
     t.bigint "agreement_id"
     t.datetime "created_at", null: false
@@ -587,7 +585,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_08_18_060515) do
     t.datetime "updated_at", null: false
   end
 
-  create_table "loan_insurance_batches", charset: "utf8mb4", force: :cascade do |t|
+  create_table "loan_insurance_batches", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.bigint "coop_member_id", null: false
     t.bigint "group_remit_id", null: false
     t.integer "age"
@@ -651,9 +649,9 @@ ActiveRecord::Schema[7.0].define(version: 2023_08_18_060515) do
   create_table "loan_insurance_rates", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.integer "min_age"
     t.integer "max_age"
-    t.decimal "monthly_rate", precision: 10
-    t.decimal "annual_rate", precision: 10
-    t.decimal "daily_rate", precision: 10
+    t.decimal "monthly_rate", precision: 5, scale: 2
+    t.decimal "annual_rate", precision: 5, scale: 2
+    t.decimal "daily_rate", precision: 5, scale: 2
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.bigint "agreement_id", null: false

@@ -9,6 +9,15 @@
   <% end %>
 <% end %>
 
+<% if dependent.dependent_health_decs.exists? %>
+  <%= link_to health_dec_group_remit_batch_dependent_path(group_remit, batch, dependent, coop: true),
+    class: small_btn('primary'), 
+    title: 'Health Declaration Form',
+    data: { turbo_frame: "modal-xl" } do %> 
+    <i class="bi bi-file-earmark-medical"></i>
+  <% end %>
+<% end %>
+
 <% if (group_remit.pending? || group_remit.for_renewal?) && group_remit.instance_of?(Remittance) && !batch.terminated? %>     
 
   <% if (batch.recent? || batch.for_reconsideration?) && dependent.dependent_health_decs.blank? %>
