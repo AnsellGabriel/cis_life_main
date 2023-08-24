@@ -6,7 +6,7 @@
   <div class="form-inputs mb-3">
     <%= f.hidden_field :status, value: @rem_status %>
     <%= f.hidden_field :batch_dependent_id, value: @dependent.id %>
-    <%= f.hidden_field :user_id, value: current_user.id %>
+    <%= f.hidden_field :userable_id, value: current_user.userable_id %>
     <%= f.hidden_field :group_remit_id, value: @group_remit.id %>
     <%= f.hidden_field :process_coverage_id, value: @process_coverage.id %>
     <%= f.input :remark %>    

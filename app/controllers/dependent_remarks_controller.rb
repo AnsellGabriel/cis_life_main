@@ -28,6 +28,7 @@ class DependentRemarksController < ApplicationController
   def create
     @dependent = BatchDependent.find(params[:dependent_remark][:batch_dependent_id])
     @dependent_remark = @dependent.dependent_remarks.build(dependent_remark_params)
+    @dependent_remark.userable_type = current_user.userable_type
 
     if @dependent_remark.save!
       @dependent.update_insurance_status(@dependent_remark.status)
@@ -70,6 +71,6 @@ class DependentRemarksController < ApplicationController
 
     # Only allow a list of trusted parameters through.
     def dependent_remark_params
-      params.require(:dependent_remark).permit(:user_id, :batch_dependent_id, :remark, :status, :group_remit_id, :process_coverage_id)
+      params.require(:dependent_remark).permit(:userable_id, :batch_dependent_id, :remark, :status, :group_remit_id, :process_coverage_id)
     end
 end

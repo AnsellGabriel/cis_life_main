@@ -1,7 +1,7 @@
 class BatchDependent < ApplicationRecord
   include Calculate
 
-  validate :validate_age
+  # validate :validate_age
 
   # batch.insurance_status
   enum insurance_status: {
@@ -22,20 +22,20 @@ class BatchDependent < ApplicationRecord
   # [relationship] is used to retrieve the value from the hash based on the given relationship parameter
   def insured_type(relationship)
     {
-      'Spouse' => 2,
-      'Parent' => 3,
-      'Child' => 4,
-      'Sibling' => 5
+      'SPOUSE' => 2,
+      'PARENT' => 3,
+      'CHILD' => 4,
+      'SIBLING' => 5
     }[relationship]
   end
 
-  def validate_age
-    age = self.member_dependent.age 
+  # def validate_age
+  #   age = self.member_dependent.age 
 
-    if age < self.agreement_benefit.min_age || age > self.agreement_benefit.max_age
-      errors.add(:age, "must be between #{self.agreement_benefit.min_age.to_i} and #{self.agreement_benefit.max_age.to_i}. Dependent's age is #{age}")
-    end
-  end
+  #   if age < self.agreement_benefit.min_age || age > self.agreement_benefit.max_age
+  #     errors.add(:age, "must be between #{self.agreement_benefit.min_age.to_i} and #{self.agreement_benefit.max_age.to_i}. Dependent's age is #{age}")
+  #   end
+  # end
 
   def update_insurance_status(status)
     self.update(insurance_status: status)

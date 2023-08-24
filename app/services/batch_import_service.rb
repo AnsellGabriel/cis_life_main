@@ -123,7 +123,7 @@ class BatchImportService
         middle_name: row["Dependent Middle Name"].to_s.upcase,
         last_name: row["Dependent Last Name"].to_s.upcase,
         birth_date: row["Dependent Birthdate"],
-        relationship: row["Relationship"].to_s.titleize.strip,
+        relationship: row["Relationship"].to_s.upcase.strip,
         beneficiary: row["Beneficiary?"],
         dependent: row["Dependent?"]
       }
@@ -138,14 +138,15 @@ class BatchImportService
         )
         dependent.save!
       rescue ActiveRecord::RecordInvalid => e
-        create_denied_member(dependent, "(DEPENDENT) - #{e.message}")
+        message = e.message.gsub("Validation failed: ", "")
+        create_denied_member(member, "(Denied dependent: #{dependent.to_s}) - #{message}")
         progress_counter += 1
         update_progress(total_members, progress_counter)
         next
       end
 
       unless member.persisted?
-        create_denied_member(dependent, "(DEPENDENT) - Unenrolled principal: #{member.to_s}")
+        create_denied_member(member, "(DEPENDENT DENIED: #{dependent.to_s}) - Unenrolled principal: #{member.to_s}")
         progress_counter += 1
         update_progress(total_members, progress_counter)
         next
@@ -155,7 +156,7 @@ class BatchImportService
       batch = @group_remit.batches.find_by(coop_member_id: coop_member.id)
 
       if member.nil? || batch.nil?
-        create_denied_member(dependent, "(DEPENDENT) - Principal not added to the plan: #{member.to_s}")
+        create_denied_member(member, "(DEPENDENT DENIED: #{dependent.to_s}) - Principal not added to the plan: #{member.to_s}")
         progress_counter += 1
         update_progress(total_members, progress_counter)
         next
@@ -167,16 +168,16 @@ class BatchImportService
         )
         insured_type = batch_dependent.insured_type(dependent.relationship)
 
-        dependent_agreement_benefits = @agreement.agreement_benefits.where("name LIKE ?", "%#{batch.agreement_benefit.name}%").find_by(insured_type: insured_type)
+        dependent_agreement_benefits = agreement_benefits.where("name LIKE ?", "%#{batch.agreement_benefit.name}%").find_by(insured_type: insured_type)
 
         unless dependent_agreement_benefits.present?
-          dependent_agreement_benefits = @agreement.agreement_benefits.find_by(insured_type: insured_type)
+          dependent_agreement_benefits = agreement_benefits.find_by(insured_type: insured_type)
         end
 
-        age_min_max = age_min_max_by_insured_type(dependent_agreement_benefits, dependent_agreement_benefits.name)
+        age_min_max = age_min_max_by_insured_type(agreement_benefits, dependent_agreement_benefits.name)
 
         if age_min_max.nil?
-          create_denied_member(dependent, "(DEPENDENT) - '#{dependent_agreement_benefits.name}' option not found in the agreement")
+          create_denied_member(member, "(DEPENDENT DENIED: #{dependent.to_s}) - '#{dependent_agreement_benefits.name}' option not found in the agreement")
           progress_counter += 1
           update_progress(total_members, progress_counter)
           next
@@ -191,11 +192,12 @@ class BatchImportService
           batch_dependent.insurance_status = :denied
     
           if dependent.age > batch_dependent.agreement_benefit.max_age
-            batch_dependent.dependent_remarks.build(remark: "Dependent age is over the maximum age limit of the plan.", status: :denied, user_type: 'CoopUser', user_id: @current_user.userable.id)
+            batch_dependent.dependent_remarks.build(remark: "Dependent age is over the maximum age limit of the plan.", status: :denied, userable_type: 'CoopUser', userable_id: @current_user.userable.id)
           else
-            batch_dependent.dependent_remarks.build(remark: "Dependent age is below the minimum age limit of the plan.", status: :denied, user_type: 'CoopUser', user_id: @current_user.userable.id)
+            batch_dependent.dependent_remarks.build(remark: "Dependent age is below the minimum age limit of the plan.", status: :denied, userable_type: 'CoopUser', userable_id: @current_user.userable.id)
           end
-    
+          
+          batch_dependent.save!
         end
       end
 

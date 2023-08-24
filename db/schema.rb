@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_08_23_035247) do
+ActiveRecord::Schema[7.0].define(version: 2023_08_24_034930) do
   create_table "active_admin_comments", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.string "namespace"
     t.text "body"
@@ -427,9 +427,10 @@ ActiveRecord::Schema[7.0].define(version: 2023_08_23_035247) do
     t.integer "status"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.bigint "user_id", null: false
+    t.string "userable_type", null: false
+    t.bigint "userable_id", null: false
     t.index ["batch_dependent_id"], name: "index_dependent_remarks_on_batch_dependent_id"
-    t.index ["user_id"], name: "index_dependent_remarks_on_user_id"
+    t.index ["userable_type", "userable_id"], name: "index_dependent_remarks_on_userable"
   end
 
   create_table "emp_agreements", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
@@ -868,7 +869,6 @@ ActiveRecord::Schema[7.0].define(version: 2023_08_23_035247) do
   add_foreign_key "denied_members", "group_remits"
   add_foreign_key "dependent_health_decs", "batch_dependents"
   add_foreign_key "dependent_remarks", "batch_dependents"
-  add_foreign_key "dependent_remarks", "users"
   add_foreign_key "emp_approvers", "employees", column: "approver_id"
   add_foreign_key "employees", "departments"
   add_foreign_key "group_import_trackers", "group_remits"
