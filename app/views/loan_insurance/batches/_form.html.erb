@@ -18,7 +18,8 @@
       <%= f.input :terms, label: false, placeholder: 'Terms', wrapper_html: { class: 'col-md-3' } %>
     </div>
     <div class="row">
-      <%= f.input :loan_amount, label: false, placeholder: 'Loan amount', wrapper_html: {class: 'col-md-12'} %>
+      <%= f.input :loan_amount, label: false, placeholder: 'Loan amount', wrapper_html: {class: 'col-md-6'} %>
+      <%= f.association :loan, label: false, prompt: 'Select Loan Type', wrapper_html: {class: 'col-md-6'} %>
     </div>
     <div class="row">
       <%= f.input :date_release, as: :string, input_html: {data: {
@@ -39,7 +40,7 @@
   </div>
 
   <div class="form-actions text-end">
-    <%= f.button :submit, 'Add', class: small_btn('primary') %>
+    <%= f.button :submit, 'Add', class: small_btn('primary'), data: {turbo: false} %>
     <%= link_to "Cancel", :back, class: small_btn('secondary') %>
   </div>
 <% end %>

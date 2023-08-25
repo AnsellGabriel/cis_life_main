@@ -1,2 +1,19 @@
-<div id="<%= dom_id batch %>">
-</div>
+
+<tr>
+  <td class="text-center align-middle" ><%= batch.id %></td>
+  <td class="align-middle" >
+    <div class="d-flex" style="padding-left: 60px; padding-top: 30px; padding-bottom: 30px;">
+      <div class="d-flex flex-column gap-1">
+        
+        <div class="">
+          <%= render 'batches/batch_status', batch: batch, agreement: agreement %>
+        </div>
+        <%= render 'member_details', 
+          batch: batch, 
+          member: batch.member_details, 
+          agreement: agreement
+        %>
+      </div>
+    </div>
+  </td>
+</tr>

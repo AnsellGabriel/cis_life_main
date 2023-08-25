@@ -4,6 +4,7 @@ class GroupRemit < ApplicationRecord
   validates_presence_of :name#, :effectivity_date, :expiry_date, :terms
 
   scope :batch_remits, -> { where(:type => 'BatchRemit')}
+  scope :loan_remits, -> { where(:type => 'LoanInsurance::GroupRemit')}
 
   belongs_to :agreement
   belongs_to :anniversary, optional: true

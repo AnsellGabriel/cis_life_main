@@ -26,7 +26,7 @@
       </div>
 
       <% if @gr_presenter.is_pending_or_renewal? %>
-        <%= button_to "Delete", group_remit_path(@group_remit), 
+        <%= button_to "Delete", loan_insurance_group_remit_path(@group_remit), 
           method: :delete,
           data: { turbo_confirm: 'Delete group remit?'},
           class: small_btn('danger') 
@@ -163,7 +163,7 @@
 
     <tbody id="batches_body">
 
-      <% if @group_remit.batches.exists? %>
+      <% if @group_remit.lppi_batches.exists? %>
         <%= render @batches, group_remit: @group_remit, agreement: @agreement %>
       <% end %>
 

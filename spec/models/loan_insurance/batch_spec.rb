@@ -19,6 +19,16 @@ RSpec.describe LoanInsurance::Batch, type: :model do
       expect(batch).not_to be_valid
     end
 
+    it "is not valid without a date realease" do
+      batch.date_release = nil
+      expect(batch).not_to be_valid
+    end
+
+    it "is not valid without a date mature" do
+      batch.date_mature = nil
+      expect(batch).not_to be_valid
+    end
+
     it "is not valid without coop service fee" do
       batch.coop_sf_amount = nil
       expect(batch).not_to be_valid
@@ -34,21 +44,27 @@ RSpec.describe LoanInsurance::Batch, type: :model do
       expect(batch).not_to be_valid
     end
 
-    it "is not valid without a coop member" do 
-      batch.coop_member_id = nil
-      expect(batch).not_to be_valid
-    end
-
     it "is not valid without an age" do 
       batch.age = nil
       expect(batch).not_to be_valid
     end
 
-    context 'filter batch' do
-      it 'is valid if age is within agreement\'s age range'
+    context "with associations" do
+      it "is not valid without a coop member" do 
+        batch.coop_member = nil
+        expect(batch).not_to be_valid
+      end
 
-      it 'is not valid if age is not within agreement\'s age range' 
+      it 'is not valid without group remit' do
+        batch.group_remit = nil
+        expect(batch).not_to be_valid
+      end
 
+      it 'is not valid without loan' do
+        batch.loan = nil
+        expect(batch).not_to be_valid
+      end
     end
+    
   end
 end

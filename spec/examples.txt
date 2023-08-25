@@ -3,24 +3,18 @@ example_id                                                           | status  |
 ./spec/helpers/loan_insurance/batch_remits_helper_spec.rb[1:1]       | unknown |                 |
 ./spec/helpers/loan_insurance/batches_helper_spec.rb[1:1]            | unknown |                 |
 ./spec/helpers/loan_insurance/details_helper_spec.rb[1:1]            | unknown |                 |
-./spec/models/loan_insurance/batch_remit_spec.rb[1:1:1]              | passed  | 0.16321 seconds |
-./spec/models/loan_insurance/batch_remit_spec.rb[1:1:2]              | passed  | 0.01836 seconds |
-./spec/models/loan_insurance/batch_remit_spec.rb[1:1:3]              | passed  | 0.01845 seconds |
-./spec/models/loan_insurance/batch_remit_spec.rb[1:1:4]              | passed  | 0.02093 seconds |
-./spec/models/loan_insurance/batch_remit_spec.rb[1:1:5]              | passed  | 0.01892 seconds |
-./spec/models/loan_insurance/batch_remit_spec.rb[1:1:6]              | passed  | 0.01926 seconds |
-./spec/models/loan_insurance/batch_remit_spec.rb[1:1:7]              | passed  | 0.01833 seconds |
-./spec/models/loan_insurance/batch_remit_spec.rb[1:1:8]              | passed  | 0.02006 seconds |
-./spec/models/loan_insurance/batch_spec.rb[1:1:1]                    | passed  | 0.58321 seconds |
-./spec/models/loan_insurance/batch_spec.rb[1:1:2]                    | passed  | 0.06954 seconds |
-./spec/models/loan_insurance/batch_spec.rb[1:1:3]                    | passed  | 0.06542 seconds |
-./spec/models/loan_insurance/batch_spec.rb[1:1:4]                    | passed  | 0.06233 seconds |
-./spec/models/loan_insurance/batch_spec.rb[1:1:5]                    | passed  | 0.05877 seconds |
-./spec/models/loan_insurance/batch_spec.rb[1:1:6]                    | passed  | 0.05638 seconds |
-./spec/models/loan_insurance/batch_spec.rb[1:1:7]                    | passed  | 0.05814 seconds |
-./spec/models/loan_insurance/batch_spec.rb[1:1:8]                    | passed  | 0.06183 seconds |
-./spec/models/loan_insurance/batch_spec.rb[1:1:9:1]                  | pending | 0.00002 seconds |
-./spec/models/loan_insurance/batch_spec.rb[1:1:9:2]                  | pending | 0.00001 seconds |
+./spec/models/loan_insurance/batch_spec.rb[1:1:1]                    | passed  | 0.56263 seconds |
+./spec/models/loan_insurance/batch_spec.rb[1:1:2]                    | passed  | 0.07942 seconds |
+./spec/models/loan_insurance/batch_spec.rb[1:1:3]                    | passed  | 0.11699 seconds |
+./spec/models/loan_insurance/batch_spec.rb[1:1:4]                    | passed  | 0.09838 seconds |
+./spec/models/loan_insurance/batch_spec.rb[1:1:5]                    | passed  | 0.10975 seconds |
+./spec/models/loan_insurance/batch_spec.rb[1:1:6]                    | passed  | 0.10338 seconds |
+./spec/models/loan_insurance/batch_spec.rb[1:1:7]                    | passed  | 0.36542 seconds |
+./spec/models/loan_insurance/batch_spec.rb[1:1:8]                    | passed  | 0.14288 seconds |
+./spec/models/loan_insurance/batch_spec.rb[1:1:9]                    | passed  | 0.14045 seconds |
+./spec/models/loan_insurance/batch_spec.rb[1:1:10:1]                 | passed  | 0.10782 seconds |
+./spec/models/loan_insurance/batch_spec.rb[1:1:10:2]                 | passed  | 0.15672 seconds |
+./spec/models/loan_insurance/batch_spec.rb[1:1:10:3]                 | passed  | 0.13827 seconds |
 ./spec/models/loan_insurance/detail_spec.rb[1:1:1]                   | passed  | 0.12384 seconds |
 ./spec/models/loan_insurance/detail_spec.rb[1:1:2]                   | passed  | 0.0712 seconds  |
 ./spec/models/loan_insurance/detail_spec.rb[1:1:3]                   | passed  | 0.07144 seconds |
@@ -30,6 +24,11 @@ example_id                                                           | status  |
 ./spec/models/loan_insurance/detail_spec.rb[1:1:7]                   | passed  | 0.06824 seconds |
 ./spec/models/loan_insurance/detail_spec.rb[1:1:8]                   | passed  | 0.0706 seconds  |
 ./spec/models/loan_insurance/detail_spec.rb[1:1:9]                   | passed  | 0.06559 seconds |
+./spec/models/loan_insurance/group_remit_spec.rb[1:1:1]              | passed  | 0.22448 seconds |
+./spec/models/loan_insurance/group_remit_spec.rb[1:1:2]              | passed  | 0.0239 seconds  |
+./spec/models/loan_insurance/group_remit_spec.rb[1:1:3]              | passed  | 0.0191 seconds  |
+./spec/models/loan_insurance/group_remit_spec.rb[1:1:4]              | passed  | 0.02288 seconds |
+./spec/models/loan_insurance/group_remit_spec.rb[1:1:5]              | passed  | 0.0333 seconds  |
 ./spec/requests/loan_insurance/batch_remits_spec.rb[1:1:1]           | unknown |                 |
 ./spec/requests/loan_insurance/batch_remits_spec.rb[1:2:1]           | unknown |                 |
 ./spec/requests/loan_insurance/batch_remits_spec.rb[1:3:1]           | unknown |                 |

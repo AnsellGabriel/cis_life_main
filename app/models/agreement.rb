@@ -1,6 +1,7 @@
 class Agreement < ApplicationRecord    
     scope :with_moa_like, -> (filter) { where("moa_no LIKE ?", "%#{filter}%") }
     scope :lppi, -> { find {|a| a.plan.acronym == 'LPPI'} }
+    
     Comm_type = ["Gross Commission", "Net Commission"]
     Anniversary = ["Single", "Multiple", "12 Months"]
 
@@ -16,7 +17,7 @@ class Agreement < ApplicationRecord
     has_many :anniversaries
     has_many :agreements_coop_members
     has_many :coop_members, through: :agreements_coop_members
-    has_many :rates, class_name: 'LoanInsurance::Rate'
+    has_many :loan_rates, class_name: 'LoanInsurance::Rate'
     accepts_nested_attributes_for :agreement_benefits, reject_if: :all_blank, allow_destroy: true
 
     def to_s
