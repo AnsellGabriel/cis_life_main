@@ -5,7 +5,7 @@
     <% if params[:coop] %>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
     <% else %>
-      <%= link_to  show_all_group_remit_batch_dependents_path(params[:group_remit_id], params[:batch_id], process_coverage: params[:process_coverage_id] ) do %>
+      <%= link_to  show_all_group_remit_batch_dependents_path(params[:group_remit_id], params[:batch_id], process_coverage_id: params[:process_coverage_id] ) do %>
         <button type="button" class="btn-close" aria-label="Close"></button>
       <% end %>
     <% end %>
