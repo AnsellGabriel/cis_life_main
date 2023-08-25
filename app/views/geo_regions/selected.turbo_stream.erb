@@ -1,0 +1,6 @@
+<%= turbo_stream.update @target do %>
+  <%= content_tag :option, "Choose Province" %>
+  <%= @provinces.each do |province| %>
+    <%= content_tag :option, province.name, value: province.id %>
+  <% end %>
+<% end %>

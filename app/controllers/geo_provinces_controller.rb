@@ -45,6 +45,14 @@ class GeoProvincesController < ApplicationController
     redirect_to geo_provinces_url, notice: "Geo province was successfully destroyed."
   end
 
+  def selected
+    @target = params[:target]
+    @municipalities = GeoMunicipality.where(geo_province_id: params[:id])
+    respond_to do |format|
+      format.turbo_stream
+    end
+  end
+
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_geo_province
