@@ -4,7 +4,7 @@ class LoanInsurance::BatchesController < ApplicationController
 
   # GET /loan_insurance/batches
   def index
-    @batches = LoanInsurance::Batch.all
+    @batches = LoanInsurance::Batch.all.order(created_at: :desc)
   end
 
   # GET /loan_insurance/batches/1
@@ -21,6 +21,7 @@ class LoanInsurance::BatchesController < ApplicationController
       loan: LoanInsurance::Loan.first
     )
     @coop_members = @cooperative.coop_members
+    @group_remit_id = params[:group_remit_id]
   end
 
   # GET /loan_insurance/batches/1/edit
@@ -29,11 +30,13 @@ class LoanInsurance::BatchesController < ApplicationController
 
   # POST /loan_insurance/batches
   def create
+    @coop_members = @cooperative.coop_members
+    @group_remit_id = params[:loan_insurance_batch][:group_remit_id]
     @batch = LoanInsurance::Batch.new(batch_params)
     @batch.process_batch
     
-    if @batch.save!
-      redirect_to loan_insurance_group_remit_path(params[:loan_insurance_batch][:group_remit_id]), notice: "Member added"
+    if @batch.save
+      redirect_to loan_insurance_group_remit_path(params[:loan_insurance_batch][:group_remit_id], from_controller: true), notice: "Member added"
     else
       render :new, status: :unprocessable_entity
     end
@@ -57,7 +60,7 @@ class LoanInsurance::BatchesController < ApplicationController
   private
     # Only allow a list of trusted parameters through.
     def batch_params
-      params.require(:loan_insurance_batch).permit(:group_remit_id, :coop_member_id, :loan_amount, :terms, :date_release, :date_mature, :loan_insurance_loan_id)
+      params.require(:loan_insurance_batch).permit(:group_remit_id, :coop_member_id, :loan_amount, :terms, :effectivity_date, :expiry_date, :date_release, :date_mature, :loan_insurance_loan_id)
     end
 
     # Use callbacks to share common setup or constraints between actions.

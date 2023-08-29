@@ -6,9 +6,9 @@
       <div class="d-flex flex-column gap-1">
         
         <div class="">
-          <%= render 'batches/batch_status', batch: batch, agreement: agreement %>
+          <%= render 'loan_insurance/batches/batch_status', batch: batch, agreement: agreement %>
         </div>
-        <%= render 'member_details', 
+        <%= render 'loan_insurance/batches/member_details', 
           batch: batch, 
           member: batch.member_details, 
           agreement: agreement
@@ -16,4 +16,23 @@
       </div>
     </div>
   </td>
+  <td class="align-middle" >
+		<div class="<%= flex_justify_align('center') %>">
+			<div class="<%= flex_justify_align('','center',true) %> ps-6">
+				<div class="d-flex flex-column mb-1">
+					<%= content_tag :span, 
+              "#{number_to_currency(batch.premium, unit: "₱", precision: 2)}", 
+              class: "text-secondary sm-green-text"
+          %>
+				</div>
+			</div>
+		</div>
+	</td>
+  <td class="align-middle">
+		<%= render 'loan_insurance/batches/action_buttons', 
+			group_remit: group_remit,
+			batch: batch,
+			agreement: agreement
+		%>
+	</td>
 </tr>

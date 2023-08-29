@@ -90,18 +90,17 @@
   </div> 
 
   <%= turbo_frame_tag "computation" do %>
-    <%= render "group_remits/computation", group_remit: @group_remit %>
+    <%= render "loan_insurance/group_remits/computation", group_remit: @group_remit %>
   <% end %>  
 </div>
 <div class="<%= flex_justify_align('between', 'center') %> gap-1">
   <div class="d-flex gap-2">
     <% status_mappings = {
-        approved: { label: "Approved", class: "btn-success" },
-        denied: { label: "Denied", class: "btn-danger" },
         pending: { label: "Pending", class: "btn-secondary" },
-        for_reconsideration: {label: 'Request', class: 'btn-warning'},
         for_review: { label: "For Review", class: "btn-outline-secondary" }
       } %>
+
+    <% status_mappings = status_mappings.merge(for_reconsideration: {label: 'Request', class: 'btn-warning'}) if @agreement.reconsiderable? %>
 
     <% status_mappings.each do |status, attributes| %>
       <% batches = @group_remit.batches.send(status) %>
@@ -148,14 +147,8 @@
       <tr class="table-dark">
 
         <th class="text-center" scope="col">ID</th>
-        <th class="text-center" scope="col">Members</th>
+        <th class="text-center" scope="col" style="width: 30%;">Members</th>
         <th class="text-center" scope="col">Premium</th>
-        <th class="text-center" scope="col">Beneficiaries</th>
-
-        <% if @agreement.plan.gyrt_type == 'family' %>
-          <th class="text-center" scope="col">Dependents</th>
-        <% end %>
-
         <th class="text-center" scope="col">Actions</th>
 
       </tr>

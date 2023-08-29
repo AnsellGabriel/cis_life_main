@@ -7,7 +7,7 @@ class LoanInsurance::GroupRemitsController < ApplicationController
   end
 
   def show
-    @batches = @group_remit.lppi_batches
+    @batches = @group_remit.lppi_batches.order(created_at: :desc)
     @pagy, @batches = pagy(@batches, items: 10)
     @gr_presenter = GroupRemitPresenter.new(@group_remit)
   end
