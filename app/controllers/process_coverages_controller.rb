@@ -363,9 +363,14 @@ class ProcessCoveragesController < ApplicationController
     respond_to do |format|
       if current_user.rank == "analyst"
         if @max_amount >= @total_net_prem
-          @process_coverage.update_attribute(:status, "approved")
-          # @process_coverage.group_remit.set_total_premiums_and_fees
-          format.html { redirect_to process_coverage_path(@process_coverage), notice: "Process Coverage Approved!" }
+          if @process_coverage.group_remit.batches.where(batches: { insurance_status: :denied }).count > 0
+            @process_coverage.update_attribute(:status, "for_head_approval")
+            format.html { redirect_to process_coverage_path(@process_coverage), notice: "Process Coverage for Head Approval!" }
+          else
+            @process_coverage.update_attribute(:status, "approved")
+            # @process_coverage.group_remit.set_total_premiums_and_fees
+            format.html { redirect_to process_coverage_path(@process_coverage), notice: "Process Coverage Approved!" }
+          end
         else
           @process_coverage.update_attribute(:status, "for_head_approval")
           format.html { redirect_to process_coverage_path(@process_coverage), notice: "Process Coverage for Head Approval!" }

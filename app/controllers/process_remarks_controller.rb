@@ -28,11 +28,18 @@ class ProcessRemarksController < ApplicationController
     @max_amount = params[:max_amount].to_i
     @total_net_prem = params[:total_net_prem].to_i
 
+    @process_coverage = ProcessCoverage.find_by(id: params[:ref])
+    # binding.pry
+
     if @process_status == "Approve" || @process_status == "Deny"
 
       if current_user.rank == "analyst"
         if @max_amount >= @total_net_prem
-          @rem_status = "approved"
+          if @process_coverage.group_remit.batches.where(batches: { insurance_status: :denied} ).count > 0
+            @rem_status = "for_head_approval"
+          else
+            @rem_status = "approved"
+          end
         else
           @rem_status = "for_head_approval"
         end
