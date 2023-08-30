@@ -22,7 +22,9 @@
             <tr>
               <td colspan=3> <strong><%= agreement_benefit.agreement.plan %></strong> <br>
                 <%= agreement_benefit.name %> <br>
-                <%= link_to 'File Claims', new_coop_process_claims_path(cm: @coop_member, ab: agreement_benefit, a: agreement_benefit.agreement), class: 'btn btn-sm btn-warning' %>
+                <% if current_user.userable_type == "CoopUser" %>
+                  <%= link_to 'File Claims', new_coop_process_claims_path(cm: @coop_member, ab: agreement_benefit, a: agreement_benefit.agreement), class: 'btn btn-sm btn-warning' %>
+                <% end %>
                 <%= agreement_benefit.description %>
               </td>
               <td>
@@ -59,7 +61,7 @@
     </div>
     <div class="card-footer">
       <% unless @for_modal.present? %>
-        <%= link_to "Back", :back, class: 'btn btn-secondary' %>
+        <%= link_to "Back", :back, data: { turbo: false }, class: 'btn btn-secondary' %>
       <% end %>
     </div>
   </div>
