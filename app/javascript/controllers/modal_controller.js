@@ -13,9 +13,11 @@ export default class extends Controller {
     }
   }
 
-  // close(event) {
-  //   if (event.detail.success) {
-  //     this.modal.hide()
-  //   }
-  // }
+  close(event) {
+    if (event.detail.success) {
+      const fetchResponse = event.detail.fetchResponse
+      this.modal.hide()
+      window.location.href = fetchResponse.response.url;
+    }
+  }
 }

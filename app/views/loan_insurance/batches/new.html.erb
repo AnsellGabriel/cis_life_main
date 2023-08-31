@@ -1,11 +1,11 @@
 <%= turbo_frame_tag "modal" do %>
   <div class="modal-header">
-    <%= content_tag :h5, "Add member", class: "modal-title", id: "staticBackdropLabel" %>
+    <%= content_tag :h5, "Add member to plan", class: "modal-title", id: "staticBackdropLabel" %>
     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
   </div>
   
   <div class="modal-body">
     <div id="error_notif"></div>
-      <%= render "form", batch: @batch, coop_members: @coop_members, group_remit_id: @group_remit_id %>
+      <%= render "form", batch: @batch, coop_members: @coop_members, group_remit_id: @group_remit_id, member: @member %>
   </div>
 <% end %>

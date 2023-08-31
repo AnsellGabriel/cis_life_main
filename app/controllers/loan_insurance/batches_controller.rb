@@ -22,6 +22,7 @@ class LoanInsurance::BatchesController < ApplicationController
     )
     @coop_members = @cooperative.coop_members
     @group_remit_id = params[:group_remit_id]
+    # @member = Member.find(1)
   end
 
   # GET /loan_insurance/batches/1/edit
@@ -35,10 +36,15 @@ class LoanInsurance::BatchesController < ApplicationController
     @batch = LoanInsurance::Batch.new(batch_params)
     @batch.process_batch
     
-    if @batch.save
-      redirect_to loan_insurance_group_remit_path(params[:loan_insurance_batch][:group_remit_id], from_controller: true), notice: "Member added"
-    else
-      render :new, status: :unprocessable_entity
+    respond_to do |format|
+      if @batch.save
+        format.html { redirect_to loan_insurance_group_remit_path(params[:loan_insurance_batch][:group_remit_id]), notice: "Member added" }
+      else
+        # format.turbo_stream do
+        #   render turbo_stream: turbo_stream.update("modal", partial: "loan_insurance/batches/form"), status: :unprocessable_entity
+        # end
+        format.html { render :new, status: :unprocessable_entity }
+      end
     end
   end
 

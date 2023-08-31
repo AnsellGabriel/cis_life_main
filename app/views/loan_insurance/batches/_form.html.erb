@@ -1,8 +1,8 @@
-<%= simple_form_for(batch) do |f| %>
+<%= simple_form_for(batch, data: {controller: 'form-redirect'}) do |f| %>
   <%= f.error_notification %>
   <%= f.error_notification message: f.object.errors[:base].to_sentence if f.object.errors[:base].present? %>
 
-  <div class="form-inputs mb-3">
+  <div class="form-inputs mb-3" data-controller="coop-member" >
     <div class="row <%= flex_justify_align('','center') %>">
       <%= f.hidden_field :group_remit_id, value: group_remit_id %>
       <%= f.association :coop_member, 
@@ -11,10 +11,34 @@
           input_html: { 
             id: "member_id", 
             data: {  
-              controller: "slim-select" }  
+              target: 'memberSelect',
+              controller: "slim-select",
+              action: "change->coop-member#selectMember", }  
             }, label: false      
       %>
     </div>
+    <% unless member.nil? %>
+      <div class="card mb-3">
+        <div class="card-body">
+          <div class="row">
+            <%= content_tag :span, 'Name ', class: 'col-md-4' %>
+            <%= content_tag :span, "#{member.first_name} #{member.middle_name } #{member.last_name}", class: 'col-md-8' %>
+          </div>
+          <div class="row">
+            <%= content_tag :span, 'Birthdate ', class: 'col-md-4' %>
+            <%= content_tag :span, "#{date_as_month_day_year(member.birth_date)}", class: 'col-md-8' %>
+          </div>
+          <div class="row">
+            <%= content_tag :span, 'Gender ', class: 'col-md-4' %>
+            <%= content_tag :span, "#{member.gender}", class: 'col-md-8' %>
+          </div> 
+          <div class="row">
+            <%= content_tag :span, 'Age ', class: 'col-md-4' %>
+            <%= content_tag :span, "#{member.age}", class: 'col-md-8' %>
+          </div>
+        </div>
+      </div>
+    <% end %>
     <div class="row">
       <div class="form-floating mb-3 col-md-6">
         <%= f.input :loan_amount, label: false, placeholder: 'Loan amount', class: 'form-control', wrapper: false %>
@@ -58,14 +82,8 @@
       %>
     </div>
   </div>
-
   <div class="form-actions text-center">
-    <% if params[:from_controller] %>
-      <%= f.button :submit, 'Add', class: small_btn('primary'), turbo: false %>
-    <% else %>
-      <%= f.button :submit, 'Add', class: small_btn('primary'), turbo: false %>
-    <% end %>
+      <%= f.button :submit, 'Add', class: small_btn('primary') %>
   </div>
 <% end %>
 
-<% console %>
