@@ -275,7 +275,7 @@ class ProcessCoveragesController < ApplicationController
     if params[:search].present?
       @batches = case params[:search]
       when "regular_new" then @batches_o.where(age: 18..65, status: 0)
-      when "regular_ren" then @batches_o.where(age: 18..65, status: 1)
+      when "regular_ren" then @batches_o.where(age: 18..65, status: 1..2)
       when "overage" then @batches_o.where(age: 66..)
       when "reconsider" then @batches_o.where(status: :for_reconsideration)
         # when "health_decs" then @batches_o.joins(:batch_health_decs)
