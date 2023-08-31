@@ -1,4 +1,5 @@
 import { Controller } from "@hotwired/stimulus"
+import { get } from "@rails/request.js"
 
 export default class extends Controller {
   static targets = ["memberSelect"]
@@ -6,14 +7,8 @@ export default class extends Controller {
   selectMember(e) {
     let id = e.target.value;
 
-    // console.log(id)
-
-  //   fetch(`/coop_members/${id}/find_member`)
-  //   .then((response) => response.json())
-  //   .then((data) => console.log(data));
-   }
-
-   doSomethingWithYourDataHere(data) {
-    // console.log(data)
-   }
+    get(`/coop_members/${id}/find_member`, {
+      responseKind: "turbo-stream"
+    })
+  }
 }

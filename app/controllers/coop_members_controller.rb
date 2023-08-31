@@ -64,7 +64,7 @@ class CoopMembersController < InheritedResources::Base
     @member = Member.find_by(id: params[:id])
 
     respond_to do |format|
-      format.json { render json: { member: @member } }
+      format.turbo_stream
     end
   end
 

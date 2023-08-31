@@ -1,0 +1,20 @@
+<div class="card mb-3">
+  <div class="card-body">
+    <div class="row">
+      <%= content_tag :span, 'Name ', class: 'col-md-4' %>
+      <%= content_tag :span, "#{member.first_name} #{member.middle_name } #{member.last_name}", class: 'col-md-8' %>
+    </div>
+    <div class="row">
+      <%= content_tag :span, 'Birthdate ', class: 'col-md-4' %>
+      <%= content_tag :span, "#{date_as_month_day_year(member.birth_date)}", class: 'col-md-8' %>
+    </div>
+    <div class="row">
+      <%= content_tag :span, 'Gender ', class: 'col-md-4' %>
+      <%= content_tag :span, "#{member.gender}", class: 'col-md-8' %>
+    </div> 
+    <div class="row">
+      <%= content_tag :span, 'Age ', class: 'col-md-4' %>
+      <%= content_tag :span, "#{member.age}", class: 'col-md-8' %>
+    </div>
+  </div>
+</div>
