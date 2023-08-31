@@ -60,8 +60,8 @@ class LoanInsurance::BatchesController < ApplicationController
 
   # DELETE /loan_insurance/batches/1
   def destroy
-    @batch.destroy
-    redirect_to batches_url, notice: "Batch was successfully destroyed."
+    @batch.destroy!
+    redirect_to loan_insurance_group_remit_path(@batch.group_remit), alert: "Member removed"
   end
 
   private

@@ -3,13 +3,15 @@ class LoanInsurance::Batch < Batch
 
   # skip agreement_benefit validation
   validate :agreement_benefit, unless: :skip_validation
-  validates_presence_of :date_release, :date_mature, :coop_member_id
+  validates_presence_of :date_release, :date_mature, :coop_member_id, :insurance_status
 
   belongs_to :group_remit, class_name: 'LoanInsurance::GroupRemit', foreign_key: 'group_remit_id'
   belongs_to :loan, class_name: 'LoanInsurance::Loan', foreign_key: 'loan_insurance_loan_id'
   belongs_to :rate, class_name: 'LoanInsurance::Rate', foreign_key: 'loan_insurance_rate_id'
   # belongs_to :retention, class_name: 'LoanInsurance::Retention', foreign_key: 'loan_insurance_retention_id'
   has_many :details, class_name: 'LoanInsurance::Detail'
+  has_many :batch_health_decs, as: :healthdecable, dependent: :destroy
+
   
   def process_batch
     return nil if effectivity_date.nil? || expiry_date.nil?
@@ -31,6 +33,7 @@ class LoanInsurance::Batch < Batch
     terms = (expiry_date.year - effectivity_date.year) * 12 + (expiry_date.month - effectivity_date.month) + (expiry_date.day > effectivity_date.day ? 1 : 0)
 
     self.terms = terms
+    self.insurance_status = :for_review
     self.age = coop_member.age(effectivity_date)
   end
 

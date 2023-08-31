@@ -18,19 +18,19 @@
               <div class="col-sm-2">
                 <h6 class="mb-0">First name:</h6>
               </div>
-              <div class="col-sm-2 text-secondary">
+              <div class="col-sm-2 text-primary">
                 <%= "#{@member.first_name}" %>
               </div>
               <div class="col-sm-2">
                 <h6 class="mb-0">Middle name:</h6>
               </div>
-              <div class="col-sm-2 text-secondary">
+              <div class="col-sm-2 text-primary">
                 <%= "#{@member.middle_name}" %>
               </div>
               <div class="col-sm-2">
                 <h6 class="mb-0">Last name:</h6>
               </div>
-              <div class="col-sm-2 text-secondary">
+              <div class="col-sm-2 text-primary">
                 <%= "#{@member.last_name}" %>
               </div>
             </div>
@@ -39,13 +39,13 @@
               <div class="col-sm-3">
                 <h6 class="mb-0">Birthdate</h6>
               </div>
-              <div class="col-sm-3 text-secondary">
+              <div class="col-sm-3 text-primary">
                 <%= @member.birth_date %>
               </div>
               <div class="col-sm-3">
                 <h6 class="mb-0">Age</h6>
               </div>
-              <div class="col-sm-3 text-secondary">
+              <div class="col-sm-3 text-primary">
                 <%= @member.age %>
               </div>
             </div>
@@ -58,19 +58,19 @@
               <div class="col-sm">
                 <h6 class="mb-0">Loan Type</h6>
               </div>
-              <div class="col-sm text-secondary">
+              <div class="col-sm text-primary">
                 <%= @batch.loan.name %>
               </div>
               <div class="col-sm">
                 <h6 class="mb-0">Loan Amount</h6>
               </div>
-              <div class="col-sm text-secondary">
+              <div class="col-sm text-primary">
                 <%= to_number(@batch.loan_amount) %>
               </div>
               <div class="col-sm">
                 <h6 class="mb-0">Terms</h6>
               </div>
-              <div class="col-sm text-secondary">
+              <div class="col-sm text-primary">
                 <%= @batch.terms %>
               </div>
             </div>
@@ -79,19 +79,19 @@
               <div class="col-sm">
                 <h6 class="mb-0">Premium</h6>
               </div>
-              <div class="col-sm text-secondary">
+              <div class="col-sm text-primary">
                 <%= to_number(@batch.premium) %>
               </div>
               <div class="col-sm">
                 <h6 class="mb-0">Unused Premium</h6>
               </div>
-              <div class="col-sm text-secondary">
+              <div class="col-sm text-primary">
                 <%= to_number(@batch.unused) %>
               </div>
               <div class="col-sm">
                 <h6 class="mb-0">Premium Due</h6>
               </div>
-              <div class="col-sm text-secondary">
+              <div class="col-sm text-primary">
                 <%= to_number(@batch.premium_due) %>
               </div>
             </div>
@@ -100,13 +100,13 @@
               <div class="col-sm">
                 <h6 class="mb-0">Release Date</h6>
               </div>
-              <div class="col-sm text-secondary">
+              <div class="col-sm text-primary">
                 <%= date_as_month_day_year(@batch.date_release) %>
               </div>
               <div class="col-sm">
                 <h6 class="mb-0">Maturity Date</h6>
               </div>
-              <div class="col-sm text-secondary">
+              <div class="col-sm text-primary">
                 <%= date_as_month_day_year(@batch.date_release)%>
               </div>
             </div>
@@ -115,13 +115,13 @@
               <div class="col-sm">
                 <h6 class="mb-0">Effectivity Date</h6>
               </div>
-              <div class="col-sm text-secondary">
+              <div class="col-sm text-primary">
                 <%= date_as_month_day_year(@batch.effectivity_date) %>
               </div>
               <div class="col-sm">
                 <h6 class="mb-0">Expiry Date</h6>
               </div>
-              <div class="col-sm text-secondary">
+              <div class="col-sm text-primary">
                 <%= date_as_month_day_year(@batch.expiry_date)%>
               </div>
             </div>

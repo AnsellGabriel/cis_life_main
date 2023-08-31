@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_08_24_034930) do
+ActiveRecord::Schema[7.0].define(version: 2023_08_31_084439) do
   create_table "active_admin_comments", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.string "namespace"
     t.text "body"
@@ -167,14 +167,15 @@ ActiveRecord::Schema[7.0].define(version: 2023_08_24_034930) do
   end
 
   create_table "batch_health_decs", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
-    t.bigint "batch_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.text "answer"
     t.string "answerable_type", null: false
     t.bigint "answerable_id", null: false
+    t.string "healthdecable_type", null: false
+    t.bigint "healthdecable_id", null: false
     t.index ["answerable_type", "answerable_id"], name: "index_batch_health_decs_on_answerable"
-    t.index ["batch_id"], name: "index_batch_health_decs_on_batch_id"
+    t.index ["healthdecable_type", "healthdecable_id"], name: "index_batch_health_decs_on_healthdecable"
   end
 
   create_table "batch_remarks", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
@@ -606,6 +607,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_08_24_034930) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.bigint "loan_insurance_loan_id", null: false
+    t.integer "insurance_status"
     t.index ["coop_member_id"], name: "index_loan_insurance_batches_on_coop_member_id"
     t.index ["group_remit_id"], name: "index_loan_insurance_batches_on_group_remit_id"
     t.index ["loan_insurance_loan_id"], name: "index_loan_insurance_batches_on_loan_insurance_loan_id"
@@ -882,7 +884,6 @@ ActiveRecord::Schema[7.0].define(version: 2023_08_24_034930) do
   add_foreign_key "batch_dependents", "member_dependents"
   add_foreign_key "batch_group_remits", "batches"
   add_foreign_key "batch_group_remits", "group_remits"
-  add_foreign_key "batch_health_decs", "batches"
   add_foreign_key "batch_remarks", "batches"
   add_foreign_key "batches", "agreement_benefits"
   add_foreign_key "batches", "coop_members"

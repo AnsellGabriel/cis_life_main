@@ -49,6 +49,11 @@ RSpec.describe LoanInsurance::Batch, type: :model do
       expect(batch).not_to be_valid
     end
 
+    it "is not valid without an insurance status" do 
+      batch.insurance_status = nil
+      expect(batch).not_to be_valid
+    end
+
     context "with associations" do
       it "is not valid without a coop member" do 
         batch.coop_member = nil
