@@ -9,6 +9,7 @@ class LoanInsurance::BatchesController < ApplicationController
 
   # GET /loan_insurance/batches/1
   def show
+    @member = @batch.member_details
   end
 
   # GET /loan_insurance/batches/new
