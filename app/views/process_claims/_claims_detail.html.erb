@@ -20,6 +20,9 @@
           <dd class="col-sm-8"><%= @process_claim.claimable.member.email %> </dd>
           <dt class="col-sm-4">Date Incident:</dt>
           <dd class="col-sm-8"><%= to_shortdate(@process_claim.date_incident) %> </dd>
+          <dt class="col-sm-4">Claim Type:</dt>
+          <dd class="col-sm-8"><%= @process_claim.claim_type %> </dd>
+          
         </dl>
       </div>
     </div>

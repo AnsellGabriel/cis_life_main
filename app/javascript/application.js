@@ -14,3 +14,5 @@ import "@popperjs/core"
 import "bootstrap"
 import "@nathanvda/cocoon"
 // import 'cocoon-js'
+import "trix"
+import "@rails/actiontext"

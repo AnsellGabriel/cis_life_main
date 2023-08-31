@@ -23,6 +23,7 @@ class ProcessClaimsController < ApplicationController
 
   def show_coop 
     @agreement_benefit = AgreementBenefit.where(agreement: @process_claim.agreement)
+    @claim_type_document = ClaimTypeDocument.where(claim_type: @process_claim.claim_type)
   end
   # GET /process_claims/new
   def new
@@ -208,7 +209,8 @@ class ProcessClaimsController < ApplicationController
         claim_benefits_param: [:id, :benefit_id, :amount, :status],
         claim_cause_attributes: [:id, :acd, :ucd, :osccd, :icd],
         claim_coverage_attributes: [:id, :amount_benefit, :coverage_type, :coverageale],
-        claim_remark_attributes: [:id, :user_id, :status, :remark])
+        claim_remark_attributes: [:id, :user_id, :status, :remark],
+        claim_attachment_attributes: [:id, :claim_type_id, :doc])
     end
 
 end

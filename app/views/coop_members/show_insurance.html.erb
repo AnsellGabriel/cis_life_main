@@ -1,4 +1,4 @@
-<%= turbo_frame_tag "modal-xl" do %>
+<%#= turbo_frame_tag "modal-xl" do %>
   <div class="card">
     <div class="card-header">
       <% if @for_modal.present? %>
@@ -23,7 +23,7 @@
               <td colspan=3> <strong><%= agreement_benefit.agreement.plan %></strong> <br>
                 <%= agreement_benefit.name %> <br>
                 <%= link_to 'File Claims', new_coop_process_claims_path(cm: @coop_member, ab: agreement_benefit, a: agreement_benefit.agreement), class: 'btn btn-sm btn-warning' %>
-                <%= agreement_benefit.description %>
+                <%= agreement_benefit.description %> 
               </td>
               <td>
                 <table class="table align-middle">
@@ -63,4 +63,4 @@
       <% end %>
     </div>
   </div>
-<% end %>
+<%# end %>

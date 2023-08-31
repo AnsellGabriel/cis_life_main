@@ -1,3 +1,9 @@
+ <div class="text-end mb-3">
+      <%= link_to "Back", index_coop_process_claims_path, class: 'btn btn-secondary btn-lg' %>
+      <%= link_to "Submit Claims", claim_route_process_claim_path(@process_claim, p: 1), class: "btn btn-success btn-lg" if @process_claim.file_claim? %>
+      <%= link_to "Cancel Submit", claim_route_process_claim_path(@process_claim, p: 0), class: "btn btn-warning btn-lg" if @process_claim.submitted? %>
+      <%= link_to "Claims Filed", claim_route_process_claim_path(@process_claim, p: 2), class: "btn btn-warning btn-lg" if @process_claim.submitted? %>
+    </div>
 <div class="row">
   <div class="col-md-6">
     <%= render 'claims_detail' %>
@@ -19,11 +25,31 @@
     </div>
     
   <div class="col-md-6">
-    <div class="text-end mb-3">
-    <%= link_to "Back", :back, class: 'btn btn-secondary btn-lg' %>
-    <%= link_to "Submit Claims", claim_route_process_claim_path(@process_claim, p: 1), class: "btn btn-success btn-lg" if @process_claim.file_claim? %>
-    <%= link_to "Cancel Submit", claim_route_process_claim_path(@process_claim, p: 0), class: "btn btn-warning btn-lg" if @process_claim.submitted? %>
-    <%= link_to "Claims Filed", claim_route_process_claim_path(@process_claim, p: 2), class: "btn btn-warning btn-lg" if @process_claim.submitted? %>
+    <div class="card">
+      <div class="card-body">
+          <table class="table table-hover">
+            <thead>
+              <tr>
+                <th>Documents</th>
+                <th></th>
+              </tr>
+            </thead>
+            <tbody>
+              <% @claim_type_document.each do |doc| %>
+              <tr>
+                <% @claim_attach = ClaimAttachment.find_by(process_claim_id: @process_claim, claim_type_document: doc) %>
+                <td><%= doc.document %> <%= content_tag :span, 'Required', class: "badge rounded-pill text-bg-warning" if doc.required %></td>
+                <td class="text-end">
+                <% unless @claim_attach.nil? %>
+                <%= link_to '<i class="bi bi-eye"></i>'.html_safe, rails_blob_url(@claim_attach.doc), target: :_blank, class: 'btn btn-outline-primary' if @claim_attach.doc.attached?  %>
+                <% else %>
+                <%= link_to '<i class="bi bi-upload"></i>'.html_safe, claim_attachments_new_path(p: @process_claim.id, d: doc.id), class: "btn btn-primary", data: { turbo_frame: "remote_modal" } %></td>
+                <% end %>
+              </tr>
+              <% end %>
+            </tbody>
+          </table>
+      </div>
     </div>
     <div class="card">
       <div class="card-body">

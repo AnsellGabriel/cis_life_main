@@ -60,12 +60,13 @@ class ProcessClaim < ApplicationRecord
   belongs_to :agreement
   belongs_to :agreement_benefit
   belongs_to :cause, optional: true
-  belongs_to :claim_type, optional: true
+  belongs_to :claim_type
   has_many :process_track, as: :trackable, dependent: :destroy
   has_one :claim_cause, dependent: :destroy
   has_many :claim_benefits, dependent: :destroy
   has_many :claim_coverages, dependent: :destroy
   has_many :claim_remarks, dependent: :destroy
+  has_many :claim_attachments, dependent: :destroy
   accepts_nested_attributes_for :claim_cause
   # belongs_to :batch
   has_many :claim_documents, dependent: :destroy

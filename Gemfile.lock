@@ -440,6 +440,7 @@ DEPENDENCIES
   factory_bot_rails
   ffaker
   humanize
+  image_processing (~> 1.2)
   importmap-rails
   jquery-rails
   matrix (~> 0.4.2)

@@ -2,10 +2,8 @@
 
 one:
   process_claim: one
-  document: MyString
-  document_type: 1
+  claim_type_document: one
 
 two:
   process_claim: two
-  document: MyString
-  document_type: 1
+  claim_type_document: two

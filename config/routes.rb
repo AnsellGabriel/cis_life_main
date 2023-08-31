@@ -2,7 +2,9 @@
 require 'sidekiq/web'
 
 Rails.application.routes.draw do 
-  resources :claim_types, :claim_type_documents, :claim_type_benefits
+  get 'claim_attachments/new'
+  get 'claim_attachments/edit'
+  resources :claim_types, :claim_type_documents, :claim_type_benefits, :claim_attachments
   resources :documents
   resources :causes
   resources :emp_approvers
