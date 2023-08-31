@@ -120,7 +120,9 @@ class ProcessRemarksController < ApplicationController
         #   approved_batches.update_all(batch_remit_id: current_batch_remit.id)
         # end
       else
-        format.html { render :new, status: :unprocessable_entity }
+        # format.html { render :new, status: :unprocessable_entity }
+        format.html { redirect_to process_coverage_url(params[:process_remark][:process_coverage_id]), alert: "Remarks not added. Remark should be present." }
+        # format.turbo_stream { render :form_update, status: :unprocessable_entity }
         format.json { render json: @process_remark.errors, status: :unprocessable_entity }
       end
     end
