@@ -1,4 +1,4 @@
-<% if dependent.dependent_remarks.exists? %>
+<% if dependent.remarks.exists? %>
   <%= link_to dependent_remarks_path(batch_dependent_id: dependent.id, 
     group_remit_id: group_remit.id, 
     batch_id: batch.id, coop: true), 
@@ -9,22 +9,22 @@
   <% end %>
 <% end %>
 
-<% if dependent.dependent_health_decs.exists? %>
+<% if dependent.health_declaration.exists? %>
   <%= link_to health_dec_group_remit_batch_dependent_path(group_remit, batch, dependent, coop: true),
     class: small_btn('primary'), 
-    title: 'Health Declaration Form',
-    data: { turbo_frame: "modal-xl" } do %> 
+    title: 'Health Declaration',
+    data: { turbo_frame: "reg_form_modal_xl" } do %> 
     <i class="bi bi-file-earmark-medical"></i>
   <% end %>
 <% end %>
 
 <% if (group_remit.pending? || group_remit.for_renewal?) && group_remit.instance_of?(Remittance) && !batch.terminated? %>     
 
-  <% if (batch.recent? || batch.for_reconsideration?) && dependent.dependent_health_decs.blank? %>
+  <% if (batch.recent? || batch.for_reconsideration?) && dependent.health_declaration.blank? %>
     <%= link_to new_group_remit_batch_dep_health_declaration_path(group_remit, batch, batch_dependent_id: dependent.id),
       class: small_btn('warning'), 
-      title: 'Health Declaration Form',
-      data: { turbo_frame: "modal-xl" } do %> 
+      title: 'Health Declaration',
+      data: { turbo_frame: "reg_form_modal_xl" } do %> 
       <i class="bi bi-file-earmark-medical"></i>
     <% end %>
   <% end %>

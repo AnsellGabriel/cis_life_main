@@ -30,8 +30,8 @@ class BatchesController < ApplicationController
     @member = @batch.member_details
     @batch_health_dec = @batch.batch_health_decs
     @group_remit = @batch.group_remits.find_by(type: "Remittance")
-    @questionaires = BatchHealthDec.where(batch_id: @batch.id).where(answerable_type: "HealthDec")
-    @subquestions = BatchHealthDec.where(batch_id: @batch.id).where(answerable_type: "HealthDecSubquestion")
+    @questionaires = BatchHealthDec.where(healthdecable: @batch).where(answerable_type: "HealthDec")
+    @subquestions = BatchHealthDec.where(healthdecable: @batch).where(answerable_type: "HealthDecSubquestion")
 
     @for_und = params[:for_und]
     @md = params[:md]

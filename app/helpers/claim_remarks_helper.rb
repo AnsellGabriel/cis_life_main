@@ -1,0 +1,2 @@
+module ClaimRemarksHelper
+end

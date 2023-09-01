@@ -5,12 +5,12 @@ class DependentHealthDecsController < ApplicationController
 
   def show 
     @dependent = @batch_dependent.member_dependent
-    @batch_dependent_health_dec = @batch_dependent.dependent_health_decs
+    @batch_dependent_health_dec = @batch_dependent.health_declaration
     @group_remit = @batch_dependent.group_remit
   end
 
   def new
-    @batch_dependent_health_dec = @batch_dependent.dependent_health_decs.build
+    @batch_dependent_health_dec = @batch_dependent.health_declaration.build
     @dependent = @batch_dependent.member_dependent
     @questionaire = HealthDec.where(active: true)
   end

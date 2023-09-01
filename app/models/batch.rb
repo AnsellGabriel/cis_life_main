@@ -36,6 +36,7 @@ class Batch < ApplicationRecord
   has_many :batch_group_remits
   has_many :group_remits, through: :batch_group_remits
   has_many :batch_health_decs, as: :healthdecable, dependent: :destroy
+  alias_attribute :health_declaration, :batch_health_decs
   has_many :batch_dependents, dependent: :destroy
   has_many :member_dependents, through: :batch_dependents
   has_many :batch_beneficiaries, dependent: :destroy
