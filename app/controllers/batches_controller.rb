@@ -27,9 +27,16 @@ class BatchesController < ApplicationController
   end
 
   def health_dec
+    @batch = case params[:batch_type]
+            when "LoanInsurance::Batch"
+              LoanInsurance::Batch.find(params[:id])
+            else
+              Batch.find(params[:id])
+            end
+            
     @member = @batch.member_details
-    @batch_health_dec = @batch.batch_health_decs
-    @group_remit = @batch.group_remits.find_by(type: "Remittance")
+    @batch_health_dec = @batch.health_declaration
+    @group_remit = GroupRemit.find(params[:group_remit_id])
     @questionaires = BatchHealthDec.where(healthdecable: @batch).where(answerable_type: "HealthDec")
     @subquestions = BatchHealthDec.where(healthdecable: @batch).where(answerable_type: "HealthDecSubquestion")
 
@@ -43,7 +50,6 @@ class BatchesController < ApplicationController
     @rem_status = :md_reco
     # @process_coverage = @batch.group_remit.process_coverage
     @process_coverage = @group_remit.process_coverage
-
   end
 
   def all_health_decs

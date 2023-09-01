@@ -1,4 +1,6 @@
 class LoanInsurance::Batch < Batch
+  include CoverageStatus
+
   self.table_name = "loan_insurance_batches"
 
   # skip agreement_benefit validation
@@ -17,8 +19,8 @@ class LoanInsurance::Batch < Batch
     return nil if effectivity_date.nil? || expiry_date.nil?
 
     agreement = group_remit.agreement
-    
     set_terms_and_age
+    find_existing_coverages(agreement)
     find_loan_rate(agreement)
     calculate_values(agreement)
   end
@@ -50,4 +52,16 @@ class LoanInsurance::Batch < Batch
   def calculate_service_fee(service_fee_percentage, premium)
     (service_fee_percentage / 100.to_d) * premium
   end
+
+  def find_existing_coverages(agreement)
+    existing_coverage = agreement.agreements_coop_members.where(coop_member_id: coop_member.id).order(created_at: :desc).first
+
+    if existing_coverage
+      update_batch_and_existing_coverage(self, existing_coverage, group_remit)
+    else
+      create_new_batch_coverage(agreement, coop_member, self )
+    end
+  end
+
+
 end

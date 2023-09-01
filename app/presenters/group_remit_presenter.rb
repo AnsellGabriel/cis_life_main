@@ -1,4 +1,6 @@
 class GroupRemitPresenter
+	include Rails.application.routes.url_helpers
+
 	def initialize(group_remit)
 		@group_remit = group_remit
 	end
@@ -100,6 +102,28 @@ class GroupRemitPresenter
 			"For payment verification"
 		when "with_pending_members"
 			"Pending members"
+		end
+	end
+
+	def status_mappings
+		status_mappings = {
+			for_review: { label: "For Review", class: "btn-outline-secondary" },
+			approved: { label: "Approved", class: "btn-success" },
+			pending: { label: "Pending", class: "btn-secondary" },
+			denied: { label: "Denied", class: "btn-danger" }
+		} 
+
+	 	status_mappings = status_mappings.merge(for_reconsideration: {label: 'Request', class: 'btn-warning'}) if @group_remit.agreement.reconsiderable? 
+
+		status_mappings
+	end
+
+	def link_to_show
+		case @group_remit.class.name
+		when "LoanInsurance::GroupRemit"
+			loan_insurance_group_remit_path(@group_remit)
+		else
+			group_remit_path(@group_remit)
 		end
 	end
 
