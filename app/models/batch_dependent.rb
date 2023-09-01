@@ -18,7 +18,7 @@ class BatchDependent < ApplicationRecord
   has_many :process_claims, as: :claimable, dependent: :destroy
   has_many :dependent_remarks, dependent: :destroy
 
-  
+  delegate :full_name, to: :member_dependent
   # [relationship] is used to retrieve the value from the hash based on the given relationship parameter
   def insured_type(relationship)
     {

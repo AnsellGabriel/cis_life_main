@@ -20,6 +20,7 @@ class Agreement < ApplicationRecord
     has_many :loan_rates, class_name: 'LoanInsurance::Rate'
     accepts_nested_attributes_for :agreement_benefits, reject_if: :all_blank, allow_destroy: true
 
+    delegate :acronym, to: :plan, prefix: true
     def to_s
       moa_no
     end
