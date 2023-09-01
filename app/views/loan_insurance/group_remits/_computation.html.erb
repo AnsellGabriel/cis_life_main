@@ -21,7 +21,7 @@
             <%= content_tag :span, "This section will update once reiewing process is completed", style: "font-size: .6rem" %>
           </div>
           <div class="text-secondary d-flex justify-content-between">
-            <%= content_tag :span, "#{@agreement.coop_sf}% Coop service fee", style: "font-size: .8rem" %>
+            <%= content_tag :span, "#{agreement.coop_sf}% Coop service fee", style: "font-size: .8rem" %>
             <%= content_tag :span, "(#{to_curr(group_remit.total_coop_commissions)})", style: "font-size: .8rem; color: var(--bs-green)"%>
           </div>      
           <div class="text-secondary d-flex justify-content-between">

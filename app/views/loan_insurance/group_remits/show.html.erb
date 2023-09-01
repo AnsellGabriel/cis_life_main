@@ -42,24 +42,7 @@
             <% end %>
 
             <% if @gr_presenter.is_pending_or_renewal? %>
-              <%= turbo_frame_tag "batch_import_form" do %>
-                <%= turbo_frame_tag "batch_form" do %>   
-                    <div class="d-flex gap-3 mb-2">
-                      <%= render 'add_member' %>
-                    </div>
-                  <% if @group_remit.batches_without_health_dec.size > 0 %>
-                    <%= content_tag :span, "Filter this batch by:", 
-                      class: 'mb-1',  
-                      style: "font-size: .7rem; color: red !important; font-weight: 700;"   
-                    %>
-                    <%= link_to "#{@group_remit.batches_without_health_dec.size} member(s) without batch health declaration!", group_remit_path(@group_remit, batch_health_dec_filter: true), 
-                      method: :get, 
-                      class: "#{badge('danger')} hovered-link", 
-                      data: { turbo: false } 
-                    %>
-                  <% end %>
-                <% end %>
-              <% end %>
+              
             <% end%>
 
           </div>
@@ -68,7 +51,7 @@
     </div>
   </div> 
   <%= turbo_frame_tag "computation" do %>
-    <%= render "loan_insurance/group_remits/computation", group_remit: @group_remit %>
+    <%= render "loan_insurance/group_remits/computation", group_remit: @group_remit, agreement: @agreement %>
   <% end %>  
 </div>
 
@@ -77,7 +60,7 @@
 
     <% @gr_presenter.status_mappings.each do |status, attributes| %>
       <% batches = @group_remit.batches.send(status) %>
-      <%= link_to group_remit_path(@group_remit, insurance_status: status), class: "btn btn-sm #{attributes[:class]} position-relative" do %>
+      <%= link_to loan_insurance_group_remit_path(@group_remit, insurance_status: status), class: "btn btn-sm #{attributes[:class]} position-relative" do %>
         <%= attributes[:label] %>
         <% unless batches.size.zero? %>
           <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-primary">
@@ -121,6 +104,8 @@
         <th class="text-center" scope="col">ID</th>
         <th class="text-center" scope="col" style="width: 30%;">Members</th>
         <th class="text-center" scope="col">Premium</th>
+        <th class="text-center" scope="col">Unused Premium</th>
+        <th class="text-center" scope="col">Premium Due</th>
         <th class="text-center" scope="col">Actions</th>
 
       </tr>
@@ -128,7 +113,7 @@
 
     <tbody id="batches_body">
 
-      <% if @group_remit.lppi_batches.exists? %>
+      <% if @group_remit.batches.exists? %>
         <%= render @batches, group_remit: @group_remit, agreement: @agreement %>
       <% end %>
 

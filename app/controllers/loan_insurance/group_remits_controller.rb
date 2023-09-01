@@ -1,4 +1,6 @@
 class LoanInsurance::GroupRemitsController < ApplicationController
+  include BatchesLoader
+
   before_action :set_agreement, only: %i[index new create show]
   before_action :set_group_remit, only: %i[show destroy]
 
@@ -7,13 +9,12 @@ class LoanInsurance::GroupRemitsController < ApplicationController
   end
 
   def show
-    if params[:batch_filter].present?
-      @batches = @group_remit.lppi_batches.filter_by_member_name(params[:batch_filter].upcase).order(created_at: :desc)
-    else
-      @batches = @group_remit.lppi_batches.order(created_at: :desc)
-    end
-    
-    @pagy, @batches = pagy(@batches, items: 10)
+    @batch = @group_remit.batches.build(premium: 0)
+    @coop_members = @cooperative.coop_members
+
+    load_batches
+    paginate_batches
+
     @gr_presenter = GroupRemitPresenter.new(@group_remit)
   end
 
