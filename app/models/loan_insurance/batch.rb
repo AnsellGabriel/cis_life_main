@@ -5,7 +5,7 @@ class LoanInsurance::Batch < Batch
 
   # skip agreement_benefit validation
   validate :agreement_benefit, unless: :skip_validation
-  validates_presence_of :date_release, :date_mature, :coop_member_id, :insurance_status
+  validates_presence_of :date_release, :date_mature, :coop_member_id, :insurance_status, :loan_amount
 
   belongs_to :group_remit, class_name: 'LoanInsurance::GroupRemit', foreign_key: 'group_remit_id'
   belongs_to :loan, class_name: 'LoanInsurance::Loan', foreign_key: 'loan_insurance_loan_id'
@@ -31,7 +31,7 @@ class LoanInsurance::Batch < Batch
     true 
   end
 
-  def set_terms_and_age    
+  def set_terms_and_age
     terms = (expiry_date.year - effectivity_date.year) * 12 + (expiry_date.month - effectivity_date.month) + (expiry_date.day > effectivity_date.day ? 1 : 0)
 
     self.terms = terms

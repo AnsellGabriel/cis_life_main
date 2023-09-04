@@ -614,6 +614,8 @@ ActiveRecord::Schema[7.0].define(version: 2023_09_01_055229) do
     t.bigint "loan_insurance_loan_id", null: false
     t.integer "insurance_status"
     t.integer "status"
+    t.boolean "terminated"
+    t.date "terminate_date"
     t.index ["coop_member_id"], name: "index_loan_insurance_batches_on_coop_member_id"
     t.index ["group_remit_id"], name: "index_loan_insurance_batches_on_group_remit_id"
     t.index ["loan_insurance_loan_id"], name: "index_loan_insurance_batches_on_loan_insurance_loan_id"

@@ -12,6 +12,7 @@ class CoopMember < ApplicationRecord
   belongs_to :cooperative
   belongs_to :coop_branch
   belongs_to :member
+  has_many :lppi_batches, class_name: 'LoanInsurance::Batch', foreign_key: 'coop_member_id'
   has_many :batches
   has_many :agreements_coop_members
   has_many :agreements, through: :agreements_coop_members
