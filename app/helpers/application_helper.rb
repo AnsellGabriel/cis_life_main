@@ -62,8 +62,9 @@ module ApplicationHelper
 		end
 	end
 
-	def health_dec_answer(id, val)
-		if (1..2).include?(id)
+	def health_dec_answer(id, val, type)
+		# if (1..2).include?(id)
+		if id == true && type == "HealthDec"
 			case val
 				when "true" then content_tag(:small, "Yes", class: 'text-success')
 				when "false" then content_tag(:small, "No", class: "text-danger")

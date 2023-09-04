@@ -29,6 +29,8 @@ module ProcessCoveragesHelper
     if rank == "analyst"
       if pc_stat == "reprocess_approved" || pc_stat == "reassess"
         "d-inline"
+      elsif pc_stat == "for_head_approval" || pc_stat == "for_vp_approval"
+        "d-none"
       else
         case status
           when "approved", "denied" then "d-none"

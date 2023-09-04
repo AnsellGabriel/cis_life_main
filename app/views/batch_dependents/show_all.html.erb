@@ -60,23 +60,25 @@
                 <div class="col-sm-3 text-secondary">
                   <% pro_cov = dependent.batch.group_remits.find_by(type: "Remittance").process_coverage %>
                   <% unless pro_cov.approved? || pro_cov.reprocess_approved? %>
-                  <%= link_to approve_dependent_process_coverage_path(params[:process_coverage_id], dependent: dependent, group_remit_id: params[:group_remit_id]), 
-                    onclick: "return confirm('Are you sure?')", 
-                    method: :get, 
-                    title: "Approve", 
-                    class: "btn btn-sm btn-success mb-1" do %>
-                      <%= bootstrap_icon "check-lg" %>
-                  <% end %>
+                    <div class="<%= bd_buttons(current_user.rank, dependent.insurance_status, pro_cov.status) %>">
+                      <%= link_to approve_dependent_process_coverage_path(params[:process_coverage_id], dependent: dependent, group_remit_id: params[:group_remit_id]), 
+                        onclick: "return confirm('Are you sure?')", 
+                        method: :get, 
+                        title: "Approve", 
+                        class: "btn btn-sm btn-success mb-1" do %>
+                          <%= bootstrap_icon "check-lg" %>
+                      <% end %>
 
-                    <%= link_to new_dependent_remark_path(group_remit_id: params[:group_remit_id], process_coverage_id: params[:process_coverage_id], batch_dependent_id: dependent.id, status: :pending), title: "Pending", class: "btn btn-sm btn-secondary mb-1", data: { turbo_frame: "modal-xl" } do %>
-                      <%= bootstrap_icon "arrow-clockwise" %>
-                    <% end %>
+                        <%= link_to new_dependent_remark_path(group_remit_id: params[:group_remit_id], process_coverage_id: params[:process_coverage_id], batch_dependent_id: dependent.id, status: :pending), title: "Pending", class: "btn btn-sm btn-secondary mb-1", data: { turbo_frame: "modal-xl" } do %>
+                          <%= bootstrap_icon "arrow-clockwise" %>
+                        <% end %>
 
-                    <%= link_to new_dependent_remark_path(group_remit_id: params[:group_remit_id], process_coverage_id: params[:process_coverage_id], batch_dependent_id: dependent.id, status: :denied), title: "Deny", class: "btn btn-sm btn-danger mb-1", data: { turbo_frame: "modal-xl" } do %>
-                      <%= bootstrap_icon "x-lg" %>
-                    <% end %>
+                        <%= link_to new_dependent_remark_path(group_remit_id: params[:group_remit_id], process_coverage_id: params[:process_coverage_id], batch_dependent_id: dependent.id, status: :denied), title: "Deny", class: "btn btn-sm btn-danger mb-1", data: { turbo_frame: "modal-xl" } do %>
+                          <%= bootstrap_icon "x-lg" %>
+                        <% end %>
 
-                  <% end %>
+                      <% end %>
+                    </div>
             
 
                   <% if dependent.dependent_remarks.exists? %>

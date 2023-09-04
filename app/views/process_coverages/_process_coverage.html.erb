@@ -266,7 +266,8 @@
                         <td>
                           <% if batch.batch_health_decs %>
                             <% batch.batch_health_decs.where(answerable_type: "HealthDec").each do |bhd| %>
-                              <%= health_dec_answer(bhd.answerable_id, bhd.answer) %> <br>
+                              <!-- <%#= health_dec_answer(bhd.answerable_id, bhd.answer) %> <br> -->
+                              <%= health_dec_answer(bhd.answerable.valid_answer, bhd.answer, bhd.answerable_type) %> <br>
                             <% end %>
                           <% end %>
                         </td>
