@@ -1,13 +1,11 @@
-<%= simple_form_for(batch, data: {controller: 'form-redirect'}) do |f| %>
-  <%= f.error_notification %>
-  <%= f.error_notification message: f.object.errors[:base].to_sentence if f.object.errors[:base].present? %>
-
-  <div class="form-inputs mb-3" data-controller="coop-member" >
-    <div class="row <%= flex_justify_align('','center') %>">
+<%= simple_form_for(batch, html: {class: "#{flex_justify_align('end', 'center')} gap-2"}) do |f| %>
+  <div class="form-inputs mb-3 col-md-7" data-controller="coop-member" >
+    <div class="row <%= flex_justify_align('between','center') %> mb-3">
       <%= f.hidden_field :group_remit_id, value: group_remit_id %>
       <%= f.association :coop_member, 
           collection: coop_members, 
           include_blank: "Search member",
+          wrapper_html: {class: 'col-md-10', style: 'margin-bottom: 0!important;'},
           input_html: { 
             id: "member_id", 
             data: {  
@@ -16,55 +14,53 @@
               action: "change->coop-member#selectMember", }  
             }, label: false      
       %>
+      <div class="form-actions col-md-2">
+        <%= f.button :submit, 'Add', class: small_btn('primary') %>
+      </div>
     </div>
-    
-    <%= turbo_frame_tag 'member details' %>
-
     <div class="row">
-      <div class="form-floating mb-3 col-md-6">
+      <div class="form-floating mb-3 col-md-4">
         <%= f.input :loan_amount, label: false, placeholder: 'Loan amount', class: 'form-control', wrapper: false %>
         <%= f.label :loan_amount, 'Loan amount', class: 'ps-4' %>
       </div>
-      <div class="form-floating col-md-6">
-        <%= f.association :loan, label: false, prompt: 'Select Loan Type', wrapper: false %>
-        <%= f.label :loan, 'Loan type', class: 'ps-4' %>
-      </div>
-    </div>
-    <div class="row">
-      <%= render 'layouts/partials/flatpickr', 
+      <%= render 'layouts/partials/flatpickr',
         form: f, 
         attribute: :effectivity_date,
         max_date: false,
-        placeholder: 'Effectivity date', 
-        css_class: 'col-md-6' 
+        placeholder: 'Effectivity date',
+        css_class: 'col-md-4'
       %>
       <%= render 'layouts/partials/flatpickr', 
         form: f, 
         attribute: :expiry_date, 
         max_date: false,
         placeholder: 'Expiry date', 
-        css_class: 'col-md-6' 
+        css_class: 'col-md-4' 
       %>
     </div>
     <div class="row">
+      <div class="form-floating col-md-4">
+        <%= f.association :loan, label: false, prompt: 'Select type', wrapper: false %>
+        <%= f.label :loan, 'Loan type', class: 'ps-4' %>
+      </div>
       <%= render 'layouts/partials/flatpickr', 
         form: f, 
         attribute: :date_release, 
         max_date: false,
         placeholder: 'Release date', 
-        css_class: 'col-md-6' 
+        css_class: 'col-md-4' 
       %>
       <%= render 'layouts/partials/flatpickr', 
         form: f, 
         attribute: :date_mature, 
         max_date: false,
         placeholder: 'Maturity date', 
-        css_class: 'col-md-6' 
+        css_class: 'col-md-4' 
       %>
     </div>
   </div>
-  <div class="form-actions text-center">
-      <%= f.button :submit, 'Add', class: small_btn('primary') %>
+  <div class="col-md-5 <%= flex_justify_align('center','center') %>" style="width: 41.65%; height: 250px; align-self: start;">
+    <%= turbo_frame_tag 'member details', style: 'width: 100%' %>
   </div>
 <% end %>
 

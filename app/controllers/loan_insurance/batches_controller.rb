@@ -41,10 +41,9 @@ class LoanInsurance::BatchesController < ApplicationController
       if @batch.save
         format.html { redirect_to loan_insurance_group_remit_path(params[:loan_insurance_batch][:group_remit_id]), notice: "Member added" }
       else
-        # format.turbo_stream do
-        #   render turbo_stream: turbo_stream.update("modal", partial: "loan_insurance/batches/form"), status: :unprocessable_entity
-        # end
-        format.html { render :new, status: :unprocessable_entity }
+        format.turbo_stream do
+          render turbo_stream: turbo_stream.replace("new_loan_insurance_batch", partial: "loan_insurance/batches/form", locals: {batch: @batch, coop_members: @coop_members, group_remit_id: @group_remit_id}), status: :unprocessable_entity
+        end
       end
     end
   end
