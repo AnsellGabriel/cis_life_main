@@ -31,7 +31,7 @@ class LoanInsurance::Batch < Batch
     true 
   end
 
-  def set_terms_and_age    
+  def set_terms_and_age
     terms = (expiry_date.year - effectivity_date.year) * 12 + (expiry_date.month - effectivity_date.month) + (expiry_date.day > effectivity_date.day ? 1 : 0)
 
     self.terms = terms

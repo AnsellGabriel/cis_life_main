@@ -45,6 +45,14 @@ class GeoMunicipalitiesController < ApplicationController
     redirect_to geo_municipalities_url, notice: "Geo municipality was successfully destroyed."
   end
 
+  def selected
+    @target = params[:target]
+    @barangays = GeoBarangay.where(geo_municipality_id: params[:id])
+    respond_to do |format|
+      format.turbo_stream
+    end
+  end
+
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_geo_municipality

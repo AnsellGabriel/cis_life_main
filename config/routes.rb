@@ -36,9 +36,15 @@ Rails.application.routes.draw do
   # resources :cooperatives
   resources :coop_types
   resources :geo_barangays
-  resources :geo_municipalities
-  resources :geo_provinces
-  resources :geo_regions
+  resources :geo_municipalities do
+    get :selected, on: :member
+  end
+  resources :geo_provinces do
+    get :selected, on: :member
+  end
+  resources :geo_regions do
+    get :selected, on: :member
+  end
   # resources :agent_groups
   # resources :departments
   # resources :agents
