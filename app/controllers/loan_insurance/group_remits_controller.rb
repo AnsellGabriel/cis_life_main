@@ -1,14 +1,20 @@
 class LoanInsurance::GroupRemitsController < ApplicationController
+  include BatchesLoader
+
   before_action :set_agreement, only: %i[index new create show]
+  before_action :set_group_remit, only: %i[show destroy]
 
   def index
-    @group_remits = @agreement.group_remits.where(type: 'LoanInsurance::GroupRemit')
+    @group_remits = @agreement.group_remits.loan_remits
   end
 
   def show
-    @group_remit = LoanInsurance::GroupRemit.find(params[:id])
-    @batches = @group_remit.batches
-    @pagy, @batches = pagy(@batches, items: 10)
+    @batch = @group_remit.batches.build(premium: 0)
+    @coop_members = @cooperative.coop_members
+
+    load_batches
+    paginate_batches
+
     @gr_presenter = GroupRemitPresenter.new(@group_remit)
   end
 
@@ -31,8 +37,18 @@ class LoanInsurance::GroupRemitsController < ApplicationController
     end
   end
 
+  def destroy
+    if @group_remit.destroy!
+      redirect_to loan_insurance_group_remits_path, alert: "Remittance deleted"
+    end
+  end
+
   private
     def set_agreement
       @agreement = @cooperative.agreements.lppi
+    end
+
+    def set_group_remit
+      @group_remit = LoanInsurance::GroupRemit.find(params[:id])
     end
 end

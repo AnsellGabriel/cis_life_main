@@ -8,41 +8,51 @@
 
 	<% if batch.pending? %>
 		<%= link_to 'Accept', accept_insurance_path(group_remit: group_remit, batch: batch),
-			data: {turbo_method: :get, turbo_confirm: "Accept insurance with adjusted premium of #{peso_currency(batch.premium)}?" , turbo_frame: "_top"}, 
+			data: {
+				turbo_method: :get, 
+				turbo_confirm: "Accept insurance with adjusted premium of #{peso_currency(batch.premium)}?", 
+				turbo_frame: "_top"
+			}, 
 			class: small_btn('success') 
 		%>
 		<%= button_to group_remit_batch_path(group_remit, batch, reconsider: true), 
 				method: :delete,
 				form: { 
-				data: { turbo_frame: "_top", 
-				turbo_confirm: "Reject repriced premium and remove #{batch.coop_member.full_name} in this remittance?" } 
+					data: { 
+						turbo_frame: "_top", 
+						turbo_confirm: "Reject repriced premium and remove #{batch.coop_member.full_name} in this remittance?" 
+					} 
 				}, 
 				class: small_btn('danger') do %>
-						Reject                 
-			<% end %>
+					Reject                 
+				<% end %>
 	<% end %>
 
 	<% if batch.batch_remarks.exists? %>
-		<%= link_to "Remarks", modal_remarks_group_remit_batch_path(group_remit, batch), data: { turbo_frame: "modal" }, class: small_btn('warning') %>
+		<%= link_to modal_remarks_group_remit_batch_path(group_remit, batch), 
+			data: { turbo_frame: "modal" }, 
+			title: 'Remarks',
+			class: small_btn('warning') do %>
+			<i class="bi bi-card-list"></i>
+		<% end %>
 	<% end %>
 
 	<% if batch.batch_health_decs.exists? %>
 		<%= link_to health_dec_group_remit_batch_path(group_remit, batch, for_und: true), 
 			class: small_btn('primary'), 
 			title: 'Health Declaration Form',
-			data: { turbo_frame: "modal-xl" } do %>
-			<i class="bi bi-file-earmark-medical"></i>
-		<% end %>
+			data: { turbo_frame: "reg_form_modal_xl" } do %>
+				<i class="bi bi-file-earmark-medical"></i>
+			<% end %>
 	<% end %>
 
-	<% if (group_remit.pending? || group_remit.for_renewal?) && group_remit.instance_of?(Remittance)%>
-
-		<% if (batch.recent? || batch.for_reconsideration?) && batch.batch_health_decs.blank? && life_benefit[0].coverage_amount > agreement.nel %>
+	<% if unsubmitted_remittance?(group_remit) %>
+		<% if eligible_for_health_declaration?(batch, agreement, life_benefit) %>
 			<%= link_to new_group_remit_batch_health_declaration_path(group_remit, batch),
 				class: small_btn('warning'), 
 				title: 'Health Declaration Form',
-				data: { turbo_frame: "modal-xl" } do %> 
-				<i class="bi bi-file-earmark-medical"></i>
+				data: { turbo_frame: "reg_form_modal_xl" } do %> 
+					<i class="bi bi-file-earmark-medical"></i>
 			<% end %>
 		<% end %>
 
@@ -50,20 +60,25 @@
 			<%= button_to group_remit_batch_path(group_remit, batch), 
 				method: :delete,
 				form: { 
-				data: { turbo_frame: "_top", 
-				turbo_confirm: "Delete Batch: #{member.last_name}, #{member.first_name} #{member.middle_name}?" } 
+					data: { 
+						turbo_frame: "_top", 
+						turbo_confirm: "Delete Batch: #{member.last_name}, #{member.first_name} #{member.middle_name}?" 
+					} 
 				}, 
 				class: small_btn('danger') do %>
-						<i class="bi bi-x-lg"></i>                    
+					<i class="bi bi-x-lg"></i>                    
 			<% end %>
 		<% end %>
 
 		<% if batch.renewal? && !batch.denied? %>
 			<%= link_to 'Terminate Insurance', terminate_insurance_path(group_remit: group_remit, batch: batch),
-				data: {turbo_method: :get, turbo_confirm: "Terminate #{batch.coop_member.full_name}'s insurance?" , turbo_frame: "_top"}, 
+				data: {
+					turbo_method: :get, 
+					turbo_confirm: "Terminate #{batch.coop_member.full_name}'s insurance?" , turbo_frame: "_top"
+				}, 
 				class: small_btn('danger') 
 			%>
 		<% end %>
 	<% end %>
-
 </div>
+

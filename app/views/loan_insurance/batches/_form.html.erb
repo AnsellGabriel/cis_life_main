@@ -1,45 +1,70 @@
-<%= simple_form_for(batch) do |f| %>
+<%= simple_form_for(batch, data: {controller: 'form-redirect'}) do |f| %>
   <%= f.error_notification %>
   <%= f.error_notification message: f.object.errors[:base].to_sentence if f.object.errors[:base].present? %>
 
-  <div class="form-inputs mb-3">
+  <div class="form-inputs mb-3" data-controller="coop-member" >
     <div class="row <%= flex_justify_align('','center') %>">
-      <%= f.hidden_field :group_remit_id, value: params[:group_remit_id] %>
+      <%= f.hidden_field :group_remit_id, value: group_remit_id %>
       <%= f.association :coop_member, 
-          collection: @coop_members, 
+          collection: coop_members, 
           include_blank: "Search member",
           input_html: { 
             id: "member_id", 
             data: {  
-              controller: "slim-select" }  
-            }, label: false,
-          wrapper_html: { class: 'col-md-9' }
+              target: 'memberSelect',
+              controller: "slim-select",
+              action: "change->coop-member#selectMember", }  
+            }, label: false      
       %>
-      <%= f.input :terms, label: false, placeholder: 'Terms', wrapper_html: { class: 'col-md-3' } %>
+    </div>
+    
+    <%= turbo_frame_tag 'member details' %>
+
+    <div class="row">
+      <div class="form-floating mb-3 col-md-6">
+        <%= f.input :loan_amount, label: false, placeholder: 'Loan amount', class: 'form-control', wrapper: false %>
+        <%= f.label :loan_amount, 'Loan amount', class: 'ps-4' %>
+      </div>
+      <div class="form-floating col-md-6">
+        <%= f.association :loan, label: false, prompt: 'Select Loan Type', wrapper: false %>
+        <%= f.label :loan, 'Loan type', class: 'ps-4' %>
+      </div>
     </div>
     <div class="row">
-      <%= f.input :loan_amount, label: false, placeholder: 'Loan amount', wrapper_html: {class: 'col-md-12'} %>
+      <%= render 'layouts/partials/flatpickr', 
+        form: f, 
+        attribute: :effectivity_date,
+        max_date: false,
+        placeholder: 'Effectivity date', 
+        css_class: 'col-md-6' 
+      %>
+      <%= render 'layouts/partials/flatpickr', 
+        form: f, 
+        attribute: :expiry_date, 
+        max_date: false,
+        placeholder: 'Expiry date', 
+        css_class: 'col-md-6' 
+      %>
     </div>
     <div class="row">
-      <%= f.input :date_release, as: :string, input_html: {data: {
-                controller: "flatpickr",
-                flatpickr_max_date: Time.zone.now,
-                flatpickr_next_arrow: "Next",
-                flatpickr_prev_arrow: "Prev"},
-                placeholder: 'Date release'}, label: false,
-                wrapper_html: {class: 'col-md-6'} %>
-      <%= f.input :date_mature, as: :string, input_html: {data: {
-                controller: "flatpickr",
-                flatpickr_max_date: Time.zone.now,
-                flatpickr_next_arrow: "Next",
-                flatpickr_prev_arrow: "Prev"},
-                placeholder: 'Date mature'}, label: false,
-                wrapper_html: {class: 'col-md-6'} %>
+      <%= render 'layouts/partials/flatpickr', 
+        form: f, 
+        attribute: :date_release, 
+        max_date: false,
+        placeholder: 'Release date', 
+        css_class: 'col-md-6' 
+      %>
+      <%= render 'layouts/partials/flatpickr', 
+        form: f, 
+        attribute: :date_mature, 
+        max_date: false,
+        placeholder: 'Maturity date', 
+        css_class: 'col-md-6' 
+      %>
     </div>
   </div>
-
-  <div class="form-actions text-end">
-    <%= f.button :submit, 'Add', class: small_btn('primary') %>
-    <%= link_to "Cancel", :back, class: small_btn('secondary') %>
+  <div class="form-actions text-center">
+      <%= f.button :submit, 'Add', class: small_btn('primary') %>
   </div>
 <% end %>
+

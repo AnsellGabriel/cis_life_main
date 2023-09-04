@@ -7,6 +7,8 @@ class CoopMember < ApplicationRecord
     .distinct.pluck(:id)
   }
 
+  delegate :age, to: :member
+
   belongs_to :cooperative
   belongs_to :coop_branch
   belongs_to :member

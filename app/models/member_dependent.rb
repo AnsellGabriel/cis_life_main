@@ -28,7 +28,7 @@ class MemberDependent < ApplicationRecord
   end
 
   def full_name
-    "#{self.last_name}, #{self.first_name} #{self.middle_name} #{self.suffix}"
+    "#{last_name}, #{first_name} #{middle_name}"
   end
 
   private

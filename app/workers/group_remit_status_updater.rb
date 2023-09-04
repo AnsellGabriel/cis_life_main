@@ -1,7 +1,7 @@
 require 'sidekiq-scheduler'
 
 class GroupRemitStatusUpdater
-	include Sidekiq::Worker
+	include Sidekiq::Job
 
   def perform
     GroupRemit.where(status: :active)

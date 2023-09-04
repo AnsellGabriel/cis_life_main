@@ -1,9 +1,135 @@
+<%= turbo_frame_tag 'modal-xl' do %>
+  <% batch_presenter = BatchPresenter.new(@batch) %>
+  <div class="modal-header">
+    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+  </div>
+  
+  <div class="modal-body">
+    <div id="error_notif"></div>
+    <div class="row <%= flex_justify_align('center') %>">
+      <div class="col-md-10" style="margin: auto;">
+        <div class="card mb-3">
+          <div class="card-body">
+            <div class="row mb-1">
+              <%= content_tag :span, 'MEMBER DETAILS', class: 'text-primary' %>
+            </div>
+            <hr>
+            <div class="row">
+              <div class="col-sm-2">
+                <h6 class="mb-0">First name:</h6>
+              </div>
+              <div class="col-sm-2 text-primary">
+                <%= "#{@member.first_name}" %>
+              </div>
+              <div class="col-sm-2">
+                <h6 class="mb-0">Middle name:</h6>
+              </div>
+              <div class="col-sm-2 text-primary">
+                <%= "#{@member.middle_name}" %>
+              </div>
+              <div class="col-sm-2">
+                <h6 class="mb-0">Last name:</h6>
+              </div>
+              <div class="col-sm-2 text-primary">
+                <%= "#{@member.last_name}" %>
+              </div>
+            </div>
+            <hr>
+            <div class="row">
+              <div class="col-sm-3">
+                <h6 class="mb-0">Birthdate</h6>
+              </div>
+              <div class="col-sm-3 text-primary">
+                <%= @member.birth_date %>
+              </div>
+              <div class="col-sm-3">
+                <h6 class="mb-0">Age</h6>
+              </div>
+              <div class="col-sm-3 text-primary">
+                <%= @member.age %>
+              </div>
+            </div>
+            <hr class="mb-5">
+            <div class="row mb-1">
+              <%= content_tag :span, 'LOAN INSURANCE DETAILS', class: 'text-primary' %>
+            </div>
+            <hr>
+            <div class="row">
+              <div class="col-sm">
+                <h6 class="mb-0">Loan Type</h6>
+              </div>
+              <div class="col-sm text-primary">
+                <%= @batch.loan.name %>
+              </div>
+              <div class="col-sm">
+                <h6 class="mb-0">Loan Amount</h6>
+              </div>
+              <div class="col-sm text-primary">
+                <%= to_number(@batch.loan_amount) %>
+              </div>
+              <div class="col-sm">
+                <h6 class="mb-0">Terms</h6>
+              </div>
+              <div class="col-sm text-primary">
+                <%= @batch.terms %>
+              </div>
+            </div>
+            <hr>
+                        <div class="row">
+              <div class="col-sm">
+                <h6 class="mb-0">Premium</h6>
+              </div>
+              <div class="col-sm text-primary">
+                <%= to_number(@batch.premium) %>
+              </div>
+              <div class="col-sm">
+                <h6 class="mb-0">Unused Premium</h6>
+              </div>
+              <div class="col-sm text-primary">
+                <%= to_number(@batch.unused) %>
+              </div>
+              <div class="col-sm">
+                <h6 class="mb-0">Premium Due</h6>
+              </div>
+              <div class="col-sm text-primary">
+                <%= to_number(@batch.premium_due) %>
+              </div>
+            </div>
+            <hr>
+            <div class="row">
+              <div class="col-sm">
+                <h6 class="mb-0">Release Date</h6>
+              </div>
+              <div class="col-sm text-primary">
+                <%= date_as_month_day_year(@batch.date_release) %>
+              </div>
+              <div class="col-sm">
+                <h6 class="mb-0">Maturity Date</h6>
+              </div>
+              <div class="col-sm text-primary">
+                <%= date_as_month_day_year(@batch.date_release)%>
+              </div>
+            </div>
+            <hr>
+            <div class="row">
+              <div class="col-sm">
+                <h6 class="mb-0">Effectivity Date</h6>
+              </div>
+              <div class="col-sm text-primary">
+                <%= date_as_month_day_year(@batch.effectivity_date) %>
+              </div>
+              <div class="col-sm">
+                <h6 class="mb-0">Expiry Date</h6>
+              </div>
+              <div class="col-sm text-primary">
+                <%= date_as_month_day_year(@batch.expiry_date)%>
+              </div>
+            </div>
+            <hr>
 
-<%= render @loan_insurance_batch %>
-
-<div>
-  <%= link_to "Edit", edit_loan_insurance_batch_path(@loan_insurance_batch), class: 'btn btn-primary' %> |
-  <%= link_to "Back", loan_insurance_batches_path, class: 'btn btn-primary' %>
-
-  <%= button_to "Delete", @loan_insurance_batch, method: :delete, class: 'btn btn-danger' %>
-</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+<% end %>

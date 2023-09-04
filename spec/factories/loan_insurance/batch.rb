@@ -4,7 +4,7 @@ FactoryBot.define do
     group_remit 
     loan
     rate
-    retention
+    # retention
 
     loan_amount { 100_000 }
     terms { 12 }
@@ -16,5 +16,6 @@ FactoryBot.define do
     coop_sf_amount { 10 }
     agent_sf_amount { 5 }
     age { coop_member.member.age(effectivity_date) }
+    insurance_status { :for_review }
   end
 end

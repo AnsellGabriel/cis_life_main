@@ -1,6 +1,6 @@
 
 
-<%= turbo_frame_tag "modal-xl" do %>
+<%= turbo_frame_tag "reg_form_modal_xl" do %>
   <div class="modal-header">
     <%= content_tag :h5, "Health Declaration - #{@dependent.last_name}, #{@dependent.first_name} #{@dependent.middle_name}", class: "modal-title", id: "staticBackdropLabel" %>
     <% if params[:coop]%>

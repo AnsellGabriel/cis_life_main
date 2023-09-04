@@ -76,6 +76,7 @@ Rails.application.routes.draw do
     get :selected, on: :member
     get :member_agreements, on: :member
     get :show_insurance, on: :member
+    get :find_member, on: :member
   end
 
   resources :denied_enrollees, only: [:index, :destroy]

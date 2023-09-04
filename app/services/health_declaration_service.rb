@@ -16,12 +16,7 @@ class HealthDeclarationService
           check_answer(answer)
           compare_answer(answer, health_dec)
 
-          if @batch.instance_of?(Batch)
-            health_dec_answer = health_dec.batch_health_decs.build(answer: answer, batch_id: @batch.id)
-          elsif @batch.instance_of?(BatchDependent)
-            health_dec_answer = health_dec.dependent_health_decs.build(answer: answer, batch_dependent_id: @batch.id)
-          end
-
+          health_dec_answer = health_dec.batch_health_decs.build(answer: answer, healthdecable: @batch)
           health_dec_answer.save!
           sub_questions = q_data[:subquestion]
     
@@ -62,12 +57,7 @@ class HealthDeclarationService
         raise ActiveRecord::Rollback, "Answer cannot be blank"
       end
 
-      if batch.instance_of?(Batch)
-        subquestion_answer = health_dec_sub.batch_health_decs.build(answer: subquestion_answer, batch_id: batch.id)
-      elsif batch.instance_of?(BatchDependent)
-        subquestion_answer = health_dec_sub.dependent_health_decs.build(answer: subquestion_answer, batch_dependent_id: batch.id)
-      end
-
+      subquestion_answer = health_dec_sub.batch_health_decs.build(answer: subquestion_answer, healthdecable: batch)
       subquestion_answer.save!
     end
   end

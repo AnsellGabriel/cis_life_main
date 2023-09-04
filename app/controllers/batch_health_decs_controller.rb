@@ -5,12 +5,12 @@ class BatchHealthDecsController < InheritedResources::Base
 
   def show 
     @member = @batch.member_details
-    @batch_health_dec = @batch.batch_health_decs
+    @batch_health_dec = @batch.health_declaration
     @group_remit = @batch.group_remit
   end
 
   def new
-    @batch_health_dec = @batch.batch_health_decs.build
+    @batch_health_dec = @batch.health_declaration.build
     @member = @batch.member_details
     @questionaire = HealthDec.where(active: true)
   end
@@ -20,7 +20,7 @@ class BatchHealthDecsController < InheritedResources::Base
     result = health_dec.process_health_declaration
     
     if result == true
-      redirect_to health_dec_group_remit_batch_path(@group_remit, @batch), notice: "Health declaration saved!"
+      redirect_to health_dec_group_remit_batch_path(@group_remit, @batch, batch_type: @batch.class.name), notice: "Health declaration saved!"
     elsif result.is_a?(String)       
       flash[:error] = result
 
@@ -38,7 +38,13 @@ class BatchHealthDecsController < InheritedResources::Base
     end
 
     def set_batch
-      @batch = Batch.find(params[:batch_id])
+      
+      @batch = case params[:batch_type]
+              when "LoanInsurance::Batch"
+                LoanInsurance::Batch.find(params[:batch_id])
+              else
+                Batch.find(params[:batch_id])
+              end
     end
 
     def set_group_remit

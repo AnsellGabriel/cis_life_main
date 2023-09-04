@@ -60,6 +60,14 @@ class CoopMembersController < InheritedResources::Base
     end
   end
 
+  def find_member
+    @member = Member.find_by(id: params[:id])
+
+    respond_to do |format|
+      format.turbo_stream
+    end
+  end
+
   def member_agreements
     # byebug
     @agreements = @coop_member.agreements.includes(:plan)

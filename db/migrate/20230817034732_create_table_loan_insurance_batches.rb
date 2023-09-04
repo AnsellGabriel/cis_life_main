@@ -18,7 +18,7 @@ class CreateTableLoanInsuranceBatches < ActiveRecord::Migration[7.0]
       t.decimal :loan_amount, precision: 10, scale: 2
       t.references :loan_insurance_rate, null: false, foreign_key: true
       t.boolean :reinsurance
-      t.references :loan_insurance_retention, null: false, foreign_key: true
+      # t.references :loan_insurance_retention, null: false, foreign_key: true
 
       t.timestamps
     end
