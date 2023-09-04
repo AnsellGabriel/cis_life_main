@@ -60,6 +60,10 @@ class Member < ApplicationRecord
     "#{last_name}, #{first_name} #{middle_name} #{suffix}"
   end
 
+  def lppi_batches
+    LoanInsurance::Batch.where(coop_member_id: coop_member).where.not(status: :terminated)
+  end
+
   private
 
   def format_phone_numbers

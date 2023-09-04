@@ -2,8 +2,8 @@
 <%= render "batch_import_modal" %>
 
 <div class="<%= flex_justify_align('between', 'center') %> mb-3 gap-3">
-  <div class="card" style="height: 260px; width: 100%">
-    <div class="card-body <%= flex_justify_align('around', '', true) %> ">
+  <div class="card" style="height: auto; width: 100%">
+    <div class="card-body <%= flex_justify_align('between', '', true) %> gap-3">
       <div class="<%= flex_justify_align('', 'center') %> gap-3">
         <%= content_tag :span, @gr_presenter.status_text, class: @gr_presenter.status_badge %>
         <%= content_tag :h3, class: 'mb-0 text-primary' do %>
@@ -33,8 +33,8 @@
 
         </div>
       </div>
-      <div class="d-flex flex-column " style="height: 260px; width: 100%">
-        <div class="<%= flex_justify_align('between') %> " style="height: 100%; width: 460px;">
+      <div class="d-flex flex-column " style="height: auto; width: 100%">
+        <div class="<%= flex_justify_align('between') %> ">
           <div style="width: 100%">
 
             <% if @gr_presenter.is_for_payment? %>
@@ -42,7 +42,7 @@
             <% end %>
 
             <% if @gr_presenter.is_pending_or_renewal? %>
-              
+              <%= render "loan_insurance/batches/form", batch: @batch, coop_members: @coop_members, group_remit_id: @group_remit.id %>
             <% end%>
 
           </div>

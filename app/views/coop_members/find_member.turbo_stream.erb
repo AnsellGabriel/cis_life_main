@@ -1,1 +1,3 @@
 <%= turbo_stream.update "member details", partial: "loan_insurance/batches/member_info", locals: { member: @member } %>
+<%= turbo_stream.update "member loans", partial: "loan_insurance/batches/member_loans", locals: { member: @member } %>
+

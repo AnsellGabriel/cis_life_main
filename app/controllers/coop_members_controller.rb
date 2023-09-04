@@ -62,6 +62,7 @@ class CoopMembersController < InheritedResources::Base
 
   def find_member
     @member = Member.find_by(id: params[:id])
+    @previous_loans = @member.lppi_batches
 
     respond_to do |format|
       format.turbo_stream
