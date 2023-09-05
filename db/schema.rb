@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_09_04_073354) do
+ActiveRecord::Schema[7.0].define(version: 2023_09_05_052934) do
   create_table "active_admin_comments", charset: "utf8mb4", force: :cascade do |t|
     t.string "namespace"
     t.text "body"
@@ -190,6 +190,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_09_04_073354) do
     t.bigint "user_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.string "batch_type", default: "Batch"
     t.index ["batch_id"], name: "index_batch_remarks_on_batch_id"
     t.index ["user_type", "user_id"], name: "index_batch_remarks_on_user"
   end

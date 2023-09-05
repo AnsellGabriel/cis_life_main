@@ -85,6 +85,22 @@ class ProcessCoverage < ApplicationRecord
     self.group_remit.agreement.plan
   end
 
+  def count_regular_batches(age_range)
+    self.group_remit.loan_batches.where(age: age_range).count
+  end
+  
+  def count_overage_batches
+    self.group_remit.loan_batches.where(age: 66..).count
+  end
+
+  def sum_batches_loan_amount
+    self.group_remit.loan_batches.where(insurance_status: :approved).sum(:loan_amount)
+  end
+  
+  def sum_batches_net_premium
+    self.group_remit.loan_batches.where(insurance_status: :approved).sum(:premium) - (self.group_remit.loan_batches.where(insurance_status: :approved).sum(:coop_sf_amount) + self.group_remit.loan_batches.where(insurance_status: :approved).sum(:agent_sf_amount))
+  end
+
   # def set_batches_for_review
   #   self.group_remit.batches.each do |batch|
   #     batch.update_attribute(:insurance_status, :for_review)

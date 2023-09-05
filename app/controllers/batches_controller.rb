@@ -54,7 +54,13 @@ class BatchesController < ApplicationController
 
   def all_health_decs
     @group_remit = GroupRemit.find(params[:group_remit_id])
-    @batches = @group_remit.batches.joins(:batch_health_decs).distinct
+    @batches_o = @group_remit.batches
+    @batches = case @batches_o.first.class.name
+    when "LoanInsurance::Batch"
+      @group_remit.loan_batches.joins(:batch_health_decs).distinct
+    else 
+      @group_remit.batches.joins(:batch_health_decs).distinct
+    end
   end
   
   def index

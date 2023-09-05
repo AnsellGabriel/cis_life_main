@@ -319,9 +319,7 @@ class ProcessCoveragesController < ApplicationController
   
       @process_cov = ProcessCoverage.includes(group_remit: { batches: [:batch_remarks, coop_member: :member ] }).find(params[:id])
   
-      @process_remarks = @process_coverage.process_remarks
-  
-      @pagy_rem, @filtered_remarks = pagy(@process_remarks, items: 3, page_param: :remark)
+     
   
       # @life_cov = ProcessCoverage.includes(group_remit: { moa: { proposal:{ proposal_insureds: :proposal_insured_benefits }}}).find_by(id: @process_coverage.id).group_remit.moa.proposal.proposal_insureds.joins(:proposal_insured_benefits).where(proposal_insureds: {insured_type: 1}, proposal_insured_benefits: {benefit: 1}).pluck('proposal_insured_benefits.cov_amount').first
   
@@ -346,6 +344,10 @@ class ProcessCoveragesController < ApplicationController
       # raise 'errors'
       puts "#{@total_net_prem} ********************************"
     end
+
+    @process_remarks = @process_coverage.process_remarks
+  
+    @pagy_rem, @filtered_remarks = pagy(@process_remarks, items: 3, page_param: :remark)
   end
 
   # GET /process_coverages/new
@@ -465,7 +467,12 @@ class ProcessCoveragesController < ApplicationController
 
   def approve_batch
     # raise 'errors'
-    @batch = Batch.find(params[:batch])
+    @batch = case params[:batch_type]
+    when "LoanInsurance::Batch"
+      LoanInsurance::Batch.find(params[:batch])
+    else
+      Batch.find(params[:batch])
+    end
 
     respond_to do |format|
       if @batch.batch_dependents.for_review.count > 0 || @batch.batch_dependents.pending.count > 0
@@ -496,7 +503,12 @@ class ProcessCoveragesController < ApplicationController
 
   def pending_batch
     # raise 'errors'
-    @batch = Batch.find(params[:batch])
+    @batch = case params[:batch_type]
+    when "LoanInsurance::Batch"
+      LoanInsurance::Batch.find(params[:batch])
+    else
+      Batch.find(params[:batch])
+    end 
 
     respond_to do |format|
       if @batch.update_attribute(:insurance_status, 2)
@@ -506,7 +518,12 @@ class ProcessCoveragesController < ApplicationController
   end
 
   def deny_batch
-    @batch = Batch.find(params[:batch])
+    @batch = case params[:batch_type]
+    when "LoanInsurance::Batch"
+      LoanInsurance::Batch.find(params[:batch])
+    else
+      Batch.find(params[:batch])
+    end 
 
     if @batch.batch_dependents.for_review.count > 0 || @batch.batch_dependents.pending.count > 0
       redirect_to process_coverage_path(@process_coverage), alert: "Please check pending and/or for review dependent(s) for that coverage."
@@ -531,9 +548,16 @@ class ProcessCoveragesController < ApplicationController
   end
 
   def modal_remarks
-    @batch = Batch.find(params[:batch])
-    @batch_remarks = @batch.batch_remarks
-    # @pagy_br, @filtered_br = pagy(@batch_remarks, items: 3, page_param: :b_remarks)
+    
+    @batch = case params[:batch_type]
+    when "LoanInsurance::Batch" 
+      LoanInsurance::Batch.find(params[:batch])
+    else
+      Batch.find(params[:batch])
+    end
+    
+    @batch_remarks = @batch.batch_remarks.where(batch_type: @batch.class.name)
+    @pagy_br, @filtered_br = pagy(@batch_remarks, items: 3, page_param: :b_remarks)
     @process_coverage = ProcessCoverage.find(params[:id])
   end
 
