@@ -13,3 +13,4 @@ dump.rdb
 db/seeds.rb
 log/development.log
 /config/database.yml
+/config/.DS_Store

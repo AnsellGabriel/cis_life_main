@@ -11,7 +11,8 @@
     <% unless process_coverages.count == 0 %>
       <% process_coverages.each do |pc| %>
         <tr>
-          <% term = (pc.expiry.year * 12 + pc.expiry.month) - (pc.effectivity.year * 12 + pc.effectivity.month)%>
+          <%  %>
+          <% term = pc.effectivity.nil? ? 0 : (pc.expiry.year * 12 + pc.expiry.month) - (pc.effectivity.year * 12 + pc.effectivity.month)%>
           <td><%= pc.id %></td>
           <td><%= link_to pc.group_remit, pc, data: {turbo: false} %></td>
           <td><%= pc.group_remit.agreement.plan %></td>
@@ -21,9 +22,9 @@
         </tr>
       <% end %>
     <% else %>
-        <tr>
-          <%= content_tag :td, "NO RECORD(S)", colspan: 6, class: "lead text-center" %>
-        </tr>
+      <tr>
+        <%= content_tag :td, "NO RECORD(S)", colspan: 6, class: "lead text-center" %>
+      </tr>
     <% end %>
   </tbody>
 </table>
