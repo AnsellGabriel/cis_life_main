@@ -25,6 +25,10 @@ class LoanInsurance::Batch < Batch
     calculate_values(agreement)
   end
 
+  def get_terms
+    terms
+  end
+
   private
 
   def skip_validation

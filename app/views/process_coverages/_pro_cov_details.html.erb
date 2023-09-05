@@ -21,9 +21,9 @@
     <% end %> -->
     <%= content_tag :p do %>
       <strong>Effectivity:</strong>
-      <%= month_day_year(process_coverage.effectivity) %> |
+      <%= process_coverage.effectivity.nil? ? "-" : month_day_year(process_coverage.effectivity) %> |
       <strong>Expiry:</strong>
-      <%= month_day_year(process_coverage.expiry) %>
+      <%= process_coverage.effectivity.nil? ? "-" : month_day_year(process_coverage.expiry) %>
     <% end %>
     <%= content_tag :p do %>
       <strong>Regular Count:</strong>

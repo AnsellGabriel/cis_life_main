@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_09_01_055229) do
+ActiveRecord::Schema[7.0].define(version: 2023_09_04_073354) do
   create_table "active_admin_comments", charset: "utf8mb4", force: :cascade do |t|
     t.string "namespace"
     t.text "body"
@@ -608,7 +608,6 @@ ActiveRecord::Schema[7.0].define(version: 2023_09_01_055229) do
     t.decimal "loan_amount", precision: 10, scale: 2
     t.bigint "loan_insurance_rate_id", null: false
     t.boolean "reinsurance"
-    t.bigint "loan_insurance_retention_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.bigint "loan_insurance_loan_id", null: false
@@ -620,7 +619,6 @@ ActiveRecord::Schema[7.0].define(version: 2023_09_01_055229) do
     t.index ["group_remit_id"], name: "index_loan_insurance_batches_on_group_remit_id"
     t.index ["loan_insurance_loan_id"], name: "index_loan_insurance_batches_on_loan_insurance_loan_id"
     t.index ["loan_insurance_rate_id"], name: "index_loan_insurance_batches_on_loan_insurance_rate_id"
-    t.index ["loan_insurance_retention_id"], name: "index_loan_insurance_batches_on_loan_insurance_retention_id"
   end
 
   create_table "loan_insurance_details", charset: "utf8mb4", force: :cascade do |t|
@@ -935,7 +933,6 @@ ActiveRecord::Schema[7.0].define(version: 2023_09_01_055229) do
   add_foreign_key "loan_insurance_batches", "group_remits"
   add_foreign_key "loan_insurance_batches", "loan_insurance_loans"
   add_foreign_key "loan_insurance_batches", "loan_insurance_rates"
-  add_foreign_key "loan_insurance_batches", "loan_insurance_retentions"
   add_foreign_key "loan_insurance_details", "batches"
   add_foreign_key "loan_insurance_details", "loan_insurance_loans"
   add_foreign_key "loan_insurance_details", "loan_insurance_rates"

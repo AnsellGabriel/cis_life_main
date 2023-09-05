@@ -81,6 +81,10 @@ class ProcessCoverage < ApplicationRecord
     end
   end
 
+  def get_plan
+    self.group_remit.agreement.plan
+  end
+
   # def set_batches_for_review
   #   self.group_remit.batches.each do |batch|
   #     batch.update_attribute(:insurance_status, :for_review)

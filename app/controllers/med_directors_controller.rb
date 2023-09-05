@@ -3,7 +3,11 @@ class MedDirectorsController < ApplicationController
   before_action :check_md
   
   def home
-    @group_remits = GroupRemit.joins(batches: :batch_health_decs).distinct
+    # # raise 'errors'
+    # @group_remits_gyrt = GroupRemit.joins(batches: :batch_health_decs).distinct
+    # @group_remits_lppi = GroupRemit.joins(loan_batches: :batch_health_decs).distinct
+    @group_remits = GroupRemit.joins(batches: :batch_health_decs).distinct.merge(GroupRemit.joins(loan_batches: :batch_health_decs).distinct)
+
   end
 
   private

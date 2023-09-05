@@ -1,0 +1,102 @@
+<div class="accordion mb-2" id="accordionFilter">
+  <div class="accordion-item">
+    <h2 class="accordion-header">
+      <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseFilter" aria-expanded="true" aria-controls="collapseFilter">Filters</button>
+    </h2>
+    <div id="collapseFilter" class="accordion-collapse collapse" data-bs-parent="#accordionFilter">
+      <div class="accordion-body">
+        <%= link_to "18-65 New", process_coverage_path(process_coverage, search: "regular_new"), class: "btn btn-sm btn-outline-primary mb-1"  %>
+        <%= link_to "18-65 Renewal", process_coverage_path(process_coverage, search: "regular_ren"), class: "btn btn-sm btn-outline-primary mb-1" %>
+        <%= link_to "Overage", process_coverage_path(process_coverage, search: "overage"), class: "btn btn-sm btn-outline-warning mb-1"  %>
+        <%= link_to "w/ Health Dec", process_coverage_path(process_coverage, search: "health_decs"), class: "btn btn-sm btn-outline-secondary mb-1"  %>
+        <%= link_to "For Reconsider", process_coverage_path(process_coverage, search: "reconsider"), class: "btn btn-sm btn-outline-info mb-1"  %>
+        <%= link_to "View All", process_coverage_path(process_coverage), class: "btn btn-sm btn-outline-success mb-1"  %>
+        <hr>
+      </div>
+    </div>
+  </div>
+</div>
+<table class="table border-dark">
+  <thead class= "table-dark">
+    <th></th>
+    <th>Member</th>
+    <th>Terms</th>
+    <th>Premium</th>
+    <th>Insurance Status</th>
+    <th>Health Dec Answers</th>
+    <th>Action</th>
+    <th>Remarks</th>
+  </thead>
+  <tbody>
+    <% @filtered_batches.each do |batch| %>
+      <td></td>
+      <td>
+        <%= batch.coop_member %>
+      </td>
+      <td>
+        <%= process_dates("Eff", month_day_year(batch.effectivity_date)) %> <br>
+        <%= process_dates("Exp", month_day_year(batch.expiry_date)) %> <br>
+        <%= process_dates("Terms", batch.get_terms) %><br>
+      </td>
+      <td>
+        <div class="row">
+          <%= process_premiums("Premium", batch.premium)%>
+        </div>
+        <div class="row">
+          <%= process_premiums("Agent's SF", batch.agent_sf_amount) %>
+        </div>
+        <div class="row">
+          <%= process_premiums("Unused Prem", batch.unused) %>
+        </div>
+        <div class="row">
+          <%= process_premiums("Coop's SF", batch.coop_sf_amount) %>
+        </div>
+        <div class="row">
+          <%= process_premiums("Net Prem", (batch.premium - (batch.coop_sf_amount + batch.agent_sf_amount))) %>
+        </div>
+      </td>
+      <td>
+        <%= insurance_status(batch.insurance_status) %>
+      </td>
+      <td>
+        <% if batch.batch_health_decs %>
+          <% batch.batch_health_decs.where(answerable_type: "HealthDec").each do |bhd| %>
+            <%= health_dec_answer(bhd.answerable.valid_answer, bhd.answer, bhd.answerable_type) %> <br>
+          <% end %>
+        <% end %>
+      </td>
+      <td>
+        <% unless process_coverage.approved? || process_coverage.reprocess_approved? %>
+          <div class="<%= batch_buttons(current_user.rank, batch.insurance_status, process_coverage.status) %>">
+            <%= link_to approve_batch_process_coverage_path(batch: batch), onclick: "return confirm('Are you sure?')", method: :get, title: "Approve", class: "btn btn-sm btn-success mb-1" do %>
+              <%= bootstrap_icon "check-lg" %>
+            <% end %>
+            <%= link_to new_batch_remark_path(ref: batch, pro_cov: process_coverage, batch_status: "Pending"), title: "Pending", class: "btn btn-sm btn-secondary mb-1", data: { turbo_frame: "modal" } do %>
+              <%= bootstrap_icon "arrow-clockwise" %>
+            <% end %>
+            <%= link_to new_batch_remark_path(ref: batch, pro_cov: process_coverage, batch_status: "Deny"), title: "Deny", class: "btn btn-sm btn-danger mb-1", data: { turbo_frame: "modal" } do %>
+              <%= bootstrap_icon "x-lg" %>
+            <% end %>
+          </div>
+          <div class="<%= reconsider_button(current_user.rank, batch.insurance_status, process_coverage.status) %>">
+            <%= link_to reconsider_batch_process_coverage_path(batch: batch), onclick: "return confirm('Are you sure?')", method: :get, class: "btn btn-sm btn-warning mb-1" do %>
+              <%= bootstrap_icon "arrow-repeat" %>
+            <% end %>
+          </div>
+          <% if current_user.head? && batch.status == "for_reconsideration" && batch.insurance_status == "denied" %>
+            <%= link_to set_premium_batch_process_coverage_path(batch: batch), onclick: "return confirm('Are you sure?')", method: :get, class: "btn btn-sm btn-info mb-1", data: { turbo_frame: "modal" } do %>
+              <%= bootstrap_icon "coin" %>
+            <% end %>
+          <% end %>
+        <% end %>
+        <% if batch.batch_health_decs.present? %>
+          <%= link_to health_dec_group_remit_batch_path(@group_remit, batch, for_und: true), class: "btn btn-sm btn-warning mb-1", data: { turbo_frame: "reg_form_modal_xl" } do %>
+            <%= bootstrap_icon "file-earmark-medical" %>
+          <% end %>
+        <% end %>
+      </td>
+      <td></td>
+    <% end %>
+  </tbody>
+</table>
+<%= console %>
