@@ -1,4 +1,4 @@
-class Member < ApplicationRecord
+class Member < ApplicationRecord  
   before_validation :uppercase_fields
   before_validation :validate_phone_format
 
@@ -60,8 +60,11 @@ class Member < ApplicationRecord
     "#{last_name}, #{first_name} #{middle_name} #{suffix}"
   end
 
-  def lppi_batches
-    LoanInsurance::Batch.where(coop_member_id: coop_member).where.not(status: :terminated)
+  def lppi_batches(cooperative, group_remit)
+    coop_member = cooperative.coop_members.find_by(member_id: self.id)
+    LoanInsurance::Batch.where(coop_member_id: coop_member)
+                        .where.not(status: :terminated)
+                        .where.not(group_remit: group_remit)
   end
 
   private

@@ -1,20 +1,20 @@
-<div class="card mb-0 <%= flex_justify_align('center', 'start') %>" style="width: 100%; height: auto">
-  <div class="card-body">
-    <div class="row ps-3">
-      <%= content_tag :span, 'Name ', class: 'col-md-4' %>
-      <%= content_tag :span, ": #{member.first_name} #{member.middle_name } #{member.last_name}", class: 'col-md-8' %>
+<div class="card mb-0 <%= flex_justify_align('center', 'start') %>" style="width: 100%; height: 135px">
+  <div class="card-body" style="width: 100%;">
+    <div class="row ps-3" style="width: 100%">
+      <%= content_tag :span, 'Name ', class: 'col-md-3 sm-secondary-text' %>
+      <%= content_tag :span, ": #{member.first_name} #{member.middle_name } #{member.last_name}", class: 'col-md-9 sm-secondary-text' %>
     </div>
     <div class="row ps-3">
-      <%= content_tag :span, 'Birthdate ', class: 'col-md-4' %>
-      <%= content_tag :span, ": #{date_as_month_day_year(member.birth_date)}", class: 'col-md-8' %>
+      <%= content_tag :span, 'Birthdate ', class: 'col-md-3 sm-secondary-text' %>
+      <%= content_tag :span, ": #{date_as_month_day_year(member.birth_date)}", class: 'col-md-9 sm-secondary-text' %>
     </div>
     <div class="row ps-3">
-      <%= content_tag :span, 'Gender ', class: 'col-md-4' %>
-      <%= content_tag :span, ": #{member.gender}", class: 'col-md-8' %>
+      <%= content_tag :span, 'Gender ', class: 'col-md-3 sm-secondary-text' %>
+      <%= content_tag :span, ": #{member.gender}", class: 'col-md-9 sm-secondary-text' %>
     </div> 
     <div class="row ps-3">
-      <%= content_tag :span, 'Age ', class: 'col-md-4' %>
-      <%= content_tag :span, ": #{member.age}", class: 'col-md-8' %>
+      <%= content_tag :span, 'Age ', class: 'col-md-3 sm-secondary-text' %>
+      <%= content_tag :span, ": #{member.age}", class: 'col-md-9 sm-secondary-text' %>
     </div>
   </div>
 </div>

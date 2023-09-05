@@ -34,6 +34,7 @@ class LoanInsurance::BatchesController < ApplicationController
   def create
     @coop_members = @cooperative.coop_members
     @group_remit_id = params[:loan_insurance_batch][:group_remit_id]
+    params[:loan_insurance_batch][:unused_loan_id] = params[:loan_insurance_batch][:unused_loan_id].to_i if params[:loan_insurance_batch][:unused_loan_id].present? 
     @batch = LoanInsurance::Batch.new(batch_params)
     @batch.process_batch
     
