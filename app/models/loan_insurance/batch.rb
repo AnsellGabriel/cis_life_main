@@ -14,7 +14,7 @@ class LoanInsurance::Batch < Batch
   # belongs_to :retention, class_name: 'LoanInsurance::Retention', foreign_key: 'loan_insurance_retention_id'
   has_many :details, class_name: 'LoanInsurance::Detail'
   has_many :batch_health_decs, as: :healthdecable, dependent: :destroy
-  has_many :batch_remarks, as: :batchable, dependent: :destroy
+  has_many :batch_remarks, as: :remarkable, dependent: :destroy
 
   def process_batch
     return :no_dates if effectivity_date.nil? || expiry_date.nil?

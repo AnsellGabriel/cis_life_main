@@ -13,7 +13,7 @@ class BatchRemarksController < ApplicationController
 
   # GET /batch_remarks/new
   def new
-    @batch = Batch.find(params[:ref])
+    @batch = check_class(params[:batch_type], params[:ref])
     @batch_remark = @batch.batch_remarks.build
     # @batch_remark = BatchRemark.new
     @title = case params[:batch_status]
@@ -61,7 +61,10 @@ class BatchRemarksController < ApplicationController
     @batch_remark.user_type = current_user.userable_type
     @batch_remark.user_id = current_user.userable_id
     
-    @batch = Batch.find_by(id: params[:batch_remark][:batch_id])
+    @batch = check_class(params[:batch_type], params[:batch_id])
+    @batch_remark.remarkable = @batch
+    
+    # @batch = Batch.find_by(id: params[:batch_remark][:batch_id])
     @process_coverage = ProcessCoverage.find_by(id: params[:batch_remark][:process_coverage])
 
     if params[:batch_remark][:status] == "denied" && (@batch.batch_dependents.for_review.count > 0 || @batch.batch_dependents.pending.count > 0)
@@ -69,9 +72,12 @@ class BatchRemarksController < ApplicationController
     else
 
       respond_to do |format|
-        if @batch_remark.remark.empty? && @batch_remark.batch_status == "For reconsideration"
+        if @batch_remark.remark.empty? && @batch_remark.batch_status == "For reconsideration" && params[:batch_type] == "Batch"
           @group_remit = @batch.group_remits.find_by(type: "Remittance")
-          format.html { return redirect_to group_remit_path(@group_remit), alert: "Unable to create empty request" }
+          format.html { render :new, alert: "Unable to create empty request" }
+        elsif @batch_remark.remark.empty? && @batch_remark.batch_status == "For reconsideration" && params[:batch_type] == "BatchDependent"
+          @group_remit = @batch.group_remits.find_by(type: "Remittance")
+          format.html { return redirect_to group_remit_batch_path(@group_remit, @batch.batch), alert: "Unable to create empty request" }
         elsif @batch_remark.remark.empty?
           format.html { return redirect_to process_coverage_path(@process_coverage), alert: "Unable to create empty request."}
         end
@@ -138,6 +144,17 @@ class BatchRemarksController < ApplicationController
     # Only allow a list of trusted parameters through.
     def batch_remark_params
       params.require(:batch_remark).permit(:batch_id, :remark, :status, :user_id, :user_type, :batch_status, :process_coverage)
+    end
+
+    def check_class(class_name, id)
+      case class_name
+      when 'Batch' 
+        Batch.find(id)
+      when 'BatchDependent'
+        BatchDependent.find(id)
+      when 'LoanInsurance::Batch'
+        LoanInsurance::Batch.find(id)
+      end
     end
 end
 

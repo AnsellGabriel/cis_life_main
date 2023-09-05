@@ -1,5 +1,5 @@
 
-<%= turbo_frame_tag "#{params[:coop] ? 'modal' : 'modal-xl'}" do %>
+<%= turbo_frame_tag "#{params[:coop] ? 'reg_form_modal' : 'reg_form_modal_xl'}" do %>
   <div class="modal-header">
     <%= content_tag :h5, 'Remarks', class: "modal-title", id: "staticBackdropLabel" %>
     <% if params[:coop] %>
@@ -12,6 +12,6 @@
   </div>
   
   <div class="modal-body">
-    <%= render 'dependent_remarks', remarks: @remarks %>
+    <%= render 'dependent_remarks', remarks: @remarks, group_remit: @group_remit, batch: @dependent, agreement: @group_remit.agreement %>
   </div>
 <% end %>

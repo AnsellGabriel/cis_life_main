@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_09_04_084155) do
+ActiveRecord::Schema[7.0].define(version: 2023_09_05_063726) do
   create_table "active_admin_comments", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.string "namespace"
     t.text "body"
@@ -179,14 +179,15 @@ ActiveRecord::Schema[7.0].define(version: 2023_09_04_084155) do
   end
 
   create_table "batch_remarks", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
-    t.bigint "batch_id", null: false
     t.text "remark"
     t.integer "status"
     t.string "user_type", null: false
     t.bigint "user_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["batch_id"], name: "index_batch_remarks_on_batch_id"
+    t.string "remarkable_type", null: false
+    t.bigint "remarkable_id", null: false
+    t.index ["remarkable_type", "remarkable_id"], name: "index_batch_remarks_on_remarkable"
     t.index ["user_type", "user_id"], name: "index_batch_remarks_on_user"
   end
 
@@ -620,7 +621,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_09_04_084155) do
 
   create_table "loan_insurance_details", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.bigint "batch_id", null: false
-    t.decimal "unuse", precision: 10, scale: 2
+    t.decimal "unused", precision: 10, scale: 2
     t.decimal "loan_amount", precision: 10, scale: 2
     t.decimal "premium_due", precision: 10, scale: 2
     t.decimal "substandard_rate", precision: 10, scale: 2
@@ -888,7 +889,6 @@ ActiveRecord::Schema[7.0].define(version: 2023_09_04_084155) do
   add_foreign_key "batch_dependents", "member_dependents"
   add_foreign_key "batch_group_remits", "batches"
   add_foreign_key "batch_group_remits", "group_remits"
-  add_foreign_key "batch_remarks", "batches"
   add_foreign_key "batches", "agreement_benefits"
   add_foreign_key "batches", "coop_members"
   add_foreign_key "claim_causes", "process_claims"

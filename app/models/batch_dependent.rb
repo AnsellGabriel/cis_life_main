@@ -17,8 +17,8 @@ class BatchDependent < ApplicationRecord
   has_many :batch_health_decs, as: :healthdecable, dependent: :destroy
   alias_attribute :health_declaration, :batch_health_decs
   has_many :process_claims, as: :claimable, dependent: :destroy
-  has_many :dependent_remarks, dependent: :destroy
-  alias_attribute :remarks, :dependent_remarks
+  has_many :batch_remarks, as: :remarkable, dependent: :destroy
+  alias_attribute :remarks, :batch_remarks
 
   delegate :full_name, to: :member_dependent
   # [relationship] is used to retrieve the value from the hash based on the given relationship parameter

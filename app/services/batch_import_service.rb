@@ -192,9 +192,9 @@ class BatchImportService
           batch_dependent.insurance_status = :denied
     
           if dependent.age > batch_dependent.agreement_benefit.max_age
-            batch_dependent.dependent_remarks.build(remark: "Dependent age is over the maximum age limit of the plan.", status: :denied, userable_type: 'CoopUser', userable_id: @current_user.userable.id)
+            batch_dependent.batch_remarks.build(remark: "Dependent age is over the maximum age limit of the plan.", status: :denied, user_type: 'CoopUser', user_id: @current_user.userable.id)
           else
-            batch_dependent.dependent_remarks.build(remark: "Dependent age is below the minimum age limit of the plan.", status: :denied, userable_type: 'CoopUser', userable_id: @current_user.userable.id)
+            batch_dependent.batch_remarks.build(remark: "Dependent age is below the minimum age limit of the plan.", status: :denied, user_type: 'CoopUser', user_id: @current_user.userable.id)
           end
           
           batch_dependent.save!

@@ -4,7 +4,7 @@ class BatchRemark < ApplicationRecord
   validates :remark, presence: true
 
   # belongs_to :batch
-  belongs_to :batchable, polymorphic: true
+  belongs_to :remarkable, polymorphic: true
   belongs_to :user, polymorphic: true
 
   enum status: {
