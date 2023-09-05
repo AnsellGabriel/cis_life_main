@@ -129,8 +129,9 @@ Rails.application.routes.draw do
     resources :loans
     resources :details
     resources :batches
-    resources :batch_remits
-    resources :group_remits
+    resources :group_remits do
+      get :submit, on: :member
+    end
   end
 
   # get 'loan_insurance', to: 'loan_insurance#index'

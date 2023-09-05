@@ -34,13 +34,16 @@ class LoanInsurance::BatchesController < ApplicationController
   def create
     @coop_members = @cooperative.coop_members
     @group_remit_id = params[:loan_insurance_batch][:group_remit_id]
-    params[:loan_insurance_batch][:unused_loan_id] = params[:loan_insurance_batch][:unused_loan_id].to_i if params[:loan_insurance_batch][:unused_loan_id].present? 
+    agreement = GroupRemit.find(@group_remit_id).agreement
+    # params[:loan_insurance_batch][:unused_loan_id] = params[:loan_insurance_batch][:unused_loan_id].to_i if params[:loan_insurance_batch][:unused_loan_id].present? 
     @batch = LoanInsurance::Batch.new(batch_params)
-    @batch.process_batch
+    result = @batch.process_batch
     
     respond_to do |format|
       if @batch.save
         format.html { redirect_to loan_insurance_group_remit_path(params[:loan_insurance_batch][:group_remit_id]), notice: "Member added" }
+      elsif result == :no_loan_rate
+        format.html { redirect_to loan_insurance_group_remit_path(params[:loan_insurance_batch][:group_remit_id]), alert: "Acceptable age for this plan: #{agreement.entry_age_from}-#{agreement.exit_age}. Member's age: #{@batch.age}" }
       else
         format.turbo_stream do
           render turbo_stream: turbo_stream.replace("new_loan_insurance_batch", partial: "loan_insurance/batches/form", locals: {batch: @batch, coop_members: @coop_members, group_remit_id: @group_remit_id}), status: :unprocessable_entity
@@ -67,7 +70,7 @@ class LoanInsurance::BatchesController < ApplicationController
   private
     # Only allow a list of trusted parameters through.
     def batch_params
-      params.require(:loan_insurance_batch).permit(:group_remit_id, :coop_member_id, :loan_amount, :terms, :effectivity_date, :expiry_date, :date_release, :date_mature, :loan_insurance_loan_id)
+      params.require(:loan_insurance_batch).permit(:group_remit_id, :coop_member_id, :loan_amount, :terms, :effectivity_date, :expiry_date, :date_release, :date_mature, :loan_insurance_loan_id, :unused_loan_id)
     end
 
     # Use callbacks to share common setup or constraints between actions.
