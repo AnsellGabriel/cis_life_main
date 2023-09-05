@@ -68,13 +68,13 @@
       <td>
         <% unless process_coverage.approved? || process_coverage.reprocess_approved? %>
           <div class="<%= batch_buttons(current_user.rank, batch.insurance_status, process_coverage.status) %>">
-            <%= link_to approve_batch_process_coverage_path(batch: batch), onclick: "return confirm('Are you sure?')", method: :get, title: "Approve", class: "btn btn-sm btn-success mb-1" do %>
+            <%= link_to approve_batch_process_coverage_path(batch: batch, batch_type: batch.class.name), onclick: "return confirm('Are you sure?')", method: :get, title: "Approve", class: "btn btn-sm btn-success mb-1" do %>
               <%= bootstrap_icon "check-lg" %>
             <% end %>
-            <%= link_to new_batch_remark_path(ref: batch, pro_cov: process_coverage, batch_status: "Pending"), title: "Pending", class: "btn btn-sm btn-secondary mb-1", data: { turbo_frame: "modal" } do %>
+            <%= link_to new_batch_remark_path(ref: batch, pro_cov: process_coverage, batch_status: "Pending", batch_type: batch.class.name), title: "Pending", class: "btn btn-sm btn-secondary mb-1", data: { turbo_frame: "modal" } do %>
               <%= bootstrap_icon "arrow-clockwise" %>
             <% end %>
-            <%= link_to new_batch_remark_path(ref: batch, pro_cov: process_coverage, batch_status: "Deny"), title: "Deny", class: "btn btn-sm btn-danger mb-1", data: { turbo_frame: "modal" } do %>
+            <%= link_to new_batch_remark_path(ref: batch, pro_cov: process_coverage, batch_status: "Deny", batch_type: batch.class.name), title: "Deny", class: "btn btn-sm btn-danger mb-1", data: { turbo_frame: "modal" } do %>
               <%= bootstrap_icon "x-lg" %>
             <% end %>
           </div>
@@ -90,13 +90,26 @@
           <% end %>
         <% end %>
         <% if batch.batch_health_decs.present? %>
-          <%= link_to health_dec_group_remit_batch_path(@group_remit, batch, for_und: true), class: "btn btn-sm btn-warning mb-1", data: { turbo_frame: "reg_form_modal_xl" } do %>
+          <%= link_to health_dec_group_remit_batch_path(@group_remit, batch, for_und: true, batch_type: batch.class.name), class: "btn btn-sm btn-warning mb-1", data: { turbo_frame: "reg_form_modal_xl" } do %>
             <%= bootstrap_icon "file-earmark-medical" %>
           <% end %>
         <% end %>
       </td>
-      <td></td>
+      <td>
+        <% batch.class.name %>
+        <% if batch.batch_remarks.where(batch_type: batch.class.name).count == 0 %>
+          <%= content_tag :small do %>
+            <% if batch.insurance_status == "approved" %>
+              No Remark(s)
+            <% else %>
+              <%= link_to "No Remark(s)", new_batch_remark_path(ref: batch, pro_cov: process_coverage, batch_status: "New", batch_type: batch.class.name), class: "text-dark", data: { turbo_frame: "modal" } %>
+            <% end %>
+          <% end %>
+        <% else %>
+          <%= link_to "View Remarks", modal_remarks_process_coverage_path(process_coverage, batch: batch, batch_type: batch.class.name), data: { turbo_frame: "modal" } %>
+        <% end %>
+      </td>
     <% end %>
   </tbody>
 </table>
-<%= console %>
+<%#= console %>

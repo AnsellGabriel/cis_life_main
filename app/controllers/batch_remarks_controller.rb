@@ -34,7 +34,8 @@ class BatchRemarksController < ApplicationController
     end
 
     @process_coverage = params[:pro_cov]
-
+    
+    @batch_type = params[:batch_type].nil? ? "Batch" : params[:batch_type]
   end
 
   def form_md
@@ -61,7 +62,14 @@ class BatchRemarksController < ApplicationController
     @batch_remark.user_type = current_user.userable_type
     @batch_remark.user_id = current_user.userable_id
     
-    @batch = Batch.find_by(id: params[:batch_remark][:batch_id])
+    # raise 'errors'
+    @batch = case params[:batch_type]
+    when "LoanInsurance::Batch"
+      LoanInsurance::Batch.find_by(id: params[:batch_remark][:batch_id])
+    else
+      Batch.find_by(id: params[:batch_remark][:batch_id])
+    end
+
     @process_coverage = ProcessCoverage.find_by(id: params[:batch_remark][:process_coverage])
 
     if params[:batch_remark][:status] == "denied" && (@batch.batch_dependents.for_review.count > 0 || @batch.batch_dependents.pending.count > 0)
@@ -79,9 +87,9 @@ class BatchRemarksController < ApplicationController
         if @batch_remark.save
           # redirect_to @batch_remark, notice: "Batch remark was successfully created."
           if params[:batch_remark][:batch_status] == "Pending"
-            format.html { redirect_to pending_batch_process_coverage_path(id: @process_coverage.id, batch: @batch)}
+            format.html { redirect_to pending_batch_process_coverage_path(id: @process_coverage.id, batch: @batch, batch_type: params[:batch_remark][:batch_type])}
           elsif params[:batch_remark][:batch_status] == "Deny"
-            format.html { redirect_to deny_batch_process_coverage_path(id: @process_coverage.id, batch: @batch)}
+            format.html { redirect_to deny_batch_process_coverage_path(id: @process_coverage.id, batch: @batch, batch_type: params[:batch_remark][:batch_type])}
           elsif params[:batch_remark][:batch_status] == "New"
             format.html { redirect_to process_coverage_path(@process_coverage), notice: "Batch remark created."}
           elsif params[:batch_remark][:batch_status] == "MD"
@@ -137,7 +145,7 @@ class BatchRemarksController < ApplicationController
 
     # Only allow a list of trusted parameters through.
     def batch_remark_params
-      params.require(:batch_remark).permit(:batch_id, :remark, :status, :user_id, :user_type, :batch_status, :process_coverage)
+      params.require(:batch_remark).permit(:batch_id, :remark, :status, :user_id, :user_type, :batch_status, :process_coverage, :batch_type)
     end
 end
 
