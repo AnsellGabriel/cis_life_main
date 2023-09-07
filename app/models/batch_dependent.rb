@@ -2,13 +2,13 @@ class BatchDependent < ApplicationRecord
   include Calculate
 
   # validate :validate_age
-
   # batch.insurance_status
   enum insurance_status: {
     approved: 0,
     denied: 1,
     pending: 2,
-    for_review: 3
+    for_review: 3,
+    for_reconsideration: 4
   }
 
   belongs_to :batch

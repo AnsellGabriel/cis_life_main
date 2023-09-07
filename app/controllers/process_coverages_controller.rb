@@ -467,16 +467,16 @@ class ProcessCoveragesController < ApplicationController
     end
   end
 
-  def pending_batch
-    # raise 'errors'
-    @batch = Batch.find(params[:batch])
+  # def pending_batch
+  #   # raise 'errors'
+  #   @batch = Batch.find(params[:batch])
 
-    respond_to do |format|
-      if @batch.update_attribute(:insurance_status, 2)
-        format.html { redirect_to process_coverage_path(@process_coverage), notice: "Pending batch updated!" }
-      end
-    end
-  end
+  #   respond_to do |format|
+  #     if @batch.update_attribute(:insurance_status, 2)
+  #       format.html { redirect_to process_coverage_path(@process_coverage), notice: "Pending batch updated!" }
+  #     end
+  #   end
+  # end
 
   def deny_batch
     @batch = Batch.find(params[:batch])

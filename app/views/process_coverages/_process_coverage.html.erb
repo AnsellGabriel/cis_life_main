@@ -248,7 +248,7 @@
                         <%= process_premiums("Net Prem", (batch.premium - (batch.coop_sf_amount + batch.agent_sf_amount))) %>
                       </div>
                     </td>
-                    <td>
+                    <td id="batch_<%= batch.id %>">
                       <%= insurance_status(batch.insurance_status) %>
                     </td>
                     <td>
@@ -286,11 +286,11 @@
                                     <%= bootstrap_icon "check-lg" %>
                                   <% end %>
                                   <%# <%= link_to new_batch_remark_path(ref: batch, pro_cov: process_coverage, batch_status: "Pending"), title: "Pending", class: "btn btn-sm btn-secondary mb-1", data: { turbo_frame: "remote_modal" } do %>
-                                    <%= link_to new_batch_remark_path(ref: batch, pro_cov: process_coverage, batch_status: "Pending"), title: "Pending", class: "btn btn-sm btn-secondary mb-1", data: { turbo_frame: "modal" } do %>
+                                    <%= link_to new_batch_remark_path(ref: batch, pro_cov: process_coverage, batch_status: "Pending", batch_type: batch.class.name), title: "Pending", class: "btn btn-sm btn-secondary mb-1", data: { turbo_frame: "reg_form_modal" } do %>
                                       <%= bootstrap_icon "arrow-clockwise" %>
                                     <% end %>
                                     <%# <%= link_to new_batch_remark_path(ref: batch, pro_cov: process_coverage, batch_status: "Deny"), title: "Deny", class: "btn btn-sm btn-danger mb-1", data: { turbo_frame: "remote_modal" } do %>
-                                      <%= link_to new_batch_remark_path(ref: batch, pro_cov: process_coverage, batch_status: "Deny"), title: "Deny", class: "btn btn-sm btn-danger mb-1", data: { turbo_frame: "modal" } do %>
+                                      <%= link_to new_batch_remark_path(ref: batch, pro_cov: process_coverage, batch_status: "Deny", batch_type: batch.class.name), title: "Deny", class: "btn btn-sm btn-danger mb-1", data: { turbo_frame: "reg_form_modal" } do %>
                                         <%= bootstrap_icon "x-lg" %>
                                       <% end %>
                                     </div>
@@ -321,11 +321,11 @@
                                           <% if batch.insurance_status == "approved" %>
                                             No Remark(s)
                                           <% else %>
-                                            <%= link_to "No Remark(s)", new_batch_remark_path(ref: batch, pro_cov: process_coverage, batch_status: "New"), class: "text-dark", data: { turbo_frame: "modal" } %>
+                                            <%= link_to "No Remark(s)", new_batch_remark_path(ref: batch, pro_cov: process_coverage, batch_status: "New"), class: "text-dark", data: { turbo_frame: "reg_form_modal" } %>
                                           <% end %>
                                         <% end %>
                                       <% else %>
-                                        <%= link_to "View Remarks", modal_remarks_process_coverage_path(process_coverage, batch: batch), data: { turbo_frame: "modal" } %>
+                                        <%= link_to "View Remarks", modal_remarks_process_coverage_path(process_coverage, batch: batch), data: { turbo_frame: "reg_form_modal" } %>
                                       <% end %>
                                     </td>
                                   </tr>

@@ -81,11 +81,11 @@
                     </div>
             
 
-                  <% if dependent.dependent_remarks.exists? %>
+                  <% if dependent.remarks.exists? %>
                     <%= link_to 'Remarks', dependent_remarks_path(batch_dependent_id: dependent.id, group_remit_id: @group_remit.id, batch_id: @batch.id, process_coverage_id: params[:process_coverage_id]), class: small_btn('warning'), data: {turbo_frame: "modal-xl"} %>
                   <% end %>
 
-                  <% if dependent.dependent_health_decs.exists? %>
+                  <% if dependent.health_declaration.exists? %>
                     <%= link_to health_dec_group_remit_batch_dependent_path(@group_remit, @batch, dependent, for_und: true, process_coverage_id: params[:process_coverage_id]), 
                     class: small_btn('warning'), 
 				            title: 'Health Declaration Form' do %>

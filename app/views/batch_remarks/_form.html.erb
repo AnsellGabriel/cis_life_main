@@ -19,11 +19,21 @@
 
     <% if params[:coop] || ( !params[:batch_remark].nil? && params[:batch_remark][:batch_status] == 'For reconsideration' ) %>
       <%= f.button :submit, "Create Request",class: 'btn-success' %>
-      <%= link_to "Back", modal_remarks_group_remit_batch_path(@batch.group_remits.find_by(type: 'Remittance'), @batch), class: 'btn btn-secondary', data: { turbo_frame: "reg_form_modal" } %>
+        <% if params[:batch_type] == 'BatchDependent' %>
+          <% dependent = BatchDependent.find(@ref)%>
+          <%= link_to "Remarks", dependent_remarks_path(
+            batch_dependent_id: dependent.id, 
+            group_remit_id: dependent.batch.group_remits.find_by(type: 'Remittance'), 
+            batch_id: dependent.batch.id, coop: true), 
+          class: 'btn btn-secondary', data: { turbo_frame: "reg_form_modal" } %>
+        <% else %>
+          <%= link_to "Remarks", modal_remarks_group_remit_batch_path(@batch.group_remits.find_by(type: 'Remittance'), @batch), class: 'btn btn-secondary', data: { turbo_frame: "reg_form_modal" } %>
+        <% end %>
+        
     <% else %>
-      <%# <%= link_to "Back", batch_remarks_path, class: 'btn btn-secondary' %> 
-      <%= link_to "Back", modal_remarks_process_coverage_path(@process_coverage, batch: @batch), class: 'btn btn-secondary', data: { turbo_frame: "modal" } %>
-      <%= f.button :submit, class: 'btn-success', data: {turbo: false} %>
+      <%# <%= link_to "Remarks", batch_remarks_path, class: 'btn btn-secondary' %> 
+      <%= link_to "Remarks", modal_remarks_process_coverage_path(@process_coverage, batch: @batch), class: 'btn btn-secondary', data: { turbo_frame: "reg_form_modal" } %>
+      <%= f.button :submit, class: 'btn-success' %>
     <% end %>
 
   </div>
