@@ -33,4 +33,12 @@ class CoopMember < ApplicationRecord
   def birthdate
     self.member.birth_date
   end
+
+  def lppi_batches(cooperative, group_remit)
+    unused_ids = group_remit.loan_batches.pluck(:unused_loan_id).compact
+    LoanInsurance::Batch.where(coop_member_id: self)
+                        .where.not(status: :terminated)
+                        .where.not(group_remit: group_remit)
+                        .where.not(unused_loan_id: unused_ids)
+  end
 end
