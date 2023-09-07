@@ -30,6 +30,14 @@
           <%= link_to "Remarks", modal_remarks_group_remit_batch_path(@batch.group_remits.find_by(type: 'Remittance'), @batch), class: 'btn btn-secondary', data: { turbo_frame: "reg_form_modal" } %>
         <% end %>
         
+    <% elsif params[:for_und] %>
+      <%= link_to 'Remarks', dependent_remarks_path(
+                batch_dependent_id: @batch.id, 
+                group_remit_id: @batch.batch.group_remits.find_by(type: 'Remittance').id, 
+                batch_id: @batch.batch.id, 
+                process_coverage_id: @process_coverage, 
+                for_und: true), class: small_btn('secondary'), data: {turbo_frame: "reg_form_modal_xl"} %>
+      <%= f.button :submit, class: small_btn('success') %>
     <% else %>
       <%# <%= link_to "Remarks", batch_remarks_path, class: 'btn btn-secondary' %> 
       <%= link_to "Remarks", modal_remarks_process_coverage_path(@process_coverage, batch: @batch), class: 'btn btn-secondary', data: { turbo_frame: "reg_form_modal" } %>
@@ -38,3 +46,4 @@
 
   </div>
 <% end %>
+

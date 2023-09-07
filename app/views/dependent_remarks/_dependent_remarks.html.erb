@@ -17,5 +17,9 @@
 <% end %>
 
 <% if (group_remit.pending? || group_remit.for_renewal?) && agreement.reconsiderable? %>
-  <%= link_to "Request reconsideration", new_batch_remark_path(ref: batch, batch_status: "For reconsideration", coop: true, batch_type: batch.class.name), class: "btn btn-sm btn-primary", data: { turbo_frame: "reg_form_modal" } %>
+  <% if params[:for_und]  %>
+    <%= link_to "New Remark", new_batch_remark_path(ref: batch, batch_status: "New", batch_type: batch.class.name, for_und: true, pro_cov: params[:process_coverage_id]), class: "btn btn-sm btn-primary", data: { turbo_frame: "reg_form_modal_xl" } %>
+  <% else %>
+    <%= link_to "Request reconsideration", new_batch_remark_path(ref: batch, batch_status: "For reconsideration", coop: true, batch_type: batch.class.name), class: "btn btn-sm btn-primary", data: { turbo_frame: "reg_form_modal" } %>
+  <% end %>
 <% end %>

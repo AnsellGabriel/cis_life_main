@@ -8,7 +8,7 @@
 </div>
 -->
 
-<%= turbo_frame_tag "reg_form_modal" do %>
+<%= turbo_frame_tag "#{params[:for_und] ? 'reg_form_modal_xl' : 'reg_form_modal'}" do %>
   <div class="modal-header">
     <% if params[:coop] || ( !params[:batch_remark].nil? && params[:batch_remark][:batch_status] == 'For reconsideration' ) %>
       <div class="<% flex_justify_align('','',true) %>">
