@@ -51,6 +51,7 @@ class Agreement < ApplicationRecord
       plan.acronym == 'PMFC' ? true : false
     end
 
+
     def self.filtered(params)
       joins(:cooperative, :plan).where("cooperatives.name LIKE ? OR plans.name LIKE ? OR agreements.moa_no LIKE ? OR plans.acronym LIKE ?", "%#{params}%", "%#{params}%", "%#{params}%", "%#{params}%")
     end

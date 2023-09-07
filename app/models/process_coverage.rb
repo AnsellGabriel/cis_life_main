@@ -96,9 +96,36 @@ class ProcessCoverage < ApplicationRecord
   def sum_batches_loan_amount
     self.group_remit.loan_batches.where(insurance_status: :approved).sum(:loan_amount)
   end
+
+  def sum_batches_gross_prem(klass)
+    case klass
+    when "LoanInsurance::Batch"
+      self.group_remit.batches.where(loan_insurance_batches: {insurance_status: :approved}).sum(:premium).to_d
+    else
+      self.group_remit.batches.where(batches: {insurance_status: :approved}).sum(:premium).to_d + self.group_remit.batches_dependents_approved_prem.sum(:premium)
+    end
+  end
   
-  def sum_batches_net_premium
+  def sum_batches_net_premium #gyrt
     self.group_remit.loan_batches.where(insurance_status: :approved).sum(:premium) - (self.group_remit.loan_batches.where(insurance_status: :approved).sum(:coop_sf_amount) + self.group_remit.loan_batches.where(insurance_status: :approved).sum(:agent_sf_amount))
+  end
+
+  def count_batches_denied(klass)
+    case klass
+    when "LoanInsurance::Batch"
+      self.group_remit.batches.where(loan_insurance_batches: { insurance_status: :denied} ).count
+    else
+      self.group_remit.batches.where(batches: { insurance_status: :denied} ).count
+    end
+  end
+
+  def count_pending_for_review_batches(klass)
+    case klass
+    when "LoanInsurance::Batch"
+      self.group_remit.batches.where(loan_insurance_batches: { insurance_status: [:for_review, :pending] }).count
+    else
+      self.group_remit.batches.where(batches: { insurance_status: [:for_review, :pending] }).count
+    end
   end
 
   # def set_batches_for_review

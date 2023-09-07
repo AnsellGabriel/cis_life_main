@@ -26,7 +26,7 @@ class ProcessRemarksController < ApplicationController
     @process_status = params[:pro_status]
     @total_life_cov = params[:total_life_cov].to_i
     @max_amount = params[:max_amount].to_i
-    @total_net_prem = params[:total_net_prem].to_i
+    @total_gross_prem = params[:total_gross_prem].to_i
 
     @process_coverage = ProcessCoverage.find_by(id: params[:ref])
     # binding.pry
@@ -34,8 +34,12 @@ class ProcessRemarksController < ApplicationController
     if @process_status == "Approve" || @process_status == "Deny"
 
       if current_user.rank == "analyst"
-        if @max_amount >= @total_net_prem
-          if @process_coverage.group_remit.batches.where(batches: { insurance_status: :denied} ).count > 0
+        if @max_amount >= @total_gross_prem
+          # if @process_coverage.group_remit.batches.where(batches: { insurance_status: :denied} ).count > 0
+          klass_name = @process_coverage.group_remit.batches.first.class.name
+          denied_count =  @process_coverage.count_batches_denied(klass_name)
+          
+          if denied_count > 0
             @rem_status = "for_head_approval"
           else
             @rem_status = "approved"
@@ -44,7 +48,7 @@ class ProcessRemarksController < ApplicationController
           @rem_status = "for_head_approval"
         end
       elsif current_user.rank == "head"
-        if @max_amount >= @total_net_prem
+        if @max_amount >= @total_gross_prem
           @rem_status = "approved"
         else
           @rem_status = "for_vp_approval"
@@ -80,7 +84,7 @@ class ProcessRemarksController < ApplicationController
   def create
     # raise 'errors'
     @process_coverage = ProcessCoverage.find(params[:process_remark][:process_coverage_id])
-    @batch_count = @process_coverage.group_remit.batches.where(batches: { insurance_status: [:for_review, :pending] }).count
+    @batch_count = @process_coverage.count_pending_for_review_batches(@process_coverage.group_remit.batches.first.class.name)
 
     unless params[:process_remark][:process_status].nil? || params[:process_remark][:process_status].empty?
       if @batch_count > 0

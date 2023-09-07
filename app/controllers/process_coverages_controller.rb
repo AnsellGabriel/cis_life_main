@@ -282,6 +282,8 @@ class ProcessCoveragesController < ApplicationController
       @pagy_batch, @filtered_batches  = pagy(@batches, items: 10, page_param: :batch)
       @group_remit = @process_coverage.group_remit
 
+      @total_net_prem = @process_coverage.sum_batches_net_premium
+
     elsif ["GYRT","GYRTF","GYRTBR","GYRTFR"].include?(@plan.acronym)
 
       @insured_types = @process_coverage.group_remit.agreement.agreement_benefits.insured_types.symbolize_keys.values
@@ -348,6 +350,9 @@ class ProcessCoveragesController < ApplicationController
     @process_remarks = @process_coverage.process_remarks
   
     @pagy_rem, @filtered_remarks = pagy(@process_remarks, items: 3, page_param: :remark)
+
+    klass_name = @process_coverage.group_remit.batches.first.class.name
+    @total_gross_prem = @process_coverage.sum_batches_gross_prem(klass_name)
   end
 
   # GET /process_coverages/new
@@ -382,17 +387,21 @@ class ProcessCoveragesController < ApplicationController
   def approve
     @max_amount = params[:max_amount].to_i
     @total_life_cov = params[:total_life_cov].to_i
-    @total_net_prem = params[:total_net_prem].to_i
+    # @total_net_prem = params[:total_net_prem].to_i
+    @total_gross_prem = params[:total_gross_prem].to_i
     # raise 'errors'
     
     @process_coverage = ProcessCoverage.find_by(id: params[:process_coverage_id])
     # compute group remit total premiums, fees and set status to :for_payment
     @process_coverage.group_remit.set_total_premiums_and_fees
+    klass_name = @process_coverage.group_remit.batches.first.class.name
 
     respond_to do |format|
       if current_user.rank == "analyst"
-        if @max_amount >= @total_net_prem
-          if @process_coverage.group_remit.batches.where(batches: { insurance_status: :denied }).count > 0
+        if @max_amount >= @total_gross_prem
+                    
+          if @process_coverage.count_batches_denied(klass_name) > 0
+          # if @process_coverage.group_remit.batches.where(batches: { insurance_status: :denied }).count > 0
             @process_coverage.update_attribute(:status, "for_head_approval")
             format.html { redirect_to process_coverage_path(@process_coverage), notice: "Process Coverage for Head Approval!" }
           else
@@ -405,7 +414,7 @@ class ProcessCoveragesController < ApplicationController
           format.html { redirect_to process_coverage_path(@process_coverage), notice: "Process Coverage for Head Approval!" }
         end
       elsif current_user.rank == "head"
-        if @max_amount >= @total_net_prem
+        if @max_amount >= @total_gross_prem
           @process_coverage.update_attribute(:status, "approved")
           # @process_coverage.group_remit.set_total_premiums_and_fees
           format.html { redirect_to process_coverage_path(@process_coverage), notice: "Process Coverage Approved!" }

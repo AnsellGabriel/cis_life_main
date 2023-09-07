@@ -55,13 +55,17 @@
     <% end %>
     <%= content_tag :p do %>
       <strong>Total Life Coverage:</strong>
-      <%= to_currency(@total_life_cov) %> | 
+      <%= to_currency(process_coverage.sum_batches_loan_amount) %>
+    <% end %>
+    <%= content_tag :p do %>
+      <strong>Total Gross Premium:</strong>
+      <%= to_currency(@total_gross_prem) %> | 
       <strong>Total Net Premium:</strong>
       <%= to_currency(@total_net_prem) %>
     <% end %>
     <%# if process_coverage.status == "pending" || process_coverage.status == "for_process" %>
     <div class="<%= approve_deny_button_pro_cov(current_user.rank, @process_coverage.status) %>">
-      <%= link_to new_process_remark_path(ref: process_coverage, pro_status: "Approve", rem_status: "approved", max_amount: session[:max_amount], total_life_cov: @total_life_cov, total_net_prem: @total_net_prem), title: "Approve", class: "btn btn-sm btn-success mb-2 me-2", data: { turbo_frame: "remote_modal" } do %>
+      <%= link_to new_process_remark_path(ref: process_coverage, pro_status: "Approve", rem_status: "approved", max_amount: session[:max_amount], total_life_cov: @total_life_cov, total_gross_prem: @total_gross_prem), title: "Approve", class: "btn btn-sm btn-success mb-2 me-2", data: { turbo_frame: "remote_modal" } do %>
         <%= bootstrap_icon "check-lg" %> Approve
       <% end %>
       <%= link_to new_process_remark_path(ref: process_coverage, pro_status: "Deny", rem_status: "denied"), title: "Denied", class: "btn btn-sm btn-danger mb-2 me-2", data: { turbo_frame: "remote_modal" } do %>

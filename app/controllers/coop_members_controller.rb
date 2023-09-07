@@ -77,8 +77,10 @@ class CoopMembersController < InheritedResources::Base
   def show_insurance 
     # binding.pry
     @for_modal = params[:pro_cov].present? ? true : false
-        
-    @batch = Batch.where(coop_member: @coop_member)
+    
+    @batch_gyrt = Batch.where(coop_member: @coop_member)
+    @batch_lppi = LoanInsurance::Batch.where(coop_member: @coop_member)
+    @batch = @batch_lppi + @batch_gyrt
   end
 
   private

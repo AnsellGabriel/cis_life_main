@@ -33,4 +33,8 @@ class AgreementBenefit < ApplicationRecord
   def upcase_name
     self.name = self.name.upcase
   end
+
+  def get_product_benefits
+    self.product_benefits
+  end
 end
