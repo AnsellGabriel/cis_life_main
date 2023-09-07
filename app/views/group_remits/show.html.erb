@@ -230,15 +230,7 @@
 
   <% if @group_remit.instance_of?(Remittance)%>
     <div class="d-flex gap-2">
-      <% status_mappings = {
-          approved: { label: "Approved", class: "btn-success" },
-          denied: { label: "Denied", class: "btn-danger" },
-          pending: { label: "Pending", class: "btn-secondary" },
-          for_reconsideration: {label: 'Request', class: 'btn-warning'},
-          for_review: { label: "For Review", class: "btn-outline-secondary" }
-        } %>
-
-      <% status_mappings.each do |status, attributes| %>
+      <% gr_presenter.status_mappings.each do |status, attributes| %>
         <% batches = @group_remit.batches.send(status) %>
         <%= link_to group_remit_path(@group_remit, insurance_status: status), class: "btn btn-sm #{attributes[:class]} position-relative" do %>
           <%= attributes[:label] %>

@@ -62,7 +62,8 @@ class CoopMembersController < InheritedResources::Base
 
   def find_member
     @member = Member.find_by(id: params[:id])
-    @previous_loans = @member.lppi_batches
+    @group_remit = GroupRemit.find_by(id: params[:group_remit_id])
+    @previous_loans = @member.lppi_batches(current_user.userable.cooperative, @group_remit)
 
     respond_to do |format|
       format.turbo_stream

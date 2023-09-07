@@ -4,7 +4,8 @@ class DependentRemarksController < ApplicationController
 
   # GET /dependent_remarks
   def index
-    @remarks = @dependent.dependent_remarks
+    @remarks = @dependent.remarks
+    @group_remit  = GroupRemit.find(params[:group_remit_id])
   end
 
   # GET /dependent_remarks/1

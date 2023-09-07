@@ -30,7 +30,7 @@
 
 	<% if batch.batch_remarks.exists? %>
 		<%= link_to modal_remarks_group_remit_batch_path(group_remit, batch), 
-			data: { turbo_frame: "modal" }, 
+			data: { turbo_frame: "reg_form_modal" }, 
 			title: 'Remarks',
 			class: small_btn('warning') do %>
 			<i class="bi bi-card-list"></i>
