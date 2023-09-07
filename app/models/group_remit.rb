@@ -166,8 +166,13 @@ class GroupRemit < ApplicationRecord
   end
 
   def batches_dependents
-    BatchDependent.joins(batch: :group_remit)
+    BatchDependent.joins(batch: :group_remits)
       .where(group_remits: {id: self.id})
+  end
+    
+  def batches_dependents_approved_prem
+    BatchDependent.joins(batch: :group_remits)
+      .where(group_remits: {id: self.id}, batch: { insurance_status: :approved })
   end
 
   def set_premium(insured_type)
