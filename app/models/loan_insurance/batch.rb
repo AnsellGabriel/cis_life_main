@@ -32,6 +32,12 @@ class LoanInsurance::Batch < Batch
     end
   end
 
+  def get_terms
+    terms
+  end
+
+ 
+
   private
 
   def skip_validation

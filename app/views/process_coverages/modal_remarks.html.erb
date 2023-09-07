@@ -1,5 +1,3 @@
-<%= @batch %>
-
 <!--
 <%= render "remote_modal", title: "Remarks" do %>
   <%= render 'batch_remarks', batch: @batch, process_coverage: @process_coverage %>
@@ -8,13 +6,12 @@
 
 <%= turbo_frame_tag "reg_form_modal" do %>
   <div class="modal-header">
+    <%#= @batch %>
     <%= content_tag :h5, 'Remarks', class: "modal-title", id: "staticBackdropLabel" %>
     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
   </div>
-  
   <div class="modal-body">
     <%= render 'batch_remarks', batch: @batch, process_coverage: @process_coverage %>
     <%#= render 'batch_remarks', batch_remarks: @batch_remarks, process_coverage: @process_coverage %>
   </div>
 <% end %>
-

@@ -28,6 +28,11 @@ class BatchRemarksController < ApplicationController
     @batch_status = params[:batch_status]
     @rem_status = remark_status(@batch_status)
     @process_coverage = params[:pro_cov]
+<<<<<<< HEAD
+=======
+    
+    @batch_type = params[:batch_type].nil? ? "Batch" : params[:batch_type]
+>>>>>>> 8642bfae532b0a6518d3f16a7516582ffbd7c90f
   end
 
   def form_md
@@ -60,6 +65,15 @@ class BatchRemarksController < ApplicationController
     @rem_status = remark_status(@batch_status)
     
     # @batch = Batch.find_by(id: params[:batch_remark][:batch_id])
+    # raise 'errors'
+    @batch = case params[:batch_type]
+    when "LoanInsurance::Batch"
+      LoanInsurance::Batch.find_by(id: params[:batch_remark][:batch_id])
+    else
+      Batch.find_by(id: params[:batch_remark][:batch_id])
+    end
+
+    @process_coverage = ProcessCoverage.find_by(id: params[:batch_remark][:process_coverage])
 
     @process_coverage = ProcessCoverage.find_by(id: params[:batch_remark][:process_coverage])&.id
   
@@ -107,6 +121,9 @@ class BatchRemarksController < ApplicationController
             else
               format.turbo_stream
             end
+            #   format.html { redirect_to pending_batch_process_coverage_path(id: @process_coverage.id, batch: @batch, batch_type: params[:batch_remark][:batch_type])}
+            # elsif params[:batch_remark][:batch_status] == "Deny"
+            #   format.html { redirect_to deny_batch_process_coverage_path(id: @process_coverage.id, batch: @batch, batch_type: params[:batch_remark][:batch_type])}
           elsif params[:batch_remark][:batch_status] == "New"
             if params[:batch_type] == 'BatchDependent'
               format.html { redirect_to dependent_remarks_path(
@@ -182,7 +199,7 @@ class BatchRemarksController < ApplicationController
 
     # Only allow a list of trusted parameters through.
     def batch_remark_params
-      params.require(:batch_remark).permit(:batch_id, :remark, :status, :user_id, :user_type, :batch_status, :process_coverage)
+      params.require(:batch_remark).permit(:batch_id, :remark, :status, :user_id, :user_type, :batch_status, :process_coverage, :batch_type)
     end
 
     def check_class(class_name, id)

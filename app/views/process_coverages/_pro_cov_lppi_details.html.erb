@@ -27,19 +27,15 @@
     <% end %>
     <%= content_tag :p do %>
       <strong>Regular Count:</strong>
-      <%= @batches_o.where(age: 18..65).count %> |
+      <%= process_coverage.count_regular_batches(18..65) %> |
       <strong>Overage Count:</strong>
-      <%= @batches_o.where(age: 66..).count %>
+      <%= process_coverage.count_overage_batches %>
     <% end %>
     <%= content_tag :p do %>
       <strong>Minimum Participation:</strong>
-      <%= num_delimit(@process_coverage.group_remit.agreement.minimum_participation) %> |
+      <%#= num_delimit(@process_coverage.group_remit.agreement.minimum_participation) %> |
       <strong>Enrolled:</strong>
-      <%= num_delimit(@process_coverage.group_remit.batches.count) %>
-    <% end %>
-    <%= content_tag :p do %>
-      <strong>No Birthdate:</strong>
-      <%= @process_coverage.group_remit.batches.where(age: ..0).count %>
+      <%#= num_delimit(@process_coverage.group_remit.batches.count) %>
     <% end %>
     <%= content_tag :p do %>
       <strong>Status:</strong>
@@ -48,16 +44,10 @@
       <%= reprocess_stat(@process_coverage.reprocess) %>
     <% end %>
     <%= content_tag :p do %>
-      <strong>Total Net Premium <small>(Principal)</small>:</strong>
-      <%= to_currency(@principal_net_prem) %> |
-      <strong>Total Net Premium <small>(Dependent)</small>:</strong>
-      <%= to_currency(@batch_dependents_net_prem) %>
-    <% end %>
-    <%= content_tag :p do %>
       <strong>Total Life Coverage:</strong>
-      <%= to_currency(@total_life_cov) %> | 
+      <%= to_currency(process_coverage.sum_batches_loan_amount) %> | 
       <strong>Total Net Premium:</strong>
-      <%= to_currency(@total_net_prem) %>
+      <%= to_currency(process_coverage.sum_batches_net_premium) %>
     <% end %>
     <%# if process_coverage.status == "pending" || process_coverage.status == "for_process" %>
     <div class="<%= approve_deny_button_pro_cov(current_user.rank, @process_coverage.status) %>">

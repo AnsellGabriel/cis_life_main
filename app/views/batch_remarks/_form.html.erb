@@ -2,10 +2,9 @@
 <%= simple_form_for(@batch_remark, url: batch_remarks_path(batch_type: @batch.class.name, batch_id: @batch.id)) do |f| %>
   <%= f.error_notification %>
   <%= f.error_notification message: f.object.errors[:base].to_sentence if f.object.errors[:base].present? %>
-
   <div class="form-inputs mb-3">
     <% if params[:coop] || ( !params[:batch_remark].nil? && params[:batch_remark][:batch_status] == 'For reconsideration' ) %>
-          <%= f.input :remark, label: 'Reason' %>
+      <%= f.input :remark, label: 'Reason' %>
     <% else %>
       <%= f.input :remark %>
     <% end %>
@@ -13,10 +12,9 @@
     <%#= f.association :user %>
     <%= f.input :batch_status, input_html: { value: @batch_status }, as: :hidden %>
     <%= f.input :process_coverage, input_html: { value: @process_coverage }, as: :hidden %>
+    <%= f.input :batch_type, input_html: { value: @batch_type } %>
   </div>
-
   <div class="form-actions text-end">
-
     <% if params[:coop] || ( !params[:batch_remark].nil? && params[:batch_remark][:batch_status] == 'For reconsideration' ) %>
       <%= f.button :submit, "Create Request",class: 'btn-success' %>
         <% if params[:batch_type] == 'BatchDependent' %>
@@ -43,7 +41,6 @@
       <%= link_to "Remarks", modal_remarks_process_coverage_path(@process_coverage, batch: @batch), class: 'btn btn-secondary', data: { turbo_frame: "reg_form_modal" } %>
       <%= f.button :submit, class: 'btn-success' %>
     <% end %>
-
   </div>
 <% end %>
 
