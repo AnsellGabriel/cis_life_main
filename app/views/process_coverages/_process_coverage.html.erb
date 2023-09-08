@@ -1,4 +1,4 @@
-<div id="<%= dom_id process_coverage %>">
+  <div id="<%= dom_id process_coverage %>">
   <% if process_coverage.group_remit.agreement.plan.acronym == "LPPI" %>
     <div class="row mb-3">
       <div class="col-6">
@@ -238,10 +238,10 @@
                             <%= link_to approve_batch_process_coverage_path(batch: batch), onclick: "return confirm('Are you sure?')", method: :get, title: "Approve", class: "btn btn-sm btn-success mb-1" do %>
                               <%= bootstrap_icon "check-lg" %>
                             <% end %>
-                            <%= link_to new_batch_remark_path(ref: batch, pro_cov: process_coverage, batch_status: "Pending"), title: "Pending", class: "btn btn-sm btn-secondary mb-1", data: { turbo_frame: "modal" } do %>
+                            <%= link_to new_batch_remark_path(ref: batch, pro_cov: process_coverage, batch_status: "Pending", batch_type: batch.class.name), title: "Pending", class: "btn btn-sm btn-secondary mb-1", data: { turbo_frame: "reg_form_modal" } do %>
                               <%= bootstrap_icon "arrow-clockwise" %>
                             <% end %>
-                            <%= link_to new_batch_remark_path(ref: batch, pro_cov: process_coverage, batch_status: "Deny"), title: "Deny", class: "btn btn-sm btn-danger mb-1", data: { turbo_frame: "modal" } do %>
+                            <%= link_to new_batch_remark_path(ref: batch, pro_cov: process_coverage, batch_status: "Deny", batch_type: batch.class.name), title: "Deny", class: "btn btn-sm btn-danger mb-1", data: { turbo_frame: "reg_form_modal" } do %>
                               <%= bootstrap_icon "x-lg" %>
                             <% end %>
                           </div>
@@ -255,76 +255,6 @@
                               <%= bootstrap_icon "coin" %>
                             <% end %>
                           <% end %>
-                        </td>
-                        <td>
-                          <%# unless process_coverage.status != "for_process" && process_coverage.status != "pending" %>
-                          <%# unless batch.insurance_status != "for_review" && batch.insurance_status != "pending" %>
-                          <%#= link_to approve_batch_process_coverage_path(batch: batch), title: "Approve", class: "btn btn-sm btn-success" do %>
-                            <%#= bootstrap_icon "check-lg" %>
-                            <%# end %>
-                            <%#= link_to deny_batch_process_coverage_path(batch: batch), title: "Deny", class: "btn btn-sm btn-danger" do %>
-                              <%#= bootstrap_icon "x-lg" %>
-                              <%# end %>
-                              <% unless process_coverage.approved? || process_coverage.reprocess_approved? %>
-                                <div class="<%= batch_buttons(current_user.rank, batch.insurance_status, process_coverage.status) %>">
-                                  <%= link_to approve_batch_process_coverage_path(batch: batch), onclick: "return confirm('Are you sure?')", method: :get, title: "Approve", class: "btn btn-sm btn-success mb-1" do %>
-                                    <%= bootstrap_icon "check-lg" %>
-                                  <% end %>
-                                  <%# <%= link_to new_batch_remark_path(ref: batch, pro_cov: process_coverage, batch_status: "Pending"), title: "Pending", class: "btn btn-sm btn-secondary mb-1", data: { turbo_frame: "remote_modal" } do %>
-                                    <%= link_to new_batch_remark_path(ref: batch, pro_cov: process_coverage, batch_status: "Pending", batch_type: batch.class.name), title: "Pending", class: "btn btn-sm btn-secondary mb-1", data: { turbo_frame: "reg_form_modal" } do %>
-                                      <%= bootstrap_icon "arrow-clockwise" %>
-                                    <% end %>
-                                    <%# <%= link_to new_batch_remark_path(ref: batch, pro_cov: process_coverage, batch_status: "Deny"), title: "Deny", class: "btn btn-sm btn-danger mb-1", data: { turbo_frame: "remote_modal" } do %>
-                                      <%= link_to new_batch_remark_path(ref: batch, pro_cov: process_coverage, batch_status: "Deny", batch_type: batch.class.name), title: "Deny", class: "btn btn-sm btn-danger mb-1", data: { turbo_frame: "reg_form_modal" } do %>
-                                        <%= bootstrap_icon "x-lg" %>
-                                      <% end %>
-                                    </div>
-                                    <div class="<%= reconsider_button(current_user.rank, batch.insurance_status, process_coverage.status) %>">
-                                      <%= link_to reconsider_batch_process_coverage_path(batch: batch), onclick: "return confirm('Are you sure?')", method: :get, class: "btn btn-sm btn-warning mb-1" do %>
-                                        <%= bootstrap_icon "arrow-repeat" %>
-                                      <% end %>
-                                    </div>
-                                    <% if current_user.head? && batch.status == "for_reconsideration" && batch.insurance_status == "denied" %>
-                                      <%= link_to set_premium_batch_process_coverage_path(batch: batch), onclick: "return confirm('Are you sure?')", method: :get, class: "btn btn-sm btn-info mb-1", data: { turbo_frame: "modal" } do %>
-                                        <%= bootstrap_icon "coin" %>
-                                      <% end %>
-                                    <% end %>
-                                  <% end %>
-                                  <%# end %>
-                                  <%# end %>
-                                  <% if batch.batch_health_decs.present? %>
-                                    <%#= link_to batch_health_dec_path(id: batch.batch_health_dec.id, b_id: batch.batch_health_dec, for_modal: "yes", pro_id: process_coverage), title: "For MD Review", class: "btn btn-sm btn-warning mb-1", remote: true, data: { turbo_frame: "remote_modal" } do %>
-                                      <%#= link_to group_remit_batch_health_declaration_path(@group_remit,batch,group_remit: @group_remit, batch: batch,id: batch.batch_health_decs.id, b_id: batch.batch_health_decs, for_modal: "yes", pro_id: process_coverage), title: "For MD Review", class: "btn btn-sm btn-warning mb-1", remote: true, data: { turbo_frame: "remote_modal" } do %>
-                                        <%= link_to health_dec_group_remit_batch_path(@group_remit, batch, for_und: true), class: "btn btn-sm btn-warning mb-1", data: { turbo_frame: "modal-xl" } do %>
-                                          <%= bootstrap_icon "file-earmark-medical" %>
-                                        <% end %>
-                                      <% end %>
-                                    </td>
-                                    <td>
-                                      <% if batch.batch_remarks.count == 0 %>
-                                        <%= content_tag :small do %>
-                                          <% if batch.insurance_status == "approved" %>
-                                            No Remark(s)
-                                          <% else %>
-                                            <%= link_to "No Remark(s)", new_batch_remark_path(ref: batch, pro_cov: process_coverage, batch_status: "New"), class: "text-dark", data: { turbo_frame: "reg_form_modal" } %>
-                                          <% end %>
-                                        <% end %>
-                                      <% else %>
-                                        <%= link_to "View Remarks", modal_remarks_process_coverage_path(process_coverage, batch: batch), data: { turbo_frame: "reg_form_modal" } %>
-                                      <% end %>
-                                    </td>
-                                  </tr>
-                                <% end %>
-                                <%# end %>
-                              <% else %>
-                                <tr class="text-center">
-                                  <td colspan=8>
-                                    <%= content_tag :span, "NO RECORD(S)", class: "lead fw-bold" %>
-                                  </td>
-                                </tr>
-                              <% end %>
-                            </tbody>
-                          </table>
                         <% end %>
                         <% if batch.batch_health_decs.present? %>
                           <%= link_to health_dec_group_remit_batch_path(@group_remit, batch, for_und: true), class: "btn btn-sm btn-warning mb-1", data: { turbo_frame: "reg_form_modal_xl" } do %>

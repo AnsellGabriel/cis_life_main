@@ -14,6 +14,7 @@ class BatchRemarksController < ApplicationController
   # GET /batch_remarks/new
   def new
     @batch = check_class(params[:batch_type], params[:ref])
+        
     @batch_remark = @batch.batch_remarks.build
     @ref = params[:ref]
     # @batch_remark = BatchRemark.new
@@ -28,11 +29,8 @@ class BatchRemarksController < ApplicationController
     @batch_status = params[:batch_status]
     @rem_status = remark_status(@batch_status)
     @process_coverage = params[:pro_cov]
-<<<<<<< HEAD
-=======
     
     @batch_type = params[:batch_type].nil? ? "Batch" : params[:batch_type]
->>>>>>> 8642bfae532b0a6518d3f16a7516582ffbd7c90f
   end
 
   def form_md
