@@ -60,15 +60,15 @@ class Member < ApplicationRecord
     "#{last_name}, #{first_name} #{middle_name} #{suffix}"
   end
 
-  def lppi_batches(cooperative, group_remit)
-    coop_member = cooperative.coop_members.find_by(member_id: self.id)
-    unused_ids = group_remit.loan_batches.pluck(:unused_loan_id).compact
-    LoanInsurance::Batch.where(coop_member_id: coop_member)
-                        .where.not(status: :terminated)
-                        .where.not(group_remit: group_remit)
-                        .where.not(unused_loan_id: unused_ids)
+  # def lppi_batches(cooperative, group_remit)
+  #   coop_member = cooperative.coop_members.find_by(member_id: self.id)
+  #   unused_ids = group_remit.loan_batches.pluck(:unused_loan_id).compact
+  #   LoanInsurance::Batch.where(coop_member_id: coop_member)
+  #                       .where.not(status: :terminated)
+  #                       .where.not(group_remit: group_remit)
+  #                       .where.not(unused_loan_id: unused_ids)
 
-  end
+  # end
 
   private
 
