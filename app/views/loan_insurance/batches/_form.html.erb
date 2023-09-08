@@ -58,7 +58,15 @@
       </div>
     </div>
     <div class="col-md-5 <%= flex_justify_align('start','start') %>" style="width: 41.65%; height: auto; align-self: start;">
-      <%= turbo_frame_tag 'member details', style: 'width: 100%' %>
+      <%= turbo_frame_tag 'member details', style: 'width: 100%' do %>
+        <div class="card mb-0 <%= flex_justify_align('center', 'start') %>" style="width: 100%; height: 135px">
+          <div class="card-body" style="width: 100%;">
+            <div class="row text-center" style="width: 100%">
+              <%= content_tag :span, 'Member Details ', class: 'col-md-12' %>
+            </div>
+          </div>
+        </div>
+      <% end %>
     </div>
   </div>
   <div class="mb-3">
