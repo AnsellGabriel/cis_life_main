@@ -45,7 +45,7 @@ class LoanInsurance::Batch < Batch
   end
 
   def set_terms_and_age
-    self.terms = compute_terms(date_mature, date_release)
+    self.terms = compute_terms(expiry_date, effectivity_date)
     self.insurance_status = :for_review
     self.age = coop_member.age(effectivity_date)
   end
@@ -59,7 +59,7 @@ class LoanInsurance::Batch < Batch
 
     if unused_loan_id
       previous_batch = LoanInsurance::Batch.find(unused_loan_id)
-      unused_term = compute_terms(previous_batch.date_mature, date_release)
+      unused_term = compute_terms(previous_batch.expiry_date, effectivity_date)
       self.unused = (previous_batch.loan_amount / 1000 ) * (rate.monthly_rate * unused_term)
       self.premium_due = premium - unused
     else

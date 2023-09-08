@@ -1,8 +1,8 @@
 <tr>
   <td><%= group_remit.id %></td>
   <td><%= group_remit.name %></td>
-  <td><%= group_remit.name %></td>
-  <td><%= group_remit.name %></td>
+  <td class="text-center"><%= to_curr(group_remit.total_principal_premium) %></td>
+  <td><%= group_remit.total_unused_premium %></td>
   <td><%= group_remit.name %></td>
   <td><%= render 'action_buttons', gr: group_remit  %></td>
 <tr>
