@@ -1,6 +1,6 @@
 class LoanInsurance::Batch < Batch
   include CoverageStatus
-
+  # self.abstract_class = true
   self.table_name = "loan_insurance_batches"
 
   # skip agreement_benefit validation

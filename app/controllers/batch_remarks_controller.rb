@@ -30,7 +30,7 @@ class BatchRemarksController < ApplicationController
     @rem_status = remark_status(@batch_status)
     @process_coverage = params[:pro_cov]
     
-    @batch_type = params[:batch_type].nil? ? "Batch" : params[:batch_type]
+    # @batch_type = params[:batch_type].nil? ? "Batch" : params[:batch_type]
   end
 
   def form_md
@@ -53,10 +53,11 @@ class BatchRemarksController < ApplicationController
   def create
     # raise 'errors'
     # @batch_remark = BatchRemark.new(batch_remark_params)
+        
+    @batch = check_class(params[:batch_type], params[:batch_id])
     @batch_remark = BatchRemark.new(batch_remark_params)
     @batch_remark.user_type = current_user.userable_type
     @batch_remark.user_id = current_user.userable_id
-    @batch = check_class(params[:batch_type], params[:batch_id])
     @ref = @batch.id
     @batch_remark.remarkable = @batch
     @batch_status = params[:batch_remark][:batch_status]
@@ -79,6 +80,8 @@ class BatchRemarksController < ApplicationController
 
         # end
         if @batch_remark.save
+                    
+          binding.pry
                     
           # byebug
           # redirect_to @batch_remark, notice: "Batch remark was successfully created."
@@ -121,8 +124,8 @@ class BatchRemarksController < ApplicationController
                 process_coverage_id: @process_coverage, 
                 for_und: true) } 
             else
-                            
-              format.html { redirect_to modal_remarks_process_coverage_path(@process_coverage, batch: @batch)}
+              
+              format.html { redirect_to modal_remarks_process_coverage_path(@process_coverage, batch: @batch, batch_type: @batch.class.name)}
             end
 
           elsif params[:batch_remark][:batch_status] == "MD"

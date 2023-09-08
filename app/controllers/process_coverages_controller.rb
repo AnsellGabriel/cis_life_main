@@ -361,6 +361,9 @@ class ProcessCoveragesController < ApplicationController
   end
 
   def set_premium_batch
+    
+    binding.pry
+    
     case params[:batch_type]
     when "LoanInsurance::Batch"
       @batch = LoanInsurance::Batch.find(params[:batch])
@@ -565,6 +568,7 @@ class ProcessCoveragesController < ApplicationController
   end
 
   def modal_remarks
+        
     @batch = case params[:batch_type]
     when "LoanInsurance::Batch" 
       LoanInsurance::Batch.find(params[:batch])
@@ -572,7 +576,7 @@ class ProcessCoveragesController < ApplicationController
       Batch.find(params[:batch])
     end
     
-    @batch_remarks = @batch.batch_remarks.where(batch_type: @batch.class.name)
+    @batch_remarks = @batch.batch_remarks.where(remarkable: @batch)
     @pagy_br, @filtered_br = pagy(@batch_remarks, items: 3, page_param: :b_remarks)
     @process_coverage = ProcessCoverage.find(params[:id])
   end
