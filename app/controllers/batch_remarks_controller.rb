@@ -61,10 +61,6 @@ class BatchRemarksController < ApplicationController
     @batch_remark.remarkable = @batch
     @batch_status = params[:batch_remark][:batch_status]
     @rem_status = remark_status(@batch_status)
-    
-    # @batch = Batch.find_by(id: params[:batch_remark][:batch_id])
-    # raise 'errors'
-    @process_coverage = ProcessCoverage.find_by(id: params[:batch_remark][:process_coverage])
 
     @process_coverage = ProcessCoverage.find_by(id: params[:batch_remark][:process_coverage])&.id
   

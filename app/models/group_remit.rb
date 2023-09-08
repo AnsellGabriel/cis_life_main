@@ -201,17 +201,17 @@ class GroupRemit < ApplicationRecord
 
   def total_principal_premium
     if self.class.name == 'LoanInsurance::GroupRemit'
-      loan_batches.to_a.sum(&:premium_due)
+      loan_batches.sum(&:premium)
     else
-      batches.to_a.sum(&:premium)
+      batches.sum(&:premium)
     end
   end
 
   def denied_principal_premiums
     if self.class.name == 'LoanInsurance::GroupRemit'
-      loan_batches.denied.to_a.sum(&:premium_due)
+      loan_batches.denied.sum(&:premium_due)
     else
-      batches.denied.to_a.sum(&:premium)
+      batches.denied.sum(&:premium)
     end
   end
 

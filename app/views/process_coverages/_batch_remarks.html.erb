@@ -1,16 +1,13 @@
-<%# batch.batch_remarks.order(created_at: :desc).each do |rem| %>
-  <%  @batch_remarks.order(created_at: :desc).each do |rem| %>
-    <%# batch_remarks.order(created_at: :desc).each do |rem| %>
-      <%= content_tag :div, class: "d-flex justify-content-between align-items-center" do %>
-        <%= content_tag :p, class: "mb-1" do %>
-          <%= rem.denied? && rem.user_type == 'CoopUser' ? 'System' : rem.user %>
-          <%= content_tag :small, "- #{time_ago_in_words(rem.created_at)} ago" %>
-          <%= batch_rem_status(rem.status) %>
-        <% end %>
-      <% end %>
-      <%= content_tag :p, rem.remark, class: "small mb-0 fst-italic" %>
-      <%= content_tag :hr %>
+<% batch.remarks.order(created_at: :desc).each do |rem| %>
+  <%= content_tag :div, class: "d-flex justify-content-between align-items-center" do %>
+    <%= content_tag :p, class: "mb-1" do %>
+      <%= rem.denied? && rem.user_type == 'CoopUser' ? 'System' : rem.user %>
+      <%= content_tag :small, "- #{time_ago_in_words(rem.created_at)} ago" %>
+      <%= batch_rem_status(rem.status) %>
+    <% end %>
   <% end %>
-  <%# <%= link_to "New Remark", new_batch_remark_path(ref: batch, pro_cov: process_coverage, batch_status: "New"), class: "btn btn-sm btn-primary", data: { turbo_frame: "remote_modal" } %> 
+  <%= content_tag :p, rem.remark, class: "small mb-0 fst-italic" %>
+  <%= content_tag :hr %>
+<% end %>
 
 <%= link_to "New Remark", new_batch_remark_path(ref: batch, pro_cov: process_coverage, batch_status: "New", batch_type: batch.class.name), class: "btn btn-sm btn-primary", data: { turbo_frame: "reg_form_modal" } %>
