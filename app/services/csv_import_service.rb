@@ -18,12 +18,15 @@ class CsvImportService
       spreadsheet = read_file
       
       case @type
-      when :batch
-        import_service = BatchImportService.new(spreadsheet, @group_remit, @cooperative, @current_user)
-        import_result = import_service.import_batches
       when :member
         import_service = MemberImportService.new(spreadsheet, @cooperative, @current_user)
         import_result = import_service.import_members
+      when :batch
+        import_service = BatchImportService.new(spreadsheet, @group_remit, @cooperative, @current_user)
+        import_result = import_service.import_batches
+      when :lppi
+        import_service = LppiImportService.new(spreadsheet, @group_remit)
+        import_result = import_service.import_loan_batches
       end
 
       import_result
