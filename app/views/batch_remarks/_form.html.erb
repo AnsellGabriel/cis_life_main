@@ -12,7 +12,7 @@
     <%#= f.association :user %>
     <%= f.input :batch_status, input_html: { value: @batch_status }, as: :hidden %>
     <%= f.input :process_coverage, input_html: { value: @process_coverage }, as: :hidden %>
-    <%= f.input :batch_type, input_html: { value: @batch_type } %>
+    <%# <%= f.input :batch_type, input_html: { value: @batch_type } %> 
   </div>
   <div class="form-actions text-end">
     <% if params[:coop] || ( !params[:batch_remark].nil? && params[:batch_remark][:batch_status] == 'For reconsideration' ) %>
