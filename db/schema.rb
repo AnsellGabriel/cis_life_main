@@ -185,6 +185,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_09_05_063726) do
     t.bigint "user_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.string "batch_type", default: "Batch"
     t.string "remarkable_type", null: false
     t.bigint "remarkable_id", null: false
     t.index ["remarkable_type", "remarkable_id"], name: "index_batch_remarks_on_remarkable"
