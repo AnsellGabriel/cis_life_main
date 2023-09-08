@@ -527,7 +527,7 @@ class ProcessCoveragesController < ApplicationController
   #       format.html { redirect_to process_coverage_path(@process_coverage), notice: "Pending batch updated!" }
   #     end
   #   end
-  # end
+  end
 
   def deny_batch
     @batch = case params[:batch_type]
