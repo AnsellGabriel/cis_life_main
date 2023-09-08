@@ -361,7 +361,12 @@ class ProcessCoveragesController < ApplicationController
   end
 
   def set_premium_batch
-    @batch = Batch.find(params[:batch])
+    case params[:batch_type]
+    when "LoanInsurance::Batch"
+      @batch = LoanInsurance::Batch.find(params[:batch])
+    else
+      @batch = Batch.find(params[:batch])
+    end
   end
 
   def update_batch_prem
@@ -560,7 +565,6 @@ class ProcessCoveragesController < ApplicationController
   end
 
   def modal_remarks
-    
     @batch = case params[:batch_type]
     when "LoanInsurance::Batch" 
       LoanInsurance::Batch.find(params[:batch])

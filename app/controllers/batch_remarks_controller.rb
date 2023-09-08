@@ -64,13 +64,6 @@ class BatchRemarksController < ApplicationController
     
     # @batch = Batch.find_by(id: params[:batch_remark][:batch_id])
     # raise 'errors'
-    @batch = case params[:batch_type]
-    when "LoanInsurance::Batch"
-      LoanInsurance::Batch.find_by(id: params[:batch_remark][:batch_id])
-    else
-      Batch.find_by(id: params[:batch_remark][:batch_id])
-    end
-
     @process_coverage = ProcessCoverage.find_by(id: params[:batch_remark][:process_coverage])
 
     @process_coverage = ProcessCoverage.find_by(id: params[:batch_remark][:process_coverage])&.id
@@ -90,6 +83,7 @@ class BatchRemarksController < ApplicationController
 
         # end
         if @batch_remark.save
+                    
           # byebug
           # redirect_to @batch_remark, notice: "Batch remark was successfully created."
           if params[:batch_remark][:batch_status] == "Pending"
@@ -131,6 +125,7 @@ class BatchRemarksController < ApplicationController
                 process_coverage_id: @process_coverage, 
                 for_und: true) } 
             else
+                            
               format.html { redirect_to modal_remarks_process_coverage_path(@process_coverage, batch: @batch)}
             end
 
