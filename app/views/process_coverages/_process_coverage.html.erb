@@ -215,12 +215,12 @@
                           <%= process_premiums("Net Prem", (batch.premium - (batch.coop_sf_amount + batch.agent_sf_amount))) %>
                         </div>
                       </td>
-                      <td>
+                      <td id="<%= "batch_#{batch.id}"%>" >
                         <%= insurance_status(batch.insurance_status) %>
                       </td>
                       <td>
                         <% if batch.batch_dependents.present? %>
-                          <%= link_to "View Dependent(s)", show_all_group_remit_batch_dependents_path(@group_remit, batch, process_coverage_id: process_coverage.id ), data: { turbo_frame: "modal-xl" } %>
+                          <%= link_to "View Dependent(s)", show_all_group_remit_batch_dependents_path(@group_remit, batch, process_coverage_id: process_coverage.id ), data: { turbo_frame: "reg_form_modal_xl" } %>
                         <% else %>
                           <%= content_tag :p, "No Dependent(s).", class: "small" %>
                         <% end %>
@@ -272,7 +272,7 @@
                             <% end %>
                           <% end %>
                         <% else %>
-                          <%= link_to "View Remarks", modal_remarks_process_coverage_path(process_coverage, batch: batch), data: { turbo_frame: "modal" } %>
+                          <%= link_to "View Remarks", modal_remarks_process_coverage_path(process_coverage, batch: batch), data: { turbo_frame: "reg_form_modal" } %>
                         <% end %>
                       </td>
                     </tr>
