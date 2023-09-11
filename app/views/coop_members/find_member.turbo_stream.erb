@@ -1,26 +1,31 @@
 <%= turbo_stream.update "member details", partial: "loan_insurance/batches/member_info", locals: { member: @member.member } %>
 
-<% unless @previous_loans.empty? %>
-  <turbo-stream action="replace" target="member loans">
+<% if @previous_loans.empty? %>
+  <turbo-stream action="update" target="member loans">
     <template>
-      <h6>Previous Loans</h6>
-      <select class="form-select select optional" name="loan_insurance_batch[unused_loan_id]" id="loan_insurance_batch_unused_loan_id">
-        <% @previous_loans.each do |loan| %>
-          <option value="<%= loan.id.to_i %>">
-            <span><strong>Released: </strong></span>
-            <span><%= date_as_month_day_year(loan.date_release) %></span>
-            <span> | </span>
-            <span><strong>Maturity: </strong></span>
-            <span><%= date_as_month_day_year(loan.date_mature) %></span>
-            <span> | </span>
-            <span><strong>Loan Amount: </strong></span>
-            <span><%= to_curr(loan.loan_amount) %></span>
-            <span> | </span>
-            <span><strong>Premium: </strong></span>
-            <span><%= to_curr(loan.premium_due) %></span>
-          </option>
-        <% end %>
-      </select>  
+    </template>
+  </turbo-stream>
+<% else %>
+  <turbo-stream action="update" target="member loans">
+    <template>
+        <h6>Previous Loans</h6>
+        <select class="form-select select optional" name="loan_insurance_batch[unused_loan_id]" id="loan_insurance_batch_unused_loan_id">
+          <% @previous_loans.each do |loan| %>
+            <option value="<%= loan.id.to_i %>">
+              <span><strong>Released: </strong></span>
+              <span><%= date_as_month_day_year(loan.date_release) %></span>
+              <span> | </span>
+              <span><strong>Maturity: </strong></span>
+              <span><%= date_as_month_day_year(loan.date_mature) %></span>
+              <span> | </span>
+              <span><strong>Loan Amount: </strong></span>
+              <span><%= to_curr(loan.loan_amount) %></span>
+              <span> | </span>
+              <span><strong>Premium: </strong></span>
+              <span><%= to_curr(loan.premium_due) %></span>
+            </option>
+          <% end %>
+        </select>  
     </template>
   </turbo-stream>
 <% end %>

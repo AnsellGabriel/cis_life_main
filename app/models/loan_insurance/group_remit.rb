@@ -6,9 +6,9 @@ class LoanInsurance::GroupRemit < GroupRemit
   def terminate_unused_batches(current_user)
     unused_ids = loan_batches.pluck(:unused_loan_id).compact
     unused_batches = LoanInsurance::Batch.where(id: unused_ids)
-    unused_batches.update_all(status: :terminated)
+    unused_batches.update_all(insurance_status: :terminated)
     unused_batches.each do |batch|
-      batch.batch_remarks.create(remark: "Insurance terminated, tagged as unused by #{current_user.userable.to_s} on #{Date.today.strftime("%B %d, %Y")}", user: current_user, batch: batch, status: :terminated, batch_status: 'terminated')
+      batch.remarks.create(remark: "Insurance terminated, tagged as unused by #{current_user.userable.to_s} on #{Date.today.strftime("%B %d, %Y")}", user: current_user, remarkable: batch, status: :terminated, batch_status: 'terminated')
     end    
   end
 

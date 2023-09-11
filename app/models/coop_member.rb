@@ -48,6 +48,6 @@ class CoopMember < ApplicationRecord
     LoanInsurance::Batch.where(coop_member_id: self)
                         .where.not(status: :terminated)
                         .where.not(group_remit: group_remit)
-                        .where.not(unused_loan_id: unused_ids)
+                        .where.not(id: unused_ids)
   end
 end

@@ -14,6 +14,8 @@
     <span class="<%= badge('danger') %>">Denied</span>
 <% elsif batch.for_reconsideration? %>
     <span class="<%= badge('warning text-dark') %>">For reconsideration</span>
+<% elsif batch.terminated? %>
+    <span class="<%= badge('danger') %>">Terminated</span>
 <% end %>
 
 <% if batch.recent? %>
