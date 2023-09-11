@@ -1,6 +1,24 @@
 class LoanInsurance::BatchesController < ApplicationController
   before_action :set_batch, only: %i[ show edit update destroy ]
-  before_action :set_group_remit, only: %i[ new ]
+  before_action :set_group_remit, only: %i[ new import]
+
+  def import
+    import_service = CsvImportService.new(
+      :lppi, 
+      params[:file], 
+      @cooperative, 
+      @group_remit
+    )
+
+    import_result = import_service.import
+    
+    if import_result.is_a?(Hash)
+      notice = "#{import_result[:added_members_counter]} members successfully added. #{import_result[:denied_members_counter]} members denied."
+      redirect_to loan_insurance_group_remit_path(@group_remit), notice: notice
+    else
+      redirect_to loan_insurance_group_remit_path(@group_remit), notice: import_result
+    end
+  end
 
   # GET /loan_insurance/batches
   def index
@@ -14,7 +32,7 @@ class LoanInsurance::BatchesController < ApplicationController
 
   # GET /loan_insurance/batches/new
   def new
-    @batch = @group_remit.lppi_batches.build(
+    @batch = @group_remit.batches.build(
       terms: 6,
       loan_amount: 500_000,
       date_release: Date.today,

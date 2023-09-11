@@ -1,5 +1,5 @@
 <!-- Batch Import Modal -->
-<%= render "batch_import_modal" %>
+<%= render "loan_insurance/group_remits/batch_import_modal" %>
 
 <div class="<%= flex_justify_align('between', 'start') %> mb-3 gap-3">
   <div class="card" style="height: auto; width: 100%">
@@ -13,6 +13,11 @@
 
           <% if @gr_presenter.is_pending_or_renewal? %>
             <div class="d-flex gap-1">
+              <%= content_tag :button, "Batch Import", 
+              class: "btn btn-sm btn-outline-primary",
+              data: {bs_toggle: "modal",
+                bs_target: "#batchEnrollment"
+              }%> 
               <%= button_to 'Submit', submit_loan_insurance_group_remit_path(@group_remit), 
                 method: :get,
                 class: small_btn('primary'),

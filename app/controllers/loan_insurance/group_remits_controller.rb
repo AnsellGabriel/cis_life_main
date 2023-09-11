@@ -4,16 +4,6 @@ class LoanInsurance::GroupRemitsController < ApplicationController
   before_action :set_agreement, only: %i[index new create show]
   before_action :set_group_remit, only: %i[submit show destroy]
 
-  def import
-    import_service = CsvImportService.new(
-      :lppi, 
-      params[:file],
-      @group_remit
-    )
-
-    @import_result = import_service.import
-  end
-
   def index
     @group_remits = @agreement.group_remits.loan_remits
   end
