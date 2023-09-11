@@ -4,11 +4,13 @@
 		class: small_btn('primary') 
 	%>
 
-	<% if batch.batch_remarks.exists? %>
-		<%= link_to "Remarks", modal_remarks_group_remit_batch_path(group_remit, batch, batch_type: batch.class.name), data: { turbo_frame: "modal" }, class: small_btn('warning') %>
+	<% if batch.remarks.exists? %>
+		<%= link_to modal_remarks_loan_insurance_batch_path(batch), data: { turbo_frame: "reg_form_modal" }, class: small_btn('warning'), title: 'Remarks' do %>
+			<i class="bi bi-card-list"></i>
+		<% end %>
 	<% end %>
 
-	<% if batch.batch_health_decs.exists? %>
+	<% if batch.health_declaration.exists? %>
 		<%= link_to health_dec_group_remit_batch_path(group_remit, batch, for_und: true, batch_type: batch.class.name), 
 			class: small_btn('primary'), 
 			title: 'Health Declaration Form',

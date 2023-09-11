@@ -30,6 +30,12 @@ class LoanInsurance::BatchesController < ApplicationController
     @member = @batch.member_details
   end
 
+  def modal_remarks
+    @batch = LoanInsurance::Batch.find(params[:id])
+    @group_remit = @batch.group_remit
+    @agreement = @group_remit.agreement
+  end
+
   # GET /loan_insurance/batches/new
   def new
     @batch = @group_remit.batches.build(

@@ -129,6 +129,7 @@ Rails.application.routes.draw do
     resources :loans
     resources :details
     resources :batches do
+      get :modal_remarks, on: :member
       collection do
         post :import
       end
