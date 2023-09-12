@@ -20,7 +20,7 @@
               }%> 
               <%= button_to 'Submit', submit_loan_insurance_group_remit_path(@group_remit), 
                 method: :get,
-                class: small_btn('primary'),
+                class: small_btn('outline-primary'),
                 data: {turbo_confirm: 'Submit group remit?' }
               %>
               <% if @group_remit.denied_members.present? %>
@@ -31,7 +31,7 @@
               <%= button_to "Delete", loan_insurance_group_remit_path(@group_remit), 
                 method: :delete,
                 data: { turbo_confirm: 'Delete group remit?'},
-                class: small_btn('danger') 
+                class: small_btn('outline-danger') 
               %>
             <% end %>
           <% end %>
@@ -111,6 +111,7 @@
         <th class="text-center" scope="col">Premium</th>
         <th class="text-center" scope="col">Unused Premium</th>
         <th class="text-center" scope="col">Premium Due</th>
+        <th class="text-center" scope="col">Excess</th>
         <th class="text-center" scope="col">Actions</th>
 
       </tr>

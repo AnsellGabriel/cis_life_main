@@ -1,0 +1,49 @@
+<div class="<%= flex_justify_align('', 'center') %> gap-3">
+  <%= link_to :back, class: "#{small_btn('secondary')} mb-3", title: 'Back' do %>
+    <i class="bi bi-arrow-left"></i>
+  <% end %>
+  <%== pagy_bootstrap_nav(@pagy) %>
+</div>
+
+<table class="table table-striped table-hover">
+  <thead>
+    <tr class="table-dark">
+      <th scope="col">ID</th>
+      <th scope="col" class="centered">Date Created</th>
+      <th scope="col" class="centered">Type</th>
+      <th scope="col" class="centered">Amount</th>
+      <th scope="col" class="centered">Effectivity</th>
+      <th scope="col" class="centered">Expiry</th>
+      <th scope="col" class="centered">Terms</th>
+      <th scope="col" class="centered">Release</th>
+      <th scope="col" class="centered">Maturity</th>
+      <th scope="col" class="centered">Premium</th>
+      <th scope="col" class="centered">Unused</th>
+      <th scope="col" class="centered">Premium Due</th>
+      <th scope="col" class="centered">Excess</th>
+      <th scope="col" class="centered">Status</th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @loans.each do |loan|  %>
+      <% loan_presenter = BatchPresenter.new(loan) %>
+      <tr>
+        <th scope="row"><%= loan.id %></th>
+        <td class="centered"><%= month_day_year(loan.created_at) %></td>
+        <td class="centered"><%= loan.loan %></td>
+        <td style="text-align: center; vertical-align: middle;"><%= to_curr(loan.loan_amount) %></td>
+        <td class="centered"><%= month_day_year(loan.effectivity_date) %></td>
+        <td class="centered"><%= month_day_year(loan.expiry_date) %></td>
+        <td class="centered"><%= loan.terms %></td>
+        <td class="centered"><%= month_day_year(loan.date_release) %></td>
+        <td class="centered"><%= month_day_year(loan.date_mature) %></td>
+        <td class="centered"><%= to_curr(loan.premium) %></td>
+        <td class="centered"><%= to_curr(loan.unused) %></td>
+        <td class="centered"><%= to_curr(loan.premium_due) %></td>
+        <td class="centered"><%= to_curr(loan.excess) %></td>
+        <td class="centered <%= loan_presenter.status_color %>"><%= loan.insurance_status.titleize %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+

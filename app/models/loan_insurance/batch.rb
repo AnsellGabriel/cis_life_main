@@ -65,6 +65,11 @@ class LoanInsurance::Batch < Batch
       self.premium_due = premium
     end
 
+    if self.premium_due < 0 
+      self.excess = self.premium_due.abs
+      self.premium_due = 0
+    end
+
     self.agent_sf_amount = calculate_service_fee(agreement.agent_sf, premium_due)
     self.coop_sf_amount = calculate_service_fee(agreement.coop_sf, premium_due)
   end

@@ -8,14 +8,6 @@ class CoopMember < ApplicationRecord
     .distinct.pluck(:id)
   }
 
-  # scope :active_loans, -> (group_remit) {
-  #   unused_ids = group_remit.loan_batches.pluck(:unused_loan_id).compact
-  #   LoanInsurance::Batch.where(coop_member_id: self)
-  #                       .where.not(status: :terminated)
-  #                       .where.not(group_remit: group_remit)
-  #                       .where.not(unused_loan_id: unused_ids)
-  # }
-
   delegate :age, to: :member
 
   belongs_to :cooperative
@@ -49,5 +41,9 @@ class CoopMember < ApplicationRecord
                         .where.not(status: :terminated)
                         .where.not(group_remit: group_remit)
                         .where.not(id: unused_ids)
+  end
+
+  def loans
+    LoanInsurance::Batch.where(coop_member_id: self).order(created_at: :desc)
   end
 end

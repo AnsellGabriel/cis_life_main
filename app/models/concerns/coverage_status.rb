@@ -7,7 +7,7 @@ module CoverageStatus
       today = Date.today
   
       month_difference = ((today.year * 12 + today.month) - (coverage_expiry.year * 12 + coverage_expiry.month)) + (coverage_expiry.day > today.day ? 1 : 0)
-      byebug
+      
       if month_difference > 24
         batch.status = :reinstated
         existing_coverages.update!(

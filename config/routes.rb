@@ -138,6 +138,8 @@ Rails.application.routes.draw do
     resources :group_remits do
       get :submit, on: :member
     end
+
+    resources :history, only: [:index]
   end
 
   # get 'loan_insurance', to: 'loan_insurance#index'
