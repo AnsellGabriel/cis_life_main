@@ -30,6 +30,14 @@ class LoanInsurance::BatchesController < ApplicationController
     @member = @batch.member_details
   end
 
+  def find_loan
+    @batch = LoanInsurance::Batch.find(params[:id])
+
+    respond_to do |format|
+      format.turbo_stream
+    end
+  end
+
   def modal_remarks
     @batch = LoanInsurance::Batch.find(params[:id])
     @group_remit = @batch.group_remit

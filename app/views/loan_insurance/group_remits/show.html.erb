@@ -24,7 +24,7 @@
                 data: {turbo_confirm: 'Submit group remit?' }
               %>
               <% if @group_remit.denied_members.present? %>
-                <%= link_to 'Denied members', group_remit_denied_members_path(@group_remit), class: small_btn('outline-secondary') %>
+                <%= link_to 'Denied members', group_remit_denied_members_path(@group_remit), class: small_btn('outline-primary') %>
               <% end %>
             </div>
             <% if @gr_presenter.is_pending_or_renewal? %>
@@ -38,20 +38,45 @@
 
         </div>
       </div>
-      <div class="d-flex flex-column " style="height: auto; width: 100%">
-        <div class="<%= flex_justify_align('between') %> ">
-          <div style="width: 100%">
-
-            <% if @gr_presenter.is_for_payment? %>
-              <%= render 'payment' %>
-            <% end %>
-
-            <% if @gr_presenter.is_pending_or_renewal? %>
+      <div class="<%= flex_justify_align('between') %> ">
+        <% if @gr_presenter.is_pending_or_renewal? %>
+          <div class="card d-flex" style="width: 45%; margin: 0 auto 0 auto">
+            <div class="card-header" style="width: 100%;">
+              <div class="text-center">
+                <%= content_tag :span, 'LPPI Enrollment Form ', class: 'text-primary' %>
+              </div>
+            </div>
+            <div class="card-body" >
               <%= render "loan_insurance/batches/form", batch: @batch, coop_members: @coop_members, group_remit_id: @group_remit.id %>
-            <% end%>
-
+            </div>
           </div>
-        </div>
+          <div class="<%= flex_justify_align('between','start',true) %>"  style="width: 45%; margin: 0 auto 0 auto">
+            <%= turbo_frame_tag 'member details', style: 'width: 100%; height: 45%;' do %>
+              <div class="card mb-0 <%= flex_justify_align('center', 'start') %>" style="height: 100%;">
+                <div class="card-header" style="width: 100%;">
+                  <div class="row text-center" style="width: 100%">
+                    <%= content_tag :span, 'Member Details ', class: 'col-md-12 text-primary' %>
+                  </div>
+                </div>
+                <div class="card-body" style="width: 100%;">
+                </div>
+              </div>
+            <% end %>
+            <%= turbo_frame_tag 'loan details', style: 'width: 100%; height: 50%;' do %>
+              <div class="card mb-0 <%= flex_justify_align('center', 'start') %>" style="height: 100%;">
+                <div class="card-header" style="width: 100%;">
+                  <div class="text-center">
+                    <%= content_tag :span, 'Loan Details ', class: 'text-primary' %>
+                  </div>
+                </div>
+                <div class="card-body" style="width: 100%;">
+                  <div class="">
+                  </div>
+                </div>
+              </div>
+            <% end %>
+          </div>
+        <% end%>
       </div>
     </div>
   </div> 

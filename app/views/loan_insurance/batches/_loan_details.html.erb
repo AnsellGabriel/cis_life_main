@@ -1,0 +1,51 @@
+<div class="card mb-0 <%= flex_justify_align('center', 'start') %>" style="height: 100%;">
+  <div class="card-header" style="width: 100%;">
+    <div class="text-center">
+      <%= content_tag :span, 'Loan Details ', class: 'text-primary' %>
+    </div>
+  </div>
+  <div class="card-body <%= flex_justify_align('center') %>" style="width: 100%;">
+    <div class="">
+      <div class="row mb-1 <%= flex_justify_align('around') %>">
+        <div class="col-md-6 sm-secondary-text text-secondary <%= flex_justify_align('','', true)%>">
+          <%= content_tag :span, "Loan Type:"%>
+          <%= content_tag :span, batch.loan, class: 'ps-2' %>
+        </div>
+        <div class="col-md-6 sm-secondary-text text-secondary <%= flex_justify_align('','', true)%>">
+          <%= content_tag :span, "Amount:"%>
+          <%= content_tag :span, to_curr(batch.loan_amount), class: 'ps-2' %>
+        </div>
+      </div>
+      <div class="row mb-1 <%= flex_justify_align('around') %>">
+        <div class="col-md-6 sm-secondary-text text-secondary <%= flex_justify_align('','', true)%>">
+          <%= content_tag :span, "Terms:" %>
+          <%= content_tag :span, batch.terms, class: 'ps-2' %>
+        </div>
+        <div class="col-md-6 sm-secondary-text text-secondary <%= flex_justify_align('','', true)%>">
+          <%= content_tag :span, "Premium Due:"%>
+          <%= content_tag :span, to_curr(batch.premium_due), class: 'ps-2' %>
+        </div>
+      </div>
+      <div class="row mb-1 <%= flex_justify_align('around') %>" >
+        <div class="col-md-6 sm-secondary-text text-secondary <%= flex_justify_align('','', true)%>">
+          <%= content_tag :span, "Effectivity:" %>
+          <%= content_tag :span, to_shortdate(batch.effectivity_date), class: 'ps-2' %>
+        </div>
+        <div class="col-md-6 sm-secondary-text text-secondary <%= flex_justify_align('','', true)%>">
+          <%= content_tag :span, "Expiry:"%>
+          <%= content_tag :span, to_shortdate(batch.expiry_date), class: 'ps-2' %>
+        </div>
+      </div>
+      <div class="row <%= flex_justify_align('around') %>">
+        <div class="col-md-6 sm-secondary-text text-secondary <%= flex_justify_align('','', true)%>">
+          <%= content_tag :span, "Release:" %>
+          <%= content_tag :span, to_shortdate(batch.date_release), class: 'ps-2' %>
+        </div>
+        <div class="col-md-6 sm-secondary-text text-secondary <%= flex_justify_align('','', true)%>">
+          <%= content_tag :span, "Maturity:"%>
+          <%= content_tag :span, to_shortdate(batch.date_mature), class: 'ps-2' %>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
