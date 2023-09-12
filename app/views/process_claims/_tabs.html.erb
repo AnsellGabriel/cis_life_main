@@ -6,14 +6,22 @@
     <li class="nav-item" role="presentation">
       <button class="nav-link" data-bs-toggle="tab" id="coverage-tab" type="button" data-bs-target="#coverage" role="tab" aria-controls="coverage">Coverage</button>
     </li>
-    <li class="nav-item" role="presentation">
-      <button class="nav-link" data-bs-toggle="tab" id="confine-tab" type="button" data-bs-target="#confine" role="tab" aria-controls="confine">Confinement</button>
-    </li>
+    <% if @process_claim.claim_type_id == 2 %>
+      <li class="nav-item" role="presentation">
+        <button class="nav-link" data-bs-toggle="tab" id="confine-tab" type="button" data-bs-target="#confine" role="tab" aria-controls="confine">Confinement</button>
+      </li>
+    <% end %>
     <li class="nav-item" role="presentation">
       <button class="nav-link" data-bs-toggle="tab" id="beneficiary-tab" type="button" data-bs-target="#beneficiary" role="tab" aria-controls="contact">Beneficiary & Distribution</button>
     </li>
+    <li class="nav-item" role="presentation">
+      <button class="nav-link" data-bs-toggle="tab" id="beneficiary-tab" type="button" data-bs-target="#message" role="tab" aria-controls="message">Coop Message
+        <span class="badge rounded-pill text-bg-warning"><%= @process_claim.claim_remarks.where(coop: 1).count %></span>
+      </button>
+    </li>
   </ul>
   <div class="tab-content container mt-3" id="myTabControl">
+    
     <div class="tab-pane fade show active" role="tabpanel" id="home" aria-labelledby="home-tab">
       <%= render 'show_cause' %>
     </div>
@@ -66,9 +74,9 @@
         </div> %>
     <%#= render 'claim_coverages/show_coverage' %>
     <%# </div> %>
-    <div class="tab-pane fade show" role="tabpanel" id="contact" aria-labelledby="contact-tab">
-      <h3>Contact us</h3>
-      <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Possimus nesciunt alias numquam ut officia laudantium velit minima, quos labore, obcaecati laborum voluptas nostrum excepturi ipsam sed deserunt. Amet, aspernatur, magni?</p>
+    <div class="tab-pane fade show" role="tabpanel" id="message" aria-labelledby="home-tab">
+      <%= link_to '<i class="bi bi-chat-left-text"></i> Message'.html_safe, new_claim_remark_path(v: @process_claim, c: 1), class: "btn btn-primary btn-lg", data: { turbo_frame: "remote_modal" } %>
+      <%= render 'claim_remarks/show_coop_remark' %>
     </div>
   </div>
 </div>

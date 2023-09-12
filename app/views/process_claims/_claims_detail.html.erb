@@ -2,10 +2,10 @@
       <h5 class="card-header">Member Details</h5>
       <div class="card-body">
         <dl class="row">
+          <dt class="col-sm-4">Route:</dt>
+          <dd class="col-sm-8"><%= @process_claim.claim_route.humanize.titleize %></dd>
           <dt class="col-sm-4">Insurance:</dt>
           <dd class="col-sm-8"><%= @process_claim.agreement.plan %></dd>
-          <dt class="col-sm-4">Type</dt>
-          <dd class="col-sm-8"><%= @process_claim.claimable_type %></dd>
           <dt class="col-sm-4">Name:</dt>
           <dd class="col-sm-8 text-primary"><%= @process_claim.claimable.get_fullname %></dd>
           <dt class="col-sm-4">Birthdate</dt>

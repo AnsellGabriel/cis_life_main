@@ -1,4 +1,6 @@
-<%= render 'action_button' %>
+<div class="mb-3">
+  <%= render 'action_button' %>
+</div>
 <div class="row">
     <div class="col-md-6">
         <%= render 'claims_detail' %>
@@ -19,18 +21,7 @@
         </div>
     </div>
     <div class="col-md-6">
-      <div class="card">
-        <div class="card-header">
-          <dl class="row">
-          <dt class="col-sm-4">Date filed</dt>
-          <dd class="col-sm-8"><%= to_shortdate(@process_claim.date_file) %></dd>
-          <dt class="col-sm-4">Cooperative</dt>
-          <dd class="col-sm-8"><%= @process_claim.cooperative %></dd>
-          <dt class="col-sm-4">Authority Level</dt>
-          <dd class="col-sm-8"></dd>
-          </dl>
-        </div>
-      </div>
+      <%= render 'show_coop' %>
       <div class="card">
         <div class="card-body">
           <%#= link_to "Evaluate", evaluate_process_claim_path(@process_claim.id), class: "btn btn-warning" %>
@@ -53,7 +44,7 @@
           <div class="row">
             <h4 class="col-md-6 text-primary">Recommendation</h4>
             <div class="col-md-6 text-end">
-              <%= link_to '<i class="bi bi-chat-left-text"></i> Add Remark'.html_safe, new_claim_remark_path(v: @process_claim, s: ""), class: "btn btn-primary mb-3", data: { turbo_frame: "remote_modal" } %>
+              <%= link_to '<i class="bi bi-chat-right-quote"></i> Add Remark'.html_safe, new_claim_remark_path(v: @process_claim, c: 0), class: "btn btn-primary mb-3", data: { turbo_frame: "remote_modal" } %>
             </div>
           </div>
           <%= render 'claim_remarks/show_remark' %>

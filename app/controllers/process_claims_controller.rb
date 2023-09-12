@@ -1,5 +1,5 @@
 class ProcessClaimsController < ApplicationController
-  before_action :set_process_claim, only: %i[ show edit update destroy show_coop claim_route claims_file claim_process ]
+  before_action :set_process_claim, only: %i[ show edit update destroy show_coop claim_route claims_file claim_process update_status ]
 
   # GET /process_claims
   def index
@@ -125,7 +125,7 @@ class ProcessClaimsController < ApplicationController
 
       respond_to do |format|
         if @process_claim.save!
-          pt = ProcessTrack.create(route_id: 2, user_id: current_user, trackable: @process_claim)
+          pt = ProcessTrack.create(route_id: 2, user: current_user, trackable: @process_claim)
           format.html { redirect_to member_agreements_coop_member_path(coop_member), notice: "Claims submitted" }
         end
       end
@@ -144,12 +144,17 @@ class ProcessClaimsController < ApplicationController
     @claim_track.user_id = current_user.id
     respond_to do |format|
       if @claim_track.save
-
         if @claim_track.route_id == 2
           # raise "error"
-          @process_claim.update(claim_route: @claim_track.route_id, date_file: Time.now, claim_filed: 0, processing: 0, approval: 0, payment: 0)
           import_product_benefit
+          @process_claim.update!(claim_route: @claim_track.route_id, status: :process, claim_filed: 1, processing: 0, approval: 0, payment: 0)
           format.html { redirect_to claims_file_process_claim_path(@process_claim), notice: "#{@process_claim.claim_route.to_s.humanize.titleize} by #{current_user}"  }
+        elsif @claim_track.route_id == 3
+          @process_claim.update!(claim_route: @claim_track.route_id, processing: 1)
+          format.html { redirect_to show_coop_process_claim_path(@process_claim), notice: "#{@process_claim.claim_route.to_s.humanize.titleize} by #{current_user}"  }
+        elsif @claim_track.route_id == 8 
+          @process_claim.update!(claim_route: @claim_track.route_id, status: :approved, approval: 1)
+          format.html { redirect_to show_coop_process_claim_path(@process_claim), notice: "#{@process_claim.claim_route.to_s.humanize.titleize} by #{current_user}"  }
         else
           @process_claim.update_attribute(:claim_route, @claim_track.route_id)
           format.html { redirect_to show_coop_process_claim_path(@process_claim), notice: "#{@process_claim.claim_route.to_s.humanize.titleize} by #{current_user}"  }
@@ -163,6 +168,7 @@ class ProcessClaimsController < ApplicationController
     end
   end
 
+  
   def import_product_benefit 
     @product_benefit = ProductBenefit.where(agreement_benefit: @process_claim.agreement_benefit)
     @product_benefit.each do | pb |
@@ -178,6 +184,7 @@ class ProcessClaimsController < ApplicationController
   end
   # PATCH/PUT /process_claims/1
   def update
+    # raise "error"
     if @process_claim.update(process_claim_params)
       if @process_claim.claim_filed? 
         redirect_to index_show_process_claims_path(p: 2), notice: "Process claim was successfully updated."
@@ -209,7 +216,7 @@ class ProcessClaimsController < ApplicationController
         claim_benefits_param: [:id, :benefit_id, :amount, :status],
         claim_cause_attributes: [:id, :acd, :ucd, :osccd, :icd],
         claim_coverage_attributes: [:id, :amount_benefit, :coverage_type, :coverageale],
-        claim_remark_attributes: [:id, :user_id, :status, :remark],
+        claim_remark_attributes: [:id, :user_id, :status, :remark, :coop],
         claim_attachment_attributes: [:id, :claim_type_id, :doc])
     end
 

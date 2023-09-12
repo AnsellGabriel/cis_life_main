@@ -1,7 +1,7 @@
 <%= turbo_frame_tag "remark" do %>
   <table class="table table-borderless table-hover">
     <tbody>
-      <% @process_claim.claim_remarks.where(coop: 0).order(created_at: :desc).each do |claim_remark| %>
+      <% @process_claim.claim_remarks.where(coop: 1).order(created_at: :desc).each do |claim_remark| %>
         <tr>
           <td>
             <figure>

@@ -29,6 +29,8 @@
           <td>
             <% if process_claim.submitted? || process_claim.claim_filed? %>
               <%= link_to "View", show_coop_process_claim_path(process_claim), class: "btn btn-warning btn-sm"  %>
+              <%= link_to "Edit", claims_file_process_claim_path(process_claim), class: "btn btn-warning btn-sm" if process_claim.claim_filed? %>
+
             <% else %>
               <%= link_to "View", claim_process_process_claim_path(process_claim), class: "btn btn-warning btn-sm"  %>
             <% end %>

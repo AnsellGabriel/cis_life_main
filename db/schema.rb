@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_08_29_063231) do
+ActiveRecord::Schema[7.0].define(version: 2023_09_05_033752) do
   create_table "action_text_rich_texts", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.string "name", null: false
     t.text "body", size: :long
@@ -321,6 +321,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_08_29_063231) do
     t.text "remark"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.boolean "coop"
     t.index ["process_claim_id"], name: "index_claim_remarks_on_process_claim_id"
     t.index ["user_id"], name: "index_claim_remarks_on_user_id"
   end
@@ -808,6 +809,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_08_29_063231) do
     t.boolean "approval"
     t.boolean "payment"
     t.bigint "claim_type_id"
+    t.integer "status"
     t.index ["agreement_benefit_id"], name: "index_process_claims_on_agreement_benefit_id"
     t.index ["agreement_id"], name: "index_process_claims_on_agreement_id"
     t.index ["cause_id"], name: "index_process_claims_on_cause_id"
