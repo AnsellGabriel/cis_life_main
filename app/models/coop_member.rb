@@ -38,7 +38,7 @@ class CoopMember < ApplicationRecord
   def active_loans(group_remit)
     unused_ids = group_remit.loan_batches.pluck(:unused_loan_id).compact
     LoanInsurance::Batch.where(coop_member_id: self)
-                        .where(status: :approved)
+                        .where(insurance_status: :approved)
                         .where.not(group_remit: group_remit)
                         .where.not(id: unused_ids)
   end

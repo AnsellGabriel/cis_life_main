@@ -1,15 +1,13 @@
-<div
-  data-controller="notification"
-  data-notification-delay-value="10000"
-  class="transition transform duration-1000 hidden"
-  data-transition-enter-from="opacity-0 translate-x-6"
-  data-transition-enter-to="opacity-100 translate-x-0"
-  data-transition-leave-from="opacity-100 translate-x-0"
-  data-transition-leave-to="opacity-0 translate-x-6"
->
-  <% flash.each do |flash_type, message| %>
-    <div class="alert alert-<%= flash_type == 'notice' ? 'success' : 'danger' %> text-center ps-6 pe-6">
-      <%= message %>
+<div class="position-fixed top-0 end-0">
+  <div class="toast" role="alert" aria-live="assertive" aria-atomic="true">
+    <div class="toast-header">
+      <strong class="me-auto">Notice</strong>
+        <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+      </div>
+      <div class="toast-body">
+        <% flash.each do |flash_type, message| %>
+        <%= message %>  
+        <% end %>
     </div>
-  <% end %>
+  </div>
 </div>

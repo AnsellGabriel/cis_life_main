@@ -46,12 +46,12 @@ class BatchPresenter
 	end
 
 	def life_benefit
-		if is_term_insurance? 
-			product_benefits = @batch.get_term_insurance_product_benefit 
-			life_benefit = product_benefits.select {|pb| pb.benefit.acronym == "LIFE" } 
-		else 
-			life_benefit = @batch.agreement_benefit.product_benefits.select {|pb| pb.benefit.acronym == "LIFE" || pb.benefit.acronym == "LI" } 
-		end 
+		if is_term_insurance?
+			product_benefits = @batch.get_term_insurance_product_benefit
+			life_benefit = product_benefits.select {|pb| pb.benefit.acronym == "LIFE" }
+		else
+			life_benefit = @batch.agreement_benefit.product_benefits.select {|pb| pb.benefit.acronym == "LIFE" || pb.benefit.acronym == "LI" }
+		end
 	end
 
 	def status_color
@@ -62,5 +62,9 @@ class BatchPresenter
 		when 'denied' then 'text-danger'
 		when 'terminated' then 'text-danger'
 		end
+	end
+
+	def require_health_dec?
+		(@batch.recent? || @batch.for_reconsideration? || @batch.reinstated?) && @batch.batch_health_decs.blank? && @batch.loan_amount > @agreement.nel
 	end
 end

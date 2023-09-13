@@ -2,7 +2,7 @@ class LoanInsurance::Batch < Batch
   include CoverageStatus
 
   self.table_name = "loan_insurance_batches"
-  
+
   # skip agreement_benefit validation
   validate :agreement_benefit, unless: :skip_validation
   validates_presence_of :date_release, :date_mature, :coop_member_id, :insurance_status, :loan_amount, :effectivity_date, :expiry_date
@@ -39,7 +39,7 @@ class LoanInsurance::Batch < Batch
   private
 
   def skip_validation
-    true 
+    true
   end
 
   def set_terms_and_age
@@ -65,7 +65,7 @@ class LoanInsurance::Batch < Batch
       self.premium_due = premium
     end
 
-    if self.premium_due < 0 
+    if self.premium_due < 0
       self.excess = self.premium_due.abs
       self.premium_due = 0
     end

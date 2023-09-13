@@ -9,17 +9,17 @@
 <% elsif batch.pending? %>
     <span class="<%= badge('warning') %> text-dark">Pending</span>
 <% elsif batch.approved? %>
-    <span class="<%= badge('success') %>">Approved</span>
+    <span class="<%= badge('primary') %>">Approved</span>
 <% elsif batch.denied? %>
     <span class="<%= badge('danger') %>">Denied</span>
 <% elsif batch.for_reconsideration? %>
-    <span class="<%= badge('warning text-dark') %>">For reconsideration</span>
+    <span class="<%= badge('warning') %> text-dark">For reconsideration</span>
 <% elsif batch.terminated? %>
     <span class="<%= badge('danger') %>">Terminated</span>
 <% end %>
 
 <% if batch.recent? %>
-    <span class="<%= badge('success') %>">New</span>
+    <span class="<%= badge('primary') %>">New</span>
 <% else %>
     <span class="<%= badge('warning') %> text-dark"><%= batch.status.to_s.titleize %></span>
 <% end %>

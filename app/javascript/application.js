@@ -15,11 +15,17 @@ Turbo.session.drive = true
 window.bootstrap = bootstrap
 
 document.addEventListener("turbo:load", function () {
-  // This code is copied from Bootstrap's docs. See link below.
+  // initialize bs tooltip
   var tooltipTriggerList = [].slice.call(
     document.querySelectorAll('[data-bs-toggle="tooltip"]')
   );
   var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
     return new bootstrap.Tooltip(tooltipTriggerEl);
   });
+
+  // initialize bs toast
+  var toastElList = [].slice.call(document.querySelectorAll('.toast'))
+  var toastList = toastElList.map(function (toastEl) {
+    return new bootstrap.Toast(toastEl, option)
+  })
 });
