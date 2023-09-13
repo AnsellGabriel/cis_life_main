@@ -1,10 +1,10 @@
-<div class="card pt-4" style="max-height: 300px; width: 100%">
+<div class="card pt-4" style="max-height: 300px; width: 350px; margin-left: auto">
   <div class="card-body">
       <div class="d-flex gap-3">
         <div style="width: 100%">
           <div class="text-secondary d-flex justify-content-between">
             <%= content_tag :span, "Gross Premium", style: "font-size: .8rem" %>
-            <%= content_tag :span, "#{to_curr(group_remit.total_principal_premium)}", style: "color: var(--bs-blue); font-size: .8rem"%>
+            <%= content_tag :span, "#{to_curr(group_remit.total_premium_due)}", style: "color: var(--bs-blue); font-size: .8rem"%>
           </div>
           <hr>
         </div>

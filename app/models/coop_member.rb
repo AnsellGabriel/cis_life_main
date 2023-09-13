@@ -22,7 +22,7 @@ class CoopMember < ApplicationRecord
     "#{full_name.titleize}"
   end
 
-  def get_fullname 
+  def get_fullname
     # first_letters = member.middle_name.split.map { |word| word[0] }
     member.last_name.titleize + ', ' + member.first_name.titleize + ' ' + member.middle_name.chr + '. ' + member.suffix
   end
@@ -30,7 +30,7 @@ class CoopMember < ApplicationRecord
   def set_full_name
     self.full_name = "#{member.last_name}, #{member.first_name} #{member.middle_name}"
   end
-  
+
   def birthdate
     self.member.birth_date
   end
@@ -38,7 +38,7 @@ class CoopMember < ApplicationRecord
   def active_loans(group_remit)
     unused_ids = group_remit.loan_batches.pluck(:unused_loan_id).compact
     LoanInsurance::Batch.where(coop_member_id: self)
-                        .where.not(status: :terminated)
+                        .where(status: :approved)
                         .where.not(group_remit: group_remit)
                         .where.not(id: unused_ids)
   end

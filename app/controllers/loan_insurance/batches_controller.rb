@@ -4,14 +4,14 @@ class LoanInsurance::BatchesController < ApplicationController
 
   def import
     import_service = CsvImportService.new(
-      :lppi, 
-      params[:file], 
-      @cooperative, 
+      :lppi,
+      params[:file],
+      @cooperative,
       @group_remit
     )
 
     import_result = import_service.import
-    
+
     if import_result.is_a?(Hash)
       notice = "#{import_result[:added_members_counter]} members successfully added. #{import_result[:denied_members_counter]} members denied."
       redirect_to loan_insurance_group_remit_path(@group_remit), notice: notice
@@ -67,10 +67,11 @@ class LoanInsurance::BatchesController < ApplicationController
     @coop_members = @cooperative.coop_members
     @group_remit_id = params[:loan_insurance_batch][:group_remit_id]
     agreement = GroupRemit.find(@group_remit_id).agreement
-    # params[:loan_insurance_batch][:unused_loan_id] = params[:loan_insurance_batch][:unused_loan_id].to_i if params[:loan_insurance_batch][:unused_loan_id].present? 
+    # params[:loan_insurance_batch][:unused_loan_id] = params[:loan_insurance_batch][:unused_loan_id].to_i if params[:loan_insurance_batch][:unused_loan_id].present?
+    params[:loan_insurance_batch][:loan_amount] = params[:loan_insurance_batch][:loan_amount].gsub(',', '').to_d
     @batch = LoanInsurance::Batch.new(batch_params)
     result = @batch.process_batch
-    
+
     respond_to do |format|
       if @batch.save
         format.html { redirect_to loan_insurance_group_remit_path(params[:loan_insurance_batch][:group_remit_id]), notice: "Member added" }

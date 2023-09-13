@@ -1,0 +1,44 @@
+require: rubocop-rails
+
+AllCops:
+  DisabledByDefault: true
+  TargetRubyVersion: 3.1.2
+  Exclude:
+    - 'db/**/*'
+# some basic configurations
+Layout/CommentIndentation:
+  Enabled: true
+
+Layout/ElseAlignment:
+  Enabled: true
+
+Layout/EndAlignment:
+  Enabled: true
+  EnforcedStyleAlignWith: keyword
+  AutoCorrect: true
+
+Layout/IndentationConsistency:
+  Enabled: true
+  EnforcedStyle: normal
+
+Layout/IndentationWidth:
+  Enabled: true
+
+Layout/LeadingCommentSpace:
+  Enabled: true
+
+Style/StringLiterals:
+  Enabled: true
+  EnforcedStyle: double_quotes
+
+Layout/IndentationStyle:
+  Enabled: true
+
+Layout/TrailingEmptyLines:
+  Enabled: true
+
+Layout/TrailingWhitespace:
+  Enabled: true
+
+Layout/LineLength:
+  Max: 200

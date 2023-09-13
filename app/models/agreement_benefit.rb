@@ -18,8 +18,8 @@ class AgreementBenefit < ApplicationRecord
   # belongs_to :options
 
 
-  enum insured_type: { 
-    principal: 1, 
+  enum insured_type: {
+    principal: 1,
     dependent_spouse: 2,
     dependent_parent: 3,
     dependent_children: 4,
@@ -29,7 +29,7 @@ class AgreementBenefit < ApplicationRecord
     ranking_junior_officer: 8,
     ranking_rank_and_file: 9
   }
-  
+
   def upcase_name
     self.name = self.name.upcase
   end

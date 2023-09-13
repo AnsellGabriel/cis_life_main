@@ -72,7 +72,7 @@ class LppiImportService
     if missing_headers.any?
       return "The following headers are missing in #{sheet_name}: #{missing_headers.join(', ')}"
     end
-  
+
     nil
   end
 
@@ -104,8 +104,8 @@ class LppiImportService
     age = member.instance_of?(MemberDependent) ? member.age : member.age(effectivity)
 
     denied_member = DeniedMember.find_or_create_by!(
-      name: "#{member.first_name} #{member.middle_name} #{member.last_name}", 
-      age: member.birth_date.nil? ? 0 : age, 
+      name: "#{member.first_name} #{member.middle_name} #{member.last_name}",
+      age: member.birth_date.nil? ? 0 : age,
       group_remit: @group_remit
     )
     denied_member.reason = reason
@@ -139,7 +139,13 @@ class LppiImportService
                   loan_amount: batch_hash[:loan_amount],
                   loan: loan_type
                 )
-    
+
+    previous_loans = coop_member.active_loans(@group_remit).order(created_at: :desc)
+
+    if previous_loans.any?
+      new_batch.unused_loan_id = previous_loans.first.id
+    end
+
     result = new_batch.process_batch
 
     if loan_type.nil?

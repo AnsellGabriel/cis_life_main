@@ -1,22 +1,26 @@
-<div class="card mb-0 <%= flex_justify_align('center', 'start') %>" style="height: 100%">
+<div class="card mb-0 <%= flex_justify_align('center', 'start') %>" style="height: 100%; width: 400px">
   <div class="card-header" style="width: 100%;">
     <div class="row text-center" style="width: 100%">
       <%= content_tag :span, 'Member Details ', class: 'col-md-12 text-primary' %>
     </div>
   </div>
   <div class="card-body <%= flex_justify_align('center', 'center') %>" style="width: 100%;">
-    <div class="">
-      <div class="row">
-        <%= content_tag :span, "Name: #{member}", class: 'sm-secondary-text text-secondary' %>
+    <div class="" style="width: 100%">
+      <div class="row ps-5">
+        <%= content_tag :span, "Name", class: 'sm-secondary-text col-md-3 text-primary' %>
+        <%= content_tag :span, ": #{member}", class: 'sm-secondary-text col-md-7 text-secondary' %>
       </div>
-      <div class="row">
-        <%= content_tag :span, "Birthdate: #{date_as_month_day_year(member.birth_date)}", class: 'sm-secondary-text text-secondary' %>
+      <div class="row ps-5">
+        <%= content_tag :span, "Birthdate", class: 'sm-secondary-text col-md-3 text-primary' %>
+        <%= content_tag :span, ": #{date_as_month_day_year(member.birth_date)}", class: 'sm-secondary-text col-md-6 text-secondary' %>
       </div>
-      <div class="row">
-        <%= content_tag :span, "Gender: #{member.gender}", class: 'sm-secondary-text text-secondary' %>
+      <div class="row ps-5">
+        <%= content_tag :span, "Gender", class: 'sm-secondary-text col-md-3 text-primary' %>
+        <%= content_tag :span, ": #{member.gender}", class: 'sm-secondary-text col-md-6 text-secondary' %>
       </div> 
-      <div class="row">
-        <%= content_tag :span, "Age: #{member.age}", class: 'sm-secondary-text text-secondary' %>
+      <div class="row ps-5">
+        <%= content_tag :span, "Age", class: 'sm-secondary-text col-md-3 text-primary' %>
+        <%= content_tag :span, ": #{member.age}", class: 'sm-secondary-text col-md-6 text-secondary' %>
       </div>
     </div>
   </div>

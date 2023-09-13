@@ -75,7 +75,7 @@ group :development, :test do
   # gem "debug", platforms: %i[ mri mingw x64_mingw ]
   gem 'byebug'
   gem "ffaker"
-  
+  gem "debug"
 
 end
 
@@ -89,6 +89,9 @@ group :development do
 
   # Speed up commands on slow machines / big apps [https://github.com/rails/spring]
   # gem "spring"
+  gem "rubocop"
+  # rubocop extension that optimize the linting for rails
+  gem "rubocop-rails"
 end
 
 group :test do
@@ -122,3 +125,5 @@ gem "audited", "~> 5.3"
 gem "matrix", "~> 0.4.2"
 
 gem "pry", "~> 0.14.2"
+gem "ruby-lsp", require: false
+gem "solargraph", require: false

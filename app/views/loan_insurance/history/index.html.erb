@@ -31,7 +31,7 @@
         <th scope="row"><%= loan.id %></th>
         <td class="centered"><%= month_day_year(loan.created_at) %></td>
         <td class="centered"><%= loan.loan %></td>
-        <td style="text-align: center; vertical-align: middle;"><%= to_curr(loan.loan_amount) %></td>
+        <td class="centered"><%= to_curr(loan.loan_amount) %></td>
         <td class="centered"><%= month_day_year(loan.effectivity_date) %></td>
         <td class="centered"><%= month_day_year(loan.expiry_date) %></td>
         <td class="centered"><%= loan.terms %></td>
