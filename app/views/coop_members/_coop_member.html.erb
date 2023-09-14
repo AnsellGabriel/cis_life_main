@@ -1,174 +1,174 @@
 <div class="col-md-10">
   <div class="card mb-3">
-    <div class="card-body">
-      <%#= binding.pry %>
+    <div class="card-body sm-secondary-text">
       <% if coop_member.deceased? %>
         <div class="row">
           <div class="text-danger">DECEASED</div>
         </div>
-        <hr class="mb-3">
       <% end %>
+      <div class="row ps-3 pe-3 ">
+        <span class="col-2 text-secondary">Branch</span>
+        <span class="col-10"><%= coop_member.coop_branch %></span>
+      </div>
       <div class="row">
-        <div class="col-sm-2">
-          <h6 class="mb-0">First name</h6>
-        </div>
+        <h6 class="text-primary mt-3 mb-0"><i class="bi bi-person"></i> Personal</h6>
+      </div>
+      <hr class=" mb-3 mt-0">
+      <div class="row ps-3 pe-3 mb-1">
         <div class="col-sm-2 text-secondary">
+          <span class="mb-0">First name</span>
+        </div>
+        <div class="col-sm-2 text-primary">
           <%= "#{@member.first_name}" %>
         </div>
-        <div class="col-sm-2">
-          <h6 class="mb-0">Middle name</h6>
-        </div>
         <div class="col-sm-2 text-secondary">
+          <span class="mb-0">Middle name</span>
+        </div>
+        <div class="col-sm-2 text-primary">
           <%= "#{@member.middle_name}" %>
         </div>
-        <div class="col-sm-2">
-          <h6 class="mb-0">Last name</h6>
-        </div>
         <div class="col-sm-2 text-secondary">
-          <%= "#{@member.last_name}, #{@member.suffix}" %>
+          <span class="mb-0">Last name</span>
+        </div>
+        <div class="col-sm-2 text-primary">
+          <%= "#{@member.last_name} #{@member.suffix}" %>
         </div>
       </div>
-      <hr class="mb-3">
-      <div class="row">
-        <div class="col-sm-3">
-          <h6 class="mb-0">Cooperative</h6>
+      <div class="row ps-3 pe-3 mb-1">
+        <div class="col-2 text-secondary">
+          Gender
         </div>
-        <div class="col-sm-9 text-secondary">
-          <%= "#{coop_member.cooperative.name}, #{coop_member.coop_branch.name}" %>
+        <div class="col-4">
+          <%= @member.gender.titleize %>
         </div>
-      </div>
-      <hr class="mb-3">
-      <div class="row">
-        <div class="col-sm-3">
-          <h6 class="mb-0">Mobile No.</h6>
+        <div class="col-2 text-secondary">
+          Age
         </div>
-        <div class="col-sm-3 text-secondary">
-          <%= member.mobile_number %>
-        </div>
-        <div class="col-sm-3">
-          <h6 class="mb-0">Email</h6>
-        </div>
-        <div class="col-sm-3 text-secondary">
-          <%= member.email %>
-        </div>
-      </div>
-      <hr>
-      <div class="row">
-        <div class="col-sm-3">
-          <h6 class="mb-0">Birthdate</h6>
-        </div>
-        <div class="col-sm-3 text-secondary">
-          <%= member.birth_date.strftime('%B %d, %Y') %>
-        </div>
-        <div class="col-sm-3">
-          <h6 class="mb-0">Birth Place</h6>
-        </div>
-        <div class="col-sm-3 text-secondary">
-          <%= member.birth_place %>
-        </div>
-      </div>
-      <hr>
-      <div class="row">
-        <div class="col-sm-3">
-          <h6 class="mb-0">Age</h6>
-        </div>
-        <div class="col-sm-3 text-secondary">
+        <div class="col-4">
           <%= @age %>
         </div>
-        <div class="col-sm-3">
-          <h6 class="mb-0">Gender</h6>
+      </div>
+      <div class="row ps-3 pe-3 mb-1">
+        <div class="col-2 text-secondary">
+          Birthdate
         </div>
-        <div class="col-sm-3 text-secondary">
-          <%= member.gender.titleize %>
+        <div class="col-4">
+          <%= to_shortdate(@member.birth_date) %>
+        </div>
+        <div class="col-2 text-secondary">
+          Birth Place
+        </div>
+        <div class="col-4">
+          <%= @member.birth_place %>
         </div>
       </div>
-      <hr>
       <div class="row">
-        <div class="col-sm-3">
-          <h6 class="mb-0">Address</h6>
+        <h6 class="text-primary mt-3 mb-0"><i class="bi bi-telephone"></i> Contact</h6>
+      </div>
+      <hr class=" mb-3 mt-0">
+      <div class="row ps-3 pe-3 mb-1">
+        <div class="col-2 text-secondary">
+          Email
         </div>
-        <div class="col-sm-9 text-secondary">
-          <%= member.address %>
+        <div class="col-4">
+          <%= @member.email %>
+        </div>
+        <div class="col-2 text-secondary">
+          Mobile no.
+        </div>
+        <div class="col-4">
+          <%= @member.mobile_number %>
         </div>
       </div>
-      <hr>
-      <div class="row">
-        <div class="col-sm-3">
-          <h6 class="mb-0">SSS No.</h6>
+      <div class="row ps-3 pe-3 mb-1">
+        <div class="col-2 text-secondary">
+          Address
         </div>
-        <div class="col-sm-3 text-secondary">
-          <%= member.sss_no %>
-        </div>
-        <div class="col-sm-3">
-          <h6 class="mb-0">TIN No.</h6>
-        </div>
-        <div class="col-sm-3 text-secondary">
-          <%= member.tin_no %>
+        <div class="col-10">
+          <%= @member.address %>
         </div>
       </div>
-      <hr>
-      <div class="row">
-        <div class="col-sm-3">
-          <h6 class="mb-0">Civil Status</h6>
-        </div>
-        <div class="col-sm-3 text-secondary">
-          <%= member.civil_status %>
-        </div>
-        <% if member.civil_status === "Married" %>
-          <div class="col-sm-3">
-            <h6 class="mb-0">Spouse</h6>
-          </div>
-          <div class="col-sm-3 text-secondary">
-            <%= member.legal_spouse %>
-          </div>
-        <% end %>
-      </div>
-      <hr>
-      <div class="row">
-        <div class="col-sm-3">
-          <h6 class="mb-0">Height</h6>
-        </div>
-        <div class="col-sm-3 text-secondary">
-          <%= "#{member.height} cm" %>
-        </div>
-        <div class="col-sm-3">
-          <h6 class="mb-0">Weight</h6>
-        </div>
-        <div class="col-sm-3 text-secondary">
-          <%= "#{member.weight} kg" %>
-        </div>
-      </div>
-      <% unless member.occupation === nil or member.occupation === '' %>
-        <hr>
+      <% if member.occupation.present? %>
         <div class="row">
-          <div class="col-sm-3">
-            <h6 class="mb-0">Occupation</h6>
+          <h6 class="text-primary mt-3 mb-0"><i class="bi bi-briefcase"></i> Work</h6>
+        </div>
+        <hr class=" mb-3 mt-0">
+        <div class="row ps-3 pe-3 mb-1">
+          <div class="col-2 text-secondary">
+            Employer
           </div>
-          <div class="col-sm-3 text-secondary">
-            <%= member.occupation %>
-          </div>
-          <div class="col-sm-3">
-            <h6 class="mb-0">Employer</h6>
-          </div>
-          <div class="col-sm-3 text-secondary">
-            <%= member.employer %>
+          <div class="col-10">
+            <%= @member.employer %>
           </div>
         </div>
-        <hr>
-        <div class="row">
-          <div class="col-sm-3">
-            <h6 class="mb-0">Work Address</h6>
+        <div class="row ps-3 pe-3 mb-1">
+          <div class="col-2 text-secondary">
+            Position
           </div>
-          <div class="col-sm-3 text-secondary">
-            <%= member.work_address %>
+          <div class="col-4">
+            <%= @member.occupation %>
           </div>
-          <div class="col-sm-3">
-            <h6 class="mb-0">Work Phone No.</h6>
+          <div class="col-2 text-secondary">
+            Work no.
           </div>
-          <div class="col-sm-3 text-secondary">
-            <%= member.work_phone_number %>
+          <div class="col-4">
+            <%= @member.work_phone_number %>
+          </div>
+        </div>
+        <div class="row ps-3 pe-3 mb-1">
+          <div class="col-2 text-secondary">
+            Work address
+          </div>
+          <div class="col-10">
+            <%= @member.work_address %>
           </div>
         </div>
       <% end %>
+      <div class="row">
+        <h6 class="text-primary mt-3 mb-0"><i class="bi bi-person-vcard"></i> Other</h6>
+      </div>
+      <hr class=" mb-3 mt-0">
+      <div class="row ps-3 pe-3 mb-1">
+        <div class="col-2 text-secondary">
+          SSS number
+        </div>
+        <div class="col-4">
+          <%= @member.sss_no %>
+        </div>
+        <div class="col-2 text-secondary">
+          TIN number
+        </div>
+        <div class="col-4">
+          <%= @member.tin_no %>
+        </div>
+      </div>
+      <div class="row ps-3 pe-3 mb-1">
+        <div class="col-2 text-secondary">
+          Height(cm)
+        </div>
+        <div class="col-4">
+          <%= @member.height %>
+        </div>
+        <div class="col-2 text-secondary">
+          Weight(kg)
+        </div>
+        <div class="col-4">
+          <%= @member.weight %>
+        </div>
+      </div>
+      <div class="row ps-3 pe-3 mb-1">
+        <div class="col-2 text-secondary">
+          Civil status
+        </div>
+        <div class="col-4">
+          <%= @member.civil_status.titleize %>
+        </div>
+        <div class="col-2 text-secondary">
+          Spouse
+        </div>
+        <div class="col-4">
+          <%= @member.legal_spouse %>
+        </div>
+      </div>
     </div>
   </div>
