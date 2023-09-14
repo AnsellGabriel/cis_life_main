@@ -10,6 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
+
 ActiveRecord::Schema[7.0].define(version: 2023_09_08_062443) do
   create_table "active_admin_comments", charset: "utf8mb4", force: :cascade do |t|
     t.string "namespace"
@@ -617,6 +618,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_09_08_062443) do
     t.boolean "terminated"
     t.date "terminate_date"
     t.integer "unused_loan_id"
+    t.decimal "excess", precision: 10, scale: 2, default: "0.0"
     t.index ["coop_member_id"], name: "index_loan_insurance_batches_on_coop_member_id"
     t.index ["group_remit_id"], name: "index_loan_insurance_batches_on_group_remit_id"
     t.index ["loan_insurance_loan_id"], name: "index_loan_insurance_batches_on_loan_insurance_loan_id"
@@ -725,6 +727,8 @@ ActiveRecord::Schema[7.0].define(version: 2023_09_08_062443) do
     t.bigint "geo_province_id"
     t.bigint "geo_municipality_id"
     t.bigint "geo_barangay_id"
+    t.decimal "total_loan_amount", precision: 15, scale: 2, default: "0.0"
+    t.boolean "for_reinsurance", default: false
     t.index ["geo_barangay_id"], name: "index_members_on_geo_barangay_id"
     t.index ["geo_municipality_id"], name: "index_members_on_geo_municipality_id"
     t.index ["geo_province_id"], name: "index_members_on_geo_province_id"

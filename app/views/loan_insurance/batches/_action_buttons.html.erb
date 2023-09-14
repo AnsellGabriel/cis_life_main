@@ -1,16 +1,31 @@
-<div  class="<%= flex_justify_align('center') %> gap-1" >
-	<%= link_to 'Show', loan_insurance_batch_path(batch),
-		data: {turbo_frame: "modal-xl"}, 
-		class: small_btn('primary') 
-	%>
+<% batch_presenter = BatchPresenter.new(batch, agreement) %>
 
-	<% if batch.batch_remarks.exists? %>
-		<%= link_to "Remarks", modal_remarks_group_remit_batch_path(group_remit, batch), data: { turbo_frame: "modal" }, class: small_btn('warning') %>
+<div  class="<%= flex_justify_align('center') %> gap-1" >
+	<%= link_to loan_insurance_batch_path(batch),
+		data: {turbo_frame: "modal-xl"}, 
+		class: small_btn('outline-primary'), 
+		title: 'View' do
+	%>
+		<i class="bi bi-eye-fill"></i>
 	<% end %>
 
-	<% if batch.batch_health_decs.exists? %>
+	<%= link_to loan_insurance_history_index_path(coop_member_id: batch.coop_member_id),
+		data: {turbo: false}, 
+		class: small_btn('outline-primary'),
+		title: 'History' do
+	%>
+		<i class="bi bi-clock-history"></i>
+	<% end %>
+
+	<% if batch.remarks.exists? %>
+		<%= link_to modal_remarks_loan_insurance_batch_path(batch), data: { turbo_frame: "reg_form_modal" }, class: small_btn('warning'), title: 'Remarks' do %>
+			<i class="bi bi-card-list"></i>
+		<% end %>
+	<% end %>
+
+	<% if batch.health_declaration.exists? %>
 		<%= link_to health_dec_group_remit_batch_path(group_remit, batch, for_und: true, batch_type: batch.class.name), 
-			class: small_btn('primary'), 
+			class: small_btn('outline-primary'), 
 			title: 'Health Declaration Form',
 			data: { turbo_frame: "reg_form_modal_xl" } do %>
 			<i class="bi bi-file-earmark-medical"></i>
@@ -19,7 +34,7 @@
 
 	<% if group_remit.pending? %>
 
-		<% if (batch.recent? || batch.for_reconsideration?) && batch.batch_health_decs.blank? && batch.loan_amount > agreement.nel %>
+		<% if batch_presenter.require_health_dec? %>
 			<%= link_to new_group_remit_batch_health_declaration_path(group_remit, batch, batch_type: batch.class.name),
 				class: small_btn('warning'), 
 				title: 'Health Declaration Form',
@@ -31,12 +46,13 @@
 		<% unless batch.renewal? || batch.terminated? %>
 			<%= button_to loan_insurance_batch_path(batch), 
 				method: :delete,
+				title: 'Delete',
 				form: { 
 				data: { turbo_frame: "_top", 
-				turbo_confirm: "Delete Batch: #{member.last_name}, #{member.first_name} #{member.middle_name}?" } 
+				turbo_confirm: "Delete entry: #{member.last_name}, #{member.first_name} #{member.middle_name}?" } 
 				}, 
-				class: small_btn('danger') do %>
-						<i class="bi bi-x-lg"></i>                    
+				class: small_btn('outline-danger') do %>
+				<i class="bi bi-trash-fill"></i>
 			<% end %>
 		<% end %>
 	<% end %>

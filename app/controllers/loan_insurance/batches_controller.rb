@@ -1,6 +1,24 @@
 class LoanInsurance::BatchesController < ApplicationController
   before_action :set_batch, only: %i[ show edit update destroy ]
-  before_action :set_group_remit, only: %i[ new ]
+  before_action :set_group_remit, only: %i[ new import]
+
+  def import
+    import_service = CsvImportService.new(
+      :lppi,
+      params[:file],
+      @cooperative,
+      @group_remit
+    )
+
+    import_result = import_service.import
+
+    if import_result.is_a?(Hash)
+      notice = "#{import_result[:added_members_counter]} members successfully added. #{import_result[:denied_members_counter]} members denied."
+      redirect_to loan_insurance_group_remit_path(@group_remit), notice: notice
+    else
+      redirect_to loan_insurance_group_remit_path(@group_remit), notice: import_result
+    end
+  end
 
   # GET /loan_insurance/batches
   def index
@@ -12,9 +30,23 @@ class LoanInsurance::BatchesController < ApplicationController
     @member = @batch.member_details
   end
 
+  def find_loan
+    @batch = LoanInsurance::Batch.find(params[:id])
+
+    respond_to do |format|
+      format.turbo_stream
+    end
+  end
+
+  def modal_remarks
+    @batch = LoanInsurance::Batch.find(params[:id])
+    @group_remit = @batch.group_remit
+    @agreement = @group_remit.agreement
+  end
+
   # GET /loan_insurance/batches/new
   def new
-    @batch = @group_remit.lppi_batches.build(
+    @batch = @group_remit.batches.build(
       terms: 6,
       loan_amount: 500_000,
       date_release: Date.today,
@@ -35,10 +67,11 @@ class LoanInsurance::BatchesController < ApplicationController
     @coop_members = @cooperative.coop_members
     @group_remit_id = params[:loan_insurance_batch][:group_remit_id]
     agreement = GroupRemit.find(@group_remit_id).agreement
-    # params[:loan_insurance_batch][:unused_loan_id] = params[:loan_insurance_batch][:unused_loan_id].to_i if params[:loan_insurance_batch][:unused_loan_id].present? 
+    # params[:loan_insurance_batch][:unused_loan_id] = params[:loan_insurance_batch][:unused_loan_id].to_i if params[:loan_insurance_batch][:unused_loan_id].present?
+    params[:loan_insurance_batch][:loan_amount] = params[:loan_insurance_batch][:loan_amount].gsub(',', '').to_d
     @batch = LoanInsurance::Batch.new(batch_params)
     result = @batch.process_batch
-    
+
     respond_to do |format|
       if @batch.save
         format.html { redirect_to loan_insurance_group_remit_path(params[:loan_insurance_batch][:group_remit_id]), notice: "Member added" }

@@ -128,10 +128,19 @@ Rails.application.routes.draw do
     resources :rates
     resources :loans
     resources :details
-    resources :batches
+    resources :batches do
+      get :modal_remarks, on: :member
+      get :find_loan, on: :member
+      collection do
+        post :import
+      end
+    end
+
     resources :group_remits do
       get :submit, on: :member
     end
+
+    resources :history, only: [:index]
   end
 
   # get 'loan_insurance', to: 'loan_insurance#index'

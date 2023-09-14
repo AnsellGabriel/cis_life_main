@@ -36,12 +36,10 @@ class LoanInsurance::Batch < Batch
     terms
   end
 
- 
-
   private
 
   def skip_validation
-    true 
+    true
   end
 
   def set_terms_and_age
@@ -65,6 +63,11 @@ class LoanInsurance::Batch < Batch
     else
       self.unused = 0
       self.premium_due = premium
+    end
+
+    if self.premium_due < 0
+      self.excess = self.premium_due.abs
+      self.premium_due = 0
     end
 
     self.agent_sf_amount = calculate_service_fee(agreement.agent_sf, premium_due)

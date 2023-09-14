@@ -141,8 +141,12 @@ class BatchRemarksController < ApplicationController
                 batch_id: @batch.batch.id, coop: true) } 
             else
               @batch.update(status: :for_reconsideration)
-              @group_remit = @batch.group_remits.find_by(type: "Remittance")
-              format.html { redirect_to modal_remarks_group_remit_batch_path(@group_remit, @batch, insurance_status: :denied) } 
+              if @batch.class.name == "LoanInsurance::Batch"
+                format.html { redirect_to modal_remarks_loan_insurance_batch_path(@batch, insurance_status: :denied) } 
+              else
+                @group_remit = @batch.group_remits.find_by(type: "Remittance")
+                format.html { redirect_to modal_remarks_group_remit_batch_path(@group_remit, @batch, insurance_status: :denied) } 
+              end
             end
 
           else

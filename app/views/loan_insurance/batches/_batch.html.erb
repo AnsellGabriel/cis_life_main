@@ -46,6 +46,18 @@
 				<div class="d-flex flex-column mb-1">
 					<%= content_tag :span, 
               "#{number_to_currency(batch.premium_due, unit: "₱", precision: 2)}", 
+              class: "text-primary sm-green-text"
+          %>
+				</div>
+			</div>
+		</div>
+	</td>
+	<td class="align-middle" >
+		<div class="<%= flex_justify_align('center') %>">
+			<div class="<%= flex_justify_align('','center',true) %> ps-6">
+				<div class="d-flex flex-column mb-1">
+					<%= content_tag :span, 
+              "#{number_to_currency(batch.excess, unit: "₱", precision: 2)}", 
               class: "text-secondary sm-green-text"
           %>
 				</div>

@@ -1,0 +1,32 @@
+{
+  "editor.formatOnSave": true,
+  "[ruby]": {
+      "editor.defaultFormatter": "Shopify.ruby-lsp"
+  },
+  // if you don't want to install the ruby-lsp in your project GemFile,
+  // you can create a seperate one and configure it here
+  "rubyLsp.bundleGemfile": ".vscode/Gemfile",
+  "rubyLsp.formatter": "rubocop",
+  "rubyLsp.enabledFeatures": {
+    "codeActions": true,
+    "diagnostics": true,
+    "documentHighlights": true,
+    "documentLink": true,
+    "documentSymbols": true,
+    "foldingRanges": true,
+    "formatting": true,
+    "hover": false,
+    "inlayHint": true,
+    "onTypeFormatting": true,
+    "selectionRanges": true,
+    "semanticHighlighting": true,
+    "completion": false,
+    "codeLens": true
+  },
+  // diagnostics for syntax errors
+  "solargraph.diagnostics": true,
+  "solargraph.definitions": true,
+  "solargraph.formatting": false,
+  "solargraph.completion": true,
+  "solargraph.hover": true
+}

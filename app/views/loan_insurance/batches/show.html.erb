@@ -40,7 +40,7 @@
                 <h6 class="mb-0">Birthdate</h6>
               </div>
               <div class="col-sm-3 text-primary">
-                <%= @member.birth_date %>
+                <%= date_as_month_day_year(@member.birth_date) %>
               </div>
               <div class="col-sm-3">
                 <h6 class="mb-0">Age</h6>
@@ -107,7 +107,7 @@
                 <h6 class="mb-0">Maturity Date</h6>
               </div>
               <div class="col-sm text-primary">
-                <%= date_as_month_day_year(@batch.date_release)%>
+                <%= date_as_month_day_year(@batch.date_mature)%>
               </div>
             </div>
             <hr>

@@ -17,15 +17,16 @@ class CsvImportService
   
       spreadsheet = read_file
       
-      case @type
-      when :batch
-        import_service = BatchImportService.new(spreadsheet, @group_remit, @cooperative, @current_user)
-        import_result = import_service.import_batches
-      when :member
-        import_service = MemberImportService.new(spreadsheet, @cooperative, @current_user)
-        import_result = import_service.import_members
-      end
+      import_service = case @type
+                        when :member
+                          MemberImportService.new(spreadsheet, @cooperative, @current_user)
+                        when :batch
+                          BatchImportService.new(spreadsheet, @group_remit, @cooperative, @current_user)
+                        when :lppi
+                          LppiImportService.new(spreadsheet, @group_remit, @cooperative)
+                        end
 
+      import_result = import_service.import
       import_result
     end
   
@@ -35,16 +36,6 @@ class CsvImportService
 
     def valid_file?
       File.extname(file.path) =~ /csv|xlsx?|xls\z/
-    end
-
-    def extract_headers
-      spreadsheet = Roo::Spreadsheet.open(file.path)
-      spreadsheet.row(1).map(&:strip)
-    end
-
-    def find_missing_headers(headers)
-      required_headers = @required_headers
-      required_headers - headers
     end
 
     def read_file
