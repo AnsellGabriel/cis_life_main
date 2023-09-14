@@ -1,71 +1,71 @@
-<%= simple_form_for(batch, html: {data: {controller: "coop-member"}}) do |f| %>
+<%= simple_form_for(batch, html: {data: {controller: "loan-form"}}) do |f| %>
   <div class="row <%= flex_justify_align('between','center') %> mb-3">
-    <%= f.hidden_field :group_remit_id, value: group_remit_id, data: {coop_member_target: 'groupRemit'} %>
+    <%= f.hidden_field :group_remit_id, value: group_remit_id, data: {loan_form_target: 'groupRemit'} %>
     <%= f.association :coop_member, 
         collection: coop_members, 
         include_blank: "Search member",
-        wrapper_html: {class: 'col-md-7', style: 'margin-bottom: 0!important;'},
+        wrapper_html: {class: '', style: 'margin-bottom: 0!important;'},
         input_html: { 
           id: "member_id", 
           data: {  
             target: 'memberSelect',
             controller: "slim-select",
-            action: "change->coop-member#selectMember", }  
-          }, label: false      
+            action: "change->loan-form#selectMember focus->loan-form#selectMember", }  
+          }, label: false    
     %>
   </div>
+  
   <div class="<%= flex_justify_align('start', 'start') %> gap-2" style="height: auto;">
-    <div class="form-inputs mb-3 col-md-7 "  >
+    <div class="form-inputs mb-3  "  >
       <div class="row">
-        <div class="form-floating mb-3 col-md-6">
-          <%= f.input :loan_amount, label: false, placeholder: 'Loan amount', class: 'form-control', wrapper: false %>
+        <div class="form-floating col-md-6">
+          <%= f.association :loan, label: false, prompt: 'Select type', wrapper: false, input_html: {class: ' text-primary'}  %>
+          <%= f.label :loan, 'Loan type', class: 'ps-4' %>
+        </div>
+        <div class="form-floating mb-3 col-md-6" data-controller="number-formatter">
+          <%= f.input :loan_amount, as: :text, label: false, placeholder: 'Loan amount', class: 'form-control', wrapper: false, input_html: {class: 'text-primary', data: {number_formatter_target: 'input'}} %>
           <%= f.label :loan_amount, 'Loan amount', class: 'ps-4' %>
         </div>
+      </div>
+      <div class="row">
         <%= render 'layouts/partials/flatpickr',
           form: f, 
           attribute: :effectivity_date,
           max_date: false,
           placeholder: 'Effectivity',
-          css_class: 'col-md-3'
+          css_class: 'col-md-6'
         %>
         <%= render 'layouts/partials/flatpickr', 
           form: f, 
           attribute: :expiry_date, 
           max_date: false,
           placeholder: 'Expiry', 
-          css_class: 'col-md-3' 
+          css_class: 'col-md-6' 
         %>
       </div>
       <div class="row">
-        <div class="form-floating col-md-6">
-          <%= f.association :loan, label: false, prompt: 'Select type', wrapper: false %>
-          <%= f.label :loan, 'Loan type', class: 'ps-4' %>
-        </div>
         <%= render 'layouts/partials/flatpickr', 
           form: f, 
           attribute: :date_release, 
           max_date: false,
           placeholder: 'Release', 
-          css_class: 'col-md-3' 
+          css_class: 'col-md-6' 
         %>
         <%= render 'layouts/partials/flatpickr', 
           form: f, 
           attribute: :date_mature, 
           max_date: false,
           placeholder: 'Maturity', 
-          css_class: 'col-md-3' 
+          css_class: 'col-md-6' 
         %>
       </div>
     </div>
-    <div class="col-md-5 <%= flex_justify_align('start','start') %>" style="width: 41.65%; height: auto; align-self: start;">
-      <%= turbo_frame_tag 'member details', style: 'width: 100%' %>
-    </div>
   </div>
-  <div class="mb-3">
+  <div class="mb-3 ">
     <%= turbo_frame_tag "member loans" %>
   </div>
   <div class="form-actions text-center">
-    <%= f.button :submit, 'Add', class: small_btn('primary') %>
+    <%= f.button :submit, 'Add', class: small_btn('primary') %> 
   </div>
 <% end %>
 

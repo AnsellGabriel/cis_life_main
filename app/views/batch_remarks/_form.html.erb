@@ -17,6 +17,7 @@
   <div class="form-actions text-end">
     <% if params[:coop] || ( !params[:batch_remark].nil? && params[:batch_remark][:batch_status] == 'For reconsideration' ) %>
       <%= f.button :submit, "Create Request",class: 'btn-success' %>
+
         <% if params[:batch_type] == 'BatchDependent' %>
           <% dependent = BatchDependent.find(@ref)%>
           <%= link_to "Remarks", dependent_remarks_path(
@@ -25,7 +26,11 @@
             batch_id: dependent.batch.id, coop: true), 
           class: 'btn btn-secondary', data: { turbo_frame: "reg_form_modal" } %>
         <% else %>
-          <%= link_to "Remarks", modal_remarks_group_remit_batch_path(@batch.group_remits.find_by(type: 'Remittance'), @batch), class: 'btn btn-secondary', data: { turbo_frame: "reg_form_modal" } %>
+          <% if @batch.class.name == 'LoanInsurance::Batch' %>
+            <%= link_to 'Remarks', modal_remarks_loan_insurance_batch_path(@batch), data: { turbo_frame: "reg_form_modal" }, class: 'btn btn-secondary', title: 'Remarks' %>
+          <% else %>
+            <%= link_to "Remarks", modal_remarks_group_remit_batch_path(@batch.group_remits.find_by(type: 'Remittance'), @batch), class: 'btn btn-secondary', data: { turbo_frame: "reg_form_modal" } %>
+          <% end %>
         <% end %>
         
     <% elsif params[:for_und] %>

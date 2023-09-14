@@ -13,7 +13,7 @@ class Batch < ApplicationRecord
     transferred: 2,
     reinstated: 3,
     for_reconsideration: 4,
-    terminated: 5,
+    reloan: 5
   }
 
   # batch.insurance_status
@@ -22,6 +22,7 @@ class Batch < ApplicationRecord
     denied: 1,
     pending: 2,
     for_review: 3,
+    terminated: 4
   }
 
   scope :filter_by_member_name, ->(name) {
@@ -120,28 +121,28 @@ class Batch < ApplicationRecord
     today = Date.today
 
     month_difference = ((today.year * 12 + today.month) - (coverage_expiry.year * 12 + coverage_expiry.month)) + (coverage_expiry.day > today.day ? 1 : 0)
-      
+
     if month_difference > 24
       batch.status = :reinstated
       existing_coverages.update!(
-        status: 'reinstated', 
-        expiry: batch.expiry_date, 
+        status: 'reinstated',
+        expiry: batch.expiry_date,
         effectivity: batch.effectivity_date
       )
     elsif group_remit.for_renewal? || existing_coverages.expiry <= Date.today
       batch.status = :renewal
       existing_coverages.update!(
-        status: 'renewal', 
-        expiry: batch.expiry_date, 
+        status: 'renewal',
+        expiry: batch.expiry_date,
         effectivity: batch.effectivity_date
-      )        
+      )
     else
       batch.status = :recent
       existing_coverages.update!(
-        status: 'new', 
-        expiry: batch.expiry_date, 
+        status: 'new',
+        expiry: batch.expiry_date,
         effectivity: batch.effectivity_date
-      )        
+      )
     end
   end
 
@@ -153,9 +154,9 @@ class Batch < ApplicationRecord
     end
 
     agreement.agreements_coop_members.create!(
-      coop_member_id: coop_member.id, 
-      status: 'new', 
-      expiry: batch.expiry_date, 
+      coop_member_id: coop_member.id,
+      status: 'new',
+      expiry: batch.expiry_date,
       effectivity: batch.effectivity_date
     )
   end

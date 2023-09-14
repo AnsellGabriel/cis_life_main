@@ -1,5 +1,6 @@
 <!-- Batch Import Modal -->
-<%= render "batch_import_modal" %>
+<%= render "loan_insurance/group_remits/batch_import_modal" %>
+
 
 <div class="<%= flex_justify_align('between', 'start') %> mb-3 gap-3">
   <div class="card" style="height: auto; width: 100%">
@@ -13,57 +14,74 @@
 
           <% if @gr_presenter.is_pending_or_renewal? %>
             <div class="d-flex gap-1">
-              <%= button_to 'Submit', submit_loan_insurance_group_remit_path(@group_remit), 
-                method: :get,
-                class: small_btn('primary'),
-                data: {turbo_confirm: 'Submit group remit?' }
-              %>
+              <%= content_tag :button, "Batch Import", 
+              class: "btn btn-sm btn-outline-primary",
+              data: {bs_toggle: "modal",
+                bs_target: "#batchEnrollment"
+              }%> 
+              <% if @gr_presenter.complete_health_decs? %>
+                <%= button_to 'Submit', submit_loan_insurance_group_remit_path(@group_remit), 
+                  method: :get,
+                  class: small_btn('outline-primary'),
+                  data: {turbo_confirm: 'Submit group remit?' }
+                %>
+              <% else %>
+                <div class="" data-bs-toggle="tooltip" data-bs-placement="top" title="Please answer all health declaration" style="cursor: pointer">
+                  <button type="button" class="<%= small_btn('outline-primary') %>" disabled>
+                    Submit
+                  </button>
+                </div>
+              <% end %>
               <% if @group_remit.denied_members.present? %>
-                <%= link_to 'Denied members', group_remit_denied_members_path(@group_remit), class: small_btn('outline-secondary') %>
+                <%= link_to 'Denied members', group_remit_denied_members_path(@group_remit), class: small_btn('outline-primary') %>
               <% end %>
             </div>
             <% if @gr_presenter.is_pending_or_renewal? %>
               <%= button_to "Delete", loan_insurance_group_remit_path(@group_remit), 
                 method: :delete,
                 data: { turbo_confirm: 'Delete group remit?'},
-                class: small_btn('danger') 
+                class: small_btn('outline-danger') 
               %>
             <% end %>
           <% end %>
 
         </div>
       </div>
-      <div class="d-flex flex-column " style="height: auto; width: 100%">
-        <div class="<%= flex_justify_align('between') %> ">
-          <div style="width: 100%">
-
-            <% if @gr_presenter.is_for_payment? %>
-              <%= render 'payment' %>
-            <% end %>
-
-            <% if @gr_presenter.is_pending_or_renewal? %>
+      <div class="<%= flex_justify_align('center') %> gap-5">
+        <% if @gr_presenter.is_pending_or_renewal? %>
+          <div class="card d-flex">
+            <div class="card-header" style="width: 100%;">
+              <div class="text-center">
+                <%= content_tag :span, 'LPPI Enrollment Form ', class: 'text-primary' %>
+              </div>
+            </div>
+            <div class="card-body" >
               <%= render "loan_insurance/batches/form", batch: @batch, coop_members: @coop_members, group_remit_id: @group_remit.id %>
-            <% end%>
-
+            </div>
           </div>
-        </div>
+          <div class="<%= flex_justify_align('between','start',true) %>" >
+            <%= turbo_frame_tag 'member details', style: 'width: 100%; height: 45%;' do %>
+              
+            <% end %>
+            <%= turbo_frame_tag 'loan details', style: 'width: 100%; height: 50%;' do %>
+              
+            <% end %>
+          </div>
+        <% end%>
       </div>
     </div>
   </div> 
-  <%= turbo_frame_tag "computation" do %>
-    <%= render "loan_insurance/group_remits/computation", group_remit: @group_remit, agreement: @agreement %>
-  <% end %>  
 </div>
 
 <div class="<%= flex_justify_align('between', 'center') %> gap-1">
-  <div class="d-flex gap-2">
-
+  <div class="<%= flex_justify_align('start', 'center') %> gap-2">
+    <%== pagy_bootstrap_nav(@pagy) %>
     <% @gr_presenter.status_mappings.each do |status, attributes| %>
       <% batches = @group_remit.batches.send(status) %>
-      <%= link_to loan_insurance_group_remit_path(@group_remit, insurance_status: status), class: "btn btn-sm #{attributes[:class]} position-relative" do %>
+      <%= link_to loan_insurance_group_remit_path(@group_remit, insurance_status: status), class: "mb-3 btn btn-sm btn-primary position-relative" do %>
         <%= attributes[:label] %>
         <% unless batches.size.zero? %>
-          <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-primary">
+          <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-warning text-dark">
             <%= batches.size >= 100 ? '99+' :  batches.size %>
           </span>
         <% end %>
@@ -106,6 +124,7 @@
         <th class="text-center" scope="col">Premium</th>
         <th class="text-center" scope="col">Unused Premium</th>
         <th class="text-center" scope="col">Premium Due</th>
+        <th class="text-center" scope="col">Excess</th>
         <th class="text-center" scope="col">Actions</th>
 
       </tr>
@@ -121,7 +140,11 @@
   </table>
 
 </div>
-
-<%== pagy_bootstrap_nav(@pagy) %>
 <% end %>
+
+
+
+<%= turbo_frame_tag "computation" do %>
+  <%= render "loan_insurance/group_remits/computation", group_remit: @group_remit, agreement: @agreement %>
+<% end %>  
 
