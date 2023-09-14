@@ -129,13 +129,16 @@ Rails.application.routes.draw do
     resources :loans
     resources :details
     resources :batches do
+      collection do
+        get :approve_all
+      end
+    end
       get :modal_remarks, on: :member
       get :find_loan, on: :member
       collection do
         post :import
       end
     end
-
     resources :group_remits do
       get :submit, on: :member
     end
