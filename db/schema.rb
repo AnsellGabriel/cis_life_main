@@ -618,7 +618,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_09_08_062443) do
     t.boolean "terminated"
     t.date "terminate_date"
     t.integer "unused_loan_id"
-    t.decimal "excess", precision: 10, scale: 2, default: "0.0"
+    t.boolean "substandard", default: false
     t.index ["coop_member_id"], name: "index_loan_insurance_batches_on_coop_member_id"
     t.index ["group_remit_id"], name: "index_loan_insurance_batches_on_group_remit_id"
     t.index ["loan_insurance_loan_id"], name: "index_loan_insurance_batches_on_loan_insurance_loan_id"

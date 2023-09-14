@@ -40,6 +40,25 @@ class LoanInsurance::Batch < Batch
     (self.rate.min_age..self.rate.max_age).include?(self.age)
   end
 
+  def update_prem_substandard(sub_rate)
+    self.premium = (self.loan_amount / 1000) * (sub_rate * self.terms)
+
+    if unused_loan_id
+      previous_batch = LoanInsurance::Batch.find(unused_loan_id)
+      unused_term = compute_terms(previous_batch.expiry_date, effectivity_date)
+      self.unused = (previous_batch.loan_amount / 1000 ) * (rate.monthly_rate * unused_term)
+      self.premium_due = self.premium - unused
+    else
+      self.unused = 0
+      self.premium_due = self.premium
+    end
+
+    self.agent_sf_amount = calculate_service_fee(self.group_remit.agreement.agent_sf, self.premium_due)
+    self.coop_sf_amount = calculate_service_fee(self.group_remit.agreement.coop_sf, self.premium_due)
+  end
+
+ 
+
   private
 
   def skip_validation

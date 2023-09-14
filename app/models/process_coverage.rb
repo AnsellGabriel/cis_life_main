@@ -81,6 +81,10 @@ class ProcessCoverage < ApplicationRecord
     end
   end
 
+  def get_plan_acronym
+    self.group_remit.agreement.plan.acronym
+  end
+
   def get_plan
     self.group_remit.agreement.plan
   end
