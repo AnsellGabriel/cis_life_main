@@ -16,106 +16,134 @@
     </div>
   </div>
 </div>
-<table class="table border-dark">
-  <thead class= "table-dark">
-    <th></th>
-    <th>Member</th>
-    <th>Terms</th>
-    <th>Premium</th>
-    <th>Insurance Status</th>
-    <th>Health Dec Answers</th>
-    <th>Action</th>
-    <th>Remarks</th>
-  </thead>
-  <tbody>
-    <% @filtered_batches.each do |batch| %>
-      <tr>
-        <% mem_bday = batch.coop_member.member.birth_date %>
-        <td></td>
-        <td>
-          <%= link_to batch.coop_member.member, show_insurance_coop_member_path(batch.coop_member, pro_cov: true), class: "link-primary", data: { turbo_frame: "modal-xl" } %> <br>
-          <%= content_tag :small, "Age: #{mem_bday.nil? ? "0" : batch.age}" %> <br>
-          <%= content_tag :small, mem_bday.nil? ? "No Birthday" : "Birthday: #{mem_bday.strftime('%b-%d-%Y')}", class: "text-secondary" %> <br>
-          <%= batch_status(batch.status) %>  <br>
-        </td>
-        <td>
-          <%= process_dates("Eff", month_day_year(batch.effectivity_date)) %> <br>
-          <%= process_dates("Exp", month_day_year(batch.expiry_date)) %> <br>
-          <%= process_dates("Terms", batch.get_terms) %><br>
-        </td>
-        <td>
-          <div class="row">
-            <%= process_premiums("Premium", batch.premium)%>
-          </div>
-          <div class="row">
-            <%= process_premiums("Agent's SF", batch.agent_sf_amount) %>
-          </div>
-          <div class="row">
-            <%= process_premiums("Unused Prem", batch.unused) %>
-          </div>
-          <div class="row">
-            <%= process_premiums("Coop's SF", batch.coop_sf_amount) %>
-          </div>
-          <div class="row">
-            <%= process_premiums("Net Prem", (batch.premium - (batch.coop_sf_amount + batch.agent_sf_amount))) %>
-          </div>
-        </td>
-        <td id="<%= "batch_#{batch.id}"%>" >
-          <%= insurance_status(batch.insurance_status) %>
-        </td>
-        <td>
-          <% if batch.batch_health_decs %>
-            <% batch.batch_health_decs.where(answerable_type: "HealthDec").each do |bhd| %>
-              <%= health_dec_answer(bhd.answerable.valid_answer, bhd.answer, bhd.answerable_type) %> <br>
-            <% end %>
-          <% end %>
-        </td>
-        <td>
-          <% unless process_coverage.approved? || process_coverage.reprocess_approved? %>
-            <div class="<%= batch_buttons(current_user.rank, batch.insurance_status, process_coverage.status) %>">
-              <%= link_to approve_batch_process_coverage_path(batch: batch, batch_type: batch.class.name), onclick: "return confirm('Are you sure?')", method: :get, title: "Approve", class: "btn btn-sm btn-success mb-1" do %>
-                <%= bootstrap_icon "check-lg" %>
-              <% end %>
-              <%= link_to new_batch_remark_path(ref: batch, pro_cov: process_coverage, batch_status: "Pending", batch_type: batch.class.name), title: "Pending", class: "btn btn-sm btn-secondary mb-1", data: { turbo_frame: "reg_form_modal" } do %>
-                <%= bootstrap_icon "arrow-clockwise" %>
-              <% end %>
-              <%= link_to new_batch_remark_path(ref: batch, pro_cov: process_coverage, batch_status: "Deny", batch_type: batch.class.name), title: "Deny", class: "btn btn-sm btn-danger mb-1", data: { turbo_frame: "reg_form_modal" } do %>
-                <%= bootstrap_icon "x-lg" %>
-              <% end %>
+
+<div data-controller="checkbox-select-all">
+  <%= form_tag update_batch_selected_process_coverages_path(p_id: process_coverage, b_ids: []), method: :patch do %>
+    <div class="row mb-2">
+      <div class="col-2">
+        <%= check_box_tag 'btncheck1', '1', false, class: 'btn-check', data: { action: "change->checkbox-select-all#toggleChildren", checkbox_select_all_target: "parent" } %>
+        <%= label_tag 'btncheck1', 'Select All', class: 'btn btn-outline-primary' %>
+      </div>
+      <div class="col-10">
+        <% if ['for_process', 'pending', 'reconsiderations_processed'].include?(process_coverage.status) %>
+          <% if process_coverage.group_remit.batches.where(insurance_status: [:pending, :for_review]).count > 0 %>
+            <div class="text-end">
+              <%= link_to "Approve All", approve_all_group_remit_batches_path(@group_remit,group_remit: process_coverage.group_remit, process_coverage: process_coverage), class: "btn btn-success", onclick: "return confirm('Are you sure?')", method: :get %>
+              <%= submit_tag 'Approve Selected', name: 'approve', onclick: "return confirm('Are you sure?')", class: "btn btn-primary" %>
+              <%= button_tag 'Deny Selected', name: 'deny', type: "submit", onclick: "return confirm('Are you sure?')", class: "btn btn-danger" %>
             </div>
-            <div class="<%= reconsider_button(current_user.rank, batch.insurance_status, process_coverage.status) %>">
-              <%= link_to reconsider_batch_process_coverage_path(batch: batch), onclick: "return confirm('Are you sure?')", method: :get, class: "btn btn-sm btn-warning mb-1" do %>
-                <%= bootstrap_icon "arrow-repeat" %>
-              <% end %>
-            </div>
-            <% if current_user.head? && batch.status == "for_reconsideration" && batch.insurance_status == "denied" %>
-              <%= link_to set_premium_batch_process_coverage_path(batch: batch), onclick: "return confirm('Are you sure?')", method: :get, class: "btn btn-sm btn-info mb-1", data: { turbo_frame: "reg_form_modal" } do %>
-                <%= bootstrap_icon "coin" %>
-              <% end %>
-            <% end %>
           <% end %>
-          <% if batch.batch_health_decs.present? %>
-            <%= link_to health_dec_group_remit_batch_path(@group_remit, batch, for_und: true, batch_type: batch.class.name), class: "btn btn-sm btn-warning mb-1", data: { turbo_frame: "reg_form_modal_xl" } do %>
-              <%= bootstrap_icon "file-earmark-medical" %>
-            <% end %>
-          <% end %>
-        </td>
-        <td>
-          <% if batch.batch_remarks.where(remarkable: batch).count == 0 %>
-            <%= content_tag :small do %>
-              <% if batch.insurance_status == "approved" %>
-                No Remark(s)
+        <% end %>
+      </div>
+    </div>
+
+    <table class="table border-dark">
+      <thead class= "table-dark">
+        <th></th>
+        <th>Member</th>
+        <th>Terms</th>
+        <th>Premium</th>
+        <th>Insurance Status</th>
+        <th>Health Dec Answers</th>
+        <th>Action</th>
+        <th>Remarks</th>
+      </thead>
+      <tbody>
+        <% @filtered_batches.each do |batch| %>
+          <tr>
+            <% mem_bday = batch.coop_member.member.birth_date %>
+            <td>
+              <% unless batch.insurance_status == "approved" || batch.insurance_status == "denied" %>
+                <%= check_box_tag "b_ids[]", batch.id, false, data: { checkbox_select_all_target: "child", action: "change->checkbox-select-all#toggleParent" } %>
+              <% end %>
+            </td>
+            <td>
+              <%= link_to batch.coop_member.member, show_insurance_coop_member_path(batch.coop_member, pro_cov: true), class: "link-primary", data: { turbo_frame: "modal-xl" } %> <br>
+              <%= content_tag :small, "Age: #{mem_bday.nil? ? "0" : batch.age}" %> <br>
+              <%= content_tag :small, mem_bday.nil? ? "No Birthday" : "Birthday: #{mem_bday.strftime('%b-%d-%Y')}", class: "text-secondary" %> <br>
+              <%= batch_status(batch.status) %>  <br>
+            </td>
+            <td>
+              <%= process_dates("Eff", month_day_year(batch.effectivity_date)) %> <br>
+              <%= process_dates("Exp", month_day_year(batch.expiry_date)) %> <br>
+              <%= process_dates("Terms", batch.get_terms) %><br>
+            </td>
+            <td>
+              <div class="row">
+                <%= process_premiums("Premium", batch.premium)%>
+              </div>
+              <div class="row">
+                <%= process_premiums("Agent's SF", batch.agent_sf_amount) %>
+              </div>
+              <div class="row">
+                <%= process_premiums("Unused Prem", batch.unused) %>
+              </div>
+              <div class="row">
+                <%= process_premiums("Coop's SF", batch.coop_sf_amount) %>
+              </div>
+              <div class="row">
+                <%= process_premiums("Net Prem", (batch.premium - (batch.coop_sf_amount + batch.agent_sf_amount))) %>
+              </div>
+            </td>
+            <td id="<%= "batch_#{batch.id}"%>" >
+              <%= insurance_status(batch.insurance_status) %>
+            </td>
+            <td>
+              <% if batch.batch_health_decs %>
+                <% batch.batch_health_decs.where(answerable_type: "HealthDec").each do |bhd| %>
+                  <%= health_dec_answer(bhd.answerable.valid_answer, bhd.answer, bhd.answerable_type) %> <br>
+                <% end %>
+              <% end %>
+            </td>
+            <td>
+              <% unless process_coverage.approved? || process_coverage.reprocess_approved? %>
+                <div class="<%= batch_buttons(current_user.rank, batch.insurance_status, process_coverage.status) %>">
+                  <%= link_to approve_batch_process_coverage_path(batch: batch, batch_type: batch.class.name), onclick: "return confirm('Are you sure?')", method: :get, title: "Approve", class: "btn btn-sm btn-success mb-1" do %>
+                    <%= bootstrap_icon "check-lg" %>
+                  <% end %>
+                  <%= link_to new_batch_remark_path(ref: batch, pro_cov: process_coverage, batch_status: "Pending", batch_type: batch.class.name), title: "Pending", class: "btn btn-sm btn-secondary mb-1", data: { turbo_frame: "reg_form_modal" } do %>
+                    <%= bootstrap_icon "arrow-clockwise" %>
+                  <% end %>
+                  <%= link_to new_batch_remark_path(ref: batch, pro_cov: process_coverage, batch_status: "Deny", batch_type: batch.class.name), title: "Deny", class: "btn btn-sm btn-danger mb-1", data: { turbo_frame: "reg_form_modal" } do %>
+                    <%= bootstrap_icon "x-lg" %>
+                  <% end %>
+                </div>
+                <div class="<%= reconsider_button(current_user.rank, batch.insurance_status, process_coverage.status) %>">
+                  <%= link_to reconsider_batch_process_coverage_path(batch: batch), onclick: "return confirm('Are you sure?')", method: :get, class: "btn btn-sm btn-warning mb-1" do %>
+                    <%= bootstrap_icon "arrow-repeat" %>
+                  <% end %>
+                </div>
+                <% if current_user.head? && batch.status == "for_reconsideration" && batch.insurance_status == "denied" %>
+                  <%= link_to set_premium_batch_process_coverage_path(batch: batch), onclick: "return confirm('Are you sure?')", method: :get, class: "btn btn-sm btn-info mb-1", data: { turbo_frame: "reg_form_modal" } do %>
+                    <%= bootstrap_icon "coin" %>
+                  <% end %>
+                <% end %>
+              <% end %>
+              <% if batch.batch_health_decs.present? %>
+                <%= link_to health_dec_group_remit_batch_path(@group_remit, batch, for_und: true, batch_type: batch.class.name), class: "btn btn-sm btn-warning mb-1", data: { turbo_frame: "reg_form_modal_xl" } do %>
+                  <%= bootstrap_icon "file-earmark-medical" %>
+                <% end %>
+              <% end %>
+            </td>
+            <td>
+              <% if batch.batch_remarks.where(remarkable: batch).count == 0 %>
+                <%= content_tag :small do %>
+                  <% if batch.insurance_status == "approved" %>
+                    No Remark(s)
+                  <% else %>
+                    <%= link_to "No Remark(s)", new_batch_remark_path(ref: batch, pro_cov: process_coverage, batch_status: "New", batch_type: batch.class.name), class: "text-dark", data: { turbo_frame: "reg_form_modal" } %>
+                  <% end %>
+                <% end %>
               <% else %>
-                <%= link_to "No Remark(s)", new_batch_remark_path(ref: batch, pro_cov: process_coverage, batch_status: "New", batch_type: batch.class.name), class: "text-dark", data: { turbo_frame: "reg_form_modal" } %>
+                <%= link_to "View Remarks", modal_remarks_process_coverage_path(process_coverage, batch: batch, batch_type: batch.class.name), data: { turbo_frame: "reg_form_modal" } %>
+                <%#= link_to "View Remarks", modal_remarks_process_coverage_path(process_coverage, batch: batch), data: { turbo_frame: "reg_form_modal" } %>
               <% end %>
-            <% end %>
-          <% else %>
-            <%= link_to "View Remarks", modal_remarks_process_coverage_path(process_coverage, batch: batch, batch_type: batch.class.name), data: { turbo_frame: "reg_form_modal" } %>
-            <%#= link_to "View Remarks", modal_remarks_process_coverage_path(process_coverage, batch: batch), data: { turbo_frame: "reg_form_modal" } %>
-          <% end %>
-        </td>
-      </tr>
-    <% end %>
-  </tbody>
-</table>
+            </td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+
+  <% end %>
+</div>
 <%#= console %>

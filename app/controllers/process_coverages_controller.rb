@@ -239,17 +239,25 @@ class ProcessCoveragesController < ApplicationController
     ids = params[:b_ids]
     
     if params[:approve]
-
-      Batch.where(id: ids).update_all(insurance_status: :approved)
+      case @pro_cov.get_batch_class_name
+      when "LoanInsurance::Batch"
+        LoanInsurance::Batch.where(id: ids).update_all(insurance_status: :approved)
+      else
+        Batch.where(id: ids).update_all(insurance_status: :approved)
+      end
+      
       @pro_cov.increment!(:approved_count, ids.length)
-
       redirect_to process_coverage_path(@pro_cov), notice: "Selected Coverages Approved!"
       
     elsif params[:deny]
-  
-      Batch.where(id: ids).update_all(insurance_status: :denied)
+      case @pro_cov.get_batch_class_name
+      when "LoanInsurance::Batch"
+        LoanInsurance::Batch.where(id: ids).update_all(insurance_status: :denied)
+      else
+        Batch.where(id: ids).update_all(insurance_status: :denied)
+      end
+      
       @pro_cov.increment!(:denied_count, ids.length)
-
       redirect_to process_coverage_path(@pro_cov), alert: "Selected Coverages Denied!"
     end
     
