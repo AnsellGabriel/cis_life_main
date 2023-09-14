@@ -127,3 +127,6 @@ gem "matrix", "~> 0.4.2"
 gem "pry", "~> 0.14.2"
 gem "ruby-lsp", require: false
 gem "solargraph", require: false
+
+# decorator gem
+gem 'draper'
