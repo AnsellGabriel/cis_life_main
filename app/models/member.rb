@@ -92,6 +92,7 @@ class Member < ApplicationRecord
     self.middle_name = self.middle_name == nil ? '' : self.middle_name.strip.upcase
     self.suffix = self.suffix == nil ? '' : self.suffix.strip.upcase
     self.civil_status = self.civil_status.strip.upcase
+    self.gender = self.gender.strip.upcase
   end
 
   def self.coop_member_details(coop_members)
