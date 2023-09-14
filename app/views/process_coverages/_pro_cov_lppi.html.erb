@@ -60,7 +60,7 @@
             <%= process_premiums("Net Prem", (batch.premium - (batch.coop_sf_amount + batch.agent_sf_amount))) %>
           </div>
         </td>
-        <td>
+        <td id="<%= "batch_#{batch.id}"%>" >
           <%= insurance_status(batch.insurance_status) %>
         </td>
         <td>
@@ -101,8 +101,7 @@
           <% end %>
         </td>
         <td>
-          <% batch.class.name %>
-          <% if batch.batch_remarks.where(batch_type: batch.class.name).count == 0 %>
+          <% if batch.batch_remarks.where(remarkable: batch).count == 0 %>
             <%= content_tag :small do %>
               <% if batch.insurance_status == "approved" %>
                 No Remark(s)
@@ -111,7 +110,8 @@
               <% end %>
             <% end %>
           <% else %>
-            <%= link_to "View Remarks", modal_remarks_process_coverage_path(process_coverage, batch: batch, batch_type: batch.class.name), data: { turbo_frame: "modal-xl" } %>
+            <%= link_to "View Remarks", modal_remarks_process_coverage_path(process_coverage, batch: batch, batch_type: batch.class.name), data: { turbo_frame: "reg_form_modal" } %>
+            <%#= link_to "View Remarks", modal_remarks_process_coverage_path(process_coverage, batch: batch), data: { turbo_frame: "reg_form_modal" } %>
           <% end %>
         </td>
       </tr>
