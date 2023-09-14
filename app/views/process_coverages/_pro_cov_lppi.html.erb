@@ -10,6 +10,7 @@
         <%= link_to "Overage", process_coverage_path(process_coverage, search: "overage"), class: "btn btn-sm btn-outline-warning mb-1"  %>
         <%= link_to "w/ Health Dec", process_coverage_path(process_coverage, search: "health_decs"), class: "btn btn-sm btn-outline-secondary mb-1"  %>
         <%= link_to "For Reconsider", process_coverage_path(process_coverage, search: "reconsider"), class: "btn btn-sm btn-outline-info mb-1"  %>
+        <%= link_to "Substandard", process_coverage_path(process_coverage, search: "substandard"), class: "btn btn-sm btn-outline-danger mb-1"  %>
         <%= link_to "View All", process_coverage_path(process_coverage), class: "btn btn-sm btn-outline-success mb-1"  %>
         <hr>
       </div>
@@ -114,6 +115,9 @@
                     <%= bootstrap_icon "arrow-repeat" %>
                   <% end %>
                 </div>
+                <%= link_to set_premium_batch_process_coverage_path(batch: batch, batch_type: batch.class.name), onclick: "return confirm('Are you sure?')", method: :get, class: "btn btn-sm btn-info mb-1", data: { turbo_frame: "reg_form_modal" } do %>
+                  <%= bootstrap_icon "coin" %>
+                <% end %>
                 <% if current_user.head? && batch.status == "for_reconsideration" && batch.insurance_status == "denied" %>
                   <%= link_to set_premium_batch_process_coverage_path(batch: batch), onclick: "return confirm('Are you sure?')", method: :get, class: "btn btn-sm btn-info mb-1", data: { turbo_frame: "reg_form_modal" } do %>
                     <%= bootstrap_icon "coin" %>

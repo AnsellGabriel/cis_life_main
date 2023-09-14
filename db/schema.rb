@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_09_08_062443) do
+ActiveRecord::Schema[7.0].define(version: 2023_09_14_063428) do
   create_table "active_admin_comments", charset: "utf8mb4", force: :cascade do |t|
     t.string "namespace"
     t.text "body"
@@ -617,6 +617,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_09_08_062443) do
     t.boolean "terminated"
     t.date "terminate_date"
     t.integer "unused_loan_id"
+    t.boolean "substandard", default: false
     t.index ["coop_member_id"], name: "index_loan_insurance_batches_on_coop_member_id"
     t.index ["group_remit_id"], name: "index_loan_insurance_batches_on_group_remit_id"
     t.index ["loan_insurance_loan_id"], name: "index_loan_insurance_batches_on_loan_insurance_loan_id"

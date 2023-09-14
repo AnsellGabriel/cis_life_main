@@ -275,6 +275,7 @@ class ProcessCoveragesController < ApplicationController
         when "regular_ren" then @batches_o.where(age: 18..65, status: 1..2)
         when "overage" then @batches_o.where(age: 66..)
         when "reconsider" then @batches_o.where(status: :for_reconsideration)
+        when "substandard" then @batches_o.where(substandard: true)
           # when "health_decs" then @batches_o.joins(:batch_health_decs)
         when "health_decs" then @batches_o.joins(:batch_health_decs).where(loan_insurance_batches: { valid_health_dec: false }).distinct
           # when "health_decs" then @batches_o.joins(:batch_health_dec).where.not(batch_health_decs: { health_dec_question_id: nil })
@@ -369,9 +370,7 @@ class ProcessCoveragesController < ApplicationController
   end
 
   def set_premium_batch
-    
-    binding.pry
-    
+        
     case params[:batch_type]
     when "LoanInsurance::Batch"
       @batch = LoanInsurance::Batch.find(params[:batch])
@@ -382,19 +381,35 @@ class ProcessCoveragesController < ApplicationController
 
   def update_batch_prem
     # raise 'errors'
-    @batch = Batch.find_by(id: params[:process_coverage][:batch])
-    @premium = params[:process_coverage][:premium].to_d
     @group_remit = @process_coverage.group_remit
+
+    case @process_coverage.get_batch_class_name
+    when "LoanInsurance::Batch"
+      @batch = LoanInsurance::Batch.find_by(id: params[:process_coverage][:batch])
+      rate = params[:process_coverage][:premium].to_d
+      @batch.update_prem_substandard(rate)
+      @batch.substandard = true
+    else
+      @batch = Batch.find_by(id: params[:process_coverage][:batch])
+      @premium = params[:process_coverage][:premium].to_d
+      @batch.set_premium_and_sf_for_reconsider(@group_remit, @premium)
+    end
+
     
-    @batch.set_premium_and_sf_for_reconsider(@group_remit, @premium)
     @batch.insurance_status = :pending
     @batch.batch_remarks.build(remark: "Adjusted Premium set. Premium: #{@batch.premium}", status: :pending, user_type: 'Employee', user_id: current_user.userable.id)
 
     respond_to do |format|
+      # raise 'errors'
       if @batch.save!
         # @group_remit.set_total_premiums_and_fees
-        @group_remit.update(status: :with_pending_members) 
-        format.html { redirect_to process_coverage_path(@process_coverage, search: 'reconsider'), notice: "Batch Premium Updated!"}
+        if @process_coverage.get_plan_acronym == "LPPI"
+          @group_remit.update(status: :with_substandard_members) 
+          format.html { redirect_to process_coverage_path(@process_coverage), notice: "Batch Premium Updated!"}
+        else
+          @group_remit.update(status: :with_pending_members) 
+          format.html { redirect_to process_coverage_path(@process_coverage, search: 'reconsider'), notice: "Batch Premium Updated!"}
+        end
       end
     end
 
