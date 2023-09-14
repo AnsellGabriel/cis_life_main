@@ -54,33 +54,33 @@ class GroupRemit < ApplicationRecord
 
     self.batches.includes(coop_member: :member).approved.each do |batch|
       existing_coverage = agreement.agreements_coop_members.find_by(coop_member_id: batch.coop_member.id)
-      
+
       new_batch = Batch.new(coop_member_id: batch.coop_member.id)
       new_batch.previous_effectivity_date = batch.effectivity_date
       new_batch.previous_expiry_date = batch.expiry_date
       b_rank = batch.agreement_benefit
 
       Batch.process_batch(
-        new_batch, 
-        new_group_remit, 
-        b_rank, 
+        new_batch,
+        new_group_remit,
+        b_rank,
         new_group_remit.terms
       )
-      
+
       new_group_remit.batches << new_batch
 
       if new_batch.member_details.age(new_group_remit.effectivity_date) >= new_batch.agreement_benefit.exit_age
         new_batch.insurance_status = :denied
         new_batch.batch_remarks.build(
-          remark: "Member age is over the maximum age limit of the plan.", 
-          status: :denied, 
-          user_type: 'CoopUser', 
+          remark: "Member age is over the maximum age limit of the plan.",
+          status: :denied,
+          user_type: 'CoopUser',
           user_id: current_user.userable.id
         )
       else
         new_batch.insurance_status = :for_review
       end
-      
+
       new_batch.save!
 
       if batch.batch_dependents.present?
@@ -98,7 +98,7 @@ class GroupRemit < ApplicationRecord
         new_beneficiary.save!
       end
     end
-    
+
     renewal_result = {
       new_group_remit: new_group_remit,
       removed_batches: removed_batches
@@ -126,7 +126,7 @@ class GroupRemit < ApplicationRecord
       group_remit.name = "#{agreement.moa_no} #{group_remit.effectivity_date.strftime('%B').upcase} #{remit_name} - #{group_remit.terms} MONTHS"
     elsif agreement.anniversary_type == 'none' or agreement.anniversary_type.nil?
       group_remit.name = "#{agreement.moa_no} #{group_remit.effectivity_date.strftime('%B').upcase} #{remit_name}"
-    else 
+    else
       group_remit.name = "#{agreement.moa_no} #{remit_name}"
     end
   end
@@ -136,7 +136,7 @@ class GroupRemit < ApplicationRecord
     self.coop_commission = total_coop_commissions
     self.agent_commission = total_agent_commissions
     self.net_premium = net_premium
-    
+
     unless self.type == 'BatchRemit'
       self.status = :for_payment
     end
@@ -170,7 +170,7 @@ class GroupRemit < ApplicationRecord
     BatchDependent.joins(batch: :group_remits)
       .where(group_remits: {id: self.id})
   end
-    
+
   def batches_dependents_approved_prem
     BatchDependent.joins(batch: :group_remits)
       .where(group_remits: {id: self.id}, batch: { insurance_status: :approved })
@@ -202,7 +202,7 @@ class GroupRemit < ApplicationRecord
 
   def total_principal_premium
     if self.class.name == 'LoanInsurance::GroupRemit'
-      loan_batches.sum(&:premium)
+      loan_batches.sum(&:premium_due)
     else
       batches.sum(&:premium)
     end
@@ -217,7 +217,7 @@ class GroupRemit < ApplicationRecord
   end
 
   def denied_dependent_premiums
-    (batches.denied.includes(:batch_dependents).sum {|batch| batch.batch_dependents.sum(&:premium) }) + 
+    (batches.denied.includes(:batch_dependents).sum {|batch| batch.batch_dependents.sum(&:premium) }) +
     (batches.where.not(insurance_status: :denied).includes(:batch_dependents).sum {|batch| batch.batch_dependents.denied.sum(&:premium) })
   end
 
@@ -248,7 +248,7 @@ class GroupRemit < ApplicationRecord
   def net_premium
     (gross_premium - (total_coop_commissions + total_agent_commissions) ) - (denied_principal_premiums + denied_dependent_premiums)
   end
-  
+
   def batches_without_beneficiaries
     batches.where.not(id: self.batches.joins(:batch_beneficiaries).select(:id))
   end
@@ -280,7 +280,7 @@ class GroupRemit < ApplicationRecord
       if anniversary_date.day > Date.today.day
         self.terms += 1
       end
-      
+
     end
   end
 
@@ -308,4 +308,3 @@ class GroupRemit < ApplicationRecord
     end
   end
 end
-

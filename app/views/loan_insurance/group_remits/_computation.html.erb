@@ -1,15 +1,10 @@
-<div class="card pt-4" style="max-height: 300px; width: 100%">
+<div class="card pt-4" style="max-height: 300px; width: 350px; margin-left: auto">
   <div class="card-body">
       <div class="d-flex gap-3">
         <div style="width: 100%">
           <div class="text-secondary d-flex justify-content-between">
-            <%= content_tag :span, "Principal Premiums", style: "font-size: .8rem" %>
-            <%= content_tag :span, "#{to_curr(group_remit.total_principal_premium)}", style: "font-size: .8rem; color: var(--bs-blue);" %>
-          </div>
-          <hr>
-          <div class="text-secondary d-flex justify-content-between">
             <%= content_tag :span, "Gross Premium", style: "font-size: .8rem" %>
-            <%= content_tag :span, "#{to_curr(group_remit.gross_premium)}", style: "color: var(--bs-blue); font-size: .8rem"%>
+            <%= content_tag :span, "#{to_curr(group_remit.total_premium_due)}", style: "color: var(--bs-blue); font-size: .8rem"%>
           </div>
           <hr>
         </div>
@@ -28,17 +23,9 @@
             <%= content_tag :span, "Denied Principal Premiums", style: "font-size: .8rem" %>
             <%= content_tag :span, "(#{to_curr(group_remit.denied_principal_premiums)})", style: "font-size: .8rem; color: var(--bs-red)"%>
           </div>       
-          <% if @agreement.plan.gyrt_type == 'family' %>
-            <div class="text-secondary d-flex justify-content-between">
-              <%= content_tag :span, "Denied Dependent Premiums", style: "font-size: .8rem" %>
-              <%= content_tag :span, "(#{to_curr(group_remit.denied_dependent_premiums)})", style: "font-size: .8rem; color: var(--bs-red)"%>
-            </div>   
-          <% end %>
         </div>
       </div>
-      
       <hr>
-      
       <div class="d-flex gap-3">
         <%= content_tag :h6, "Net Premium", style: "width: 200px;", class: 'text-primary' %>
         <%= content_tag :h6, "#{number_to_currency(group_remit.coop_net_premium, unit: "₱", precision: 2)}", style: "color: var(--bs-blue);"%>

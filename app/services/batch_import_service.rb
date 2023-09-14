@@ -21,7 +21,7 @@ class BatchImportService
     @progress_tracker = @group_remit.create_group_import_tracker(progress: 0.0)
   end
 
-  def import_batches
+  def import
     initialize_counters_and_arrays
     agreement_benefits = @agreement.agreement_benefits
     # Principal batch import section

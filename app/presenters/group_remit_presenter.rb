@@ -45,6 +45,10 @@ class GroupRemitPresenter
 		@group_remit.for_payment?
 	end
 
+	def complete_health_decs?
+		@group_remit.batches.where(status: :recent).where.missing(:batch_health_decs).empty?
+	end
+
 	def remaining_days
 		remaining_days = (@group_remit.expiry_date - Date.today).to_i
 	end
@@ -83,7 +87,7 @@ class GroupRemitPresenter
 			"badge bg-primary"
 		end
 	end
-	
+
 	def status_text
 		case @group_remit.status
 		when "pending"
@@ -111,9 +115,9 @@ class GroupRemitPresenter
 			approved: { label: "Approved", class: "btn-success" },
 			pending: { label: "Pending", class: "btn-secondary" },
 			denied: { label: "Denied", class: "btn-danger" }
-		} 
+		}
 
-	 	status_mappings = status_mappings.merge(for_reconsideration: {label: 'Request', class: 'btn-warning'}) if @group_remit.agreement.reconsiderable? 
+	 	status_mappings = status_mappings.merge(for_reconsideration: {label: 'Request', class: 'btn-warning'}) if @group_remit.agreement.reconsiderable?
 
 		status_mappings
 	end

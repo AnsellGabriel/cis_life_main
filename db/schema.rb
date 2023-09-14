@@ -10,7 +10,8 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_09_14_063428) do
+
+ActiveRecord::Schema[7.0].define(version: 2023_09_08_062443) do
   create_table "active_admin_comments", charset: "utf8mb4", force: :cascade do |t|
     t.string "namespace"
     t.text "body"
@@ -726,6 +727,8 @@ ActiveRecord::Schema[7.0].define(version: 2023_09_14_063428) do
     t.bigint "geo_province_id"
     t.bigint "geo_municipality_id"
     t.bigint "geo_barangay_id"
+    t.decimal "total_loan_amount", precision: 15, scale: 2, default: "0.0"
+    t.boolean "for_reinsurance", default: false
     t.index ["geo_barangay_id"], name: "index_members_on_geo_barangay_id"
     t.index ["geo_municipality_id"], name: "index_members_on_geo_municipality_id"
     t.index ["geo_province_id"], name: "index_members_on_geo_province_id"
