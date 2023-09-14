@@ -71,7 +71,7 @@ class Batch < ApplicationRecord
 
 
   def dependents_premium
-    batch_dependents.approved.sum(:premium)
+    batch_dependents.sum(:premium)
   end
 
 

@@ -15,11 +15,10 @@
 <!-- Member's count Modal -->
 <%= render "member_count_modal" %>
 
-<div class="">
-  <%= link_to 'GYRT', coop_agreement_path(@agreement), class: small_btn('secondary') %>
-</div>
-
 <div class="<%= flex_justify_align('', 'center') %> gap-3">
+  <%= link_to coop_agreement_path(@agreement), class: small_btn('outline-secondary') do %>
+    <i class="bi bi-arrow-left"></i>
+  <% end %>
   <%= content_tag :span, gr_presenter.status_text, class: gr_presenter.status_badge %>
   <%= content_tag :h3, class: 'mb-0 text-primary' do %>
       <%= @group_remit %>    
@@ -31,12 +30,12 @@
       <div class="d-flex gap-1">
         <%= button_to 'Submit', submit_group_remit_path(@group_remit), 
           method: :get,
-          class: small_btn('success'), 
+          class: small_btn('outline-primary'), 
           data: {turbo_confirm: 'Submit group remit?' } 
         %>
         
         <%  if @group_remit.denied_members.present? %>
-          <%= link_to 'Denied members', group_remit_denied_members_path(@group_remit), class: small_btn('outline-secondary') %>
+          <%= link_to 'Denied members', group_remit_denied_members_path(@group_remit), class: small_btn('outline-primary') %>
         <% end %>
 
       </div>
@@ -45,7 +44,7 @@
         <%= button_to "Delete", group_remit_path(@group_remit), 
           method: :delete,
           data: { turbo_confirm: 'Delete group remit?'},
-          class: small_btn('danger') 
+          class: small_btn('outline-danger') 
         %>
       <% end %>
 
@@ -53,14 +52,14 @@
         <%= button_to "Delete", group_remit_path(@group_remit), 
           method: :delete,
           data: { turbo_confirm: 'Delete group remit?'},
-          class: small_btn('danger') 
+          class: small_btn('outline-danger') 
         %>
       <% end %>
 
     <% elsif gr_presenter.is_expired? && gr_presenter.is_batch_remit? %>
       <%= button_to 'Renew', renewal_group_remit_path(@group_remit),
           method: :get, 
-          class: small_btn('warning'), 
+          class: small_btn('outline-warning'), 
           data: {turbo_confirm: 'Renew group remit?' } 
         %>
     <% elsif !gr_presenter.is_for_renewal? && gr_presenter.is_batch_remit? && gr_presenter.is_none_anniversary? && @group_remit.effectivity_date == Date.today.beginning_of_month %>
@@ -116,22 +115,22 @@
       <div class="card mb-2">
         <div class="card-body text-secondary">
           <div class="<%= flex_justify_align('center') %>">
-            <%= content_tag :h6, "Effectivity Date ", class: 'sm-secondary-text', style: "width: 150px" %>
-            <%= content_tag :h6, "#{@group_remit.effectivity_date.present? ? @group_remit.effectivity_date.strftime('%B %d, %Y') : 'Tentative'}", class: 'sm-secondary-text', style: "width: 150px" %>
+            <%= content_tag :h6, "Effectivity Date ", class: 'sm-secondary-text text-primary', style: "width: 150px" %>
+            <%= content_tag :h6, ": #{@group_remit.effectivity_date.present? ? @group_remit.effectivity_date.strftime('%B %d, %Y') : 'Tentative'}", class: 'sm-secondary-text', style: "width: 150px" %>
           </div>
           <div class="<%= flex_justify_align('center') %>">
-            <%= content_tag :h6, "Expiry Date", class: 'sm-secondary-text', style: "width: 150px" %>
-            <%= content_tag :h6, "#{@group_remit.expiry_date.strftime('%B %d, %Y')}", class: 'sm-secondary-text', style: "width: 150px" %>
+            <%= content_tag :h6, "Expiry Date", class: 'sm-secondary-text text-primary', style: "width: 150px" %>
+            <%= content_tag :h6, ": #{@group_remit.expiry_date.strftime('%B %d, %Y')}", class: 'sm-secondary-text', style: "width: 150px" %>
           </div>
           <% if @group_remit.instance_of?(Remittance)%>
             <div class="<%= flex_justify_align('center') %>">
-              <%= content_tag :h6, "Submitted Date ", class: 'sm-secondary-text', style: "width: 150px" %>
-              <%= content_tag :h6, "#{@group_remit.date_submitted.present? ? @group_remit.date_submitted.strftime('%B %d, %Y') : 'Pending'}", class: 'sm-secondary-text', style: "width: 150px" %>
+              <%= content_tag :h6, "Submitted Date ", class: 'sm-secondary-text text-primary', style: "width: 150px" %>
+              <%= content_tag :h6, ": #{@group_remit.date_submitted.present? ? @group_remit.date_submitted.strftime('%B %d, %Y') : 'Pending'}", class: 'sm-secondary-text', style: "width: 150px" %>
             </div>
           <% end %>
           <div class="<%= flex_justify_align('center') %>">
-            <%= content_tag :h6, "Terms", class: 'sm-secondary-text', style: "width: 150px" %>
-            <%= content_tag :h6, "#{@group_remit.terms} months", class: 'sm-secondary-text', style: "width: 150px"%>
+            <%= content_tag :h6, "Terms", class: 'sm-secondary-text text-primary', style: "width: 150px" %>
+            <%= content_tag :h6, ": #{@group_remit.terms} months", class: 'sm-secondary-text', style: "width: 150px"%>
           </div>
           
         </div>
@@ -213,10 +212,10 @@
       <div class="d-flex gap-2">
 
         <% @group_remit.agreement.agreement_benefits.where.not(insured_type: 2..5).each do |a_benefit| %>
-          <%= link_to group_remit_path(@group_remit, rank_filter: a_benefit), class: "btn btn-sm btn-warning position-relative" do %>
+          <%= link_to group_remit_path(@group_remit, rank_filter: a_benefit), class: "btn btn-sm btn-primary position-relative" do %>
             <%= a_benefit.name %>
             <% unless @group_remit.batches.where(agreement_benefit: a_benefit).size <= 0 %>
-              <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-primary">
+              <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-warning text-dark">
                 <%= @group_remit.batches.where(agreement_benefit: a_benefit).size < 100 ? @group_remit.batches.where(agreement_benefit: a_benefit).size : '99+'%>
               </span>
             <% end %>
@@ -232,11 +231,11 @@
     <div class="d-flex gap-2">
       <% gr_presenter.status_mappings.each do |status, attributes| %>
         <% batches = @group_remit.batches.send(status) %>
-        <%= link_to group_remit_path(@group_remit, insurance_status: status), class: "btn btn-sm #{attributes[:class]} position-relative" do %>
+        <%= link_to group_remit_path(@group_remit, insurance_status: status), class: "btn btn-sm btn-outline-#{status == :denied ? 'danger' : 'primary'} position-relative" do %>
           <%= attributes[:label] %>
 
           <% unless batches.size.zero? %>
-            <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-primary">
+            <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-warning text-dark">
               <%= batches.size >= 100 ? '99+' :  batches.size %>
             </span>
           <% end %>
@@ -273,7 +272,7 @@
 
 <div class="table-responsive">
   <%= turbo_frame_tag "batches" do %>
-  <table class="table table-hover">
+  <table class="table table-sm table-hover">
     <thead>
       <tr class="table-dark">
 
