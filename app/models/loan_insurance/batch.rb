@@ -36,6 +36,10 @@ class LoanInsurance::Batch < Batch
     terms
   end
 
+  def get_rate_age_range
+    (self.rate.min_age..self.rate.max_age).include?(self.age)
+  end
+
  
 
   private

@@ -67,6 +67,27 @@ class LoanInsurance::BatchesController < ApplicationController
     redirect_to loan_insurance_group_remit_path(@batch.group_remit), alert: "Member removed"
   end
 
+
+  def approve_all
+    @process_coverage = ProcessCoverage.find(params[:process_coverage])
+    @batches = @process_coverage.group_remit.batches
+    
+    @batches.each do |batch|
+      if batch.insurance_status == "for_review"
+        # if (18..65).include?(batch.age)
+        # if (batch.agreement_benefit.min_age..batch.agreement_benefit.max_age).include?(batch.age)
+        if batch.get_rate_age_range
+          batch.update_attribute(:insurance_status, "approved")
+          @process_coverage.increment!(:approved_count)
+          
+        end
+      end
+    end
+    
+    redirect_to process_coverage_path(@process_coverage), notice: "Batches have been approved!"
+
+  end
+
   private
     # Only allow a list of trusted parameters through.
     def batch_params

@@ -128,7 +128,11 @@ Rails.application.routes.draw do
     resources :rates
     resources :loans
     resources :details
-    resources :batches
+    resources :batches do
+      collection do
+        get :approve_all
+      end
+    end
     resources :group_remits do
       get :submit, on: :member
     end
