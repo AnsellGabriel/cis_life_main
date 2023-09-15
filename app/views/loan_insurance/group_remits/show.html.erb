@@ -60,12 +60,8 @@
             </div>
           </div>
           <div class="<%= flex_justify_align('between','start',true) %>" >
-            <%= turbo_frame_tag 'member details', style: 'width: 100%; height: 45%;' do %>
-              
-            <% end %>
-            <%= turbo_frame_tag 'loan details', style: 'width: 100%; height: 50%;' do %>
-              
-            <% end %>
+            <%= turbo_frame_tag 'member details', style: 'width: 100%; height: 45%;' %>
+            <%= turbo_frame_tag 'loan details', style: 'width: 100%; height: 50%;' %>
           </div>
         <% end%>
       </div>

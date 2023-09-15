@@ -2,31 +2,21 @@
   <%= link_to :back, class: "#{small_btn('secondary')} mb-3", title: 'Back' do %>
     <i class="bi bi-arrow-left"></i>
   <% end %>
-  <%== pagy_bootstrap_nav(@pagy) %>
+  <%= content_tag :h4, "#{@coop_member.full_name} - loan history".upcase, class: 'text-primary' %>
 </div>
 
+<%== pagy_bootstrap_nav(@pagy) %>
 <table class="table table-striped table-hover">
   <thead>
     <tr class="table-dark">
       <th scope="col">ID</th>
-      <th scope="col" class="centered">Date Created</th>
-      <th scope="col" class="centered">Type</th>
-      <th scope="col" class="centered">Amount</th>
-      <th scope="col" class="centered">Effectivity</th>
-      <th scope="col" class="centered">Expiry</th>
-      <th scope="col" class="centered">Terms</th>
-      <th scope="col" class="centered">Release</th>
-      <th scope="col" class="centered">Maturity</th>
-      <th scope="col" class="centered">Premium</th>
-      <th scope="col" class="centered">Unused</th>
-      <th scope="col" class="centered">Premium Due</th>
-      <th scope="col" class="centered">Excess</th>
-      <th scope="col" class="centered">Status</th>
+      <% @table_headers.each do |th| %>
+        <th scope="col" class="centered"><%= th %></th>
+      <% end %>
     </tr>
   </thead>
   <tbody>
     <% @loans.each do |loan|  %>
-      <% loan_presenter = BatchPresenter.new(loan) %>
       <tr>
         <th scope="row"><%= loan.id %></th>
         <td class="centered"><%= month_day_year(loan.created_at) %></td>
@@ -39,9 +29,9 @@
         <td class="centered"><%= month_day_year(loan.date_mature) %></td>
         <td class="centered"><%= to_curr(loan.premium) %></td>
         <td class="centered"><%= to_curr(loan.unused) %></td>
-        <td class="centered"><%= to_curr(loan.premium_due) %></td>
         <td class="centered"><%= to_curr(loan.excess) %></td>
-        <td class="centered <%= loan_presenter.status_color %>"><%= loan.insurance_status.titleize %></td>
+        <td class="centered"><%= to_curr(loan.premium_due) %></td>
+        <td class="centered <%= loan.status_color %>"><%= loan.insurance_status.titleize %></td>
       </tr>
     <% end %>
   </tbody>
