@@ -10,8 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-
-ActiveRecord::Schema[7.0].define(version: 2023_09_08_062443) do
+ActiveRecord::Schema[7.0].define(version: 2023_09_15_033026) do
   create_table "active_admin_comments", charset: "utf8mb4", force: :cascade do |t|
     t.string "namespace"
     t.text "body"
@@ -619,6 +618,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_09_08_062443) do
     t.date "terminate_date"
     t.integer "unused_loan_id"
     t.boolean "substandard", default: false
+    t.decimal "excess", precision: 10, scale: 2, default: "0.0"
     t.index ["coop_member_id"], name: "index_loan_insurance_batches_on_coop_member_id"
     t.index ["group_remit_id"], name: "index_loan_insurance_batches_on_group_remit_id"
     t.index ["loan_insurance_loan_id"], name: "index_loan_insurance_batches_on_loan_insurance_loan_id"
@@ -864,6 +864,24 @@ ActiveRecord::Schema[7.0].define(version: 2023_09_08_062443) do
     t.integer "minimum_participation"
     t.string "proposal_no"
     t.index ["cooperative_id"], name: "index_proposals_on_cooperative_id"
+  end
+
+  create_table "reinsurance_batches", charset: "utf8mb4", force: :cascade do |t|
+    t.bigint "reinsurance_id"
+    t.bigint "loan_insurance_batch_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["loan_insurance_batch_id"], name: "index_reinsurance_batches_on_loan_insurance_batch_id"
+    t.index ["reinsurance_id"], name: "index_reinsurance_batches_on_reinsurance_id"
+  end
+
+  create_table "reinsurances", charset: "utf8mb4", force: :cascade do |t|
+    t.date "date_from"
+    t.date "date_to"
+    t.decimal "ri_total_amount", precision: 10
+    t.decimal "ri_total_prem", precision: 10
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
   end
 
   create_table "underwriting_routes", charset: "utf8mb4", force: :cascade do |t|

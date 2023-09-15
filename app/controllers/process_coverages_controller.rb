@@ -289,7 +289,7 @@ class ProcessCoveragesController < ApplicationController
       end
 
       @pagy_batch, @filtered_batches  = pagy(@batches, items: 10, page_param: :batch)
-      @group_remit = @process_coverage.group_remit
+      @group_remit = @process_coverage.group_remit          
 
       @total_net_prem = @process_coverage.sum_batches_net_premium
 
@@ -370,7 +370,7 @@ class ProcessCoveragesController < ApplicationController
   end
 
   def set_premium_batch
-        
+    
     case params[:batch_type]
     when "LoanInsurance::Batch"
       @batch = LoanInsurance::Batch.find(params[:batch])
@@ -599,7 +599,7 @@ class ProcessCoveragesController < ApplicationController
       Batch.find(params[:batch])
     end
     
-    @batch_remarks = @batch.batch_remarks.where(remarkable: @batch)
+    @batch_remarks = @batch.batch_remarks#.where(remarkable_type: @batch.class.name)
     @pagy_br, @filtered_br = pagy(@batch_remarks, items: 3, page_param: :b_remarks)
     @process_coverage = ProcessCoverage.find(params[:id])
   end

@@ -64,5 +64,12 @@ module ProcessCoveragesHelper
       content_tag :span, "NO", class: "text-secondary"
     end
   end
+
+  def substandard(val=nil)
+    case val
+      when true then content_tag :span, "substandard", class: "badge bg-primary"
+    end
+
+  end
   
 end
