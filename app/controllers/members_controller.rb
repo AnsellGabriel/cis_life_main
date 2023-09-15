@@ -1,16 +1,16 @@
 class MembersController < InheritedResources::Base
   before_action :authenticate_user!
-  before_action :check_userable_type 
+  before_action :check_userable_type
 
   def import
     import_service = CsvImportService.new(
-      :member, 
-      params[:file],  
+      :member,
+      params[:file],
       @cooperative,
       nil,
       current_user.userable
     )
-    
+
     import_message = import_service.import
 
     if import_message.is_a?(String)
@@ -48,9 +48,9 @@ class MembersController < InheritedResources::Base
 
   def create
     @member = Member.new(member_params)
-    respond_to do |format|  
+    respond_to do |format|
       if @member.save
-        format.html { 
+        format.html {
           coop_member = @member.coop_members.find_by(cooperative_id: @cooperative.id)
           redirect_to coop_members_path,
           notice: "Member was successfully created." }
@@ -71,7 +71,7 @@ class MembersController < InheritedResources::Base
 
     respond_to do |format|
       if @member.update(member_params)
-        format.html { 
+        format.html {
           redirect_to coop_members_path,
           notice: "Member was successfully updated." }
       else
@@ -79,7 +79,7 @@ class MembersController < InheritedResources::Base
       end
     end
   end
-  
+
   private
     def member_params
       params.require(:member).permit(:birth_place, :address, :sss_no, :tin_no, :civil_status, :legal_spouse, :height, :weight, :occupation, :employer, :work_address, :work_phone_number, :last_name, :first_name, :middle_name, :suffix, :email, :mobile_number, :birth_date, :gender, :geo_region_id, :geo_province_id, :geo_municipality_id, :geo_barangay_id,

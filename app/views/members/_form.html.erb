@@ -3,7 +3,7 @@
   <%= f.error_notification %>
   <%= f.error_notification message: f.object.errors[:base].to_sentence if f.object.errors[:base].present? %>
   <div class="form-inputs mb-3">
-    <div class="row">
+    <div class="row ps-3 pe-3">
       <div class="col-12">
           <%= f.simple_fields_for :coop_members do |member| %>
             <div class="form-group d-flex align-items-end coop-member-form">
@@ -11,102 +11,108 @@
                 <%= member.hidden_field :cooperative_id, value: @cooperative.id %>
 
               <div class="col-md-6">
-                <%= member.input :coop_branch_id, collection: @cooperative.coop_branches.map {|branch| [branch.name, branch.id]}, style: "width: auto" ,class: "form-select mb-3"  %>
+                <%= member.input :coop_branch_id, collection: @cooperative.coop_branches.map {|branch| [branch.name, branch.id]}, style: "width: auto" ,class: "form-select mb-3", label_html: {class: 'text-secondary sm-secondary-text'}  %>
               </div>
-
-              <div class="col-md-6 form-check form-switch">
-                <%= member.input :deceased, style: "width: auto", class: "form-check-input mb-3"  %>
-              </div>
-              <!--
-              <div class="">
-                <%= member.input :transferred, as: :boolean, label: "Transferred?" %>
-              </div>
-              -->
             </div>
           <% end %>
       </div>
     </div>
     <div class="row">
+      <h6 class="text-primary mt-3"><i class="bi bi-person"></i> Personal</h6>
+    </div>
+    <div class="row ps-3 pe-3">
       <div class="col-3">
-        <%= f.input :first_name %>
+        <%= f.input :first_name, label_html: {class: 'text-secondary sm-secondary-text'} %>
       </div>
       <div class="col-3">
-        <%= f.input :middle_name %>
+        <%= f.input :middle_name, label_html: {class: 'text-secondary sm-secondary-text'} %>
       </div>
       <div class="col-3">
-       <%= f.input :last_name%>
+       <%= f.input :last_name, label_html: {class: 'text-secondary sm-secondary-text'}%>
       </div>
-      <div class="col-3">
-        <%= f.input :suffix %>
+      <div class="col-1">
+        <%= f.input :suffix, label_html: {class: 'text-secondary sm-secondary-text'} %>
       </div>
     </div>
-    <div class="row">
+    <div class="row ps-3 pe-3">
       <div class="col-3">
-        <%= f.input :gender, collection: [['Male', 'male'], ['Female', 'female']] ,class: 'form-select mb-3' %>
+        <%= f.input :gender, collection: [['Male', 'MALE'], ['Female', 'FEMALE']] ,class: 'form-select mb-3', label_html: {class: 'text-secondary sm-secondary-text'} %>
       </div>
       <div class="col-3">
         <%= f.input :birth_date, as: :string, input_html: {data: {
             controller: "flatpickr",
             flatpickr_max_date: Time.zone.now,
             flatpickr_next_arrow: "Next",
-            flatpickr_prev_arrow: "Prev"}} %>
+            flatpickr_prev_arrow: "Prev"}}, label_html: {class: 'text-secondary sm-secondary-text'} %>
       </div>
-      <div class="col-3">
-        <%= f.input :birth_place %>
+      <div class="col-6">
+        <%= f.input :birth_place, label_html: {class: 'text-secondary sm-secondary-text'} %>
       </div>
     
     </div>
     <div class="row">
+      <h6 class="text-primary mt-3"><i class="bi bi-telephone"></i> Contact</h6>
+    </div>
+    <div class="row ps-3 pe-3">
+      <div class="col-6">
+        <%= f.input :email, label_html: {class: 'text-secondary sm-secondary-text'} %>
+      </div>
+      <div class="col-3">
+        <%= f.input :mobile_number, label_html: {class: 'text-secondary sm-secondary-text'} %>
+      </div>
+    </div>
+    <div class="row ps-3 pe-3">
       <div class="col-12">
-        <%= f.input :address %>
+        <%= f.input :address, label_html: {class: 'text-secondary sm-secondary-text'} %>
       </div>
     </div>
     <div class="row">
-      <div class="col-3">
-        <%= f.input :email %>
+      <h6 class="text-primary mt-3"><i class="bi bi-briefcase"></i> Work</h6>
+    </div>
+    <div class="row ps-3 pe-3">
+      <div class="col-6">
+        <%= f.input :employer, label_html: {class: 'text-secondary sm-secondary-text'} %>
       </div>
       <div class="col-3">
-        <%= f.input :mobile_number %>
-      </div>
-   
-      <div class="col-3">
-        <%= f.input :sss_no, label: "SSS #" %>
+        <%= f.input :occupation, label: 'Position', label_html: {class: 'text-secondary sm-secondary-text'} %>
       </div>
       <div class="col-3">
-        <%= f.input :tin_no, label: "TIN #" %>
+        <%= f.input :work_phone_number, label_html: {class: 'text-secondary sm-secondary-text'} %>
       </div>
+      <div class="col-12">
+        <%= f.input :work_address, label_html: {class: 'text-secondary sm-secondary-text'} %>
+      </div>
+      
     </div>
     <div class="row">
-    <div class="col-3">
-        <%= f.input :civil_status, collection: [["Single", "single"], ["Married", "married"], ["Divorced", "divorced"], ["Separated", "separated"], ["Widowed", "widowed"]], class: "form-select" %>
+      <h6 class="text-primary mt-3"><i class="bi bi-person-vcard"></i> Other</h6>
+    </div>
+    <div class="row ps-3 pe-3">
+      <div class="col-3">
+        <%= f.input :sss_no, label: "SSS #", label_html: {class: 'text-secondary sm-secondary-text'} %>
       </div>
       <div class="col-3">
-        <%= f.input :legal_spouse %>
+        <%= f.input :tin_no, label: "TIN #", label_html: {class: 'text-secondary sm-secondary-text'} %>
       </div>
       <div class="col-3">
-        <%= f.input :height, label: "Height (cm)" %>
+        <%= f.input :height, label: "Height (cm)", label_html: {class: 'text-secondary sm-secondary-text'} %>
       </div>
       <div class="col-3">
-        <%= f.input :weight, label: "Weight (kg)"%>
+        <%= f.input :weight, label: "Weight (kg)", label_html: {class: 'text-secondary sm-secondary-text'}%>
       </div>
     </div>
-    <div class="row">
+    <div class="row ps-3 pe-3">
       <div class="col-3">
-        <%= f.input :occupation %>
+        <%= f.input :civil_status, collection: [["Single", "SINGLE"], ["Married", "MARRIED"], ["Divorced", "DIVORCED"], ["Separated", "SEPARATED"], ["Widowed", "WIDOWED"]], class: "form-select", label_html: {class: 'text-secondary sm-secondary-text'} %>
       </div>
-      <div class="col-3">
-        <%= f.input :employer %>
-      </div>
-      <div class="col-3">
-        <%= f.input :work_address %>
-      </div>
-      <div class="col-3">
-        <%= f.input :work_phone_number %>
+      <div class="col-6">
+        <%= f.input :legal_spouse, label_html: {class: 'text-secondary sm-secondary-text'} %>
       </div>
     </div>
+    
   </div>
 
-  <div class="form-actions text-end">
-    <%= f.button :submit, 'Enroll', class: 'btn btn-success' %>
+  <div class="form-actions text-center">
+    <%= f.button :submit, 'Enroll', class: small_btn('primary') %>
   </div>
 <% end %>

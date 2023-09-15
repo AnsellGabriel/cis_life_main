@@ -1,15 +1,11 @@
 <%= turbo_frame_tag "modal-xl" do %>
-    <div class="modal-header mb-3 col-md-10" style="margin: auto">
-      <% if current_user.userable_type == "CoopUser" %>
-        <div class="<%= flex_justify_align('','center') %> gap-2">
-          <%= link_to "Edit member details", edit_member_path(@member), class: 'btn btn-sm btn-primary' %> 
-          
-        </div>
-      <% end %>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-    </div>
-    
-    <div class="modal-body d-flex justify-content-center">
+    <div class="modal-body <%=  flex_justify_align('center', 'center', true)%> gap-3">
+      <div class="<%= flex_justify_align('between', 'center')%> w-100" >
+        <h5 class="text-primary mb-0">Member Information</h6>
+        <button type="button" class="<%= small_btn('danger')%>" data-bs-dismiss="modal" aria-label="Close" style="align-self: end;">
+          Close
+        </button>
+      </div>
       <%= render partial: 'coop_member', locals: { member: @member, coop_member: @coop_member } %>
     </div>
 <% end %>
