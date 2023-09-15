@@ -59,6 +59,8 @@ class BatchRemarksController < ApplicationController
     @batch_remark.user_type = current_user.userable_type
     @batch_remark.user_id = current_user.userable_id
     @ref = @batch.id
+    # @batch_remark.remarkable_id = @batch.id
+    # @batch_remark.remarkable_type = @batch.class.name
     @batch_remark.remarkable = @batch
     @batch_status = params[:batch_remark][:batch_status]
     @rem_status = remark_status(@batch_status)

@@ -1,6 +1,6 @@
 class Batch < ApplicationRecord
-  self.abstract_class = true
-  self.table_name = "batches"
+  
+  # self.table_name = "batches"
 
   include Calculate
   attr_accessor :rank
@@ -44,6 +44,7 @@ class Batch < ApplicationRecord
   has_many :member_dependents, through: :batch_dependents
   has_many :batch_beneficiaries, dependent: :destroy
   has_many :member_dependents, through: :batch_beneficiaries
+  # has_many :batch_remarks, source: :remarkable, source_type: "Batch", dependent: :destroy
   has_many :batch_remarks, as: :remarkable, dependent: :destroy
   alias_attribute :remarks, :batch_remarks
   has_many :process_claims, as: :claimable, dependent: :destroy

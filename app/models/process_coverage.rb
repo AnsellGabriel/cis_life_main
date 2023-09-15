@@ -136,6 +136,10 @@ class ProcessCoverage < ApplicationRecord
     self.group_remit.batches.first.class.name
   end
 
+  def get_batches
+    self.group_remit.batches
+  end
+
   # def set_batches_for_review
   #   self.group_remit.batches.each do |batch|
   #     batch.update_attribute(:insurance_status, :for_review)

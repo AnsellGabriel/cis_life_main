@@ -2,6 +2,7 @@
 require 'sidekiq/web'
 
 Rails.application.routes.draw do 
+  resources :reinsurances
   resources :claim_types, :claim_type_documents, :claim_type_benefits
   resources :documents
   resources :causes
@@ -22,6 +23,7 @@ Rails.application.routes.draw do
   resources :user do 
     get :approved, on: :member
   end
+
   resources :agreement_benefits do
     get :selected, on: :member
   end
@@ -36,12 +38,15 @@ Rails.application.routes.draw do
   # resources :cooperatives
   resources :coop_types
   resources :geo_barangays
+
   resources :geo_municipalities do
     get :selected, on: :member
   end
+
   resources :geo_provinces do
     get :selected, on: :member
   end
+
   resources :geo_regions do
     get :selected, on: :member
   end
@@ -132,13 +137,13 @@ Rails.application.routes.draw do
       collection do
         get :approve_all
       end
-    end
       get :modal_remarks, on: :member
       get :find_loan, on: :member
       collection do
         post :import
       end
     end
+
     resources :group_remits do
       get :submit, on: :member
     end
@@ -173,6 +178,7 @@ Rails.application.routes.draw do
   resources :process_remarks do 
     get :view_all, on: :collection
   end
+
   resources :process_coverages do 
     get :approve_batch, on: :member
     get :approve_dependent, on: :member
@@ -189,6 +195,7 @@ Rails.application.routes.draw do
     get :cov_list, on: :collection
     patch :update_batch_selected, on: :collection
   end
+
   get 'preview', to: 'process_coverages#preview'
   get 'download', to: 'process_coverages#download'
   get 'process_coverages/pdf/:id', to: "process_coverages#pdf", as: 'pc_pdf'
