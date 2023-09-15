@@ -25,7 +25,8 @@ class GroupRemit < ApplicationRecord
     active: 4,
     for_renewal: 5,
     expired: 6,
-    with_pending_members: 7
+    with_pending_members: 7,
+    with_substandard_members: 8
   }
 
   def to_s

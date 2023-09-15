@@ -136,7 +136,7 @@
       <div class="row mb-2">
         <div class="col-2">
           <div class="d-flex">
-            <% b_name = %>
+            <%# b_name = %>
             <%= check_box_tag 'btncheck1', '1', false, class: 'btn-check', data: { action: "change->checkbox-select-all#toggleChildren", checkbox_select_all_target: "parent" } %>
             <%= label_tag 'btncheck1', 'Select All', class: 'btn btn-outline-primary' %>
           </div>
