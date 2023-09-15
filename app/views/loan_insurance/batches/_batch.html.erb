@@ -16,6 +16,28 @@
       </div>
     </div>
   </td>
+	<td class="align-middle" >
+		<div class="<%= flex_justify_align('center') %>">
+			<div class="<%= flex_justify_align('','center',true) %> ps-6">
+				<div class="d-flex flex-column mb-1">
+					<%= content_tag :span, 
+              "#{to_shortdate(batch.effectivity_date)}", class: "text-secondary sm-green-text"
+          %>
+				</div>
+			</div>
+		</div>
+	</td>
+	<td class="align-middle" >
+		<div class="<%= flex_justify_align('center') %>">
+			<div class="<%= flex_justify_align('','center',true) %> ps-6">
+				<div class="d-flex flex-column mb-1">
+					<%= content_tag :span, 
+              "#{to_shortdate(batch.expiry_date)}", class: "text-secondary sm-green-text"
+          %>
+				</div>
+			</div>
+		</div>
+	</td>
   <td class="align-middle" >
 		<div class="<%= flex_justify_align('center') %>">
 			<div class="<%= flex_justify_align('','center',true) %> ps-6">
@@ -33,7 +55,11 @@
 			<div class="<%= flex_justify_align('','center',true) %> ps-6">
 				<div class="d-flex flex-column mb-1">
 					<%= content_tag :span, 
-              "#{number_to_currency(batch.unused, unit: "₱", precision: 2)}", 
+              "Unused: #{number_to_currency(batch.unused, unit: "₱", precision: 2)}", 
+              class: "text-secondary sm-green-text"
+          %>
+					<%= content_tag :span, 
+              "Excess: #{number_to_currency(batch.excess, unit: "₱", precision: 2)}", 
               class: "text-secondary sm-green-text"
           %>
 				</div>
@@ -47,18 +73,6 @@
 					<%= content_tag :span, 
               "#{number_to_currency(batch.premium_due, unit: "₱", precision: 2)}", 
               class: "text-primary sm-green-text"
-          %>
-				</div>
-			</div>
-		</div>
-	</td>
-	<td class="align-middle" >
-		<div class="<%= flex_justify_align('center') %>">
-			<div class="<%= flex_justify_align('','center',true) %> ps-6">
-				<div class="d-flex flex-column mb-1">
-					<%= content_tag :span, 
-              "#{number_to_currency(batch.excess, unit: "₱", precision: 2)}", 
-              class: "text-secondary sm-green-text"
           %>
 				</div>
 			</div>

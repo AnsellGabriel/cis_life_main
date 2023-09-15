@@ -25,9 +25,7 @@ class GroupRemitPresenter
 		@group_remit.type == 'Remittance'
 	end
 
-	def is_pending_or_renewal?
-		@group_remit.pending? || @group_remit.for_renewal?
-	end
+
 
 	def is_for_renewal?
 		@group_remit.for_renewal?
@@ -45,9 +43,7 @@ class GroupRemitPresenter
 		@group_remit.for_payment?
 	end
 
-	def complete_health_decs?
-		@group_remit.batches.where(status: :recent).where.missing(:batch_health_decs).empty?
-	end
+	
 
 	def remaining_days
 		remaining_days = (@group_remit.expiry_date - Date.today).to_i
@@ -75,52 +71,7 @@ class GroupRemitPresenter
 		end
 	end
 
-	def status_badge
-		case @group_remit.status
-		when "pending", "for_renewal", "under_review"
-			"badge bg-warning text-dark"
-		when "active"
-			"badge bg-success"
-		when "expired", "with_pending_members"
-			"badge bg-danger"
-		when "for_payment", "payment_verification"
-			"badge bg-primary"
-		end
-	end
 
-	def status_text
-		case @group_remit.status
-		when "pending"
-			"Pending"
-		when "active"
-			"Active"
-		when "expired"
-			"Expired"
-		when "for_renewal"
-			"For renewal"
-		when "under_review"
-			"Under review"
-		when "for_payment"
-			"For payment"
-		when "payment_verification"
-			"For payment verification"
-		when "with_pending_members"
-			"Pending members"
-		end
-	end
-
-	def status_mappings
-		status_mappings = {
-			for_review: { label: "For Review", class: "btn-outline-secondary" },
-			approved: { label: "Approved", class: "btn-success" },
-			pending: { label: "Pending", class: "btn-secondary" },
-			denied: { label: "Denied", class: "btn-danger" }
-		}
-
-	 	status_mappings = status_mappings.merge(for_reconsideration: {label: 'Request', class: 'btn-warning'}) if @group_remit.agreement.reconsiderable?
-
-		status_mappings
-	end
 
 	def link_to_show
 		case @group_remit.class.name

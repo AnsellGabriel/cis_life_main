@@ -22,7 +22,7 @@ class GroupRemit < ApplicationRecord
     under_review: 1,
     for_payment: 2,
     payment_verification: 3,
-    active: 4,
+    paid: 4,
     for_renewal: 5,
     expired: 6,
     with_pending_members: 7,
@@ -202,7 +202,7 @@ class GroupRemit < ApplicationRecord
 
   def total_principal_premium
     if self.class.name == 'LoanInsurance::GroupRemit'
-      loan_batches.sum(&:premium_due)
+      loan_batches.sum(:premium_due)
     else
       batches.sum(&:premium)
     end

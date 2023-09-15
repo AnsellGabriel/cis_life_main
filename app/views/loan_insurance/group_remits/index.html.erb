@@ -10,8 +10,7 @@
       </h6>
       <div class="small text-muted <%= flex_justify_align('', '', true) %>">
         <%= content_tag :span, "Required Minimum Participants: #{@agreement.minimum_participation}" %>
-        <%= content_tag :span, "Current Approved Participants: #{@agreement.group_remits.where(type: 'BatchRemit', status: :active).joins(:batches).size
-    }" %>
+        <%= content_tag :span, "Current Approved Participants: #{@agreement.active_batches_count}" %>
       </div>
     </div>
     <%= turbo_frame_tag "new_batch" do %>
