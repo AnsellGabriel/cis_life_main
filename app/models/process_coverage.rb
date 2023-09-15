@@ -81,6 +81,10 @@ class ProcessCoverage < ApplicationRecord
     end
   end
 
+  def get_plan_acronym
+    self.group_remit.agreement.plan.acronym
+  end
+
   def get_plan
     self.group_remit.agreement.plan
   end
@@ -126,6 +130,10 @@ class ProcessCoverage < ApplicationRecord
     else
       self.group_remit.batches.where(batches: { insurance_status: [:for_review, :pending] }).count
     end
+  end
+
+  def get_batch_class_name
+    self.group_remit.batches.first.class.name
   end
 
   # def set_batches_for_review

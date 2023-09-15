@@ -239,17 +239,25 @@ class ProcessCoveragesController < ApplicationController
     ids = params[:b_ids]
     
     if params[:approve]
-
-      Batch.where(id: ids).update_all(insurance_status: :approved)
+      case @pro_cov.get_batch_class_name
+      when "LoanInsurance::Batch"
+        LoanInsurance::Batch.where(id: ids).update_all(insurance_status: :approved)
+      else
+        Batch.where(id: ids).update_all(insurance_status: :approved)
+      end
+      
       @pro_cov.increment!(:approved_count, ids.length)
-
       redirect_to process_coverage_path(@pro_cov), notice: "Selected Coverages Approved!"
       
     elsif params[:deny]
-  
-      Batch.where(id: ids).update_all(insurance_status: :denied)
+      case @pro_cov.get_batch_class_name
+      when "LoanInsurance::Batch"
+        LoanInsurance::Batch.where(id: ids).update_all(insurance_status: :denied)
+      else
+        Batch.where(id: ids).update_all(insurance_status: :denied)
+      end
+      
       @pro_cov.increment!(:denied_count, ids.length)
-
       redirect_to process_coverage_path(@pro_cov), alert: "Selected Coverages Denied!"
     end
     
@@ -267,6 +275,7 @@ class ProcessCoveragesController < ApplicationController
         when "regular_ren" then @batches_o.where(age: 18..65, status: 1..2)
         when "overage" then @batches_o.where(age: 66..)
         when "reconsider" then @batches_o.where(status: :for_reconsideration)
+        when "substandard" then @batches_o.where(substandard: true)
           # when "health_decs" then @batches_o.joins(:batch_health_decs)
         when "health_decs" then @batches_o.joins(:batch_health_decs).where(loan_insurance_batches: { valid_health_dec: false }).distinct
           # when "health_decs" then @batches_o.joins(:batch_health_dec).where.not(batch_health_decs: { health_dec_question_id: nil })
@@ -361,24 +370,46 @@ class ProcessCoveragesController < ApplicationController
   end
 
   def set_premium_batch
-    @batch = Batch.find(params[:batch])
+        
+    case params[:batch_type]
+    when "LoanInsurance::Batch"
+      @batch = LoanInsurance::Batch.find(params[:batch])
+    else
+      @batch = Batch.find(params[:batch])
+    end
   end
 
   def update_batch_prem
     # raise 'errors'
-    @batch = Batch.find_by(id: params[:process_coverage][:batch])
-    @premium = params[:process_coverage][:premium].to_d
     @group_remit = @process_coverage.group_remit
+
+    case @process_coverage.get_batch_class_name
+    when "LoanInsurance::Batch"
+      @batch = LoanInsurance::Batch.find_by(id: params[:process_coverage][:batch])
+      rate = params[:process_coverage][:premium].to_d
+      @batch.update_prem_substandard(rate)
+      @batch.substandard = true
+    else
+      @batch = Batch.find_by(id: params[:process_coverage][:batch])
+      @premium = params[:process_coverage][:premium].to_d
+      @batch.set_premium_and_sf_for_reconsider(@group_remit, @premium)
+    end
+
     
-    @batch.set_premium_and_sf_for_reconsider(@group_remit, @premium)
     @batch.insurance_status = :pending
     @batch.batch_remarks.build(remark: "Adjusted Premium set. Premium: #{@batch.premium}", status: :pending, user_type: 'Employee', user_id: current_user.userable.id)
 
     respond_to do |format|
+      # raise 'errors'
       if @batch.save!
         # @group_remit.set_total_premiums_and_fees
-        @group_remit.update(status: :with_pending_members) 
-        format.html { redirect_to process_coverage_path(@process_coverage, search: 'reconsider'), notice: "Batch Premium Updated!"}
+        if @process_coverage.get_plan_acronym == "LPPI"
+          @group_remit.update(status: :with_substandard_members) 
+          format.html { redirect_to process_coverage_path(@process_coverage), notice: "Batch Premium Updated!"}
+        else
+          @group_remit.update(status: :with_pending_members) 
+          format.html { redirect_to process_coverage_path(@process_coverage, search: 'reconsider'), notice: "Batch Premium Updated!"}
+        end
       end
     end
 
@@ -560,7 +591,7 @@ class ProcessCoveragesController < ApplicationController
   end
 
   def modal_remarks
-    
+        
     @batch = case params[:batch_type]
     when "LoanInsurance::Batch" 
       LoanInsurance::Batch.find(params[:batch])
@@ -568,7 +599,7 @@ class ProcessCoveragesController < ApplicationController
       Batch.find(params[:batch])
     end
     
-    @batch_remarks = @batch.batch_remarks.where(batch_type: @batch.class.name)
+    @batch_remarks = @batch.batch_remarks.where(remarkable: @batch)
     @pagy_br, @filtered_br = pagy(@batch_remarks, items: 3, page_param: :b_remarks)
     @process_coverage = ProcessCoverage.find(params[:id])
   end

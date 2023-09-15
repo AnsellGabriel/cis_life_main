@@ -185,7 +185,6 @@ ActiveRecord::Schema[7.0].define(version: 2023_09_13_053742) do
     t.bigint "user_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.string "batch_type", default: "Batch"
     t.string "remarkable_type", null: false
     t.bigint "remarkable_id", null: false
     t.index ["remarkable_type", "remarkable_id"], name: "index_batch_remarks_on_remarkable"
@@ -614,7 +613,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_09_13_053742) do
     t.boolean "terminated"
     t.date "terminate_date"
     t.integer "unused_loan_id"
-    t.decimal "excess", precision: 10, scale: 2, default: "0.0"
+    t.boolean "substandard", default: false
     t.index ["coop_member_id"], name: "index_loan_insurance_batches_on_coop_member_id"
     t.index ["group_remit_id"], name: "index_loan_insurance_batches_on_group_remit_id"
     t.index ["loan_insurance_loan_id"], name: "index_loan_insurance_batches_on_loan_insurance_loan_id"
