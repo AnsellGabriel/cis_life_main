@@ -2,7 +2,7 @@ class GroupRemitsController < InheritedResources::Base
   include Container
   include Counter
   include BatchesLoader
-  
+
   before_action :authenticate_user!
   before_action :check_userable_type
   before_action :set_group_remit, only: %i[show edit update destroy submit payment]
@@ -35,9 +35,9 @@ class GroupRemitsController < InheritedResources::Base
     else
       @group_remit.set_under_review_status
     end
-    
+
     @group_remit.date_submitted = Date.today
-    
+
     respond_to do |format|
       if @group_remit.save!
         @process_coverage = @group_remit.build_process_coverage
@@ -75,9 +75,9 @@ class GroupRemitsController < InheritedResources::Base
   def new
     @agreement = Agreement.find_by(id: params[:agreement_id])
     @group_remit = @agreement.group_remits.build(
-      name: FFaker::Company.name, 
-      description: FFaker::Lorem.paragraph, 
-      agreement_id: 1, 
+      name: FFaker::Company.name,
+      description: FFaker::Lorem.paragraph,
+      agreement_id: 1,
       anniversary_id: 1)
   end
 
@@ -87,13 +87,13 @@ class GroupRemitsController < InheritedResources::Base
     if @agreement.is_term_insurance? && params[:group_remit][:terms].blank?
       return redirect_to coop_agreement_path(@agreement), alert: 'Please select a term duration'
     end
-    
+
     @group_remit = @agreement.group_remits.build(type: 'Remittance')
     anniversary_date = set_anniversary(@agreement.anniversary_type, params[:anniversary_id])
     terms = params[:group_remit][:terms] if params[:group_remit].present?
 
     GroupRemit.process_group_remit(@group_remit, anniversary_date, params[:anniversary_id], terms)
-    
+
     respond_to do |format|
       if @group_remit.save!
 
@@ -108,7 +108,7 @@ class GroupRemitsController < InheritedResources::Base
         else
           @group_remit.update!(batch_remit_id: params[:batch_remit_id])
         end
-        
+
         format.html { redirect_to coop_agreement_group_remit_path(@agreement, @group_remit), notice: "Group remit was successfully created." }
       else
         format.html { render :new, status: :unprocessable_entity }
@@ -153,13 +153,13 @@ class GroupRemitsController < InheritedResources::Base
     respond_to do |format|
       if @group_remit.save!
         approved_batches = @group_remit.batches.approved
-        approved_members = CoopMember.approved_members(approved_batches) 
+        approved_members = CoopMember.approved_members(approved_batches)
         current_batch_remit = BatchRemit.find(@group_remit.batch_remit_id)
         duplicate_batches = current_batch_remit.batch_group_remits.existing_members(approved_members)
 
         BatchRemit.process_batch_remit(current_batch_remit, duplicate_batches, approved_batches)
 
-        current_batch_remit.save!        
+        current_batch_remit.save!
         format.html { redirect_to coop_agreement_group_remit_path(@group_remit.agreement, @group_remit), notice: "Proof of payment sent" }
       else
         format.html { redirect_to coop_agreement_group_remit_path(@group_remit.agreement, @group_remit), alert: "Invalid proof of payment" }
@@ -171,7 +171,7 @@ class GroupRemitsController < InheritedResources::Base
   private
 
     def set_group_remit
-      @group_remit = GroupRemit.includes(:batches).find(params[:id])
+      @group_remit = GroupRemit.includes(:batches).find(params[:id]).decorate
     end
 
     def set_members
@@ -179,7 +179,7 @@ class GroupRemitsController < InheritedResources::Base
     end
 
     def group_remit_params
-      params.require(:group_remit).permit(:name, :description, :agreement_id, :anniversary_id, 
+      params.require(:group_remit).permit(:name, :description, :agreement_id, :anniversary_id,
         process_coverage_attributes: [:group_remit_id, :effectivity, :expiry], payments_attributes: [:id, :receipt, :_destroy] )
     end
 

@@ -1,7 +1,7 @@
 class GroupRemit < ApplicationRecord
   before_destroy :delete_associated_batches
 
-  validates_presence_of :name#, :effectivity_date, :expiry_date, :terms
+  validates_presence_of :name #, :effectivity_date, :expiry_date, :terms
 
   scope :batch_remits, -> { where(:type => 'BatchRemit')}
   scope :loan_remits, -> { where(:type => 'LoanInsurance::GroupRemit')}
@@ -12,7 +12,7 @@ class GroupRemit < ApplicationRecord
   has_many :batches, through: :batch_group_remits
   has_many :denied_members, dependent: :destroy
   has_many :payments, dependent: :destroy
-  has_many :loan_batches, dependent: :destroy, class_name: 'LoanInsurance::Batch'
+  # has_many :loan_batches, dependent: :destroy, class_name: 'LoanInsurance::Batch'
   has_one :process_coverage, dependent: :destroy
   has_one :group_import_tracker, dependent: :destroy
   accepts_nested_attributes_for :payments

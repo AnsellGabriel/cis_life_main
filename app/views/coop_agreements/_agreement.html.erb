@@ -5,23 +5,22 @@
   <% agreement_presenter = AgreementPresenter.new(agreement) %>
 
   <div class="<%= flex_justify_align('', 'center', true) %> gap-3">
-    <% agreement.group_remits.where(type: 'BatchRemit').each do |batch_remit| %>
-      <% gr_presenter = GroupRemitPresenter.new(batch_remit) %>
+    <% agreement.group_remits.where(type: 'BatchRemit').decorate.each do |batch_remit| %>
       <div class="card">
         <div class="card-body d-flex flex-column" style="width: 400px">
 
-          <% if gr_presenter.remaining_days <= 90 && gr_presenter.remaining_days > 0 %>
+          <% if batch_remit.remaining_days <= 90 && batch_remit.remaining_days > 0 %>
             <div class="">
-              <span class="<%= badge("#{gr_presenter.countdown_color}") %>">
-                  Expiry : <%= gr_presenter.remaining_days %> days
+              <span class="<%= badge("#{batch_remit.countdown_color}") %>">
+                  Expiry : <%= batch_remit.remaining_days %> days
               </span>
             </div>
           <% end %>
 
           <div class="mb-1 <%= flex_justify_align('between', 'center') %>">
             <div class="<%= flex_justify_align('','center') %> gap-1">
-              <span class="<%= gr_presenter.status_badge %>">
-                <%= gr_presenter.status_text %>
+              <span class="<%= batch_remit.status_badge %>">
+                <%= batch_remit.status_text %>
               </span>
             </div>
             <div class="">

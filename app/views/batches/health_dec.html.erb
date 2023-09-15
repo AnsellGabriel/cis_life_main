@@ -1,9 +1,8 @@
-<% presenter_gr = GroupRemitPresenter.new(@group_remit) %>
 <%= turbo_frame_tag "reg_form_modal_xl" do %>
   <div class="modal-header">
     <%= content_tag :h5, "Health Declaration - #{@member.last_name}, #{@member.first_name} #{@member.middle_name}", class: "modal-title", id: "staticBackdropLabel" %>
     <% unless @for_und.present? %>
-      <%= link_to presenter_gr.link_to_show, data: {turbo: false} do %>
+      <%= link_to @group_remit.link_to_show, data: {turbo: false} do %>
         <button type="button" class="btn-close" aria-label="Close"></button>
       <% end %>
     <% else %>

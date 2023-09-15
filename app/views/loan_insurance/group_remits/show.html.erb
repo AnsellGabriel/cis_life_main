@@ -129,6 +129,12 @@
 
       <% if @group_remit.batches.exists? %>
         <%= render @batches, group_remit: @group_remit, agreement: @agreement %>
+      <% else %>
+        <tr>
+          <td colspan="8" class="text-center">
+            No record found.
+          </td>
+        </tr>
       <% end %>
 
     </tbody>
@@ -136,8 +142,6 @@
 
 </div>
 <% end %>
-
-
 
 <%= turbo_frame_tag "computation" do %>
   <%= render "loan_insurance/group_remits/computation", group_remit: @group_remit, agreement: @agreement %>

@@ -49,8 +49,6 @@ class LoanInsurance::GroupRemitsController < ApplicationController
 
     load_batches
     paginate_batches
-
-    # @gr_presenter = GroupRemitPresenter.new(@group_remit)
   end
 
   def new
