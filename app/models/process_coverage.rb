@@ -114,6 +114,7 @@ class ProcessCoverage < ApplicationRecord
     self.group_remit.batches.where(insurance_status: :approved).sum(:premium) - (self.group_remit.batches.where(insurance_status: :approved).sum(:coop_sf_amount) + self.group_remit.batches.where(insurance_status: :approved).sum(:agent_sf_amount))
   end
 
+  
   def count_batches_denied(klass)
     case klass
     when "LoanInsurance::Batch"

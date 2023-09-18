@@ -55,7 +55,7 @@
     <% end %>
     <%= content_tag :p do %>
       <strong>Total Life Coverage:</strong>
-      <%= to_currency(process_coverage.sum_batches_loan_amount) %>
+      <%= to_currency(@total_life_cov) %>
     <% end %>
     <%= content_tag :p do %>
       <strong>Total Gross Premium:</strong>
