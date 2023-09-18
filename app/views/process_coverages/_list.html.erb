@@ -6,6 +6,7 @@
     <th>Agent</th>
     <th>Terms</th>
     <th>Status</th>
+    <th>Approver</th>
   </thead>
   <tbody>
     <% unless process_coverages.count == 0 %>
@@ -19,11 +20,12 @@
           <td><%= pc.agent %></td>
           <td><%= term %></td>
           <td><%= pc.status %></td>
+          <td><%= pc.approver %></td>
         </tr>
       <% end %>
     <% else %>
       <tr>
-        <%= content_tag :td, "NO RECORD(S)", colspan: 6, class: "lead text-center" %>
+        <%= content_tag :td, "NO RECORD(S)", colspan: 7, class: "lead text-center" %>
       </tr>
     <% end %>
   </tbody>

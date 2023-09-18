@@ -31,6 +31,18 @@ class BatchDependent < ApplicationRecord
     }[relationship]
   end
 
+  def self.gross_prem(group_remit_id)
+    joins(batch: { batch_group_remits: :group_remit}).where(group_remits: {id: group_remit_id}).where(insurance_status: :approved).sum(:premium)
+  end
+
+  def self.coop_sf_amt(group_remit_id)
+    joins(batch: { batch_group_remits: :group_remit}).where(group_remits: {id: group_remit_id}).where(insurance_status: :approved).sum(:coop_sf_amount)
+  end
+
+  def self.agent_sf_amt(group_remit_id)
+    joins(batch: { batch_group_remits: :group_remit}).where(group_remits: {id: group_remit_id}).where(insurance_status: :approved).sum(:agent_sf_amount)
+  end
+
   # def validate_age
   #   age = self.member_dependent.age 
 

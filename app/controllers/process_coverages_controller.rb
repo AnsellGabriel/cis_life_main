@@ -39,7 +39,7 @@ class ProcessCoveragesController < ApplicationController
       @approved_process_coverages = @process_coverages_x.where(status: :approved)
       # @pending_process_coverages = ProcessCoverage.where(status: :pending)
       @reprocess_coverages = @process_coverages_x.where(status: :reprocess)
-      @reassess_coverages = ProcessCoverage.where(status: :reassess)
+      @reassess_coverages = @process_coverages_x.where(status: :reassess)
       @denied_process_coverages = @process_coverages_x.where(status: :denied)
 
       if params[:search].present?
@@ -131,97 +131,62 @@ class ProcessCoveragesController < ApplicationController
   def cov_list
     # raise 'errors'
     @current_date = params[:current_date]&.to_date
+
+    if params[:date_type] == "yearly"
+      start_date = @current_date.beginning_of_year
+      end_date = @current_date.end_of_year
+    elsif params[:date_type] == "monthly"
+      start_date = @current_date.beginning_of_month
+      end_date = @current_date.end_of_month
+    elsif params[:date_type] == "weekly"
+      start_date = @current_date.beginning_of_week
+      end_date = @current_date.end_of_week
+    end
+
     @process_coverages = case params[:cov_type]
       when "For Process" 
-        if params[:date_type] == "yearly"
-          start_date = @current_date.beginning_of_year
-          end_date = @current_date.end_of_year
-          
-        elsif params[:date_type] == "monthly"
-          start_date = @current_date.beginning_of_month
-          end_date = @current_date.end_of_month
-        elsif params[:date_type] == "weekly"
-          start_date = @current_date.beginning_of_week
-          end_date = @current_date.end_of_week
-        end
         # ProcessCoverage.where(status: :for_process, created_at: start_date..end_date)
         if current_user.head?
-          ProcessCoverage.joins(group_remit: { agreement: { emp_agreements: {employee: :emp_approver} } }).where( emp_approver: { approver_id: current_user.userable_id }, emp_agreements: { active: true}).where(status: :for_process, created_at: start_date..end_date)
+          # ProcessCoverage.joins(group_remit: { agreement: { emp_agreements: {employee: :emp_approver} } }).where( emp_approver: { approver_id: current_user.userable_id }, emp_agreements: { active: true}).where(status: :for_process, created_at: start_date..end_date)
+          ProcessCoverage.index_cov_list(current_user.userable_id, :for_process, start_date..end_date)
         elsif current_user.senior_officer?
           ProcessCoverage.where(status: :for_process, created_at: start_date..end_date)
         end
         
       when "Approved" 
-        if params[:date_type] == "yearly"
-          start_date = @current_date.beginning_of_year
-          end_date = @current_date.end_of_year
-          
-        elsif params[:date_type] == "monthly"
-          start_date = @current_date.beginning_of_month
-          end_date = @current_date.end_of_month
-        elsif params[:date_type] == "weekly"
-          start_date = @current_date.beginning_of_week
-          end_date = @current_date.end_of_week
-        end
         # ProcessCoverage.where(status: :approved, created_at: start_date..end_date)
         if current_user.head?
-          ProcessCoverage.joins(group_remit: { agreement: { emp_agreements: {employee: :emp_approver} } }).where( emp_approver: { approver_id: current_user.userable_id }, emp_agreements: { active: true}).where(status: :approved, created_at: start_date..end_date)
+          ProcessCoverage.index_cov_list(current_user.userable_id, :approved, start_date..end_date)
+          # ProcessCoverage.joins(group_remit: { agreement: { emp_agreements: {employee: :emp_approver} } }).where( emp_approver: { approver_id: current_user.userable_id }, emp_agreements: { active: true}).where(status: :approved, created_at: start_date..end_date)
         elsif current_user.senior_officer?
           ProcessCoverage.where(status: :approved, created_at: start_date..end_date)
         end
 
       when "Reconsider" 
-        if params[:date_type] == "yearly"
-          start_date = @current_date.beginning_of_year
-          end_date = @current_date.end_of_year
-          
-        elsif params[:date_type] == "monthly"
-          start_date = @current_date.beginning_of_month
-          end_date = @current_date.end_of_month
-        elsif params[:date_type] == "weekly"
-          start_date = @current_date.beginning_of_week
-          end_date = @current_date.end_of_week
-        end
         # ProcessCoverage.where(status: :for_reconsider, created_at: start_date..end_date)
         if current_user.head?
-          ProcessCoverage.joins(group_remit: { agreement: { emp_agreements: {employee: :emp_approver} } }).where( emp_approver: { approver_id: current_user.userable_id }, emp_agreements: { active: true}).where(status: :reprocess, created_at: start_date..end_date)
+          ProcessCoverage.index_cov_list(current_user.userable_id, :reprocess, start_date..end_date)
+          # ProcessCoverage.joins(group_remit: { agreement: { emp_agreements: {employee: :emp_approver} } }).where( emp_approver: { approver_id: current_user.userable_id }, emp_agreements: { active: true}).where(status: :reprocess, created_at: start_date..end_date)
         elsif current_user.senior_officer?
           ProcessCoverage.where(status: :reprocess, created_at: start_date..end_date)
         end
 
       when "Reassess" 
-        if params[:date_type] == "yearly"
-          start_date = @current_date.beginning_of_year
-          end_date = @current_date.end_of_year
-          
-        elsif params[:date_type] == "monthly"
-          start_date = @current_date.beginning_of_month
-          end_date = @current_date.end_of_month
-        elsif params[:date_type] == "weekly"
-          start_date = @current_date.beginning_of_week
-          end_date = @current_date.end_of_week
-        end
+        
+        binding.pry
+        
         # ProcessCoverage.where(status: :for_reconsider, created_at: start_date..end_date)
         if current_user.head?
-          ProcessCoverage.joins(group_remit: { agreement: { emp_agreements: {employee: :emp_approver} } }).where( emp_approver: { approver_id: current_user.userable_id }, emp_agreements: { active: true}).where(status: :reassess, created_at: start_date..end_date)
+          ProcessCoverage.index_cov_list(current_user.userable_id, :reassess, start_date..end_date)
+          # ProcessCoverage.joins(group_remit: { agreement: { emp_agreements: {employee: :emp_approver} } }).where( emp_approver: { approver_id: current_user.userable_id }, emp_agreements: { active: true}).where(status: :reassess, created_at: start_date..end_date)
         elsif current_user.senior_officer?
           ProcessCoverage.where(status: :reassess, created_at: start_date..end_date)
         end
 
       when "Denied" 
-        if params[:date_type] == "yearly"
-          start_date = @current_date.beginning_of_year
-          end_date = @current_date.end_of_year
-          
-        elsif params[:date_type] == "monthly"
-          start_date = @current_date.beginning_of_month
-          end_date = @current_date.end_of_month
-        elsif params[:date_type] == "weekly"
-          start_date = @current_date.beginning_of_week
-          end_date = @current_date.end_of_week
-        end
         if current_user.head?
-          ProcessCoverage.joins(group_remit: { agreement: { emp_agreements: {employee: :emp_approver} } }).where( emp_approver: { approver_id: current_user.userable_id }, emp_agreements: { active: true}).where(status: :denied, created_at: start_date..end_date)
+          ProcessCoverage.index_cov_list(current_user.userable_id, :denied, start_date..end_date)
+          # ProcessCoverage.joins(group_remit: { agreement: { emp_agreements: {employee: :emp_approver} } }).where( emp_approver: { approver_id: current_user.userable_id }, emp_agreements: { active: true}).where(status: :denied, created_at: start_date..end_date)
         elsif current_user.senior_officer?
           ProcessCoverage.where(status: :denied, created_at: start_date..end_date)
         end
@@ -237,29 +202,37 @@ class ProcessCoveragesController < ApplicationController
     # raise 'errors'
     @pro_cov = ProcessCoverage.find_by(id: params[:p_id])
     ids = params[:b_ids]
-    
-    if params[:approve]
-      case @pro_cov.get_batch_class_name
-      when "LoanInsurance::Batch"
-        LoanInsurance::Batch.where(id: ids).update_all(insurance_status: :approved)
-      else
-        Batch.where(id: ids).update_all(insurance_status: :approved)
+
+    if ids.nil?
+      redirect_to process_coverage_path(@pro_cov), alert: "Please select batch(es) to update!"
+
+    else
+
+      if params[:approve]
+        case @pro_cov.get_batch_class_name
+        when "LoanInsurance::Batch"
+          LoanInsurance::Batch.where(id: ids).update_all(insurance_status: :approved)
+        else
+          Batch.where(id: ids).update_all(insurance_status: :approved)
+        end
+        
+        @pro_cov.increment!(:approved_count, ids.length)
+        redirect_to process_coverage_path(@pro_cov), notice: "Selected Coverages Approved!"
+        
+      elsif params[:deny]
+        case @pro_cov.get_batch_class_name
+        when "LoanInsurance::Batch"
+          LoanInsurance::Batch.where(id: ids).update_all(insurance_status: :denied)
+        else
+          Batch.where(id: ids).update_all(insurance_status: :denied)
+        end
+        
+        @pro_cov.increment!(:denied_count, ids.length)
+        redirect_to process_coverage_path(@pro_cov), alert: "Selected Coverages Denied!"
       end
-      
-      @pro_cov.increment!(:approved_count, ids.length)
-      redirect_to process_coverage_path(@pro_cov), notice: "Selected Coverages Approved!"
-      
-    elsif params[:deny]
-      case @pro_cov.get_batch_class_name
-      when "LoanInsurance::Batch"
-        LoanInsurance::Batch.where(id: ids).update_all(insurance_status: :denied)
-      else
-        Batch.where(id: ids).update_all(insurance_status: :denied)
-      end
-      
-      @pro_cov.increment!(:denied_count, ids.length)
-      redirect_to process_coverage_path(@pro_cov), alert: "Selected Coverages Denied!"
+
     end
+    
     
     # redirect_to process_coverage_path(@process_coverage), notice: "Selected Coverages Approved!"
   end
@@ -329,29 +302,27 @@ class ProcessCoveragesController < ApplicationController
       @pagy_batch, @filtered_batches  = pagy(@batches, items: 10, page_param: :batch)
   
       @process_cov = ProcessCoverage.includes(group_remit: { batches: [:batch_remarks, coop_member: :member ] }).find(params[:id])
-  
-     
-  
-      # @life_cov = ProcessCoverage.includes(group_remit: { moa: { proposal:{ proposal_insureds: :proposal_insured_benefits }}}).find_by(id: @process_coverage.id).group_remit.moa.proposal.proposal_insureds.joins(:proposal_insured_benefits).where(proposal_insureds: {insured_type: 1}, proposal_insured_benefits: {benefit: 1}).pluck('proposal_insured_benefits.cov_amount').first
+      
+      @group_remit = @process_coverage.group_remit
   
       # @life_cov = ProcessCoverage.includes(group_remit: { agreement: { agreement_benefits: :product_benefits }}).find_by(id: @process_coverage.id).group_remit.agreement.agreement_benefits.joins(:product_benefits).where(agreement_benefits: {insured_type: 1}, product_benefits: {benefit_id: 1}).pluck('product_benefits.coverage_amount').first
-  
-      @life_cov = ProcessCoverage.includes(group_remit: { agreement: { agreement_benefits: :product_benefits }}).find_by(id: @process_coverage.id).group_remit.agreement.agreement_benefits.joins(:product_benefits).where(agreement_benefits: {insured_type: 1}, product_benefits: {benefit_id: 1}).pluck('product_benefits.coverage_amount').first
   
       @batches_x = @process_coverage.group_remit.batches
       # @total_life_cov = ProductBenefit.joins(agreement_benefit: :batch).where('batches.id IN (?)', @batches_x.pluck(:id)).where('product_benefits.benefit_id = ?', 1).sum(:coverage_amount)
       # raise 'errors'
-      @total_life_cov = ProductBenefit.joins(agreement_benefit: :batches).where('batches.id IN (?)', @batches_x.pluck(:id)).where('product_benefits.benefit_id = ?', 1).sum(:coverage_amount)
+      # @total_life_cov = ProductBenefit.joins(agreement_benefit: :batches).where('batches.id IN (?)', @batches_x.pluck(:id)).where('product_benefits.benefit_id = ?', 1).sum(:coverage_amount)
+      @total_life_cov = ProductBenefit.total_cov_amt(@batches_x)
   
       #principal premium
-      @principal_net_prem = @process_coverage.group_remit.batches.where(insurance_status: "approved").sum(:premium) - (@process_coverage.group_remit.batches.where(insurance_status: "approved").sum(:coop_sf_amount) + @process_coverage.group_remit.batches.where(insurance_status: "approved").sum(:agent_sf_amount))
+      @principal_net_prem = @process_coverage.get_principal_prem
+      # @principal_net_prem = @process_coverage.group_remit.batches.where(insurance_status: "approved").sum(:premium) - (@process_coverage.group_remit.batches.where(insurance_status: "approved").sum(:coop_sf_amount) + @process_coverage.group_remit.batches.where(insurance_status: "approved").sum(:agent_sf_amount))
       
       #dependent premium
-      @batch_dependents_net_prem = BatchDependent.joins(batch: { batch_group_remits: :group_remit}).where(group_remits: {id: @process_coverage.group_remit_id}).where(insurance_status: :approved).sum(:premium) - (BatchDependent.joins(batch: { batch_group_remits: :group_remit}).where(group_remits: {id: @process_coverage.group_remit_id}).where(insurance_status: :approved).sum(:coop_sf_amount) + BatchDependent.joins(batch: { batch_group_remits: :group_remit}).where(group_remits: {id: @process_coverage.group_remit_id}).where(insurance_status: :approved).sum(:agent_sf_amount))
-      
+      @batch_dependents_net_prem = BatchDependent.gross_prem(@group_remit.id) - (BatchDependent.coop_sf_amt(@group_remit.id) + BatchDependent.agent_sf_amt(@group_remit.id))
+      # @batch_dependents_net_prem = BatchDependent.joins(batch: { batch_group_remits: :group_remit}).where(group_remits: {id: @process_coverage.group_remit_id}).where(insurance_status: :approved).sum(:premium) - (BatchDependent.joins(batch: { batch_group_remits: :group_remit}).where(group_remits: {id: @process_coverage.group_remit_id}).where(insurance_status: :approved).sum(:coop_sf_amount) + BatchDependent.joins(batch: { batch_group_remits: :group_remit}).where(group_remits: {id: @process_coverage.group_remit_id}).where(insurance_status: :approved).sum(:agent_sf_amount))
+
       @total_net_prem = @principal_net_prem + @batch_dependents_net_prem
   
-      @group_remit = @process_coverage.group_remit
       # raise 'errors'
       puts "#{@total_net_prem} ********************************"
     end

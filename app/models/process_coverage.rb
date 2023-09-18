@@ -114,6 +114,7 @@ class ProcessCoverage < ApplicationRecord
     self.group_remit.batches.where(insurance_status: :approved).sum(:premium) - (self.group_remit.batches.where(insurance_status: :approved).sum(:coop_sf_amount) + self.group_remit.batches.where(insurance_status: :approved).sum(:agent_sf_amount))
   end
 
+  
   def count_batches_denied(klass)
     case klass
     when "LoanInsurance::Batch"
@@ -138,6 +139,18 @@ class ProcessCoverage < ApplicationRecord
 
   def get_batches
     self.group_remit.batches
+  end
+
+  def get_principal_prem
+    prem = self.group_remit.batches.where(insurance_status: "approved").sum(:premium)
+    coop_sf = self.group_remit.batches.where(insurance_status: "approved").sum(:coop_sf_amount)
+    agent_sf = self.group_remit.batches.where(insurance_status: "approved").sum(:agent_sf_amount)
+
+    prem - (coop_sf + agent_sf)
+  end
+
+  def self.index_cov_list(approver_id, status, date_range)
+    joins(group_remit: { agreement: { emp_agreements: {employee: :emp_approver} } }).where( emp_approver: { approver_id: approver_id }, emp_agreements: { active: true}).where(status: status, created_at: date_range)
   end
 
   # def set_batches_for_review
