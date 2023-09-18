@@ -90,15 +90,15 @@ class ProcessCoverage < ApplicationRecord
   end
 
   def count_regular_batches(age_range)
-    self.group_remit.loan_batches.where(age: age_range).count
+    self.group_remit.batches.where(age: age_range).count
   end
   
   def count_overage_batches
-    self.group_remit.loan_batches.where(age: 66..).count
+    self.group_remit.batches.where(age: 66..).count
   end
 
   def sum_batches_loan_amount
-    self.group_remit.loan_batches.where(insurance_status: :approved).sum(:loan_amount)
+    self.group_remit.batches.where(insurance_status: :approved).sum(:loan_amount)
   end
 
   def sum_batches_gross_prem(klass)
@@ -111,7 +111,7 @@ class ProcessCoverage < ApplicationRecord
   end
   
   def sum_batches_net_premium #gyrt
-    self.group_remit.loan_batches.where(insurance_status: :approved).sum(:premium) - (self.group_remit.loan_batches.where(insurance_status: :approved).sum(:coop_sf_amount) + self.group_remit.loan_batches.where(insurance_status: :approved).sum(:agent_sf_amount))
+    self.group_remit.batches.where(insurance_status: :approved).sum(:premium) - (self.group_remit.batches.where(insurance_status: :approved).sum(:coop_sf_amount) + self.group_remit.batches.where(insurance_status: :approved).sum(:agent_sf_amount))
   end
 
   def count_batches_denied(klass)
