@@ -19,10 +19,16 @@ class BatchesController < ApplicationController
     @import_result = import_service.import
 
     if @import_result.is_a?(Hash)
-      notice = "#{@import_result[:added_members_counter]} members successfully added. #{@import_result[:denied_members_counter]} members denied."
+      added_members_count = @import_result[:added_members_counter]
+      denied_members_count = @import_result[:denied_members_counter]
+
+      added_message = "#{added_members_count} members successfully added." if added_members_count > 0
+      denied_message = "#{denied_members_count} members denied." if denied_members_count > 0
+
+      notice = [added_message, denied_message].compact.join(' ')
       redirect_to group_remit_path(@group_remit), notice: notice
     else
-      redirect_to group_remit_path(@group_remit), notice: @import_result
+      redirect_to group_remit_path(@group_remit), alert: @import_result
     end
   end
 
@@ -33,7 +39,7 @@ class BatchesController < ApplicationController
             else
               Batch.find(params[:id])
             end
-            
+
     @member = @batch.member_details
     @batch_health_dec = @batch.health_declaration
     @group_remit = GroupRemit.find(params[:group_remit_id]).decorate
@@ -55,12 +61,13 @@ class BatchesController < ApplicationController
   def all_health_decs
     @group_remit = GroupRemit.find(params[:group_remit_id])
     @batches_o = @group_remit.batches
-    @batches = case @batches_o.first.class.name
-    when "LoanInsurance::Batch"
-      @group_remit.loan_batches.joins(:batch_health_decs).distinct
-    else
-      @group_remit.batches.joins(:batch_health_decs).distinct
-    end
+    # @batches = case @batches_o.first.class.name
+    # when "LoanInsurance::Batch"
+    #   @group_remit.loan_batches.joins(:batch_health_decs).distinct
+    # else
+    #   @group_remit.batches.joins(:batch_health_decs).distinct
+    # end
+    @batches = @group_remit.batches.joins(:batch_health_decs).distinct
   end
 
   def index

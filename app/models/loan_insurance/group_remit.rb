@@ -2,9 +2,10 @@ class LoanInsurance::GroupRemit < GroupRemit
   validates :type, inclusion: { in: ['LoanInsurance::GroupRemit'], message: 'is not valid' }
 
   has_many :batches, class_name: "LoanInsurance::Batch", foreign_key: "group_remit_id", dependent: :destroy
+  # has_many :payments, as: :payable, dependent: :destroy, class_name: "Payment"
 
   def terminate_unused_batches(current_user)
-    unused_ids = loan_batches.pluck(:unused_loan_id).compact
+    unused_ids = batches.pluck(:unused_loan_id).compact
     unused_batches = LoanInsurance::Batch.where(id: unused_ids)
     unused_batches.update_all(insurance_status: :terminated)
     unused_batches.each do |batch|
@@ -13,11 +14,15 @@ class LoanInsurance::GroupRemit < GroupRemit
   end
 
   def total_unused_premium
-    loan_batches.sum(:unused)
+    batches.sum(:unused)
   end
 
   def total_premium_due
-    loan_batches.sum(:premium_due)
+    batches.sum(:premium_due)
+  end
+
+  def payments
+    Payment.where(payable_type: 'LoanInsurance::GroupRemit', payable_id: self.id)
   end
 
 end

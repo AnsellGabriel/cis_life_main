@@ -11,7 +11,7 @@ class GroupRemit < ApplicationRecord
   has_many :batch_group_remits
   has_many :batches, through: :batch_group_remits
   has_many :denied_members, dependent: :destroy
-  has_many :payments, dependent: :destroy
+  has_many :payments, as: :payable, dependent: :destroy
   # has_many :loan_batches, dependent: :destroy, class_name: 'LoanInsurance::Batch'
   has_one :process_coverage, dependent: :destroy
   has_one :group_import_tracker, dependent: :destroy
@@ -202,7 +202,7 @@ class GroupRemit < ApplicationRecord
 
   def total_principal_premium
     if self.class.name == 'LoanInsurance::GroupRemit'
-      loan_batches.sum(:premium_due)
+      batches.sum(:premium_due)
     else
       batches.sum(&:premium)
     end
@@ -210,7 +210,7 @@ class GroupRemit < ApplicationRecord
 
   def denied_principal_premiums
     if self.class.name == 'LoanInsurance::GroupRemit'
-      loan_batches.denied.sum(&:premium_due)
+      batches.denied.sum(&:premium_due)
     else
       batches.denied.sum(&:premium)
     end

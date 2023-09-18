@@ -1,5 +1,5 @@
 class Payment < ApplicationRecord
   mount_uploader :receipt, ReceiptUploader
 
-  belongs_to :group_remit
+  belongs_to :payable, polymorphic: true
 end

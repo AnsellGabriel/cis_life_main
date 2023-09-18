@@ -9,7 +9,7 @@ class ProcessCoverage < ApplicationRecord
   # audited
   # has_associated_audits
 
-  
+
   enum status: {
     for_process: 0,
     pending: 1,
@@ -90,15 +90,15 @@ class ProcessCoverage < ApplicationRecord
   end
 
   def count_regular_batches(age_range)
-    self.group_remit.loan_batches.where(age: age_range).count
+    self.group_remit.batches.where(age: age_range).count
   end
-  
+
   def count_overage_batches
-    self.group_remit.loan_batches.where(age: 66..).count
+    self.group_remit.batches.where(age: 66..).count
   end
 
   def sum_batches_loan_amount
-    self.group_remit.loan_batches.where(insurance_status: :approved).sum(:loan_amount)
+    self.group_remit.batches.where(insurance_status: :approved).sum(:loan_amount)
   end
 
   def sum_batches_gross_prem(klass)
@@ -109,9 +109,9 @@ class ProcessCoverage < ApplicationRecord
       self.group_remit.batches.where(batches: {insurance_status: :approved}).sum(:premium).to_d + self.group_remit.batches_dependents_approved_prem.sum(:premium)
     end
   end
-  
+
   def sum_batches_net_premium #gyrt
-    self.group_remit.loan_batches.where(insurance_status: :approved).sum(:premium) - (self.group_remit.loan_batches.where(insurance_status: :approved).sum(:coop_sf_amount) + self.group_remit.loan_batches.where(insurance_status: :approved).sum(:agent_sf_amount))
+    self.group_remit.batches.where(insurance_status: :approved).sum(:premium) - (self.group_remit.batches.where(insurance_status: :approved).sum(:coop_sf_amount) + self.group_remit.batches.where(insurance_status: :approved).sum(:agent_sf_amount))
   end
 
   def count_batches_denied(klass)
@@ -145,5 +145,5 @@ class ProcessCoverage < ApplicationRecord
   #     batch.update_attribute(:insurance_status, :for_review)
   #   end
   # end
-  
+
 end
