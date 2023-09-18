@@ -14,8 +14,8 @@
 <!-- Member's count Modal -->
 <%= render "member_count_modal" %>
 
-<div class="<%= flex_justify_align('', 'center') %> gap-3">
-  <%= link_to coop_agreement_path(@agreement), class: small_btn('outline-secondary') do %>
+<div class="<%= flex_justify_align('', 'center') %> gap-1">
+  <%= link_to coop_agreement_path(@agreement), class: small_btn('outline-secondary'), title: 'Back' do %>
     <i class="bi bi-arrow-left"></i>
   <% end %>
   <%= content_tag :span, @group_remit.status.titleize, class: @group_remit.status_badge %>
@@ -42,7 +42,7 @@
       <% unless @group_remit.is_for_renewal? %>
         <%= button_to "Delete", group_remit_path(@group_remit), 
           method: :delete,
-          data: { turbo_confirm: 'Delete group remit?'},
+          data: { turbo_confirm: "Delete #{@group_remit}?"},
           class: small_btn('outline-danger') 
         %>
       <% end %>
