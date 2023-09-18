@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_09_14_063428) do
+ActiveRecord::Schema[7.0].define(version: 2023_09_13_053742) do
   create_table "active_admin_comments", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.string "namespace"
     t.text "body"
@@ -615,6 +615,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_09_14_063428) do
     t.integer "unused_loan_id"
     t.decimal "excess", precision: 10, scale: 2, default: "0.0"
     t.boolean "substandard", default: false
+    t.decimal "excess", precision: 10, scale: 2, default: "0.0"
     t.index ["coop_member_id"], name: "index_loan_insurance_batches_on_coop_member_id"
     t.index ["group_remit_id"], name: "index_loan_insurance_batches_on_group_remit_id"
     t.index ["loan_insurance_loan_id"], name: "index_loan_insurance_batches_on_loan_insurance_loan_id"
@@ -849,7 +850,39 @@ ActiveRecord::Schema[7.0].define(version: 2023_09_14_063428) do
     t.index ["benefit_id"], name: "index_product_benefits_on_benefit_id"
   end
 
-  create_table "underwriting_routes", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+  create_table "proposals", charset: "utf8mb4", force: :cascade do |t|
+    t.bigint "cooperative_id", null: false
+    t.integer "ave_age"
+    t.decimal "total_premium", precision: 10, scale: 2
+    t.decimal "coop_sf", precision: 10, scale: 2
+    t.decimal "agent_sf", precision: 10, scale: 2
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.integer "minimum_participation"
+    t.string "proposal_no"
+    t.index ["cooperative_id"], name: "index_proposals_on_cooperative_id"
+  end
+
+  create_table "reinsurance_batches", charset: "utf8mb4", force: :cascade do |t|
+    t.bigint "reinsurance_id"
+    t.bigint "loan_insurance_batch_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["loan_insurance_batch_id"], name: "index_reinsurance_batches_on_loan_insurance_batch_id"
+    t.index ["reinsurance_id"], name: "index_reinsurance_batches_on_reinsurance_id"
+  end
+
+  create_table "reinsurances", charset: "utf8mb4", force: :cascade do |t|
+    t.date "date_from"
+    t.date "date_to"
+    t.decimal "ri_total_amount", precision: 10
+    t.decimal "ri_total_prem", precision: 10
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  create_table "underwriting_routes", charset: "utf8mb4", force: :cascade do |t|
+
     t.string "name"
     t.string "description"
     t.datetime "created_at", null: false

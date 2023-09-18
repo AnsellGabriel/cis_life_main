@@ -103,15 +103,15 @@ class LoanInsurance::BatchesController < ApplicationController
 
   def approve_all
     @process_coverage = ProcessCoverage.find(params[:process_coverage])
-    @batches = @process_coverage.group_remit.batches
+    @batches = @process_coverage.get_batches
     
     @batches.each do |batch|
-      if batch.insurance_status == "for_review"
+      if batch.insurance_status == "for_review" || batch.insurance_status == "pending"
         # if (18..65).include?(batch.age)
         # if (batch.agreement_benefit.min_age..batch.agreement_benefit.max_age).include?(batch.age)
         if batch.get_rate_age_range
           batch.update_attribute(:insurance_status, "approved")
-          @process_coverage.increment!(:approved_count)
+          # @process_coverage.increment!(:approved_count)
           
         end
       end
