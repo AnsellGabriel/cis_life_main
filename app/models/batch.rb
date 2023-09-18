@@ -1,6 +1,5 @@
 class Batch < ApplicationRecord
-  
-  # self.table_name = "batches"
+  self.table_name = "batches"
 
   include Calculate
   attr_accessor :rank

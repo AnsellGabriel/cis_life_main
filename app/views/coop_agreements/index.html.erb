@@ -36,17 +36,15 @@
                       <% end %>
                     <% end %>
                   <% end %>
-                  
-                    <% gr_presenter = GroupRemitPresenter.new(last_group_remit)%>
-
+              
                     <% if last_group_remit.present? %>
-                        <span class="<%= gr_presenter.status_badge %>">
-                          <%= gr_presenter.status_text %>
+                        <span class="<%= @group_remit.status_badge %>">
+                          <%= @group_remit.status_text %>
                         </span>
 
-                      <% if gr_presenter.remaining_days <= 90 && gr_presenter.remaining_days > 0 %>
-                        <span class="<%= badge("#{gr_presenter.countdown_color}") %>">
-                            Expiry : <%= gr_presenter.remaining_days %> days
+                      <% if @group_remit.remaining_days <= 90 && @group_remit.remaining_days > 0 %>
+                        <span class="<%= badge("#{@group_remit.countdown_color}") %>">
+                            Expiry : <%= @group_remit.remaining_days %> days
                         </span>
                       <% end %>
 

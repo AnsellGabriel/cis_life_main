@@ -9,15 +9,5 @@
 		<%= content_tag :span, batch.age, class: 'text-secondary' %>
 	  <%= content_tag :span, "(#{to_shortdate(member.birth_date)})", class: 'text-secondary' %>
 	</div>
-	<% if !agreement.plan.acronym == 'LPPI' %>
-		<div class="small text-secondary">
-			<%= content_tag :span, 'Effectivity: ' %>
-			<%= content_tag :span, to_shortdate(batch.effectivity_date) %>
-		</div>
-		<div class="small text-secondary">
-			<%= content_tag :span, 'Expiry: ' %>
-			<%= content_tag :span, to_shortdate(batch.expiry_date) %>
-		</div>
-	<% end %>
 </div>
 

@@ -1,6 +1,5 @@
 class LoanInsurance::Batch < Batch
   include CoverageStatus
-  # self.abstract_class = true
   self.table_name = "loan_insurance_batches"
 
   # skip agreement_benefit validation
@@ -38,7 +37,7 @@ class LoanInsurance::Batch < Batch
   def get_terms
     terms
   end
-  
+
   def get_rate_age_range
     (self.rate.min_age..self.rate.max_age).include?(self.age)
   end
@@ -60,13 +59,11 @@ class LoanInsurance::Batch < Batch
     self.coop_sf_amount = calculate_service_fee(self.group_remit.agreement.coop_sf, self.premium_due)
   end
 
+
   def check_md_reco
     self.batch_remarks.where(status: 2).count
   end
   
-
- 
-
   private
 
   def skip_validation
@@ -111,7 +108,7 @@ class LoanInsurance::Batch < Batch
 
   def find_existing_coverages(agreement)
     existing_coverage = agreement.agreements_coop_members.where(coop_member_id: coop_member.id).order(created_at: :desc).first
-
+    
     if existing_coverage
       update_batch_and_existing_coverage(self, existing_coverage, group_remit)
     else

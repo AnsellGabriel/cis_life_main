@@ -1,16 +1,15 @@
 <% if !@agreement.group_remits.blank? %>
 	<div class="<%= flex_justify_align('', '', true) %> gap-1">
 
-		<% @agreement.group_remits.includes(:anniversary).where(type: 'Remittance').order(created_at: :desc).each do |group_remit| %>
-			<% gr_presenter = GroupRemitPresenter.new(group_remit)%>
+		<% @agreement.group_remits.includes(:anniversary).where(type: 'Remittance').order(created_at: :desc).decorate.each do |group_remit| %>
 			<% batch_remit = @agreement.group_remits.find_by(type: 'BatchRemit', id: group_remit.batch_remit_id )%>
 
 			<div class="card hidden" data-toggler-target="toggleable" data-id="history-<%= batch_remit.id %>">
 				<div class="card-body <%= flex_justify_align('between', 'start') %> gap-1">
 					<div class="<%= flex_justify_align('', '', true) %> gap-3">
 						<div class="">
-							<span class="<%= gr_presenter.status_badge %>" style="max-width: 200px;">
-								<%= gr_presenter.status_text %>
+							<span class="<%= group_remit.status_badge %>" style="max-width: 200px;">
+								<%= group_remit.status_text %>
 							</span>
 						</div>
 						<%= content_tag :span, "#{group_remit.name}", class: 'mb-1 text-primary' %>

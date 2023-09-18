@@ -44,16 +44,14 @@ class LoanInsurance::GroupRemitsController < ApplicationController
   end
 
   def show
-    @batch = @group_remit.batches.build(premium: 0)
+    @batch = @group_remit.loan_batches.build(premium: 0)
     @coop_members = @cooperative.coop_members
 
     load_batches
     paginate_batches
-
-    @gr_presenter = GroupRemitPresenter.new(@group_remit)
   end
 
-  def new 
+  def new
     @group_remit = @agreement.group_remits.new(type: 'LoanInsurance::GroupRemit')
   end
 
@@ -80,10 +78,10 @@ class LoanInsurance::GroupRemitsController < ApplicationController
 
   private
     def set_agreement
-      @agreement = @cooperative.agreements.lppi
+      @agreement = @cooperative.agreements.lppi.decorate
     end
 
     def set_group_remit
-      @group_remit = LoanInsurance::GroupRemit.find(params[:id])
+      @group_remit = LoanInsurance::GroupRemit.find(params[:id]).decorate
     end
 end

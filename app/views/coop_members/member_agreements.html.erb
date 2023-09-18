@@ -2,9 +2,8 @@
 
 <div class="row row-cols-2 row-cols-md-2 g-4 mb-3" >
 	<% @agreements.each do |agreement| %>
-		<% group_remit = agreement.group_remits.where(type: 'BatchRemit').joins(batches: :coop_member).where(coop_members: { id: @coop_member.id }).order('group_remits.created_at DESC').first %>
+		<% group_remit = agreement.group_remits.where(type: 'BatchRemit').joins(batches: :coop_member).where(coop_members: { id: @coop_member.id }).order('group_remits.created_at DESC').first.decorate %>
 		
-    <% gr_presenter = GroupRemitPresenter.new(group_remit) %>
 		<% batch = group_remit.batches.find_by(coop_member_id: @coop_member.id) %>
 		<% benefit = batch.agreement_benefit %>
 
@@ -17,8 +16,8 @@
 								<div class="">
 									<%= agreement.plan.name %>
 									<%= content_tag :span, 
-										gr_presenter.status_text, 
-										class: gr_presenter.status_badge 
+										group_remit.status_text, 
+										class: group_remit.status_badge 
 									%>
 								</div>
 								<div class="">

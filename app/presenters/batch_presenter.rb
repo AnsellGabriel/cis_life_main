@@ -54,15 +54,7 @@ class BatchPresenter
 		end
 	end
 
-	def status_color
-		case @batch.insurance_status
-		when 'for_review' then 'text-warning'
-		when 'approved' then 'text-success'
-		when 'pending' then 'text-secondary'
-		when 'denied' then 'text-danger'
-		when 'terminated' then 'text-danger'
-		end
-	end
+	
 
 	def require_health_dec?
 		(@batch.recent? || @batch.for_reconsideration? || @batch.reinstated?) && @batch.batch_health_decs.blank? && @batch.loan_amount > @agreement.nel

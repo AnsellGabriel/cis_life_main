@@ -9,15 +9,15 @@ class LoanInsurance::GroupRemit < GroupRemit
     unused_batches.update_all(insurance_status: :terminated)
     unused_batches.each do |batch|
       batch.remarks.create(remark: "Insurance terminated, tagged as unused by #{current_user.userable.to_s} on #{Date.today.strftime("%B %d, %Y")}", user: current_user, remarkable: batch, status: :terminated, batch_status: 'terminated')
-    end    
+    end
   end
 
   def total_unused_premium
-    loan_batches.sum(&:unused)
+    loan_batches.sum(:unused)
   end
 
   def total_premium_due
-    loan_batches.sum(&:premium_due)
+    loan_batches.sum(:premium_due)
   end
 
 end

@@ -1,6 +1,7 @@
 
 require 'sidekiq/web'
 
+
 Rails.application.routes.draw do 
   resources :reinsurances
   resources :claim_types, :claim_type_documents, :claim_type_benefits
@@ -9,18 +10,18 @@ Rails.application.routes.draw do
   resources :emp_approvers
   get 'med_directors/home'
   get 'med_director/index'
-  
-  resources :emp_agreements do 
+
+  resources :emp_agreements do
     get :transfer_index, on: :collection
     get :update_ea_selected, on: :collection
     patch :transfer_agreements, on: :collection
     get :inactive_sub, on: :member
   end
   # resources :denied_dependents
- 
+
   resources :anniversaries, :agent_groups, :departments, :agents, :coop_users, :employees, :plans, :product_benefits, :claim_benefits, :claim_remarks, :claim_coverages
 
-  resources :user do 
+  resources :user do
     get :approved, on: :member
   end
 
@@ -61,7 +62,7 @@ Rails.application.routes.draw do
   get "/progress", to: "progress#show"
   get "/progress/update", to: "progress#update"
 
-  #* Coop Module 
+  #* Coop Module
   namespace :coop do
     get 'dashboard', to: 'dashboard#index'
   end
@@ -70,7 +71,7 @@ Rails.application.routes.draw do
     get :selected, on: :member
   end
   resources :coop_branches
-  
+
   resources :members do
     collection do
       post :import
@@ -90,7 +91,7 @@ Rails.application.routes.draw do
     resources :group_remits
   end
 
-  resources :group_remits do 
+  resources :group_remits do
     get 'denied_members', to: 'denied_members#index'
     get 'download_csv', to: 'denied_members#download_csv'
     post :payment, on: :member
@@ -106,7 +107,7 @@ Rails.application.routes.draw do
       end
       # get :approve_selected, on: :collection
       # get :approve_all, on: :collection
-      resources :batch_health_decs, as: 'health_declarations' 
+      resources :batch_health_decs, as: 'health_declarations'
       resources :dependent_health_decs, as: 'dep_health_declarations'
       resources :batch_dependents, as: 'dependents' do
         get :health_dec, on: :member
@@ -122,8 +123,8 @@ Rails.application.routes.draw do
         end
       end
     end
-  end 
-  
+  end
+
   resources :health_decs do
     resources :health_dec_subquestions
   end
@@ -137,6 +138,7 @@ Rails.application.routes.draw do
       collection do
         get :approve_all
       end
+
       get :modal_remarks, on: :member
       get :find_loan, on: :member
       collection do
@@ -175,7 +177,7 @@ Rails.application.routes.draw do
   end
   resources :dependent_remarks
 
-  resources :process_remarks do 
+  resources :process_remarks do
     get :view_all, on: :collection
   end
 
@@ -214,7 +216,7 @@ Rails.application.routes.draw do
       # mount Sidekiq::Web in your Rails app
         root 'application#root', as: :authenticated_root
     end
-  
+
     unauthenticated do
       root 'devise/sessions#new', as: :unauthenticated_root
     end
@@ -223,7 +225,7 @@ Rails.application.routes.draw do
   authenticate :user, -> (u) { u.admin? } do
     mount Sidekiq::Web => "/sidekiq"
   end
-  
+
   # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
 
   # Defines the root path route ("/")

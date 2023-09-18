@@ -10,7 +10,7 @@ class CoopAgreementsController < ApplicationController
 
   # GET /agreements/1
   def show
-    @group_remits_eager = @agreement.group_remits.joins(:anniversary)
+    @group_remits_eager = @agreement.group_remits.joins(:anniversary).decorate
     @coop_sf = @agreement.coop_sf
     @filtered_anniversaries = @agreement.get_filtered_anniversaries(@agreement.group_remits.expiry_dates)
   end
