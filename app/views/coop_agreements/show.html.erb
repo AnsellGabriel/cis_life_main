@@ -5,7 +5,7 @@
   <%= content_tag :h4, @agreement.plan.name %>
 </div>
 
-  <div class="d-flex gap-3" data-controller="toggler">
+  <div class="d-flex gap-3" data-controller="toggler parent">
     <div class="col-6">
       <div class="card">
         <div class="card-body">
@@ -21,8 +21,7 @@
                 <% end %>
 
                 <%= content_tag :span, "Required Minimum Participants: #{@agreement.minimum_participation}" %>
-                <%= content_tag :span, "Current Approved Participants: #{@agreement.group_remits.where(type: 'BatchRemit', status: :active).joins(:batches).size
-}" %>
+                <%= content_tag :span, "Current Approved Participants: #{@agreement.group_remits.where(type: 'BatchRemit', status: :active).joins(:batches).size}" %>
               </div>
             </div>
 
