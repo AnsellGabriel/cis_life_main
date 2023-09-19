@@ -3,8 +3,9 @@ require 'sidekiq/web'
 
 
 Rails.application.routes.draw do 
+
   resources :reinsurances
-  resources :claim_types, :claim_type_documents, :claim_type_benefits
+  resources :claim_types, :claim_type_documents, :claim_type_benefits, :claim_attachments, :claim_confinements, :claim_benefits, :claim_coverages
   resources :documents
   resources :causes
   resources :emp_approvers
@@ -161,6 +162,10 @@ Rails.application.routes.draw do
   #* Underwriting Module Routes
   resources :user_levels
   resources :authority_levels
+  resources :claim_remarks do
+    get :new_status, to: 'claim_remarks#new_status', on: :collection
+    post :create_status, to: 'claim_remarks#create_status', on: :collection
+  end
   resources :process_claims do
     get :new_coop, to: 'process_claims#new_coop', on: :collection
     post :create_coop, to: 'process_claims#create_coop', on: :collection
@@ -170,6 +175,7 @@ Rails.application.routes.draw do
     get :claim_route, on: :member
     get :claims_file, on: :member
     get :claim_process, on: :member
+    get :update_status, on: :member
   end
   resources :underwriting_routes
   resources :batch_remarks do

@@ -29,9 +29,11 @@
               flatpickr_prev_arrow: "Prev"},
               class: 'text-center'},
               label: "Incident Date : ",
+              dateformat: "m-d-Y\\Z",
               wrapper_html: {class: flex_justify_align('start', 'center')},
               label_html: {style: "width: 170px; margin: 0"} %>
-      
+        
+      <%= f.association :claim_type, collection: ClaimType.order(:name) %>
     </div>
   </div>
   <%# </div> %>
