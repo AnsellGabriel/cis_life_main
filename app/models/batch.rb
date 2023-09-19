@@ -1,9 +1,10 @@
 class Batch < ApplicationRecord
+  self.table_name = "batches"
+
   include Calculate
   attr_accessor :rank
 
   validates_presence_of :effectivity_date, :expiry_date, :premium, :coop_sf_amount, :age, :agent_sf_amount, :coop_member_id
-
   # batch.status
   enum status: {
     recent: 0,
@@ -11,7 +12,7 @@ class Batch < ApplicationRecord
     transferred: 2,
     reinstated: 3,
     for_reconsideration: 4,
-    terminated: 5,
+    reloan: 5
   }
 
   # batch.insurance_status
@@ -19,7 +20,8 @@ class Batch < ApplicationRecord
     approved: 0,
     denied: 1,
     pending: 2,
-    for_review: 3
+    for_review: 3,
+    terminated: 4
   }
 
   scope :filter_by_member_name, ->(name) {
@@ -35,12 +37,15 @@ class Batch < ApplicationRecord
 
   has_many :batch_group_remits
   has_many :group_remits, through: :batch_group_remits
-  has_many :batch_health_decs, dependent: :destroy
+  has_many :batch_health_decs, as: :healthdecable, dependent: :destroy
+  alias_attribute :health_declaration, :batch_health_decs
   has_many :batch_dependents, dependent: :destroy
   has_many :member_dependents, through: :batch_dependents
   has_many :batch_beneficiaries, dependent: :destroy
   has_many :member_dependents, through: :batch_beneficiaries
-  has_many :batch_remarks, dependent: :destroy
+  # has_many :batch_remarks, source: :remarkable, source_type: "Batch", dependent: :destroy
+  has_many :batch_remarks, as: :remarkable, dependent: :destroy
+  alias_attribute :remarks, :batch_remarks
   has_many :process_claims, as: :claimable, dependent: :destroy
   has_many :claim_coverages, as: :coverageable, dependent: :destroy
 
@@ -66,7 +71,7 @@ class Batch < ApplicationRecord
 
 
   def dependents_premium
-    batch_dependents.approved.sum(:premium)
+    batch_dependents.sum(:premium)
   end
 
 
@@ -116,28 +121,28 @@ class Batch < ApplicationRecord
     today = Date.today
 
     month_difference = ((today.year * 12 + today.month) - (coverage_expiry.year * 12 + coverage_expiry.month)) + (coverage_expiry.day > today.day ? 1 : 0)
-      
+
     if month_difference > 24
       batch.status = :reinstated
       existing_coverages.update!(
-        status: 'reinstated', 
-        expiry: batch.expiry_date, 
+        status: 'reinstated',
+        expiry: batch.expiry_date,
         effectivity: batch.effectivity_date
       )
     elsif group_remit.for_renewal? || existing_coverages.expiry <= Date.today
       batch.status = :renewal
       existing_coverages.update!(
-        status: 'renewal', 
-        expiry: batch.expiry_date, 
+        status: 'renewal',
+        expiry: batch.expiry_date,
         effectivity: batch.effectivity_date
-      )        
+      )
     else
       batch.status = :recent
       existing_coverages.update!(
-        status: 'new', 
-        expiry: batch.expiry_date, 
+        status: 'new',
+        expiry: batch.expiry_date,
         effectivity: batch.effectivity_date
-      )        
+      )
     end
   end
 
@@ -149,9 +154,9 @@ class Batch < ApplicationRecord
     end
 
     agreement.agreements_coop_members.create!(
-      coop_member_id: coop_member.id, 
-      status: 'new', 
-      expiry: batch.expiry_date, 
+      coop_member_id: coop_member.id,
+      status: 'new',
+      expiry: batch.expiry_date,
       effectivity: batch.effectivity_date
     )
   end

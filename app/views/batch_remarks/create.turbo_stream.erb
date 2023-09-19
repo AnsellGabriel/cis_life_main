@@ -1,0 +1,15 @@
+<%= turbo_stream.update "batch_#{@batch.id}" do %>
+    <%= insurance_status(@batch.insurance_status) %>
+<% end %>
+
+<%= turbo_stream.update 'reg_form_modal' do %>
+  <div class="modal-header">
+    <%= content_tag :h5, 'Remarks', class: "modal-title", id: "staticBackdropLabel" %>
+    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+  </div>
+  
+  <div class="modal-body">
+    <%= render 'process_coverages/batch_remarks', batch: @batch, process_coverage: @process_coverage %>
+    <%#= render 'batch_remarks', batch_remarks: @batch_remarks, process_coverage: @process_coverage %>
+  </div>
+<% end %>

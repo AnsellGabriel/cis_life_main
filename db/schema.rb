@@ -208,26 +208,28 @@ ActiveRecord::Schema[7.0].define(version: 2023_09_12_081208) do
     t.index ["group_remit_id"], name: "index_batch_group_remits_on_group_remit_id"
   end
 
-  create_table "batch_health_decs", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
-    t.bigint "batch_id", null: false
+  create_table "batch_health_decs", charset: "utf8mb4", force: :cascade do |t|
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.text "answer"
     t.string "answerable_type", null: false
     t.bigint "answerable_id", null: false
+    t.string "healthdecable_type", null: false
+    t.bigint "healthdecable_id", null: false
     t.index ["answerable_type", "answerable_id"], name: "index_batch_health_decs_on_answerable"
-    t.index ["batch_id"], name: "index_batch_health_decs_on_batch_id"
+    t.index ["healthdecable_type", "healthdecable_id"], name: "index_batch_health_decs_on_healthdecable"
   end
 
-  create_table "batch_remarks", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
-    t.bigint "batch_id", null: false
+  create_table "batch_remarks", charset: "utf8mb4", force: :cascade do |t|
     t.text "remark"
     t.integer "status"
     t.string "user_type", null: false
     t.bigint "user_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["batch_id"], name: "index_batch_remarks_on_batch_id"
+    t.string "remarkable_type", null: false
+    t.bigint "remarkable_id", null: false
+    t.index ["remarkable_type", "remarkable_id"], name: "index_batch_remarks_on_remarkable"
     t.index ["user_type", "user_id"], name: "index_batch_remarks_on_user"
   end
 
@@ -328,7 +330,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_09_12_081208) do
   create_table "claim_remarks", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.bigint "process_claim_id", null: false
     t.bigint "user_id", null: false
-    t.integer "status"
+    t.string "status"
     t.text "remark"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
@@ -337,7 +339,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_09_12_081208) do
     t.index ["user_id"], name: "index_claim_remarks_on_user_id"
   end
 
-  create_table "claim_type_benefits", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+  create_table "claim_type_benefits", charset: "utf8mb4", force: :cascade do |t|
     t.bigint "claim_type_id"
     t.bigint "benefit_id"
     t.datetime "created_at", null: false
@@ -346,7 +348,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_09_12_081208) do
     t.index ["claim_type_id"], name: "index_claim_type_benefits_on_claim_type_id"
   end
 
-  create_table "claim_type_documents", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+  create_table "claim_type_documents", charset: "utf8mb4", force: :cascade do |t|
     t.bigint "claim_type_id"
     t.bigint "document_id"
     t.boolean "required"
@@ -356,7 +358,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_09_12_081208) do
     t.index ["document_id"], name: "index_claim_type_documents_on_document_id"
   end
 
-  create_table "claim_types", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+  create_table "claim_types", charset: "utf8mb4", force: :cascade do |t|
     t.string "name"
     t.text "description"
     t.datetime "created_at", null: false
@@ -490,7 +492,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_09_12_081208) do
     t.datetime "updated_at", null: false
   end
 
-  create_table "dependent_health_decs", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+  create_table "dependent_health_decs", charset: "utf8mb4", force: :cascade do |t|
     t.bigint "batch_dependent_id", null: false
     t.text "answer"
     t.string "answerable_type", null: false
@@ -507,12 +509,14 @@ ActiveRecord::Schema[7.0].define(version: 2023_09_12_081208) do
     t.integer "status"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.bigint "user_id", null: false
+    t.string "userable_type", null: false
+    t.bigint "userable_id", null: false
     t.index ["batch_dependent_id"], name: "index_dependent_remarks_on_batch_dependent_id"
     t.index ["user_id"], name: "index_dependent_remarks_on_user_id"
+    t.index ["userable_type", "userable_id"], name: "index_dependent_remarks_on_userable"
   end
 
-  create_table "documents", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+  create_table "documents", charset: "utf8mb4", force: :cascade do |t|
     t.string "name"
     t.text "description"
     t.datetime "created_at", null: false
@@ -530,7 +534,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_09_12_081208) do
     t.index ["employee_id"], name: "index_emp_agreements_on_employee_id"
   end
 
-  create_table "emp_approvers", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+  create_table "emp_approvers", charset: "utf8mb4", force: :cascade do |t|
     t.bigint "employee_id"
     t.bigint "approver_id"
     t.datetime "created_at", null: false
@@ -539,7 +543,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_09_12_081208) do
     t.index ["employee_id"], name: "index_emp_approvers_on_employee_id"
   end
 
-  create_table "employees", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+  create_table "employees", charset: "utf8mb4", force: :cascade do |t|
     t.string "last_name"
     t.string "first_name"
     t.string "middle_name"
@@ -656,15 +660,20 @@ ActiveRecord::Schema[7.0].define(version: 2023_09_12_081208) do
     t.decimal "loan_amount", precision: 10, scale: 2
     t.bigint "loan_insurance_rate_id", null: false
     t.boolean "reinsurance"
-    t.bigint "loan_insurance_retention_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.bigint "loan_insurance_loan_id", null: false
+    t.integer "insurance_status"
+    t.integer "status"
+    t.boolean "terminated"
+    t.date "terminate_date"
+    t.integer "unused_loan_id"
+    t.boolean "substandard", default: false
+    t.decimal "excess", precision: 10, scale: 2, default: "0.0"
     t.index ["coop_member_id"], name: "index_loan_insurance_batches_on_coop_member_id"
     t.index ["group_remit_id"], name: "index_loan_insurance_batches_on_group_remit_id"
     t.index ["loan_insurance_loan_id"], name: "index_loan_insurance_batches_on_loan_insurance_loan_id"
     t.index ["loan_insurance_rate_id"], name: "index_loan_insurance_batches_on_loan_insurance_rate_id"
-    t.index ["loan_insurance_retention_id"], name: "index_loan_insurance_batches_on_loan_insurance_retention_id"
   end
 
   create_table "loan_insurance_details", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
@@ -702,9 +711,9 @@ ActiveRecord::Schema[7.0].define(version: 2023_09_12_081208) do
   create_table "loan_insurance_rates", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.integer "min_age"
     t.integer "max_age"
-    t.decimal "monthly_rate", precision: 10
-    t.decimal "annual_rate", precision: 10
-    t.decimal "daily_rate", precision: 10
+    t.decimal "monthly_rate", precision: 5, scale: 2
+    t.decimal "annual_rate", precision: 5, scale: 2
+    t.decimal "daily_rate", precision: 5, scale: 2
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.bigint "agreement_id", null: false
@@ -769,6 +778,8 @@ ActiveRecord::Schema[7.0].define(version: 2023_09_12_081208) do
     t.bigint "geo_province_id"
     t.bigint "geo_municipality_id"
     t.bigint "geo_barangay_id"
+    t.decimal "total_loan_amount", precision: 15, scale: 2, default: "0.0"
+    t.boolean "for_reinsurance", default: false
     t.index ["geo_barangay_id"], name: "index_members_on_geo_barangay_id"
     t.index ["geo_municipality_id"], name: "index_members_on_geo_municipality_id"
     t.index ["geo_province_id"], name: "index_members_on_geo_province_id"
@@ -915,6 +926,24 @@ ActiveRecord::Schema[7.0].define(version: 2023_09_12_081208) do
     t.index ["cooperative_id"], name: "index_proposals_on_cooperative_id"
   end
 
+  create_table "reinsurance_batches", charset: "utf8mb4", force: :cascade do |t|
+    t.bigint "reinsurance_id"
+    t.bigint "batch_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["batch_id"], name: "index_reinsurance_batches_on_batch_id"
+    t.index ["reinsurance_id"], name: "index_reinsurance_batches_on_reinsurance_id"
+  end
+
+  create_table "reinsurances", charset: "utf8mb4", force: :cascade do |t|
+    t.date "date_from"
+    t.date "date_to"
+    t.decimal "ri_total_amount", precision: 10
+    t.decimal "ri_total_prem", precision: 10
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
   create_table "requirements", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.string "name"
     t.string "description"
@@ -969,8 +998,6 @@ ActiveRecord::Schema[7.0].define(version: 2023_09_12_081208) do
   add_foreign_key "batch_dependents", "member_dependents"
   add_foreign_key "batch_group_remits", "batches"
   add_foreign_key "batch_group_remits", "group_remits"
-  add_foreign_key "batch_health_decs", "batches"
-  add_foreign_key "batch_remarks", "batches"
   add_foreign_key "batches", "agreement_benefits"
   add_foreign_key "batches", "coop_members"
   add_foreign_key "claim_attachments", "claim_type_documents"
@@ -990,7 +1017,6 @@ ActiveRecord::Schema[7.0].define(version: 2023_09_12_081208) do
   add_foreign_key "denied_members", "group_remits"
   add_foreign_key "dependent_health_decs", "batch_dependents"
   add_foreign_key "dependent_remarks", "batch_dependents"
-  add_foreign_key "dependent_remarks", "users"
   add_foreign_key "emp_approvers", "employees", column: "approver_id"
   add_foreign_key "employees", "departments"
   add_foreign_key "group_import_trackers", "group_remits"
@@ -1000,7 +1026,6 @@ ActiveRecord::Schema[7.0].define(version: 2023_09_12_081208) do
   add_foreign_key "loan_insurance_batches", "group_remits"
   add_foreign_key "loan_insurance_batches", "loan_insurance_loans"
   add_foreign_key "loan_insurance_batches", "loan_insurance_rates"
-  add_foreign_key "loan_insurance_batches", "loan_insurance_retentions"
   add_foreign_key "loan_insurance_details", "batches"
   add_foreign_key "loan_insurance_details", "loan_insurance_loans"
   add_foreign_key "loan_insurance_details", "loan_insurance_rates"

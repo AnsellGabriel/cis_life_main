@@ -29,6 +29,8 @@ module ProcessCoveragesHelper
     if rank == "analyst"
       if pc_stat == "reprocess_approved" || pc_stat == "reassess"
         "d-inline"
+      elsif pc_stat == "for_head_approval" || pc_stat == "for_vp_approval"
+        "d-none"
       else
         case status
           when "approved", "denied" then "d-none"
@@ -61,6 +63,13 @@ module ProcessCoveragesHelper
     else
       content_tag :span, "NO", class: "text-secondary"
     end
+  end
+
+  def substandard(val=nil)
+    case val
+      when true then content_tag :span, "substandard", class: "badge bg-primary"
+    end
+
   end
   
 end

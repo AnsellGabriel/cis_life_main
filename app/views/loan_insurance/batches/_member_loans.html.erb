@@ -1,0 +1,15 @@
+<h6>Previous Loans</h6>
+
+<% previous_loans.each do |loan| %>
+  <span><strong>Loan amount: </strong></span>
+  <span><%= to_curr(loan.loan_amount) %></span>
+  <span><strong>Effectivity: </strong></span>
+  <span><%= date_as_month_day_year(loan.effectivity_date) %></span>
+  <span><strong>Expiry: </strong></span>
+  <span><%= date_as_month_day_year(loan.expiry_date) %></span>
+  <span><strong>Terms: </strong></span>
+  <span><%= loan.terms %></span>
+  <span><strong>Premium: </strong></span>
+  <span><%= to_curr(loan.premium_due) %></span>
+<% end %>
+

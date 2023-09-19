@@ -1,11 +1,11 @@
 class ProcessClaim < ApplicationRecord
   attr_accessor :batch_id
-  
+
   validates_presence_of :cooperative_id, :agreement_id, :date_incident, :entry_type, :claimant_name, :relationship, :claimant_email, :claimant_contact_no
 
   enum nature_of_claim: {
     LIFE: 0, # Life
-    HIB: 1, # Hospital Income Benefit 
+    HIB: 1, # Hospital Income Benefit
     AMR: 2, # Accidental Medical Reimbursement
     AD: 3, # Accidental Dismemberment
     TPD: 4, # Total & Permanent Disability
@@ -31,7 +31,7 @@ class ProcessClaim < ApplicationRecord
     file_claim: 0,
     submitted: 1, # Claims filed
     claim_filed: 2,
-    processing: 3, # processing 
+    processing: 3, # processing
     evaluation: 4,
     vp_evaluation: 5,
     president_evaluation: 6,
@@ -48,11 +48,11 @@ class ProcessClaim < ApplicationRecord
     claim_routes.key(i)
   end
 
-  def display_route(claim_routes) 
+  def display_route(claim_routes)
     claim_route.to_s.humanize.titleize
   end
 
-  def get_benefit_claim_total(pc) 
+  def get_benefit_claim_total(pc)
     ClaimBenefit.where(process_claim: pc).sum(:amount)
   end
 

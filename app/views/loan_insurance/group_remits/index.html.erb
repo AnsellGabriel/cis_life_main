@@ -10,8 +10,7 @@
       </h6>
       <div class="small text-muted <%= flex_justify_align('', '', true) %>">
         <%= content_tag :span, "Required Minimum Participants: #{@agreement.minimum_participation}" %>
-        <%= content_tag :span, "Current Approved Participants: #{@agreement.group_remits.where(type: 'BatchRemit', status: :active).joins(:batches).size
-    }" %>
+        <%= content_tag :span, "Current Approved Participants: #{@agreement.active_batches_count}" %>
       </div>
     </div>
     <%= turbo_frame_tag "new_batch" do %>
@@ -25,9 +24,11 @@
       <tr class="table-dark">
 
         <th class="col-1" scope="col">ID</th>
-        <th class="col-5" scope="col">Name</th>
-        <th class="col-3" scope="col">Total Premium</th>
-        <th class="col-3" scope="col">Actions</th>
+        <th class="col-3" scope="col">Name</th>
+        <th class="col-2 text-center" scope="col">Premiums</th>
+        <th class="col-2 text-center" scope="col">Unused Premiums</th>
+        <th class="col-2 text-center" scope="col">Premium Dues</th>
+        <th class="col-2" scope="col">Actions</th>
 
       </tr>
     </thead>
@@ -36,7 +37,7 @@
       <% if @group_remits.exists? %>
         <%= render @group_remits %>
       <% else %>
-        <td class="text-center">NO RECORD</td>
+        <td class="text-center" colspan="12">NO RECORD</td>
       <% end %>
     </tbody>
   </table>

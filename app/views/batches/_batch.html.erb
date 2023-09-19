@@ -1,29 +1,21 @@
-<% plan_acronym = agreement.plan.acronym %>
-<% member = batch.coop_member.member %>
-<% beneficiaries = batch.batch_beneficiaries %>
-<% dependents = batch.batch_dependents %>
-
-<% if plan_acronym == 'PMFC' %>
-	<% product_benefits = batch.get_term_insurance_product_benefit %>
-	<% life_benefit = product_benefits.select {|pb| pb.benefit.acronym == "LIFE" } %>
-<% else %>
-	<% life_benefit = batch.agreement_benefit.product_benefits.select {|pb| pb.benefit.acronym == "LIFE" || pb.benefit.acronym == "LI" } %>
-<% end %>
+<% presenter_batch = BatchPresenter.new(batch, agreement) %>
 
 <tr id="<%= dom_id(batch) %>">
 	<td class="text-center align-middle" ><%= batch.id %></td>
 	<td class="align-middle" >
 		<div class="d-flex" style="padding-left: 60px; padding-top: 30px; padding-bottom: 30px;">
 			<div class="d-flex flex-column gap-1">
-				
 				<div class="">
-					<%= render 'batches/batch_status', batch: batch, agreement: agreement %>
+					<%= render 'batches/batch_status', 
+						batch: batch, 
+						agreement: agreement 
+					%>
 				</div>
 				<%= render 'batches/member_details', 
 					batch: batch, 
-					member: member, 
+					member: batch.member_details, 
 					agreement: agreement,
-					beneficiaries: beneficiaries
+					beneficiaries: batch.batch_beneficiaries
 				%>
 			</div>
 		</div>
@@ -34,8 +26,8 @@
 				<div class="d-flex flex-column mb-1">
 					<%= render 'batches/premiums', 
 						batch: batch,
-						dependents: dependents,
-						plan_acronym: plan_acronym
+						dependents: batch.batch_dependents,
+						plan_acronym: agreement.plan_acronym
 					%>
 				</div>
 			</div>
@@ -45,18 +37,16 @@
 		<div class="<%= flex_justify_align('center') %>">
 			<div class="d-flex flex-column ps-6">
 
-				<% unless beneficiaries.exists? %>
+				<% unless batch.batch_beneficiaries.exists? %>
 					<%= content_tag :span, "None", class: 'sm-red-text' %>
 				<% else %>
 					<div class="d-flex flex-column mb-1">
-
-						<% beneficiaries.each do |b| %>
-							<%= content_tag :span, "#{b.member_dependent.last_name}, #{b.member_dependent.first_name} #{b.member_dependent.middle_name}", 
+						<% batch.batch_beneficiaries.each do |b| %>
+							<%= content_tag :span, "#{b.full_name}", 
 								class: "text-secondary", 
 								style: "font-size: .7rem;" 
 							%>
 						<% end %>
-
 					</div>
 				<% end %>
 
@@ -69,15 +59,17 @@
 			<div class="<%= flex_justify_align('center') %>">
 				<div class="<%= flex_justify_align('','center',true) %> ps-6">
 
-					<% unless dependents.exists? %>
+					<% unless batch.batch_dependents.exists? %>
 						<%= content_tag :span, "None", class: 'sm-red-text' %>
 					<% else %>
 						<div class="d-flex flex-column mb-1">
-							<% dependents.each do |d| %>
+							<% batch.batch_dependents.each do |d| %>
 								<% d_presenter = DependentPresenter.new(d)%>
 								<div class="<%= flex_justify_align('','center') %> gap-1">
-									<%= content_tag :span, "#{d.insurance_status.titleize}", class: d_presenter.status_badge %>									
-									<%= content_tag :span, "#{d.member_dependent.last_name}, #{d.member_dependent.first_name} #{d.member_dependent.middle_name}", 
+									<%= content_tag :span, "#{d.insurance_status.titleize}", 
+										class: d_presenter.status_badge 
+									%>									
+									<%= content_tag :span, "#{d.full_name}", 
 										class: "text-secondary", 
 										style: "font-size: .7rem;" 
 									%>
@@ -95,9 +87,9 @@
 		<%= render 'batches/action_buttons', 
 			group_remit: group_remit,
 			batch: batch,
-			life_benefit: life_benefit,
+			life_benefit: presenter_batch.life_benefit,
 			agreement: agreement,
-			member: member
+			member: batch.member_details
 		%>
 	</td>
 </tr>

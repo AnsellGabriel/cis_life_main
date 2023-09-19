@@ -1,8 +1,8 @@
 <%= turbo_frame_tag "modal-xl" do %>
   <div class="modal-header">
     <h5 class="card-header">New dependent remark</h5>
-    <%= link_to show_all_group_remit_batch_dependents_path(@group_remit, @batch, process_coverage: @process_coverage.id ) do %>
-      <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+    <%= link_to show_all_group_remit_batch_dependents_path(@group_remit, @batch, process_coverage_id: @process_coverage.id ) do %>
+      <button type="button" class="btn-close" aria-label="Close"></button>
     <% end %>
   </div>
   

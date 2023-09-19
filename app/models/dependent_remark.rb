@@ -9,5 +9,5 @@ class DependentRemark < ApplicationRecord
   }
 
   belongs_to :batch_dependent
-  belongs_to :user
+  belongs_to :userable, polymorphic: true
 end

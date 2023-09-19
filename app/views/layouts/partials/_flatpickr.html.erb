@@ -1,0 +1,12 @@
+<div class="form-floating mb-3 <%= css_class %>">
+  <%= form.input attribute, as: :string, input_html: {data: {
+    controller: "flatpickr",
+    flatpickr_max_date: max_date,
+    flatpickr_next_arrow: "Next",
+    flatpickr_prev_arrow: "Prev"},
+    class: 'text-primary',
+    placeholder: placeholder}, label: false,
+    wrapper: false
+  %>
+  <%= form.label attribute, placeholder, class: 'ps-4' %>
+</div>

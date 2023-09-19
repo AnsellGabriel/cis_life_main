@@ -28,23 +28,25 @@ class MemberDependent < ApplicationRecord
   end
 
   def full_name
-    "#{self.last_name}, #{self.first_name} #{self.middle_name} #{self.suffix}"
+    "#{last_name}, #{first_name} #{middle_name}"
   end
 
   private
   
   def validate_relationship  
-    allowed_relationships = case self.member.civil_status
-                              when "Married"
-                                ['Spouse', 'Child']
-                              when "Single"
-                                ['Parent', 'Sibling']
+    principal_civil_status = self.member.civil_status
+    
+    allowed_relationships = case principal_civil_status
+                              when "MARRIED"
+                                ['SPOUSE', 'CHILD']
+                              when "SINGLE"
+                                ['PARENT', 'SIBLING']
                               else
-                                ['Parent', 'Child', 'Sibling']
+                                ['PARENT', 'CHILD', 'SIBLING']
                             end
   
     unless allowed_relationships.include?(self.relationship) 
-      errors.add(:relationship, "allowed: #{allowed_relationships.join(', ')}")
+      errors.add(:relationship, "allowed: #{allowed_relationships.join(', ')} for principal with civil status #{principal_civil_status}. Dependent's relationship to principal is #{self.relationship}")
     end
   end
   
@@ -54,6 +56,7 @@ class MemberDependent < ApplicationRecord
     self.first_name = self.first_name.upcase
     self.middle_name = self.middle_name.upcase
     self.suffix = self.suffix == nil ? '' : self.suffix.upcase
+    self.relationship = self.relationship.upcase
     # repeat the above line for each field you want to make all caps
   end
 end

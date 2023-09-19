@@ -1,0 +1,9 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  reinsurance: one
+  loan_batches: one
+
+two:
+  reinsurance: two
+  loan_batches: two

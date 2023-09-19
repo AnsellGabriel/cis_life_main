@@ -114,7 +114,7 @@
                   <% if @batch.batch_beneficiaries.size < 4 %>
                     <%= link_to new_group_remit_batch_beneficiary_path(@group_remit, @batch),
                                 class: small_btn('success'),
-                                data: { turbo_frame: "modal" } do %>
+                                data: { turbo_frame: "reg_form_modal" } do %>
                       <i class="bi bi-plus-lg"></i>
                     <% end %>
 
@@ -203,7 +203,7 @@
                       <%= link_to new_group_remit_batch_dependent_path(@group_remit, @batch),
                           class: small_btn('success'), 
                           data: {
-                            turbo_frame: "modal"
+                            turbo_frame: "reg_form_modal"
                           } do %>     
                         <i class="bi bi-plus-lg"></i>
                       <% end %>
@@ -215,27 +215,32 @@
           <hr>
           <% if @dependents.present? %>
             <div class="row">
-              <div class="col-sm-1"></div>
-              <div class="col-sm-3">
+              <div class="col-sm-4">
                 <%= content_tag :h6, 'Name', 
                   class: 'text-center', 
                   style: 'font-size: .8rem' 
                 %>
               </div>
-              <div class="col-sm-2">
+              <div class="col-sm-1">
                 <%= content_tag :h6, 'Age', 
                   class: 'text-center', 
                   style: 'font-size: .8rem' 
                 %>
               </div>
-              <div class="col-sm-3">
+              <div class="col-sm-2">
                 <%= content_tag :h6, 'Relationship', 
                   class: 'text-center', 
                   style: 'font-size: .8rem' 
                 %>
               </div>
-              <div class="col-sm-3">
+              <div class="col-sm-2">
                 <%= content_tag :h6, 'Premium', 
+                  class: 'text-center', 
+                  style: 'font-size: .8rem' 
+                %>
+              </div>
+              <div class="col-sm-3">
+                <%= content_tag :h6, 'Actions', 
                   class: 'text-center', 
                   style: 'font-size: .8rem' 
                 %>
@@ -247,53 +252,33 @@
             <% d_presenter = DependentPresenter.new(d) %>
             <div class="row mb-1">
               <div class="d-flex align-items-center">
-                <div class="col-sm-1">
-                  <% if (@group_remit.pending? || @group_remit.for_renewal?) && @group_remit.instance_of?(Remittance) && !@batch.terminated? %>                   
-                    <%= button_to group_remit_batch_dependent_path(@group_remit, @batch, d), 
-                      method: :delete,
-                      form: { 
-                      data: { turbo_frame: "_top", 
-                      turbo_confirm: "Delete dependent?" } 
-                      }, 
-                      class: small_btn('danger'),
-                      style: "font-size: .8rem" do %>
-                      <i class="bi bi-x-lg"></i>
-                    <% end %>
-
-                    <% if (@batch.recent? || @batch.for_reconsideration?) && d.dependent_health_decs.blank? %>
-                      <%= link_to new_group_remit_batch_dep_health_declaration_path(@group_remit, @batch, batch_dependent_id: d.id),
-                        class: small_btn('warning'), 
-                        title: 'Health Declaration Form',
-                        data: { turbo_frame: "modal-xl" } do %> 
-                        <i class="bi bi-file-earmark-medical"></i>
-                      <% end %>
-                    <% end %>
-                  <% end %>
-                </div>
-                <div class="col-sm-3 text-secondary <%= flex_justify_align('start', 'baseline', true) %> gap-1">
+                <div class="col-sm-4 text-secondary <%= flex_justify_align('start', 'baseline') %> gap-1">
                   <%= content_tag :span, "#{d.insurance_status.titleize}", class: d_presenter.status_badge %>
                   <%= content_tag :h6, "#{d.member_dependent.last_name}, #{d.member_dependent.first_name} #{d.member_dependent.middle_name}", 
                     class: "mb-0", 
                     style: "font-size: .8rem" 
                   %>
                 </div>
-                <div class="col-sm-2 text-secondary">
+                <div class="col-sm-1 text-secondary">
                   <%= content_tag :h6, "#{d.member_dependent.age}", 
                     class: "mb-0 text-center", 
                     style: "font-size: .8rem" 
                   %>
                 </div>
-                <div class="col-sm-3 text-secondary">
+                <div class="col-sm-2 text-secondary">
                   <%= content_tag :h6, "#{d.member_dependent.relationship}", 
                     class: "mb-0 text-center", 
                     style: "font-size: .8rem" 
                   %>
                 </div>
-                <div class="col-sm-3 text-secondary">
+                <div class="col-sm-2 text-secondary">
                   <%= content_tag :h6, "#{peso_currency(d.premium)}", 
                     class: "mb-0 text-center", 
                     style: "font-size: .8rem" 
                   %>
+                </div>
+                <div class="col-sm-3 <%= flex_justify_align('', 'center') %> gap-1">
+                  <%= render 'dependent_buttons', group_remit: @group_remit, batch: @batch, dependent: d %>
                 </div>
               </div>
             </div>

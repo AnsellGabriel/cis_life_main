@@ -6,18 +6,18 @@ class BatchesController < ApplicationController
   before_action :check_userable_type
   before_action :set_batch, only: %i[show edit update destroy health_dec]
   before_action :set_group_remit_and_agreement
-  
+
   def import
     import_service = CsvImportService.new(
-      :batch, 
-      params[:file], 
-      @cooperative, 
+      :batch,
+      params[:file],
+      @cooperative,
       @group_remit,
       current_user
     )
 
     @import_result = import_service.import
-    
+
     if @import_result.is_a?(Hash)
       notice = "#{@import_result[:added_members_counter]} members successfully added. #{@import_result[:denied_members_counter]} members denied."
       redirect_to group_remit_path(@group_remit), notice: notice
@@ -27,11 +27,18 @@ class BatchesController < ApplicationController
   end
 
   def health_dec
+    @batch = case params[:batch_type]
+            when "LoanInsurance::Batch"
+              LoanInsurance::Batch.find(params[:id])
+            else
+              Batch.find(params[:id])
+            end
+            
     @member = @batch.member_details
-    @batch_health_dec = @batch.batch_health_decs
-    @group_remit = @batch.group_remits.find_by(type: "Remittance")
-    @questionaires = BatchHealthDec.where(batch_id: @batch.id).where(answerable_type: "HealthDec")
-    @subquestions = BatchHealthDec.where(batch_id: @batch.id).where(answerable_type: "HealthDecSubquestion")
+    @batch_health_dec = @batch.health_declaration
+    @group_remit = GroupRemit.find(params[:group_remit_id]).decorate
+    @questionaires = BatchHealthDec.where(healthdecable: @batch).where(answerable_type: "HealthDec")
+    @subquestions = BatchHealthDec.where(healthdecable: @batch).where(answerable_type: "HealthDecSubquestion")
 
     @for_und = params[:for_und]
     @md = params[:md]
@@ -43,14 +50,19 @@ class BatchesController < ApplicationController
     @rem_status = :md_reco
     # @process_coverage = @batch.group_remit.process_coverage
     @process_coverage = @group_remit.process_coverage
-
   end
 
   def all_health_decs
     @group_remit = GroupRemit.find(params[:group_remit_id])
-    @batches = @group_remit.batches.joins(:batch_health_decs).distinct
+    @batches_o = @group_remit.batches
+    @batches = case @batches_o.first.class.name
+    when "LoanInsurance::Batch"
+      @group_remit.loan_batches.joins(:batch_health_decs).distinct
+    else
+      @group_remit.batches.joins(:batch_health_decs).distinct
+    end
   end
-  
+
   def index
     @pagy, @batches = pagy(@group_remit.batches, items: 10)
   end
@@ -58,9 +70,9 @@ class BatchesController < ApplicationController
   def approve_all
     @process_coverage = ProcessCoverage.find(params[:process_coverage])
     @batches = @process_coverage.group_remit.batches
-    
+
     @batches.each do |batch|
-      if batch.insurance_status == "for_review"
+      if batch.insurance_status == "for_review" || batch.insurance_status == "pending"
         # if (18..65).include?(batch.age)
         if (batch.agreement_benefit.min_age..batch.agreement_benefit.max_age).include?(batch.age)
           batch.update_attribute(:insurance_status, "approved")
@@ -84,18 +96,18 @@ class BatchesController < ApplicationController
 
   def new
     @coop_members = @cooperative.unselected_coop_members(@agreement.group_remits.joins(:batches).pluck(:coop_member_id))
-    
+
     if Rails.env.development?
       @batch = @group_remit.batches.new(
-        effectivity_date: FFaker::Time.date , 
-        expiry_date: FFaker::Time.date, 
-        active: true, 
+        effectivity_date: FFaker::Time.date ,
+        expiry_date: FFaker::Time.date,
+        active: true,
         status: :recent
       )
     else
       @batch = @group_remit.batches.new
     end
-    
+
   end
 
   def create
@@ -114,9 +126,9 @@ class BatchesController < ApplicationController
     end
 
     Batch.process_batch(
-      @batch, 
-      @group_remit, 
-      batch_params[:rank], 
+      @batch,
+      @group_remit,
+      batch_params[:rank],
       @group_remit.terms
     )
 
@@ -142,7 +154,7 @@ class BatchesController < ApplicationController
           containers # controller/concerns/container.rb
           counters  # controller/concerns/counter.rb
 
-          format.html { 
+          format.html {
             redirect_to group_remit_path(@group_remit)
             if @batch.denied?
               flash[:alert] = "Member denied. Please check the denied remarks."
@@ -167,7 +179,7 @@ class BatchesController < ApplicationController
   def update
     respond_to do |format|
       if @batch.update(batch_params)
-        format.html { 
+        format.html {
           redirect_to group_remit_path(@group_remit), notice: "Batch updated"
         }
       else
@@ -186,7 +198,7 @@ class BatchesController < ApplicationController
     respond_to do |format|
 
       if @batch.destroy
-        
+
         if params[:reconsider].present? && params[:reconsider]
           @group_remit.process_coverage.update(status: :reconsiderations_processed)
         end
@@ -203,8 +215,8 @@ class BatchesController < ApplicationController
           redirect_to group_remit_batch_path(@group_remit, @batch), alert: 'Unable to destroy batch.'
         }
       end
-      
-    end  
+
+    end
   end
 
   def modal_remarks
@@ -212,23 +224,23 @@ class BatchesController < ApplicationController
   end
 
   # def terminate_insurance
-    
+
   # end
 
   private
     def batch_params
       params.require(:batch).permit(
-        :rank, 
+        :rank,
         :duration,
-        :active, 
-        :coop_sf_amount, 
-        :agent_sf_amount, 
-        :status, 
-        :premium, 
-        :coop_member_id, 
+        :active,
+        :coop_sf_amount,
+        :agent_sf_amount,
+        :status,
+        :premium,
+        :coop_member_id,
         batch_dependents_attributes: [
-          :member_dependent_id, 
-          :beneficiary, 
+          :member_dependent_id,
+          :beneficiary,
           :_destroy
         ]
       )
@@ -243,7 +255,7 @@ class BatchesController < ApplicationController
       set_group_remit_and_agreement
       @batch = @group_remit.batches.find_by(id: params[:id])
     end
-    
+
     def premiums_and_commissions
       @gross_premium = @group_remit.gross_premium
       @total_coop_commission = @group_remit.total_coop_commissions

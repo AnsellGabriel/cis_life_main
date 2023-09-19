@@ -57,10 +57,10 @@ class BatchDependentsController < InheritedResources::Base
 
   def health_dec
     @dependent = @batch_dependent.member_dependent
-    @dependent_health_dec = @batch_dependent.dependent_health_decs
+    @dependent_health_dec = @batch_dependent.health_declaration
     @group_remit = @batch_dependent.batch.group_remits.find_by(type: "Remittance")
-    @questionaires = DependentHealthDec.where(batch_dependent_id: @batch_dependent.id).where(answerable_type: "HealthDec")
-    @subquestions = DependentHealthDec.where(batch_dependent_id: @batch_dependent.id).where(answerable_type: "HealthDecSubquestion")
+    @questionaires = BatchHealthDec.where(healthdecable: @batch_dependent).where(answerable_type: "HealthDec")
+    @subquestions = BatchHealthDec.where(healthdecable: @batch_dependent).where(answerable_type: "HealthDecSubquestion")
 
     @for_und = params[:for_und]
     # @md = params[:md]

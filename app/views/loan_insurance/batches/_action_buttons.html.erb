@@ -1,0 +1,60 @@
+<% batch_presenter = BatchPresenter.new(batch, agreement) %>
+
+<div  class="<%= flex_justify_align('center') %> gap-1" >
+	<%= link_to loan_insurance_batch_path(batch),
+		data: {turbo_frame: "modal-xl"}, 
+		class: small_btn('outline-primary'), 
+		title: 'View' do
+	%>
+		<i class="bi bi-eye-fill"></i>
+	<% end %>
+
+	<%= link_to loan_insurance_history_index_path(coop_member_id: batch.coop_member_id),
+		data: {turbo: false}, 
+		class: small_btn('outline-primary'),
+		title: 'History' do
+	%>
+		<i class="bi bi-clock-history"></i>
+	<% end %>
+
+	<% if batch.remarks.exists? %>
+		<%= link_to modal_remarks_loan_insurance_batch_path(batch), data: { turbo_frame: "reg_form_modal" }, class: small_btn('warning'), title: 'Remarks' do %>
+			<i class="bi bi-card-list"></i>
+		<% end %>
+	<% end %>
+
+	<% if batch.health_declaration.exists? %>
+		<%= link_to health_dec_group_remit_batch_path(group_remit, batch, for_und: true, batch_type: batch.class.name), 
+			class: small_btn('outline-primary'), 
+			title: 'Health Declaration Form',
+			data: { turbo_frame: "reg_form_modal_xl" } do %>
+			<i class="bi bi-file-earmark-medical"></i>
+		<% end %>
+	<% end %>
+
+	<% if group_remit.pending? %>
+
+		<% if batch_presenter.require_health_dec? %>
+			<%= link_to new_group_remit_batch_health_declaration_path(group_remit, batch, batch_type: batch.class.name),
+				class: small_btn('warning'), 
+				title: 'Health Declaration Form',
+				data: { turbo_frame: "reg_form_modal_xl" } do %> 
+				<i class="bi bi-file-earmark-medical"></i>
+			<% end %>
+		<% end %>
+
+		<% unless batch.renewal? || batch.terminated? %>
+			<%= button_to loan_insurance_batch_path(batch), 
+				method: :delete,
+				title: 'Delete',
+				form: { 
+				data: { turbo_frame: "_top", 
+				turbo_confirm: "Delete entry: #{member.last_name}, #{member.first_name} #{member.middle_name}?" } 
+				}, 
+				class: small_btn('outline-danger') do %>
+				<i class="bi bi-trash-fill"></i>
+			<% end %>
+		<% end %>
+	<% end %>
+
+</div>

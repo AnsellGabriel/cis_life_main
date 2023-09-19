@@ -1,31 +1,31 @@
 <%= simple_form_for(@cooperative) do |f| %>
-<%#= simple_form_for(@claim_benefit, url: url, method: meth) do |f| %>
-  <%= f.error_notification %>
-  <%= f.error_notification message: f.object.errors[:base].to_sentence if f.object.errors[:base].present? %>
-  <div class="form-inputs">
-    <div class="row">
-      <%= f.input :name, wrapper_html: { class: "col col-md-8" } %>
-      <%= f.input :acronym, wrapper_html: { class: "col col-md-4" } %>
+  <%#= simple_form_for(@claim_benefit, url: url, method: meth) do |f| %>
+    <%= f.error_notification %>
+    <%= f.error_notification message: f.object.errors[:base].to_sentence if f.object.errors[:base].present? %>
+    <div class="form-inputs">
+      <div class="row">
+        <%= f.input :name, wrapper_html: { class: "col col-md-8" } %>
+        <%= f.input :acronym, wrapper_html: { class: "col col-md-4" } %>
+      </div>
+      <%= f.input :description %>
+      <div class="row" data-controller="geography">
+        <%= f.association :geo_region, label: "Region", input_html: { class: "form-select", data: { action: "change->geography#search_provinces" } }, wrapper_html: { class: "col col-md-3" } %>
+        <%= f.association :geo_province, label: "Province", input_html: { class: "form-select", id: "province_id", data: { geography_target: "provinceSelect", action: "change->geography#search_municipalities" } }, wrapper_html: { class: "col col-md-3" } %>
+        <%= f.association :geo_municipality, label: "Municipality", input_html: { class: "form-select", id: "muni_id", data: { geography_target: "muniSelect", action: "change->geography#search_barangays" } }, wrapper_html: { class: "col col-md-3" } %>
+        <%= f.association :geo_barangay, label: "Barangay", input_html: { class: "form-select", id: "brgy_id", data: { geography_target: "brgySelect" } }, wrapper_html: { class: "col col-md-3" } %>
+      </div>
+      <div class="row">
+        <%= f.input :street, wrapper_html: { class: "col col-md-6" } %>
+        <%= f.association :coop_type, label: "Type of Cooperative", wrapper_html: { class: "col col-md-6" } %>
+        <%= f.input :registration_number, wrapper_html: { class: "col col-md-6" } %>
+        <%= f.input :tin_number, label: "TIN", wrapper_html: { class: "col col-md-6" } %>
+        <%= f.input :contact_details, wrapper_html: { class: "col col-md-6"} %>
+        <%= f.input :email, wrapper_html: { class: "col col-md-6"} %>
+      </div>
     </div>
-    <%= f.input :description %>
-    <div class="row">
-      <%= f.association :geo_region, label: "Region", wrapper_html: { class: "col col-md-3" } %>
-      <%= f.association :geo_province, label: "Province", wrapper_html: { class: "col col-md-3" } %>
-      <%= f.association :geo_municipality, label: "Municipality", wrapper_html: { class: "col col-md-3" } %>
-      <%= f.association :geo_barangay, label: "Barangay", wrapper_html: { class: "col col-md-3" } %>
+    <br>
+    <div class="form-actions text-end">
+      <%= link_to "Back", cooperatives_path, class: "btn btn-secondary" %>
+      <%= f.button :submit, class: "btn btn-success" %>
     </div>
-    <div class="row">
-      <%= f.input :street, wrapper_html: { class: "col col-md-6" } %>
-      <%= f.association :coop_type, label: "Type of Cooperative", wrapper_html: { class: "col col-md-6" } %>
-      <%= f.input :registration_number, wrapper_html: { class: "col col-md-6" } %>
-      <%= f.input :tin_number, label: "TIN", wrapper_html: { class: "col col-md-6" } %>
-      <%= f.input :contact_details, wrapper_html: { class: "col col-md-6"} %>
-      <%= f.input :email, wrapper_html: { class: "col col-md-6"} %>
-    </div>
-  </div>
-  <br>
-  <div class="form-actions text-end">
-    <%= link_to "Back", cooperatives_path, class: "btn btn-secondary" %>
-    <%= f.button :submit, class: "btn btn-success" %>
-  </div>
-<% end %>
+  <% end %>

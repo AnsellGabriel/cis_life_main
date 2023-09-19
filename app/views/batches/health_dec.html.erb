@@ -1,21 +1,18 @@
-
-
-<%= turbo_frame_tag "modal-xl" do %>
+<%= turbo_frame_tag "reg_form_modal_xl" do %>
   <div class="modal-header">
     <%= content_tag :h5, "Health Declaration - #{@member.last_name}, #{@member.first_name} #{@member.middle_name}", class: "modal-title", id: "staticBackdropLabel" %>
     <% unless @for_und.present? %>
-      <%= link_to group_remit_path(@group_remit), data: {turbo: false} do %>
+      <%= link_to @group_remit.link_to_show, data: {turbo: false} do %>
         <button type="button" class="btn-close" aria-label="Close"></button>
       <% end %>
-      <% else %>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+    <% else %>
+      <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
     <% end %>
   </div>
-  
   <div class="modal-body">
     <% if @md.present? %>
       <%= render 'coop_members/coop_member', member: @batch.coop_member.member, coop_member: @batch.coop_member %>
-    <% end %> 
+    <% end %>
     <table class="table table-bordered">
       <thead>
         <tr>
@@ -25,7 +22,6 @@
         </tr>
       </thead>
       <tbody>
-  
         <% @questionaires.each_with_index do |q, index| %>
           <tr>
             <td><%= index+1 %></td>
@@ -45,14 +41,11 @@
             </td>
           </tr>
         <% end %>
-
-
-
       </tbody>
     </table>
   </div>
 <% end %>
-  <%#= @batch %>
+<%#= @batch %>
 <% if @md.present? %>
   <% if @batch.batch_remarks.where(status: 2).count <= 0 %>
     <%= render "batch_remarks/form_md", locals: { batch_remark: @batch_remark }  %>

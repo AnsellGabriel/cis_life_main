@@ -26,18 +26,29 @@ class ProcessRemarksController < ApplicationController
     @process_status = params[:pro_status]
     @total_life_cov = params[:total_life_cov].to_i
     @max_amount = params[:max_amount].to_i
-    @total_net_prem = params[:total_net_prem].to_i
+    @total_gross_prem = params[:total_gross_prem].to_i
+
+    @process_coverage = ProcessCoverage.find_by(id: params[:ref])
+    # binding.pry
 
     if @process_status == "Approve" || @process_status == "Deny"
 
       if current_user.rank == "analyst"
-        if @max_amount >= @total_net_prem
-          @rem_status = "approved"
+        if @max_amount >= @total_gross_prem
+          # if @process_coverage.group_remit.batches.where(batches: { insurance_status: :denied} ).count > 0
+          klass_name = @process_coverage.group_remit.batches.first.class.name
+          denied_count =  @process_coverage.count_batches_denied(klass_name)
+          
+          if denied_count > 0
+            @rem_status = "for_head_approval"
+          else
+            @rem_status = "approved"
+          end
         else
           @rem_status = "for_head_approval"
         end
       elsif current_user.rank == "head"
-        if @max_amount >= @total_net_prem
+        if @max_amount >= @total_gross_prem
           @rem_status = "approved"
         else
           @rem_status = "for_vp_approval"
@@ -73,12 +84,21 @@ class ProcessRemarksController < ApplicationController
   def create
     # raise 'errors'
     @process_coverage = ProcessCoverage.find(params[:process_remark][:process_coverage_id])
-    @batch_count = @process_coverage.group_remit.batches.where(batches: { insurance_status: [:for_review, :pending] }).count
-
+    @batch_count = @process_coverage.count_pending_for_review_batches(@process_coverage.group_remit.batches.first.class.name)
+    @dependent_count = @process_coverage.count_pending_for_review_dep(@process_coverage.get_batch_class_name)
+    binding.pry
+    
     unless params[:process_remark][:process_status].nil? || params[:process_remark][:process_status].empty?
       if @batch_count > 0
         return redirect_to process_coverage_path(@process_coverage), alert: "Can't proceed. There are #{@batch_count} #{'coverage'.pluralize(@batch_count)} for review or pending"
       end
+
+      unless @process_coverage.get_plan_acronym == "LPPI"
+        if @dependent_count > 0
+          return redirect_to process_coverage_path(@process_coverage), alert: "Can't proceed. There are #{@dependent_count} dependent #{'coverage'.pluralize(@batch_count)} for review or pending"
+        end
+      end
+      
     else
       params[:process_remark][:status] = ""
     end
@@ -113,7 +133,9 @@ class ProcessRemarksController < ApplicationController
         #   approved_batches.update_all(batch_remit_id: current_batch_remit.id)
         # end
       else
-        format.html { render :new, status: :unprocessable_entity }
+        # format.html { render :new, status: :unprocessable_entity }
+        format.html { redirect_to process_coverage_url(params[:process_remark][:process_coverage_id]), alert: "Remarks not added. Remark should be present." }
+        # format.turbo_stream { render :form_update, status: :unprocessable_entity }
         format.json { render json: @process_remark.errors, status: :unprocessable_entity }
       end
     end

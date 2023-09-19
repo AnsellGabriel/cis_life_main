@@ -1,4 +1,4 @@
 class BatchHealthDec < ApplicationRecord
-  belongs_to :batch
+  belongs_to :healthdecable, polymorphic: true
   belongs_to :answerable, polymorphic: true
 end

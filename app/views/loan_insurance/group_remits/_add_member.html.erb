@@ -1,8 +1,8 @@
 <div>
-    <%= link_to 'Add Member', new_loan_insurance_batch_path(group_remit_id: params[:id]), data: {turbo_frame: "batch_form"}, class: 'btn btn-sm btn-outline-primary' %>
+    <%= link_to 'Add Member', new_loan_insurance_batch_path(group_remit_id: params[:id]), data: {turbo_frame: "modal"}, class: 'btn btn-sm btn-outline-primary' %>
     <%= content_tag :button, "Batch Import", 
-        class: "btn btn-sm btn-outline-primary",
-        data: {bs_toggle: "modal",
-          bs_target: "#batchEnrollment"
-        }%>  
+      class: "btn btn-sm btn-outline-primary",
+      data: {bs_toggle: "modal",
+        bs_target: "#batchEnrollment"
+      }%>  
 </div>

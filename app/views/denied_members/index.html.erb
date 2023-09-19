@@ -1,5 +1,9 @@
 <div class="mb-3">
-	<%= link_to 'Back', group_remit_path(@group_remit), class: small_btn('secondary') %>
+	<% if @group_remit.class.name == 'LoanInsurance::GroupRemit' %>
+		<%= link_to 'Back', loan_insurance_group_remit_path(@group_remit), class: small_btn('secondary') %>
+	<% else %>
+		<%= link_to 'Back', group_remit_path(@group_remit), class: small_btn('secondary') %>
+	<% end %>
 </div>
 <div class="<%= flex_justify_align('', 'center') %> gap-1 mb-3">
   <%= content_tag :h6, "#{@group_remit.agreement.moa_no} (Denied members)", class: 'mb-0' %>
@@ -10,11 +14,11 @@
 
 		<table class="table table-hover">
 		<thead>
-		<tr class="table-dark">
-			<th class="text-center" scope="col">Name</th>
-			<th class="text-center" scope="col">Age</th>
-			<th class="text-center" scope="col">Reason</th>
-		</tr>
+			<tr class="table-dark">
+				<th class="text-center" scope="col">Principal</th>
+				<th class="text-center" scope="col">Age</th>
+				<th class="text-center" scope="col">Reason</th>
+			</tr>
 		</thead>
 
 		<tbody id="batches_body">
@@ -28,7 +32,7 @@
 					<td class="text-center" style="font-size: .7rem;">
 						<%= member.age == 0 ? "Unknown" : member.age %>
 					</td>
-					<td class="text-center" style="font-size: .7rem;">
+					<td class="" style="font-size: .7rem;">
 						<%= member.reason %>
 					</td>
 				</tr>

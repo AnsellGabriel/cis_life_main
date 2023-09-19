@@ -1,19 +1,21 @@
 
 
-<%= turbo_frame_tag "modal-xl" do %>
+<%= turbo_frame_tag "reg_form_modal_xl" do %>
   <div class="modal-header">
     <%= content_tag :h5, "Health Declaration - #{@dependent.last_name}, #{@dependent.first_name} #{@dependent.middle_name}", class: "modal-title", id: "staticBackdropLabel" %>
-    <% unless @for_und.present? %>
+    <% if params[:coop]%>
+      <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+    <% elsif !@for_und.present? %>
       <%= link_to group_remit_batch_path(@group_remit, @batch), data: {turbo: false} do %>
         <button type="button" class="btn-close" aria-label="Close"></button>
       <% end %>
     <% else %>
-      <%= link_to show_all_group_remit_batch_dependents_path(@group_remit, @batch) do %>
+      <%= link_to show_all_group_remit_batch_dependents_path(@group_remit, @batch, process_coverage_id: params[:process_coverage_id]) do %>
         <button type="button" class="btn-close" aria-label="Close"></button>
       <% end %>
     <% end %>
   </div>
-  
+  <% console %>
   <div class="modal-body">
     <% if @md.present? %>
       <%= render 'coop_members/coop_member', member: @batch.coop_member.member, coop_member: @batch.coop_member %>

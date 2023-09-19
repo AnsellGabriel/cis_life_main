@@ -40,6 +40,10 @@ class ApplicationController < ActionController::Base
       session[:max_amount] = cur_user_max_amount.nil? ? 0 : cur_user_max_amount
     end
   end
+
+  # def set_retention_limit
+  #   @retention_limit = Retention.find_by(active: true)
+  # end
   
   protected
   # Overwriting the sign_out redirect path method for unapproved users

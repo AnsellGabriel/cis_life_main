@@ -81,6 +81,105 @@ class ProcessCoverage < ApplicationRecord
     end
   end
 
+  def get_plan_acronym
+    self.group_remit.agreement.plan.acronym
+  end
+
+  def get_plan
+    self.group_remit.agreement.plan
+  end
+
+  def count_regular_batches(age_range)
+    self.group_remit.batches.where(age: age_range).count
+  end
+  
+  def count_overage_batches
+    self.group_remit.batches.where(age: 66..).count
+  end
+
+  def sum_batches_loan_amount
+    self.group_remit.batches.where(insurance_status: :approved).sum(:loan_amount)
+  end
+
+  def sum_batches_gross_prem(klass)
+    case klass
+    when "LoanInsurance::Batch"
+      self.group_remit.batches.where(loan_insurance_batches: {insurance_status: :approved}).sum(:premium).to_d
+    else
+      self.group_remit.batches.where(batches: {insurance_status: :approved}).sum(:premium).to_d + self.group_remit.batches_dependents_approved_prem.sum(:premium)
+    end
+  end
+  
+  def sum_batches_net_premium #gyrt
+    self.group_remit.batches.where(insurance_status: :approved).sum(:premium) - (self.group_remit.batches.where(insurance_status: :approved).sum(:coop_sf_amount) + self.group_remit.batches.where(insurance_status: :approved).sum(:agent_sf_amount))
+  end
+
+  
+  def count_batches_denied(klass)
+    case klass
+    when "LoanInsurance::Batch"
+      self.group_remit.batches.where(loan_insurance_batches: { insurance_status: :denied} ).count
+    else
+      self.group_remit.batches.where(batches: { insurance_status: :denied} ).count
+    end
+  end
+
+  def count_pending_for_review_batches(klass)
+    case klass
+    when "LoanInsurance::Batch"
+      self.group_remit.batches.where(loan_insurance_batches: { insurance_status: [:for_review, :pending] }).count
+    else
+      self.group_remit.batches.where(batches: { insurance_status: [:for_review, :pending] }).count
+    end
+  end
+
+  def count_pending_for_review_dep(klass)
+    count = 0
+    self.group_remit.batches.each do |batch|
+      count += batch.batch_dependents.where(insurance_status: [:for_review, :pending]).count
+    end
+    return count
+  end
+
+  def get_batch_class_name
+    self.group_remit.batches.first.class.name
+  end
+
+  def get_batches
+    self.group_remit.batches
+  end
+
+  def get_principal_prem
+    prem = self.group_remit.batches.where(insurance_status: "approved").sum(:premium)
+    coop_sf = self.group_remit.batches.where(insurance_status: "approved").sum(:coop_sf_amount)
+    agent_sf = self.group_remit.batches.where(insurance_status: "approved").sum(:agent_sf_amount)
+
+    prem - (coop_sf + agent_sf)
+  end
+
+  def get_lppi_effective
+    self.group_remit.batches.order(effectivity_date: :asc).pluck(:effectivity_date).first
+  end
+
+  def get_lppi_expiry
+    self.group_remit.batches.order(expiry_date: :asc).pluck(:expiry_date).last
+  end
+  
+
+  def self.index_cov_list(approver_id, status, date_range)
+    # joins(group_remit: { agreement: { emp_agreements: {employee: :emp_approver} } }).where( emp_approver: { approver_id: approver_id }, emp_agreements: { active: true}).where(status: status, created_at: date_range)
+    where(status: status, created_at: date_range, approver_id: approver_id)
+  end
+
+  def self.for_approvals(rank, user_id)
+    case rank
+    when "head"
+      where(status: :for_head_approval, approver_id: user_id)
+    when "senior_officer"
+      where(status: :for_vp_approval, approver_id: user_id)
+    end
+  end
+
   # def set_batches_for_review
   #   self.group_remit.batches.each do |batch|
   #     batch.update_attribute(:insurance_status, :for_review)

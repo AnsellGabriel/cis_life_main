@@ -40,7 +40,7 @@
                     anniv_type: 'none',
                     type: 'BatchRemit'
                   }, 
-                  class: small_btn('success'), 
+                  class: small_btn('outline-primary'), 
                   data: { turbo: false } 
                 %>
               <% end %>
@@ -57,7 +57,7 @@
                     anniv_type: 'single',
                     type: 'BatchRemit'
                   }, 
-                  class: small_btn('success'), 
+                  class: small_btn('outline-primary'), 
                   data: { turbo: false } 
                 %>
               <% end %>
@@ -71,7 +71,6 @@
         </div>
         <div class="card-footer <%= flex_justify_align('between') %>">
           <small class="text-muted">Agent: <%= @agreement.agent.full_name %></small>
-          <small class="text-muted">Updated: <%= time_ago_in_words(@agreement.updated_at) %></small>
         </div>
       </div>
     </div>

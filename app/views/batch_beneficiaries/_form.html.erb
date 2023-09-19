@@ -12,9 +12,9 @@
       <%= content_tag :p, 'Beneficiary not on the list?', class: "text-muted" %>
 
       <% if @claims == 'true' %>
-        <%= link_to 'Enroll Beneficiary', new_beneficiary_group_remit_batch_member_dependents_path(@group_remit, @batch, claims: true), class: "mb-3 btn btn-sm btn-primary", data: {turbo_frame: "modal"} %>
+        <%= link_to 'Enroll Beneficiary', new_beneficiary_group_remit_batch_member_dependents_path(@group_remit, @batch, claims: true), class: "mb-3 btn btn-sm btn-primary", data: {turbo_frame: "reg_form_modal"} %>
       <% else %>
-        <%= link_to 'Enroll Beneficiary', new_beneficiary_group_remit_batch_member_dependents_path(@group_remit, @batch), class: "mb-3 btn btn-sm btn-primary", data: {turbo_frame: "modal"} %>
+        <%= link_to 'Enroll Beneficiary', new_beneficiary_group_remit_batch_member_dependents_path(@group_remit, @batch), class: "mb-3 btn btn-sm btn-primary", data: {turbo_frame: "reg_form_modal"} %>
       <% end %>
 
     </div>

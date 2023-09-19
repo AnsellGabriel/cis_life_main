@@ -1,0 +1,88 @@
+<div class="card">
+  <div class="card-header"><%= process_coverage.get_plan %></div>
+  <div class="card-body">
+    <%= content_tag :p do %>
+      <strong>Cooperative:</strong>
+      <%= process_coverage.group_remit.agreement.cooperative %> |
+      <strong>Agent:</strong>
+      <%= process_coverage.agent %>
+    <% end %>
+    <%= content_tag :p do %>
+      <strong>Group remit:</strong>
+      <%= process_coverage.group_remit %> |
+      <strong>MOA:</strong>
+      <%#= link_to process_coverage.group_remit.agreement.moa_no, agreement_path(id: process_coverage.group_remit.agreement) %>
+      <%= link_to process_coverage.group_remit.agreement.moa_no, show_details_agreement_path(process_coverage.group_remit.agreement), data: { turbo_frame: "remote_modal" } %>
+    <% end %>
+    <!-- <%= content_tag :p do %>
+      <strong>MOA:</strong>
+      <%#= link_to process_coverage.group_remit.agreement.moa_no, agreement_path(id: process_coverage.group_remit.agreement) %>
+      <%= link_to process_coverage.group_remit.agreement.moa_no, show_details_agreement_path(process_coverage.group_remit.agreement), data: { turbo_frame: "remote_modal" } %>
+      <%#= link_to process_coverage.group_remit.agreement.moa_no, agreement_path(id: process_coverage.group_remit.moa,for_modal: "yes"), data: { turbo_frame: "remote_modal" } %>
+    <% end %> -->
+    <%= content_tag :p do %>
+      <strong>Effectivity:</strong>
+      <!-- <%= process_coverage.effectivity.nil? ? "-" : month_day_year(process_coverage.effectivity) %> | -->
+      <%= month_day_year(process_coverage.get_lppi_effective) %> |
+      <strong>Expiry:</strong>
+      <!-- <%= process_coverage.effectivity.nil? ? "-" : month_day_year(process_coverage.expiry) %> -->
+      <%= month_day_year(process_coverage.get_lppi_expiry) %>
+    <% end %>
+    <%= content_tag :p do %>
+      <strong>Regular Count:</strong>
+      <%= process_coverage.count_regular_batches(18..65) %> |
+      <strong>Overage Count:</strong>
+      <%= process_coverage.count_overage_batches %>
+    <% end %>
+    <%= content_tag :p do %>
+      <strong>Minimum Participation:</strong>
+      <%#= num_delimit(@process_coverage.group_remit.agreement.minimum_participation) %> |
+      <strong>Enrolled:</strong>
+      <%#= num_delimit(@process_coverage.group_remit.batches.count) %>
+    <% end %>
+    <%= content_tag :p do %>
+      <strong>Status:</strong>
+      <%= process_status(@process_coverage.status) %> |
+      <strong>Reprocess:</strong>
+      <%= reprocess_stat(@process_coverage.reprocess) %>
+    <% end %>
+    <%= content_tag :p do %>
+      <strong>Total Life Coverage:</strong>
+      <%= to_currency(process_coverage.sum_batches_loan_amount) %>
+    <% end %>
+    <%= content_tag :p do %>
+      <strong>Total Gross Premium:</strong>
+      <%= to_currency(@total_gross_prem) %> | 
+      <strong>Total Net Premium:</strong>
+      <%= to_currency(@total_net_prem) %>
+    <% end %>
+    <%# if process_coverage.status == "pending" || process_coverage.status == "for_process" %>
+    <div class="<%= approve_deny_button_pro_cov(current_user.rank, @process_coverage.status) %>">
+      <%= link_to new_process_remark_path(ref: process_coverage, pro_status: "Approve", rem_status: "approved", max_amount: session[:max_amount], total_life_cov: @total_life_cov, total_gross_prem: @total_gross_prem), title: "Approve", class: "btn btn-sm btn-success mb-2 me-2", data: { turbo_frame: "remote_modal" } do %>
+        <%= bootstrap_icon "check-lg" %> Approve
+      <% end %>
+      <%= link_to new_process_remark_path(ref: process_coverage, pro_status: "Deny", rem_status: "denied"), title: "Denied", class: "btn btn-sm btn-danger mb-2 me-2", data: { turbo_frame: "remote_modal" } do %>
+        <%= bootstrap_icon "x-lg" %> Deny
+      <% end %>
+      <% if current_user.head? && process_coverage.for_head_approval? %>
+        <%= link_to new_process_remark_path(ref: process_coverage, pro_status: "Reassess", rem_status: "reassess"), title: "Reassess", class: "btn btn-sm btn-primary mb-2", data: { turbo_frame: "remote_modal" } do %>
+          <%= bootstrap_icon "pencil-square" %> Re-assessment
+        <% end %>
+      <% end %>
+    </div>
+    <% if current_user.analyst? && (process_coverage.approved? || process_coverage.denied?) %>
+      <%= link_to new_process_remark_path(ref: process_coverage, pro_status: "Reprocess", rem_status: "reprocess"), title: "Reprocess", class: "btn btn-sm btn-warning mb-2", data: { turbo_frame: "remote_modal" } do %>
+        <%= bootstrap_icon "arrow-repeat" %> Reprocess
+      <% end %>
+    <% end %>
+    <% if (current_user.head? || current_user.senior_officer?) && (process_coverage.reprocess_request?) %>
+      <%= link_to new_process_remark_path(ref: process_coverage, pro_status: "Reprocess", rem_status: "reprocess_approved"), title: "Reprocess", class: "btn btn-sm btn-warning mb-2", data: { turbo_frame: "remote_modal" } do %>
+        <%= bootstrap_icon "arrow-repeat" %> Approve Reprocess
+      <% end %>
+    <% end %>
+    <%# end %>
+    <%# unless process_coverage.group_remit.batches.where(insurance_status: "for_review").count == 0 %>
+    <%#= link_to "Approve All", approve_all_group_remit_batches_path(@group_remit,group_remit: process_coverage.group_remit, process_coverage: process_coverage), class: "btn btn-success", onclick: "return confirm('Are you sure?')", method: :get %>
+    <%# end %>
+  </div>
+</div>

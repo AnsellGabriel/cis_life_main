@@ -1,0 +1,6 @@
+<%= turbo_stream.update @target do %>
+  <%= content_tag :option, "Choose Barangay" %>
+  <%= @barangays.each do |brgy| %>
+    <%= content_tag :option, brgy.name, value: brgy.id %>
+  <% end %>
+<% end %>

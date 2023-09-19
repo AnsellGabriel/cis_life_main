@@ -8,14 +8,24 @@
 				class: "text-secondary sm-green-text"
 		%>
 <% end %>
-
-<%= content_tag :span, 
-		"Principal premium: #{number_to_currency(batch.premium, unit: "₱", precision: 2)}", 
-		class: "text-secondary sm-green-text"
-%>
+<div class="">
+	<%= content_tag :span, 
+			"Principal: ", 
+			class: "text-secondary sm-green-text"
+	%>
+	<%= content_tag :span, 
+			"#{number_to_currency(batch.premium, unit: "₱", precision: 2)}", 
+			class: "text-primary sm-green-text"
+	%>
+</div>
 
 <% if dependents.exists? %>
+	<div class="">
 		<%= content_tag :span, 
-				"Dependent(s) premium: #{number_to_currency(batch.dependents_premium, unit: "₱", precision: 2) }", 
+				"Dependent(s): ", 
 				class: "text-secondary sm-green-text" %>
+		<%= content_tag :span, 
+				"#{number_to_currency(batch.dependents_premium, unit: "₱", precision: 2) }", 
+				class: "text-primary sm-green-text" %>
+	</div>
 <% end %>

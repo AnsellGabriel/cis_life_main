@@ -1,28 +1,31 @@
 
 require 'sidekiq/web'
 
+
 Rails.application.routes.draw do 
 
+  resources :reinsurances
   resources :claim_types, :claim_type_documents, :claim_type_benefits, :claim_attachments, :claim_confinements, :claim_benefits, :claim_coverages
   resources :documents
   resources :causes
   resources :emp_approvers
   get 'med_directors/home'
   get 'med_director/index'
-  
-  resources :emp_agreements do 
+
+  resources :emp_agreements do
     get :transfer_index, on: :collection
     get :update_ea_selected, on: :collection
     patch :transfer_agreements, on: :collection
     get :inactive_sub, on: :member
   end
   # resources :denied_dependents
- 
-  resources :anniversaries, :agent_groups, :departments, :agents, :coop_users, :employees, :plans, :product_benefits
 
-  resources :user do 
+  resources :anniversaries, :agent_groups, :departments, :agents, :coop_users, :employees, :plans, :product_benefits, :claim_benefits, :claim_remarks, :claim_coverages
+
+  resources :user do
     get :approved, on: :member
   end
+
   resources :agreement_benefits do
     get :selected, on: :member
   end
@@ -37,9 +40,18 @@ Rails.application.routes.draw do
   # resources :cooperatives
   resources :coop_types
   resources :geo_barangays
-  resources :geo_municipalities
-  resources :geo_provinces
-  resources :geo_regions
+
+  resources :geo_municipalities do
+    get :selected, on: :member
+  end
+
+  resources :geo_provinces do
+    get :selected, on: :member
+  end
+
+  resources :geo_regions do
+    get :selected, on: :member
+  end
   # resources :agent_groups
   # resources :departments
   # resources :agents
@@ -51,7 +63,7 @@ Rails.application.routes.draw do
   get "/progress", to: "progress#show"
   get "/progress/update", to: "progress#update"
 
-  #* Coop Module 
+  #* Coop Module
   namespace :coop do
     get 'dashboard', to: 'dashboard#index'
   end
@@ -60,7 +72,7 @@ Rails.application.routes.draw do
     get :selected, on: :member
   end
   resources :coop_branches
-  
+
   resources :members do
     collection do
       post :import
@@ -71,6 +83,7 @@ Rails.application.routes.draw do
     get :selected, on: :member
     get :member_agreements, on: :member
     get :show_insurance, on: :member
+    get :find_member, on: :member
   end
 
   resources :denied_enrollees, only: [:index, :destroy]
@@ -79,7 +92,7 @@ Rails.application.routes.draw do
     resources :group_remits
   end
 
-  resources :group_remits do 
+  resources :group_remits do
     get 'denied_members', to: 'denied_members#index'
     get 'download_csv', to: 'denied_members#download_csv'
     post :payment, on: :member
@@ -95,7 +108,7 @@ Rails.application.routes.draw do
       end
       # get :approve_selected, on: :collection
       # get :approve_all, on: :collection
-      resources :batch_health_decs, as: 'health_declarations' 
+      resources :batch_health_decs, as: 'health_declarations'
       resources :dependent_health_decs, as: 'dep_health_declarations'
       resources :batch_dependents, as: 'dependents' do
         get :health_dec, on: :member
@@ -111,8 +124,8 @@ Rails.application.routes.draw do
         end
       end
     end
-  end 
-  
+  end
+
   resources :health_decs do
     resources :health_dec_subquestions
   end
@@ -122,9 +135,23 @@ Rails.application.routes.draw do
     resources :rates
     resources :loans
     resources :details
-    resources :batches
-    resources :batch_remits
-    resources :group_remits
+    resources :batches do
+      collection do
+        get :approve_all
+      end
+
+      get :modal_remarks, on: :member
+      get :find_loan, on: :member
+      collection do
+        post :import
+      end
+    end
+
+    resources :group_remits do
+      get :submit, on: :member
+    end
+
+    resources :history, only: [:index]
   end
 
   # get 'loan_insurance', to: 'loan_insurance#index'
@@ -156,9 +183,10 @@ Rails.application.routes.draw do
   end
   resources :dependent_remarks
 
-  resources :process_remarks do 
+  resources :process_remarks do
     get :view_all, on: :collection
   end
+
   resources :process_coverages do 
     get :approve_batch, on: :member
     get :approve_dependent, on: :member
@@ -175,6 +203,7 @@ Rails.application.routes.draw do
     get :cov_list, on: :collection
     patch :update_batch_selected, on: :collection
   end
+
   get 'preview', to: 'process_coverages#preview'
   get 'download', to: 'process_coverages#download'
   get 'process_coverages/pdf/:id', to: "process_coverages#pdf", as: 'pc_pdf'
@@ -193,7 +222,7 @@ Rails.application.routes.draw do
       # mount Sidekiq::Web in your Rails app
         root 'application#root', as: :authenticated_root
     end
-  
+
     unauthenticated do
       root 'devise/sessions#new', as: :unauthenticated_root
     end
@@ -202,7 +231,7 @@ Rails.application.routes.draw do
   authenticate :user, -> (u) { u.admin? } do
     mount Sidekiq::Web => "/sidekiq"
   end
-  
+
   # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
 
   # Defines the root path route ("/")

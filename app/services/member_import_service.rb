@@ -8,7 +8,7 @@ class MemberImportService
     end
 
 
-    def import_members
+    def import
     headers = extract_headers(@spreadsheet, 'Members_Data')
 
     if headers.nil?
