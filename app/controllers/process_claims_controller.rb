@@ -47,7 +47,17 @@ class ProcessClaimsController < ApplicationController
     @coop_member = CoopMember.find(params[:cm])
     @process_claim.claimable = @coop_member
     @process_claim.cooperative = @coop_member.cooperative
+    
+    set_dummy_value
     # raise "error"
+  end
+
+  def set_dummy_value
+    first_name = FFaker::NamePH.first_name 
+    @process_claim.claimant_name = first_name + ' ' + FFaker::NamePH.last_name
+    @process_claim.claimant_contact_no = FFaker::PhoneNumber.phone_number
+    @process_claim.claimant_email = first_name + '@gmail.com'
+
   end
 
   def create_coop 
@@ -79,6 +89,7 @@ class ProcessClaimsController < ApplicationController
     else
       @claim_cause = @process_claim.build_claim_cause
     end
+    @process_claim.date_file = Date.today if @process_claim.date_file.nil?
   end
 
   def claim_process 
@@ -146,7 +157,7 @@ class ProcessClaimsController < ApplicationController
       if @claim_track.save
         if @claim_track.route_id == 2
           # raise "error"
-          import_product_benefit
+          import_product_benefit if @process_claim.submitted?
           @process_claim.update!(claim_route: @claim_track.route_id, status: :process, claim_filed: 1, processing: 0, approval: 0, payment: 0)
           format.html { redirect_to claims_file_process_claim_path(@process_claim), notice: "#{@process_claim.claim_route.to_s.humanize.titleize} by #{current_user}"  }
         elsif @claim_track.route_id == 3
@@ -169,14 +180,19 @@ class ProcessClaimsController < ApplicationController
   end
 
   
-  def import_product_benefit 
-    @product_benefit = ProductBenefit.where(agreement_benefit: @process_claim.agreement_benefit)
-    @product_benefit.each do | pb |
-      @process_claim.claim_benefits.create(process_claim_id: @process_claim.id, benefit_id: pb.benefit_id, amount: pb.coverage_amount)
-    end
-    @batch = Batch.where(coop_member: @process_claim.claimable, agreement_benefit: @process_claim.agreement_benefit)
-    @batch.each do |b|
-      @process_claim.claim_coverages.create(process_claim: @process_claim, coverageable: b)
+  def import_product_benefit
+    if @process_claim.claim_type == ClaimType.find_by(name: 'Hospital Confinement Claim')
+      @benefit = Benefit.find_by(name: "Hospital Income Benefit")
+      @process_claim.claim_benefits.create(process_claim_id: @process_claim.id, benefit: @benefit, amount: @process_claim.claim_confinements.sum(:amount))
+    else
+      @product_benefit = ProductBenefit.where(agreement_benefit: @process_claim.agreement_benefit)
+      @product_benefit.each do | pb |
+        @process_claim.claim_benefits.create(process_claim_id: @process_claim.id, benefit_id: pb.benefit_id, amount: pb.coverage_amount)
+      end
+      @batch = Batch.where(coop_member: @process_claim.claimable, agreement_benefit: @process_claim.agreement_benefit)
+      @batch.each do |b|
+        @process_claim.claim_coverages.create(process_claim: @process_claim, coverageable: b)
+      end
     end
     # @process_claim.claim_benefits.create(
     #   @product_benefit.map { |pb| { process_claim_id: @process_claim.id, benefit_id: pb.benefit_id, amount: pb.coverage_amount } }
@@ -217,7 +233,8 @@ class ProcessClaimsController < ApplicationController
         claim_cause_attributes: [:id, :acd, :ucd, :osccd, :icd],
         claim_coverage_attributes: [:id, :amount_benefit, :coverage_type, :coverageale],
         claim_remark_attributes: [:id, :user_id, :status, :remark, :coop],
-        claim_attachment_attributes: [:id, :claim_type_id, :doc])
+        claim_attachment_attributes: [:id, :claim_type_id, :doc],
+        claim_confinement_attributes: [:id, :date_admit, :date_discharge, :terms, :amount])
     end
 
 end

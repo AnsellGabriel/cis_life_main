@@ -2,9 +2,8 @@
 require 'sidekiq/web'
 
 Rails.application.routes.draw do 
-  get 'claim_attachments/new'
-  get 'claim_attachments/edit'
-  resources :claim_types, :claim_type_documents, :claim_type_benefits, :claim_attachments
+
+  resources :claim_types, :claim_type_documents, :claim_type_benefits, :claim_attachments, :claim_confinements, :claim_benefits, :claim_coverages
   resources :documents
   resources :causes
   resources :emp_approvers
@@ -19,7 +18,7 @@ Rails.application.routes.draw do
   end
   # resources :denied_dependents
  
-  resources :anniversaries, :agent_groups, :departments, :agents, :coop_users, :employees, :plans, :product_benefits, :claim_benefits, :claim_coverages
+  resources :anniversaries, :agent_groups, :departments, :agents, :coop_users, :employees, :plans, :product_benefits
 
   resources :user do 
     get :approved, on: :member

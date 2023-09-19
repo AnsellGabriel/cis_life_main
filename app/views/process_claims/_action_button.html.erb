@@ -1,18 +1,23 @@
 
+    <%= link_to '<i class="bi bi-chat-left-text"></i> Message'.html_safe, new_claim_remark_path(v: @process_claim, c: 1), class: "btn btn-primary btn-lg", data: { turbo_frame: "remote_modal" } if current_user.userable_type == 'CoopUser'  %>
     <% if current_user.userable_type == 'CoopUser' %>
         <%= link_to "Submit Claims", claim_route_process_claim_path(@process_claim, p: 1), class: "btn btn-success btn-lg" if @process_claim.file_claim? %>
-        <%= link_to "Cancel Submit", claim_route_process_claim_path(@process_claim, p: 0), class: "btn btn-warning btn-lg" if @process_claim.submitted? %>
-    <% end %>
-        <%= link_to "Process Claims", claim_route_process_claim_path(@process_claim, p: 3), class: "btn btn-warning btn-lg" if @process_claim.claim_filed? %>
-        <%= link_to "Claims Filed", claim_route_process_claim_path(@process_claim, p: 2), class: "btn btn-warning btn-lg" if @process_claim.submitted? %>
-        <%= link_to '<i class="bi bi-clipboard-plus"></i> For Evaluation'.html_safe, claim_route_process_claim_path(p: 6), class: "btn btn-primary btn-lg" if @process_claim.vp_evaluation? %>
-        <%= link_to '<i class="bi bi-clipboard-plus"></i> For Evaluation'.html_safe, claim_route_process_claim_path(p: 4), class: "btn btn-primary btn-lg" if @process_claim.processing? %>
+    <% elsif current_user.userable_type == 'Employee' %>
+        <%= link_to "Return to Coop", claim_route_process_claim_path(@process_claim, p: 0), class: "btn btn-warning btn-lg" if @process_claim.submitted? %>
+        <%= link_to "Claims Filed", claim_route_process_claim_path(@process_claim, p: 2), class: "btn btn-primary btn-lg" if @process_claim.submitted? %>
+        <%= link_to "Process Claims", claim_route_process_claim_path(@process_claim, p: 3), class: "btn btn-primary btn-lg" if @process_claim.claim_filed? %>
+        <%= link_to '<i class="bi bi-repeat"></i> Return to Claims Filed'.html_safe, claim_route_process_claim_path(p: 2), class: "btn btn-primary btn-lg" unless @process_claim.claim_filed? || @process_claim.submitted? %>
+        <%= link_to '<i class="bi bi-clipboard-plus"></i> For President Evaluation'.html_safe, claim_route_process_claim_path(p: 6), class: "btn btn-primary btn-lg" if @process_claim.vp_evaluation? %>
+        <%= link_to '<i class="bi bi-clipboard-plus"></i> Evaluation'.html_safe, claim_route_process_claim_path(p: 4), class: "btn btn-primary btn-lg" if @process_claim.processing? %>
         <%= link_to '<i class="bi bi-clipboard-plus"></i> For VP Evaluation'.html_safe, claim_route_process_claim_path(p: 5), class: "btn btn-primary btn-lg" if @process_claim.evaluation? %>
-        <%= link_to '<i class="bi bi-chat-left-text"></i> Message'.html_safe, new_claim_remark_path(v: @process_claim, c: 1), class: "btn btn-primary btn-lg", data: { turbo_frame: "remote_modal" } if current_user.userable_type == 'CoopUser'  %>
-        <%= link_to '<i class="bi bi-check-circle"></i> Approve'.html_safe, claim_route_process_claim_path(p: 8), class: "btn btn-success btn-lg"  %>
-        <%= link_to '<i class="bi bi-x-square"></i> Denied'.html_safe, new_status_claim_remarks_path(v: @process_claim, s: 1), class: "btn btn-danger btn-lg", data: { turbo_frame: "remote_modal" }   %>
-        <%= link_to '<i class="bi bi-sign-stop-lights"></i> Pending'.html_safe, new_status_claim_remarks_path(v: @process_claim, s: 2), class: "btn btn-warning btn-lg", data: { turbo_frame: "remote_modal" }   %>
-        <%= link_to '<i class="bi bi-bootstrap-reboot"></i> Reconsider'.html_safe, new_status_claim_remarks_path(v: @process_claim, s: 3), class: "btn btn-warning btn-lg", data: { turbo_frame: "remote_modal" }   %>
+        <% if @process_claim.processing? %>
+            <%= link_to '<i class="bi bi-check-circle"></i> Approve'.html_safe, claim_route_process_claim_path(p: 8), class: "btn btn-success btn-lg"  %>
+            <%= link_to '<i class="bi bi-x-square"></i> Denied'.html_safe, new_status_claim_remarks_path(v: @process_claim, s: 1), class: "btn btn-danger btn-lg", data: { turbo_frame: "remote_modal" }   %>  
+        <% end %>
+        <%= link_to '<i class="bi bi-sign-stop-lights"></i> Pending'.html_safe, new_status_claim_remarks_path(v: @process_claim, s: 2), class: "btn btn-warning btn-lg", data: { turbo_frame: "remote_modal" } if @process_claim.claim_filed?  %>
+        <%= link_to '<i class="bi bi-bootstrap-reboot"></i> Reconsider'.html_safe, new_status_claim_remarks_path(v: @process_claim, s: 3), class: "btn btn-warning btn-lg", data: { turbo_frame: "remote_modal" } if @process_claim.denied?  %>
+        
+    <% end %>
         <%#= link_to '<i class="bi bi-x-square"></i> Denied'.html_safe, update_status_process_claim_path(p: 1), class: "btn btn-danger btn-lg" %>
         
     <%# end %>

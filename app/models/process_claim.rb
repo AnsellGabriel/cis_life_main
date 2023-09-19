@@ -78,6 +78,7 @@ class ProcessClaim < ApplicationRecord
   has_many :claim_coverages, dependent: :destroy
   has_many :claim_remarks, dependent: :destroy
   has_many :claim_attachments, dependent: :destroy
+  has_many :claim_confinements, dependent: :destroy
   accepts_nested_attributes_for :claim_cause
   # belongs_to :batch
   has_many :claim_documents, dependent: :destroy
