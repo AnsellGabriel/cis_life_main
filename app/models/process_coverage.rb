@@ -150,7 +150,17 @@ class ProcessCoverage < ApplicationRecord
   end
 
   def self.index_cov_list(approver_id, status, date_range)
-    joins(group_remit: { agreement: { emp_agreements: {employee: :emp_approver} } }).where( emp_approver: { approver_id: approver_id }, emp_agreements: { active: true}).where(status: status, created_at: date_range)
+    # joins(group_remit: { agreement: { emp_agreements: {employee: :emp_approver} } }).where( emp_approver: { approver_id: approver_id }, emp_agreements: { active: true}).where(status: status, created_at: date_range)
+    where(status: status, created_at: date_range, approver_id: approver_id)
+  end
+
+  def self.for_approvals(rank, user_id)
+    case rank
+    when "head"
+      where(status: :for_head_approval, approver_id: user_id)
+    when "senior_officer"
+      where(status: :for_vp_approval, approver_id: user_id)
+    end
   end
 
   # def set_batches_for_review

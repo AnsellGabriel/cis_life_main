@@ -33,6 +33,7 @@ class ProcessCoveragesController < ApplicationController
       # @process_coverages_x = ProcessCoverage.joins(group_remit: { agreement: :emp_agreements }).where( emp_agreements: { approver_id: current_user.userable_id, active: true })
       # @process_coverages_x = ProcessCoverage.joins(group_remit: { agreement: { emp_agreements: {employee: :emp_approver} } }).where( emp_approver: { approver_id: current_user.userable_id }, emp_agreements: { active: true })
       # @process_coverages_x = ProcessCoverage.joins(group_remit: { agreement: { emp_agreements: {employee: :emp_approver} } }).where(approver: current_user.userable_id)
+            
       @process_coverages_x = ProcessCoverage.joins(group_remit: :agreement).where(approver: current_user.userable_id)
       # @process_coverages_x = ProcessCoverage.all
       @for_process_coverages = @process_coverages_x.where(status: :for_process)
@@ -172,9 +173,7 @@ class ProcessCoveragesController < ApplicationController
         end
 
       when "Reassess" 
-        
-        binding.pry
-        
+                
         # ProcessCoverage.where(status: :for_reconsider, created_at: start_date..end_date)
         if current_user.head?
           ProcessCoverage.index_cov_list(current_user.userable_id, :reassess, start_date..end_date)
@@ -190,8 +189,8 @@ class ProcessCoveragesController < ApplicationController
         elsif current_user.senior_officer?
           ProcessCoverage.where(status: :denied, created_at: start_date..end_date)
         end
-      when "head approval" then ProcessCoverage.where(status: :for_head_approval)
-      when "vp approval" then ProcessCoverage.where(status: :for_head_approval)
+      when "head approval" then ProcessCoverage.for_approvals(current_user.rank, current_user.userable_id)#where(status: :for_head_approval)
+      when "vp approval" then ProcessCoverage.for_approvals(current_user.rank, current_user.userable_id)#where(status: :for_head_approval)
     end
 
     @title = params[:title]

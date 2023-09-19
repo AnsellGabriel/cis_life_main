@@ -28,7 +28,7 @@
             <td>
               <%= a.id %>
               <%= a.agreement.cooperative %> <%= ea_badge_pill(a.active) %> <br />
-              <%= a.agreement.plan %>
+              <%= a.agreement.plan %> (<%= a.agreement.id %>)
             </td>
             <td><%= a.employee.emp_approver.approver %></td>
             <td><%= cat_type(a.category_type) %></td>
