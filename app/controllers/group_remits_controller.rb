@@ -140,32 +140,34 @@ class GroupRemitsController < InheritedResources::Base
     end
   end
 
-  def payment
-    if params[:file].nil?
-      return redirect_to coop_agreement_group_remit_path(@group_remit.agreement, @group_remit), alert: "Please attach proof of payment"
-    end
+  #! moved to payments_controller
+  # def payment
+  #   agreement = @group_remit.agreement
 
-    agreement = @group_remit.agreement
-    anniv_type = agreement.anniversary_type
-    @group_remit.payments.build(receipt: params[:file])
-    @group_remit.status = :payment_verification
+  #   if params[:file].nil?
+  #     return redirect_to coop_agreement_group_remit_path(agreement, @group_remit), alert: "Please attach proof of payment"
+  #   end
 
-    respond_to do |format|
-      if @group_remit.save!
-        approved_batches = @group_remit.batches.approved
-        approved_members = CoopMember.approved_members(approved_batches)
-        current_batch_remit = BatchRemit.find(@group_remit.batch_remit_id)
-        duplicate_batches = current_batch_remit.batch_group_remits.existing_members(approved_members)
+  #   # anniv_type = agreement.anniversary_type
+  #   @group_remit.payments.build(receipt: params[:file])
+  #   @group_remit.status = :payment_verification
 
-        BatchRemit.process_batch_remit(current_batch_remit, duplicate_batches, approved_batches)
+  #   respond_to do |format|
+  #     if @group_remit.save!
+  #       # approved_batches = @group_remit.batches.approved
+  #       # approved_members = CoopMember.approved_members(approved_batches)
+  #       # current_batch_remit = BatchRemit.find(@group_remit.batch_remit_id)
+  #       # duplicate_batches = current_batch_remit.batch_group_remits.existing_members(approved_members)
 
-        current_batch_remit.save!
-        format.html { redirect_to coop_agreement_group_remit_path(@group_remit.agreement, @group_remit), notice: "Proof of payment sent" }
-      else
-        format.html { redirect_to coop_agreement_group_remit_path(@group_remit.agreement, @group_remit), alert: "Invalid proof of payment" }
-      end
-    end
-  end
+  #       # BatchRemit.process_batch_remit(current_batch_remit, duplicate_batches, approved_batches)
+
+  #       # current_batch_remit.save!
+  #       format.html { redirect_to coop_agreement_group_remit_path(agreement, @group_remit), notice: "Proof of payment sent" }
+  #     else
+  #       format.html { redirect_to coop_agreement_group_remit_path(agreement, @group_remit), alert: "Invalid proof of payment" }
+  #     end
+  #   end
+  # end
 
 
   private

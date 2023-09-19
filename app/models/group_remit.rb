@@ -189,7 +189,7 @@ class GroupRemit < ApplicationRecord
   end
 
   def total_dependent_premiums
-    batches.includes(:batch_dependents).sum {|batch| batch.batch_dependents.approved.sum(&:premium) }
+    batches.includes(:batch_dependents).sum {|batch| batch.batch_dependents.sum(:premium) }
   end
 
   def dependent_coop_commissions
@@ -204,21 +204,21 @@ class GroupRemit < ApplicationRecord
     if self.class.name == 'LoanInsurance::GroupRemit'
       batches.sum(:premium_due)
     else
-      batches.sum(&:premium)
+      batches.sum(:premium)
     end
   end
 
   def denied_principal_premiums
     if self.class.name == 'LoanInsurance::GroupRemit'
-      batches.denied.sum(&:premium_due)
+      batches.where.not(insurance_status: :approved).sum(:premium_due)
     else
-      batches.denied.sum(&:premium)
+      batches.where.not(insurance_status: :approved).sum(:premium)
     end
   end
 
   def denied_dependent_premiums
-    (batches.denied.includes(:batch_dependents).sum {|batch| batch.batch_dependents.sum(&:premium) }) +
-    (batches.where.not(insurance_status: :denied).includes(:batch_dependents).sum {|batch| batch.batch_dependents.denied.sum(&:premium) })
+    (batches.where.not(insurance_status: :approved).includes(:batch_dependents).sum {|batch| batch.batch_dependents.sum(&:premium) }) +
+    (batches.where(insurance_status: :approved).includes(:batch_dependents).sum {|batch| batch.batch_dependents.denied.sum(&:premium) })
   end
 
   def gross_premium
@@ -229,8 +229,12 @@ class GroupRemit < ApplicationRecord
     batches.approved.sum(:coop_sf_amount)
   end
 
+  def commisionable_premium
+    gross_premium - (denied_principal_premiums + denied_dependent_premiums)
+  end
+
   def total_coop_commissions
-    coop_commissions + dependent_coop_commissions
+    commisionable_premium * (agreement.coop_sf / 100)
   end
 
   def total_agent_commissions
@@ -242,7 +246,7 @@ class GroupRemit < ApplicationRecord
   end
 
   def coop_net_premium
-    (gross_premium - total_coop_commissions ) - (denied_principal_premiums + denied_dependent_premiums)
+    commisionable_premium - total_coop_commissions
   end
 
   def net_premium
@@ -294,6 +298,29 @@ class GroupRemit < ApplicationRecord
 
   def batches_all_renewal?
     batches.all? { |batch| batch.status == "renewal" }
+  end
+
+  def update_batch_remit
+    approved_batches = batches.approved
+    approved_members = CoopMember.approved_members(approved_batches)
+    current_batch_remit = BatchRemit.find(self.batch_remit_id)
+    duplicate_batches = current_batch_remit.batch_group_remits.existing_members(approved_members)
+
+    BatchRemit.process_batch_remit(current_batch_remit, duplicate_batches, approved_batches)
+    current_batch_remit.save!
+  end
+
+  def update_batch_coverages
+    batches.includes(:coop_member).each do |batch|
+      agreement = self.agreement
+      coop_member = batch.coop_member
+      existing_coverage = agreement.agreements_coop_members.find_or_initialize_by(coop_member_id: coop_member.id)
+
+      existing_coverage.status = batch.status,
+      existing_coverage.expiry = batch.expiry_date,
+      existing_coverage.effectivity = batch.effectivity_date
+      existing_coverage.save!
+    end
   end
 
   private

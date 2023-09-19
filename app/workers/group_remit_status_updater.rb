@@ -4,7 +4,7 @@ class GroupRemitStatusUpdater
 	include Sidekiq::Job
 
   def perform
-    GroupRemit.where(status: :active)
+    GroupRemit.where(status: :paid)
       .where("expiry_date <= ?", Date.current)
       .update(status: :expired)
   end

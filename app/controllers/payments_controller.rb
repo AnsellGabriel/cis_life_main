@@ -1,5 +1,9 @@
 class PaymentsController < ApplicationController
-  before_action :set_data, only: %i[create]
+  before_action :initialize_payment_data, only: %i[create]
+
+  def index
+    @payments = Payment.all.includes(payable: {agreement: [:cooperative, :plan]})
+  end
 
   def create
     if params[:file].nil?
@@ -8,24 +12,46 @@ class PaymentsController < ApplicationController
 
     respond_to do |format|
       if @payment.save!
-        @group_remit.status = :payment_verification
-    
+        @group_remit.update(status: :payment_verification)
+
         if @group_remit.type == 'LoanInsurance::GroupRemit'
           format.html { redirect_to loan_insurance_group_remit_path(@group_remit), notice: "Proof of payment sent" }
         else
-          return update_batch_remit(@group_remit)
+          format.html { redirect_to coop_agreement_group_remit_path(@agreement, @group_remit), notice: "Proof of payment uploaded" }
         end
 
       else
-        format.html { redirect_to coop_agreement_group_remit_path(@group_remit.agreement, @group_remit), alert: "Invalid proof of payment" }
+        format.html { redirect_to coop_agreement_group_remit_path(@agreement, @group_remit), alert: "Invalid proof of payment" }
       end
     end
   end
 
+  def approve
+    payment = Payment.find(params[:id])
+    group_remit = payment.payable
+
+
+    if payment.update(status: :approved)
+      group_remit.paid!
+
+      if group_remit.type == 'LoanInsurance::GroupRemit'
+        group_remit.update_members_total_loan
+      else
+        group_remit.update_batch_remit
+        group_remit.update_batch_coverages
+      end
+
+      redirect_to payments_path, notice: "Remittance approved"
+    else
+      redirect_to payments_path, alert: "Something went wrong"
+    end
+
+  end
+
   private
 
-  def set_data
-    @group_remit = GroupRemit.find(params[:id])
+  def initialize_payment_data
+    @group_remit = GroupRemit.find(params[:group_remit_id])
     @agreement = @group_remit.agreement
     @payment = Payment.new(receipt: params[:file], payable_type: @group_remit.class.name, payable_id: @group_remit.id)
   end
@@ -38,16 +64,6 @@ class PaymentsController < ApplicationController
     end
   end
 
-  def update_batch_remit(group_remit)
-    approved_batches = group_remit.batches.approved
-    approved_members = CoopMember.approved_members(approved_batches)
-    current_batch_remit = BatchRemit.find(group_remit.batch_remit_id)
-    duplicate_batches = current_batch_remit.batch_group_remits.existing_members(approved_members)
-
-    BatchRemit.process_batch_remit(current_batch_remit, duplicate_batches, approved_batches)
-    current_batch_remit.save!
-
-    redirect_to coop_agreement_group_remit_path(group_remit.agreement, group_remit), notice: "Proof of payment uploaded"
-  end
+  # def create_or_update_coverage
 
 end

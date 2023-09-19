@@ -21,7 +21,7 @@
                 <% end %>
 
                 <%= content_tag :span, "Required Minimum Participants: #{@agreement.minimum_participation}" %>
-                <%= content_tag :span, "Current Approved Participants: #{@agreement.group_remits.where(type: 'BatchRemit', status: :active).joins(:batches).size}" %>
+                <%= content_tag :span, "Current Approved Participants: #{@agreement.group_remits.where(type: 'BatchRemit', status: :paid).joins(:batches).size}" %>
               </div>
             </div>
 

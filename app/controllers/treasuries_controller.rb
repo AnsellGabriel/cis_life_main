@@ -1,2 +1,0 @@
-class TreasuriesController < ApplicationController
-end

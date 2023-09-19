@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_09_18_061438) do
+ActiveRecord::Schema[7.0].define(version: 2023_09_19_013703) do
   create_table "active_admin_comments", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.string "namespace"
     t.text "body"
@@ -737,6 +737,9 @@ ActiveRecord::Schema[7.0].define(version: 2023_09_18_061438) do
     t.datetime "updated_at", null: false
     t.string "payable_type", null: false
     t.bigint "payable_id", null: false
+    t.integer "or_number"
+    t.date "or_date"
+    t.integer "status", default: 0
     t.index ["payable_type", "payable_id"], name: "index_payments_on_payable"
   end
 

@@ -49,7 +49,7 @@
               %>
             <% end %>
           <% elsif @group_remit.is_for_payment? %>
-            <%= render 'group_remits/payment' %>
+            <%= render 'group_remits/payment', group_remit: @group_remit %>
           <% end %>
 
         </div>

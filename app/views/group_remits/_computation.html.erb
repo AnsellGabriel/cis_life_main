@@ -1,8 +1,7 @@
-<div class="card pt-4" style="max-height: 300px; width: 100%">
+<div class="card" style="max-height: 340px; width: 100%">
   <div class="card-body">
       <div class="d-flex gap-3">
         <div style="width: 100%">
-          <% unless @principal_count == 0 %>
             <div class="text-secondary d-flex justify-content-between">
               <%= content_tag :span, "Principal Premiums", style: "font-size: .8rem" %>
               <%= content_tag :span, "#{to_curr(group_remit.total_principal_premium)}", style: "font-size: .8rem; color: var(--bs-blue);" %>
@@ -13,7 +12,6 @@
                 <%= content_tag :span, "#{to_curr(group_remit.total_dependent_premiums)}", style: "font-size: .8rem; color: var(--bs-blue);" %>
               </div>
             <% end %>
-          <% end %>
           <hr>
           <div class="text-secondary d-flex justify-content-between">
             <%= content_tag :span, "Gross Premium", style: "font-size: .8rem" %>
@@ -26,22 +24,27 @@
       <div class="d-flex gap-3">
         <div style="width: 100%">
           <div class="text-secondary d-flex justify-content-between">
-            <%= content_tag :span, "This section will update once reiewing process is completed", style: "font-size: .6rem" %>
-          </div>
+            <%= content_tag :span, "The sections below will update once reviewing process is completed", style: "font-size: .6rem" %>
+          </div>    
           <div class="text-secondary d-flex justify-content-between">
-            <%= content_tag :span, "#{@agreement.coop_sf}% Coop service fee", style: "font-size: .8rem" %>
-            <%= content_tag :span, "(#{to_curr(group_remit.total_coop_commissions)})", style: "font-size: .8rem; color: var(--bs-green)"%>
-          </div>      
-          <div class="text-secondary d-flex justify-content-between">
-            <%= content_tag :span, "Denied Principal Premiums", style: "font-size: .8rem" %>
+            <%= content_tag :span, "Unapprove Principal Premiums", style: "font-size: .8rem" %>
             <%= content_tag :span, "(#{to_curr(group_remit.denied_principal_premiums)})", style: "font-size: .8rem; color: var(--bs-red)"%>
           </div>       
           <% if @agreement.plan.gyrt_type == 'family' %>
             <div class="text-secondary d-flex justify-content-between">
-              <%= content_tag :span, "Denied Dependent Premiums", style: "font-size: .8rem" %>
+              <%= content_tag :span, "Unapprove Dependent Premiums", style: "font-size: .8rem" %>
               <%= content_tag :span, "(#{to_curr(group_remit.denied_dependent_premiums)})", style: "font-size: .8rem; color: var(--bs-red)"%>
             </div>   
           <% end %>
+          <hr>
+          <div class="text-secondary d-flex justify-content-between">
+            <%= content_tag :span, "Premium after deductions", style: "font-size: .8rem" %>
+            <%= content_tag :span, "#{to_curr(group_remit.commisionable_premium)}", style: "font-size: .8rem; color: var(--bs-blue)"%>
+          </div> 
+          <div class="text-secondary d-flex justify-content-between">
+            <%= content_tag :span, "#{@agreement.coop_sf}% Coop service fee", style: "font-size: .8rem" %>
+            <%= content_tag :span, "(#{to_curr(group_remit.total_coop_commissions)})", style: "font-size: .8rem; color: var(--bs-green)"%>
+          </div>  
         </div>
       </div>
       

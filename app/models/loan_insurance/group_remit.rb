@@ -25,4 +25,15 @@ class LoanInsurance::GroupRemit < GroupRemit
     Payment.where(payable_type: 'LoanInsurance::GroupRemit', payable_id: self.id)
   end
 
+  def update_members_total_loan
+    batches = self.batches.approved.includes(coop_member: :member)
+
+    batches.each do |batch|
+      member = batch.coop_member.member
+      
+      member.update!(total_loan_amount: batch.coop_member.member.total_loan_amount + batch.loan_amount)
+      member.update!(for_reinsurance: true) if member.total_loan_amount >= 550_000
+    end
+  end
+
 end

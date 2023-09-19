@@ -1,4 +1,4 @@
-<%= form_with url: payment_path(@group_remit), html: {data: {controller: 'payment-upload'}} do |form| %>
+<%= form_with url: payments_path(group_remit_id: group_remit.id), html: {data: {controller: 'payment-upload'}} do |form| %>
   <%= form.label :file, "Upload proof of payment", class: "text-primary" %>
     <div class="d-flex gap-1  mb-1 align-items-center">
         <%= form.file_field :file, 
