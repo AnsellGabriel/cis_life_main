@@ -85,11 +85,20 @@ class ProcessRemarksController < ApplicationController
     # raise 'errors'
     @process_coverage = ProcessCoverage.find(params[:process_remark][:process_coverage_id])
     @batch_count = @process_coverage.count_pending_for_review_batches(@process_coverage.group_remit.batches.first.class.name)
-
+    @dependent_count = @process_coverage.count_pending_for_review_dep(@process_coverage.get_batch_class_name)
+    binding.pry
+    
     unless params[:process_remark][:process_status].nil? || params[:process_remark][:process_status].empty?
       if @batch_count > 0
         return redirect_to process_coverage_path(@process_coverage), alert: "Can't proceed. There are #{@batch_count} #{'coverage'.pluralize(@batch_count)} for review or pending"
       end
+
+      unless @process_coverage.get_plan_acronym == "LPPI"
+        if @dependent_count > 0
+          return redirect_to process_coverage_path(@process_coverage), alert: "Can't proceed. There are #{@dependent_count} dependent #{'coverage'.pluralize(@batch_count)} for review or pending"
+        end
+      end
+      
     else
       params[:process_remark][:status] = ""
     end

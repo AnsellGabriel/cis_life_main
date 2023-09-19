@@ -4,10 +4,18 @@
   <%= f.error_notification message: f.object.errors[:base].to_sentence if f.object.errors[:base].present? %>
 
   <div class="form-inputs mb-3">
-    <%= f.input :date_from %>
-    <%= f.input :date_to %>
-    <%= f.input :ri_total_amount %>
-    <%= f.input :ri_total_prem %>
+    <div class="row">
+      <%= f.input :date_from, as: :string, wrapper_html: { class: "col-6" }, input_html: { data: { controller: "flatpickr",
+              flatpickr_max_date: Time.zone.now,
+              flatpickr_next_arrow: "Next",
+              flatpickr_prev_arrow: "Prev" } } %>
+      <%= f.input :date_to, as: :string, wrapper_html: { class: "col-6" }, input_html: { data: { controller: "flatpickr",
+            flatpickr_min_date: Time.zone.now,
+            flatpickr_next_arrow: "Next",
+            flatpickr_prev_arrow: "Prev" } } %>
+    </div>
+    <%#= f.input :ri_total_amount %>
+    <%#= f.input :ri_total_prem %>
   </div>
 
   <div class="form-actions text-end">

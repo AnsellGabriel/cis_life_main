@@ -23,7 +23,14 @@ class ReinsurancesController < ApplicationController
   def create
     @reinsurance = Reinsurance.new(reinsurance_params)
 
+    @batches = LoanInsurance::Batch.get_ri_batches(@reinsurance.date_from..@reinsurance.date_to)
+    @batches.each do |batch|
+      @reinsurance.batches << batch
+    end
+    
+    
     if @reinsurance.save
+      @reinsurance.set_total_prem_and_amount
       redirect_to @reinsurance, notice: "Reinsurance was successfully created."
     else
       render :new, status: :unprocessable_entity
@@ -53,6 +60,6 @@ class ReinsurancesController < ApplicationController
 
     # Only allow a list of trusted parameters through.
     def reinsurance_params
-      params.require(:reinsurance).permit(:date_from, :date_to, :ri_total_amount, :ri_total_prem)
+      params.require(:reinsurance).permit(:date_from, :date_to)
     end
 end
