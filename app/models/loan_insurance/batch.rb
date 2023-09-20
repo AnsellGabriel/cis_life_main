@@ -67,8 +67,11 @@ class LoanInsurance::Batch < Batch
   def self.get_ri_batches(ri_period)
     self.where(effectivity_date: ri_period, loan_amount: 350000.., insurance_status: :approved)
   end
-  
-  
+
+  def batch_dependents
+    nil
+  end
+
   private
 
   def skip_validation
@@ -113,7 +116,7 @@ class LoanInsurance::Batch < Batch
 
   def find_existing_coverages(agreement)
     existing_coverage = agreement.agreements_coop_members.where(coop_member_id: coop_member.id).order(created_at: :desc).first
-    
+
     if existing_coverage
       update_batch_and_existing_coverage(self, existing_coverage, group_remit)
     else

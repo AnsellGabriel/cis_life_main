@@ -4,5 +4,6 @@
   <td class="text-center"><%= to_curr(group_remit.total_principal_premium) %></td>
   <td class="text-center"><%= to_curr(group_remit.total_unused_premium) %></td>
   <td class="text-center"><%= to_curr(group_remit.total_premium_due) %></td>
+  <td class="text-center"><%= group_remit.status.titleize %></td>
   <td><%= render 'action_buttons', gr: group_remit  %></td>
 <tr>

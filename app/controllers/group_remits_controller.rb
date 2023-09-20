@@ -203,7 +203,7 @@ class GroupRemitsController < InheritedResources::Base
     end
 
     def load_data
-      @agreement = @group_remit.agreement
+      @agreement = @group_remit.agreement.decorate
       @anniversary = @group_remit.anniversary
       load_concerns
     end

@@ -30,8 +30,8 @@ class LoanInsurance::GroupRemit < GroupRemit
 
     batches.each do |batch|
       member = batch.coop_member.member
-      
-      member.update!(total_loan_amount: batch.coop_member.member.total_loan_amount + batch.loan_amount)
+
+      member.update!(total_loan_amount: member.total_loan_amount + batch.loan_amount)
       member.update!(for_reinsurance: true) if member.total_loan_amount >= 550_000
     end
   end

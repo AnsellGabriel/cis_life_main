@@ -189,7 +189,11 @@ class GroupRemit < ApplicationRecord
   end
 
   def total_dependent_premiums
-    batches.includes(:batch_dependents).sum {|batch| batch.batch_dependents.sum(:premium) }
+    if agreement.plan.acronym == 'GYRT'
+      batches.includes(:batch_dependents).sum {|batch| batch.batch_dependents.sum(:premium) }
+    else
+      0
+    end
   end
 
   def dependent_coop_commissions
@@ -197,7 +201,11 @@ class GroupRemit < ApplicationRecord
   end
 
   def dependent_agent_commissions
-    batches.approved.includes(:batch_dependents).sum {|batch| batch.batch_dependents.approved.sum(&:agent_sf_amount) }
+    if agreement.plan.acronym.include?('GYRT')
+      batches.approved.includes(:batch_dependents).sum {|batch| batch.batch_dependents.approved.sum(&:agent_sf_amount) }
+    else
+      0
+    end
   end
 
   def total_principal_premium
@@ -217,8 +225,11 @@ class GroupRemit < ApplicationRecord
   end
 
   def denied_dependent_premiums
-    (batches.where.not(insurance_status: :approved).includes(:batch_dependents).sum {|batch| batch.batch_dependents.sum(&:premium) }) +
-    (batches.where(insurance_status: :approved).includes(:batch_dependents).sum {|batch| batch.batch_dependents.denied.sum(&:premium) })
+    if agreement.plan.acronym == 'GYRT'
+      (batches.where.not(insurance_status: :approved).includes(:batch_dependents).sum {|batch| batch.batch_dependents.sum(&:premium) }) + (batches.where(insurance_status: :approved).includes(:batch_dependents).sum {|batch| batch.batch_dependents.denied.sum(&:premium) })
+    else
+      0
+    end
   end
 
   def gross_premium

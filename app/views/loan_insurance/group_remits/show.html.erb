@@ -123,6 +123,7 @@
       <tr class="table-dark">
         <th class="text-center" scope="col">ID</th>
         <th class="text-center" scope="col" style="width: 30%;">Members</th>
+        <th class="text-center" scope="col">Loan Amount</th>
         <th class="text-center" scope="col">Effectivity Date</th>
         <th class="text-center" scope="col">Expiry Date</th>
         <th class="text-center" scope="col">Premium</th>
@@ -151,6 +152,6 @@
 <% end %>
 
 <%= turbo_frame_tag "computation" do %>
-  <%= render "loan_insurance/group_remits/computation", group_remit: @group_remit, agreement: @agreement %>
+  <%= render "group_remits/computation", group_remit: @group_remit, agreement: @agreement %>
 <% end %>  
 

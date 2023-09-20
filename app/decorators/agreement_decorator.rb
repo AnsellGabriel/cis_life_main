@@ -13,4 +13,12 @@ class AgreementDecorator < Draper::Decorator
   def active_batches_count
     object.group_remits.where(status: :paid).joins(:batches).size
   end
+
+  def is_lppi?
+    object.plan.acronym == 'LPPI'
+  end
+
+  def is_gyrt?
+    object.plan.acronym.include?('GYRT')
+  end
 end
