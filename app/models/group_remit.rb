@@ -40,7 +40,7 @@ class GroupRemit < ApplicationRecord
     # new_group_remit.expiry_date = self.expiry_date + 1.year # Assuming the renewal duration is 1 year from the current date
     new_group_remit.status = :for_renewal
     new_group_remit.type = "Remittance"
-    new_group_remit.name = "#{self.name} Renewal"
+    new_group_remit.name = "#{self.name} RENEWAL"
     new_group_remit.batch_remit_id = self.id
     self.status = :for_renewal
     self.set_terms_and_expiry_date(self.expiry_date + 1.year)
@@ -159,7 +159,7 @@ class GroupRemit < ApplicationRecord
   end
 
   def approve_insurance_status_of_batches
-    self.batches.update_all(insurance_status: :approved)
+    self.batches.where(insurance_status: :for_review).update_all(insurance_status: :approved)
   end
 
   def coop_member_ids
@@ -304,14 +304,14 @@ class GroupRemit < ApplicationRecord
     approved_batches = batches.approved
     approved_members = CoopMember.approved_members(approved_batches)
     current_batch_remit = BatchRemit.find(self.batch_remit_id)
-    duplicate_batches = current_batch_remit.batch_group_remits.existing_members(approved_members)
+    # duplicate_batches = current_batch_remit.batch_group_remits.existing_members(approved_members)
 
-    BatchRemit.process_batch_remit(current_batch_remit, duplicate_batches, approved_batches)
+    BatchRemit.process_batch_remit(current_batch_remit, approved_batches)
     current_batch_remit.save!
   end
 
   def update_batch_coverages
-    batches.includes(:coop_member).each do |batch|
+    batches.where(insurance_status: :approved).includes(:coop_member).each do |batch|
       agreement = self.agreement
       coop_member = batch.coop_member
       existing_coverage = agreement.agreements_coop_members.find_or_initialize_by(coop_member_id: coop_member.id)
