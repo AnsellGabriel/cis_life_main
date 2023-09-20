@@ -11,6 +11,6 @@ class AgreementDecorator < Draper::Decorator
   #   end
 
   def active_batches_count
-    object.group_remits.where(status: :paid).joins(:loan_batches).size
+    object.group_remits.where(status: :paid).joins(:batches).size
   end
 end
