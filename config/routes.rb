@@ -1,9 +1,7 @@
 
 require 'sidekiq/web'
 
-
 Rails.application.routes.draw do 
-
   resources :reinsurances
   resources :claim_types, :claim_type_documents, :claim_type_benefits, :claim_attachments, :claim_confinements, :claim_benefits, :claim_coverages
   resources :documents
@@ -95,7 +93,6 @@ Rails.application.routes.draw do
   resources :group_remits do
     get 'denied_members', to: 'denied_members#index'
     get 'download_csv', to: 'denied_members#download_csv'
-    post :payment, on: :member
     get :submit, on: :member
     get :renewal, on: :member
     resources :batches do
@@ -159,6 +156,10 @@ Rails.application.routes.draw do
   # get 'insurance/reject', as: 'reject_insurance'
   get 'insurance/terminate', as: 'terminate_insurance'
 
+  resources :payments, only: %i[index create] do
+    get :approve, on: :member
+  end
+
   #* Underwriting Module Routes
   resources :user_levels
   resources :authority_levels
@@ -187,7 +188,7 @@ Rails.application.routes.draw do
     get :view_all, on: :collection
   end
 
-  resources :process_coverages do 
+  resources :process_coverages do
     get :approve_batch, on: :member
     get :approve_dependent, on: :member
     get :deny_batch, on: :member

@@ -1,0 +1,43 @@
+<%= content_tag :h3, 'List of Remittances', class: 'text-primary' %>
+
+<table class="table table-sm table-hover">
+    <thead>
+      <tr class="table-dark">
+        <th class="text-center" scope="col">Status</th>
+        <th class="text-center" scope="col">Cooperative</th>
+        <th class="text-center" scope="col">Plan</th>
+        <th class="text-center" scope="col">Net Premium</th>
+        <th class="text-center" scope="col">Actions</th>
+      </tr>
+    </thead>
+
+    <tbody id="batches_body">
+      <% if @payments.present? %>
+
+        <% @payments.each do |payment| %>
+          <tr class="table-light">
+            <td class="text-center"><%= payment.status.titleize %></td>
+            <td class="text-center"><%= payment.payable.agreement.cooperative %></td>
+            <td class="text-center"><%= payment.payable.agreement.plan.name %></td>
+            <td class="text-center"><%= to_curr(payment.payable.net_premium) %></td>
+            <td class="text-center">
+              <%= link_to payment.receipt.url, class: small_btn('warning'), title: 'Proof of Payment' do %>
+                <i class="bi bi-eye"></i>
+              <% end %>
+              <% unless payment.approved? %>
+                <%= link_to approve_payment_path(payment), class: small_btn('success'), title: 'Approve' do %>
+                  <i class="bi bi-check-lg"></i>
+                <% end %>
+              <% end %>
+            </td>
+          </tr>
+        <% end %>
+
+      <% else %>
+        <tr class="table-light">
+          <td colspan="4" class="text-center">No remittance found</td>
+        </tr>
+      <% end %>
+
+    </tbody>
+  </table>

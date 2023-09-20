@@ -30,7 +30,7 @@
               %>
               <%= link_to 'Remittances', '#',
                 class: small_btn('outline-warning'),
-                data: { action: "click->toggler#toggle", id: "history-#{batch_remit.id}" }
+                data: { action: "click->toggler#toggle click->parent#toggleChildren", id: "history-#{batch_remit.id}" }
               %>
             </div>
           </div>
