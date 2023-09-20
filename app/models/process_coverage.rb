@@ -133,6 +133,14 @@ class ProcessCoverage < ApplicationRecord
     end
   end
 
+  def count_pending_for_review_dep(klass)
+    count = 0
+    self.group_remit.batches.each do |batch|
+      count += batch.batch_dependents.where(insurance_status: [:for_review, :pending]).count
+    end
+    return count
+  end
+
   def get_batch_class_name
     self.group_remit.batches.first.class.name
   end
@@ -149,8 +157,27 @@ class ProcessCoverage < ApplicationRecord
     prem - (coop_sf + agent_sf)
   end
 
+  def get_lppi_effective
+    self.group_remit.batches.order(effectivity_date: :asc).pluck(:effectivity_date).first
+  end
+
+  def get_lppi_expiry
+    self.group_remit.batches.order(expiry_date: :asc).pluck(:expiry_date).last
+  end
+  
+
   def self.index_cov_list(approver_id, status, date_range)
-    joins(group_remit: { agreement: { emp_agreements: {employee: :emp_approver} } }).where( emp_approver: { approver_id: approver_id }, emp_agreements: { active: true}).where(status: status, created_at: date_range)
+    # joins(group_remit: { agreement: { emp_agreements: {employee: :emp_approver} } }).where( emp_approver: { approver_id: approver_id }, emp_agreements: { active: true}).where(status: status, created_at: date_range)
+    where(status: status, created_at: date_range, approver_id: approver_id)
+  end
+
+  def self.for_approvals(rank, user_id)
+    case rank
+    when "head"
+      where(status: :for_head_approval, approver_id: user_id)
+    when "senior_officer"
+      where(status: :for_vp_approval, approver_id: user_id)
+    end
   end
 
   # def set_batches_for_review

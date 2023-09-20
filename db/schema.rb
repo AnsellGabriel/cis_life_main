@@ -855,10 +855,10 @@ ActiveRecord::Schema[7.0].define(version: 2023_09_19_013703) do
 
   create_table "reinsurance_batches", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.bigint "reinsurance_id"
-    t.bigint "loan_insurance_batch_id"
+    t.bigint "batch_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["loan_insurance_batch_id"], name: "index_reinsurance_batches_on_loan_insurance_batch_id"
+    t.index ["batch_id"], name: "index_reinsurance_batches_on_batch_id"
     t.index ["reinsurance_id"], name: "index_reinsurance_batches_on_reinsurance_id"
   end
 

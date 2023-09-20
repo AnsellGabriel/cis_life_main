@@ -315,9 +315,8 @@ class GroupRemit < ApplicationRecord
       agreement = self.agreement
       coop_member = batch.coop_member
       existing_coverage = agreement.agreements_coop_members.find_or_initialize_by(coop_member_id: coop_member.id)
-
-      existing_coverage.status = batch.status,
-      existing_coverage.expiry = batch.expiry_date,
+      existing_coverage.status = batch.status
+      existing_coverage.expiry = batch.expiry_date
       existing_coverage.effectivity = batch.effectivity_date
       existing_coverage.save!
     end

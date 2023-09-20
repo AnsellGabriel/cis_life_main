@@ -63,6 +63,11 @@ class LoanInsurance::Batch < Batch
   def check_md_reco
     self.batch_remarks.where(status: 2).count
   end
+
+  def self.get_ri_batches(ri_period)
+    self.where(effectivity_date: ri_period, loan_amount: 350000.., insurance_status: :approved)
+  end
+  
   
   private
 

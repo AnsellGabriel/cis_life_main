@@ -1,4 +1,5 @@
 <div class="card">
+  <div class="card-header"><%= process_coverage.get_plan %></div>
   <div class="card-body">
     <%= content_tag :p do %>
       <strong>Cooperative:</strong>
@@ -21,9 +22,11 @@
     <% end %> -->
     <%= content_tag :p do %>
       <strong>Effectivity:</strong>
-      <%= process_coverage.effectivity.nil? ? "-" : month_day_year(process_coverage.effectivity) %> |
+      <!-- <%= process_coverage.effectivity.nil? ? "-" : month_day_year(process_coverage.effectivity) %> | -->
+      <%= month_day_year(process_coverage.get_lppi_effective) %> |
       <strong>Expiry:</strong>
-      <%= process_coverage.effectivity.nil? ? "-" : month_day_year(process_coverage.expiry) %>
+      <!-- <%= process_coverage.effectivity.nil? ? "-" : month_day_year(process_coverage.expiry) %> -->
+      <%= month_day_year(process_coverage.get_lppi_expiry) %>
     <% end %>
     <%= content_tag :p do %>
       <strong>Regular Count:</strong>
