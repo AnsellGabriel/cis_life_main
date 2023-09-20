@@ -102,4 +102,8 @@ class Member < ApplicationRecord
   def self.filter_by_name(last_name_filter, first_name_filter)
     where("last_name LIKE ? AND first_name LIKE ?", "%#{last_name_filter}%", "%#{first_name_filter}%")
   end
+
+  def self.get_ri
+    where(for_reinsurance: true)
+  end
 end

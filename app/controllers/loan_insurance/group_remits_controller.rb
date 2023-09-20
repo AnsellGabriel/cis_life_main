@@ -9,7 +9,7 @@ class LoanInsurance::GroupRemitsController < ApplicationController
   end
 
   def submit
-    if @group_remit.loan_batches.empty?
+    if @group_remit.batches.empty?
       respond_to do |format|
         format.html { redirect_to loan_insurance_group_remit_path(@group_remit), alert: "Unable to submit empty group remit!" }
       end
@@ -44,7 +44,7 @@ class LoanInsurance::GroupRemitsController < ApplicationController
   end
 
   def show
-    @batch = @group_remit.loan_batches.build(premium: 0)
+    @batch = @group_remit.batches.build(premium: 0)
     @coop_members = @cooperative.coop_members
 
     load_batches
