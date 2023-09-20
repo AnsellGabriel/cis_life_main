@@ -23,10 +23,25 @@ class ReinsurancesController < ApplicationController
   def create
     @reinsurance = Reinsurance.new(reinsurance_params)
 
-    @batches = LoanInsurance::Batch.get_ri_batches(@reinsurance.date_from..@reinsurance.date_to)
-    @batches.each do |batch|
-      @reinsurance.batches << batch
+    # @batches = LoanInsurance::Batch.get_ri_batches(@reinsurance.date_from..@reinsurance.date_to)
+    ri_start = @reinsurance.date_from
+    ri_end = @reinsurance.date_to
+    @members = Member.get_ri
+
+    @members.each do |member|
+      member.coop_members.each do |cm|
+        batch_total = cm.loan_batches.where("(effectivity_date <= ? and expiry_date >= ?) OR (effectivity_date <= ? and expiry_date >= ?)", ri_start, ri_start, ri_end, ri_end).sum(:loan_amount)
+        if batch_total >= 350000
+          cm.loan_batches.where("(effectivity_date <= ? and expiry_date >= ?) OR (effectivity_date <= ? and expiry_date >= ?)", ri_start, ri_start, ri_end, ri_end).each do |batch|
+            @reinsurance.batches << batch
+          end
+        end
+      end
     end
+
+    # @batches.each do |batch|
+    #   @reinsurance.batches << batch
+    # end
     
     
     if @reinsurance.save

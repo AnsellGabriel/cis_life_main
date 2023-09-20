@@ -1,4 +1,5 @@
 class ClaimCoveragesController < ApplicationController
+  before_action :set_claim_coverage, only: %i[ edit update destroy ]
   def new
     @process_claim = ProcessClaim.find(params[:v])
     @claim_coverage = @process_claim.claim_coverages.build
@@ -14,6 +15,14 @@ class ClaimCoveragesController < ApplicationController
   def update 
   end
 
+  def destroy
+    @claim_coverage.destroy
+
+    respond_to do |format|
+      format.html { redirect_to claims_file_process_claim_path(@process_claim), notice: "Claim coverage was successfully destroyed." }
+      format.json { head :no_content }
+    end
+  end
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_claim_coverage
