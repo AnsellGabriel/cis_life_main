@@ -18,6 +18,7 @@ class LoanInsurance::Batch < Batch
   has_many :reinsurance_batches
   has_many :reinsurances, through: :reinsurance_batches
 
+
   def process_batch
     return :no_dates if effectivity_date.nil? || expiry_date.nil?
 
