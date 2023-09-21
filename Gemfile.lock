@@ -155,9 +155,6 @@ GEM
     crass (1.0.6)
     csv (3.2.7)
     date (3.3.3)
-    debug (1.8.0)
-      irb (>= 1.5.0)
-      reline (>= 0.3.1)
     devise (4.9.2)
       bcrypt (~> 3.0)
       orm_adapter (~> 0.1)
@@ -211,10 +208,6 @@ GEM
       has_scope (~> 0.6)
       railties (>= 5.2, < 7.1)
       responders (>= 2, < 4)
-    io-console (0.6.0)
-    irb (1.8.1)
-      rdoc
-      reline (>= 0.3.8)
     jaro_winkler (1.5.6)
     jquery-rails (4.6.0)
       rails-dom-testing (>= 1, < 3)
@@ -298,8 +291,6 @@ GEM
     pry (0.14.2)
       coderay (~> 1.1)
       method_source (~> 1.0)
-    psych (5.1.0)
-      stringio
     public_suffix (5.0.3)
     puma (5.6.6)
       nio4r (~> 2.0)
@@ -343,15 +334,11 @@ GEM
       activesupport (>= 6.1.5)
       i18n
     rbs (2.8.4)
-    rdoc (6.5.0)
-      psych (>= 4.0.0)
     redis (5.0.6)
       redis-client (>= 0.9.0)
     redis-client (0.14.1)
       connection_pool
     regexp_parser (2.8.1)
-    reline (0.3.8)
-      io-console (~> 0.5)
     request_store (1.5.1)
       rack (>= 1.4)
     requestjs-rails (0.0.10)
@@ -469,7 +456,6 @@ GEM
       railties (>= 6.0.0)
     store_base_sti_class (3.0.0)
       activerecord (>= 6, < 7.1)
-    stringio (3.0.8)
     syntax_tree (6.1.1)
       prettier_print (>= 1.2.0)
     thor (1.2.2)
@@ -529,13 +515,13 @@ DEPENDENCIES
   cocoon
   coderay
   csv
-  debug
   devise
   draper
   ed25519
   factory_bot_rails
   ffaker
   humanize
+  image_processing (~> 1.2)
   importmap-rails
   jquery-rails
   matrix (~> 0.4.2)

@@ -1,5 +1,5 @@
 class ProcessClaimsController < ApplicationController
-  before_action :set_process_claim, only: %i[ show edit update destroy show_coop claim_route claims_file claim_process ]
+  before_action :set_process_claim, only: %i[ show edit update destroy show_coop claim_route claims_file claim_process update_status ]
 
   # GET /process_claims
   def index
@@ -23,6 +23,7 @@ class ProcessClaimsController < ApplicationController
 
   def show_coop 
     @agreement_benefit = AgreementBenefit.where(agreement: @process_claim.agreement)
+    @claim_type_document = ClaimTypeDocument.where(claim_type: @process_claim.claim_type)
   end
   # GET /process_claims/new
   def new
@@ -46,7 +47,17 @@ class ProcessClaimsController < ApplicationController
     @coop_member = CoopMember.find(params[:cm])
     @process_claim.claimable = @coop_member
     @process_claim.cooperative = @coop_member.cooperative
+    
+    set_dummy_value
     # raise "error"
+  end
+
+  def set_dummy_value
+    first_name = FFaker::NamePH.first_name 
+    @process_claim.claimant_name = first_name + ' ' + FFaker::NamePH.last_name
+    @process_claim.claimant_contact_no = FFaker::PhoneNumber.phone_number
+    @process_claim.claimant_email = first_name + '@gmail.com'
+
   end
 
   def create_coop 
@@ -78,6 +89,7 @@ class ProcessClaimsController < ApplicationController
     else
       @claim_cause = @process_claim.build_claim_cause
     end
+    @process_claim.date_file = Date.today if @process_claim.date_file.nil?
   end
 
   def claim_process 
@@ -124,7 +136,7 @@ class ProcessClaimsController < ApplicationController
 
       respond_to do |format|
         if @process_claim.save!
-          pt = ProcessTrack.create(route_id: 2, user_id: current_user, trackable: @process_claim)
+          pt = ProcessTrack.create(route_id: 2, user: current_user, trackable: @process_claim)
           format.html { redirect_to member_agreements_coop_member_path(coop_member), notice: "Claims submitted" }
         end
       end
@@ -143,12 +155,17 @@ class ProcessClaimsController < ApplicationController
     @claim_track.user_id = current_user.id
     respond_to do |format|
       if @claim_track.save
-
         if @claim_track.route_id == 2
           # raise "error"
-          @process_claim.update(claim_route: @claim_track.route_id, date_file: Time.now, claim_filed: 0, processing: 0, approval: 0, payment: 0)
-          import_product_benefit
+          import_product_benefit if @process_claim.submitted?
+          @process_claim.update!(claim_route: @claim_track.route_id, status: :process, claim_filed: 1, processing: 0, approval: 0, payment: 0)
           format.html { redirect_to claims_file_process_claim_path(@process_claim), notice: "#{@process_claim.claim_route.to_s.humanize.titleize} by #{current_user}"  }
+        elsif @claim_track.route_id == 3
+          @process_claim.update!(claim_route: @claim_track.route_id, processing: 1)
+          format.html { redirect_to show_coop_process_claim_path(@process_claim), notice: "#{@process_claim.claim_route.to_s.humanize.titleize} by #{current_user}"  }
+        elsif @claim_track.route_id == 8 
+          @process_claim.update!(claim_route: @claim_track.route_id, status: :approved, approval: 1)
+          format.html { redirect_to show_coop_process_claim_path(@process_claim), notice: "#{@process_claim.claim_route.to_s.humanize.titleize} by #{current_user}"  }
         else
           @process_claim.update_attribute(:claim_route, @claim_track.route_id)
           format.html { redirect_to show_coop_process_claim_path(@process_claim), notice: "#{@process_claim.claim_route.to_s.humanize.titleize} by #{current_user}"  }
@@ -162,14 +179,20 @@ class ProcessClaimsController < ApplicationController
     end
   end
 
-  def import_product_benefit 
-    @product_benefit = ProductBenefit.where(agreement_benefit: @process_claim.agreement_benefit)
-    @product_benefit.each do | pb |
-      @process_claim.claim_benefits.create(process_claim_id: @process_claim.id, benefit_id: pb.benefit_id, amount: pb.coverage_amount)
-    end
-    @batch = Batch.where(coop_member: @process_claim.claimable, agreement_benefit: @process_claim.agreement_benefit)
-    @batch.each do |b|
-      @process_claim.claim_coverages.create(process_claim: @process_claim, coverageable: b)
+  
+  def import_product_benefit
+    if @process_claim.claim_type == ClaimType.find_by(name: 'Hospital Confinement Claim')
+      @benefit = Benefit.find_by(name: "Hospital Income Benefit")
+      @process_claim.claim_benefits.create(process_claim_id: @process_claim.id, benefit: @benefit, amount: @process_claim.claim_confinements.sum(:amount))
+    else
+      @product_benefit = ProductBenefit.where(agreement_benefit: @process_claim.agreement_benefit)
+      @product_benefit.each do | pb |
+        @process_claim.claim_benefits.create(process_claim_id: @process_claim.id, benefit_id: pb.benefit_id, amount: pb.coverage_amount)
+      end
+      @batch = Batch.where(coop_member: @process_claim.claimable, agreement_benefit: @process_claim.agreement_benefit)
+      @batch.each do |b|
+        @process_claim.claim_coverages.create(process_claim: @process_claim, coverageable: b)
+      end
     end
     # @process_claim.claim_benefits.create(
     #   @product_benefit.map { |pb| { process_claim_id: @process_claim.id, benefit_id: pb.benefit_id, amount: pb.coverage_amount } }
@@ -177,6 +200,7 @@ class ProcessClaimsController < ApplicationController
   end
   # PATCH/PUT /process_claims/1
   def update
+    # raise "error"
     if @process_claim.update(process_claim_params)
       if @process_claim.claim_filed? 
         redirect_to index_show_process_claims_path(p: 2), notice: "Process claim was successfully updated."
@@ -208,7 +232,9 @@ class ProcessClaimsController < ApplicationController
         claim_benefits_param: [:id, :benefit_id, :amount, :status],
         claim_cause_attributes: [:id, :acd, :ucd, :osccd, :icd],
         claim_coverage_attributes: [:id, :amount_benefit, :coverage_type, :coverageale],
-        claim_remark_attributes: [:id, :user_id, :status, :remark])
+        claim_remark_attributes: [:id, :user_id, :status, :remark, :coop],
+        claim_attachment_attributes: [:id, :claim_type_id, :doc],
+        claim_confinement_attributes: [:id, :date_admit, :date_discharge, :terms, :amount])
     end
 
 end

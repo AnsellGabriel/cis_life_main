@@ -1,0 +1,14 @@
+<div class="card">
+        <div class="card-header">
+          <dl class="row">
+          <dt class="col-sm-4">Date filed</dt>
+          <dd class="col-sm-8"><%= to_shortdate(@process_claim.date_file) %></dd>
+          <dt class="col-sm-4">Cooperative</dt>
+          <dd class="col-sm-8"><%= @process_claim.cooperative %></dd>
+          <dt class="col-sm-4">Status</dt>
+          <dd class="col-sm-8"><%= @process_claim.status.humanize %></dd>
+          <dt class="col-sm-4">Authority Level</dt>
+          <dd class="col-sm-8"></dd>
+          </dl>
+        </div>
+      </div>

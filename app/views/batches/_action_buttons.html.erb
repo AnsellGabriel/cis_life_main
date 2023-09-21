@@ -1,6 +1,6 @@
 
 
-<div  class="d-flex gap-1" >
+<div  class="<%= flex_justify_align('center') %> gap-1" >
 	<%= link_to group_remit_batch_path(group_remit, batch),
 		data: {turbo_frame: "_top"}, 
 		title: 'View',
@@ -73,14 +73,16 @@
 			<% end %>
 		<% end %>
 
-		<% if batch.renewal? && !batch.denied? %>
-			<%= link_to 'Terminate Insurance', terminate_insurance_path(group_remit: group_remit, batch: batch),
+		<% if batch.renewal? && !batch.denied? && !batch.terminated? %>
+			<%= link_to terminate_insurance_path(group_remit: group_remit, batch: batch),
 				data: {
 					turbo_method: :get, 
 					turbo_confirm: "Terminate #{batch.coop_member.full_name}'s insurance?" , turbo_frame: "_top"
 				}, 
-				class: small_btn('danger') 
-			%>
+				class: small_btn('danger'),
+				title: 'Terminate Insurance' do %>
+			    <i class="bi bi-x-circle"></i>
+			<% end %>
 		<% end %>
 	<% end %>
 </div>

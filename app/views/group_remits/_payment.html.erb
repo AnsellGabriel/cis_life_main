@@ -1,13 +1,14 @@
-<%= form_with url: payment_group_remit_path(@group_remit), method: :post do |form| %>
+<%= form_with url: payments_path(group_remit_id: group_remit.id), html: {data: {controller: 'payment-upload'}} do |form| %>
   <%= form.label :file, "Upload proof of payment", class: "text-primary" %>
     <div class="d-flex gap-1  mb-1 align-items-center">
         <%= form.file_field :file, 
           class: "form-control", 
-          style: "width: 80%" 
+          style: "width: 80%" ,
+          data: {payment_upload_target: 'file'}
         %>
         <%= submit_tag 'Upload', 
           class: "btn btn-sm btn-outline-success", 
-          data: {turbo: 'false'} 
+          data: {turbo: 'false', action: 'click->payment-upload#submit', payment_upload_target: 'button'} 
         %>
     </div>
 <% end %>

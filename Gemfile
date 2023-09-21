@@ -11,6 +11,7 @@ gem "rails", "~> 7.0.4", ">= 7.0.4.3"
 gem "sprockets-rails"
 
 # Use mysql2 as the database for Active Record
+# gem "mysql2", "~> 0.5"
 gem "mysql2", "~> 0.5"
 
 
@@ -48,7 +49,7 @@ gem "tzinfo-data", platforms: %i[ mingw mswin x64_mingw jruby ]
 # gem "sassc-rails"
 
 # Use Active Storage variants [https://guides.rubyonrails.org/active_storage_overview.html#transforming-images]
-# gem "image_processing", "~> 1.2"
+gem "image_processing", "~> 1.2"
 
 gem 'bootstrap', '~> 5.1', '>= 5.1.3'
 gem 'bootstrap-icons-helper'
@@ -75,7 +76,7 @@ group :development, :test do
   # gem "debug", platforms: %i[ mri mingw x64_mingw ]
   gem 'byebug'
   gem "ffaker"
-  gem "debug"
+  # gem "debug"
 
 end
 

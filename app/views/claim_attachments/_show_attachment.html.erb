@@ -1,0 +1,21 @@
+<table class="table table-borderless table-hover">
+  <thead>
+    <tr class="border-top border-bottom border-primary">
+      <%# <th class="text-primary">ID</th> %>
+      <th class="text-primary">Documents</th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @process_claim.claim_attachments.each do |ca| %>
+      <tr>
+        <%# <td>= benefit_claim.id</td> %>
+        <td> <small><%= ca.claim_type_document %></small> <br>
+        <small class="text-muted"><%= ca.created_at %></small> </td>
+        <td>
+            <%= link_to '<i class="bi bi-eye"></i>'.html_safe, rails_blob_url(ca.doc), target: :_blank, class: 'btn btn-outline-primary btn-sm' if ca.doc.attached?  %>
+        </td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>

@@ -1,4 +1,5 @@
 class GroupRemitDecorator < Draper::Decorator
+	include Rails.application.routes.url_helpers
   delegate_all
 
   def is_remittance?

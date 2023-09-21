@@ -22,7 +22,7 @@ class ProcessRemarksController < ApplicationController
     else
       "Add Remark"
     end
-    
+
     @process_status = params[:pro_status]
     @total_life_cov = params[:total_life_cov].to_i
     @max_amount = params[:max_amount].to_i
@@ -38,7 +38,7 @@ class ProcessRemarksController < ApplicationController
           # if @process_coverage.group_remit.batches.where(batches: { insurance_status: :denied} ).count > 0
           klass_name = @process_coverage.group_remit.batches.first.class.name
           denied_count =  @process_coverage.count_batches_denied(klass_name)
-          
+
           if denied_count > 0
             @rem_status = "for_head_approval"
           else
@@ -62,7 +62,7 @@ class ProcessRemarksController < ApplicationController
     end
 
 
-    
+
     @process_coverage = ProcessCoverage.find(params[:ref])
     if Rails.env.development?
       @process_remark = @process_coverage.process_remarks.build(remark: FFaker::Lorem.sentence)
@@ -84,25 +84,30 @@ class ProcessRemarksController < ApplicationController
   def create
     # raise 'errors'
     @process_coverage = ProcessCoverage.find(params[:process_remark][:process_coverage_id])
+    agreement = @process_coverage.group_remit.agreement.decorate
     @batch_count = @process_coverage.count_pending_for_review_batches(@process_coverage.group_remit.batches.first.class.name)
-    @dependent_count = @process_coverage.count_pending_for_review_dep(@process_coverage.get_batch_class_name)
-    binding.pry
-    
+
+    if agreement.is_gyrt?
+      @dependent_count = @process_coverage.count_pending_for_review_dep(@process_coverage.get_batch_class_name)
+    else
+      @dependent_count = 0
+    end
+
     unless params[:process_remark][:process_status].nil? || params[:process_remark][:process_status].empty?
       if @batch_count > 0
         return redirect_to process_coverage_path(@process_coverage), alert: "Can't proceed. There are #{@batch_count} #{'coverage'.pluralize(@batch_count)} for review or pending"
       end
 
-      unless @process_coverage.get_plan_acronym == "LPPI"
-        if @dependent_count > 0
-          return redirect_to process_coverage_path(@process_coverage), alert: "Can't proceed. There are #{@dependent_count} dependent #{'coverage'.pluralize(@batch_count)} for review or pending"
-        end
-      end
-      
+      # unless @process_coverage.get_plan_acronym == "LPPI"
+      #   if @dependent_count > 0
+      #     return redirect_to process_coverage_path(@process_coverage), alert: "Can't proceed. There are #{@dependent_count} dependent #{'coverage'.pluralize(@batch_count)} for review or pending"
+      #   end
+      # end
+
     else
       params[:process_remark][:status] = ""
     end
-    
+
     @process_remark = ProcessRemark.new(process_remark_params)
     @process_remark.user_type = current_user.userable_type
     @process_remark.user_id = current_user.userable_id
@@ -123,7 +128,7 @@ class ProcessRemarksController < ApplicationController
           format.json { render :show, status: :created, location: @process_remark }
         end
         # format.html { redirect_back fallback_location:, notice: "Process remark was successfully created." }
-        
+
         # agreement = @process_coverage.group_remit.agreement
 
         # if agreement.anniversary_type == 'none' or agreement.anniversary_type.nil?

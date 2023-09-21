@@ -1,6 +1,6 @@
 require "test_helper"
 
-class ClaimDocumentTest < ActiveSupport::TestCase
+class ClaimAttachmentTest < ActiveSupport::TestCase
   # test "the truth" do
   #   assert true
   # end
