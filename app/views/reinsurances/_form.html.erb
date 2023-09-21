@@ -6,15 +6,17 @@
   <div class="form-inputs mb-3">
     <div class="row">
       <div class="col-6">
+        <%= f.label :date_from, label: "Date From" %>
         <%= f.date_field :date_from, class: "start_time form-control" %>
       </div>
       <div class="col-6">
-        <%= f.date_field :date_from, class: "end_time form-control"%>
+        <%= f.label :date_to, label: "Date To" %>
+        <%= f.date_field :date_to, class: "end_time form-control"%>
       </div>
     </div>
 
-  <div class="form-actions text-end">
-    <%= link_to "Back", reinsurances_path, class: 'btn btn-secondary' %>
-    <%= f.button :submit, class: 'btn-success' %>
+  <div class="form-actions text-end mt-3">
+    <%#= link_to "Back", reinsurances_path, class: 'btn btn-secondary' %>
+    <%= f.button :submit, class: 'btn-success', data: { turbo: false } %>
   </div>
 <% end %>

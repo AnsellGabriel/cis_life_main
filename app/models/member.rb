@@ -60,6 +60,26 @@ class Member < ApplicationRecord
     "#{last_name}, #{first_name} #{middle_name}"
   end
 
+  def self.get_ri
+    where(for_reinsurance: true)
+  end
+
+  def get_for_ri_sum(ri)
+    ri_start = ri.date_from
+    ri_end = ri.date_to
+
+    total = 0
+    self.coop_members.each do |cm|
+      total = cm.loan_batches.where("(effectivity_date <= ? and expiry_date >= ?) OR (effectivity_date <= ? and expiry_date >= ?)", ri_start, ri_start, ri_end, ri_end).sum(:loan_amount)
+      if total >= 350000
+        cm.loan_batches.where("(effectivity_date <= ? and expiry_date >= ?) OR (effectivity_date <= ? and expiry_date >= ?)", ri_start, ri_start, ri_end, ri_end).each do |batch|
+          ri.batches << batch
+        end
+      end
+    end
+    
+  end
+
   private
 
   def format_phone_numbers
@@ -103,7 +123,7 @@ class Member < ApplicationRecord
     where("last_name LIKE ? AND first_name LIKE ?", "%#{last_name_filter}%", "%#{first_name_filter}%")
   end
 
-  def self.get_ri
-    where(for_reinsurance: true)
-  end
+  
+  
 end
+
