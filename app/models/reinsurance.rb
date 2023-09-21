@@ -9,4 +9,8 @@ class Reinsurance < ApplicationRecord
       ri_total_prem: self.batches.sum(:premium_due)
     )
   end
+
+  def count_batches
+    self.batches.count
+  end
 end
