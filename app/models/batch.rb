@@ -13,7 +13,8 @@ class Batch < ApplicationRecord
     transferred: 2,
     reinstated: 3,
     for_reconsideration: 4,
-    reloan: 5
+    reloan: 5,
+    expired: 6
   }
 
   # batch.insurance_status

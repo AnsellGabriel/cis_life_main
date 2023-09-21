@@ -4,3 +4,7 @@
       cron: '0 6 * * *' # Set the desired time for the job to run (6:00 am in this example)
       class: 'GroupRemitStatusUpdater'
       queue: 'default'
+    batch_status_update:
+      cron: '49 14 * * *' 
+      class: 'LoanStatusUpdater'
+      queue: 'default'

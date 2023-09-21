@@ -887,7 +887,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_09_19_013703) do
     t.index ["process_coverage_id"], name: "index_process_remarks_on_process_coverage_id"
     t.index ["user_type", "user_id"], name: "index_process_remarks_on_user"
   end
-
+  
   create_table "process_tracks", charset: "utf8mb4", force: :cascade do |t|
     t.string "description"
     t.integer "route_id"
@@ -983,7 +983,6 @@ ActiveRecord::Schema[7.0].define(version: 2023_09_19_013703) do
 
   add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
   add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
-  add_foreign_key "agents", "agent_groups"
   add_foreign_key "agreements_coop_members", "agreements"
   add_foreign_key "agreements_coop_members", "coop_members"
   add_foreign_key "anniversaries", "agreements"
