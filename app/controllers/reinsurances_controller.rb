@@ -21,35 +21,30 @@ class ReinsurancesController < ApplicationController
 
   # POST /reinsurances
   def create
+    # raise 'errors'
+
     @reinsurance = Reinsurance.new(reinsurance_params)
 
     # @batches = LoanInsurance::Batch.get_ri_batches(@reinsurance.date_from..@reinsurance.date_to)
-    ri_start = @reinsurance.date_from
-    ri_end = @reinsurance.date_to
     @members = Member.get_ri
 
     @members.each do |member|
-      member.coop_members.each do |cm|
-        batch_total = cm.loan_batches.where("(effectivity_date <= ? and expiry_date >= ?) OR (effectivity_date <= ? and expiry_date >= ?)", ri_start, ri_start, ri_end, ri_end).sum(:loan_amount)
-        if batch_total >= 350000
-          cm.loan_batches.where("(effectivity_date <= ? and expiry_date >= ?) OR (effectivity_date <= ? and expiry_date >= ?)", ri_start, ri_start, ri_end, ri_end).each do |batch|
-            @reinsurance.batches << batch
-          end
-        end
-      end
+      member.get_for_ri_sum(@reinsurance)
     end
 
-    # @batches.each do |batch|
-    #   @reinsurance.batches << batch
-    # end
-    
-    
-    if @reinsurance.save
-      @reinsurance.set_total_prem_and_amount
-      redirect_to @reinsurance, notice: "Reinsurance was successfully created."
+    unless @reinsurance.count_batches > 0
+      redirect_to reinsurances_path, alert: "No for reinsurance for that period."
     else
-      render :new, status: :unprocessable_entity
+      
+      if @reinsurance.save
+        @reinsurance.set_total_prem_and_amount
+        redirect_to @reinsurance, notice: "Reinsurance was successfully created."
+      else
+        render :new, status: :unprocessable_entity
+      end
+      
     end
+    
   end
 
   # PATCH/PUT /reinsurances/1
