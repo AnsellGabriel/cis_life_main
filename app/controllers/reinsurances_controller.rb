@@ -21,6 +21,7 @@ class ReinsurancesController < ApplicationController
 
   # POST /reinsurances
   def create
+    raise 'errors'
     @reinsurance = Reinsurance.new(reinsurance_params)
 
     # @batches = LoanInsurance::Batch.get_ri_batches(@reinsurance.date_from..@reinsurance.date_to)
