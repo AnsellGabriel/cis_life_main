@@ -15,7 +15,7 @@ class AgreementDecorator < Draper::Decorator
   end
 
   def is_lppi?
-    object.plan.acronym == 'LPPI'
+    object.plan.acronym.include?('LPPI')
   end
 
   def is_gyrt?
