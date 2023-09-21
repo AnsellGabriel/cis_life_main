@@ -1,22 +1,17 @@
 
-<%= simple_form_for(@reinsurance) do |f| %>
+<%= simple_form_for(@reinsurance, data: { controller: "flatpickr2" }) do |f| %>
   <%= f.error_notification %>
   <%= f.error_notification message: f.object.errors[:base].to_sentence if f.object.errors[:base].present? %>
 
   <div class="form-inputs mb-3">
     <div class="row">
-      <%= f.input :date_from, as: :string, wrapper_html: { class: "col-6" }, input_html: { data: { controller: "flatpickr",
-              flatpickr_max_date: Time.zone.now,
-              flatpickr_next_arrow: "Next",
-              flatpickr_prev_arrow: "Prev" } } %>
-      <%= f.input :date_to, as: :string, wrapper_html: { class: "col-6" }, input_html: { data: { controller: "flatpickr",
-            #flatpickr_min_date: Time.zone.now,
-            flatpickr_next_arrow: "Next",
-            flatpickr_prev_arrow: "Prev" } } %>
+      <div class="col-6">
+        <%= f.date_field :date_from, class: "start_time form-control" %>
+      </div>
+      <div class="col-6">
+        <%= f.date_field :date_from, class: "end_time form-control"%>
+      </div>
     </div>
-    <%#= f.input :ri_total_amount %>
-    <%#= f.input :ri_total_prem %>
-  </div>
 
   <div class="form-actions text-end">
     <%= link_to "Back", reinsurances_path, class: 'btn btn-secondary' %>
