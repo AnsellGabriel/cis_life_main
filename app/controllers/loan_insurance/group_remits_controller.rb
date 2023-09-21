@@ -5,7 +5,7 @@ class LoanInsurance::GroupRemitsController < ApplicationController
   before_action :set_group_remit, only: %i[submit show destroy]
 
   def index
-    @group_remits = @agreement.group_remits.loan_remits
+    @group_remits = @agreement.group_remits.loan_remits.order(created_at: :desc)
   end
 
   def submit

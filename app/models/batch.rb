@@ -13,8 +13,7 @@ class Batch < ApplicationRecord
     transferred: 2,
     reinstated: 3,
     for_reconsideration: 4,
-    reloan: 5,
-    expired: 6
+    reloan: 5
   }
 
   # batch.insurance_status
@@ -23,7 +22,8 @@ class Batch < ApplicationRecord
     denied: 1,
     pending: 2,
     for_review: 3,
-    terminated: 4
+    terminated: 4,
+    expired: 5
   }
 
   scope :filter_by_member_name, ->(name) {

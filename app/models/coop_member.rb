@@ -35,12 +35,20 @@ class CoopMember < ApplicationRecord
     self.member.birth_date
   end
 
-  def active_loans(group_remit)
+  def active_loans(group_remit, loan_type = nil)
     unused_ids = group_remit.batches.pluck(:unused_loan_id).compact
-    LoanInsurance::Batch.where(coop_member_id: self)
+    active_loans = LoanInsurance::Batch.where(coop_member_id: self)
                         .where(insurance_status: :approved)
+                        .where.not(insurance_status: :expired)
                         .where.not(group_remit: group_remit)
                         .where.not(id: unused_ids)
+
+    if loan_type.present?
+      active_loans = active_loans.where(loan: loan_type)
+    else
+      active_loans
+    end
+
   end
 
   def loans
