@@ -100,15 +100,19 @@ class LoanInsurance::BatchesController < ApplicationController
 
   # DELETE /loan_insurance/batches/1
   def destroy
-    @batch.destroy!
-    redirect_to loan_insurance_group_remit_path(@batch.group_remit), alert: "Member removed"
+    if @batch.destroy!
+      if @batch.unused_loan_id.present?
+        LoanInsurance::Batch.find(@batch.unused_loan_id).update(status: :recent)
+      end
+      redirect_to loan_insurance_group_remit_path(@batch.group_remit), alert: "Member removed"
+    end
   end
 
 
   def approve_all
     @process_coverage = ProcessCoverage.find(params[:process_coverage])
     @batches = @process_coverage.get_batches
-    
+
     @batches.each do |batch|
       if batch.insurance_status == "for_review" || batch.insurance_status == "pending"
         # if (18..65).include?(batch.age)
@@ -116,11 +120,11 @@ class LoanInsurance::BatchesController < ApplicationController
         if batch.get_rate_age_range
           batch.update_attribute(:insurance_status, "approved")
           # @process_coverage.increment!(:approved_count)
-          
+
         end
       end
     end
-    
+
     redirect_to process_coverage_path(@process_coverage), notice: "Batches have been approved!"
 
   end

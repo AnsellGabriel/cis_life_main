@@ -23,7 +23,7 @@ class BatchDecorator < Draper::Decorator
   def insurance_badge
     if object.approved?
       'primary'
-    elsif object.denied? or object.terminated?
+    elsif object.denied?
       'danger'
     else
       'warning text-dark'
@@ -33,10 +33,10 @@ class BatchDecorator < Draper::Decorator
   def status_badge
     if object.recent?
       'primary'
-    elsif object.expired?
-      'danger'
-    else
+    elsif object.reloan?
       'warning text-dark'
+    else
+      'danger'
     end
   end
 

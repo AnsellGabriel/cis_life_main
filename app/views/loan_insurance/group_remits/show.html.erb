@@ -1,3 +1,4 @@
+
 <!-- Batch Import Modal -->
 <%= render "loan_insurance/group_remits/batch_import_modal" %>
 
@@ -19,11 +20,6 @@
               data: {bs_toggle: "modal",
                 bs_target: "#batchEnrollment"
               }%> 
-              <%= button_to 'Submit', submit_loan_insurance_group_remit_path(@group_remit), 
-                  method: :get,
-                  class: small_btn('outline-primary'),
-                  data: {turbo_confirm: 'Submit group remit?' }
-                %>
               <% if @group_remit.complete_health_decs? %>
                 <%= button_to 'Submit', submit_loan_insurance_group_remit_path(@group_remit), 
                   method: :get,
@@ -81,13 +77,22 @@
     <%== pagy_bootstrap_nav(@pagy) %>
     <% @group_remit.status_mappings.each do |status, attributes| %>
       <% batches = @group_remit.batches.send(status) %>
-      <%= link_to loan_insurance_group_remit_path(@group_remit, insurance_status: status), class: "mb-3 btn btn-sm btn-primary position-relative" do %>
+      <%= link_to loan_insurance_group_remit_path(@group_remit, insurance_status: status), class: "mb-3 btn btn-sm btn-outline-primary position-relative" do %>
         <%= attributes[:label] %>
         <% unless batches.size.zero? %>
           <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-warning text-dark">
             <%= batches.size >= 100 ? '99+' :  batches.size %>
           </span>
         <% end %>
+      <% end %>
+    <% end %>
+
+    <% if @batch_with_health_dec.present? %>
+      <%= link_to loan_insurance_group_remit_path(@group_remit, batch_health_dec_filter: true), class: "mb-3 btn btn-sm btn-outline-danger position-relative" do %>
+          <%= 'w/out Health Declaration' %>
+          <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-warning text-dark">
+            <%= @batch_with_health_dec.size >= 100 ? '99+' :  @batch_with_health_dec.size %>
+          </span>
       <% end %>
     <% end %>
 
@@ -154,4 +159,3 @@
 <%= turbo_frame_tag "computation" do %>
   <%= render "group_remits/computation", group_remit: @group_remit, agreement: @agreement %>
 <% end %>  
-

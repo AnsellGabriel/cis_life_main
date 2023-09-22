@@ -2,8 +2,8 @@ class LoanInsurance::Batch < Batch
   include CoverageStatus
   self.table_name = "loan_insurance_batches"
 
-  # skip agreement_benefit validation
-  validate :agreement_benefit, unless: :skip_validation
+
+  validate :agreement_benefit, unless: :skip_validation # skip agreement_benefit validation
   validates_presence_of :date_release, :date_mature, :coop_member_id, :insurance_status, :loan_amount, :effectivity_date, :expiry_date
 
   belongs_to :group_remit, class_name: 'LoanInsurance::GroupRemit', foreign_key: 'group_remit_id'
@@ -24,8 +24,25 @@ class LoanInsurance::Batch < Batch
 
     agreement = group_remit.agreement
     set_terms_and_age
-    find_existing_coverages(agreement)
     loan_rate = find_loan_rate(agreement)
+    previous_coverage = agreement.agreements_coop_members.find_by(coop_member_id: coop_member.id)
+
+    if previous_coverage.present?
+      month_difference = expiry_and_today_month_diff(previous_coverage.expiry)
+
+      if month_difference > 24
+        self.status = :reinstated
+      else
+        self.status = :reloan
+      end
+
+    else
+      if agreement.transferred_date.present? && (agreement.transferred_date >= coop_member.membership_date)
+        self.status = :transferred
+      else
+        self.status = :recent
+      end
+    end
 
     if loan_rate.nil?
       :no_loan_rate
@@ -99,6 +116,8 @@ class LoanInsurance::Batch < Batch
 
     if unused_loan_id
       previous_batch = LoanInsurance::Batch.find(unused_loan_id)
+      previous_batch.update(status: :terminated)
+
       unused_term = compute_terms(previous_batch.expiry_date, effectivity_date)
       self.unused = (previous_batch.loan_amount / 1000 ) * (rate.monthly_rate * unused_term)
       self.premium_due = premium - unused
@@ -120,18 +139,24 @@ class LoanInsurance::Batch < Batch
     (service_fee_percentage / 100.to_d) * premium
   end
 
-  def find_existing_coverages(agreement)
-    existing_coverage = agreement.agreements_coop_members.where(coop_member_id: coop_member.id).order(created_at: :desc).first
+  # def find_existing_coverages(agreement)
+  #   existing_coverage = agreement.agreements_coop_members.where(coop_member_id: coop_member.id).order(created_at: :desc).first
 
-    if existing_coverage
-      update_batch_and_existing_coverage(self, existing_coverage, group_remit)
-    else
-      create_new_batch_coverage(agreement, coop_member, self )
-    end
-  end
+  #   if existing_coverage
+  #     update_batch_and_existing_coverage(self, existing_coverage, group_remit)
+  #   else
+  #     create_new_batch_coverage(agreement, coop_member, self )
+  #   end
+  # end
 
   def compute_terms(expiry_date, effectivity_date)
     (expiry_date.year - effectivity_date.year) * 12 + (expiry_date.month - effectivity_date.month) + (expiry_date.day > effectivity_date.day ? 1 : 0)
+  end
+
+  def expiry_and_today_month_diff(expiry_date)
+    today = Date.today
+
+    month_difference = ((today.year * 12 + today.month) - (expiry_date.year * 12 + expiry_date.month)) + (expiry_date.day > today.day ? 1 : 0)
   end
 
 

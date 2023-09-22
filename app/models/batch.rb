@@ -14,7 +14,8 @@ class Batch < ApplicationRecord
     reinstated: 3,
     for_reconsideration: 4,
     reloan: 5,
-    expired: 6
+    terminated: 6,
+    expired: 7
   }
 
   # batch.insurance_status
@@ -22,8 +23,7 @@ class Batch < ApplicationRecord
     approved: 0,
     denied: 1,
     pending: 2,
-    for_review: 3,
-    terminated: 4
+    for_review: 3
   }
 
   scope :filter_by_member_name, ->(name) {
