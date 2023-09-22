@@ -23,8 +23,25 @@ class LoanInsurance::Batch < Batch
 
     agreement = group_remit.agreement
     set_terms_and_age
-    find_existing_coverages(agreement)
     loan_rate = find_loan_rate(agreement)
+    previous_coverage = agreement.agreements_coop_members.find_by(coop_member_id: coop_member.id)
+
+    if previous_coverage.present?
+      month_difference = expiry_and_today_month_diff(previous_coverage.expiry)
+      
+      if month_difference > 24
+        self.status = :reinstated
+      else
+        self.status = :reloan
+      end
+
+    else
+      if agreement.transferred_date.present? && (agreement.transferred_date >= coop_member.membership_date)
+        self.status = :transferred
+      else
+        self.status = :recent
+      end
+    end
 
     if loan_rate.nil?
       :no_loan_rate
@@ -115,18 +132,24 @@ class LoanInsurance::Batch < Batch
     (service_fee_percentage / 100.to_d) * premium
   end
 
-  def find_existing_coverages(agreement)
-    existing_coverage = agreement.agreements_coop_members.where(coop_member_id: coop_member.id).order(created_at: :desc).first
+  # def find_existing_coverages(agreement)
+  #   existing_coverage = agreement.agreements_coop_members.where(coop_member_id: coop_member.id).order(created_at: :desc).first
 
-    if existing_coverage
-      update_batch_and_existing_coverage(self, existing_coverage, group_remit)
-    else
-      create_new_batch_coverage(agreement, coop_member, self )
-    end
-  end
+  #   if existing_coverage
+  #     update_batch_and_existing_coverage(self, existing_coverage, group_remit)
+  #   else
+  #     create_new_batch_coverage(agreement, coop_member, self )
+  #   end
+  # end
 
   def compute_terms(expiry_date, effectivity_date)
     (expiry_date.year - effectivity_date.year) * 12 + (expiry_date.month - effectivity_date.month) + (expiry_date.day > effectivity_date.day ? 1 : 0)
+  end
+
+  def expiry_and_today_month_diff(expiry_date)
+    today = Date.today
+
+    month_difference = ((today.year * 12 + today.month) - (expiry_date.year * 12 + expiry_date.month)) + (expiry_date.day > today.day ? 1 : 0)
   end
 
 

@@ -49,6 +49,8 @@ class LoanInsurance::GroupRemitsController < ApplicationController
 
     load_batches
     paginate_batches
+
+    @batch_with_health_dec = @group_remit.batches_without_health_dec
   end
 
   def new

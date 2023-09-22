@@ -36,6 +36,7 @@ class PaymentsController < ApplicationController
 
       if group_remit.type == 'LoanInsurance::GroupRemit'
         group_remit.update_members_total_loan
+        group_remit.update_batch_coverages
       else
         group_remit.update_batch_remit
         group_remit.update_batch_coverages

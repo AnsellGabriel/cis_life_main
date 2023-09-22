@@ -269,7 +269,8 @@ class GroupRemit < ApplicationRecord
   end
 
   def batches_without_health_dec
-    batches.recent.where.not(id: self.batches.joins(:batch_health_decs).select(:id))
+    # batches.recent.where.not(id: self.batches.joins(:batch_health_decs).select(:id))
+    batches.recent.where.missing(:batch_health_decs)
   end
 
   def all_batches_have_beneficiaries?
@@ -323,7 +324,7 @@ class GroupRemit < ApplicationRecord
 
   def update_batch_coverages
     batches.where(insurance_status: :approved).includes(:coop_member).each do |batch|
-      agreement = self.agreement
+      # agreement = self.agreement
       coop_member = batch.coop_member
       existing_coverage = agreement.agreements_coop_members.find_or_initialize_by(coop_member_id: coop_member.id)
       existing_coverage.status = batch.status
