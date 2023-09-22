@@ -73,7 +73,14 @@ class Member < ApplicationRecord
       total = cm.loan_batches.where("(effectivity_date <= ? and expiry_date >= ?) OR (effectivity_date <= ? and expiry_date >= ?)", ri_start, ri_start, ri_end, ri_end).sum(:loan_amount)
       if total >= 350000
         cm.loan_batches.where("(effectivity_date <= ? and expiry_date >= ?) OR (effectivity_date <= ? and expiry_date >= ?)", ri_start, ri_start, ri_end, ri_end).each do |batch|
-          ri.batches << batch
+          ri_date = batch.reinsurance_batches.find_by(batch: batch).nil? ? ri.date_from : batch.reinsurance_batches.find_by(batch: batch).ri_date
+          
+          # binding.pry
+          
+          # ri.batches << batch
+          ri_batch = ReinsuranceBatch.find_or_initialize_by(reinsurance: ri, batch: batch)
+          ri_batch.ri_date = ri_date
+          ri_batch.save!
         end
       end
     end

@@ -70,6 +70,10 @@ class LoanInsurance::Batch < Batch
     # where(effectivity_date: ri_period, loan_amount: 350000.., insurance_status: :approved)
   end
 
+  def get_ri_date(ri)
+    self.reinsurance_batches.find_by(reinsurance: ri, batch: self).ri_date
+  end
+
   def batch_dependents
     nil
   end
