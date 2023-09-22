@@ -19,7 +19,7 @@ class LoanInsurance::GroupRemitsController < ApplicationController
 
     @group_remit.set_under_review_status
     @group_remit.date_submitted = Date.today
-    @group_remit.terminate_unused_batches(current_user)
+    # @group_remit.terminate_unused_batches(current_user)
 
     respond_to do |format|
       if @group_remit.save!

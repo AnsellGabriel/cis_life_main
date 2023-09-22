@@ -70,7 +70,7 @@ class LoanInsurance::BatchesController < ApplicationController
     # params[:loan_insurance_batch][:unused_loan_id] = params[:loan_insurance_batch][:unused_loan_id].to_i if params[:loan_insurance_batch][:unused_loan_id].present?
     params[:loan_insurance_batch][:loan_amount] = params[:loan_insurance_batch][:loan_amount].gsub(',', '').to_d
     @batch = LoanInsurance::Batch.new(batch_params)
-    result = @batch.process_batch
+    result = @batch.process_batch(current_user)
 
     respond_to do |format|
       if @batch.save

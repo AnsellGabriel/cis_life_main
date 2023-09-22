@@ -27,7 +27,7 @@ class InsuranceController < ApplicationController
         expiry: @batch.previous_expiry_date,
         effectivity: @batch.previous_effectivity_date
       )
-        @batch.update(insurance_status: :terminated)
+        @batch.update(status: :terminated)
         format.html { redirect_to group_remit_path(@group_remit), alert: "Member insurance coverage terminated" }
       else
         format.html { redirect_to group_remit_path(@group_remit), alert: "Unsuccessful insurance coverage termination" }
