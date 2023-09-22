@@ -20,11 +20,6 @@
               data: {bs_toggle: "modal",
                 bs_target: "#batchEnrollment"
               }%> 
-              <%= button_to 'Submit', submit_loan_insurance_group_remit_path(@group_remit), 
-                  method: :get,
-                  class: small_btn('outline-primary'),
-                  data: {turbo_confirm: 'Submit group remit?' }
-                %>
               <% if @group_remit.complete_health_decs? %>
                 <%= button_to 'Submit', submit_loan_insurance_group_remit_path(@group_remit), 
                   method: :get,
@@ -164,5 +159,3 @@
 <%= turbo_frame_tag "computation" do %>
   <%= render "group_remits/computation", group_remit: @group_remit, agreement: @agreement %>
 <% end %>  
-
-<% console %>

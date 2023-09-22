@@ -37,6 +37,7 @@ class PaymentsController < ApplicationController
       if group_remit.type == 'LoanInsurance::GroupRemit'
         group_remit.update_members_total_loan
         group_remit.update_batch_coverages
+        group_remit.terminate_unused_batches(current_user)
       else
         group_remit.update_batch_remit
         group_remit.update_batch_coverages

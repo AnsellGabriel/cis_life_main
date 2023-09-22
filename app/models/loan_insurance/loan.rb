@@ -9,6 +9,10 @@ class LoanInsurance::Loan < ApplicationRecord
     name
   end
   
+  def self.filtered_by_cooperative(cooperative)
+    where(cooperative: cooperative)
+  end
+  
   private
 
   def capitalize_name

@@ -115,6 +115,14 @@ class ProcessRemarksController < ApplicationController
     respond_to do |format|
       if @process_remark.save
         if params[:process_remark][:process_status] == "Approve"
+          if agreement.is_lppi?
+            group_remit = @process_coverage.group_remit
+            group_remit.batches.where(insurance_status: :denied).each do |batch|
+              if batch.unused_loan_id.present?
+                LoanInsurance::Batch.find(batch.unused_loan_id).update(status: :recent)
+              end
+            end
+          end
 
           format.html { redirect_to process_coverage_approve_path(process_coverage_id: params[:process_remark][:process_coverage_id], total_life_cov: params[:process_remark][:total_life_cov], max_amount: params[:process_remark][:max_amount], total_net_prem: params[:process_remark][:total_net_prem])}
         elsif params[:process_remark][:process_status] == "Deny"

@@ -38,6 +38,10 @@ class LoanInsurance::BatchesController < ApplicationController
     end
   end
 
+  def show_unuse_batch
+    @batch = LoanInsurance::Batch.find(params[:id])
+  end
+
   def modal_remarks
     @batch = LoanInsurance::Batch.find(params[:id])
     @group_remit = @batch.group_remit
@@ -70,7 +74,7 @@ class LoanInsurance::BatchesController < ApplicationController
     # params[:loan_insurance_batch][:unused_loan_id] = params[:loan_insurance_batch][:unused_loan_id].to_i if params[:loan_insurance_batch][:unused_loan_id].present?
     params[:loan_insurance_batch][:loan_amount] = params[:loan_insurance_batch][:loan_amount].gsub(',', '').to_d
     @batch = LoanInsurance::Batch.new(batch_params)
-    result = @batch.process_batch(current_user)
+    result = @batch.process_batch
 
     respond_to do |format|
       if @batch.save
@@ -96,8 +100,12 @@ class LoanInsurance::BatchesController < ApplicationController
 
   # DELETE /loan_insurance/batches/1
   def destroy
-    @batch.destroy!
-    redirect_to loan_insurance_group_remit_path(@batch.group_remit), alert: "Member removed"
+    if @batch.destroy!
+      if @batch.unused_loan_id.present?
+        LoanInsurance::Batch.find(@batch.unused_loan_id).update(status: :recent)
+      end
+      redirect_to loan_insurance_group_remit_path(@batch.group_remit), alert: "Member removed"
+    end
   end
 
 

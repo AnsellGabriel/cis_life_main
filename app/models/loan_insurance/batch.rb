@@ -18,7 +18,8 @@ class LoanInsurance::Batch < Batch
   has_many :reinsurance_batches
   has_many :reinsurances, through: :reinsurance_batches
 
-  def process_batch(current_user)
+
+  def process_batch
     return :no_dates if effectivity_date.nil? || expiry_date.nil?
 
     agreement = group_remit.agreement
@@ -46,7 +47,7 @@ class LoanInsurance::Batch < Batch
     if loan_rate.nil?
       :no_loan_rate
     else
-      calculate_values(agreement, current_user)
+      calculate_values(agreement)
       true
     end
   end
@@ -86,6 +87,10 @@ class LoanInsurance::Batch < Batch
     # where(effectivity_date: ri_period, loan_amount: 350000.., insurance_status: :approved)
   end
 
+  def get_ri_date(ri)
+    self.reinsurance_batches.find_by(reinsurance: ri, batch: self).ri_date
+  end
+
   def batch_dependents
     nil
   end
@@ -106,19 +111,12 @@ class LoanInsurance::Batch < Batch
     self.rate = agreement.loan_rates.where("min_age <= ? AND max_age >= ?", age, age).first
   end
 
-  def calculate_values(agreement, current_user = nil)
+  def calculate_values(agreement)
     self.premium = (loan_amount / 1000 ) * (rate.monthly_rate * terms)
 
     if unused_loan_id
       previous_batch = LoanInsurance::Batch.find(unused_loan_id)
       previous_batch.update(status: :terminated)
-      previous_batch.remarks.create!(
-        remark: "Insurance terminated, tagged as unused by #{current_user.userable.to_s} on #{Date.today.strftime("%B %d, %Y")}",
-        user: current_user,
-        remarkable: self,
-        status: :terminated,
-        batch_status: 'terminated'
-      )
 
       unused_term = compute_terms(previous_batch.expiry_date, effectivity_date)
       self.unused = (previous_batch.loan_amount / 1000 ) * (rate.monthly_rate * unused_term)

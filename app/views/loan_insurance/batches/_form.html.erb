@@ -19,7 +19,7 @@
     <div class="form-inputs mb-3  "  >
       <div class="row">
         <div class="form-floating col-md-6">
-          <%= f.association :loan, label: false, prompt: 'Select type', wrapper: false, input_html: {class: ' text-primary'}  %>
+          <%= f.association :loan, collection: LoanInsurance::Loan.filtered_by_cooperative(@cooperative) , label: false, prompt: 'Select type', wrapper: false, input_html: {class: ' text-primary'}  %>
           <%= f.label :loan, 'Loan type', class: 'ps-4' %>
         </div>
         <div class="form-floating mb-3 col-md-6" data-controller="number-formatter">

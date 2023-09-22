@@ -27,6 +27,7 @@
       <th>Loan Amount</th>
       <th>Terms</th>
       <th>Premium</th>
+      <th>RI Date</th>
     </thead>
     <tbody>
       <% reinsurance.batches.each do |batch| %>
@@ -39,6 +40,7 @@
             <%= process_dates("Terms", batch.terms) %><br>
           </td>
           <td><%= to_currency(batch.premium_due) %></td>
+          <td><%= process_dates("RI Date", month_day_year(batch.get_ri_date(reinsurance.id))) %></td>
         </tr>
       <% end %>
     </tbody>

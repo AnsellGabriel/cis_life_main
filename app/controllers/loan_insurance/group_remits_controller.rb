@@ -29,14 +29,13 @@ class LoanInsurance::GroupRemitsController < ApplicationController
         @process_coverage.processor_id  = @group_remit.agreement.emp_agreements.find_by(agreement: @group_remit.agreement, active: true).employee_id
         @process_coverage.approver_id  = @group_remit.agreement.emp_agreements.find_by(agreement: @group_remit.agreement, active: true).employee.emp_approver.approver_id
         @process_coverage.set_default_attributes
+        @process_coverage.save!
         # raise 'errors'
-        if @process_coverage.save
-          format.html { redirect_to loan_insurance_group_remit_path(@group_remit.agreement), notice: "Group remit submitted" }
+        format.html { redirect_to loan_insurance_group_remit_path(@group_remit), notice: "Group remit submitted" }
         # else
         #   format.html { redirect_to coop_agreement_group_remit_path(@group_remit.agreement, @group_remit), alert: "Process Coverage not created!" }
         #   @group_remit.status = :pending
         #   @group_remit.save!
-        end
       # else
       #   format.html { redirect_to coop_agreement_group_remit_path(@group_remit.agreement, @group_remit), alert: "Please see members below and complete the necessary details." }
       end

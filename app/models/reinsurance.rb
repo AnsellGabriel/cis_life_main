@@ -10,6 +10,12 @@ class Reinsurance < ApplicationRecord
     )
   end
 
+  # def set_batches_ri_date
+  #   self.reinsurance_batches.each do |batch|
+  #     prev_ri = batch.reinsurance_batches.find_by(batch: batch)
+  #   end
+  # end
+
   def count_batches
     self.batches.count
   end
