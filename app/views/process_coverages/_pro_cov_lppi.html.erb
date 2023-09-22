@@ -118,7 +118,7 @@
                 <% end %>
               </td>
               <td>
-                <%= link_to unuse_batch_loan_insurance_batch_path(batch), class: "btn btn-sm btn-success mb-1" do %>
+                <%= link_to unuse_batch_loan_insurance_batch_path(batch.unused_loan_id), class: "btn btn-sm btn-info mb-1", data: { turbo_frame: "modal-xl" } do %>
                   <%= bootstrap_icon "eye" %>
                 <% end %>
               </td>
