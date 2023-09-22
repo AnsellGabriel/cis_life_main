@@ -485,14 +485,14 @@ class ProcessCoveragesController < ApplicationController
     end
 
     respond_to do |format|
-      # if @batch.batch_dependents.for_review.count > 0 || @batch.batch_dependents.pending.count > 0
-      #   format.html { redirect_to process_coverage_path(@process_coverage), alert: "Please check pending and/or for review dependent(s) for that coverage." }
-      # else
+      if (@batch.class.name == "Batch") && (@batch.batch_dependents.for_review.count > 0 || @batch.batch_dependents.pending.count > 0)
+        format.html { redirect_to process_coverage_path(@process_coverage), alert: "Please check pending and/or for review dependent(s) for that coverage." }
+      else
         if @batch.update_attribute(:insurance_status, 0)
           @process_coverage.increment!(:approved_count)
           format.html { redirect_to process_coverage_path(@process_coverage), notice: "Batch Approved!" }
         end
-      # end
+      end
 
     end
 
@@ -538,7 +538,7 @@ class ProcessCoveragesController < ApplicationController
       Batch.find(params[:batch])
     end
 
-    if @batch.batch_dependents.for_review.count > 0 || @batch.batch_dependents.pending.count > 0
+    if (@batch.class.name == "Batch") && (@batch.batch_dependents.for_review.count > 0 || @batch.batch_dependents.pending.count > 0)
       redirect_to process_coverage_path(@process_coverage), alert: "Please check pending and/or for review dependent(s) for that coverage."
     else
       respond_to do |format|

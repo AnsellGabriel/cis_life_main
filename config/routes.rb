@@ -136,6 +136,9 @@ Rails.application.routes.draw do
       collection do
         get :approve_all
       end
+      member do 
+        get :show_unuse_batch, as: 'unuse_batch'
+      end
 
       get :modal_remarks, on: :member
       get :find_loan, on: :member

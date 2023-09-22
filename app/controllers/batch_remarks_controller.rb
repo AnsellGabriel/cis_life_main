@@ -66,7 +66,7 @@ class BatchRemarksController < ApplicationController
     @rem_status = remark_status(@batch_status)
 
     @process_coverage = ProcessCoverage.find_by(id: params[:batch_remark][:process_coverage])&.id
-  
+    
     if !params[:batch_type] == 'BatchDependent' && params[:batch_remark][:status] == "denied" && (@batch.batch_dependents.for_review.count > 0 || @batch.batch_dependents.pending.count > 0)
       redirect_to process_coverage_path(@process_coverage), alert: "Please check pending and/or for review dependent(s) for that coverage."
     else
