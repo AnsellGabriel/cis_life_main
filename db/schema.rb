@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_09_19_013703) do
+ActiveRecord::Schema[7.0].define(version: 2023_09_22_025700) do
   create_table "action_text_rich_texts", charset: "utf8mb4", force: :cascade do |t|
     t.string "name", null: false
     t.text "body", size: :long
@@ -887,7 +887,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_09_19_013703) do
     t.index ["process_coverage_id"], name: "index_process_remarks_on_process_coverage_id"
     t.index ["user_type", "user_id"], name: "index_process_remarks_on_user"
   end
-  
+
   create_table "process_tracks", charset: "utf8mb4", force: :cascade do |t|
     t.string "description"
     t.integer "route_id"
@@ -934,6 +934,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_09_19_013703) do
     t.bigint "batch_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.date "ri_date"
     t.index ["batch_id"], name: "index_reinsurance_batches_on_batch_id"
     t.index ["reinsurance_id"], name: "index_reinsurance_batches_on_reinsurance_id"
   end
@@ -983,6 +984,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_09_19_013703) do
 
   add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
   add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
+  add_foreign_key "agents", "agent_groups"
   add_foreign_key "agreements_coop_members", "agreements"
   add_foreign_key "agreements_coop_members", "coop_members"
   add_foreign_key "anniversaries", "agreements"
