@@ -4,8 +4,8 @@
     <div class="d-flex gap-2">
       <%= render 'counter_box', title: 'Total members', count: @cooperative.coop_members.size %>
       <% @cooperative.agreements.each do |a| %>
-        <% presenter = AgreementPresenter.new(a) %>
-        <%= render 'counter_box', title: "Enrolled in #{presenter.plan_acronym}", count: presenter.batch_remit_batches_count %>
+        <% agreement = a.decorate %>
+        <%= render 'counter_box', title: "Enrolled in #{agreement.plan_acronym}", count: agreement.active_batches_count %>
       <% end %>
     </div>
 
@@ -69,3 +69,4 @@
     </div>
   </div>
 </div>
+

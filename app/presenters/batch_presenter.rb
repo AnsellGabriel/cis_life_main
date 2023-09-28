@@ -32,7 +32,7 @@ class BatchPresenter
 	def present_product_benefits
 		if @agreement.plan.acronym == 'PMFC'
 				@batch.get_term_insurance_product_benefit
-		else
+		elsew
 				@batch.agreement_benefit.product_benefits
 		end
 	end
@@ -54,7 +54,7 @@ class BatchPresenter
 		end
 	end
 
-	
+
 
 	def require_health_dec?
 		(@batch.recent? || @batch.for_reconsideration? || @batch.reinstated?) && @batch.batch_health_decs.blank? && @batch.loan_amount > @agreement.nel

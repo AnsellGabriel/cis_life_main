@@ -98,6 +98,17 @@ class LoanInsurance::BatchesController < ApplicationController
     end
   end
 
+  def remove_unused
+    batch = LoanInsurance::Batch.find(params[:id])
+    LoanInsurance::Batch.find(batch.unused_loan_id).update!(status: :recent)
+    batch.update!(unused_loan_id: nil)
+    batch.calculate_values(batch.group_remit.agreement)
+
+    if batch.save!
+      redirect_to loan_insurance_group_remit_path(batch.group_remit), alert: "Unused loan removed"
+    end
+  end
+
   # DELETE /loan_insurance/batches/1
   def destroy
     if @batch.destroy!

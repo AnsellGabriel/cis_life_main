@@ -1,6 +1,17 @@
 <% batch_presenter = BatchPresenter.new(batch, agreement) %>
 
 <div  class="<%= flex_justify_align('center') %> gap-1" >
+	<% if batch.unused_loan_id %>
+		<%= button_to remove_unused_loan_insurance_batch_path(batch), 
+			title: 'Remove unused premium',
+			method: :get,
+			data: { turbo_frame: "_top", 
+			turbo_confirm: "Remove unused for #{member.last_name}, #{member.first_name} #{member.middle_name}?" },
+			class: small_btn('outline-danger') do %>
+			<i class="bi bi-calendar2-x"></i>
+		<% end %>
+	<% end %>
+
 	<%= link_to loan_insurance_batch_path(batch),
 		data: {turbo_frame: "modal-xl"}, 
 		class: small_btn('outline-primary'), 
