@@ -44,6 +44,7 @@ class MembersController < InheritedResources::Base
       # birth_date: FFaker::Time.date
     )
     @coop_member = @member.coop_members.build
+    @prov = @muni = @brgy = []
   end
 
   def create
