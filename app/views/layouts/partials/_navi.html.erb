@@ -39,7 +39,7 @@
                 Insurance
               </a>
               <ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
-                <% @cooperative.agreements.each do |a| %>
+                <% @cooperative.agreements.includes(:plan).each do |a| %>
                   <% case a.plan.acronym %>
                   <% when 'LPPI' %>
                     <%= link_to "LPPI", loan_insurance_group_remits_path, class: "dropdown-item" %>
