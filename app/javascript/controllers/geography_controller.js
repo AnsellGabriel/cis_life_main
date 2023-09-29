@@ -3,8 +3,7 @@ import { get } from "@rails/request.js"
 
 // Connects to data-controller="geography"
 export default class extends Controller {
-  static targets = ["provinceSelect", "muniSelect", "brgySelect"]
-
+  static targets = ["provinceSelect", "muniSelect", "brgySelect"]x
 
   search_provinces(event) {
     let region_id = event.target.selectedOptions[0].value
@@ -40,4 +39,5 @@ export default class extends Controller {
       responseKind: "turbo-stream"
     })
   }
+
 }
