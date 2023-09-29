@@ -3,7 +3,7 @@ class MemberImportService
       @spreadsheet = spreadsheet
       @cooperative = cooperative
       @current_user = current_user
-      @required_headers = ["Birth Place", "First Name", "Middle Name", "Last Name", "Suffix", "Birthdate", "Gender", "Address", "SSS #", "TIN #", "Mobile #", "Email", "Civil Status", "Height (cm)", "Weight (kg)", "Occupation", "Employer", "Work Address", "Spouse", "Work Phone #"]     
+      @required_headers = ["Birth Place", "First Name", "Middle Name", "Last Name", "Suffix", "Birthdate", "Gender", "Address", "SSS #", "TIN #", "Mobile #", "Email", "Civil Status", "Height (cm)", "Weight (kg)", "Occupation", "Employer", "Work Address", "Spouse", "Work Phone #"]
       @progress = @current_user.create_member_import_tracker(progress: 0.0)
     end
 
@@ -16,7 +16,7 @@ class MemberImportService
     end
 
     members_spreadsheet = parse_file('Members_Data')
-    
+
     missing_headers = find_missing_headers(@required_headers, headers)
 
 
@@ -69,7 +69,7 @@ class MemberImportService
 
       if member.persisted?
         # check if member is already a coop member
-        coop_member = member.coop_members.find_or_initialize_by(cooperative_id: @cooperative.id) 
+        coop_member = member.coop_members.find_or_initialize_by(cooperative_id: @cooperative.id)
         member.update(member_hash)
         coop_member.update(coop_member_hash)
         updated_members_counter += 1
@@ -117,7 +117,7 @@ class MemberImportService
     def find_missing_headers(required_headers, headers)
       required_headers - headers
     end
-    
+
     def update_progress(total, processed_members)
       @progress.update(progress: (processed_members.to_f / total.to_f * 100))
     end

@@ -4,31 +4,33 @@
     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
   </div>
   
-  <div class="modal-body">
+  <div class="modal-body sm-secondary-text">
     <div id="error_notif"></div>
     <div class="row <%= flex_justify_align('center') %>">
       <div class="col-md-10" style="margin: auto;">
         <div class="card mb-3">
           <div class="card-body">
             <div class="row mb-1">
-              <%= content_tag :span, 'MEMBER DETAILS', class: 'text-primary' %>
+              <%= content_tag :span, class: 'text-primary' do %>
+                <i class="bi bi-person"></i> Member Details
+              <% end %>
             </div>
             <hr>
             <div class="row">
               <div class="col-sm-2">
-                <h6 class="mb-0">First name:</h6>
+                <span class="mb-0 text-secondary">First name</span>
               </div>
               <div class="col-sm-2 text-primary">
                 <%= "#{@member.first_name}" %>
               </div>
               <div class="col-sm-2">
-                <h6 class="mb-0">Middle name:</h6>
+                <span class="mb-0 text-secondary">Middle name</span>
               </div>
               <div class="col-sm-2 text-primary">
                 <%= "#{@member.middle_name}" %>
               </div>
-              <div class="col-sm-2">
-                <h6 class="mb-0">Last name:</h6>
+              <div class="col-sm-2 text-secondary">
+                <span class="mb-0">Last name</span>
               </div>
               <div class="col-sm-2 text-primary">
                 <%= "#{@member.last_name}" %>
@@ -37,91 +39,97 @@
             <hr>
             <div class="row">
               <div class="col-sm-3">
-                <h6 class="mb-0">Birthdate</h6>
+                <span class="mb-0 text-secondary">Birthdate</span>
               </div>
-              <div class="col-sm-3 text-primary">
+              <div class="col-sm-3 ">
                 <%= date_as_month_day_year(@member.birth_date) %>
               </div>
-              <div class="col-sm-3">
-                <h6 class="mb-0">Age</h6>
+              <div class="col-sm-3 text-secondary">
+                <span class="mb-0">Age</span>
               </div>
-              <div class="col-sm-3 text-primary">
+              <div class="col-sm-3 ">
                 <%= @member.age %>
               </div>
             </div>
             <hr class="mb-5">
             <div class="row mb-1">
-              <%= content_tag :span, 'LOAN INSURANCE DETAILS', class: 'text-primary' %>
+              <%= content_tag :span, class: 'text-primary' do %>
+                <i class="bi bi-cash"></i> Loan Details
+              <% end %>
             </div>
             <hr>
             <div class="row">
-              <div class="col-sm">
-                <h6 class="mb-0">Loan Type</h6>
+              <div class="col-sm-3">
+                <span class="mb-0 text-secondary">Loan Type</span>
               </div>
-              <div class="col-sm text-primary">
+              <div class="col-sm-3">
                 <%= @batch.loan.name %>
               </div>
-              <div class="col-sm">
-                <h6 class="mb-0">Loan Amount</h6>
+              <div class="col-sm-3">
+                <span class="mb-0 text-secondary">Premium</span>
               </div>
-              <div class="col-sm text-primary">
-                <%= to_number(@batch.loan_amount) %>
-              </div>
-              <div class="col-sm">
-                <h6 class="mb-0">Terms</h6>
-              </div>
-              <div class="col-sm text-primary">
-                <%= @batch.terms %>
+              <div class="col-sm-3">
+                <%= to_number(@batch.premium) %>
               </div>
             </div>
             <hr>
-                        <div class="row">
-              <div class="col-sm">
-                <h6 class="mb-0">Premium</h6>
+            <div class="row">
+              <div class="col-sm-3">
+                <span class="mb-0 text-secondary">Loan Amount</span>
               </div>
-              <div class="col-sm text-primary">
-                <%= to_number(@batch.premium) %>
+              <div class="col-sm-3 ">
+                <%= to_number(@batch.loan_amount) %>
               </div>
-              <div class="col-sm">
-                <h6 class="mb-0">Unused Premium</h6>
+              <div class="col-sm-3">
+                <span class="mb-0 text-secondary">Unused Premium</span>
               </div>
-              <div class="col-sm text-primary">
+              <div class="col-sm-3 ">
                 <%= to_number(@batch.unused) %>
               </div>
-              <div class="col-sm">
-                <h6 class="mb-0">Premium Due</h6>
+            </div>
+            <hr>
+
+            <div class="row">
+              <div class="col-sm-3">
+                <span class="mb-0 text-secondary">Terms</span>
               </div>
-              <div class="col-sm text-primary">
+              <div class="col-sm-3 ">
+                <%= @batch.terms %>
+              </div>
+              <div class="col-sm-3">
+                <span class="mb-0 text-secondary">Premium Due</span>
+              </div>
+              <div class="col-sm-3 ">
                 <%= to_number(@batch.premium_due) %>
               </div>
             </div>
             <hr>
             <div class="row">
-              <div class="col-sm">
-                <h6 class="mb-0">Release Date</h6>
+              <div class="col-sm-3">
+                <span class="mb-0 text-secondary">Release Date</span>
               </div>
-              <div class="col-sm text-primary">
+              <div class="col-sm-3 ">
                 <%= date_as_month_day_year(@batch.date_release) %>
               </div>
-              <div class="col-sm">
-                <h6 class="mb-0">Maturity Date</h6>
+              <div class="col-sm-3">
+                <span class="mb-0 text-secondary">Effectivity Date</span>
               </div>
-              <div class="col-sm text-primary">
-                <%= date_as_month_day_year(@batch.date_mature)%>
+              <div class="col-sm-3 ">
+                <%= date_as_month_day_year(@batch.effectivity_date) %>
               </div>
             </div>
             <hr>
             <div class="row">
               <div class="col-sm">
-                <h6 class="mb-0">Effectivity Date</h6>
+                <span class="mb-0 text-secondary">Maturity Date</span>
               </div>
-              <div class="col-sm text-primary">
-                <%= date_as_month_day_year(@batch.effectivity_date) %>
+              <div class="col-sm ">
+                <%= date_as_month_day_year(@batch.date_mature)%>
               </div>
               <div class="col-sm">
-                <h6 class="mb-0">Expiry Date</h6>
+                <span class="mb-0 text-secondary">Expiry Date</span>
               </div>
-              <div class="col-sm text-primary">
+              <div class="col-sm ">
                 <%= date_as_month_day_year(@batch.expiry_date)%>
               </div>
             </div>

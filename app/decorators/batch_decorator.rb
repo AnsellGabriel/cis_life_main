@@ -40,4 +40,10 @@ class BatchDecorator < Draper::Decorator
     end
   end
 
+  def capitalized_insured_type
+		object.agreement_benefit
+				.name
+				.upcase
+	end
+
 end
