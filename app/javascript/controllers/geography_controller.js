@@ -3,7 +3,7 @@ import { get } from "@rails/request.js"
 
 // Connects to data-controller="geography"
 export default class extends Controller {
-  static targets = ["provinceSelect", "muniSelect", "brgySelect"]x
+  static targets = ["provinceSelect", "muniSelect", "brgySelect"]
 
   search_provinces(event) {
     let region_id = event.target.selectedOptions[0].value
