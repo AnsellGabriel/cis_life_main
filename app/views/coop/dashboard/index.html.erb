@@ -61,10 +61,18 @@
   <div class="col-md-6">
     <div class="card col-md-11" style="margin: auto">
       <div class="card-header text-primary">
-        <%= content_tag :h6, 'Notifications', class: 'mb-0' %>
+        <%= content_tag :h6, 'Message Board', class: 'mb-0' %>
       </div>
       <div class="card-body <%= flex_justify_align('between','center') %>">
-        <%= content_tag :span, 'No notifications' %>
+        <% if @notifications.present? %>
+          <ul>
+            <% @notifications.limit(10).order(created_at: :desc).each do |notice| %>
+              <%= content_tag :li, notice.message, class: 'text-secondary sm-secondary-text mb-1' %>
+            <% end %>
+          </ul>
+        <% else %>
+          <%= content_tag :span, 'No notifications', class: 'text-secondary sm-secondary-text mb-1' %>
+        <% end %>
       </div>
     </div>
   </div>

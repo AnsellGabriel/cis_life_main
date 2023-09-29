@@ -139,6 +139,7 @@ class GroupRemit < ApplicationRecord
 
     unless self.type == 'BatchRemit'
       self.status = :for_payment
+      Notification.create(notifiable: self.agreement.cooperative, message: "#{self.name} is approved and now for payment.")
     end
 
     self.save!
@@ -149,6 +150,7 @@ class GroupRemit < ApplicationRecord
     set_total_premiums_and_fees
 
     self.status = :for_payment
+    Notification.create(notifiable: self.agreement.cooperative, message: "#{self.name} is approved and now for payment.")
     self.save!
   end
 
@@ -316,9 +318,9 @@ class GroupRemit < ApplicationRecord
     approved_batches = batches.approved
     approved_members = CoopMember.approved_members(approved_batches)
     current_batch_remit = BatchRemit.find(self.batch_remit_id)
-    # duplicate_batches = current_batch_remit.batch_group_remits.existing_members(approved_members)
+    duplicate_batches = current_batch_remit.batch_group_remits.existing_members(approved_members)
 
-    BatchRemit.process_batch_remit(current_batch_remit, approved_batches)
+    BatchRemit.process_batch_remit(current_batch_remit, approved_batches, duplicate_batches)
     current_batch_remit.save!
   end
 

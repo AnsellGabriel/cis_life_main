@@ -1,7 +1,7 @@
 <% batch_presenter = BatchPresenter.new(batch, agreement) %>
 
 <div  class="<%= flex_justify_align('center') %> gap-1" >
-	<% if batch.unused_loan_id %>
+	<% if batch.unused_loan_id && group_remit.pending? %>
 		<%= button_to remove_unused_loan_insurance_batch_path(batch), 
 			title: 'Remove unused premium',
 			method: :get,
