@@ -31,14 +31,18 @@ class MemberImportService
     members_spreadsheet.drop(1).each do |row|
       # Extract member data from CSV row
       member_hash = {
-        last_name: row["Last Name"] == nil ? nil : row["Last Name"].strip.upcase,
-        first_name: row["First Name"] == nil ? nil : row["First Name"].strip.upcase,
-        middle_name: row["Middle Name"] == nil ? nil : row["Middle Name"].strip.upcase,
-        suffix: row["Suffix"] == nil ? nil : row["Suffix"].strip.upcase,
+        last_name: row["Last Name"] == nil ? nil : row["Last Name"].strip,
+        first_name: row["First Name"] == nil ? nil : row["First Name"].strip,
+        middle_name: row["Middle Name"] == nil ? nil : row["Middle Name"].strip,
+        suffix: row["Suffix"] == nil ? nil : row["Suffix"].strip,
         birth_place: row["Birth Place"],
         birth_date: row["Birthdate"],
         gender: row["Gender"],
         address: row["Address"],
+        geo_region: row["Region"] == nil ? nil : GeoRegion.find_by(name: row["Region"].strip),
+        geo_province: row["Province"] == nil ? nil : GeoProvince.find_by(name: row["Province"].strip),
+        geo_municipality: row["Municipality"] == nil ? nil : GeoMunicipality.find_by(name: row["Municipality"].strip),
+        geo_barangay: row["Barangay"] == nil ? nil : GeoBarangay.find_by(name: row["Barangay"].strip),
         sss_no: row["SSS #"],
         tin_no: row["TIN #"],
         mobile_number: row["Mobile #"],
