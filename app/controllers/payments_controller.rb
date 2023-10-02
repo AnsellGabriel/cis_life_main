@@ -30,9 +30,9 @@ class PaymentsController < ApplicationController
     payment = Payment.find(params[:id])
     group_remit = payment.payable
 
-
-    if payment.update(status: :approved)
+    if payment.approved!
       group_remit.paid!
+      Notification.create(notifiable: group_remit.agreement.cooperative, message: "#{group_remit.name} payment verified.")
 
       if group_remit.type == 'LoanInsurance::GroupRemit'
         group_remit.update_members_total_loan

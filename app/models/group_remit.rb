@@ -12,7 +12,7 @@ class GroupRemit < ApplicationRecord
   has_many :batches, through: :batch_group_remits
   has_many :denied_members, dependent: :destroy
   has_many :payments, as: :payable, dependent: :destroy
-  # has_many :loan_batches, dependent: :destroy, class_name: 'LoanInsurance::Batch'
+  has_many :loan_batches, dependent: :destroy, class_name: 'LoanInsurance::Batch'
   has_one :process_coverage, dependent: :destroy
   has_one :group_import_tracker, dependent: :destroy
   accepts_nested_attributes_for :payments
@@ -139,6 +139,7 @@ class GroupRemit < ApplicationRecord
 
     unless self.type == 'BatchRemit'
       self.status = :for_payment
+      Notification.create(notifiable: self.agreement.cooperative, message: "#{self.name} is approved and now for payment.")
     end
 
     self.save!
@@ -149,6 +150,7 @@ class GroupRemit < ApplicationRecord
     set_total_premiums_and_fees
 
     self.status = :for_payment
+    Notification.create(notifiable: self.agreement.cooperative, message: "#{self.name} is approved and now for payment.")
     self.save!
   end
 
@@ -189,7 +191,7 @@ class GroupRemit < ApplicationRecord
   end
 
   def total_dependent_premiums
-    if agreement.plan.acronym == 'GYRT'
+    if agreement.plan.acronym.include?('GYRT')
       batches.includes(:batch_dependents).sum {|batch| batch.batch_dependents.sum(:premium) }
     else
       0
@@ -225,7 +227,7 @@ class GroupRemit < ApplicationRecord
   end
 
   def denied_dependent_premiums
-    if agreement.plan.acronym == 'GYRT'
+    if agreement.plan.acronym.include?('GYRT')
       (batches.where.not(insurance_status: :approved).includes(:batch_dependents).sum {|batch| batch.batch_dependents.sum(&:premium) }) + (batches.where(insurance_status: :approved).includes(:batch_dependents).sum {|batch| batch.batch_dependents.denied.sum(&:premium) })
     else
       0
@@ -316,9 +318,9 @@ class GroupRemit < ApplicationRecord
     approved_batches = batches.approved
     approved_members = CoopMember.approved_members(approved_batches)
     current_batch_remit = BatchRemit.find(self.batch_remit_id)
-    # duplicate_batches = current_batch_remit.batch_group_remits.existing_members(approved_members)
+    duplicate_batches = current_batch_remit.batch_group_remits.existing_members(approved_members)
 
-    BatchRemit.process_batch_remit(current_batch_remit, approved_batches)
+    BatchRemit.process_batch_remit(current_batch_remit, approved_batches, duplicate_batches)
     current_batch_remit.save!
   end
 

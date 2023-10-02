@@ -95,22 +95,6 @@ class LoanInsurance::Batch < Batch
     nil
   end
 
-  private
-
-  def skip_validation
-    true
-  end
-
-  def set_terms_and_age
-    self.terms = compute_terms(expiry_date, effectivity_date)
-    self.insurance_status = :for_review
-    self.age = coop_member.age(effectivity_date)
-  end
-
-  def find_loan_rate(agreement)
-    self.rate = agreement.loan_rates.where("min_age <= ? AND max_age >= ?", age, age).first
-  end
-
   def calculate_values(agreement)
     self.premium = (loan_amount / 1000 ) * (rate.monthly_rate * terms)
 
@@ -134,6 +118,24 @@ class LoanInsurance::Batch < Batch
     self.agent_sf_amount = calculate_service_fee(agreement.agent_sf, premium_due)
     self.coop_sf_amount = calculate_service_fee(agreement.coop_sf, premium_due)
   end
+  
+  private
+
+  def skip_validation
+    true
+  end
+
+  def set_terms_and_age
+    self.terms = compute_terms(expiry_date, effectivity_date)
+    self.insurance_status = :for_review
+    self.age = coop_member.age(effectivity_date)
+  end
+
+  def find_loan_rate(agreement)
+    self.rate = agreement.loan_rates.where("min_age <= ? AND max_age >= ?", age, age).first
+  end
+
+
 
   def calculate_service_fee(service_fee_percentage, premium)
     (service_fee_percentage / 100.to_d) * premium

@@ -7,8 +7,8 @@
 <span class="<%= badge(batch.insurance_badge) %>"><%= batch.insurance_status.titleize %></span>
 <span class="<%= badge(batch.status_badge) %>"><%= batch.status == 'recent' ? 'New' : batch.status.to_s.titleize %></span>
 
-<% if agreement.plan.acronym == 'GYRTBR' || agreement.plan.acronym == 'GYRTFR'%>
+<% if agreement.plan.acronym.include?('GYRT') %>
     <span class="badge bg-primary">
-            <%= batch.insured_type.titleize %>
+            <%= batch.capitalized_insured_type %>
     </span>
 <% end %>

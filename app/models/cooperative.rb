@@ -4,10 +4,11 @@ class Cooperative < ApplicationRecord
 
     has_many :coop_members, dependent: :destroy
     has_many :members, through: :coop_members
-    
+
     has_many :agreements
     has_many :group_remits
     has_many :denied_enrollees
+    has_many :notifications, as: :notifiable, dependent: :destroy
 
     # belongs_to :coop_type
     # belongs_to :geo_region
@@ -23,10 +24,10 @@ class Cooperative < ApplicationRecord
     def to_s
       name
     end
-    
-    def get_address 
-      unless geo_province_id.nil? && geo_municipality_id.nil? && geo_barangay_id.nil? 
-        geo_province.name + ', ' + geo_municipality.name + ', ' + geo_barangay.name + ', ' + 
+
+    def get_address
+      unless geo_province_id.nil? && geo_municipality_id.nil? && geo_barangay_id.nil?
+        geo_province.name + ', ' + geo_municipality.name + ', ' + geo_barangay.name + ', ' +
         "#{self.street}"
       end
       # "#{self.street}" + ', ' geo_barangay.name + ', ' + geo_municipality.name + ', ' + geo_province.name
@@ -35,7 +36,7 @@ class Cooperative < ApplicationRecord
     def unselected_coop_members(ids)
       coop_members.where.not(id: ids)
     end
-    
+
     def get_fulladdress
       "#{street}, #{municipality}, #{province}, #{region}"
     end
