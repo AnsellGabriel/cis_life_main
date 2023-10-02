@@ -45,6 +45,14 @@ class PlanUnitsController < ApplicationController
     redirect_to plan_units_url, notice: "Plan unit was successfully destroyed.", status: :see_other
   end
 
+  def find_units
+    @plan_unit = PlanUnit.find_by(id: params[:id])
+    
+    respond_to do |format|
+      format.turbo_stream
+    end
+  end
+
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_plan_unit

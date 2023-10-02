@@ -7,8 +7,9 @@
     <%= f.association :cooperative %>
     <div data-controller="group-plan">
       <%= f.association :plan, input_html: { data: { action: "change->group-plan#search_units" } } %>
-      <%= f.association :plan_unit, input_html: { id: "plan_unit_id", data: { group_plan_target: "unitSelect" } } %>
+      <%= f.association :plan_unit, input_html: { id: "plan_unit_id", data: { action: "change->group-plan#selectUnits", group_plan_target: "unitSelect" } } %>
     </div>
+    <%= turbo_frame_tag 'unit details' %>
   </div>
 
   <div class="form-actions text-end">

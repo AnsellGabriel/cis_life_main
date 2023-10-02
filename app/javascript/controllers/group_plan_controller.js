@@ -3,7 +3,7 @@ import { get } from "@rails/request.js"
 
 // Connects to data-controller="group-plan"
 export default class extends Controller {
-  static targets = ["unitSelect"]
+  static targets = ["unitSelect", "benefitTable"]
 
 
 
@@ -13,6 +13,15 @@ export default class extends Controller {
     let target = this.unitSelectTarget.id
 
     get(`/plans/${plan_id}/selected?target=${target}`, {
+      responseKind: "turbo-stream"
+    })
+  }
+
+  selectUnits(event) {
+    let unit_id = event.target.value;
+
+
+    get(`/plan_units/${unit_id}/find_units`, {
       responseKind: "turbo-stream"
     })
   }
