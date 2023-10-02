@@ -47,7 +47,7 @@ class MembersController < InheritedResources::Base
     @prov = @muni = @brgy = []
   end
 
-  def create
+  def create    
     @member = Member.new(member_params)
     respond_to do |format|
       if @member.save

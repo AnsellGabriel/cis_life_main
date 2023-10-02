@@ -1,0 +1,46 @@
+<%= content_tag :h1, "List of Plan Units" %>
+
+
+<div class="text-end mb-3">
+  <%= link_to new_plan_unit_path, class: 'btn btn-primary' do %>
+    New Plan Unit
+  <% end %>
+</div>
+
+<table class ="table table-striped">
+  <table class="table table-striped table-bordered table-hover">
+    <thead>
+      <tr>
+
+        <th>Plan</th>
+        <th>Total Prem</th>
+        <th></th>
+
+      </tr>
+    </thead>
+
+    <tbody>
+      <% @plan_units.group_by(&:plan).each do |plan, plan_units| %>
+       <tr>
+          <td colspan=5 class="bg-dark">
+            <%= content_tag :p, link_to(plan, plan) , class: 'lead text-white mb-0' %>
+          </td>
+        </tr>
+        <% plan_units.each do |plan_unit| %>
+          <tr>
+          <td><%= plan_unit.name %></td>
+          <td><%= to_currency(plan_unit.total_prem) %></td>
+      
+            <td>
+              <%= link_to 'View', plan_unit, class: 'btn btn-secondary btn-sm' %>
+              <%= link_to 'Edit', edit_plan_unit_path(plan_unit), class: 'btn btn-secondary btn-sm' %>
+              <%= link_to "Delete", plan_unit, class: "btn btn-danger btn-sm", method: :delete, data: { "turbo-method": :delete, turbo_confirm: "Are you sure?" } %>
+            </td>
+
+          </tr>
+        <% end %>
+        
+      <% end %>
+    </tbody>
+  </table>
+</div>

@@ -24,23 +24,25 @@
   <table class="table">
     <thead>
       <th>Name</th>
+      <th>Cooperative</th>
       <th>Loan Amount</th>
       <th>Terms</th>
       <th>Premium</th>
       <th>RI Date</th>
     </thead>
     <tbody>
-      <% reinsurance.batches.each do |batch| %>
+      <% reinsurance.get_batches.each do |ri| %>
         <tr>
-          <td><%= batch.coop_member %></td>
-          <td><%= to_currency(batch.loan_amount) %></td>
+          <td><%= ri.coop_member %></td>
+          <td><%= ri.coop_member.cooperative %></td>
+          <td><%= to_currency(ri.loan_amount) %></td>
           <td>
-            <%= process_dates("Eff", month_day_year(batch.effectivity_date)) %> <br>
-            <%= process_dates("Exp", month_day_year(batch.expiry_date)) %> <br>
-            <%= process_dates("Terms", batch.terms) %><br>
+            <%= process_dates("Eff", month_day_year(ri.effectivity_date)) %> <br>
+            <%= process_dates("Exp", month_day_year(ri.expiry_date)) %> <br>
+            <%= process_dates("Terms", ri.terms) %><br>
           </td>
-          <td><%= to_currency(batch.premium_due) %></td>
-          <td><%= process_dates("RI Date", month_day_year(batch.get_ri_date(reinsurance.id))) %></td>
+          <td><%= to_currency(ri.premium_due) %></td>
+          <td><%= process_dates("RI Date", month_day_year(ri.get_ri_date(reinsurance.id))) %></td>
         </tr>
       <% end %>
     </tbody>

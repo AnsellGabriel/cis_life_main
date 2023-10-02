@@ -1,0 +1,16 @@
+
+<%= simple_form_for(@unit_benefit) do |f| %>
+  <%= f.error_notification %>
+  <%= f.error_notification message: f.object.errors[:base].to_sentence if f.object.errors[:base].present? %>
+
+  <div class="form-inputs mb-3">
+    <%= f.association :plan_unit %>
+    <%= f.association :benefit %>
+    <%= f.input :coverage_amount %>
+  </div>
+
+  <div class="form-actions text-end">
+    <%= link_to "Back", unit_benefits_path, class: 'btn btn-secondary' %>
+    <%= f.button :submit, class: 'btn-success' %>
+  </div>
+<% end %>

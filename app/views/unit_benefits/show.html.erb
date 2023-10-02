@@ -1,0 +1,9 @@
+
+<%= render @unit_benefit %>
+
+<div>
+  <%= link_to "Edit", edit_unit_benefit_path(@unit_benefit), class: 'btn btn-primary' %> |
+  <%= link_to "Back", unit_benefits_path, class: 'btn btn-primary' %>
+
+  <%= button_to "Delete", @unit_benefit, method: :delete, class: 'btn btn-danger' %>
+</div>
