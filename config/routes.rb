@@ -4,7 +4,9 @@ require 'sidekiq/web'
 Rails.application.routes.draw do 
   resources :group_proposals
   resources :unit_benefits
-  resources :plan_units 
+  resources :plan_units do
+    get :find_units, on: :member
+  end
   resources :reinsurances
   resources :claim_types, :claim_type_documents, :claim_type_benefits, :claim_attachments, :claim_confinements, :claim_benefits, :claim_coverages
   resources :documents

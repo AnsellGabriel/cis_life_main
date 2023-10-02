@@ -28,7 +28,7 @@
         <th scope="row"><%= group_proposal.id %></th>
         <td><%= group_proposal.cooperative %></td>
         <td><%= group_proposal.plan %></td>
-        <td><%= group_proposal.plan_unit %></td>
+        <td><%= group_proposal.plan_unit.name %></td>
     
           <td>
             <%= link_to 'View', group_proposal, class: 'btn btn-secondary btn-sm' %>
