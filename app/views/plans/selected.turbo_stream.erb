@@ -1,0 +1,6 @@
+<%= turbo_stream.update @target do %>
+  <%= content_tag :option, "Choose Unit/Plan" %>
+  <%= @units.each do |unit| %>
+    <%= content_tag :option, unit.name, value: unit.id %>
+  <% end %>
+<% end %>

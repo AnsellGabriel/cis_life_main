@@ -3,6 +3,14 @@ class PlansController < InheritedResources::Base
   before_action :check_userable_type
   before_action :set_cooperative, only: %i[index new create show]
 
+  def selected
+    @target = params[:target]
+    @units = PlanUnit.where(plan_id: params[:id])
+    respond_to do |format|
+      format.turbo_stream
+    end
+  end
+
   private
 
     def plan_params

@@ -1,0 +1,11 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  plan_unit: one
+  benefit: one
+  coverage_amount: 9.99
+
+two:
+  plan_unit: two
+  benefit: two
+  coverage_amount: 9.99
