@@ -142,10 +142,11 @@ Rails.application.routes.draw do
     resources :loans
     resources :details
     resources :batches do
+      get :remove_unused, on: :member
       collection do
         get :approve_all
       end
-      member do 
+      member do
         get :show_unuse_batch, as: 'unuse_batch'
       end
 
