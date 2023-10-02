@@ -12,7 +12,6 @@
 
 ActiveRecord::Schema[7.0].define(version: 2023_10_02_031148) do
   create_table "action_text_rich_texts", charset: "utf8mb4", force: :cascade do |t|
-
     t.string "name", null: false
     t.text "body", size: :long
     t.string "record_type", null: false
@@ -806,8 +805,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_10_02_031148) do
     t.index ["geo_region_id"], name: "index_members_on_geo_region_id"
   end
 
-
-  create_table "notifications", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+  create_table "notifications", charset: "utf8mb4", force: :cascade do |t|
     t.text "message"
     t.string "notifiable_type", null: false
     t.bigint "notifiable_id", null: false
@@ -816,7 +814,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_10_02_031148) do
     t.index ["notifiable_type", "notifiable_id"], name: "index_notifications_on_notifiable"
   end
 
-  create_table "payments", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+  create_table "payments", charset: "utf8mb4", force: :cascade do |t|
     t.string "receipt"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
