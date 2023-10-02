@@ -50,6 +50,15 @@
               </ul>
             </li>
           <%# if current_user.userable_type == 'CoopUser' %>
+          <% elsif current_user.userable.department_id == 15 %>
+          <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                Cooperative
+              </a>
+              <ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+                <%= link_to "Members", mis_members_path, class: "dropdown-item" %>
+              </ul>
+            </li>
           <% else %>
             <%# if current_user.userable.department_id == 19 %>
               <li class="nav-item dropdown"> 

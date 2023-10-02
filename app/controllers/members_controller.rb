@@ -49,11 +49,12 @@ class MembersController < InheritedResources::Base
 
   def create
     @member = Member.new(member_params)
+    
     respond_to do |format|
       if @member.save
         format.html {
           coop_member = @member.coop_members.find_by(cooperative_id: @cooperative.id)
-          redirect_to coop_members_path,
+          redirect_to coop_members_path(cooperative_id: @cooperative.id),
           notice: "Member was successfully created." }
       else
         format.html { render :new, status: :unprocessable_entity }
@@ -63,6 +64,11 @@ class MembersController < InheritedResources::Base
 
   def edit
     @member = Member.find(params[:id])
+
+    if params[:cooperative_id]
+      @cooperative = Cooperative.find(params[:cooperative_id])
+    end
+
     @coop_member = @member.coop_members.find_by(cooperative_id: @cooperative.id)
   end
 

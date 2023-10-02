@@ -5,6 +5,7 @@ class MemberImportService
       @current_user = current_user
       @required_headers = ["Birth Place", "First Name", "Middle Name", "Last Name", "Suffix", "Birthdate", "Gender", "Address", "SSS #", "TIN #", "Mobile #", "Email", "Civil Status", "Height (cm)", "Weight (kg)", "Occupation", "Employer", "Work Address", "Spouse", "Work Phone #"]
       @progress = @current_user.create_member_import_tracker(progress: 0.0)
+      byebug
     end
 
 
@@ -58,11 +59,20 @@ class MemberImportService
       }
 
       # Extract cooperative member data from CSV row
-      coop_member_hash = {
-        cooperative_id: @cooperative.id,
-        coop_branch_id: @current_user.coop_branch_id,
-        membership_date: row["Membership Date"]
-      }
+      begin
+        coop_member_hash = {
+          cooperative_id: @cooperative.id,
+          coop_branch_id: @cooperative.coop_branches.find_by(name: row["Branch"].strip).id,
+          membership_date: row["Membership Date"]
+        }
+      rescue NoMethodError => e
+        create_denied_enrollee(row["First Name"], row["Middle Name"], row["Last Name"], "Coop branch not found: #{row["Branch"]}")
+        denied_enrollees_counter += 1
+        progress_counter += 1
+        update_progress(total_members, progress_counter)
+        next
+      end
+
 
       # Check if a member with the same first name, last name, and birth date already exists
       member = @cooperative.members.find_or_initialize_by(

@@ -4,6 +4,8 @@ class Employee < ApplicationRecord
   has_many :emp_agreements
   has_many :agreements, through: :emp_agreements
   has_one :user, as: :userable, dependent: :destroy
+  has_one :member_import_tracker, as: :trackable, dependent: :destroy
+
   accepts_nested_attributes_for :user
 
   ANALYSTS = Employee.joins(:user).where(department_id: 17, user: { rank: 1 })
@@ -20,5 +22,5 @@ class Employee < ApplicationRecord
   def signed_fullname
     "#{first_name} #{middle_name[0]}. #{last_name}".titleize
   end
-  
+
 end

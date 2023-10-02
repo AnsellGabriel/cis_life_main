@@ -57,7 +57,7 @@ class Member < ApplicationRecord
   end
 
   def full_address
-    "#{address}, #{geo_barangay.name}, #{geo_municipality.name}, #{geo_province.name}, #{geo_region.name}"
+    "#{self&.address}, #{geo_barangay&.name}, #{geo_municipality&.name}, #{geo_province&.name}, #{geo_region&.name}"
   end
 
   def full_name

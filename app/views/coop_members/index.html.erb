@@ -29,11 +29,11 @@
     </div>
   </div>
 </div>
-<div class="d-flex align-items-center gap-3">
-    <%= content_tag :h1, "Members"  %>
-    <div class="d-flex gap-1">
+<div class="<%= flex_justify_align('','',true) %> gap-3">
+    <%= content_tag :h3, @cooperative.name, class: 'text-primary mb-0'  %>
+    <div class="d-flex gap-1 mb-3">
       <div class="mb-1">
-        <%= link_to "Enroll Member", new_member_path, 
+        <%= link_to "Enroll Member", new_member_path(cooperative_id: @cooperative.id), 
           class: small_btn('outline-primary'), 
           data: {
             turbo_frame: "modal-lg"
@@ -58,7 +58,7 @@
   
   <%== pagy_bootstrap_nav(@pagy) %>
   <div class="d-flex align-items-center gap-1 mb-3">
-    <%= form_with url: coop_members_path, method: :get do %>
+    <%= form_with url: coop_members_path(cooperative_id: @cooperative.id), method: :get do %>
       <div class="form-group d-flex gap-1">
         <%= text_field_tag 'first_name_filter', nil, placeholder: 'First name', class: "form-control", style: "width: auto"%>
         <%= text_field_tag 'last_name_filter', nil, placeholder: 'Last name', class: "form-control", style: "width: auto;"%>
@@ -107,7 +107,7 @@
             <%= link_to coop_member_path(coop_member), class: small_btn('outline-primary'), data: {turbo_frame: 'modal-xl'}, title: 'Show' do %>
               <i class="bi bi-eye-fill"></i>
             <% end %>
-            <%= link_to edit_member_path(member), class: small_btn('outline-primary'), data: {turbo_frame: 'modal-lg'}, title: 'Edit' do%>
+            <%= link_to edit_member_path(member, cooperative_id: @cooperative.id), class: small_btn('outline-primary'), data: {turbo_frame: 'modal-lg'}, title: 'Edit' do%>
               <i class="bi bi-pencil"></i>
             <% end %>
               <%= link_to show_insurance_coop_member_path(coop_member), class: small_btn('outline-primary'), title: 'Coverages' do %>
