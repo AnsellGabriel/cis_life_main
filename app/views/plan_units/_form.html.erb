@@ -1,0 +1,26 @@
+
+<%= simple_form_for(@plan_unit) do |f| %>
+  <%= f.error_notification %>
+  <%= f.error_notification message: f.object.errors[:base].to_sentence if f.object.errors[:base].present? %>
+
+  <div class="form-inputs mb-3">
+    <%= f.association :plan %>
+    <%= f.input :name %>
+    <%= f.input :total_prem %>
+
+    <h3>Benefits</h3>
+    <div id="unit-benefits">
+      <%= f.simple_fields_for :unit_benefits do |ub| %>
+        <%= render "unit_benefit_fields", f: ub %>
+      <% end %>
+    </div>
+    <div class="links">
+      <%= link_to_add_association "Add Benefit", f, :unit_benefits %>
+    </div>
+  </div>
+
+  <div class="form-actions text-end">
+    <%= link_to "Back", plan_units_path, class: 'btn btn-secondary' %>
+    <%= f.button :submit, class: 'btn-success' %>
+  </div>
+<% end %>

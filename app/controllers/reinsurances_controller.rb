@@ -21,20 +21,31 @@ class ReinsurancesController < ApplicationController
 
   # POST /reinsurances
   def create
+    # raise 'errors'
+
     @reinsurance = Reinsurance.new(reinsurance_params)
 
-    @batches = LoanInsurance::Batch.get_ri_batches(@reinsurance.date_from..@reinsurance.date_to)
-    @batches.each do |batch|
-      @reinsurance.batches << batch
+    # @batches = LoanInsurance::Batch.get_ri_batches(@reinsurance.date_from..@reinsurance.date_to)
+    @members = Member.get_ri
+
+    @members.each do |member|
+      member.get_for_ri_sum(@reinsurance)
     end
-    
-    
-    if @reinsurance.save
-      @reinsurance.set_total_prem_and_amount
-      redirect_to @reinsurance, notice: "Reinsurance was successfully created."
+        
+    if @reinsurance.batches.empty?
+      redirect_to reinsurances_path, alert: "No for reinsurance for that period."
     else
-      render :new, status: :unprocessable_entity
+      
+      if @reinsurance.save
+        @reinsurance.set_total_prem_and_amount        
+        # @reinsurance.set_batches_ri_date
+        redirect_to @reinsurance, notice: "Reinsurance was successfully created."
+      else
+        render :new, status: :unprocessable_entity
+      end
+      
     end
+    
   end
 
   # PATCH/PUT /reinsurances/1

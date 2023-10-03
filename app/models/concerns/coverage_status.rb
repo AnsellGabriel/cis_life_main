@@ -15,13 +15,6 @@ module CoverageStatus
           expiry: batch.expiry_date,
           effectivity: batch.effectivity_date
         )
-      elsif existing_coverages.expiry <= Date.today
-        batch.status = :renewal
-        existing_coverages.update!(
-          status: 'renewal',
-          expiry: batch.expiry_date,
-          effectivity: batch.effectivity_date
-        )
       elsif batch.class.name == 'LoanInsurance::Batch'
         batch.status = :reloan
         existing_coverages.update!(
@@ -29,6 +22,13 @@ module CoverageStatus
           expiry: batch.expiry_date,
           effectivity: batch.effectivity_date
         )
+      # elsif existing_coverages.expiry <= Date.today
+      #   batch.status = :renewal
+      #   existing_coverages.update!(
+      #     status: 'renewal',
+      #     expiry: batch.expiry_date,
+      #     effectivity: batch.effectivity_date
+      #   )
       end
     end
 

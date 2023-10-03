@@ -11,8 +11,8 @@ class GroupRemit < ApplicationRecord
   has_many :batch_group_remits
   has_many :batches, through: :batch_group_remits
   has_many :denied_members, dependent: :destroy
-  has_many :payments, dependent: :destroy
-  # has_many :loan_batches, dependent: :destroy, class_name: 'LoanInsurance::Batch'
+  has_many :payments, as: :payable, dependent: :destroy
+  has_many :loan_batches, dependent: :destroy, class_name: 'LoanInsurance::Batch'
   has_one :process_coverage, dependent: :destroy
   has_one :group_import_tracker, dependent: :destroy
   accepts_nested_attributes_for :payments
@@ -40,7 +40,7 @@ class GroupRemit < ApplicationRecord
     # new_group_remit.expiry_date = self.expiry_date + 1.year # Assuming the renewal duration is 1 year from the current date
     new_group_remit.status = :for_renewal
     new_group_remit.type = "Remittance"
-    new_group_remit.name = "#{self.name} Renewal"
+    new_group_remit.name = "#{self.name} RENEWAL"
     new_group_remit.batch_remit_id = self.id
     self.status = :for_renewal
     self.set_terms_and_expiry_date(self.expiry_date + 1.year)
@@ -139,6 +139,7 @@ class GroupRemit < ApplicationRecord
 
     unless self.type == 'BatchRemit'
       self.status = :for_payment
+      Notification.create(notifiable: self.agreement.cooperative, message: "#{self.name} is approved and now for payment.")
     end
 
     self.save!
@@ -149,6 +150,7 @@ class GroupRemit < ApplicationRecord
     set_total_premiums_and_fees
 
     self.status = :for_payment
+    Notification.create(notifiable: self.agreement.cooperative, message: "#{self.name} is approved and now for payment.")
     self.save!
   end
 
@@ -159,7 +161,7 @@ class GroupRemit < ApplicationRecord
   end
 
   def approve_insurance_status_of_batches
-    self.batches.update_all(insurance_status: :approved)
+    self.batches.where(insurance_status: :for_review).update_all(insurance_status: :approved)
   end
 
   def coop_member_ids
@@ -189,7 +191,11 @@ class GroupRemit < ApplicationRecord
   end
 
   def total_dependent_premiums
-    batches.includes(:batch_dependents).sum {|batch| batch.batch_dependents.approved.sum(&:premium) }
+    if agreement.plan.acronym.include?('GYRT')
+      batches.includes(:batch_dependents).sum {|batch| batch.batch_dependents.sum(:premium) }
+    else
+      0
+    end
   end
 
   def dependent_coop_commissions
@@ -197,28 +203,35 @@ class GroupRemit < ApplicationRecord
   end
 
   def dependent_agent_commissions
-    batches.approved.includes(:batch_dependents).sum {|batch| batch.batch_dependents.approved.sum(&:agent_sf_amount) }
+    if agreement.plan.acronym.include?('GYRT')
+      batches.approved.includes(:batch_dependents).sum {|batch| batch.batch_dependents.approved.sum(&:agent_sf_amount) }
+    else
+      0
+    end
   end
 
   def total_principal_premium
     if self.class.name == 'LoanInsurance::GroupRemit'
       batches.sum(:premium_due)
     else
-      batches.sum(&:premium)
+      batches.sum(:premium)
     end
   end
 
   def denied_principal_premiums
     if self.class.name == 'LoanInsurance::GroupRemit'
-      batches.denied.sum(&:premium_due)
+      batches.where.not(insurance_status: :approved).sum(:premium_due)
     else
-      batches.denied.sum(&:premium)
+      batches.where.not(insurance_status: :approved).sum(:premium)
     end
   end
 
   def denied_dependent_premiums
-    (batches.denied.includes(:batch_dependents).sum {|batch| batch.batch_dependents.sum(&:premium) }) +
-    (batches.where.not(insurance_status: :denied).includes(:batch_dependents).sum {|batch| batch.batch_dependents.denied.sum(&:premium) })
+    if agreement.plan.acronym.include?('GYRT')
+      (batches.where.not(insurance_status: :approved).includes(:batch_dependents).sum {|batch| batch.batch_dependents.sum(&:premium) }) + (batches.where(insurance_status: :approved).includes(:batch_dependents).sum {|batch| batch.batch_dependents.denied.sum(&:premium) })
+    else
+      0
+    end
   end
 
   def gross_premium
@@ -229,8 +242,12 @@ class GroupRemit < ApplicationRecord
     batches.approved.sum(:coop_sf_amount)
   end
 
+  def commisionable_premium
+    gross_premium - (denied_principal_premiums + denied_dependent_premiums)
+  end
+
   def total_coop_commissions
-    coop_commissions + dependent_coop_commissions
+    commisionable_premium * (agreement.coop_sf / 100)
   end
 
   def total_agent_commissions
@@ -242,7 +259,7 @@ class GroupRemit < ApplicationRecord
   end
 
   def coop_net_premium
-    (gross_premium - total_coop_commissions ) - (denied_principal_premiums + denied_dependent_premiums)
+    commisionable_premium - total_coop_commissions
   end
 
   def net_premium
@@ -254,7 +271,8 @@ class GroupRemit < ApplicationRecord
   end
 
   def batches_without_health_dec
-    batches.recent.where.not(id: self.batches.joins(:batch_health_decs).select(:id))
+    # batches.recent.where.not(id: self.batches.joins(:batch_health_decs).select(:id))
+    batches.recent.where.missing(:batch_health_decs)
   end
 
   def all_batches_have_beneficiaries?
@@ -294,6 +312,28 @@ class GroupRemit < ApplicationRecord
 
   def batches_all_renewal?
     batches.all? { |batch| batch.status == "renewal" }
+  end
+
+  def update_batch_remit
+    approved_batches = batches.approved
+    approved_members = CoopMember.approved_members(approved_batches)
+    current_batch_remit = BatchRemit.find(self.batch_remit_id)
+    duplicate_batches = current_batch_remit.batch_group_remits.existing_members(approved_members)
+
+    BatchRemit.process_batch_remit(current_batch_remit, approved_batches, duplicate_batches)
+    current_batch_remit.save!
+  end
+
+  def update_batch_coverages
+    batches.where(insurance_status: :approved).includes(:coop_member).each do |batch|
+      # agreement = self.agreement
+      coop_member = batch.coop_member
+      existing_coverage = agreement.agreements_coop_members.find_or_initialize_by(coop_member_id: coop_member.id)
+      existing_coverage.status = batch.status
+      existing_coverage.expiry = batch.expiry_date
+      existing_coverage.effectivity = batch.effectivity_date
+      existing_coverage.save!
+    end
   end
 
   private

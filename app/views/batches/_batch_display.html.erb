@@ -1,42 +1,42 @@
 <% batch_presenter = BatchPresenter.new(batch) %>
 
-<div class="row <%= flex_justify_align('center') %>" >
+<div class="row <%= flex_justify_align('center') %> sm-secondary-text" >
   <div class="col-md-10" style="margin: auto;">
     <div class="card mb-3">
       <div class="card-body">
         <div class="row">
           <div class="col-sm-2">
-            <h6 class="mb-0">First name:</h6>
+            <span class="mb-0 text-secondary">First name</span>
           </div>
-          <div class="col-sm-2 text-secondary">
+          <div class="col-sm-2 text-primary">
             <%= "#{batch_member.member.first_name}" %>
           </div>
-          <div class="col-sm-2">
-            <h6 class="mb-0">Middle name:</h6>
-          </div>
           <div class="col-sm-2 text-secondary">
+            <span class="mb-0">Middle name</span>
+          </div>
+          <div class="col-sm-2 text-primary">
             <%= "#{batch_member.member.middle_name}" %>
           </div>
-          <div class="col-sm-2">
-            <h6 class="mb-0">Last name:</h6>
-          </div>
           <div class="col-sm-2 text-secondary">
+            <span class="mb-0">Last name</span>
+          </div>
+          <div class="col-sm-2 text-primary">
             <%= "#{batch_member.member.last_name}, #{batch_member.member.suffix}" %>
           </div>
         </div>
         <hr>
         <div class="row">
           <div class="col-sm-3">
-            <h6 class="mb-0">Civil Status</h6>
+            <span class="mb-0 text-secondary">Civil Status</span>
           </div>
-          <div class="col-sm-3 text-secondary">
+          <div class="col-sm-3">
             <%= batch_member.member.civil_status %>
           </div>
           <% if @agreement.plan.gyrt_type == 'family' %>
             <div class="col-sm-3">
-              <h6 class="mb-0">Rank</h6>
+              <span class="mb-0 text-secondary">Rank</span>
             </div>
-            <div class="col-sm-3 text-secondary">
+            <div class="col-sm-3">
               <%= batch_presenter.capitalized_insured_type %>
             </div>
           <% end %>
@@ -44,15 +44,15 @@
         <hr>
         <div class="row">
           <div class="col-sm">
-            <h6 class="mb-0">Effectivity date:</h6>
+            <span class="mb-0 text-secondary">Effectivity date</span>
           </div>
-          <div class="col-sm text-secondary">
+          <div class="col-sm">
             <%= @effectivity_date.present? ? date_as_month_day_year(@effectivity_date) : 'Tentative' %>
           </div>
           <div class="col-sm">
-            <h6 class="mb-0">Expiry date:</h6>
+            <span class="mb-0 text-secondary">Expiry date</span>
           </div>
-          <div class="col-sm text-secondary">
+          <div class="col-sm">
             <%= date_as_month_day_year(@expiry_date)%>
           </div>
         </div>
@@ -60,13 +60,13 @@
         <hr class="mb-3">
           <div class="row">
             <div class="col-sm">
-              <h6 class="mb-0">Coop residency:</h6>
+              <span class="mb-0">Coop residency</span>
             </div>
             <div class="col-sm text-secondary">
               <%= months_to_years_months(batch.residency) %>
             </div>
             <div class="col-sm">
-              <h6 class="mb-0">Term duration:</h6>
+              <span class="mb-0">Term duration</span>
             </div>
             <div class="col-sm text-secondary">
               <%= "#{batch.duration} months"%>
@@ -76,16 +76,16 @@
         <hr class="mb-3">
         <div class="row">
           <div class="col-sm-3">
-            <h6 class="mb-0">Premium</h6>
+            <span class="mb-0 text-secondary">Premium</span>
+          </div>
+          <div class="col-sm-3 ">
+            <%= to_curr(batch.premium) %>
           </div>
           <div class="col-sm-3 text-secondary">
-            <%= peso_currency(batch.premium) %>
+            <span class="mb-0">Coop Commission</span>
           </div>
-          <div class="col-sm-3">
-            <h6 class="mb-0">Coop Commission</h6>
-          </div>
-          <div class="col-sm-3 text-secondary">
-            <%= peso_currency(batch.coop_sf_amount) %>
+          <div class="col-sm-3 ">
+            <%= to_curr(batch.coop_sf_amount) %>
           </div>
         </div>
       </div>
@@ -93,7 +93,7 @@
   </div>
 </div>
 
-<div class="row <%= flex_justify_align('center') %>">
+<div class="row <%= flex_justify_align('center') %> sm-secondary-text">
   <% if (@agreement.plan.gyrt_type.present? && @agreement.plan.gyrt_type == 'basic') || !@batch.agreement_benefit.with_dependent? %>
     <div class="col-md-10" style="margin: auto;">
   <% else %>
@@ -108,12 +108,12 @@
             <div class="col-sm-12 <%= flex_justify_align('center', 'center') %> gap-2">
           <% end %>
             <div class="d-flex gap-1 align-items-center">
-                <h6 class="mb-0 text-primary">Beneficiaries</h6>
+                <span class="mb-0 text-primary">Beneficiaries</span>
                 <!-- button to open turbo-frame "modal"  -->
                 <% if (@group_remit.pending? || @group_remit.for_renewal?) && @group_remit.instance_of?(Remittance) && !@batch.terminated? %>
                   <% if @batch.batch_beneficiaries.size < 4 %>
                     <%= link_to new_group_remit_batch_beneficiary_path(@group_remit, @batch),
-                                class: small_btn('success'),
+                                class: small_btn('outline-success'),
                                 data: { turbo_frame: "reg_form_modal" } do %>
                       <i class="bi bi-plus-lg"></i>
                     <% end %>
@@ -128,19 +128,19 @@
           <div class="row">
             <div class="col-sm-1"></div>
             <div class="col-sm-6">
-              <%= content_tag :h6, 'Name', 
+              <%= content_tag :span, 'Name', 
                 class: 'text-center', 
                 style: 'font-size: .8rem' 
               %>  
             </div>
             <div class="col-sm-2">
-              <%= content_tag :h6, 'Age', 
+              <%= content_tag :span, 'Age', 
                 class: 'text-center', 
                 style: 'font-size: .8rem' 
               %>  
             </div>
             <div class="col-sm-3">
-              <%= content_tag :h6, 'Relationship', 
+              <%= content_tag :span, 'Relationship', 
                 class: 'text-center', 
                 style: 'font-size: .8rem' 
               %>  
@@ -150,7 +150,7 @@
         <% end %>
         <% @beneficiaries.each do |b| %>
           <div class="row mb-1">
-            <div class="d-flex align-items-center">
+            <div class="d-flex align-items-center gap-1">
                 <div class="col-sm-1">
                   <% if (@group_remit.pending? || @group_remit.for_renewal?) && @group_remit.instance_of?(Remittance) && !@batch.terminated? %>
                     <%= button_to group_remit_batch_beneficiary_path(@group_remit, @batch, b), 
@@ -159,25 +159,25 @@
                     data: { turbo_frame: "_top", 
                     turbo_confirm: "Delete beneficiary?" } 
                     }, 
-                    class: small_btn('danger') do %>
+                    class: small_btn('outline-danger') do %>
                     <i class="bi bi-x-lg"></i>
                     <% end %>
                   <% end %>
                 </div>
               <div class="col-sm-6 text-secondary">
-                <%= content_tag :h6, "#{b.member_dependent.last_name}, #{b.member_dependent.first_name} #{b.member_dependent.middle_name}", 
+                <%= content_tag :span, "#{b.member_dependent.last_name}, #{b.member_dependent.first_name} #{b.member_dependent.middle_name}", 
                   class: "mb-0 text-center", 
                   style: "font-size: .8rem" 
                 %>
               </div>
               <div class="col-sm-2 text-secondary">
-                <%= content_tag :h6, "#{b.member_dependent.age}", 
+                <%= content_tag :span, "#{b.member_dependent.age}", 
                   class: "mb-0 text-center", 
                   style: "font-size: .8rem" 
                 %>
               </div>
               <div class="col-sm-3 text-secondary">
-                <%= content_tag :h6, "#{b.member_dependent.relationship}", 
+                <%= content_tag :span, "#{b.member_dependent.relationship}", 
                   class: "mb-0 text-center", 
                   style: "font-size: .8rem" 
                 %>
@@ -196,12 +196,12 @@
           <div class="row">
             <div class="col-sm-12 <%= flex_justify_align('center') %>">
               <div class="gap-1 <%= flex_justify_align('','center') %>">
-                  <h6 class="mb-0 text-primary">Dependents</h6>
+                  <span class="mb-0 text-primary">Dependents</span>
                   <!-- button to open turbo-frame "modal"  -->
                   <% if (@group_remit.pending? ||  @group_remit.for_renewal?) && @group_remit.instance_of?(Remittance) && !@batch.terminated? %>
                     <% if @batch.batch_dependents.size < 4 %>
                       <%= link_to new_group_remit_batch_dependent_path(@group_remit, @batch),
-                          class: small_btn('success'), 
+                          class: small_btn('outline-success'), 
                           data: {
                             turbo_frame: "reg_form_modal"
                           } do %>     
@@ -216,31 +216,31 @@
           <% if @dependents.present? %>
             <div class="row">
               <div class="col-sm-4">
-                <%= content_tag :h6, 'Name', 
+                <%= content_tag :span, 'Name', 
                   class: 'text-center', 
                   style: 'font-size: .8rem' 
                 %>
               </div>
               <div class="col-sm-1">
-                <%= content_tag :h6, 'Age', 
+                <%= content_tag :span, 'Age', 
                   class: 'text-center', 
                   style: 'font-size: .8rem' 
                 %>
               </div>
               <div class="col-sm-2">
-                <%= content_tag :h6, 'Relationship', 
+                <%= content_tag :span, 'Relationship', 
                   class: 'text-center', 
                   style: 'font-size: .8rem' 
                 %>
               </div>
               <div class="col-sm-2">
-                <%= content_tag :h6, 'Premium', 
+                <%= content_tag :span, 'Premium', 
                   class: 'text-center', 
                   style: 'font-size: .8rem' 
                 %>
               </div>
               <div class="col-sm-3">
-                <%= content_tag :h6, 'Actions', 
+                <%= content_tag :span, 'Actions', 
                   class: 'text-center', 
                   style: 'font-size: .8rem' 
                 %>
@@ -254,25 +254,25 @@
               <div class="d-flex align-items-center">
                 <div class="col-sm-4 text-secondary <%= flex_justify_align('start', 'baseline') %> gap-1">
                   <%= content_tag :span, "#{d.insurance_status.titleize}", class: d_presenter.status_badge %>
-                  <%= content_tag :h6, "#{d.member_dependent.last_name}, #{d.member_dependent.first_name} #{d.member_dependent.middle_name}", 
+                  <%= content_tag :span, "#{d.member_dependent.last_name}, #{d.member_dependent.first_name} #{d.member_dependent.middle_name}", 
                     class: "mb-0", 
                     style: "font-size: .8rem" 
                   %>
                 </div>
                 <div class="col-sm-1 text-secondary">
-                  <%= content_tag :h6, "#{d.member_dependent.age}", 
+                  <%= content_tag :span, "#{d.member_dependent.age}", 
                     class: "mb-0 text-center", 
                     style: "font-size: .8rem" 
                   %>
                 </div>
                 <div class="col-sm-2 text-secondary">
-                  <%= content_tag :h6, "#{d.member_dependent.relationship}", 
+                  <%= content_tag :span, "#{d.member_dependent.relationship}", 
                     class: "mb-0 text-center", 
                     style: "font-size: .8rem" 
                   %>
                 </div>
                 <div class="col-sm-2 text-secondary">
-                  <%= content_tag :h6, "#{peso_currency(d.premium)}", 
+                  <%= content_tag :span, "#{peso_currency(d.premium)}", 
                     class: "mb-0 text-center", 
                     style: "font-size: .8rem" 
                   %>

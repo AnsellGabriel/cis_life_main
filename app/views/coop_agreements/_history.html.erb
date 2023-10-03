@@ -1,10 +1,10 @@
 <% if !@agreement.group_remits.blank? %>
-	<div class="<%= flex_justify_align('', '', true) %> gap-1">
+	<div class="<%= flex_justify_align('', '', true) %> gap-1" >
 
 		<% @agreement.group_remits.includes(:anniversary).where(type: 'Remittance').order(created_at: :desc).decorate.each do |group_remit| %>
 			<% batch_remit = @agreement.group_remits.find_by(type: 'BatchRemit', id: group_remit.batch_remit_id )%>
 
-			<div class="card hidden" data-toggler-target="toggleable" data-id="history-<%= batch_remit.id %>">
+			<div class="card hidden" data-toggler-target="toggleable" data-id="history-<%= batch_remit.id %>" data-parent-target="child">
 				<div class="card-body <%= flex_justify_align('between', 'start') %> gap-1">
 					<div class="<%= flex_justify_align('', '', true) %> gap-3">
 						<div class="">
@@ -39,6 +39,7 @@
 			</div>
 		<% end %>
 
+		<div class="text-center" data-parent-target="default"></div>
 	</div>
 <% else %>
 	<div class="text-center">

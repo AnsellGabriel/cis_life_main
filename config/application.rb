@@ -15,11 +15,11 @@ module CisLifeMain
     config.active_job.queue_name_delimiter = '_'
 
     Sidekiq.configure_server do |config|
-      config.redis = { url: 'redis://localhost:6379/15516' }
+      config.redis = { url: 'redis://localhost:6379/0' }
     end
 
     Sidekiq.configure_client do |config|
-      config.redis = { url: 'redis://localhost:6379/15516' }
+      config.redis = { url: 'redis://localhost:6379/0' }
     end
 
 

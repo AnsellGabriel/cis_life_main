@@ -9,4 +9,18 @@ class Reinsurance < ApplicationRecord
       ri_total_prem: self.batches.sum(:premium_due)
     )
   end
+
+  def get_batches
+    self.batches
+  end
+
+  # def set_batches_ri_date
+  #   self.reinsurance_batches.each do |batch|
+  #     prev_ri = batch.reinsurance_batches.find_by(batch: batch)
+  #   end
+  # end
+
+  def count_batches
+    self.batches.count
+  end
 end

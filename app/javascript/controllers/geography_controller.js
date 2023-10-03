@@ -5,7 +5,6 @@ import { get } from "@rails/request.js"
 export default class extends Controller {
   static targets = ["provinceSelect", "muniSelect", "brgySelect"]
 
-
   search_provinces(event) {
     let region_id = event.target.selectedOptions[0].value
     let target = this.provinceSelectTarget.id
@@ -40,4 +39,5 @@ export default class extends Controller {
       responseKind: "turbo-stream"
     })
   }
+
 }

@@ -139,7 +139,7 @@
       <div style="width: 100%">
 
         <% if @group_remit.is_for_payment? %>
-          <%= render 'payment' %>
+          <%= render 'payment', group_remit: @group_remit %>
         <% end %>
 
         <% if @group_remit.is_pending_or_renewal? && @group_remit.is_remittance? %>
@@ -202,7 +202,7 @@
   </div> 
 
   <%= turbo_frame_tag "computation" do %>
-    <%= render "group_remits/computation", group_remit: @group_remit %>
+    <%= render "group_remits/computation", group_remit: @group_remit, agreement: @agreement %>
   <% end %>  
 </div>
 

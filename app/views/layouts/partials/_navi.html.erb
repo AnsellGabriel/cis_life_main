@@ -71,6 +71,14 @@
                   <%= link_to "Claims Message", claim_remarks_path, class: "dropdown-item" %>
                 </ul>
               </li>
+              <li class="nav-item dropdown"> 
+                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                  Treasury
+                </a>
+                <ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+                  <%= link_to "Payments", payments_path, class: "dropdown-item" %>
+                </ul>
+              </li>
             <%# end %>
             <%# if current_user.userable.department_id == 17 %>
               <li class="nav-item dropdown"> 

@@ -62,6 +62,7 @@
         <th>Premium</th>
         <th>Insurance Status</th>
         <th>Health Dec Answers</th>
+        <th>Unuse</th>
         <th>Action</th>
         <th>Remarks</th>
       </thead>
@@ -114,6 +115,11 @@
                   <% batch.batch_health_decs.where(answerable_type: "HealthDec").each do |bhd| %>
                     <%= health_dec_answer(bhd.answerable.valid_answer, bhd.answer, bhd.answerable_type) %> <br>
                   <% end %>
+                <% end %>
+              </td>
+              <td>
+                <%= link_to unuse_batch_loan_insurance_batch_path(batch.unused_loan_id), class: "btn btn-sm btn-info mb-1", data: { turbo_frame: "modal-xl" } do %>
+                  <%= bootstrap_icon "eye" %>
                 <% end %>
               </td>
               <td>

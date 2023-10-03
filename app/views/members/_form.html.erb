@@ -64,6 +64,12 @@
     <div class="row ps-3 pe-3">
       <div class="col-12">
         <%= f.input :address, label_html: {class: 'text-secondary sm-secondary-text'} %>
+          <div class="row" data-controller="geography">
+            <%= f.association :geo_region, label: "Region", input_html: { data: { action: "change->geography#search_provinces" } }, label_html: {class: 'text-secondary sm-secondary-text'}, wrapper_html: { class: "col-4" } %>
+            <%= f.association :geo_province, collection: @province, label: "Province", input_html: { id: "province_id", data: { action: "change->geography#search_municipalities", geography_target: "provinceSelect" } }, label_html: {class: 'text-secondary sm-secondary-text'}, wrapper_html: { class: "col-4" } %>
+            <%= f.association :geo_municipality, collection: @muni, label: "Municipality", input_html: { id: "muni_id", data: { action: "change->geography#search_barangays", geography_target: "muniSelect" } }, label_html: {class: 'text-secondary sm-secondary-text'}, wrapper_html: { class: "col-4" } %>
+            <%= f.association :geo_barangay, collection: @brgy, label: "Barangay", input_html: { id: "brgy_id", data: { geography_target: "brgySelect" } }, label_html: {class: 'text-secondary sm-secondary-text'}, wrapper_html: { class: "col-4" } %>
+          </div>
       </div>
     </div>
     <div class="row">

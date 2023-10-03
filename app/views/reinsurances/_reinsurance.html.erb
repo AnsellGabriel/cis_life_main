@@ -11,12 +11,41 @@
 
   <p>
     <strong>Ri total amount:</strong>
-    <%= reinsurance.ri_total_amount %>
+    <%= to_currency(reinsurance.ri_total_amount) %>
   </p>
 
   <p>
     <strong>Ri total prem:</strong>
-    <%= reinsurance.ri_total_prem %>
+    <%= to_currency(reinsurance.ri_total_prem) %>
   </p>
+
+  <%= content_tag :p, "Batches", class: "lead" %>
+
+  <table class="table">
+    <thead>
+      <th>Name</th>
+      <th>Cooperative</th>
+      <th>Loan Amount</th>
+      <th>Terms</th>
+      <th>Premium</th>
+      <th>RI Date</th>
+    </thead>
+    <tbody>
+      <% reinsurance.get_batches.each do |ri| %>
+        <tr>
+          <td><%= ri.coop_member %></td>
+          <td><%= ri.coop_member.cooperative %></td>
+          <td><%= to_currency(ri.loan_amount) %></td>
+          <td>
+            <%= process_dates("Eff", month_day_year(ri.effectivity_date)) %> <br>
+            <%= process_dates("Exp", month_day_year(ri.expiry_date)) %> <br>
+            <%= process_dates("Terms", ri.terms) %><br>
+          </td>
+          <td><%= to_currency(ri.premium_due) %></td>
+          <td><%= process_dates("RI Date", month_day_year(ri.get_ri_date(reinsurance.id))) %></td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
 
 </div>

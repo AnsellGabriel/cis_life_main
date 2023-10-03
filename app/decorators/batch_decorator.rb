@@ -19,4 +19,31 @@ class BatchDecorator < Draper::Decorator
 		when 'terminated' then 'text-danger'
 		end
 	end
+
+  def insurance_badge
+    if object.approved?
+      'primary'
+    elsif object.denied?
+      'danger'
+    else
+      'warning text-dark'
+    end
+  end
+
+  def status_badge
+    if object.recent?
+      'primary'
+    elsif object.reloan?
+      'warning text-dark'
+    else
+      'danger'
+    end
+  end
+
+  def capitalized_insured_type
+		object.agreement_benefit
+				.name
+				.upcase
+	end
+
 end

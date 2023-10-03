@@ -38,6 +38,10 @@ class LoanInsurance::BatchesController < ApplicationController
     end
   end
 
+  def show_unuse_batch
+    @batch = LoanInsurance::Batch.find(params[:id])
+  end
+
   def modal_remarks
     @batch = LoanInsurance::Batch.find(params[:id])
     @group_remit = @batch.group_remit
@@ -94,17 +98,32 @@ class LoanInsurance::BatchesController < ApplicationController
     end
   end
 
+  def remove_unused
+    batch = LoanInsurance::Batch.find(params[:id])
+    LoanInsurance::Batch.find(batch.unused_loan_id).update!(status: :recent)
+    batch.update!(unused_loan_id: nil)
+    batch.calculate_values(batch.group_remit.agreement)
+
+    if batch.save!
+      redirect_to loan_insurance_group_remit_path(batch.group_remit), alert: "Unused loan removed"
+    end
+  end
+
   # DELETE /loan_insurance/batches/1
   def destroy
-    @batch.destroy!
-    redirect_to loan_insurance_group_remit_path(@batch.group_remit), alert: "Member removed"
+    if @batch.destroy!
+      if @batch.unused_loan_id.present?
+        LoanInsurance::Batch.find(@batch.unused_loan_id).update(status: :recent)
+      end
+      redirect_to loan_insurance_group_remit_path(@batch.group_remit), alert: "Member removed"
+    end
   end
 
 
   def approve_all
     @process_coverage = ProcessCoverage.find(params[:process_coverage])
     @batches = @process_coverage.get_batches
-    
+
     @batches.each do |batch|
       if batch.insurance_status == "for_review" || batch.insurance_status == "pending"
         # if (18..65).include?(batch.age)
@@ -112,11 +131,11 @@ class LoanInsurance::BatchesController < ApplicationController
         if batch.get_rate_age_range
           batch.update_attribute(:insurance_status, "approved")
           # @process_coverage.increment!(:approved_count)
-          
+
         end
       end
     end
-    
+
     redirect_to process_coverage_path(@process_coverage), notice: "Batches have been approved!"
 
   end

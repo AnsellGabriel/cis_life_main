@@ -2,7 +2,7 @@
 
 
 <div class="text-end mb-3">
-  <%= link_to new_reinsurance_path, class: 'btn btn-primary' do %>
+  <%= link_to new_reinsurance_path, class: 'btn btn-primary', data: { turbo_frame: "reg_form_modal" } do %>
     New Reinsurance
   <% end %>
 </div>
@@ -15,8 +15,9 @@
       <th>#</th>
         <th>Date From</th>
         <th>Date To</th>
-        <th>Ri Total Amount</th>
-        <th>Ri Total Prem</th>
+        <th>Total Coverage</th>
+        <th>Total Premium</th>
+        <th>Count</th>
         <th></th>
 
       </tr>
@@ -29,8 +30,9 @@
         <th scope="row"><%= reinsurance.id %></th>
         <td><%= reinsurance.date_from %></td>
         <td><%= reinsurance.date_to %></td>
-        <td><%= reinsurance.ri_total_amount %></td>
-        <td><%= reinsurance.ri_total_prem %></td>
+        <td><%= to_currency(reinsurance.ri_total_amount) %></td>
+        <td><%= to_currency(reinsurance.ri_total_prem) %></td>
+        <td><%= pluralize(reinsurance.count_batches, "Coverage") %></td>
     
           <td>
             <%= link_to 'View', reinsurance, class: 'btn btn-secondary btn-sm' %>

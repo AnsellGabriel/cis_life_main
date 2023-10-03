@@ -1,0 +1,43 @@
+<%= content_tag :h1, "List of Group Proposals" %>
+
+
+<div class="text-end mb-3">
+  <%= link_to new_group_proposal_path, class: 'btn btn-primary' do %>
+    New Group Proposal
+  <% end %>
+</div>
+
+<table class ="table table-striped">
+  <table class="table table-striped table-bordered table-hover">
+    <thead>
+      <tr>
+
+      <th>#</th>
+        <th>Cooperative</th>
+        <th>Plan</th>
+        <th>Plan Unit</th>
+        <th></th>
+
+      </tr>
+    </thead>
+
+    <tbody>
+      <% @group_proposals.each do |group_proposal| %>
+        <tr>
+
+        <th scope="row"><%= group_proposal.id %></th>
+        <td><%= group_proposal.cooperative %></td>
+        <td><%= group_proposal.plan %></td>
+        <td><%= group_proposal.plan_unit.name %></td>
+    
+          <td>
+            <%= link_to 'View', group_proposal, class: 'btn btn-secondary btn-sm' %>
+            <%= link_to 'Edit', edit_group_proposal_path(group_proposal), class: 'btn btn-secondary btn-sm' %>
+            <%= link_to "Delete", group_proposal, class: "btn btn-danger btn-sm", method: :delete, data: { "turbo-method": :delete, turbo_confirm: "Are you sure?" } %>
+          </td>
+
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+</div>

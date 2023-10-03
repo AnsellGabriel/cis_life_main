@@ -1,0 +1,11 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  cooperative: one
+  plan: one
+  plan_unit: one
+
+two:
+  cooperative: two
+  plan: two
+  plan_unit: two

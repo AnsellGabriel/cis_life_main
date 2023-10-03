@@ -140,7 +140,7 @@ class LppiImportService
                   loan: loan_type
                 )
 
-    previous_loans = coop_member.active_loans(@group_remit).order(created_at: :desc)
+    previous_loans = coop_member.active_loans(@group_remit, loan_type).order(created_at: :desc)
 
     if previous_loans.any?
       new_batch.unused_loan_id = previous_loans.first.id

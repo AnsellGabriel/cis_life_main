@@ -1,0 +1,9 @@
+
+<%= render @group_proposal %>
+
+<div>
+  <%= link_to "Edit", edit_group_proposal_path(@group_proposal), class: 'btn btn-primary' %> |
+  <%= link_to "Back", group_proposals_path, class: 'btn btn-primary' %>
+
+  <%= button_to "Delete", @group_proposal, method: :delete, class: 'btn btn-danger' %>
+</div>

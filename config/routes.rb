@@ -1,9 +1,12 @@
 
 require 'sidekiq/web'
 
-
 Rails.application.routes.draw do 
-
+  resources :group_proposals
+  resources :unit_benefits
+  resources :plan_units do
+    get :find_units, on: :member
+  end
   resources :reinsurances
   resources :claim_types, :claim_type_documents, :claim_type_benefits, :claim_attachments, :claim_confinements, :claim_benefits, :claim_coverages
   resources :documents
@@ -20,7 +23,11 @@ Rails.application.routes.draw do
   end
   # resources :denied_dependents
 
-  resources :anniversaries, :agent_groups, :departments, :agents, :coop_users, :employees, :plans, :product_benefits, :claim_benefits, :claim_coverages
+  resources :anniversaries, :agent_groups, :departments, :agents, :coop_users, :employees, :product_benefits, :claim_benefits, :claim_coverages
+
+  resources :plans do 
+    get :selected, on: :member
+  end
   
 
   resources :user do
@@ -96,7 +103,6 @@ Rails.application.routes.draw do
   resources :group_remits do
     get 'denied_members', to: 'denied_members#index'
     get 'download_csv', to: 'denied_members#download_csv'
-    post :payment, on: :member
     get :submit, on: :member
     get :renewal, on: :member
     resources :batches do
@@ -137,8 +143,12 @@ Rails.application.routes.draw do
     resources :loans
     resources :details
     resources :batches do
+      get :remove_unused, on: :member
       collection do
         get :approve_all
+      end
+      member do
+        get :show_unuse_batch, as: 'unuse_batch'
       end
 
       get :modal_remarks, on: :member
@@ -159,6 +169,10 @@ Rails.application.routes.draw do
   get 'insurance/accept', as: 'accept_insurance'
   # get 'insurance/reject', as: 'reject_insurance'
   get 'insurance/terminate', as: 'terminate_insurance'
+
+  resources :payments, only: %i[index create] do
+    get :approve, on: :member
+  end
 
   #* Underwriting Module Routes
   resources :user_levels
@@ -189,7 +203,7 @@ Rails.application.routes.draw do
     get :view_all, on: :collection
   end
 
-  resources :process_coverages do 
+  resources :process_coverages do
     get :approve_batch, on: :member
     get :approve_dependent, on: :member
     get :deny_batch, on: :member

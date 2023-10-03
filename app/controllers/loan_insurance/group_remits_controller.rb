@@ -5,11 +5,11 @@ class LoanInsurance::GroupRemitsController < ApplicationController
   before_action :set_group_remit, only: %i[submit show destroy]
 
   def index
-    @group_remits = @agreement.group_remits.loan_remits
+    @group_remits = @agreement.group_remits.loan_remits.order(created_at: :desc)
   end
 
   def submit
-    if @group_remit.loan_batches.empty?
+    if @group_remit.batches.empty?
       respond_to do |format|
         format.html { redirect_to loan_insurance_group_remit_path(@group_remit), alert: "Unable to submit empty group remit!" }
       end
@@ -19,7 +19,7 @@ class LoanInsurance::GroupRemitsController < ApplicationController
 
     @group_remit.set_under_review_status
     @group_remit.date_submitted = Date.today
-    @group_remit.terminate_unused_batches(current_user)
+    # @group_remit.terminate_unused_batches(current_user)
 
     respond_to do |format|
       if @group_remit.save!
@@ -29,14 +29,13 @@ class LoanInsurance::GroupRemitsController < ApplicationController
         @process_coverage.processor_id  = @group_remit.agreement.emp_agreements.find_by(agreement: @group_remit.agreement, active: true).employee_id
         @process_coverage.approver_id  = @group_remit.agreement.emp_agreements.find_by(agreement: @group_remit.agreement, active: true).employee.emp_approver.approver_id
         @process_coverage.set_default_attributes
+        @process_coverage.save!
         # raise 'errors'
-        if @process_coverage.save
-          format.html { redirect_to loan_insurance_group_remit_path(@group_remit.agreement), notice: "Group remit submitted" }
+        format.html { redirect_to loan_insurance_group_remit_path(@group_remit), notice: "Group remit submitted" }
         # else
         #   format.html { redirect_to coop_agreement_group_remit_path(@group_remit.agreement, @group_remit), alert: "Process Coverage not created!" }
         #   @group_remit.status = :pending
         #   @group_remit.save!
-        end
       # else
       #   format.html { redirect_to coop_agreement_group_remit_path(@group_remit.agreement, @group_remit), alert: "Please see members below and complete the necessary details." }
       end
@@ -44,11 +43,13 @@ class LoanInsurance::GroupRemitsController < ApplicationController
   end
 
   def show
-    @batch = @group_remit.loan_batches.build(premium: 0)
+    @batch = @group_remit.batches.build(premium: 0)
     @coop_members = @cooperative.coop_members
 
     load_batches
     paginate_batches
+
+    @batch_with_health_dec = @group_remit.batches_without_health_dec
   end
 
   def new
