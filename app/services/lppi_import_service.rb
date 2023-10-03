@@ -7,7 +7,7 @@ class LppiImportService
 
     @headers = ["FIRST_NAME", "MIDDLE_NAME", "LAST_NAME", "BIRTHDATE", "EFFECTIVITY_DATE", "EXPIRY_DATE", "RELEASE_DATE", "MATURITY_DATE", "LOAN_AMOUNT", "LOAN_TYPE"]
 
-    @progress_tracker = @group_remit.create_group_import_tracker(progress: 0.0)
+    @progress_tracker = @group_remit.create_progress_tracker(progress: 0.0)
   end
 
   def import

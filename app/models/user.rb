@@ -8,6 +8,8 @@ class User < ApplicationRecord
   belongs_to :userable, polymorphic: true
   has_many :user_levels
   has_many :dependent_remarks
+  has_one :progress_tracker, as: :trackable, dependent: :destroy
+
 
   enum rank: {
     rank_and_file: 0,
@@ -16,7 +18,7 @@ class User < ApplicationRecord
     senior_officer: 3,
     medical_director: 4
   }
-  
+
   attribute :admin, :boolean, default: false
   attribute :approved, :boolean, default: false
 
@@ -32,5 +34,5 @@ class User < ApplicationRecord
   def active_for_authentication?
     super && approved?
   end
-  
+
 end

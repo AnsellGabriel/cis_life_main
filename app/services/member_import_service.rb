@@ -4,10 +4,8 @@ class MemberImportService
       @cooperative = cooperative
       @current_user = current_user
       @required_headers = ["Birth Place", "First Name", "Middle Name", "Last Name", "Suffix", "Birthdate", "Gender", "Address", "SSS #", "TIN #", "Mobile #", "Email", "Civil Status", "Height (cm)", "Weight (kg)", "Occupation", "Employer", "Work Address", "Spouse", "Work Phone #"]
-      @progress = @current_user.create_member_import_tracker(progress: 0.0)
+      @progress = @current_user.create_progress_tracker(progress: 0.0)
     end
-
-
 
     def import
     headers = extract_headers(@spreadsheet, 'Members_Data')
@@ -19,7 +17,6 @@ class MemberImportService
     members_spreadsheet = parse_file('Members_Data')
 
     missing_headers = find_missing_headers(@required_headers, headers)
-
 
     # ! Attributes with Date type should have a format of: yyyy-mm-dd
     # Initialize variables to keep track of member imports

@@ -6,7 +6,7 @@
         <h5 class="modal-title text-center text-primary" id="staticBackdropLabel">Batch Enrollment</h5>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
-      <div class="modal-body <%= flex_justify_align('','', true) %> gap-3" data-controller="progress-bar" data-progress-bar-url-value="<%= progress_path(coop_user_id: current_user.userable.id) %>">
+      <div class="modal-body <%= flex_justify_align('','', true) %> gap-3" data-controller="progress-bar" data-progress-bar-url-value="<%= progress_path(user_id: current_user.id) %>">
         <%= form_with url: import_members_path, method: :post do |form| %>
           <%= form.label :file, "For multiple enrollment upload your csv file.", class: "form-text" %>
           <div class="d-flex gap-3">

@@ -18,7 +18,7 @@ class BatchImportService
     @principal_headers << "Rank" if @gyrt_ranking_plans.include?(@agreement.plan.acronym)
     @dependent_headers << "Dependent?" if @agreement.plan.gyrt_type == 'family'
 
-    @progress_tracker = @group_remit.create_group_import_tracker(progress: 0.0)
+    @progress_tracker = @group_remit.create_progress_tracker(progress: 0.0)
   end
 
   def import
