@@ -76,7 +76,7 @@ group :development, :test do
   # gem "debug", platforms: %i[ mri mingw x64_mingw ]
   gem 'byebug'
   gem "ffaker"
-  gem "debug"
+  # gem "debug"
 
 end
 

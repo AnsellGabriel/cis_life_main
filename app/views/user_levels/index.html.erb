@@ -13,9 +13,7 @@
       <tr>
 
       <th>#</th>
-        <th>User</th>
         <th>Authority Level</th>
-        <th>Active</th>
         <th></th>
 
       </tr>
@@ -26,9 +24,9 @@
         <tr>
 
         <th scope="row"><%= user_level.id %></th>
-        <td><%= user_level.user.userable.signed_fullname %></td>
-        <td><%= user_level.authority_level.name %> - <%= to_currency(user_level.authority_level.maxAmount) %></td>
-        <td><%= badge_pill(user_level.active) %></td>
+        <td><%= user_level.user.userable.signed_fullname %> <br> <small><%= user_level.user.userable.designation %></small> <br>
+        <small><%= user_level.authority_level.name %> - <%= to_currency(user_level.authority_level.maxAmount) %></small> <br>
+        <small><%= badge_pill(user_level.active) %></small></td>
     
           <td>
             <%= link_to 'View', user_level, class: 'btn btn-secondary btn-sm' %>

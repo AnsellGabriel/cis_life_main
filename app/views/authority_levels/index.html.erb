@@ -7,7 +7,7 @@
   <% end %>
 </div>
 
-<table class ="table table-striped">
+
   <table class="table table-striped table-bordered table-hover">
     <thead>
       <tr>
@@ -26,7 +26,7 @@
 
         <th scope="row"><%= authority_level.id %></th>
         <td><%= authority_level.name %></td>
-        <td><%= to_currency(authority_level.maxAmount) %></td>
+        <td><%= to_curr(authority_level.maxAmount) %></td>
     
           <td>
             <%= link_to 'View', authority_level, class: 'btn btn-secondary btn-sm' %>
@@ -38,4 +38,3 @@
       <% end %>
     </tbody>
   </table>
-</div>
