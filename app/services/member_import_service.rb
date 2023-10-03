@@ -61,7 +61,7 @@ class MemberImportService
       }
 
       # Check if a member with the same first name, last name, and birth date already exists
-      member = @cooperative.members.find_or_initialize_by(
+      member = Member.find_or_initialize_by(
         first_name: member_hash[:first_name],
         last_name: member_hash[:last_name],
         birth_date: member_hash[:birth_date]

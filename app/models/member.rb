@@ -70,7 +70,8 @@ class Member < ApplicationRecord
 
     total = 0
     self.coop_members.each do |cm|
-      total = cm.loan_batches.where("(effectivity_date <= ? and expiry_date >= ?) OR (effectivity_date <= ? and expiry_date >= ?)", ri_start, ri_start, ri_end, ri_end).sum(:loan_amount)
+    # self.joins(:coop_member).each do |cm|
+      total += cm.loan_batches.where("(effectivity_date <= ? and expiry_date >= ?) OR (effectivity_date <= ? and expiry_date >= ?)", ri_start, ri_start, ri_end, ri_end).sum(:loan_amount)
       if total >= 350000
         cm.loan_batches.where("(effectivity_date <= ? and expiry_date >= ?) OR (effectivity_date <= ? and expiry_date >= ?)", ri_start, ri_start, ri_end, ri_end).each do |batch|
           ri_date = batch.reinsurance_batches.find_by(batch: batch).nil? ? ri.date_from : batch.reinsurance_batches.find_by(batch: batch).ri_date
