@@ -22,7 +22,7 @@
 		</thead>
 
 		<tbody id="batches_body">
-			<% @denied_members.each do |member| %>
+			<% @denied_members.order(name: :desc).each do |member| %>
 				<tr class="text-muted">
 					<td class="<%= flex_justify_align('center') %>">
 						<div class="" style="width: 250px; font-size: .7rem;">

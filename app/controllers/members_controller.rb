@@ -49,7 +49,7 @@ class MembersController < InheritedResources::Base
 
   def create
     @member = Member.new(member_params)
-    
+
     respond_to do |format|
       if @member.save
         format.html {

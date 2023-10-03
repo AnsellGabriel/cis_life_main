@@ -5,8 +5,8 @@ class MemberImportService
       @current_user = current_user
       @required_headers = ["Birth Place", "First Name", "Middle Name", "Last Name", "Suffix", "Birthdate", "Gender", "Address", "SSS #", "TIN #", "Mobile #", "Email", "Civil Status", "Height (cm)", "Weight (kg)", "Occupation", "Employer", "Work Address", "Spouse", "Work Phone #"]
       @progress = @current_user.create_member_import_tracker(progress: 0.0)
-      byebug
     end
+
 
 
     def import
@@ -75,7 +75,7 @@ class MemberImportService
 
 
       # Check if a member with the same first name, last name, and birth date already exists
-      member = @cooperative.members.find_or_initialize_by(
+      member = Member.find_or_initialize_by(
         first_name: member_hash[:first_name],
         last_name: member_hash[:last_name],
         birth_date: member_hash[:birth_date]
