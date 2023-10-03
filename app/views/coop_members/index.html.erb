@@ -113,9 +113,9 @@
               <%= link_to show_insurance_coop_member_path(coop_member), class: small_btn('outline-primary'), title: 'Coverages' do %>
                 <i class="bi bi-clock-history"></i>
               <% end %>
-            <% if coop_member.batches.joins(:group_remits).where(group_remits: { type: 'BatchRemit' }).exists? %>
-              <%= link_to 'Insurance', member_agreements_coop_member_path(coop_member), class: 'btn btn-sm btn-primary' %>
-            <% end %>
+            <%# <% if coop_member.batches.joins(:group_remits).where(group_remits: { type: 'BatchRemit' }).exists? %>
+              <%# <%= link_to 'Insurance', member_agreements_coop_member_path(coop_member), class: 'btn btn-sm btn-primary' %>
+            <%# <% end %>
             <%# <%= link_to 'Coverage', show_insurance_coop_member_path(coop_member), class: 'btn btn-sm btn-secondary' %>
           </td>
         </tr>
