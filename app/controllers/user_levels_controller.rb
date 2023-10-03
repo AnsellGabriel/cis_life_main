@@ -25,7 +25,7 @@ class UserLevelsController < ApplicationController
     @user_level = UserLevel.new(user_level_params)
 
     if @user_level.save
-      redirect_to @user_level, notice: "User level was successfully created."
+      redirect_to user_levels_path, notice: "User level was successfully created."
     else
       render :new, status: :unprocessable_entity
     end
@@ -34,7 +34,7 @@ class UserLevelsController < ApplicationController
   # PATCH/PUT /user_levels/1
   def update
     if @user_level.update(user_level_params)
-      redirect_to @user_level, notice: "User level was successfully updated."
+      redirect_to user_levels_path, notice: "User level was successfully updated."
     else
       render :edit, status: :unprocessable_entity
     end

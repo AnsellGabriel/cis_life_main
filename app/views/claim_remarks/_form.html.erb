@@ -8,6 +8,7 @@
     <%= f.select :status, options_for_select(ClaimRemark.statuses.keys.map { |key| [key.humanize, key] }), { prompt: 'Select Type' }, { class: 'form-control' } unless current_user.userable_type == 'CoopUser' %>
     <%= f.hidden_field :coop %>
     <%= f.input :remark, :input_html => {:rows => 6} %>
+
   </div>
   <br>
   <div class="form-actions text-end">

@@ -1,8 +1,8 @@
 # config valid for current version and patch releases of Capistrano
 lock "~> 3.17.3"
 
-# set :application, "cis_life_main" 
-set :application, "cis_live"
+set :application, "cis_life_main" 
+# set :application, "cis_live"
 set :repo_url, "git@github.com:AnsellGabriel/cis_life_main.git"
 # set :repo_url, "git@example.com:me/my_repo.git"
 

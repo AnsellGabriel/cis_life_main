@@ -48,7 +48,7 @@ class MembersController < InheritedResources::Base
   end
 
   def create
-    
+
     @member = Member.find_or_initialize_by(
       first_name: member_params[:first_name],
       last_name: member_params[:last_name],

@@ -1,0 +1,11 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  plan: one
+  name: MyString
+  total_prem: 9.99
+
+two:
+  plan: two
+  name: MyString
+  total_prem: 9.99

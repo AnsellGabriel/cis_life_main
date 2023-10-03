@@ -30,7 +30,7 @@
     
           <td>
             <%= link_to "View", show_coop_process_claim_path(process_claim), class: "btn btn-warning btn-sm" %>
-            <%= link_to 'Edit', claims_file_process_claim_path(process_claim), class: 'btn btn-secondary btn-sm' unless process_claim.submitted? %>
+            <%#= link_to 'Edit', claims_file_process_claim_path(process_claim), class: 'btn btn-secondary btn-sm' if process_claim.submitted? %>
             <%#= link_to 'Edit', edit_process_claim_path(process_claim), class: 'btn' %>
             <%#= link_to 'Delete', process_claim, method: :delete, data: { confirm: 'Are you sure?' }, class: 'btn' %>
           </td>

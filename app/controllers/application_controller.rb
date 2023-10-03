@@ -46,8 +46,9 @@ class ApplicationController < ActionController::Base
     if current_user.nil? || current_user.user_levels.count == 0
       session[:max_amount] = 0
     else
-      cur_user_max_amount = current_user.user_levels.find_by(active: true).authority_level.maxAmount
-      session[:max_amount] = cur_user_max_amount.nil? ? 0 : cur_user_max_amount
+      @cur_user_max_amount = current_user.user_levels.find_by(active: true).authority_level.maxAmount
+      # raise "error"
+      session[:max_amount] = @cur_user_max_amount.nil? ? 0 : @cur_user_max_amount
     end
   end
 

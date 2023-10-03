@@ -1,5 +1,18 @@
 class ClaimRemarksController < ApplicationController
   before_action :set_claim_remark, only: %i[ show edit update destroy ]
+  
+
+  def index
+      if current_user.userable == "CoopUser"
+        @cooperative = current_user.userable.cooperative
+        @claim_remarks = ClaimRemark.joins(:process_claim).where(read: 0, process_claim: { cooperative_id: @cooperative.id }).where.not(user: current_user)
+      else
+        @claim_remarks = ClaimRemark.joins(:process_claim).where(read: 0).where.not(user: current_user)
+      end
+
+      @process_claims = ProcessClaim.where(cooperative: @cooperative)
+  end
+
   def new_status 
     @process_claim = ProcessClaim.find(params[:v])
     @claim_remark = @process_claim.claim_remarks.build
@@ -43,6 +56,8 @@ class ClaimRemarksController < ApplicationController
     @claim_remark = @process_claim.claim_remarks.build(claim_remark_params)
     @claim_remark.user = current_user
     @claim_remark.coop = 0
+    @claim_remark.read = 0
+    @claim_remark.pin = 0
     # raise "error"
     respond_to do |format|
       if @claim_remark.save
@@ -70,6 +85,8 @@ class ClaimRemarksController < ApplicationController
     @process_claim = ProcessClaim.find(params[:v])
     @claim_remark = @process_claim.claim_remarks.build(claim_remark_params)
     @claim_remark.user = current_user
+    @claim_remark.read = 0
+    @claim_remark.pin = 0
     # raise "error"
     respond_to do |format|
       if @claim_remark.save
@@ -96,6 +113,16 @@ class ClaimRemarksController < ApplicationController
     end
   end
 
+  def read_message 
+    @claim_remark
+    respond_to do |format|
+      if @registration.update_attribute(:attend, @attend)
+        # format.html { redirect_back fallback_location: registrations_path, notice: "Updated" }
+        redirect_back(fallback_location: root_path)
+      end
+    end
+  end
+
   def destroy
     @claim_remark.destroy
 
@@ -114,6 +141,6 @@ class ClaimRemarksController < ApplicationController
 
     # Only allow a list of trusted parameters through.
     def claim_remark_params
-      params.require(:claim_remark).permit(:process_claim_id, :user_id, :status, :remark, :coop)
+      params.require(:claim_remark).permit(:process_claim_id, :user_id, :status, :remark, :coop, :read)
     end
 end

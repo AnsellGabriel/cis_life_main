@@ -1,0 +1,43 @@
+<%= content_tag :h1, "List of Unit Benefits" %>
+
+
+<div class="text-end mb-3">
+  <%= link_to new_unit_benefit_path, class: 'btn btn-primary' do %>
+    New Unit Benefit
+  <% end %>
+</div>
+
+<table class ="table table-striped">
+  <table class="table table-striped table-bordered table-hover">
+    <thead>
+      <tr>
+
+      <th>#</th>
+        <th>Plan Unit</th>
+        <th>Benefit</th>
+        <th>Coverage Amount</th>
+        <th></th>
+
+      </tr>
+    </thead>
+
+    <tbody>
+      <% @unit_benefits.each do |unit_benefit| %>
+        <tr>
+
+        <th scope="row"><%= unit_benefit.id %></th>
+        <td><%= unit_benefit.plan_unit %></td>
+        <td><%= unit_benefit.benefit %></td>
+        <td><%= unit_benefit.coverage_amount %></td>
+    
+          <td>
+            <%= link_to 'View', unit_benefit, class: 'btn btn-secondary btn-sm' %>
+            <%= link_to 'Edit', edit_unit_benefit_path(unit_benefit), class: 'btn btn-secondary btn-sm' %>
+            <%= link_to "Delete", unit_benefit, class: "btn btn-danger btn-sm", method: :delete, data: { "turbo-method": :delete, turbo_confirm: "Are you sure?" } %>
+          </td>
+
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+</div>

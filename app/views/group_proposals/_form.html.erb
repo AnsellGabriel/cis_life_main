@@ -1,0 +1,19 @@
+
+<%= simple_form_for(@group_proposal) do |f| %>
+  <%= f.error_notification %>
+  <%= f.error_notification message: f.object.errors[:base].to_sentence if f.object.errors[:base].present? %>
+
+  <div class="form-inputs mb-3">
+    <%= f.association :cooperative %>
+    <div data-controller="group-plan">
+      <%= f.association :plan, input_html: { data: { action: "change->group-plan#search_units" } } %>
+      <%= f.association :plan_unit, input_html: { id: "plan_unit_id", data: { action: "change->group-plan#selectUnits", group_plan_target: "unitSelect" } } %>
+    </div>
+    <%= turbo_frame_tag 'unit details' %>
+  </div>
+
+  <div class="form-actions text-end">
+    <%= link_to "Back", group_proposals_path, class: 'btn btn-secondary' %>
+    <%= f.button :submit, class: 'btn-success' %>
+  </div>
+<% end %>
