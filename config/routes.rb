@@ -224,6 +224,13 @@ Rails.application.routes.draw do
   get 'download', to: 'process_coverages#download'
   get 'process_coverages/pdf/:id', to: "process_coverages#pdf", as: 'pc_pdf'
 
+  #* MIS module routes
+  namespace :mis do
+    get 'dashboard', to: 'dashboard#index'
+    resources :members do
+      get :update_table, on: :collection
+    end
+  end
 
   #* Authentication Routes
   devise_for :admin_users, ActiveAdmin::Devise.config

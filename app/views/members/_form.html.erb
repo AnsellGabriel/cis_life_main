@@ -1,5 +1,5 @@
 
-<%= simple_form_for(member) do |f| %>
+<%= simple_form_for(member, url: members_path(cooperative_id: @cooperative.id)) do |f| %>
   <%= f.error_notification %>
   <%= f.error_notification message: f.object.errors[:base].to_sentence if f.object.errors[:base].present? %>
   <div class="form-inputs mb-3">

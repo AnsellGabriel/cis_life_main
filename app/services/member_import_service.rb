@@ -8,6 +8,7 @@ class MemberImportService
     end
 
 
+
     def import
     headers = extract_headers(@spreadsheet, 'Members_Data')
 
@@ -31,14 +32,18 @@ class MemberImportService
     members_spreadsheet.drop(1).each do |row|
       # Extract member data from CSV row
       member_hash = {
-        last_name: row["Last Name"] == nil ? nil : row["Last Name"].strip.upcase,
-        first_name: row["First Name"] == nil ? nil : row["First Name"].strip.upcase,
-        middle_name: row["Middle Name"] == nil ? nil : row["Middle Name"].strip.upcase,
-        suffix: row["Suffix"] == nil ? nil : row["Suffix"].strip.upcase,
+        last_name: row["Last Name"] == nil ? nil : row["Last Name"].strip,
+        first_name: row["First Name"] == nil ? nil : row["First Name"].strip,
+        middle_name: row["Middle Name"] == nil ? nil : row["Middle Name"].strip,
+        suffix: row["Suffix"] == nil ? nil : row["Suffix"].strip,
         birth_place: row["Birth Place"],
         birth_date: row["Birthdate"],
         gender: row["Gender"],
         address: row["Address"],
+        geo_region: row["Region"] == nil ? nil : GeoRegion.find_by(name: row["Region"].strip),
+        geo_province: row["Province"] == nil ? nil : GeoProvince.find_by(name: row["Province"].strip),
+        geo_municipality: row["Municipality"] == nil ? nil : GeoMunicipality.find_by(name: row["Municipality"].strip),
+        geo_barangay: row["Barangay"] == nil ? nil : GeoBarangay.find_by(name: row["Barangay"].strip),
         sss_no: row["SSS #"],
         tin_no: row["TIN #"],
         mobile_number: row["Mobile #"],
@@ -54,14 +59,23 @@ class MemberImportService
       }
 
       # Extract cooperative member data from CSV row
-      coop_member_hash = {
-        cooperative_id: @cooperative.id,
-        coop_branch_id: @current_user.coop_branch_id,
-        membership_date: row["Membership Date"]
-      }
+      begin
+        coop_member_hash = {
+          cooperative_id: @cooperative.id,
+          coop_branch_id: @cooperative.coop_branches.find_by(name: row["Branch"].strip).id,
+          membership_date: row["Membership Date"]
+        }
+      rescue NoMethodError => e
+        create_denied_enrollee(row["First Name"], row["Middle Name"], row["Last Name"], "Coop branch not found: #{row["Branch"]}")
+        denied_enrollees_counter += 1
+        progress_counter += 1
+        update_progress(total_members, progress_counter)
+        next
+      end
+
 
       # Check if a member with the same first name, last name, and birth date already exists
-      member = @cooperative.members.find_or_initialize_by(
+      member = Member.find_or_initialize_by(
         first_name: member_hash[:first_name],
         last_name: member_hash[:last_name],
         birth_date: member_hash[:birth_date]

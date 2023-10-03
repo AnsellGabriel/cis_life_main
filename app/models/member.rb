@@ -56,6 +56,10 @@ class Member < ApplicationRecord
     coop_members.find_by(cooperative_id: coop.id).id
   end
 
+  def full_address
+    "#{self&.address}, #{geo_barangay&.name}, #{geo_municipality&.name}, #{geo_province&.name}, #{geo_region&.name}"
+  end
+
   def full_name
     "#{last_name}, #{first_name} #{middle_name}"
   end
@@ -74,9 +78,9 @@ class Member < ApplicationRecord
       if total >= 350000
         cm.loan_batches.where("(effectivity_date <= ? and expiry_date >= ?) OR (effectivity_date <= ? and expiry_date >= ?)", ri_start, ri_start, ri_end, ri_end).each do |batch|
           ri_date = batch.reinsurance_batches.find_by(batch: batch).nil? ? ri.date_from : batch.reinsurance_batches.find_by(batch: batch).ri_date
-          
+
           # binding.pry
-          
+
           # ri.batches << batch
           ri_batch = ReinsuranceBatch.find_or_initialize_by(reinsurance: ri, batch: batch)
           ri_batch.ri_date = ri_date
@@ -84,7 +88,7 @@ class Member < ApplicationRecord
         end
       end
     end
-    
+
   end
 
   private
@@ -130,7 +134,6 @@ class Member < ApplicationRecord
     where("last_name LIKE ? AND first_name LIKE ?", "%#{last_name_filter}%", "%#{first_name_filter}%")
   end
 
-  
-  
-end
 
+
+end

@@ -2,7 +2,7 @@ class BatchImportService
   def initialize(spreadsheet, group_remit, cooperative, current_user)
     @spreadsheet = spreadsheet
     @group_remit = group_remit
-    @cooperative = cooperative  
+    @cooperative = cooperative
     @agreement = @group_remit.agreement
     @current_user = current_user
 
@@ -10,7 +10,7 @@ class BatchImportService
     @gyrt_ranking_plans = ['GYRTBR', 'GYRTFR']
     @gyrt_family_plans = ['GYRTF', 'GYRTFR']
     @special_term_insurance = ['PMFC']
-    
+
     @principal_headers = ["First Name", "Middle Name", "Last Name", "Birthdate"]
     @dependent_headers = ["Member First Name", "Member Middle Name", "Member Last Name", "Member Birthdate", "Dependent First Name", "Dependent Middle Name", "Dependent Last Name", "Relationship", "Beneficiary?"]
 
@@ -42,7 +42,7 @@ class BatchImportService
     if dependent_headers.nil?
       return "Incorrect/Missing sheet name: DEPENDENT"
     end
-    
+
     dependent_spreadsheet = parse_file('DEPENDENT')
     missing_dependent_headers = check_missing_headers('DEPENDENT', @dependent_headers, dependent_headers)
     return missing_dependent_headers if missing_dependent_headers
@@ -55,7 +55,7 @@ class BatchImportService
     principal_spreadsheet.drop(1).each do |row|
       batch_hash = extract_batch_data(row)
       member = find_or_initialize_member(batch_hash)
-      
+
       unless member.persisted?
         create_denied_member(member, 'Unenrolled member.')
         progress_counter += 1
@@ -66,7 +66,7 @@ class BatchImportService
       coop_member = @cooperative.coop_members.find_by(member_id: member.id)
       # checks if member is already in another group remit/batch remit
       without_coverage_member = available_member_list.find_by(id: coop_member.id)
-      
+
       if without_coverage_member.nil?
         create_denied_member(member, 'Member already exist in other batch or remittance')
         progress_counter += 1
@@ -82,7 +82,7 @@ class BatchImportService
           next
         end
       end
-      
+
       age_min_max = age_min_max_by_insured_type(agreement_benefits, batch_hash[:rank])
 
       if age_min_max.nil?
@@ -91,9 +91,9 @@ class BatchImportService
         update_progress(total_members, progress_counter)
         next
       end
-      
+
       duplicate_member = find_duplicate_member(coop_member.id)
-    
+
       if duplicate_member
         # add_duplicate_member(member)
         create_denied_member(member, 'Member already exist in the batch.')
@@ -115,7 +115,7 @@ class BatchImportService
         last_name: row["Member Last Name"].to_s.squish.upcase,
         birth_date: row["Member Birthdate"]
       }
-    
+
       member = find_or_initialize_member(member_name)
 
       dependent_hash = {
@@ -127,6 +127,13 @@ class BatchImportService
         beneficiary: row["Beneficiary?"],
         dependent: row["Dependent?"]
       }
+
+      unless member.persisted?
+        create_denied_member(member, "Dependent denied: #{dependent_hash[:first_name]} #{dependent_hash[:middle_name]} #{dependent_hash[:last_name]} - Principal is not a cooperative member.")
+        progress_counter += 1
+        update_progress(total_members, progress_counter)
+        next
+      end
 
       begin
         dependent = member.member_dependents.find_or_create_by(
@@ -146,7 +153,7 @@ class BatchImportService
       end
 
       unless member.persisted?
-        create_denied_member(member, "(DEPENDENT DENIED: #{dependent.to_s}) - Unenrolled principal: #{member.to_s}")
+        create_denied_member(member, "(Denied dependent: #{dependent.to_s}) - Principal not enrolled in the plan.")
         progress_counter += 1
         update_progress(total_members, progress_counter)
         next
@@ -156,7 +163,7 @@ class BatchImportService
       batch = @group_remit.batches.find_by(coop_member_id: coop_member.id)
 
       if member.nil? || batch.nil?
-        create_denied_member(member, "(DEPENDENT DENIED: #{dependent.to_s}) - Principal not added to the plan: #{member.to_s}")
+        create_denied_member(member, "(Denied dependent: #{dependent.to_s}) - Principal not enrolled in the plan.")
         progress_counter += 1
         update_progress(total_members, progress_counter)
         next
@@ -190,13 +197,13 @@ class BatchImportService
         if dependent.age < batch_dependent.agreement_benefit.min_age or dependent.age > batch_dependent.agreement_benefit.max_age
 
           batch_dependent.insurance_status = :denied
-    
+
           if dependent.age > batch_dependent.agreement_benefit.max_age
             batch_dependent.batch_remarks.build(remark: "Dependent age is over the maximum age limit of the plan.", status: :denied, user_type: 'CoopUser', user_id: @current_user.userable.id)
           else
             batch_dependent.batch_remarks.build(remark: "Dependent age is below the minimum age limit of the plan.", status: :denied, user_type: 'CoopUser', user_id: @current_user.userable.id)
           end
-          
+
           batch_dependent.save!
         end
       end
@@ -215,7 +222,7 @@ class BatchImportService
     }
 
   end
-  
+
   private
 
   def find_missing_headers(required_headers, headers)
@@ -237,9 +244,9 @@ class BatchImportService
   def create_denied_member(member, reason, effectivity = nil)
     age = member.instance_of?(MemberDependent) ? member.age : member.age(effectivity)
 
-    denied_member = DeniedMember.find_or_create_by!(
-      name: "#{member.first_name} #{member.middle_name} #{member.last_name}", 
-      age: member.birth_date.nil? ? 0 : age, 
+    denied_member = DeniedMember.create!(
+      name: "#{member.first_name} #{member.middle_name} #{member.last_name}",
+      age: member.birth_date.nil? ? 0 : age,
       group_remit: @group_remit
     )
     denied_member.reason = reason
@@ -253,7 +260,7 @@ class BatchImportService
       if agreement_benefits.find_by(name: rank).nil?
         return nil
       end
-      
+
       {
         min_age: agreement_benefits.find_by(name: rank).min_age,
         max_age: agreement_benefits.find_by(name: rank).max_age
@@ -282,7 +289,7 @@ class BatchImportService
       terms: row["Terms"].to_i.present? ? row["Terms"].to_i : nil
     }
   end
-  
+
   def find_or_initialize_member(batch_hash)
     @cooperative.members.find_or_initialize_by(
       first_name: batch_hash[:first_name],
@@ -310,9 +317,9 @@ class BatchImportService
     b_rank = @group_remit.agreement.agreement_benefits.find_by(name: batch_hash[:rank])
 
     Batch.process_batch(
-      new_batch, 
-      @group_remit, 
-      b_rank, 
+      new_batch,
+      @group_remit,
+      b_rank,
       @group_remit.terms
     )
 
@@ -344,7 +351,7 @@ class BatchImportService
     if missing_headers.any?
       return "The following headers are missing in #{sheet_name}: #{missing_headers.join(', ')}"
     end
-  
+
     nil
   end
 end

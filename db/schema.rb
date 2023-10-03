@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_09_12_081208) do
+ActiveRecord::Schema[7.0].define(version: 2023_10_02_081404) do
   create_table "action_text_rich_texts", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.string "name", null: false
     t.text "body", size: :long
@@ -765,10 +765,11 @@ ActiveRecord::Schema[7.0].define(version: 2023_09_12_081208) do
 
   create_table "member_import_trackers", charset: "utf8mb4", force: :cascade do |t|
     t.float "progress"
-    t.bigint "coop_user_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["coop_user_id"], name: "index_member_import_trackers_on_coop_user_id"
+    t.string "trackable_type", null: false
+    t.bigint "trackable_id", null: false
+    t.index ["trackable_type", "trackable_id"], name: "index_member_import_trackers_on_trackable"
   end
 
   create_table "members", charset: "utf8mb4", force: :cascade do |t|
@@ -1072,7 +1073,6 @@ ActiveRecord::Schema[7.0].define(version: 2023_09_12_081208) do
   add_foreign_key "loan_insurance_loans", "cooperatives"
   add_foreign_key "loan_insurance_rates", "agreements"
   add_foreign_key "member_dependents", "members"
-  add_foreign_key "member_import_trackers", "coop_users"
   add_foreign_key "process_claims", "agreement_benefits"
   add_foreign_key "process_claims", "agreements"
   add_foreign_key "process_claims", "cooperatives"
