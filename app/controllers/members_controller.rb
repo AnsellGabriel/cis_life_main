@@ -48,7 +48,15 @@ class MembersController < InheritedResources::Base
   end
 
   def create
-    @member = Member.new(member_params)
+    
+    @member = Member.find_or_initialize_by(
+      first_name: member_params[:first_name],
+      last_name: member_params[:last_name],
+      middle_name: member_params[:middle_name],
+      birth_date: member_params[:birth_date]
+    )
+
+    @member.assign_attributes(member_params)
 
     respond_to do |format|
       if @member.save
