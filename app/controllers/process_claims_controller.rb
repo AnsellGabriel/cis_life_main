@@ -162,7 +162,13 @@ class ProcessClaimsController < ApplicationController
           format.html { redirect_to claims_file_process_claim_path(@process_claim), notice: "#{@process_claim.claim_route.to_s.humanize.titleize} by #{current_user}"  }
         elsif @claim_track.route_id == 3
           @process_claim.update!(claim_route: @claim_track.route_id, processing: 1)
-          format.html { redirect_to show_coop_process_claim_path(@process_claim), notice: "#{@process_claim.claim_route.to_s.humanize.titleize} by #{current_user}"  }
+          format.html { redirect_to claim_process_process_claim_path(@process_claim), notice: "#{@process_claim.claim_route.to_s.humanize.titleize} by #{current_user}"  }
+        elsif @claim_track.route_id == 5
+          # ClaimsMailer.with(process_claim: @process_claim).new_claim_email.deliver_later
+          # RegisterMailer.with(registration: @registration, event_hub: @event_hub).register_created.deliver_later
+          @process_claim.update!(claim_route: @claim_track.route_id, processing: 1)
+          format.html { redirect_to claim_process_process_claim_path(@process_claim), notice: "#{@process_claim.claim_route.to_s.humanize.titleize} by #{current_user}"  }
+          
         elsif @claim_track.route_id == 8 
           @process_claim.update!(claim_route: @claim_track.route_id, status: :approved, approval: 1)
           format.html { redirect_to show_coop_process_claim_path(@process_claim), notice: "#{@process_claim.claim_route.to_s.humanize.titleize} by #{current_user}"  }
@@ -189,10 +195,10 @@ class ProcessClaimsController < ApplicationController
       @product_benefit.each do | pb |
         @process_claim.claim_benefits.create(process_claim_id: @process_claim.id, benefit_id: pb.benefit_id, amount: pb.coverage_amount)
       end
-      @batch = Batch.where(coop_member: @process_claim.claimable, agreement_benefit: @process_claim.agreement_benefit)
-      @batch.each do |b|
-        @process_claim.claim_coverages.create(process_claim: @process_claim, coverageable: b)
-      end
+    end
+    @batch = Batch.where(coop_member: @process_claim.claimable, agreement_benefit: @process_claim.agreement_benefit)
+    @batch.each do |b|
+      @process_claim.claim_coverages.create(process_claim: @process_claim, coverageable: b)
     end
     # @process_claim.claim_benefits.create(
     #   @product_benefit.map { |pb| { process_claim_id: @process_claim.id, benefit_id: pb.benefit_id, amount: pb.coverage_amount } }
@@ -232,7 +238,7 @@ class ProcessClaimsController < ApplicationController
         claim_benefits_param: [:id, :benefit_id, :amount, :status],
         claim_cause_attributes: [:id, :acd, :ucd, :osccd, :icd],
         claim_coverage_attributes: [:id, :amount_benefit, :coverage_type, :coverageale],
-        claim_remark_attributes: [:id, :user_id, :status, :remark, :coop],
+        claim_remark_attributes: [:id, :user_id, :status, :remark, :coop, :read],
         claim_attachment_attributes: [:id, :claim_type_id, :doc],
         claim_confinement_attributes: [:id, :date_admit, :date_discharge, :terms, :amount])
     end

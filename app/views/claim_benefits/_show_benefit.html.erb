@@ -12,7 +12,7 @@
         <%# <td>= benefit_claim.id</td> %>
         <td> <small><%= benefit_claim.benefit %></small> <span class="badge bg-warning text-dark"><%= benefit_claim.status %></span></td>
         <td class="text-end"><%= to_curr(benefit_claim.amount) %></td>
-        <% unless params[:action] == 'show' %>
+        <% unless params[:action] == 'show_coop' %>
           <td class="text-end">
             <%#= link_to 'View', benefit_claim, class: 'btn' %>
             <%= link_to '<i class="bi bi-pencil-square"></i>'.html_safe, edit_claim_benefit_path(benefit_claim), class: 'btn btn-outline-primary btn-sm', data: { turbo_frame: "remote_modal" } if @process_claim.claim_filed? %>

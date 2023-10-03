@@ -23,11 +23,12 @@ Rails.application.routes.draw do
   end
   # resources :denied_dependents
 
-  resources :anniversaries, :agent_groups, :departments, :agents, :coop_users, :employees, :product_benefits, :claim_benefits, :claim_remarks, :claim_coverages
+  resources :anniversaries, :agent_groups, :departments, :agents, :coop_users, :employees, :product_benefits, :claim_benefits, :claim_coverages
 
   resources :plans do 
     get :selected, on: :member
   end
+  
 
   resources :user do
     get :approved, on: :member
@@ -179,6 +180,7 @@ Rails.application.routes.draw do
   resources :claim_remarks do
     get :new_status, to: 'claim_remarks#new_status', on: :collection
     post :create_status, to: 'claim_remarks#create_status', on: :collection
+    get :read_message, on: :member
   end
   resources :process_claims do
     get :new_coop, to: 'process_claims#new_coop', on: :collection
