@@ -4,7 +4,7 @@
     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
   </div>
   <div class="modal-body <%= flex_justify_align('center')%>">
-    <%= render "form", member: @member%>
+    <%= render "form", member: @member, coop_member: :coop_members%>
   </div>
 <% end %>
 

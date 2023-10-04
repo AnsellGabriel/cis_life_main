@@ -1,14 +1,14 @@
 
-<%= simple_form_for(member, url: members_path(cooperative_id: @cooperative.id)) do |f| %>
+<%= simple_form_for(member) do |f| %>
   <%= f.error_notification %>
   <%= f.error_notification message: f.object.errors[:base].to_sentence if f.object.errors[:base].present? %>
   <div class="form-inputs mb-3">
     <div class="row ps-3 pe-3">
       <div class="col-12">
-          <%= f.simple_fields_for :coop_members do |member| %>
+          <%= f.simple_fields_for coop_member do |member| %>
             <div class="form-group d-flex align-items-end coop-member-form">
-                <%= member.hidden_field :membership_date, value: Date.today%>
-                <%= member.hidden_field :cooperative_id, value: @cooperative.id %>
+              <%= member.hidden_field :membership_date, value: Date.today%>
+              <%= member.hidden_field :cooperative_id, value: @cooperative.id %>
 
               <div class="col-md-6">
                 <%= member.input :coop_branch_id, collection: @cooperative.coop_branches.map {|branch| [branch.name, branch.id]}, style: "width: auto" ,class: "form-select mb-3", label_html: {class: 'text-secondary sm-secondary-text'}  %>

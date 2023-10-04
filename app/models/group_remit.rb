@@ -14,7 +14,8 @@ class GroupRemit < ApplicationRecord
   has_many :payments, as: :payable, dependent: :destroy
   has_many :loan_batches, dependent: :destroy, class_name: 'LoanInsurance::Batch'
   has_one :process_coverage, dependent: :destroy
-  has_one :group_import_tracker, dependent: :destroy
+  # has_one :group_import_tracker, dependent: :destroy
+  has_one :progress_tracker, as: :trackable, dependent: :destroy
   accepts_nested_attributes_for :payments
 
   enum status: {
