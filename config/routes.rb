@@ -1,7 +1,7 @@
 
 require 'sidekiq/web'
 
-Rails.application.routes.draw do 
+Rails.application.routes.draw do
   resources :group_proposals
   resources :unit_benefits
   resources :plan_units do
@@ -25,10 +25,10 @@ Rails.application.routes.draw do
 
   resources :anniversaries, :agent_groups, :departments, :agents, :coop_users, :employees, :product_benefits, :claim_benefits, :claim_coverages
 
-  resources :plans do 
+  resources :plans do
     get :selected, on: :member
   end
-  
+
 
   resources :user do
     get :approved, on: :member
@@ -227,6 +227,8 @@ Rails.application.routes.draw do
   #* MIS module routes
   namespace :mis do
     get 'dashboard', to: 'dashboard#index'
+    get 'cooperatives', to: 'cooperatives#index'
+    
     resources :members do
       get :update_table, on: :collection
     end
