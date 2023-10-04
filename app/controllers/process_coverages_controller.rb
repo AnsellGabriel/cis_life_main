@@ -551,7 +551,13 @@ class ProcessCoveragesController < ApplicationController
   end
 
   def reconsider_batch
-    @batch = Batch.find(params[:batch])
+
+    @batch = case params[:batch_type]
+    when "LoanInsurance::Batch"
+      LoanInsurance::Batch.find(params[:batch])
+    else
+      Batch.find(params[:batch])
+    end
 
     respond_to do |format|
       if @batch.update_attribute(:insurance_status, 3)
