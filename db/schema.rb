@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_10_03_082341) do
+ActiveRecord::Schema[7.0].define(version: 2023_10_03_085945) do
   create_table "action_text_rich_texts", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.string "name", null: false
     t.text "body", size: :long
@@ -591,14 +591,6 @@ ActiveRecord::Schema[7.0].define(version: 2023_10_03_082341) do
     t.datetime "updated_at", null: false
   end
 
-  create_table "group_import_trackers", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
-    t.float "progress"
-    t.bigint "group_remit_id", null: false
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.index ["group_remit_id"], name: "index_group_import_trackers_on_group_remit_id"
-  end
-
   create_table "group_proposals", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.bigint "cooperative_id"
     t.bigint "plan_id"
@@ -748,15 +740,6 @@ ActiveRecord::Schema[7.0].define(version: 2023_10_03_082341) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["member_id"], name: "index_member_dependents_on_member_id"
-  end
-
-  create_table "member_import_trackers", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
-    t.float "progress"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.string "trackable_type", null: false
-    t.bigint "trackable_id", null: false
-    t.index ["trackable_type", "trackable_id"], name: "index_member_import_trackers_on_trackable"
   end
 
   create_table "members", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
@@ -1041,7 +1024,6 @@ ActiveRecord::Schema[7.0].define(version: 2023_10_03_082341) do
   add_foreign_key "dependent_remarks", "batch_dependents"
   add_foreign_key "emp_approvers", "employees", column: "approver_id"
   add_foreign_key "employees", "departments"
-  add_foreign_key "group_import_trackers", "group_remits"
   add_foreign_key "group_remits", "agreements"
   add_foreign_key "health_dec_subquestions", "health_decs"
   add_foreign_key "loan_insurance_batches", "coop_members"
