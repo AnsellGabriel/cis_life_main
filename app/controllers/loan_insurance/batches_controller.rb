@@ -100,7 +100,9 @@ class LoanInsurance::BatchesController < ApplicationController
 
   def remove_unused
     batch = LoanInsurance::Batch.find(params[:id])
-    LoanInsurance::Batch.find(batch.unused_loan_id).update!(status: :recent)
+    @unused_Loan = LoanInsurance::Batch.find(batch.unused_loan_id)
+
+    @unused_Loan.update!(status: :recent)
     batch.update!(unused_loan_id: nil)
     batch.calculate_values(batch.group_remit.agreement)
 

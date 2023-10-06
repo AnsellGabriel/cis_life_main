@@ -2,11 +2,12 @@
 
 <div  class="<%= flex_justify_align('center') %> gap-1" >
 	<% if batch.unused_loan_id && group_remit.pending? %>
+		<% batch = batch.decorate %>
 		<%= button_to remove_unused_loan_insurance_batch_path(batch), 
 			title: 'Remove unused premium',
 			method: :get,
 			data: { turbo_frame: "_top", 
-			turbo_confirm: "Remove unused for #{member.last_name}, #{member.first_name} #{member.middle_name}?" },
+			turbo_confirm: "Remove unused for #{member.last_name}, #{member.first_name} #{member.middle_name}? \n\nPrevious loan details:\nLoan type: #{batch.prev_loan_type}\nLoan amount: #{to_curr(batch.prev_loan_amount)}\nEffectivity date: #{date_as_month_day_year(batch.prev_loan_eff_date)} " },
 			class: small_btn('outline-danger') do %>
 			<i class="bi bi-calendar2-x"></i>
 		<% end %>
