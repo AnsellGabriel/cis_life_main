@@ -1,6 +1,5 @@
 <div id="<%= dom_id group_proposal %>">
  
-
  
   <div class="row">
     <div class="col-8">
@@ -51,6 +50,10 @@
               <% end %>
             </tbody>
           </table>
+
+          <div class="text-end me-3">
+            <%= content_tag :span, "TOTAL PREMIUM: #{to_currency(group_proposal.plan_unit.total_prem)}", class: "lead" %>
+          </div>
           
         </div>
       </div>

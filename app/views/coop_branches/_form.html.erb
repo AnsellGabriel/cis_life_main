@@ -5,11 +5,11 @@
 
   <div class="form-inputs mb-3">
     <%= f.input :name %>
-    <div class="row">
-      <%= f.association :geo_region, label: "Region", wrapper_html: { class: "col col-md-6" } %>
-      <%= f.association :geo_province, label: "Province", wrapper_html: { class: "col col-md-6" } %>
-      <%= f.association :geo_municipality, label: "Municipality", wrapper_html: { class: "col col-md-6" } %>
-      <%= f.association :geo_barangay, label: "Barangay", wrapper_html: { class: "col col-md-6" } %>
+    <div class="row" data-controller="geography">
+      <%= f.association :geo_region, label: "Region", input_html: { data: { action: "change->geography#search_provinces" } }, wrapper_html: { class: "col col-md-6" } %>
+      <%= f.association :geo_province, label: "Province", input_html: { id: "province_id", data: { action: "change->geography#search_municipalities", geography_target: "provinceSelect" } }, wrapper_html: { class: "col col-md-6" } %>
+      <%= f.association :geo_municipality, label: "Municipality", input_html: { id: "muni_id", data: { action: "change->geography#search_barangays", geography_target: "muniSelect" } }, wrapper_html: { class: "col col-md-6" } %>
+      <%= f.association :geo_barangay, label: "Barangay", input_html: { id: "brgy_id", data: { geography_target: "brgySelect" } }, wrapper_html: { class: "col col-md-6" } %>
     </div>
     <%= f.input :street %>
     <%= f.input :contact_details %>
