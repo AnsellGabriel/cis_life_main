@@ -16,7 +16,7 @@
               </h6>
               <div class="small text-muted <%= flex_justify_align('', '', true) %>">
 
-                <% if @agreement.anniversary_type == 'single' %>
+                <% if @agreement.anniversary_type.downcase == 'single' %>
                   <%= content_tag :span, "Anniversary Date: #{@agreement.anniversaries[0].anniversary_date.strftime('%B %d')}" %>
                 <% end %>
 
@@ -27,7 +27,7 @@
 
             <% if plan_acronym == 'PMFC' %>
               <%= render 'terms_button', agreement: @agreement %>
-            <% elsif @agreement.anniversary_type == 'none' or @agreement.anniversary_type.nil? %>
+            <% elsif @agreement.anniversary_type.downcase == '12 months' or @agreement.anniversary_type.nil? %>
               <% current_batch_remit = @agreement.group_remits.find_by(type: 'BatchRemit', effectivity_date: Date.today.beginning_of_month)%>
 
               <% unless current_batch_remit.present? %>
@@ -44,7 +44,7 @@
                 %>
               <% end %>
 
-            <% elsif @agreement.anniversary_type == 'single' %>
+            <% elsif @agreement.anniversary_type.downcase == 'single' %>
               <% current_batch_remit = @agreement.group_remits.find_by(type: 'BatchRemit')%>
 
               <% unless current_batch_remit.present? %>

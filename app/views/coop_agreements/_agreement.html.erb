@@ -1,5 +1,5 @@
 
-<% anniv = agreement.anniversary_type %>
+<% anniv = agreement.anniversary_type.downcase %>
 
 <div id="<%= dom_id(agreement) %>" class="row <%= flex_justify_align('between') %>">
   <% agreement_presenter = AgreementPresenter.new(agreement) %>

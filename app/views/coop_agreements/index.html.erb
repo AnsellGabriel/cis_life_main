@@ -14,7 +14,7 @@
               <div class="<%= flex_justify_align('','center') %> gap-1">
                 <h6 class="card-title mb-0"><%= agreement.moa_no %></h6>
                   <% last_group_remit = agreement.group_remits.last %>
-                  <% if agreement.anniversary_type == 'multiple' %>
+                  <% if agreement.anniversary_type.downcase == 'multiple' %>
                     <% agreement.anniversaries.each do |anniv| %>
                       <% if anniv.group_remits.blank? %>
                         <% next %>

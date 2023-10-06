@@ -39,9 +39,9 @@
                   </div>
                   <div class="<%= flex_justify_align('center', '', true) %> ps-3 col-md-12 sm-secondary-text">
 
-                    <% if ['single', 'multiple'].include?(a.anniversary_type) %>
+                    <% if ['single', 'multiple'].include?(a.anniversary_type.downcase) %>
                       <div class="d-flex gap-2">
-                        <%= content_tag :span, "Anniversary day#{a.anniversary_type == 'multiple' ? '(s)' : '' }: ", class: 'card-text' %>
+                        <%= content_tag :span, "Anniversary day#{a.anniversary_type.downcase == 'multiple' ? '(s)' : '' }: ", class: 'card-text' %>
                           <%= content_tag :span, presenter.anniversary_dates, class: 'card-text' %>
                       </div>
                     <% end %>
