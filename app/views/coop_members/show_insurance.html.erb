@@ -68,11 +68,12 @@
             <th>Terms</th>
             <th>Loan</th>
             <th>Premium</th>
+            <th>Actions</th>
           </thead>
           <tbody>
             <% @batch_lppi.each do |lppi| %>
               <tr>
-                <td><%= lppi.group_remit %> <small><%= batch_status(lppi.status) %></small></td>
+                <td><small><%= batch_status(lppi.status) %></small> <%= lppi.group_remit %></td>
                 <td>
                   <%= "Eff: #{lppi.effectivity_date}" %> <br>
                   <%= "Exp: #{lppi.expiry_date}" %> <br>
@@ -82,6 +83,17 @@
                   <%= lppi.loan.name %> - <%= to_currency(lppi.loan_amount) %>
                 </td>
                 <td><%= to_currency(lppi.premium) %></td>
+                <td>
+                  <% if lppi.remarks.exists? %>
+                    <%= link_to modal_remarks_loan_insurance_batch_path(lppi), data: { turbo_frame: "reg_form_modal" }, class: small_btn('warning'), title: 'Remarks' do %>
+                      <i class="bi bi-card-list"></i>
+                    <% end %>
+                  <% end %>
+
+                  <% unless lppi.terminated? %>
+                    <%= link_to 'Terminate', terminate_loan_insurance_batch_path(lppi), class: small_btn('danger'), data: {turbo_frame: '_top', turbo_confirm: 'Terminate loan?', turbo_method: :get}  %>
+                  <% end %>
+                </td>
               </tr>
             <% end %>
           </tbody>

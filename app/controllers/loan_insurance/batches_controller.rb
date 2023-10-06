@@ -121,6 +121,16 @@ class LoanInsurance::BatchesController < ApplicationController
     end
   end
 
+  def terminate
+    batch = LoanInsurance::Batch.find(params[:id])
+    coop_member = batch.coop_member
+
+    if batch.update(status: :terminated)
+      batch.batch_remarks.create!(remark: 'Loan terminated by the cooperative.', user: current_user, status: :terminated)
+
+      redirect_to show_insurance_coop_member_path(coop_member), alert: "Member loan terminated"
+    end
+  end
 
   def approve_all
     @process_coverage = ProcessCoverage.find(params[:process_coverage])

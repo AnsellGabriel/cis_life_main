@@ -144,18 +144,22 @@ Rails.application.routes.draw do
     resources :details
     resources :batches do
       get :remove_unused, on: :member
+      get :terminate, on: :member
+      get :modal_remarks, on: :member
+      get :find_loan, on: :member
+
       collection do
         get :approve_all
       end
+
       member do
         get :show_unuse_batch, as: 'unuse_batch'
       end
 
-      get :modal_remarks, on: :member
-      get :find_loan, on: :member
       collection do
         post :import
       end
+
     end
 
     resources :group_remits do
@@ -228,7 +232,7 @@ Rails.application.routes.draw do
   namespace :mis do
     get 'dashboard', to: 'dashboard#index'
     get 'cooperatives', to: 'cooperatives#index'
-    
+
     resources :members do
       get :update_table, on: :collection
     end
