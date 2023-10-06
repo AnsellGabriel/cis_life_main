@@ -134,3 +134,6 @@ gem "solargraph", require: false
 
 # decorator gem
 gem 'draper'
+
+# gem for making reusable components for rails views
+gem 'view_component'
