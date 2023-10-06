@@ -83,8 +83,6 @@ class BatchRemarksController < ApplicationController
         # end
         if @batch_remark.save
 
-          binding.pry
-
           # byebug
           # redirect_to @batch_remark, notice: "Batch remark was successfully created."
           if params[:batch_remark][:batch_status] == "Pending"

@@ -118,9 +118,12 @@
                 <% end %>
               </td>
               <td>
-                <%= link_to unuse_batch_loan_insurance_batch_path(batch.unused_loan_id), class: "btn btn-sm btn-info mb-1", data: { turbo_frame: "modal-xl" } do %>
-                  <%= bootstrap_icon "eye" %>
+                <% unless batch.unused_loan_id.nil? %>
+                  <%= link_to unuse_batch_loan_insurance_batch_path(batch.unused_loan_id), class: "btn btn-sm btn-info mb-1", data: { turbo_frame: "modal-xl" } do %>
+                    <%= bootstrap_icon "eye" %>
+                  <% end %>
                 <% end %>
+                
               </td>
               <td>
                 <% unless process_coverage.approved? || process_coverage.reprocess_approved? %>
@@ -136,7 +139,7 @@
                     <% end %>
                   </div>
                   <div class="<%= reconsider_button(current_user.rank, batch.insurance_status, process_coverage.status) %>">
-                    <%= link_to reconsider_batch_process_coverage_path(batch: batch), onclick: "return confirm('Are you sure?')", method: :get, class: "btn btn-sm btn-warning mb-1" do %>
+                    <%= link_to reconsider_batch_process_coverage_path(batch: batch, batch_type: batch.class.name), onclick: "return confirm('Are you sure?')", method: :get, class: "btn btn-sm btn-warning mb-1" do %>
                       <%= bootstrap_icon "arrow-repeat" %>
                     <% end %>
                   </div>

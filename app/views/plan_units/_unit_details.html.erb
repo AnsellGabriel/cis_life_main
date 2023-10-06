@@ -1,19 +1,22 @@
-<table class="table">
-  <thead>
-    <th>Benefits</th>
-    <th>Coverage Amount</th>
-  </thead>
-  <tbody>
 
-    <% plan_unit.unit_benefits.each do |ub| %>
-      <tr>
-        <td><%= ub.benefit.name %></td>
-        <td><%= to_currency(ub.coverage_amount) %></td>
-      </tr>
-    <% end %>
-    <tr>
-      <td colspan=2>Premium: <%= to_currency(plan_unit.total_prem) %></td>
-    </tr>
-
-  </tbody>
-</table>
+<div class="card col-6 border-info">
+  <div class="card-body">
+    <table class="table table-hover">
+      <thead>
+        <th>Benefits</th>
+        <th>Coverage Amount</th>
+      </thead>
+      <tbody>
+        <% plan_unit.unit_benefits.each do |ub| %>
+          <tr>
+            <td><%= ub.benefit.name %></td>
+            <td><%= to_currency(ub.coverage_amount) %></td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+    <h3>
+      Premium: <%= to_currency(plan_unit.total_prem) %>
+    </h3>
+  </div>
+</div>
