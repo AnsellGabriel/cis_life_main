@@ -190,4 +190,8 @@ module ApplicationHelper
     end
   end
 
+	def coop_user?(current_user)
+		current_user.userable_type == 'CoopUser'
+	end
+
 end
