@@ -5,7 +5,11 @@ class CooperativesController < ApplicationController
 
   # GET /cooperatives or /cooperatives.json
   def index
-    @cooperatives = Cooperative.all
+    if params[:coop_filter]
+      @cooperatives = Cooperative.where("name LIKE ?", "%#{params[:coop_filter]}%")
+    else
+      @cooperatives = Cooperative.all
+    end
   end
 
   # GET /cooperatives/1 or /cooperatives/1.json
@@ -21,7 +25,7 @@ class CooperativesController < ApplicationController
     #   # default_values
     # end
   end
-  
+
   # GET /cooperatives/1/edit
   def edit
   end
@@ -87,7 +91,7 @@ class CooperativesController < ApplicationController
         coop_branches_params: [:id, :name, :geo_region_id, :geo_province_id, :geo_municipality_id, :geo_barangay_id, :street, :contact_details])
     end
 
-    def default_values 
+    def default_values
       @geo_region = GeoRegion.all
       @coop_type = CoopType.all
       @cooperative.geo_region_id = @geo_region.shuffle.first.id

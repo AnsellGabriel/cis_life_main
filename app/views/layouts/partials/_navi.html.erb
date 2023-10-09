@@ -4,8 +4,13 @@
       <span class="navbar-toggler-icon"></span>
     </button>
     <div class="collapse navbar-collapse" id="navbarNavDropdown">
-      <a class="navbar-brand" href="#">
+      <a class="navbar-brand <%= flex_justify_align('', 'center') %>" href="#">
         <%= image_tag 'cis_logo.png', width: 150, class: 'mb-2 mb-lg-0 me-2' %>
+        <div class="" style="max-width: 500px; word-wrap: break-word; height: auto;">
+          <% if current_user %>
+            <%= nav_header(current_user) %>
+          <% end %>
+        </div>
       </a>
 
       <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
@@ -30,7 +35,7 @@
               <% end %>
             <% end %>
 
-          <% elsif current_user.userable.department_id == 15 %>
+          <% elsif mis_user?(current_user) %>
 
             <%= render 'layouts/partials/nav_dropdown', title: 'Encoding' do %>
                 <%= link_to "Cooperatives", cooperatives_path, class: "dropdown-item" %>
