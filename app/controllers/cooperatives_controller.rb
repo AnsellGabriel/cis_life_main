@@ -20,7 +20,7 @@ class CooperativesController < ApplicationController
   # GET /cooperatives/new
   def new
     @cooperative = Cooperative.new
-    @provinces = @municipalities = @barangays = []
+    @prov = @muni = @brgy = []
     # if Rails.env.development?
     #   # default_values
     # end
