@@ -6,9 +6,9 @@
     <div class="collapse navbar-collapse" id="navbarNavDropdown">
       <a class="navbar-brand <%= flex_justify_align('', 'center') %>" href="#">
         <%= image_tag 'cis_logo.png', width: 150, class: 'mb-2 mb-lg-0 me-2' %>
-        <div class="" style="max-width: 500px; word-wrap: break-word; height: auto;">
+        <div class="" style="max-width: 500px;">
           <% if current_user %>
-            <%= nav_header(current_user) %>
+            <%= truncate(nav_header(current_user), length: 65) %>
           <% end %>
         </div>
       </a>

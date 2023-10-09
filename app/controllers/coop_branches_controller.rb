@@ -6,7 +6,7 @@ class CoopBranchesController < ApplicationController
   # GET /coop_branches or /coop_branches.json
   def index
     @coop_branches = @cooperative.coop_branches.all
-  
+
     respond_to do |format|
       format.html # render the index view template
     end
@@ -21,9 +21,10 @@ class CoopBranchesController < ApplicationController
     # @coop_branch = @cooperative.coop_branches.build
     @cooperative = Cooperative.find(params[:v])
     @coop_branch = @cooperative.coop_branches.build
-    default_values
+    # default_values
+    @prov = @muni = @brgy = []
   end
-  
+
   # GET /coop_branches/1/edit
   def edit
   end
@@ -92,7 +93,7 @@ class CoopBranchesController < ApplicationController
     #   end
     # end
 
-    def default_values 
+    def default_values
       @geo_region = GeoRegion.all
       @coop_branch.geo_region_id = @geo_region.shuffle.first.id
       @geo_province = GeoProvince.where(geo_region_id: @cooperative.geo_region_id)
