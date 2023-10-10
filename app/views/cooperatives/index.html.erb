@@ -40,7 +40,7 @@
           <small><%= cooperative.contact_details %> | <%= cooperative.email %></small></td>
       
             <td>
-              <%= link_to 'View', cooperative, class: 'btn btn-secondary btn-sm' %>
+              <%= link_to 'View', cooperative_path(cooperative, cooperative_id: cooperative.id), class: 'btn btn-secondary btn-sm' %>
               <%= link_to 'Edit', edit_cooperative_path(cooperative), class: 'btn btn-secondary btn-sm' %>
             </td>
 

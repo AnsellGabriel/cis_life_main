@@ -1,6 +1,5 @@
 class CooperativesController < ApplicationController
   # before_action :check_userable_type, except: %i[ selected ]
-  before_action :set_cooperative, only: %i[ show edit update destroy ]
   before_action :authenticate_user!, only: %i[ index show edit update destroy ]
 
   # GET /cooperatives or /cooperatives.json
@@ -85,11 +84,6 @@ class CooperativesController < ApplicationController
   end
 
   private
-    # Use callbacks to share common setup or constraints between actions.
-    def set_cooperative
-      @cooperative = Cooperative.find(params[:id])
-    end
-
     # Only allow a list of trusted parameters through.
     def cooperative_params
       # params.require(:cooperative).permit(:coop_type_id, :geo_region_id, :geo_province_id, :geo_municipality_id, :geo_barangay_id, :street, :name, :description, :registration_no, :tin, :acronym, :contact_no, :email)
