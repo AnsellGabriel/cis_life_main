@@ -148,8 +148,8 @@ ActiveRecord::Schema[7.0].define(version: 2023_10_03_085945) do
     t.string "status"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.date "effectivity"
     t.date "expiry"
+    t.date "effectivity"
     t.index ["agreement_id"], name: "index_agreements_coop_members_on_agreement_id"
     t.index ["coop_member_id"], name: "index_agreements_coop_members_on_coop_member_id"
   end
@@ -947,7 +947,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_10_03_085945) do
     t.datetime "updated_at", null: false
   end
 
-  create_table "requirements", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+  create_table "underwriting_routes", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.string "name"
     t.string "description"
     t.datetime "created_at", null: false

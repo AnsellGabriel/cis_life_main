@@ -19,7 +19,6 @@ class MembersController < InheritedResources::Base
     else
       redirect_to coop_members_path, notice: "#{import_message[:created_members_counter] > 0 ? "#{import_message[:created_members_counter]} members enrolled. " : '' } #{import_message[:updated_members_counter] > 0 ? "#{import_message[:updated_members_counter]} members updated." : ''}"
     end
-
   end
 
   def new
