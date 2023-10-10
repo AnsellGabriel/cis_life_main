@@ -23,10 +23,17 @@ class CoopBranchesController < ApplicationController
     @coop_branch = @cooperative.coop_branches.build
     # default_values
     @prov = @muni = @brgy = []
+
+    if Rails.env.development?
+      default_values
+    end
   end
 
   # GET /coop_branches/1/edit
   def edit
+    @prov = GeoProvince.where(geo_region_id: @coop_branch.geo_region_id)
+    @muni = GeoMunicipality.where(geo_province_id: @coop_branch.geo_province_id)
+    @brgy = GeoBarangay.where(geo_municipality_id: @coop_branch.geo_municipality_id)
   end
 
   # POST /coop_branches or /coop_branches.json
@@ -48,6 +55,7 @@ class CoopBranchesController < ApplicationController
 
   # PATCH/PUT /coop_branches/1 or /coop_branches/1.json
   def update
+
     respond_to do |format|
       if @coop_branch.update(coop_branch_params)
         format.html { redirect_back fallback_location: @cooperative, notice: "Coop branch was successfully updated." }

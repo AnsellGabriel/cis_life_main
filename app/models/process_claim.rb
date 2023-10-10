@@ -1,7 +1,7 @@
 class ProcessClaim < ApplicationRecord
   attr_accessor :batch_id
 
-  validates_presence_of :cooperative_id, :agreement_id, :date_incident, :entry_type, :claimant_name, :relationship, :claimant_email, :claimant_contact_no
+  validates_presence_of :cooperative_id, :agreement_id, :entry_type, :claimant_name, :relationship, :claimant_email, :claimant_contact_no
 
   enum nature_of_claim: {
     LIFE: 0, # Life

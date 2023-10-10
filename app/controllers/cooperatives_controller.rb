@@ -14,7 +14,13 @@ class CooperativesController < ApplicationController
 
   # GET /cooperatives/1 or /cooperatives/1.json
   def show
+    @member = Member.new
+    @member.coop_members.build
     @coop_branches = CoopBranch.where(cooperative: @cooperative)
+    coop_members = @cooperative.coop_members
+    f_members = Member.coop_member_details(coop_members)
+      .filter_by_name(params[:last_name_filter], params[:first_name_filter])
+    @pagy, @filtered_members = pagy(f_members, items: 10)
   end
 
   # GET /cooperatives/new

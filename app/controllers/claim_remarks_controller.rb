@@ -32,14 +32,16 @@ class ClaimRemarksController < ApplicationController
   def new
     @process_claim = ProcessClaim.find(params[:v])
     @claim_remark = @process_claim.claim_remarks.build
-   
+    @claim_remarks = ClaimRemark.where(process_claim: @process_claim, coop: 1)
     # raise "error"
     # @claim_remark.coop = params[:c]
       set_dummy_param
   end
+
   def set_dummy_param
     if params[:c] == "1"
       @claim_remark.coop = :true
+      @process_claim.claim_remarks.where(coop: 1, read: 0).where.not(user: current_user).update(read: 1)
     elsif params[:c] == "0"
       @claim_remark.coop = :false
     end

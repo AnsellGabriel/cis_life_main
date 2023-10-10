@@ -1,3 +1,4 @@
+
 class MembersController < InheritedResources::Base
   before_action :authenticate_user!
   before_action :check_userable_type
@@ -22,6 +23,10 @@ class MembersController < InheritedResources::Base
   end
 
   def new
+    # byebug
+    if params[:coop_id].present? 
+      @cooperative = Cooperative.find(params[:coop_id])
+    end
     @member = Member.new(
       # birth_place: FFaker::Address.city,
       # address: FFaker::Address.street_address,

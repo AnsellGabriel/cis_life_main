@@ -1,7 +1,15 @@
 
     <%= link_to '<i class="bi bi-arrow-bar-left"></i>'.html_safe, index_coop_process_claims_path, class: 'btn btn-secondary btn-lg'  if current_user.userable_type == "CoopUser"   %>
     <%= link_to '<i class="bi bi-arrow-bar-left"></i>'.html_safe, index_show_process_claims_path(p: @process_claim.claim_route), class: 'btn btn-secondary btn-lg' if current_user.userable_type == "Employee" %>
-    <%= link_to '<i class="bi bi-chat-left-text"></i> Message'.html_safe, new_claim_remark_path(v: @process_claim, c: 1), class: "btn btn-primary btn-lg", data: { turbo_frame: "remote_modal" } %>
+    <%= link_to new_claim_remark_path(v: @process_claim, c: 1), class: "btn btn-primary btn-lg position-relative", data: { turbo_frame: "remote_modal" } do %>
+        <i class="bi bi-chat-left-text"></i> Message
+        <% unless @process_claim.claim_remarks.where(coop: 1, read: 0).where.not(user: current_user).count == 0 %>
+            <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+                <%= @process_claim.claim_remarks.where(coop: 1, read: 0).where.not(user: current_user).count %>
+                <span class="visually-hidden">unread messages</span>
+            </span>
+        <% end %>
+    <% end %>
     <% if current_user.userable_type == 'CoopUser' %>
         <%= link_to "Submit Claims", claim_route_process_claim_path(@process_claim, p: 1), class: "btn btn-success btn-lg" if @process_claim.file_claim? %>
     <% elsif current_user.userable_type == 'Employee' %>

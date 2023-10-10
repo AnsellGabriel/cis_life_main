@@ -1,39 +1,45 @@
 <div id="<%= dom_id emp_agreement %>">
   
-  <div class="row">
-    <div class="col-2">
-      <%= content_tag :p, "Cooperative:", class: "lead" %> 
-    </div>
-    <div class="col-4">
-      <%= content_tag :p, emp_agreement.agreement.cooperative, class: "fw-bold" %>
+  <div class="card border-info" style="width: 60rem;">
+    <div class="card-body">
+   
+      <div class="row">
+        <div class="col-2">
+          <%= content_tag :p, "Cooperative:", class: "lead" %> 
+        </div>
+        <div class="col-4">
+          <%= content_tag :p, emp_agreement.agreement.cooperative, class: "fw-bold" %>
+        </div>
+      </div>
+      
+      <div class="row">
+        <div class="col-2">
+          <%= content_tag :p, "Plan:", class: "lead" %> 
+        </div>
+        <div class="col-4">
+          <%= content_tag :p, emp_agreement.agreement.plan, class: "fw-bold" %>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col-2">
+          <%= content_tag :p, "Processor:", class: "lead" %> 
+        </div>
+        <div class="col-4">
+          <%= content_tag :p, emp_agreement.employee.signed_fullname, class: "fw-bold" %>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col-2">
+          <%= content_tag :p, "Approver:", class: "lead" %> 
+        </div>
+        <div class="col-4">
+          <%= content_tag :p, emp_agreement.employee.emp_approver.approver.signed_fullname, class: "fw-bold" %>
+        </div>
+      </div>
+
     </div>
   </div>
   
-  <div class="row">
-    <div class="col-2">
-      <%= content_tag :p, "Plan:", class: "lead" %> 
-    </div>
-    <div class="col-4">
-      <%= content_tag :p, emp_agreement.agreement.plan, class: "fw-bold" %>
-    </div>
-  </div>
-
-  <div class="row">
-    <div class="col-2">
-      <%= content_tag :p, "Processor:", class: "lead" %> 
-    </div>
-    <div class="col-4">
-      <%= content_tag :p, emp_agreement.employee.signed_fullname, class: "fw-bold" %>
-    </div>
-  </div>
-
-  <div class="row">
-    <div class="col-2">
-      <%= content_tag :p, "Approver:", class: "lead" %> 
-    </div>
-    <div class="col-4">
-      <%= content_tag :p, emp_agreement.employee.emp_approver.approver.signed_fullname, class: "fw-bold" %>
-    </div>
-  </div>
-
 </div>
