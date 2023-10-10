@@ -1,4 +1,4 @@
-<%= turbo_frame_tag "modal-xl" do %>
+<%#= turbo_frame_tag "modal-xl" do %>
   <div class="card">
     <div class="card-header">
       <% if @for_modal.present? %>
@@ -59,7 +59,7 @@
               <% end %>
             <% end %>
           </tbody>
-        </table>
+      </table>
         
         <%= content_tag :p, "LPPI coverages", class: "lead" %>
         <table class="table table-bordered table-hover align-middle">
@@ -86,7 +86,7 @@
             <% end %>
           </tbody>
         </table>
-      </div>
+     
       <div class="card-footer">
         <% unless @for_modal.present? %>
           <%= link_to "Back", :back, data: { turbo: false }, class: 'btn btn-secondary' %>

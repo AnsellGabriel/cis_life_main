@@ -7,9 +7,9 @@ class ClaimsMailer < ApplicationMailer
   #
   def new_claim_email
     @process_claim = params[:process_claim]
-    @name = @process_claim.claimable.get_fullname
+    #  @name = @process_claim.claimable.get_fullname
 
-    attachments.inline['cis_logo.png'] = File.read('app/assets/images/50email.png')
+    attachments.inline['cis_logo.png'] = File.read('app/assets/images/cis_logo.png')
     mail(
           from: "1cispga@gmail.com",
           to:"ansellgabriel@gmail.com", 
