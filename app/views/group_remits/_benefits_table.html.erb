@@ -7,7 +7,7 @@
     </tr>
   </thead>
   <tbody>
-    <% ab.product_benefits.each do |product| %>
+    <% ab.product_benefits.includes(:benefit).each do |product| %>
       <tr>
         <td>
           <%= content_tag :span, "#{product.benefit.name}", class: 'sm-secondary-text text-center', style: "width: 100px;"%>

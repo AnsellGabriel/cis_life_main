@@ -7,13 +7,14 @@ class CoopUser < ApplicationRecord
   belongs_to :cooperative
   belongs_to :coop_branch, optional: true
   has_one :user, as: :userable, dependent: :destroy
-  has_one :member_import_tracker, dependent: :destroy
+  # has_one :member_import_tracker, as: :trackable, dependent: :destroy
+  has_one :progress_tracker, as: :trackable, dependent: :destroy
   accepts_nested_attributes_for :user
 
   def to_s
     get_fullname.titleize
   end
-  
+
   def get_fullname
     "#{first_name} #{last_name}"
   end

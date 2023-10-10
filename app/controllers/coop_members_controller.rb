@@ -7,6 +7,7 @@ class CoopMembersController < InheritedResources::Base
     # initalize new member for coop member modal form
     @member = Member.new
     @member.coop_members.build
+
     coop_members = @cooperative.coop_members
     f_members = Member.coop_member_details(coop_members)
       .filter_by_name(params[:last_name_filter], params[:first_name_filter])
@@ -43,7 +44,7 @@ class CoopMembersController < InheritedResources::Base
       end
     end
   end
-  
+
   def show
     @member = @coop_member.member
     @age = @member.age
@@ -54,7 +55,7 @@ class CoopMembersController < InheritedResources::Base
     @target = params[:target]
     @member = @coop_member.member
     @member_dependents = MemberDependent.where(member_id: @member.id)
-    
+
     respond_to do |format|
       format.turbo_stream
     end
@@ -76,17 +77,16 @@ class CoopMembersController < InheritedResources::Base
     @agreements = @coop_member.agreements.includes(:plan)
   end
 
-  def show_insurance 
+  def show_insurance
     # binding.pry
     @for_modal = params[:pro_cov].present? ? true : false
-    
+
     @batch_gyrt = Batch.where(coop_member: @coop_member)
     @batch_lppi = LoanInsurance::Batch.where(coop_member: @coop_member)
     @batch = @batch_lppi + @batch_gyrt
   end
 
   private
-
     def set_coop_member
       @coop_member = CoopMember.find(params[:id])
     end

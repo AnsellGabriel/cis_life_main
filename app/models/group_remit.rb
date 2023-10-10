@@ -14,7 +14,8 @@ class GroupRemit < ApplicationRecord
   has_many :payments, as: :payable, dependent: :destroy
   has_many :loan_batches, dependent: :destroy, class_name: 'LoanInsurance::Batch'
   has_one :process_coverage, dependent: :destroy
-  has_one :group_import_tracker, dependent: :destroy
+  # has_one :group_import_tracker, dependent: :destroy
+  has_one :progress_tracker, as: :trackable, dependent: :destroy
   accepts_nested_attributes_for :payments
 
   enum status: {
@@ -110,7 +111,7 @@ class GroupRemit < ApplicationRecord
     group_remit.set_terms_and_expiry_date(anniversary_date)
     agreement = group_remit.agreement
 
-    if agreement.anniversary_type == 'multiple' || agreement.anniversary_type == 'single'
+    if agreement.anniversary_type.downcase == 'multiple' || agreement.anniversary_type.downcase == 'single'
       group_remit.anniversary_id = params[:anniversary_id]
     end
 
@@ -124,7 +125,7 @@ class GroupRemit < ApplicationRecord
     if agreement.is_term_insurance?
       group_remit.terms = terms
       group_remit.name = "#{agreement.moa_no} #{group_remit.effectivity_date.strftime('%B').upcase} #{remit_name} - #{group_remit.terms} MONTHS"
-    elsif agreement.anniversary_type == 'none' or agreement.anniversary_type.nil?
+    elsif agreement.anniversary_type.downcase == '12 months' or agreement.anniversary_type.nil?
       group_remit.name = "#{agreement.moa_no} #{group_remit.effectivity_date.strftime('%B').upcase} #{remit_name}"
     else
       group_remit.name = "#{agreement.moa_no} #{remit_name}"
@@ -283,7 +284,7 @@ class GroupRemit < ApplicationRecord
     plan = self.agreement.plan.acronym
     anniversary_type = self.agreement.anniversary_type
 
-    if anniversary_type == 'none' or anniversary_type.nil?
+    if anniversary_type.downcase == '12 months' or anniversary_type.nil?
       self.terms = 12
       self.effectivity_date = Date.today.beginning_of_month
       self.expiry_date = anniversary_date

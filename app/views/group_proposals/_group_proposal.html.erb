@@ -1,17 +1,64 @@
 <div id="<%= dom_id group_proposal %>">
-  <p>
-    <strong>Cooperative:</strong>
-    <%= group_proposal.cooperative_id %>
-  </p>
+ 
+ 
+  <div class="row">
+    <div class="col-8">
+    
+      <div class="card border-info" style="max-width: 50rem;">
+        <div class="card-body">
+          <p>
+            <strong>Cooperative:</strong>
+            <%= group_proposal.cooperative.name %>
+          </p>
 
-  <p>
-    <strong>Plan:</strong>
-    <%= group_proposal.plan_id %>
-  </p>
+          <p>
+            <strong>Address:</strong>
+            <%= group_proposal.cooperative.get_address %>
+          </p>
 
-  <p>
-    <strong>Plan unit:</strong>
-    <%= group_proposal.plan_unit_id %>
-  </p>
+          <p>
+            <strong>Plan:</strong>
+            <%= content_tag :span, "#{group_proposal.plan.name} (#{group_proposal.plan.acronym})" %>
+          </p>
+
+          <p>
+            <strong>Plan unit:</strong>
+            <%= group_proposal.plan_unit.name %>
+          </p>
+
+        </div>
+      </div>
+
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-6">
+
+      <div class="card border-info" style="max-width: 45rem;">
+        <div class="card-body">
+          <table class="table">
+            <thead>
+              <th>Benefit Name</th>
+              <th>Coverage</th>
+            </thead>
+            <tbody>
+              <% group_proposal.plan_unit.unit_benefits.each do |ub| %>
+                <tr>
+                  <td><%= ub.benefit.name %></td>
+                  <td><%= to_currency(ub.coverage_amount) %></td>
+                </tr>
+              <% end %>
+            </tbody>
+          </table>
+
+          <div class="text-end me-3">
+            <%= content_tag :span, "TOTAL PREMIUM: #{to_currency(group_proposal.plan_unit.total_prem)}", class: "lead" %>
+          </div>
+          
+        </div>
+      </div>
+
+    </div>
+  </div>
 
 </div>

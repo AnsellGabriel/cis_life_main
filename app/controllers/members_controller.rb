@@ -9,7 +9,7 @@ class MembersController < InheritedResources::Base
       params[:file],
       @cooperative,
       nil,
-      current_user.userable
+      current_user
     )
 
     import_message = import_service.import
@@ -52,13 +52,22 @@ class MembersController < InheritedResources::Base
     @prov = @muni = @brgy = []
   end
 
-  def create    
-    @member = Member.new(member_params)
+  def create
+
+    @member = Member.find_or_initialize_by(
+      first_name: member_params[:first_name],
+      last_name: member_params[:last_name],
+      middle_name: member_params[:middle_name],
+      birth_date: member_params[:birth_date]
+    )
+
+    @member.assign_attributes(member_params)
+
     respond_to do |format|
       if @member.save
         format.html {
           coop_member = @member.coop_members.find_by(cooperative_id: @cooperative.id)
-          redirect_to coop_members_path,
+          redirect_to coop_members_path(cooperative_id: @cooperative.id),
           notice: "Member was successfully created." }
       else
         format.html { render :new, status: :unprocessable_entity }
@@ -68,6 +77,11 @@ class MembersController < InheritedResources::Base
 
   def edit
     @member = Member.find(params[:id])
+
+    if params[:cooperative_id]
+      @cooperative = Cooperative.find(params[:cooperative_id])
+    end
+
     @coop_member = @member.coop_members.find_by(cooperative_id: @cooperative.id)
   end
 

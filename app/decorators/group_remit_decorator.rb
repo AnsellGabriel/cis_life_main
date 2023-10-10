@@ -15,15 +15,15 @@ class GroupRemitDecorator < Draper::Decorator
 	end
 
 	def is_none_anniversary?
-		object.agreement.anniversary_type == 'none' || object.agreement.anniversary_type.nil?
+		object.agreement.anniversary_type.downcase == '12 months' || object.agreement.anniversary_type.nil?
 	end
 
 	def is_single_anniversary?
-		object.agreement.anniversary_type == 'single'
+		object.agreement.anniversary_type.downcase == 'single'
 	end
 
 	def is_multiple_anniversary?
-		object.agreement.anniversary_type == 'multiple'
+		object.agreement.anniversary_type.downcase == 'multiple'
 	end
 
 	def is_batch_remit?

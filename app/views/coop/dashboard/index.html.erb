@@ -1,7 +1,7 @@
 <%= content_tag :h4, @cooperative.name, class: 'text-primary mb-3' %>
 <div class="d-flex">
   <div class="col-md-6">
-    <div class="d-flex gap-2">
+    <div class="ps-3 d-flex gap-2 row" style="max-width: 800px;" >
       <%= render 'counter_box', title: 'Total members', count: @cooperative.coop_members.size %>
       <% @cooperative.agreements.each do |a| %>
         <% agreement = a.decorate %>
@@ -13,9 +13,9 @@
       <div class="card-header text-primary">
         <%= content_tag :h6, 'Cooperative Information', class: 'mb-0' %>
       </div>
-      <div class="card-body <%= flex_justify_align('between','center') %>">
+      <div class="card-body <%= flex_justify_align('between','center') %> sm-secondary-text">
         <div class="ps-3 col-md-9">
-          <%= content_tag :p, "Address: 10/F Jollibee Plaza Building, Emerald Ave., Ortigas Center, Pasig City 1600", class: 'card-text' %>
+          <%= content_tag :p, "Address: #{@cooperative.get_address}", class: 'card-text' %>
           <%= content_tag :p, "Contact number: #{@cooperative.contact_number}", class: 'card-text' %>
           <%= content_tag :p, "Email: #{@cooperative.email}", class: 'card-text' %>
         </div>
@@ -32,22 +32,27 @@
           <div class="card">
             <%= link_to presenter.insurance_path, style: 'color: black' do %>
               <div class="card-body <%= flex_justify_align('between','center') %> gap-3">
-                <div class="">
+                <div class="w-100">
                   <div class="text-primary d-flex gap-1 mb-1">
                     <%= content_tag :h6, a.plan.name, class: 'mb-1 text-primary' %>
                     <%= content_tag :p, "(#{a.plan.description})", class: 'text-muted mb-0', style: 'font-size: .8rem' %>
                   </div>
-                  <div class="<%= flex_justify_align('', '', true) %> ps-3 col-md-9">
+                  <div class="<%= flex_justify_align('center', '', true) %> ps-3 col-md-12 sm-secondary-text">
 
                     <% if ['single', 'multiple'].include?(a.anniversary_type) %>
                       <div class="d-flex gap-2">
-                        <%= content_tag :span, "Anniversary day#{a.anniversary_type == 'multiple' ? '(s)' : '' }: ", class: 'card-text' %>
+                        <%= content_tag :span, "Anniversary day#{a.anniversary_type.downcase == 'multiple' ? '(s)' : '' }: ", class: 'card-text' %>
                           <%= content_tag :span, presenter.anniversary_dates, class: 'card-text' %>
                       </div>
                     <% end %>
-                    
-                    <%= content_tag :span, "Entry age: #{a.entry_age_from} - #{a.entry_age_to} years old", class: 'card-text' %>
-                    <%= content_tag :span, "Exit age: #{a.exit_age} years old", class: 'card-text mb-2' %>
+                    <div class="row <%= flex_justify_align('center') %>">
+                      <%= content_tag :span, "Entry age: #{a.entry_age_from} - #{a.entry_age_to} years old", class: 'card-text col-md-6' %>
+                      <%= content_tag :span, "Minimum Participatiion: #{a.minimum_participation}", class: 'card-text col-md-6' %>
+                    </div>
+                    <div class="row">
+                      <%= content_tag :span, "Exit age: #{a.exit_age} years old", class: 'card-text mb-2 col-md-6' %>
+                      <%= content_tag :span, "Cooperative service fee: #{a.coop_sf}%", class: 'card-text mb-2 col-md-6' %>
+                    </div>
                   </div>
                 </div>
               </div>
@@ -59,6 +64,12 @@
   </div>
 
   <div class="col-md-6">
+    <div class="card border-primary mb-3 ms-4" style="max-width: 300px;" >
+      <div class="card-body text-primary">
+        <%= content_tag :p, number_with_delimiter(123_123_123), class: 'fs-1 mb-0 ps-1'  %>
+        <%= content_tag :span, 'Total Claimed Amount'%>
+      </div>
+    </div>
     <div class="card col-md-11" style="margin: auto">
       <div class="card-header text-primary">
         <%= content_tag :h6, 'Message Board', class: 'mb-0' %>
@@ -77,4 +88,3 @@
     </div>
   </div>
 </div>
-

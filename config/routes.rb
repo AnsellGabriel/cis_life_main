@@ -1,7 +1,7 @@
 
 require 'sidekiq/web'
 
-Rails.application.routes.draw do 
+Rails.application.routes.draw do
   resources :group_proposals
   resources :unit_benefits
   resources :plan_units do
@@ -25,10 +25,10 @@ Rails.application.routes.draw do
 
   resources :anniversaries, :agent_groups, :departments, :agents, :coop_users, :employees, :product_benefits, :claim_benefits, :claim_coverages
 
-  resources :plans do 
+  resources :plans do
     get :selected, on: :member
   end
-  
+
 
   resources :user do
     get :approved, on: :member
@@ -144,18 +144,22 @@ Rails.application.routes.draw do
     resources :details
     resources :batches do
       get :remove_unused, on: :member
+      get :terminate, on: :member
+      get :modal_remarks, on: :member
+      get :find_loan, on: :member
+
       collection do
         get :approve_all
       end
+
       member do
         get :show_unuse_batch, as: 'unuse_batch'
       end
 
-      get :modal_remarks, on: :member
-      get :find_loan, on: :member
       collection do
         post :import
       end
+
     end
 
     resources :group_remits do
@@ -225,6 +229,15 @@ Rails.application.routes.draw do
   get 'download', to: 'process_coverages#download'
   get 'process_coverages/pdf/:id', to: "process_coverages#pdf", as: 'pc_pdf'
 
+  #* MIS module routes
+  namespace :mis do
+    get 'dashboard', to: 'dashboard#index'
+    get 'cooperatives', to: 'cooperatives#index'
+
+    resources :members do
+      get :update_table, on: :collection
+    end
+  end
 
   #* Authentication Routes
   devise_for :admin_users, ActiveAdmin::Devise.config

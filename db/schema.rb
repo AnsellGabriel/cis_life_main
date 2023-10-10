@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_10_02_031148) do
+ActiveRecord::Schema[7.0].define(version: 2023_10_03_085945) do
   create_table "action_text_rich_texts", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.string "name", null: false
     t.text "body", size: :long
@@ -88,16 +88,15 @@ ActiveRecord::Schema[7.0].define(version: 2023_10_02_031148) do
     t.string "middle_name"
     t.date "birthdate"
     t.string "mobile_number"
+    t.bigint "agent_group_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.bigint "agent_group_id", null: false
     t.index ["agent_group_id"], name: "index_agents_on_agent_group_id"
   end
 
   create_table "agreement_benefits", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.bigint "agreement_id"
     t.bigint "plan_id"
-    t.bigint "proposal_id"
     t.bigint "option_id"
     t.string "name"
     t.text "description"
@@ -111,7 +110,6 @@ ActiveRecord::Schema[7.0].define(version: 2023_10_02_031148) do
     t.index ["agreement_id"], name: "index_agreement_benefits_on_agreement_id"
     t.index ["option_id"], name: "index_agreement_benefits_on_option_id"
     t.index ["plan_id"], name: "index_agreement_benefits_on_plan_id"
-    t.index ["proposal_id"], name: "index_agreement_benefits_on_proposal_id"
   end
 
   create_table "agreements", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
@@ -120,7 +118,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_10_02_031148) do
     t.bigint "agent_id"
     t.string "moa_no"
     t.integer "contestability"
-    t.decimal "nel", precision: 12, scale: 2
+    t.decimal "nel", precision: 12, scale: 2, default: "25000.0"
     t.decimal "nml", precision: 12, scale: 2
     t.string "anniversary_type"
     t.boolean "transferred"
@@ -133,7 +131,6 @@ ActiveRecord::Schema[7.0].define(version: 2023_10_02_031148) do
     t.integer "exit_age"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.bigint "proposal_id", null: false
     t.string "description"
     t.decimal "coop_sf", precision: 10, scale: 2
     t.decimal "agent_sf", precision: 10, scale: 2
@@ -143,12 +140,11 @@ ActiveRecord::Schema[7.0].define(version: 2023_10_02_031148) do
     t.index ["agent_id"], name: "index_agreements_on_agent_id"
     t.index ["cooperative_id"], name: "index_agreements_on_cooperative_id"
     t.index ["plan_id"], name: "index_agreements_on_plan_id"
-    t.index ["proposal_id"], name: "index_agreements_on_proposal_id"
   end
 
   create_table "agreements_coop_members", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
-    t.bigint "agreement_id", null: false
     t.bigint "coop_member_id", null: false
+    t.bigint "agreement_id", null: false
     t.string "status"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
@@ -237,18 +233,18 @@ ActiveRecord::Schema[7.0].define(version: 2023_10_02_031148) do
     t.date "effectivity_date"
     t.date "expiry_date"
     t.boolean "active"
-    t.float "coop_sf_amount"
-    t.float "agent_sf_amount"
+    t.decimal "coop_sf_amount", precision: 10, scale: 2
+    t.decimal "agent_sf_amount", precision: 10, scale: 2
     t.integer "status"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.decimal "premium", precision: 10, scale: 2
+    t.integer "age"
+    t.integer "insurance_status", default: 3
     t.bigint "coop_member_id", null: false
     t.boolean "transferred"
     t.bigint "agreement_benefit_id", null: false
     t.boolean "valid_health_dec", default: false
-    t.integer "age"
-    t.integer "insurance_status", default: 3
     t.boolean "below_nel", default: false
     t.integer "duration"
     t.integer "residency"
@@ -595,14 +591,6 @@ ActiveRecord::Schema[7.0].define(version: 2023_10_02_031148) do
     t.datetime "updated_at", null: false
   end
 
-  create_table "group_import_trackers", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
-    t.float "progress"
-    t.bigint "group_remit_id", null: false
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.index ["group_remit_id"], name: "index_group_import_trackers_on_group_remit_id"
-  end
-
   create_table "group_proposals", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.bigint "cooperative_id"
     t.bigint "plan_id"
@@ -690,7 +678,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_10_02_031148) do
 
   create_table "loan_insurance_details", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.bigint "batch_id", null: false
-    t.decimal "unuse", precision: 10, scale: 2
+    t.decimal "unused", precision: 10, scale: 2
     t.decimal "loan_amount", precision: 10, scale: 2
     t.decimal "premium_due", precision: 10, scale: 2
     t.decimal "substandard_rate", precision: 10, scale: 2
@@ -723,9 +711,9 @@ ActiveRecord::Schema[7.0].define(version: 2023_10_02_031148) do
   create_table "loan_insurance_rates", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.integer "min_age"
     t.integer "max_age"
-    t.decimal "monthly_rate", precision: 10
-    t.decimal "annual_rate", precision: 10
-    t.decimal "daily_rate", precision: 10
+    t.decimal "monthly_rate", precision: 5, scale: 2
+    t.decimal "annual_rate", precision: 5, scale: 2
+    t.decimal "daily_rate", precision: 5, scale: 2
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.bigint "agreement_id", null: false
@@ -752,14 +740,6 @@ ActiveRecord::Schema[7.0].define(version: 2023_10_02_031148) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["member_id"], name: "index_member_dependents_on_member_id"
-  end
-
-  create_table "member_import_trackers", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
-    t.float "progress"
-    t.bigint "coop_user_id", null: false
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.index ["coop_user_id"], name: "index_member_import_trackers_on_coop_user_id"
   end
 
   create_table "members", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
@@ -911,14 +891,6 @@ ActiveRecord::Schema[7.0].define(version: 2023_10_02_031148) do
     t.index ["user_type", "user_id"], name: "index_process_remarks_on_user"
   end
 
-  create_table "process_routes", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
-    t.string "name"
-    t.string "department"
-    t.string "description"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-  end
-
   create_table "process_tracks", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.string "description"
     t.integer "route_id"
@@ -947,17 +919,13 @@ ActiveRecord::Schema[7.0].define(version: 2023_10_02_031148) do
     t.index ["benefit_id"], name: "index_product_benefits_on_benefit_id"
   end
 
-  create_table "proposals", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
-    t.bigint "cooperative_id", null: false
-    t.integer "ave_age"
-    t.decimal "total_premium", precision: 10, scale: 2
-    t.decimal "coop_sf", precision: 10, scale: 2
-    t.decimal "agent_sf", precision: 10, scale: 2
+  create_table "progress_trackers", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+    t.float "progress"
+    t.string "trackable_type", null: false
+    t.bigint "trackable_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.integer "minimum_participation"
-    t.string "proposal_no"
-    t.index ["cooperative_id"], name: "index_proposals_on_cooperative_id"
+    t.index ["trackable_type", "trackable_id"], name: "index_progress_trackers_on_trackable"
   end
 
   create_table "reinsurance_batches", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
@@ -979,14 +947,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_10_02_031148) do
     t.datetime "updated_at", null: false
   end
 
-  create_table "requirements", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
-    t.string "name"
-    t.string "description"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-  end
-
-  create_table "underwriting_routes", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+  create_table "requirements", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.string "name"
     t.string "description"
     t.datetime "created_at", null: false
@@ -1032,7 +993,6 @@ ActiveRecord::Schema[7.0].define(version: 2023_10_02_031148) do
 
   add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
   add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
-  add_foreign_key "agents", "agent_groups"
   add_foreign_key "agreements_coop_members", "agreements"
   add_foreign_key "agreements_coop_members", "coop_members"
   add_foreign_key "anniversaries", "agreements"
@@ -1064,7 +1024,6 @@ ActiveRecord::Schema[7.0].define(version: 2023_10_02_031148) do
   add_foreign_key "dependent_remarks", "batch_dependents"
   add_foreign_key "emp_approvers", "employees", column: "approver_id"
   add_foreign_key "employees", "departments"
-  add_foreign_key "group_import_trackers", "group_remits"
   add_foreign_key "group_remits", "agreements"
   add_foreign_key "health_dec_subquestions", "health_decs"
   add_foreign_key "loan_insurance_batches", "coop_members"
@@ -1078,7 +1037,6 @@ ActiveRecord::Schema[7.0].define(version: 2023_10_02_031148) do
   add_foreign_key "loan_insurance_loans", "cooperatives"
   add_foreign_key "loan_insurance_rates", "agreements"
   add_foreign_key "member_dependents", "members"
-  add_foreign_key "member_import_trackers", "coop_users"
   add_foreign_key "process_claims", "agreement_benefits"
   add_foreign_key "process_claims", "agreements"
   add_foreign_key "process_claims", "cooperatives"
@@ -1087,5 +1045,4 @@ ActiveRecord::Schema[7.0].define(version: 2023_10_02_031148) do
   add_foreign_key "process_tracks", "users"
   add_foreign_key "product_benefits", "agreement_benefits"
   add_foreign_key "product_benefits", "benefits"
-  add_foreign_key "proposals", "cooperatives"
 end

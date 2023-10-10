@@ -7,29 +7,40 @@ class ApplicationController < ActionController::Base
   def root
     case current_user.userable_type
     when "Agent" then redirect_to agents_path
-    when "CoopUser" then redirect_to coop_dashboard_path	
+    when "CoopUser" then redirect_to coop_dashboard_path
     when "Employee"
+      
       if current_user.medical_director?
         redirect_to med_directors_home_path
       else
         case current_user.userable.department_id
         when 17, 13
           redirect_to process_coverages_path
+        when 15
+          redirect_to mis_dashboard_path
         else
           redirect_to employees_path
         end
       end
+
     else
       super
     end
   end
 
   private
+
   def set_cooperative
     if current_user && current_user.userable_type == 'CoopUser'
       session[:cooperative_id] ||= current_user.userable.cooperative_id
       @cooperative ||= Cooperative.find_by(id: session[:cooperative_id])
+    elsif params[:cooperative_id]
+      session[:cooperative_id] = params[:cooperative_id]
+      @cooperative = Cooperative.find_by(id: session[:cooperative_id])
+    else
+      @cooperative = Cooperative.find_by(id: session[:cooperative_id])
     end
+
   end
 
   def set_authority_level
@@ -45,7 +56,7 @@ class ApplicationController < ActionController::Base
   # def set_retention_limit
   #   @retention_limit = Retention.find_by(active: true)
   # end
-  
+
   protected
   # Overwriting the sign_out redirect path method for unapproved users
   def after_sign_in_path_for(resource)

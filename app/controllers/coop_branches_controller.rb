@@ -21,7 +21,9 @@ class CoopBranchesController < ApplicationController
     # @coop_branch = @cooperative.coop_branches.build
     @cooperative = Cooperative.find(params[:v])
     @coop_branch = @cooperative.coop_branches.build
-    default_values
+    if Rails.env.development?
+      default_values
+    end
   end
   
   # GET /coop_branches/1/edit

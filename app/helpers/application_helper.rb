@@ -13,7 +13,7 @@ module ApplicationHelper
 		date.strftime('%B %d, %Y')
 	end
 
-	def to_shortdate(date) 
+	def to_shortdate(date)
 		date.strftime('%b %d, %Y')
 	end
 	def start_month(val)
@@ -94,6 +94,8 @@ module ApplicationHelper
 			when "renewal" then content_tag(:span, "RENEWAL", class: "badge bg-success")
 			when "reinstated" then content_tag(:span, "REINSTATED", class: "badge bg-warning")
 			when "for_reconsideration" then content_tag(:span, "FOR RECONSIDER", class: "badge bg-info")
+			when "reloan" then content_tag(:span, "RELOAN", class: "badge bg-warning text-dark")
+			when "terminated" then content_tag(:span, "TERMINATED", class: "badge bg-danger")
 		end
 	end
 
@@ -167,6 +169,8 @@ module ApplicationHelper
 			when "denied" then content_tag(:span, "Denied", class: "badge rounded-pill bg-danger")
 			when "md_reco" then content_tag(:span, "M.D Recommendation", class: "badge rounded-pill bg-warning")
 			when "request" then content_tag(:span, "Requesting for reconsideration", class: "badge rounded-pill bg-warning text-dark")
+			when "terminated" then content_tag(:span, "Terminated", class: "badge rounded-pill bg-danger")
+
 		end
 	end
 
@@ -176,7 +180,7 @@ module ApplicationHelper
 		else
 			"false"
 		end
-		
+
 	end
 
 	def badge_pill(val)
@@ -185,5 +189,5 @@ module ApplicationHelper
       when false then content_tag :span, "INACTIVE", class: "badge rounded-pill bg-danger"
     end
   end
-	
+
 end
