@@ -31,19 +31,12 @@
     </li>
   </ul>
   <div class="tab-content container mt-3" id="myTabControl">
-    <div class="tab-pane fade show active" role="tabpanel" id="home" aria-labelledby="home-tab">
+    <div class="tab-pane fade show <%= 'active' unless params[:active_tab] == 'members' %>" role="tabpanel" id="home" aria-labelledby="home-tab">
       <%= render 'coop_branches/show_coop_branch', c: cooperative %>
     </div>
-    <div class="tab-pane fade show" role="tabpanel" id="member" aria-labelledby="member-tab">
+    <div class="tab-pane fade show <%= 'active' if params[:active_tab] == 'members' %>" role="tabpanel" id="member" aria-labelledby="member-tab">
       <%= render 'coop_members/show_coop_members' %>
     </div>
   </div>
 </div>
-<%# <div class="card">
-  <h4 class="card-header">Branches</h4>
-  <div class="card-body"> %>
-<%#= render 'coop_branches/show_coop_branch', c: cooperative %>
-<%# </div>
-</div> %>
-<%# </div> %>
-<%#≠ console %>
+

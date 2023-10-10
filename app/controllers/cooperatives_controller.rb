@@ -20,7 +20,7 @@ class CooperativesController < ApplicationController
     coop_members = @cooperative.coop_members
     f_members = Member.coop_member_details(coop_members)
       .filter_by_name(params[:last_name_filter], params[:first_name_filter])
-    @pagy, @filtered_members = pagy(f_members, items: 10)
+    @pagy, @filtered_members = pagy(f_members, items: 10, params: {active_tab: 'members'})
   end
 
   # GET /cooperatives/new
