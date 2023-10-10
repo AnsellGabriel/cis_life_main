@@ -117,7 +117,6 @@ class Member < ApplicationRecord
     number
   end
 
-
   def uppercase_fields
     self.last_name = self.last_name == nil ? '' : self.last_name.strip.upcase
     self.first_name = self.first_name == nil ? '' : self.first_name.strip.upcase
@@ -129,6 +128,10 @@ class Member < ApplicationRecord
 
   def self.coop_member_details(coop_members)
     includes(coop_members: :coop_branch).where(coop_members: { id: coop_members.ids }).order(:last_name)
+  end
+
+  def self.filter_by_coop_member_id(id)
+    where(coop_members: { id: id })
   end
 
   def self.filter_by_name(last_name_filter, first_name_filter)

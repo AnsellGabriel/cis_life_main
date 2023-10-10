@@ -24,7 +24,7 @@ class MembersController < InheritedResources::Base
 
   def new
     # byebug
-    if params[:coop_id].present? 
+    if params[:coop_id].present?
       @cooperative = Cooperative.find(params[:coop_id])
     end
     @member = Member.new(
@@ -66,9 +66,14 @@ class MembersController < InheritedResources::Base
     respond_to do |format|
       if @member.save
         format.html {
-          coop_member = @member.coop_members.find_by(cooperative_id: @cooperative.id)
-          redirect_to coop_members_path(cooperative_id: @cooperative.id),
-          notice: "Member was successfully created." }
+          if current_user.userable_type == 'CoopUser'
+            coop_member = @member.coop_members.find_by(cooperative_id: @cooperative.id)
+            redirect_to coop_members_path(cooperative_id: @cooperative.id),
+            notice: "Member was successfully created."
+          elsif current_user.userable_type == 'Employee'
+            redirect_to cooperative_path(@cooperative), notice: "Member was successfully created."
+          end
+        }
       else
         format.html { render :new, status: :unprocessable_entity }
       end
@@ -92,8 +97,13 @@ class MembersController < InheritedResources::Base
     respond_to do |format|
       if @member.update(member_params)
         format.html {
-          redirect_to coop_members_path,
-          notice: "Member was successfully updated." }
+          if current_user.userable_type == 'CoopUser'
+            redirect_to coop_members_path,
+            notice: "Member was successfully updated."
+          elsif current_user.userable_type == 'Employee'
+            redirect_to cooperative_path(@cooperative), notice: "Member was successfully updated."
+          end
+        }
       else
         format.html { render :new, status: :unprocessable_entity }
       end
