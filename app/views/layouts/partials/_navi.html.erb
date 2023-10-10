@@ -16,8 +16,8 @@
       <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
         <% if current_user %>
           <%= link_to "Home", authenticated_root_path, class: "nav-link" %>
+          
           <% if coop_user?(current_user) %>
-
             <%= render 'layouts/partials/nav_dropdown', title: 'Cooperative' do %>
               <%= link_to "Members", coop_members_path, class: "dropdown-item" %>
               <%= link_to "Claims Filed", index_coop_process_claims_path, class: "dropdown-item" %>
@@ -33,12 +33,6 @@
                   <%= link_to "GYRT", coop_agreement_path(a), class: "dropdown-item" %>
                 <% end %>
               <% end %>
-            <% end %>
-
-          <% elsif mis_user?(current_user) %>
-
-            <%= render 'layouts/partials/nav_dropdown', title: 'Encoding' do %>
-                <%= link_to "Cooperatives", cooperatives_path, class: "dropdown-item" %>
             <% end %>
 
           <% else %>
