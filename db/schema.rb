@@ -724,9 +724,9 @@ ActiveRecord::Schema[7.0].define(version: 2023_10_03_085945) do
   create_table "loan_insurance_rates", charset: "utf8mb4", force: :cascade do |t|
     t.integer "min_age"
     t.integer "max_age"
-    t.decimal "monthly_rate", precision: 5, scale: 2
-    t.decimal "annual_rate", precision: 5, scale: 2
-    t.decimal "daily_rate", precision: 5, scale: 2
+    t.decimal "monthly_rate", precision: 10
+    t.decimal "annual_rate", precision: 10
+    t.decimal "daily_rate", precision: 10
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.bigint "agreement_id", null: false
@@ -903,7 +903,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_10_03_085945) do
     t.index ["user_type", "user_id"], name: "index_process_remarks_on_user"
   end
 
-  create_table "process_tracks", charset: "utf8mb4", force: :cascade do |t|
+  create_table "process_tracks", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.string "description"
     t.integer "route_id"
     t.bigint "user_id", null: false
@@ -940,20 +940,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_10_03_085945) do
     t.index ["trackable_type", "trackable_id"], name: "index_progress_trackers_on_trackable"
   end
 
-  create_table "proposals", charset: "utf8mb4", force: :cascade do |t|
-    t.bigint "cooperative_id", null: false
-    t.integer "ave_age"
-    t.decimal "total_premium", precision: 10, scale: 2
-    t.decimal "coop_sf", precision: 10, scale: 2
-    t.decimal "agent_sf", precision: 10, scale: 2
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.integer "minimum_participation"
-    t.string "proposal_no"
-    t.index ["cooperative_id"], name: "index_proposals_on_cooperative_id"
-  end
-
-  create_table "reinsurance_batches", charset: "utf8mb4", force: :cascade do |t|
+  create_table "reinsurance_batches", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.bigint "reinsurance_id"
     t.bigint "batch_id"
     t.datetime "created_at", null: false
@@ -979,7 +966,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_10_03_085945) do
     t.datetime "updated_at", null: false
   end
 
-  create_table "unit_benefits", charset: "utf8mb4", force: :cascade do |t|
+  create_table "unit_benefits", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.bigint "plan_unit_id"
     t.bigint "benefit_id"
     t.decimal "coverage_amount", precision: 10, scale: 2
