@@ -1,0 +1,27 @@
+<div class="messaging">
+      <div class="inbox_msg">
+        <div class="mesgs">
+          <div class="msg_history">
+            <% @claim_remarks.each do |cr| %>
+                <% if cr.user == current_user %>
+                    <div class="outgoing_msg mb-3">
+                        <div class="sent_msg">
+                            <p><%= cr.remark %></p>
+                            <span class="time_date"> <%= cr.created_at %> </span> </div>
+                    </div>
+                <% else %>
+                    <div class="incoming_msg mb-3">
+                        <div class="received_msg">
+                            <%= cr.user %>
+                            <div class="received_withd_msg">
+                            <p><%= cr.remark %></p>
+                            <span class="time_date"> <%= cr.created_at %> </span> </div>
+                        </div>
+                    </div>
+                <% end %>
+            <% end %>
+            
+          </div>
+        </div>
+    </div>
+</div>

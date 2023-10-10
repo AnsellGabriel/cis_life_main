@@ -470,6 +470,10 @@ GEM
       concurrent-ruby (~> 1.0)
     unicode-display_width (2.4.2)
     uniform_notifier (1.16.0)
+    view_component (3.6.0)
+      activesupport (>= 5.2.0, < 8.0)
+      concurrent-ruby (~> 1.0)
+      method_source (~> 1.0)
     warden (1.2.9)
       rack (>= 2.0.9)
     web-console (4.2.0)
@@ -551,6 +555,7 @@ DEPENDENCIES
   store_base_sti_class
   turbo-rails
   tzinfo-data
+  view_component
   web-console
   webdrivers
 

@@ -1,7 +1,7 @@
 <%= content_tag :h4, @cooperative.name, class: 'text-primary mb-3' %>
 <div class="d-flex">
   <div class="col-md-6">
-    <div class="d-flex gap-2">
+    <div class="ps-3 d-flex gap-2 row" style="max-width: 800px;" >
       <%= render 'counter_box', title: 'Total members', count: @cooperative.coop_members.size %>
       <% @cooperative.agreements.each do |a| %>
         <% agreement = a.decorate %>
@@ -41,7 +41,7 @@
 
                     <% if ['single', 'multiple'].include?(a.anniversary_type) %>
                       <div class="d-flex gap-2">
-                        <%= content_tag :span, "Anniversary day#{a.anniversary_type == 'multiple' ? '(s)' : '' }: ", class: 'card-text' %>
+                        <%= content_tag :span, "Anniversary day#{a.anniversary_type.downcase == 'multiple' ? '(s)' : '' }: ", class: 'card-text' %>
                           <%= content_tag :span, presenter.anniversary_dates, class: 'card-text' %>
                       </div>
                     <% end %>

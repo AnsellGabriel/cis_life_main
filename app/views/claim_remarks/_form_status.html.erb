@@ -6,7 +6,7 @@
   <div class="form-inputs">
     <%= f.hidden_field :status %>
     <%#= f.select :status, options_for_select(ClaimRemark.statuses.keys.map { |key| [key.humanize, key] }), { prompt: 'Select Type' }, { class: 'form-control' } %>
-    <%= f.input :remark, :input_html => {:rows => 6} %>
+    <%= f.input :remark, :input_html => {:rows => 3} %>
   </div>
   <br>
   <div class="form-actions text-end">

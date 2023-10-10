@@ -186,10 +186,10 @@ class GroupRemitsController < InheritedResources::Base
     end
 
     def set_anniversary(anniversary_type, anniv_id)
-      if anniversary_type == "single" || anniversary_type == "multiple"
+      if anniversary_type.downcase == "single" || anniversary_type.downcase == "multiple"
         anniv_date = @agreement.anniversaries.find_by(id: anniv_id)
         anniv_date.anniversary_date
-      elsif (anniversary_type == "none" or anniversary_type.nil?) && @agreement.plan.acronym != 'PMFC'
+      elsif (anniversary_type.downcase == "12 months" or anniversary_type.nil?) && @agreement.plan.acronym != 'PMFC'
         Date.today.prev_month.end_of_month.next_year
       elsif @agreement.plan.acronym == 'PMFC'
         Date.today.beginning_of_month + params[:group_remit][:terms].to_i.months

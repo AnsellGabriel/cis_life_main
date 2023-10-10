@@ -24,6 +24,7 @@ class ProcessClaimsController < ApplicationController
   def show_coop 
     @agreement_benefit = AgreementBenefit.where(agreement: @process_claim.agreement)
     @claim_type_document = ClaimTypeDocument.where(claim_type: @process_claim.claim_type)
+    
   end
   # GET /process_claims/new
   def new
@@ -50,6 +51,10 @@ class ProcessClaimsController < ApplicationController
     
     set_dummy_value
     # raise "error"
+  end
+
+  def new_ca 
+    @process_claim = ProcessClaim.new
   end
 
   def set_dummy_value
@@ -163,8 +168,8 @@ class ProcessClaimsController < ApplicationController
         elsif @claim_track.route_id == 3
           @process_claim.update!(claim_route: @claim_track.route_id, processing: 1)
           format.html { redirect_to claim_process_process_claim_path(@process_claim), notice: "#{@process_claim.claim_route.to_s.humanize.titleize} by #{current_user}"  }
+          ClaimsMailer.with(process_claim: @process_claim).new_claim_email.deliver_later
         elsif @claim_track.route_id == 5
-          # ClaimsMailer.with(process_claim: @process_claim).new_claim_email.deliver_later
           # RegisterMailer.with(registration: @registration, event_hub: @event_hub).register_created.deliver_later
           @process_claim.update!(claim_route: @claim_track.route_id, processing: 1)
           format.html { redirect_to claim_process_process_claim_path(@process_claim), notice: "#{@process_claim.claim_route.to_s.humanize.titleize} by #{current_user}"  }

@@ -118,7 +118,11 @@ class LoanInsurance::Batch < Batch
     self.agent_sf_amount = calculate_service_fee(agreement.agent_sf, premium_due)
     self.coop_sf_amount = calculate_service_fee(agreement.coop_sf, premium_due)
   end
-  
+
+  def previous_loan
+    LoanInsurance::Batch.find(unused_loan_id)
+  end
+
   private
 
   def skip_validation

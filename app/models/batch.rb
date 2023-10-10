@@ -84,7 +84,7 @@ class Batch < ApplicationRecord
     previous_coverage = agreement.agreements_coop_members.find_by(coop_member_id: coop_member.id)
     batch.age = batch.member_details.age
     batch.expiry_date = group_remit.expiry_date
-    batch.effectivity_date = ['single', 'multiple'].include?(agreement.anniversary_type) ? Date.today : group_remit.effectivity_date
+    batch.effectivity_date = ['single', 'multiple'].include?(agreement.anniversary_type.downcase) ? Date.today : group_remit.effectivity_date
 
     check_plan(agreement, batch, rank, duration, group_remit)
 
