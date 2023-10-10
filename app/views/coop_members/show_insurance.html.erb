@@ -23,9 +23,9 @@
               <tr>
                 <td colspan=3> <strong><%= agreement_benefit.agreement.plan %></strong> <br>
                   <%= agreement_benefit.name %> <br>
-                  <% if current_user.userable_type == "CoopUser" %>
-                    <%= link_to 'File Claims', new_coop_process_claims_path(cm: @coop_member, ab: agreement_benefit, a: agreement_benefit.agreement), class: 'btn btn-sm btn-warning' %>
-                  <% end %>
+                  <%# if current_user.userable_type == "CoopUser" %>
+                  <%= link_to 'File Claims', new_coop_process_claims_path(cm: @coop_member, ab: agreement_benefit, a: agreement_benefit.agreement), class: 'btn btn-sm btn-warning' %>
+                  <%# end %>
                   <%= agreement_benefit.description %>
                 </td>
                 <td>
@@ -59,8 +59,7 @@
               <% end %>
             <% end %>
           </tbody>
-      </table>
-        
+        </table>
         <%= content_tag :p, "LPPI coverages", class: "lead" %>
         <table class="table table-bordered table-hover align-middle">
           <thead>
@@ -89,7 +88,6 @@
                       <i class="bi bi-card-list"></i>
                     <% end %>
                   <% end %>
-
                   <% unless lppi.terminated? %>
                     <%= link_to 'Terminate', terminate_loan_insurance_batch_path(lppi), class: small_btn('danger'), data: {turbo_frame: '_top', turbo_confirm: 'Terminate loan?', turbo_method: :get}  %>
                   <% end %>
@@ -98,12 +96,11 @@
             <% end %>
           </tbody>
         </table>
-     
-      <div class="card-footer">
-        <% unless @for_modal.present? %>
-          <%= link_to "Back", :back, data: { turbo: false }, class: 'btn btn-secondary' %>
-        <% end %>
+        <div class="card-footer">
+          <% unless @for_modal.present? %>
+            <%= link_to "Back", :back, data: { turbo: false }, class: 'btn btn-secondary' %>
+          <% end %>
+        </div>
       </div>
     </div>
-  </div>
-  <% end %>
+    <%# end %>
