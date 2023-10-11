@@ -9,19 +9,19 @@
             <span class="mb-0 text-secondary">First name</span>
           </div>
           <div class="col-sm-2 text-primary">
-            <%= "#{batch_member.member.first_name}" %>
+            <%= "#{batch_member.member.first_name.capitalize}" %>
           </div>
           <div class="col-sm-2 text-secondary">
             <span class="mb-0">Middle name</span>
           </div>
           <div class="col-sm-2 text-primary">
-            <%= "#{batch_member.member.middle_name}" %>
+            <%= "#{batch_member.member.middle_name.capitalize}" %>
           </div>
           <div class="col-sm-2 text-secondary">
             <span class="mb-0">Last name</span>
           </div>
           <div class="col-sm-2 text-primary">
-            <%= "#{batch_member.member.last_name}, #{batch_member.member.suffix}" %>
+            <%= "#{batch_member.member.last_name.capitalize}, #{batch_member.member.suffix}" %>
           </div>
         </div>
         <hr>
@@ -30,7 +30,7 @@
             <span class="mb-0 text-secondary">Civil Status</span>
           </div>
           <div class="col-sm-3">
-            <%= batch_member.member.civil_status %>
+            <%= batch_member.member.civil_status.capitalize %>
           </div>
           <% if @agreement.plan.gyrt_type == 'family' %>
             <div class="col-sm-3">
@@ -47,13 +47,13 @@
             <span class="mb-0 text-secondary">Effectivity date</span>
           </div>
           <div class="col-sm">
-            <%= @effectivity_date.present? ? date_as_month_day_year(@effectivity_date) : 'Tentative' %>
+            <%= @effectivity_date.present? ? month_day_year(@effectivity_date) : 'Tentative' %>
           </div>
           <div class="col-sm">
             <span class="mb-0 text-secondary">Expiry date</span>
           </div>
           <div class="col-sm">
-            <%= date_as_month_day_year(@expiry_date)%>
+            <%= month_day_year(@expiry_date)%>
           </div>
         </div>
         <% if @agreement.plan.acronym == 'PMFC' %>
@@ -165,7 +165,7 @@
                   <% end %>
                 </div>
               <div class="col-sm-6 text-secondary">
-                <%= content_tag :span, "#{b.member_dependent.last_name}, #{b.member_dependent.first_name} #{b.member_dependent.middle_name}", 
+                <%= content_tag :span, "#{b.member_dependent.last_name.capitalize}, #{b.member_dependent.first_name.capitalize} #{b.member_dependent.middle_name.chr}.", 
                   class: "mb-0 text-center", 
                   style: "font-size: .8rem" 
                 %>
@@ -177,7 +177,7 @@
                 %>
               </div>
               <div class="col-sm-3 text-secondary">
-                <%= content_tag :span, "#{b.member_dependent.relationship}", 
+                <%= content_tag :span, "#{b.member_dependent.relationship.capitalize}", 
                   class: "mb-0 text-center", 
                   style: "font-size: .8rem" 
                 %>
@@ -254,7 +254,7 @@
               <div class="d-flex align-items-center">
                 <div class="col-sm-4 text-secondary <%= flex_justify_align('start', 'baseline') %> gap-1">
                   <%= content_tag :span, "#{d.insurance_status.titleize}", class: d_presenter.status_badge %>
-                  <%= content_tag :span, "#{d.member_dependent.last_name}, #{d.member_dependent.first_name} #{d.member_dependent.middle_name}", 
+                  <%= content_tag :span, "#{d.member_dependent.last_name.capitalize}, #{d.member_dependent.first_name.capitalize} #{d.member_dependent.middle_name.chr}.", 
                     class: "mb-0", 
                     style: "font-size: .8rem" 
                   %>
@@ -266,7 +266,7 @@
                   %>
                 </div>
                 <div class="col-sm-2 text-secondary">
-                  <%= content_tag :span, "#{d.member_dependent.relationship}", 
+                  <%= content_tag :span, "#{d.member_dependent.relationship.capitalize}", 
                     class: "mb-0 text-center", 
                     style: "font-size: .8rem" 
                   %>

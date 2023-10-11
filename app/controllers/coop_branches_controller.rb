@@ -6,7 +6,7 @@ class CoopBranchesController < ApplicationController
   # GET /coop_branches or /coop_branches.json
   def index
     @coop_branches = @cooperative.coop_branches.all
-  
+
     respond_to do |format|
       format.html # render the index view template
     end
@@ -21,13 +21,19 @@ class CoopBranchesController < ApplicationController
     # @coop_branch = @cooperative.coop_branches.build
     @cooperative = Cooperative.find(params[:v])
     @coop_branch = @cooperative.coop_branches.build
-    if Rails.env.development?
-      default_values
-    end
+    # default_values
+    @prov = @muni = @brgy = []
+
+    # if Rails.env.development?
+    #   default_values
+    # end
   end
-  
+
   # GET /coop_branches/1/edit
   def edit
+    @prov = GeoProvince.where(geo_region_id: @coop_branch.geo_region_id)
+    @muni = GeoMunicipality.where(geo_province_id: @coop_branch.geo_province_id)
+    @brgy = GeoBarangay.where(geo_municipality_id: @coop_branch.geo_municipality_id)
   end
 
   # POST /coop_branches or /coop_branches.json
@@ -49,6 +55,7 @@ class CoopBranchesController < ApplicationController
 
   # PATCH/PUT /coop_branches/1 or /coop_branches/1.json
   def update
+
     respond_to do |format|
       if @coop_branch.update(coop_branch_params)
         format.html { redirect_back fallback_location: @cooperative, notice: "Coop branch was successfully updated." }
@@ -94,7 +101,7 @@ class CoopBranchesController < ApplicationController
     #   end
     # end
 
-    def default_values 
+    def default_values
       @geo_region = GeoRegion.all
       @coop_branch.geo_region_id = @geo_region.shuffle.first.id
       @geo_province = GeoProvince.where(geo_region_id: @cooperative.geo_region_id)

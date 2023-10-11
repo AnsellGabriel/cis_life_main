@@ -115,16 +115,16 @@
         <div class="card-body text-secondary">
           <div class="<%= flex_justify_align('center') %>">
             <%= content_tag :h6, "Effectivity Date ", class: 'sm-secondary-text text-primary', style: "width: 150px" %>
-            <%= content_tag :h6, ": #{@group_remit.effectivity_date.present? ? @group_remit.effectivity_date.strftime('%B %d, %Y') : 'Tentative'}", class: 'sm-secondary-text', style: "width: 150px" %>
+            <%= content_tag :h6, ": #{@group_remit.effectivity_date.present? ? month_day_year(@group_remit.effectivity_date) : 'Tentative'}", class: 'sm-secondary-text', style: "width: 150px" %>
           </div>
           <div class="<%= flex_justify_align('center') %>">
             <%= content_tag :h6, "Expiry Date", class: 'sm-secondary-text text-primary', style: "width: 150px" %>
-            <%= content_tag :h6, ": #{@group_remit.expiry_date.strftime('%B %d, %Y')}", class: 'sm-secondary-text', style: "width: 150px" %>
+            <%= content_tag :h6, ": #{month_day_year(@group_remit.expiry_date)}", class: 'sm-secondary-text', style: "width: 150px" %>
           </div>
           <% if @group_remit.instance_of?(Remittance)%>
             <div class="<%= flex_justify_align('center') %>">
               <%= content_tag :h6, "Submitted Date ", class: 'sm-secondary-text text-primary', style: "width: 150px" %>
-              <%= content_tag :h6, ": #{@group_remit.date_submitted.present? ? @group_remit.date_submitted.strftime('%B %d, %Y') : 'Pending'}", class: 'sm-secondary-text', style: "width: 150px" %>
+              <%= content_tag :h6, ": #{@group_remit.date_submitted.present? ? month_day_year(@group_remit.date_submitted) : 'Pending'}", class: 'sm-secondary-text', style: "width: 150px" %>
             </div>
           <% end %>
           <div class="<%= flex_justify_align('center') %>">

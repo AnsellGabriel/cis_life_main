@@ -20,7 +20,7 @@
               data: {bs_toggle: "modal",
                 bs_target: "#batchEnrollment"
               }%> 
-              <% if !@group_remit.complete_health_decs? %>
+              <% if @group_remit.complete_health_decs? %>
                 <%= button_to 'Submit', submit_loan_insurance_group_remit_path(@group_remit), 
                   method: :get,
                   class: small_btn('outline-primary'),
@@ -127,10 +127,11 @@
     <thead>
       <tr class="table-dark">
         <th class="text-center" scope="col">ID</th>
-        <th class="text-center" scope="col" style="width: 30%;">Members</th>
+        <th class="text-center" scope="col">Members</th>
         <th class="text-center" scope="col">Loan Amount</th>
         <th class="text-center" scope="col">Effectivity Date</th>
         <th class="text-center" scope="col">Expiry Date</th>
+        <th class="text-center" scope="col">Terms</th>
         <th class="text-center" scope="col">Premium</th>
         <th class="text-center" scope="col">Unused Premium</th>
         <th class="text-center" scope="col">Premium Due</th>

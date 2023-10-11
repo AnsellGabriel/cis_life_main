@@ -80,11 +80,10 @@ class Batch < ApplicationRecord
   def self.process_batch(batch, group_remit, rank = nil, duration = nil)
     agreement = group_remit.agreement
     coop_member = batch.coop_member
-    # existing_coverages = agreement.agreements_coop_members.find_by(coop_member_id: coop_member.id)
     previous_coverage = agreement.agreements_coop_members.find_by(coop_member_id: coop_member.id)
-    batch.age = batch.member_details.age
     batch.expiry_date = group_remit.expiry_date
     batch.effectivity_date = ['single', 'multiple'].include?(agreement.anniversary_type.downcase) ? Date.today : group_remit.effectivity_date
+    batch.age = batch.member_details.age(batch.effectivity_date)
 
     check_plan(agreement, batch, rank, duration, group_remit)
 
@@ -135,51 +134,6 @@ class Batch < ApplicationRecord
 
     month_difference = ((today.year * 12 + today.month) - (expiry_date.year * 12 + expiry_date.month)) + (expiry_date.day > today.day ? 1 : 0)
   end
-
-  # def self.update_existing_coverage(batch, existing_coverages)
-  #   # existing_coverages.update!(
-  #   #   status: batch.status,
-  #   #   expiry: batch.expiry_date,
-  #   #   effectivity: batch.effectivity_date
-  #   # )
-  #   # if month_difference > 24
-  #   #   batch.status = :reinstated
-  #   #   existing_coverages.update!(
-  #   #     status: 'reinstated',
-  #   #     expiry: batch.expiry_date,
-  #   #     effectivity: batch.effectivity_date
-  #   #   )
-  #   # elsif group_remit.for_renewal? || existing_coverages.expiry <= Date.today
-  #   #   batch.status = :renewal
-  #   #   existing_coverages.update!(
-  #   #     status: 'renewal',
-  #   #     expiry: batch.expiry_date,
-  #   #     effectivity: batch.effectivity_date
-  #   #   )
-  #   # else
-  #   #   batch.status = :recent
-  #   #   existing_coverages.update!(
-  #   #     status: 'new',
-  #   #     expiry: batch.expiry_date,
-  #   #     effectivity: batch.effectivity_date
-  #   #   )
-  #   # end
-  # end
-
-  # def self.create_new_batch_coverage(agreement, coop_member, batch )
-  #   if agreement.transferred_date.present? && (agreement.transferred_date >= coop_member.membership_date)
-  #     batch.status = :transferred
-  #   else
-  #     batch.status = :recent
-  #   end
-
-  #   agreement.agreements_coop_members.create!(
-  #     coop_member_id: coop_member.id,
-  #     status: 'new',
-  #     expiry: batch.expiry_date,
-  #     effectivity: batch.effectivity_date
-  #   )
-  # end
 
   private
 
