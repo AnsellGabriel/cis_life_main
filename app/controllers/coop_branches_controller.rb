@@ -24,9 +24,9 @@ class CoopBranchesController < ApplicationController
     # default_values
     @prov = @muni = @brgy = []
 
-    if Rails.env.development?
-      default_values
-    end
+    # if Rails.env.development?
+    #   default_values
+    # end
   end
 
   # GET /coop_branches/1/edit

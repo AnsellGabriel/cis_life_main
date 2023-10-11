@@ -14,10 +14,10 @@ class MembersController < InheritedResources::Base
 
     import_message = import_service.import
 
-    if import_message.is_a?(String)
-      redirect_to coop_members_path, alert: import_message
+    if current_user.userable_type == 'CoopUser'
+      import_redirect(coop_members_path, import_message)
     else
-      redirect_to coop_members_path, notice: "#{import_message[:created_members_counter] > 0 ? "#{import_message[:created_members_counter]} members enrolled. " : '' } #{import_message[:updated_members_counter] > 0 ? "#{import_message[:updated_members_counter]} members updated." : ''}"
+      import_redirect(@cooperative, import_message)
     end
   end
 
@@ -118,6 +118,14 @@ class MembersController < InheritedResources::Base
     def check_userable_type
       unless current_user.userable_type == 'CoopUser' || current_user.userable_type == 'Employee'
         render file: "#{Rails.root}/public/404.html", status: :not_found
+      end
+    end
+
+    def import_redirect(path, import_message)
+      if import_message.is_a?(String)
+        redirect_to path, alert: import_message
+      else
+        redirect_to path, notice: "#{import_message[:created_members_counter] > 0 ? "#{import_message[:created_members_counter]} members enrolled. " : '' } #{import_message[:updated_members_counter] > 0 ? "#{import_message[:updated_members_counter]} members updated." : ''} #{import_message[:denied_enrollees_counter] > 0 ? "#{import_message[:denied_enrollees_counter]} members denied." : ''}"
       end
     end
 end
