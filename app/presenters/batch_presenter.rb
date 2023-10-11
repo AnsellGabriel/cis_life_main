@@ -14,7 +14,7 @@ class BatchPresenter
 		#     .upcase
 		@batch.agreement_benefit
 				.name
-				.upcase
+				.titleize
 	end
 
 	def present_agreement_benefit

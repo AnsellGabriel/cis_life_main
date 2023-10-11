@@ -35,7 +35,7 @@ class Member < ApplicationRecord
   end
 
   def to_s
-    full_name.titleize
+    full_name
   end
 
   def validate_phone_format
@@ -61,7 +61,7 @@ class Member < ApplicationRecord
   end
 
   def full_name
-    "#{last_name}, #{first_name} #{middle_name}"
+    "#{last_name.capitalize} #{suffix}, #{first_name.capitalize} #{middle_name.capitalize.chr}."
   end
 
   def self.get_ri
@@ -137,7 +137,5 @@ class Member < ApplicationRecord
   def self.filter_by_name(last_name_filter, first_name_filter)
     where("last_name LIKE ? AND first_name LIKE ?", "%#{last_name_filter}%", "%#{first_name_filter}%")
   end
-
-
 
 end

@@ -48,7 +48,7 @@
           <div class="card-body d-flex flex-column" style="width: 400px">
             <%= render 'agreement_field', 
               name: 'Anniversary Date', 
-              value: date_as_month_day(anniv.anniversary_date), 
+              value: month_day_year(anniv.anniversary_date), 
               margin: ''
             %>            
             <div class="mt-4 text-center">
