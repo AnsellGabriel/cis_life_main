@@ -292,7 +292,7 @@
     <tbody id="batches_body">
 
       <% if @group_remit.batches.exists? %>
-        <%= render @batches.includes([coop_member: :member], :agreement_benefit, :batch_beneficiaries), group_remit: @group_remit, agreement: @agreement %>
+        <%= render @batches.includes([coop_member: :member], :batch_beneficiaries), group_remit: @group_remit, agreement: @agreement %>
       <% end %>
 
     </tbody>
