@@ -112,7 +112,7 @@ class GroupRemit < ApplicationRecord
     agreement = group_remit.agreement
 
     if agreement.anniversary_type.downcase == 'multiple' || agreement.anniversary_type.downcase == 'single'
-      group_remit.anniversary_id = params[:anniversary_id]
+      group_remit.anniversary_id = anniv_id
     end
 
     set_group_remit_names_and_terms(group_remit, terms)

@@ -24,18 +24,24 @@
 <div class="card mb-3">
   <ul class="nav nav-tabs">
     <li class="nav-item" role="presentation">
+      <button class="nav-link active" data-bs-toggle="tab" id="member-tab" type="button" data-bs-target="#member" role="tab" aria-controls="member" aria-current="page">Members</button>
+    </li>
+    <li class="nav-item" role="presentation">
       <button class="nav-link" data-bs-toggle="tab" id="home-tab" type="button" data-bs-target="#home" role="tab" aria-controls="home">Branches</button>
     </li>
     <li class="nav-item" role="presentation">
-      <button class="nav-link active" data-bs-toggle="tab" id="member-tab" type="button" data-bs-target="#member" role="tab" aria-controls="member" aria-current="page">Members</button>
+      <button class="nav-link" data-bs-toggle="tab" id="member-tab" type="button" data-bs-target="#member" role="tab" aria-controls="member" aria-current="page">Agreements</button>
     </li>
   </ul>
   <div class="tab-content container mt-3" id="myTabControl">
+    <div class="tab-pane fade show active" role="tabpanel" id="member" aria-labelledby="member-tab">
+      <%= render 'coop_members/show_coop_members' %>
+    </div>
     <div class="tab-pane fade show" role="tabpanel" id="home" aria-labelledby="home-tab">
       <%= render 'coop_branches/show_coop_branch', c: cooperative %>
     </div>
-    <div class="tab-pane fade show active" role="tabpanel" id="member" aria-labelledby="member-tab">
-      <%= render 'coop_members/show_coop_members' %>
+    <div class="tab-pane fade show" role="tabpanel" id="home" aria-labelledby="home-tab">
+      <%= render 'coop_branches/show_coop_branch', c: cooperative %>
     </div>
   </div>
 </div>
