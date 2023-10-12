@@ -17,11 +17,11 @@
 							<div class="<%= flex_justify_align('center','', true) %>">
 								<div class="text-secondary small <%= flex_justify_align('between') %>" style="width: 300px">
 									<%= content_tag :span, 'Created date: ' %>
-									<%= content_tag :span, date_as_month_day_year(group_remit.created_at) %>
+									<%= content_tag :span, month_day_year(group_remit.created_at) %>
 								</div>
 								<div class="text-secondary small <%= flex_justify_align('between') %>" style="width: 300px">
 									<%= content_tag :span, 'Submitted date: ' %>
-									<%= content_tag :span, "#{group_remit.date_submitted.present? ? date_as_month_day_year(group_remit.date_submitted) : 'Pending'}" %>
+									<%= content_tag :span, "#{group_remit.date_submitted.present? ? month_day_year(group_remit.date_submitted) : 'Pending'}" %>
 								</div>
 								<div class="text-secondary small <%= flex_justify_align('between') %>">
 										<%= content_tag :span, 'Approved Participants: ' %>

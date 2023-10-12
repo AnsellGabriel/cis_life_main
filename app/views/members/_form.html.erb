@@ -30,7 +30,7 @@
       <div class="col-3">
        <%= f.input :last_name, label_html: {class: 'text-secondary sm-secondary-text'}%>
       </div>
-      <div class="col-1">
+      <div class="col-2">
         <%= f.input :suffix, label_html: {class: 'text-secondary sm-secondary-text'} %>
       </div>
     </div>
@@ -43,6 +43,7 @@
             controller: "flatpickr",
             flatpickr_max_date: Time.zone.now,
             flatpickr_next_arrow: "Next",
+            flatpickr_date_format: "m-d-Y",
             flatpickr_prev_arrow: "Prev"}}, label_html: {class: 'text-secondary sm-secondary-text'} %>
       </div>
       <div class="col-6">

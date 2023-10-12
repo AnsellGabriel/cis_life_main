@@ -19,19 +19,19 @@
           <span class="mb-0">First name</span>
         </div>
         <div class="col-sm-2 text-primary">
-          <%= "#{@member.first_name}" %>
+          <%= "#{@member.first_name.capitalize}" %>
         </div>
         <div class="col-sm-2 text-secondary">
           <span class="mb-0">Middle name</span>
         </div>
         <div class="col-sm-2 text-primary">
-          <%= "#{@member.middle_name}" %>
+          <%= "#{@member.middle_name.capitalize}" %>
         </div>
         <div class="col-sm-2 text-secondary">
           <span class="mb-0">Last name</span>
         </div>
         <div class="col-sm-2 text-primary">
-          <%= "#{@member.last_name} #{@member.suffix}" %>
+          <%= "#{@member.last_name.capitalize} #{@member.suffix}" %>
         </div>
       </div>
       <div class="row ps-3 pe-3 mb-1">

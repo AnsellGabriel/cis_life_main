@@ -1,5 +1,6 @@
 <div class="mb-3">
-	<%= link_to 'Back', coop_members_path, class: small_btn('secondary') %>
+	<%= link_to 'Back', :back, class: small_btn('secondary') %>
+	<%= link_to 'Clear All', destroy_all_denied_enrollees_path, class: small_btn('danger'), data: {turbo_confirm: 'Delete all denied enrollees?', turbo_method: :delete}  %>
 </div>
 <div class="<%= flex_justify_align('', 'center') %> gap-1 mb-3">
   <%= content_tag :h6, "Denied Enrollees", class: 'mb-0' %>
@@ -8,7 +9,6 @@
 		<table class="table table-hover">
 		<thead>
 		<tr class="table-dark">
-      <th></th>
 			<th class="text-center" scope="col">Name</th>
 			<th class="text-center" scope="col">Reason</th>
 		</tr>
@@ -17,15 +17,8 @@
 		<tbody id="batches_body">
 			<% @denied_enrollees.each do |e| %>
 				<tr class="text-muted">
-          <td class="text-center" style="font-size: .7rem;">
-						<%= button_to denied_enrollee_path(e), 
-              method: :delete,
-              class: small_btn('danger') do %>
-                  <i class="bi bi-x-lg"></i>                    
-            <% end %>
-					</td>
-					<td class="<%= flex_justify_align('center') %>">
-						<div class="" style="width: 250px; font-size: .7rem;">
+					<td class="text-center">
+						<div class="" style="font-size: .7rem;">
 							<%= e.name %>
 						</div>
 					</td>

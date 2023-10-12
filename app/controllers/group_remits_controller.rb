@@ -189,10 +189,8 @@ class GroupRemitsController < InheritedResources::Base
       if anniversary_type.downcase == "single" || anniversary_type.downcase == "multiple"
         anniv_date = @agreement.anniversaries.find_by(id: anniv_id)
         anniv_date.anniversary_date
-      elsif (anniversary_type.downcase == "12 months" or anniversary_type.nil?) && @agreement.plan.acronym != 'PMFC'
+      elsif (anniversary_type.downcase == "12 months" or anniversary_type.nil?)
         Date.today.prev_month.end_of_month.next_year
-      elsif @agreement.plan.acronym == 'PMFC'
-        Date.today.beginning_of_month + params[:group_remit][:terms].to_i.months
       end
     end
 
