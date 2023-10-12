@@ -16,7 +16,13 @@
       </div>
       <%  if @cooperative.denied_enrollees.present? %>
         <div class="">
-          <%= link_to 'Denied enrollees', denied_enrollees_path, class: small_btn('outline-secondary') %>
+          <%= link_to denied_enrollees_path, class: "#{small_btn('outline-danger')} position-relative" do %>
+            Denied Enrollees
+            <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+              !
+              <span class="visually-hidden">unread messages</span>
+            </span>
+          <% end %>
         </div>
       <% end %>
     </div>

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_10_11_035757) do
+ActiveRecord::Schema[7.0].define(version: 2023_10_12_013302) do
   create_table "action_text_rich_texts", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.string "name", null: false
     t.text "body", size: :long
@@ -106,7 +106,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_10_11_035757) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.decimal "exit_age", precision: 10, scale: 3
-    t.boolean "with_dependent"
+    t.boolean "with_dependent", default: false
     t.index ["agreement_id"], name: "index_agreement_benefits_on_agreement_id"
     t.index ["option_id"], name: "index_agreement_benefits_on_option_id"
     t.index ["plan_id"], name: "index_agreement_benefits_on_plan_id"
@@ -126,9 +126,9 @@ ActiveRecord::Schema[7.0].define(version: 2023_10_11_035757) do
     t.string "previous_provider"
     t.string "comm_type"
     t.boolean "claims_fund"
-    t.integer "entry_age_from"
-    t.integer "entry_age_to"
-    t.integer "exit_age"
+    t.decimal "entry_age_from", precision: 5, scale: 2
+    t.decimal "entry_age_to", precision: 5, scale: 2
+    t.decimal "exit_age", precision: 5, scale: 2
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.string "description"

@@ -86,6 +86,10 @@ class MembersController < InheritedResources::Base
       @cooperative = Cooperative.find(params[:cooperative_id])
     end
 
+    @prov = GeoProvince.where(geo_region_id: @member.geo_region_id)
+    @muni = GeoMunicipality.where(geo_province_id: @member.geo_province_id)
+    @brgy = GeoBarangay.where(geo_municipality_id: @member.geo_municipality_id)
+
     @coop_member = @member.coop_members.find_by(cooperative_id: @cooperative.id)
   end
 
