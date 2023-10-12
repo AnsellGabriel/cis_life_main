@@ -34,13 +34,13 @@
         %>
         
         <%  if @group_remit.denied_members.present? %>
-          <%= link_to 'Denied members', group_remit_denied_members_path(@group_remit), class: small_btn('outline-primary') %>
+          <%= link_to 'Denied members', group_remit_denied_members_path(@group_remit), class: small_btn('outline-danger') %>
         <% end %>
 
       </div>
 
       <% unless @group_remit.is_for_renewal? %>
-        <%= button_to "Delete", group_remit_path(@group_remit), 
+        <%= button_to "Delete remittance", group_remit_path(@group_remit), 
           method: :delete,
           data: { turbo_confirm: "Delete #{@group_remit}?"},
           class: small_btn('outline-danger') 
@@ -48,7 +48,7 @@
       <% end %>
 
       <% if short_term_insurance && @group_remit.is_batch_remit? && @group_remit.is_pending_or_renewal? %>
-        <%= button_to "Delete", group_remit_path(@group_remit), 
+        <%= button_to "Delete remittance", group_remit_path(@group_remit), 
           method: :delete,
           data: { turbo_confirm: 'Delete group remit?'},
           class: small_btn('outline-danger') 

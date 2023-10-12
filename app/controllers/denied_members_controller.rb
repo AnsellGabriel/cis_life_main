@@ -14,10 +14,15 @@ class DeniedMembersController < ApplicationController
 		generate_csv(@denied_members, "#{@group_remit.agreement.moa_no}-denied_members")
 	end
 
+	def destroy_all
+		@group_remit.denied_members.destroy_all
+
+		redirect_to group_remit_path(@group_remit), notice: "Denied members deleted successfully."
+	end
+
 	private
 
 	def set_group_remit
 		@group_remit = GroupRemit.find(params[:group_remit_id])
 	end
 end
-  
