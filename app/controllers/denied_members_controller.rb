@@ -17,7 +17,11 @@ class DeniedMembersController < ApplicationController
 	def destroy_all
 		@group_remit.denied_members.destroy_all
 
-		redirect_to group_remit_path(@group_remit), notice: "Denied members deleted successfully."
+		if @group_remit.type == "LoanInsurance::GroupRemit"
+			redirect_to loan_insurance_group_remit_path(@group_remit), notice: "Denied members deleted successfully."
+		else
+			redirect_to group_remit_path(@group_remit), notice: "Denied members deleted successfully."
+		end
 	end
 
 	private
