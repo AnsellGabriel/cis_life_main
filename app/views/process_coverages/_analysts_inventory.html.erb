@@ -249,6 +249,88 @@
               </div>
             </div>
 
+            <div class="accordion-item">
+              <h2 class="accordion-header" id="headingFive">
+                <button class="accordion-button collapsed text-warning" type="button" data-bs-toggle="collapse" data-bs-target="#collapseFive" aria-expanded="false" aria-controls="collapseTwo">
+                  Processed / Received
+                </button>
+              </h2>
+              <div id="collapseFive" class="accordion-collapse collapse" aria-labelledby="headingFive" data-bs-parent="#accordionExample">
+                <div class="accordion-body">
+                  <table class="table">
+                    <thead>
+                      <tr>
+                        <th rowspan=2>Analyst</th>
+                        <th colspan=3 class="text-center">Day</th>
+                        <th colspan=3 class="text-center">Week</th>
+                        <th colspan=3 class="text-center">Month</th>
+                        <th colspan=3 class="text-center">Year</th>
+                      </tr>
+                      <tr>
+                        <th scope='col' class="text-center">R</th>
+                        <th scope='col' class="text-center">P</th>
+                        <th scope='col' class="text-center">R</th>
+                        <th scope='col' class="text-center">P</th>
+                        <th scope='col' class="text-center">R</th>
+                        <th scope='col' class="text-center">P</th>
+                        <th scope='col' class="text-center">R</th>
+                        <th scope='col' class="text-center">P</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <% @analysts.each do |analyst| %>
+                        <tr>
+                          <td><%= analyst %></td>
+                          <td class="text-center">
+                            <% start_date = current_date.beginning_of_day %>
+                            <% end_date = current_date.end_of_day %>
+                            <%= @process_coverages.where(processor: analyst, created_at: start_date..end_date).count %> 
+                          </td>
+                          <td class="text-center">
+                            <% start_date = current_date.beginning_of_day %>
+                            <% end_date = current_date.end_of_day %>
+                            <%= @coverages_total_processed.where(processor: analyst, created_at: start_date..end_date).count %>
+                          </td>
+                        
+                          <td class="text-center">
+                            <% start_date = current_date.beginning_of_week %>
+                            <% end_date = current_date.end_of_week %>
+                            <%= @process_coverages.where(processor: analyst, created_at: start_date..end_date).count %>
+                          </td>
+                          <td class="text-center">
+                            <% start_date = current_date.beginning_of_week %>
+                            <% end_date = current_date.end_of_week %>
+                            <%= @coverages_total_processed.where(processor: analyst, created_at: start_date..end_date).count %>
+                          </td>
+                          <td class="text-center">
+                            <% start_date = current_date.beginning_of_month %>
+                            <% end_date = current_date.end_of_month %>
+                            <%= @process_coverages.where(processor: analyst, created_at: start_date..end_date).count %>
+                          </td>
+                          <td class="text-center">
+                            <% start_date = current_date.beginning_of_month %>
+                            <% end_date = current_date.end_of_month %>
+                            <%= @coverages_total_processed.where(processor: analyst, created_at: start_date..end_date).count %>
+                          </td>
+                          <td class="text-center">
+                            <% start_date = current_date.beginning_of_year %>
+                            <% end_date = current_date.end_of_year %>
+                            <%= @process_coverages.where(processor: analyst, created_at: start_date..end_date).count %>
+                          </td>
+                          <td class="text-center">
+                            <% start_date = current_date.beginning_of_year %>
+                            <% end_date = current_date.end_of_year %>
+                            <%= @coverages_total_processed.where(processor: analyst, created_at: start_date..end_date).count %>
+                          </td>
+                          
+                        </tr>
+                      <% end %>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+
           </div>
         </div>
         

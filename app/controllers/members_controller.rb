@@ -2,6 +2,7 @@
 class MembersController < InheritedResources::Base
   before_action :authenticate_user!
   before_action :check_userable_type
+  before_action :set_member, only: %i[show edit update destroy show_coverages]
 
   def import
     import_service = CsvImportService.new(
@@ -19,6 +20,13 @@ class MembersController < InheritedResources::Base
     else
       redirect_to coop_members_path, notice: "#{import_message[:created_members_counter] > 0 ? "#{import_message[:created_members_counter]} members enrolled. " : '' } #{import_message[:updated_members_counter] > 0 ? "#{import_message[:updated_members_counter]} members updated." : ''}"
     end
+
+  end
+
+  def show_coverages
+    @for_modal = params[:pro_cov].present? ? true : false
+    @lppi_batches = LoanInsurance::Batch.get_member_lppi_coverages(@member)
+    @gyrt_batches = Batch.get_member_gyrt_coverages(@member)
 
   end
 
@@ -101,6 +109,10 @@ class MembersController < InheritedResources::Base
   end
 
   private
+
+    def set_member
+      @member = Member.find(params[:id])
+    end
     def member_params
       params.require(:member).permit(:birth_place, :address, :sss_no, :tin_no, :civil_status, :legal_spouse, :height, :weight, :occupation, :employer, :work_address, :work_phone_number, :last_name, :first_name, :middle_name, :suffix, :email, :mobile_number, :birth_date, :gender, :geo_region_id, :geo_province_id, :geo_municipality_id, :geo_barangay_id,
         coop_members_attributes: [:id, :cooperative_id, :coop_branch_id, :membership_date, :transferred, :_destroy])

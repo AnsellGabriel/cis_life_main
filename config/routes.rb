@@ -85,6 +85,7 @@ Rails.application.routes.draw do
     collection do
       post :import
     end
+    get :show_coverages, on: :member
   end
 
   resources :coop_members do
@@ -223,6 +224,7 @@ Rails.application.routes.draw do
     get :modal_remarks, on: :member
     get :cov_list, on: :collection
     patch :update_batch_selected, on: :collection
+    get :transfer_to_md, on: :member
   end
 
   get 'preview', to: 'process_coverages#preview'
