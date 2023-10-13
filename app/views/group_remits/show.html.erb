@@ -35,7 +35,7 @@
         
         <%  if @group_remit.denied_members.present? %>
           <%= link_to group_remit_denied_members_path(@group_remit), class: "#{small_btn('outline-danger')} position-relative" do %>
-            Denied members
+            Rejected members
             <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
               !
               <span class="visually-hidden">unread messages</span>
