@@ -15,12 +15,11 @@ class MembersController < InheritedResources::Base
 
     import_message = import_service.import
 
-    if import_message.is_a?(String)
-      redirect_to coop_members_path, alert: import_message
+    if current_user.userable_type == 'CoopUser'
+      import_redirect(coop_members_path, import_message)
     else
-      redirect_to coop_members_path, notice: "#{import_message[:created_members_counter] > 0 ? "#{import_message[:created_members_counter]} members enrolled. " : '' } #{import_message[:updated_members_counter] > 0 ? "#{import_message[:updated_members_counter]} members updated." : ''}"
+      import_redirect(@cooperative, import_message)
     end
-
   end
 
   def show_coverages
@@ -32,7 +31,7 @@ class MembersController < InheritedResources::Base
 
   def new
     # byebug
-    if params[:coop_id].present? 
+    if params[:coop_id].present?
       @cooperative = Cooperative.find(params[:coop_id])
     end
     @member = Member.new(
@@ -74,9 +73,14 @@ class MembersController < InheritedResources::Base
     respond_to do |format|
       if @member.save
         format.html {
-          coop_member = @member.coop_members.find_by(cooperative_id: @cooperative.id)
-          redirect_to coop_members_path(cooperative_id: @cooperative.id),
-          notice: "Member was successfully created." }
+          if current_user.userable_type == 'CoopUser'
+            coop_member = @member.coop_members.find_by(cooperative_id: @cooperative.id)
+            redirect_to coop_members_path(cooperative_id: @cooperative.id),
+            notice: "Member was successfully created."
+          elsif current_user.userable_type == 'Employee'
+            redirect_to cooperative_path(@cooperative), notice: "Member was successfully created."
+          end
+        }
       else
         format.html { render :new, status: :unprocessable_entity }
       end
@@ -90,6 +94,10 @@ class MembersController < InheritedResources::Base
       @cooperative = Cooperative.find(params[:cooperative_id])
     end
 
+    @prov = GeoProvince.where(geo_region_id: @member.geo_region_id)
+    @muni = GeoMunicipality.where(geo_province_id: @member.geo_province_id)
+    @brgy = GeoBarangay.where(geo_municipality_id: @member.geo_municipality_id)
+
     @coop_member = @member.coop_members.find_by(cooperative_id: @cooperative.id)
   end
 
@@ -100,8 +108,13 @@ class MembersController < InheritedResources::Base
     respond_to do |format|
       if @member.update(member_params)
         format.html {
-          redirect_to coop_members_path,
-          notice: "Member was successfully updated." }
+          if current_user.userable_type == 'CoopUser'
+            redirect_to coop_members_path,
+            notice: "Member was successfully updated."
+          elsif current_user.userable_type == 'Employee'
+            redirect_to cooperative_path(@cooperative), notice: "Member was successfully updated."
+          end
+        }
       else
         format.html { render :new, status: :unprocessable_entity }
       end
@@ -121,6 +134,14 @@ class MembersController < InheritedResources::Base
     def check_userable_type
       unless current_user.userable_type == 'CoopUser' || current_user.userable_type == 'Employee'
         render file: "#{Rails.root}/public/404.html", status: :not_found
+      end
+    end
+
+    def import_redirect(path, import_message)
+      if import_message.is_a?(String)
+        redirect_to path, alert: import_message
+      else
+        redirect_to path, notice: "#{import_message[:created_members_counter] > 0 ? "#{import_message[:created_members_counter]} members enrolled. " : '' } #{import_message[:updated_members_counter] > 0 ? "#{import_message[:updated_members_counter]} members updated." : ''} #{import_message[:denied_enrollees_counter] > 0 ? "#{import_message[:denied_enrollees_counter]} members denied." : ''}"
       end
     end
 end

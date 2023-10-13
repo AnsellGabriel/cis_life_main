@@ -1,34 +1,6 @@
 <!-- New Member form Modal -->
-<div class="modal fade" id="batchEnrollment" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title text-center text-primary" id="staticBackdropLabel">Batch Enrollment</h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-      </div>
-      <div class="modal-body <%= flex_justify_align('','', true) %> gap-3" data-controller="progress-bar" data-progress-bar-url-value="<%= progress_path(user_id: current_user.id) %>">
-        <%= form_with url: import_members_path, method: :post do |form| %>
-          <%= form.label :file, "For multiple enrollment upload your csv file.", class: "form-text" %>
-          <div class="d-flex gap-3">
-            <%= form.file_field :file, 
-              class: "form-control", 
-              style: "width: 80%", 
-              data: {progress_bar_target: 'file'} 
-            %>
-            <%= submit_tag 'Upload', 
-              class: small_btn('primary'), 
-              data: {
-                action: 'click->progress-bar#updateProgress', 
-                progress_bar_target: 'button'
-              }
-            %>
-          </div>
-        <% end %>
-        <%= render 'layouts/partials/progress_bar' %>
-      </div>
-    </div>
-  </div>
-</div>
+<%=  render 'member_import_modal' %>
+
 <div class="<%= flex_justify_align('','',true) %> gap-3">
     <%= content_tag :h3, @cooperative.name, class: 'text-primary mb-0'  %>
     <div class="d-flex gap-1 mb-3">
@@ -40,15 +12,17 @@
           } %>
       </div>
       <div class="mb-1">
-        <%= content_tag :button, "Batch Enrollment", 
-          class: small_btn('outline-primary'), 
-          data: {bs_toggle: "modal",
-            bs_target: "#batchEnrollment"
-          }%>
+        <%= render 'member_import_btn' %>
       </div>
       <%  if @cooperative.denied_enrollees.present? %>
         <div class="">
-          <%= link_to 'Denied enrollees', denied_enrollees_path, class: small_btn('outline-secondary') %>
+          <%= link_to denied_enrollees_path, class: "#{small_btn('outline-danger')} position-relative" do %>
+            Denied Enrollees
+            <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+              !
+              <span class="visually-hidden">unread messages</span>
+            </span>
+          <% end %>
         </div>
       <% end %>
     </div>

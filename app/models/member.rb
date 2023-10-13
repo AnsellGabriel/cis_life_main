@@ -35,7 +35,7 @@ class Member < ApplicationRecord
   end
 
   def to_s
-    full_name.titleize
+    full_name
   end
 
   def validate_phone_format
@@ -61,7 +61,7 @@ class Member < ApplicationRecord
   end
 
   def full_name
-    "#{last_name}, #{first_name} #{middle_name}"
+    "#{last_name.capitalize} #{suffix}, #{first_name.capitalize} #{middle_name.capitalize.chr}."
   end
 
   def self.get_ri
@@ -107,6 +107,7 @@ class Member < ApplicationRecord
     end
 
     number = number.to_s.gsub(/[^0-9]/, '') # remove all non-digit characters
+    
     if number.length == 10 && number.start_with?('9') # mobile number
       number = "+63#{number}"
     elsif number.length == 7 && ['02', '03', '032', '033', '034', '035', '036', '037', '038', '039', '042', '043', '044', '045', '046', '047', '048', '049', '052', '053', '054', '055', '056', '057', '058', '072', '074', '075', '076', '077', '078'].include?(number[0..2]) # landline number
@@ -116,7 +117,6 @@ class Member < ApplicationRecord
     end
     number
   end
-
 
   def uppercase_fields
     self.last_name = self.last_name == nil ? '' : self.last_name.strip.upcase
@@ -131,10 +131,12 @@ class Member < ApplicationRecord
     includes(coop_members: :coop_branch).where(coop_members: { id: coop_members.ids }).order(:last_name)
   end
 
+  def self.filter_by_coop_member_id(id)
+    where(coop_members: { id: id })
+  end
+
   def self.filter_by_name(last_name_filter, first_name_filter)
     where("last_name LIKE ? AND first_name LIKE ?", "%#{last_name_filter}%", "%#{first_name_filter}%")
   end
-
-
 
 end

@@ -10,18 +10,18 @@ class CoopBranch < ApplicationRecord
   belongs_to :geo_municipality, optional: true
   belongs_to :geo_barangay, optional: true
 
-  def to_s 
+  def to_s
     name
   end
 
-  def get_address 
-    unless geo_province_id.nil? && geo_municipality_id.nil? && geo_barangay_id.nil? 
-      geo_province.name + ', ' + geo_municipality.name + ', ' + geo_barangay.name + ', ' + 
+  def get_address
+    unless geo_province.nil? && geo_municipality.nil? && geo_barangay.nil?
+      geo_province.name + ', ' + geo_municipality.name + ', ' + geo_barangay.name + ', ' +
       "#{self.street}"
     end
     # "#{self.street}" + ', ' geo_barangay.name + ', ' + geo_municipality.name + ', ' + geo_province.name
   end
-  
+
   def to_upcase
     name.upcase
   end

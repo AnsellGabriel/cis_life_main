@@ -42,7 +42,7 @@
                 <span class="mb-0 text-secondary">Birthdate</span>
               </div>
               <div class="col-sm-3 ">
-                <%= date_as_month_day_year(@member.birth_date) %>
+                <%= month_day_year(@member.birth_date) %>
               </div>
               <div class="col-sm-3 text-secondary">
                 <span class="mb-0">Age</span>
@@ -109,13 +109,13 @@
                 <span class="mb-0 text-secondary">Release Date</span>
               </div>
               <div class="col-sm-3 ">
-                <%= date_as_month_day_year(@batch.date_release) %>
+                <%= month_day_year(@batch.date_release) %>
               </div>
               <div class="col-sm-3">
                 <span class="mb-0 text-secondary">Effectivity Date</span>
               </div>
               <div class="col-sm-3 ">
-                <%= date_as_month_day_year(@batch.effectivity_date) %>
+                <%= month_day_year(@batch.effectivity_date) %>
               </div>
             </div>
             <hr>
@@ -124,13 +124,13 @@
                 <span class="mb-0 text-secondary">Maturity Date</span>
               </div>
               <div class="col-sm ">
-                <%= date_as_month_day_year(@batch.date_mature)%>
+                <%= month_day_year(@batch.date_mature)%>
               </div>
               <div class="col-sm">
                 <span class="mb-0 text-secondary">Expiry Date</span>
               </div>
               <div class="col-sm ">
-                <%= date_as_month_day_year(@batch.expiry_date)%>
+                <%= month_day_year(@batch.expiry_date)%>
               </div>
             </div>
             <hr>

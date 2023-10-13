@@ -1,11 +1,14 @@
 class CooperativesController < ApplicationController
   # before_action :check_userable_type, except: %i[ selected ]
-  before_action :set_cooperative, only: %i[ show edit update destroy ]
   before_action :authenticate_user!, only: %i[ index show edit update destroy ]
 
   # GET /cooperatives or /cooperatives.json
   def index
-    @cooperatives = Cooperative.all
+    if params[:coop_filter]
+      @cooperatives = Cooperative.where("name LIKE ?", "%#{params[:coop_filter]}%")
+    else
+      @cooperatives = Cooperative.all
+    end
   end
 
   # GET /cooperatives/1 or /cooperatives/1.json
@@ -13,21 +16,23 @@ class CooperativesController < ApplicationController
     @member = Member.new
     @member.coop_members.build
     @coop_branches = CoopBranch.where(cooperative: @cooperative)
+
     coop_members = @cooperative.coop_members
     f_members = Member.coop_member_details(coop_members)
       .filter_by_name(params[:last_name_filter], params[:first_name_filter])
-    @pagy, @filtered_members = pagy(f_members, items: 10)
+
+    @pagy, @filtered_members = pagy(f_members, items: 10, params: {active_tab: 'members'})
   end
 
   # GET /cooperatives/new
   def new
     @cooperative = Cooperative.new
-    @provinces = @municipalities = @barangays = []
+    @prov = @muni = @brgy = []
     # if Rails.env.development?
     #   # default_values
     # end
   end
-  
+
   # GET /cooperatives/1/edit
   def edit
   end
@@ -81,11 +86,6 @@ class CooperativesController < ApplicationController
   end
 
   private
-    # Use callbacks to share common setup or constraints between actions.
-    def set_cooperative
-      @cooperative = Cooperative.find(params[:id])
-    end
-
     # Only allow a list of trusted parameters through.
     def cooperative_params
       # params.require(:cooperative).permit(:coop_type_id, :geo_region_id, :geo_province_id, :geo_municipality_id, :geo_barangay_id, :street, :name, :description, :registration_no, :tin, :acronym, :contact_no, :email)
@@ -93,7 +93,7 @@ class CooperativesController < ApplicationController
         coop_branches_params: [:id, :name, :geo_region_id, :geo_province_id, :geo_municipality_id, :geo_barangay_id, :street, :contact_details])
     end
 
-    def default_values 
+    def default_values
       @geo_region = GeoRegion.all
       @coop_type = CoopType.all
       @cooperative.geo_region_id = @geo_region.shuffle.first.id

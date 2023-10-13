@@ -55,6 +55,9 @@ class ProcessClaimsController < ApplicationController
 
   def new_ca 
     @process_claim = ProcessClaim.new
+    @coop_member = CoopMember.find(params[:cm])
+    @process_claim.claimable = @coop_member
+    @process_claim.cooperative = @coop_member.cooperative
   end
 
   def set_dummy_value
