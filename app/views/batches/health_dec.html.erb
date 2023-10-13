@@ -61,7 +61,7 @@
       <div class="tab-pane fade" id="pills-rem" role="tabpanel" aria-labelledby="pills-rem-tab">
         <% if @md.present? %>
           <div class="row">
-            <div class="card col-6">
+            <div class="card col-6 ms-3">
               <div class="card-header">
                 Recommendation
               </div>
@@ -80,9 +80,11 @@
                 <%#= content_tag :h4, @batch.batch_remarks.where(status: 2).first.remark %>
               </div>
             </div>
-            <div class="col-6">
-                <%= render "batch_remarks/form_md", locals: { batch_remark: @batch_remark, batch: @batch }  %>
-            </div>
+            <% unless @batch.insurance_status == "approved" || @batch.insurance_status == "denied" %>
+              <div class="col-6">
+                  <%= render "batch_remarks/form_md", locals: { batch_remark: @batch_remark, batch: @batch }  %>
+              </div>
+            <% end %>
           </div>
         <% end %>
       </div>
