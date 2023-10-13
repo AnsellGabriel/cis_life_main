@@ -48,10 +48,9 @@ class BatchesController < ApplicationController
 
     @for_und = params[:for_und]
     @md = params[:md]
-
     # Medical Director Remarks
     @batch_remark = @batch.batch_remarks.build
-    @batch_status = "test"
+    # @batch_status = "test"
     @batch_status = "MD"
     @rem_status = :md_reco
     # @process_coverage = @batch.group_remit.process_coverage

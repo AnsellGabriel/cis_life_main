@@ -174,8 +174,8 @@
                   <% @filtered_batches.each do |batch| %>
                     <% group_remit =  batch.group_remits.find_by(type: 'Remittance') %>
                     <% mem_bday = batch.coop_member.member.birth_date %>
-                    <% effect = batch.group_remits.find_by(type: "Remittance").effectivity_date %>
-                    <% expire = batch.group_remits.find_by(type: "Remittance").expiry_date %>
+                    <% effect = batch.effectivity_date.nil? ? batch.group_remits.find_by(type: "Remittance").effectivity_date : batch.effectivity_date %>
+                    <% expire = batch.expiry_date.nil? ? batch.group_remits.find_by(type: "Remittance").expiry_date : batch.expiry_date %>
                     <% if mem_bday.nil? %>
                       <% mem_age = "" %>
                     <% else %>
@@ -189,7 +189,8 @@
                         <% end %>
                       </td>
                       <td>
-                        <%= link_to batch.coop_member.member, show_insurance_coop_member_path(batch.coop_member, pro_cov: true), class: "link-primary", data: { turbo_frame: "modal-xl" } %> <br>
+                        <!-- <%= link_to batch.coop_member.member, show_insurance_coop_member_path(batch.coop_member, pro_cov: true), class: "link-primary", data: { turbo_frame: "modal-xl" } %> <br>-->
+                        <%= link_to batch.coop_member.member, show_coverages_member_path(batch.coop_member.member, pro_cov: true), class: "link-primary", data: { turbo_frame: "modal-xl" } %> <br>
                         <%= content_tag :small, "Age: #{mem_age}" %> <br>
                         <%= content_tag :small, mem_bday.nil? ? "No Birthday" : "Birthday: #{mem_bday.strftime('%b-%d-%Y')}", class: "text-secondary" %> <br>
                         <%= batch_status(batch.status) %>  <br>
@@ -245,6 +246,7 @@
                               <%= bootstrap_icon "x-lg" %>
                             <% end %>
                           </div>
+                          <br>
                           <div class="<%= reconsider_button(current_user.rank, batch.insurance_status, process_coverage.status) %>">
                             <%= link_to reconsider_batch_process_coverage_path(batch: batch), onclick: "return confirm('Are you sure?')", method: :get, class: "btn btn-sm btn-warning mb-1" do %>
                               <%= bootstrap_icon "arrow-repeat" %>
@@ -260,6 +262,9 @@
                         <% if batch.batch_health_decs.present? %>
                           <%= link_to health_dec_group_remit_batch_path(@group_remit, batch, for_und: true), class: "btn btn-sm btn-warning mb-1", data: { turbo_frame: "reg_form_modal_xl" } do %>
                             <%= bootstrap_icon "file-earmark-medical" %>
+                          <% end %>
+                          <%= link_to transfer_to_md_process_coverage_path(batch: batch, batch_type: batch.class.name), onclick: "return confirm('Are you sure?')", method: :get, class: "btn btn-sm btn-warning mb-1" do %>
+                            <%= bootstrap_icon "arrow-up-right" %>
                           <% end %>
                         <% end %>
                       </td>

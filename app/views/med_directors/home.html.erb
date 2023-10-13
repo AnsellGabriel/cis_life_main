@@ -4,21 +4,22 @@
   <table class="table table-striped table-bordered table-hover">
     <thead>
       <tr>
-        <th>Process Coverage</th>
+        <th>Batch</th>
         <th></th>
       </tr>
     </thead>
     <tbody>
-      <% @group_remits.each do |group_remit| %>
+      <% @batches.each do |batch| %>
         <tr>
           <td>
             <!-- temp change process_coverage.group_remit to process_coverage.group_remit.id -->
-            <strong> <%= group_remit.agreement.cooperative %> </strong> <%= content_tag :small, "#{group_remit.agreement.cooperative.acronym}", class: "text-primary" %> <br>
-            <small><%= group_remit.agreement.plan.acronym %><%= group_remit.process_coverage.id %></small> <br>
-            <%= content_tag :small, group_remit.agreement.plan, class: "fw-lighter" %>
+            <strong> <%= batch.coop_member.set_full_name %> </strong> <%= content_tag :small, "#{batch.get_group_remit.agreement.cooperative.acronym}", class: "text-primary" %> <br>
+            <small><%= batch.get_group_remit.agreement.cooperative %> <br>
+            <%= content_tag :small, batch.get_group_remit.agreement.plan, class: "fw-lighter" %>
           </td>
           <td>
-            <%= link_to 'View', all_health_decs_group_remit_batches_path(group_remit), class: 'btn btn-secondary btn-sm' %>
+            <%= link_to "View", health_dec_group_remit_batch_path(batch.get_group_remit, batch, for_und: true, md: true, batch_type: batch.class.name), class: "btn btn-sm btn-warning mb-1", data: { turbo_frame: "reg_form_modal_xl" } %>
+          <%#= link_to 'View', all_health_decs_group_remit_batches_path(group_remit), class: 'btn btn-secondary btn-sm' %>
           </td>
         </tr>
       <% end %>

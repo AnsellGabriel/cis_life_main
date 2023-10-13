@@ -10,46 +10,87 @@
     <% end %>
   </div>
   <div class="modal-body">
-    <% if @md.present? %>
-      <%= render 'coop_members/coop_member', member: @batch.coop_member.member, coop_member: @batch.coop_member %>
-    <% end %>
-    <table class="table table-bordered">
-      <thead>
-        <tr>
-          <th scope="col"></th>
-          <th scope="col" class="col-11">Questionnaire</th>
-          <th scope="col" class="col-1">Answer</th>
-        </tr>
-      </thead>
-      <tbody>
-        <% @questionaires.each_with_index do |q, index| %>
-          <tr>
-            <td><%= index+1 %></td>
-            <td>
-              <p><%= q.answerable.question %></p>
-              <% if q.answerable.health_dec_subquestions.present? %>
-                <% @subquestions.map do |sub| %>
-                  <% if sub.answerable.health_dec.id == q.answerable.id %>
-                    <p><%= sub.answerable.question %></p>
-                    <input value="<%= sub.answer %>" class="form-control" readonly disabled>
+
+    <ul class="nav nav-pills mb-3" id="pills-tab" role="tablist">
+      <li class="nav-item" role="presentation">
+        <button class="nav-link active" id="pills-hd-tab" data-bs-toggle="pill" data-bs-target="#pills-hd" type="button" role="tab" aria-controls="pills-hd" aria-selected="true">Health Declaration</button>
+      </li>
+      <li class="nav-item" role="presentation">
+        <button class="nav-link" id="pills-mem-tab" data-bs-toggle="pill" data-bs-target="#pills-mem" type="button" role="tab" aria-controls="pills-mem" aria-selected="false">Member's Details</button>
+      </li>
+      <li class="nav-item" role="presentation">
+        <button class="nav-link" id="pills-rem-tab" data-bs-toggle="pill" data-bs-target="#pills-rem" type="button" role="tab" aria-controls="pills-rem" aria-selected="false">Remarks/Recommendation</button>
+      </li>
+    </ul>
+    <div class="tab-content" id="pills-tabContent">
+      <div class="tab-pane fade show active" id="pills-hd" role="tabpanel" aria-labelledby="pills-hd-tab">
+        <table class="table table-bordered">
+          <thead>
+            <tr>
+              <th scope="col"></th>
+              <th scope="col" class="col-11">Questionnaire</th>
+              <th scope="col" class="col-1">Answer</th>
+            </tr>
+          </thead>
+          <tbody>
+            <% @questionaires.each_with_index do |q, index| %>
+              <tr>
+                <td><%= index+1 %></td>
+                <td>
+                  <p><%= q.answerable.question %></p>
+                  <% if q.answerable.health_dec_subquestions.present? %>
+                    <% @subquestions.map do |sub| %>
+                      <% if sub.answerable.health_dec.id == q.answerable.id %>
+                        <p><%= sub.answerable.question %></p>
+                        <input value="<%= sub.answer %>" class="form-control" readonly disabled>
+                      <% end %>
+                    <% end %>
                   <% end %>
+                </td>
+                <td>
+                  <%= q.answer == "true" ? 'Yes' : 'No' %>
+                </td>
+              </tr>
+            <% end %>
+          </tbody>
+        </table>
+      </div>
+      <div class="tab-pane fade" id="pills-mem" role="tabpanel" aria-labelledby="pills-mem-tab">
+        <%= render 'coop_members/coop_member', member: @batch.coop_member.member, coop_member: @batch.coop_member %>
+      </div>
+      <div class="tab-pane fade" id="pills-rem" role="tabpanel" aria-labelledby="pills-rem-tab">
+        <% if @md.present? %>
+          <div class="row">
+            <div class="card col-6 ms-3">
+              <div class="card-header">
+                Recommendation
+              </div>
+              <div class="card-body">
+                <% @batch.remarks.order(created_at: :desc).each do |rem| %>
+                  <%= content_tag :div, class: "d-flex justify-content-between align-items-center" do %>
+                    <%= content_tag :p, class: "mb-1" do %>
+                      <%= rem.denied? && rem.user_type == 'CoopUser' ? 'System' : rem.user %>
+                      <%= content_tag :small, "- #{time_ago_in_words(rem.created_at)} ago" %>
+                      <%= batch_rem_status(rem.status) %>
+                    <% end %>
+                  <% end %>
+                  <%= content_tag :p, rem.remark, class: "small mb-0 fst-italic" %>
+                  <%= content_tag :hr %>
                 <% end %>
-              <% end %>
-            </td>
-            <td>
-              <%= q.answer == "true" ? 'Yes' : 'No' %>
-            </td>
-          </tr>
+                <%#= content_tag :h4, @batch.batch_remarks.where(status: 2).first.remark %>
+              </div>
+            </div>
+            <% unless @batch.insurance_status == "approved" || @batch.insurance_status == "denied" %>
+              <div class="col-6">
+                  <%= render "batch_remarks/form_md", locals: { batch_remark: @batch_remark, batch: @batch }  %>
+              </div>
+            <% end %>
+          </div>
         <% end %>
-      </tbody>
-    </table>
+      </div>
+    </div>
+
+
   </div>
 <% end %>
 <%#= @batch %>
-<% if @md.present? %>
-  <% if @batch.batch_remarks.where(status: 2).count <= 0 %>
-    <%= render "batch_remarks/form_md", locals: { batch_remark: @batch_remark }  %>
-  <% else %>
-    <%= content_tag :h3, @batch.batch_remarks.where(status: 2).first.remark %>
-  <% end %>
-<% end %>

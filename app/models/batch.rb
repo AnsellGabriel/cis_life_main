@@ -76,6 +76,18 @@ class Batch < ApplicationRecord
     batch_dependents.sum(:premium)
   end
 
+  def get_group_remit
+    self.group_remits.find_by(type: "Remittance")
+  end
+
+  def get_terms
+    (self.expiry_date - self.effectivity_date).to_i / 30
+  end
+
+  def self.get_member_gyrt_coverages(member)
+    joins(coop_member: :member).where(member: { id: member.id })
+  end
+
 
   def self.process_batch(batch, group_remit, rank = nil, duration = nil)
     agreement = group_remit.agreement
@@ -134,6 +146,7 @@ class Batch < ApplicationRecord
 
     month_difference = ((today.year * 12 + today.month) - (expiry_date.year * 12 + expiry_date.month)) + (expiry_date.day > today.day ? 1 : 0)
   end
+
 
   private
 

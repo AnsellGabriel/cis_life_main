@@ -77,6 +77,10 @@ class LoanInsurance::Batch < Batch
     self.coop_sf_amount = calculate_service_fee(self.group_remit.agreement.coop_sf, self.premium_due)
   end
 
+  def self.get_member_lppi_coverages(member)
+    joins(coop_member: :member).where(member: { id: member.id })
+  end
+
 
   def check_md_reco
     self.batch_remarks.where(status: 2).count

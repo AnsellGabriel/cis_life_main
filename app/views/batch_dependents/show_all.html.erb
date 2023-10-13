@@ -89,20 +89,19 @@
 
 
                       <% end %>
+                      <% if dependent.health_declaration.exists? %>
+                        <%= link_to health_dec_group_remit_batch_dependent_path(@group_remit, @batch, dependent, for_und: true, process_coverage_id: pro_cov), 
+                        class: small_btn('warning'), 
+                        title: 'Health Declaration Form' do %>
+                          <i class="bi bi-file-earmark-medical"></i>
+                        <% end %>
+                      <% end %>
+
+                      <% if dependent.remarks.exists? %>
+                        <%= link_to 'Remarks', dependent_remarks_path(batch_dependent_id: dependent.id, group_remit_id: @group_remit.id, batch_id: @batch.id, process_coverage_id: pro_cov, for_und: true), class: small_btn('warning'), data: {turbo_frame: "reg_form_modal_xl"} %>
+                      <% end %>
                     </div>
             
-
-                  <% if dependent.remarks.exists? %>
-                    <%= link_to 'Remarks', dependent_remarks_path(batch_dependent_id: dependent.id, group_remit_id: @group_remit.id, batch_id: @batch.id, process_coverage_id: pro_cov, for_und: true), class: small_btn('warning'), data: {turbo_frame: "reg_form_modal_xl"} %>
-                  <% end %>
-
-                  <% if dependent.health_declaration.exists? %>
-                    <%= link_to health_dec_group_remit_batch_dependent_path(@group_remit, @batch, dependent, for_und: true, process_coverage_id: pro_cov), 
-                    class: small_btn('warning'), 
-				            title: 'Health Declaration Form' do %>
-                      <i class="bi bi-file-earmark-medical"></i>
-                    <% end %>
-                  <% end %>
                 </div>
               </div>
               <hr>
