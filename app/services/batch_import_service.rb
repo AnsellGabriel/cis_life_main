@@ -275,7 +275,9 @@ class BatchImportService
 
   def initialize_counters_and_arrays
     @added_members_counter = 0
+    @added_dependents_counter = 0
     @denied_members_counter = 0
+    @denied_dependents_counter = 0
   end
 
   def extract_batch_data(row)
