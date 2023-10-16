@@ -54,10 +54,12 @@ class ProcessClaimsController < ApplicationController
   end
 
   def new_ca 
+    # raise "errors"
     @process_claim = ProcessClaim.new
     @coop_member = CoopMember.find(params[:cm])
     @process_claim.claimable = @coop_member
     @process_claim.cooperative = @coop_member.cooperative
+    @claim_cause = @process_claim.build_claim_cause
   end
 
   def set_dummy_value
@@ -70,7 +72,26 @@ class ProcessClaimsController < ApplicationController
 
   def create_coop 
     @process_claim = ProcessClaim.new(process_claim_params)
-    @process_claim.entry_type = "coop"
+    @process_claim.entry_type = :coop
+    @process_claim.claim_route = :file_claim
+    @process_claim.age = @process_claim.get_age.to_i
+    
+    respond_to do |format|
+      if @process_claim.save!
+        @process_claim.process_track.create(route_id: 0, user: current_user)
+        format.html { redirect_to show_coop_process_claim_path(@process_claim), notice: "Claims was successfully added." }
+        format.json { render :show, status: :created, location: @anniversary }
+      else
+        format.html { render :new_coop, status: :unprocessable_entity }
+        format.json { render json: @process_claim.errors, status: :unprocessable_entity }
+        # format.turbo_stream { render :form_update, status: :unprocessable_entity }
+      end
+    end
+  end
+
+  def create_ca 
+    @process_claim = ProcessClaim.new(process_claim_params)
+    @process_claim.entry_type = :claim
     @process_claim.claim_route = :file_claim
     @process_claim.age = @process_claim.get_age.to_i
     

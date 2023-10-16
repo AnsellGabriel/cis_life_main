@@ -196,7 +196,8 @@ Rails.application.routes.draw do
     get :claims_file, on: :member
     get :claim_process, on: :member
     get :update_status, on: :member
-    get :new_ca, on: :collection
+    get :new_ca, to: 'process_claims#new_ca', on: :collection
+    post :create_ca, to: 'process_claims#create_ca', on: :collection
   end
   resources :underwriting_routes
   resources :batch_remarks do
