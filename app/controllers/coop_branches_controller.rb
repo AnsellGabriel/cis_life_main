@@ -19,7 +19,8 @@ class CoopBranchesController < ApplicationController
   # GET /coop_branches/new
   def new
     # @coop_branch = @cooperative.coop_branches.build
-    @cooperative = Cooperative.find(params[:v])
+    # @cooperative = Cooperative.find(params[:v])
+    @cooperative = Cooperative.find(params[:cooperative_id])
     @coop_branch = @cooperative.coop_branches.build
     # default_values
     @prov = @muni = @brgy = []
