@@ -34,14 +34,16 @@ class BatchRemarksController < ApplicationController
   end
 
   def form_md
+    
+    # binding.pry
+    
+    #  @batch_status = "MD"
 
-    # @batch_status = "MD"
+    #  @rem_status = :md_reco
+    #  @process_coverage = @batch.group_remit.process_coverage
 
-    # @rem_status = :md_reco
-    # @process_coverage = @batch.group_remit.process_coverage
-
-    # @batch = Batch.find(params[:batch])
-    # @batch_remark = @batch.batch_remarks.build
+    #  @batch = Batch.find(params[:batch])
+    #  @batch_remark = @batch.batch_remarks.build
 
   end
 
@@ -51,16 +53,18 @@ class BatchRemarksController < ApplicationController
 
   # POST /batch_remarks
   def create
-    # raise 'errors'
     # @batch_remark = BatchRemark.new(batch_remark_params)
-
-    @batch = check_class(params[:batch_type], params[:batch_id])
+    unless params[:batch_remark][:status] == "md_reco"
+      @batch = check_class(params[:batch_type], params[:batch_id])
+    else
+      @batch = check_class(params[:batch_remark][:remarkable_type], params[:batch_remark][:remarkable_id])
+    end
     @batch_remark = BatchRemark.new(batch_remark_params)
     @batch_remark.user_type = current_user.userable_type
     @batch_remark.user_id = current_user.userable_id
-    @ref = @batch.id
     # @batch_remark.remarkable_id = @batch.id
     # @batch_remark.remarkable_type = @batch.class.name
+    @ref = @batch.id
     @batch_remark.remarkable = @batch
     @batch_status = params[:batch_remark][:batch_status]
     @rem_status = remark_status(@batch_status)
@@ -130,7 +134,8 @@ class BatchRemarksController < ApplicationController
 
           elsif params[:batch_remark][:batch_status] == "MD"
             @group_remit = @batch.group_remits.find_by(type: "Remittance")
-            format.html { redirect_to all_health_decs_group_remit_batches_path(@group_remit.process_coverage), notice: "Recommendation created." }
+            # format.html { redirect_to all_health_decs_group_remit_batches_path(@group_remit.process_coverage), notice: "Recommendation created." }
+            format.html { redirect_to med_directors_home_path, notice: "Recommendation created." }
           elsif params[:batch_remark][:batch_status] == "For reconsideration"
 
             if params[:batch_type] == 'BatchDependent'

@@ -1,6 +1,6 @@
 class CoopAgreementsController < ApplicationController
   before_action :authenticate_user!
-  before_action :check_userable_type
+  # before_action :check_userable_type
   before_action :set_agreement, only: %i[ show edit update destroy ]
 
   # GET /agreements

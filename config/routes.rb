@@ -85,6 +85,7 @@ Rails.application.routes.draw do
     collection do
       post :import
     end
+    get :show_coverages, on: :member
   end
 
   resources :coop_members do
@@ -94,7 +95,10 @@ Rails.application.routes.draw do
     get :find_member, on: :member
   end
 
-  resources :denied_enrollees, only: [:index, :destroy]
+  resources :denied_enrollees, only: [:index] do
+    # routes for deleting all denied enrolle
+    delete :destroy_all, on: :collection
+  end
 
   resources :coop_agreements do
     resources :group_remits
@@ -103,6 +107,7 @@ Rails.application.routes.draw do
   resources :group_remits do
     get 'denied_members', to: 'denied_members#index'
     get 'download_csv', to: 'denied_members#download_csv'
+    delete 'destroy_all', to: 'denied_members#destroy_all'
     get :submit, on: :member
     get :renewal, on: :member
     resources :batches do
@@ -224,6 +229,7 @@ Rails.application.routes.draw do
     get :modal_remarks, on: :member
     get :cov_list, on: :collection
     patch :update_batch_selected, on: :collection
+    get :transfer_to_md, on: :member
   end
 
   get 'preview', to: 'process_coverages#preview'

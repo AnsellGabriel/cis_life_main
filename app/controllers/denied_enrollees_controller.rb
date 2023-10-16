@@ -6,8 +6,18 @@ class DeniedEnrolleesController < ApplicationController
   end
 
   def destroy
-    @denied_enrollee = DeniedEnrollee.find(params[:id])
-    @denied_enrollee.destroy!
-    redirect_to denied_enrollees_path, notice: "Denied enrollee deleted successfully."
+    # @cooperative.denied_enrollees.destroy_all
+
+    # redirect_to coop_members_path, notice: "Denied enrollees deleted successfully."
+  end
+
+  def destroy_all
+    @cooperative.denied_enrollees.destroy_all
+
+    if current_user.userable_type == "CoopUser"
+      redirect_to coop_members_path, notice: "Denied enrollees deleted successfully."
+    else
+      redirect_to cooperative_path(@cooperative), notice: "Denied enrollees deleted successfully."
+    end
   end
 end

@@ -46,7 +46,7 @@
                           <%= content_tag :span, 'Effectivity date: ' %>
                           <span> 
                           <% if group_remit.effectivity_date.present? %>
-                            <%= date_as_month_day_year(group_remit.effectivity_date) %>
+                            <%= month_day_year(group_remit.effectivity_date) %>
                           <% else %>
                             Tentative
                           <% end %>
@@ -54,7 +54,7 @@
                         </div>
                         <div class="text-secondary small">
                             <%= content_tag :span, 'Expiry date: ' %>
-                            <%= content_tag :span, date_as_month_day_year(group_remit.expiry_date) %>
+                            <%= content_tag :span, month_day_year(group_remit.expiry_date) %>
                         </div>
                       </div>
                       <%= link_to 'View', group_remit_path(group_remit), class: small_btn('secondary') %>

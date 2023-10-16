@@ -25,9 +25,7 @@
               </div>
             </div>
 
-            <% if plan_acronym == 'PMFC' %>
-              <%= render 'terms_button', agreement: @agreement %>
-            <% elsif @agreement.anniversary_type.downcase == '12 months' or @agreement.anniversary_type.nil? %>
+            <% if @agreement.anniversary_type.downcase == '12 months' or @agreement.anniversary_type.nil? %>
               <% current_batch_remit = @agreement.group_remits.find_by(type: 'BatchRemit', effectivity_date: Date.today.beginning_of_month)%>
 
               <% unless current_batch_remit.present? %>

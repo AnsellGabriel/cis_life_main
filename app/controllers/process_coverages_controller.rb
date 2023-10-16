@@ -1,7 +1,7 @@
 class ProcessCoveragesController < ApplicationController
   before_action :authenticate_user!
   before_action :check_emp_department
-  before_action :set_process_coverage, only: %i[ show edit update destroy approve_batch deny_batch pending_batch reconsider_batch pdf set_premium_batch update_batch_prem ]
+  before_action :set_process_coverage, only: %i[ show edit update destroy approve_batch deny_batch pending_batch reconsider_batch pdf set_premium_batch update_batch_prem transfer_to_md ]
 
   # GET /process_coverages
   def index
@@ -15,6 +15,8 @@ class ProcessCoveragesController < ApplicationController
       @reprocess_coverages = ProcessCoverage.where(status: :reprocess)
       @reassess_coverages = ProcessCoverage.where(status: :reassess)
       @denied_process_coverages = ProcessCoverage.where(status: :denied)
+
+      @coverages_total_processed = ProcessCoverage.where(status: [:approved, :denied, :reprocess])
 
       if params[:search].present?
         @process_coverages = @process_coverages_x.joins(group_remit: {agreement: :cooperative}).where("group_remits.name LIKE ? OR group_remits.description LIKE ? OR agreements.moa_no LIKE ? OR cooperatives.name LIKE ?", "%#{params[:search]}%", "%#{params[:search]}%", "%#{params[:search]}%", "%#{params[:search]}%")
@@ -48,7 +50,7 @@ class ProcessCoveragesController < ApplicationController
       else
         @process_coverages = @process_coverages_x
       end
-
+      # raise 'errors'
       if params[:emp_id].present?
         # raise 'errors'
         date_from = params[:date_from]
@@ -349,6 +351,21 @@ class ProcessCoveragesController < ApplicationController
     end
   end
 
+  def transfer_to_md
+    case params[:batch_type]
+    when "LoanInsurance::Batch"
+      @batch = LoanInsurance::Batch.find(params[:batch])
+    else
+      @batch = Batch.find(params[:batch])
+    end
+
+    respond_to do |format|
+      @batch.update(for_md: true)
+      format.html { redirect_to @process_coverage, notice: "Batch sent to M.D. for review"  }
+    end
+    
+  end
+
   def update_batch_prem
     # raise 'errors'
     @group_remit = @process_coverage.group_remit
@@ -622,7 +639,7 @@ class ProcessCoveragesController < ApplicationController
     end
 
     def check_emp_department
-      unless (current_user.userable_type == 'Employee' && current_user.userable.department_id == 17) || current_user.senior_officer? #check if underwriting
+      unless (current_user.userable_type == 'Employee' && current_user.userable.department_id == 1) || current_user.senior_officer? #check if underwriting
         render file: "#{Rails.root}/public/404.html", status: :not_found
       end
     end

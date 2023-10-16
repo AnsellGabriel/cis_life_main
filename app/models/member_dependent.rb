@@ -1,6 +1,6 @@
 class MemberDependent < ApplicationRecord
   attr_accessor :claims
-  
+
   before_validation :name_to_upcase
 
   validates_presence_of :first_name, :last_name, :birth_date, :relationship
@@ -28,14 +28,14 @@ class MemberDependent < ApplicationRecord
   end
 
   def full_name
-    "#{last_name}, #{first_name} #{middle_name}"
+    "#{last_name.capitalize}, #{first_name.capitalize} #{middle_name.chr}."
   end
 
   private
-  
-  def validate_relationship  
+
+  def validate_relationship
     principal_civil_status = self.member.civil_status
-    
+
     allowed_relationships = case principal_civil_status
                               when "MARRIED"
                                 ['SPOUSE', 'CHILD']
@@ -44,12 +44,12 @@ class MemberDependent < ApplicationRecord
                               else
                                 ['PARENT', 'CHILD', 'SIBLING']
                             end
-  
-    unless allowed_relationships.include?(self.relationship) 
+
+    unless allowed_relationships.include?(self.relationship)
       errors.add(:relationship, "allowed: #{allowed_relationships.join(', ')} for principal with civil status #{principal_civil_status}. Dependent's relationship to principal is #{self.relationship}")
     end
   end
-  
+
 
   def name_to_upcase
     self.last_name = self.last_name.upcase

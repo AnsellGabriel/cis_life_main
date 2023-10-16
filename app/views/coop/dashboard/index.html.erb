@@ -46,11 +46,11 @@
                       </div>
                     <% end %>
                     <div class="row <%= flex_justify_align('center') %>">
-                      <%= content_tag :span, "Entry age: #{a.entry_age_from} - #{a.entry_age_to} years old", class: 'card-text col-md-6' %>
-                      <%= content_tag :span, "Minimum Participatiion: #{a.minimum_participation}", class: 'card-text col-md-6' %>
+                      <%= content_tag :span, "Entry age: #{a.entry_age_from.to_i} - #{a.entry_age_to.to_i} years old", class: 'card-text col-md-6' %>
+                      <%= content_tag :span, "Minimum Participatiion: #{number_with_delimiter(a.minimum_participation)}", class: 'card-text col-md-6' %>
                     </div>
                     <div class="row">
-                      <%= content_tag :span, "Exit age: #{a.exit_age} years old", class: 'card-text mb-2 col-md-6' %>
+                      <%= content_tag :span, "Exit age: #{a.exit_age.to_i} years old", class: 'card-text mb-2 col-md-6' %>
                       <%= content_tag :span, "Cooperative service fee: #{a.coop_sf}%", class: 'card-text mb-2 col-md-6' %>
                     </div>
                   </div>
@@ -66,7 +66,7 @@
   <div class="col-md-6">
     <div class="card border-primary mb-3 ms-4" style="max-width: 300px;" >
       <div class="card-body text-primary">
-        <%= content_tag :p, number_with_delimiter(123_123_123), class: 'fs-1 mb-0 ps-1'  %>
+        <%= content_tag :p, number_with_delimiter(15_450_000), class: 'fs-1 mb-0 ps-1'  %>
         <%= content_tag :span, 'Total Claimed Amount'%>
       </div>
     </div>

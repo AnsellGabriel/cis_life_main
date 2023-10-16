@@ -190,4 +190,26 @@ module ApplicationHelper
     end
   end
 
+	def coop_user?(current_user)
+		current_user.userable_type == 'CoopUser'
+	end
+
+	def mis_user?(current_user)
+		current_user.userable.department_id == 15
+	end
+
+	def nav_header(current_user)
+		user_type = current_user.userable_type
+
+		if user_type == 'CoopUser'
+			current_user.userable.cooperative.name.titleize
+		elsif user_type == 'Employee'
+
+			case current_user.userable.department_id
+			when 15 then "Management Information System"
+			end
+
+		end
+	end
+
 end

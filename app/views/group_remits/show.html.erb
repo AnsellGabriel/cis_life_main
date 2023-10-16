@@ -34,13 +34,19 @@
         %>
         
         <%  if @group_remit.denied_members.present? %>
-          <%= link_to 'Denied members', group_remit_denied_members_path(@group_remit), class: small_btn('outline-primary') %>
+          <%= link_to group_remit_denied_members_path(@group_remit), class: "#{small_btn('outline-danger')} position-relative" do %>
+            Rejected members
+            <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+              !
+              <span class="visually-hidden">unread messages</span>
+            </span>
+          <% end %>
         <% end %>
 
       </div>
 
       <% unless @group_remit.is_for_renewal? %>
-        <%= button_to "Delete", group_remit_path(@group_remit), 
+        <%= button_to "Delete remittance", group_remit_path(@group_remit), 
           method: :delete,
           data: { turbo_confirm: "Delete #{@group_remit}?"},
           class: small_btn('outline-danger') 
@@ -48,7 +54,7 @@
       <% end %>
 
       <% if short_term_insurance && @group_remit.is_batch_remit? && @group_remit.is_pending_or_renewal? %>
-        <%= button_to "Delete", group_remit_path(@group_remit), 
+        <%= button_to "Delete remittance", group_remit_path(@group_remit), 
           method: :delete,
           data: { turbo_confirm: 'Delete group remit?'},
           class: small_btn('outline-danger') 
@@ -115,16 +121,16 @@
         <div class="card-body text-secondary">
           <div class="<%= flex_justify_align('center') %>">
             <%= content_tag :h6, "Effectivity Date ", class: 'sm-secondary-text text-primary', style: "width: 150px" %>
-            <%= content_tag :h6, ": #{@group_remit.effectivity_date.present? ? @group_remit.effectivity_date.strftime('%B %d, %Y') : 'Tentative'}", class: 'sm-secondary-text', style: "width: 150px" %>
+            <%= content_tag :h6, ": #{@group_remit.effectivity_date.present? ? month_day_year(@group_remit.effectivity_date) : 'Tentative'}", class: 'sm-secondary-text', style: "width: 150px" %>
           </div>
           <div class="<%= flex_justify_align('center') %>">
             <%= content_tag :h6, "Expiry Date", class: 'sm-secondary-text text-primary', style: "width: 150px" %>
-            <%= content_tag :h6, ": #{@group_remit.expiry_date.strftime('%B %d, %Y')}", class: 'sm-secondary-text', style: "width: 150px" %>
+            <%= content_tag :h6, ": #{month_day_year(@group_remit.expiry_date)}", class: 'sm-secondary-text', style: "width: 150px" %>
           </div>
           <% if @group_remit.instance_of?(Remittance)%>
             <div class="<%= flex_justify_align('center') %>">
               <%= content_tag :h6, "Submitted Date ", class: 'sm-secondary-text text-primary', style: "width: 150px" %>
-              <%= content_tag :h6, ": #{@group_remit.date_submitted.present? ? @group_remit.date_submitted.strftime('%B %d, %Y') : 'Pending'}", class: 'sm-secondary-text', style: "width: 150px" %>
+              <%= content_tag :h6, ": #{@group_remit.date_submitted.present? ? month_day_year(@group_remit.date_submitted) : 'Pending'}", class: 'sm-secondary-text', style: "width: 150px" %>
             </div>
           <% end %>
           <div class="<%= flex_justify_align('center') %>">
@@ -292,7 +298,7 @@
     <tbody id="batches_body">
 
       <% if @group_remit.batches.exists? %>
-        <%= render @batches.includes([coop_member: :member], :agreement_benefit, :batch_beneficiaries), group_remit: @group_remit, agreement: @agreement %>
+        <%= render @batches.includes([coop_member: :member], :batch_beneficiaries), group_remit: @group_remit, agreement: @agreement %>
       <% end %>
 
     </tbody>

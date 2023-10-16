@@ -3,7 +3,9 @@
   <%= f.error_notification message: f.object.errors[:base].to_sentence if f.object.errors[:base].present? %>
 
   <div class="form-inputs mb-3">
-      <%= f.association :batch, as: :hidden %>
+      <%#= f.association :batch, as: :hidden %>
+      <%= f.input :remarkable_id, input_html: { value: @batch.id }, as: :hidden %>
+      <%= f.input :remarkable_type, input_html: { value: @batch.class.name }, as: :hidden %>
       <%= f.input :remark, label: "Recommendation" %>
       <%= f.input :status, input_html: { value: @rem_status }, as: :hidden %>
       <%#= f.association :user %>

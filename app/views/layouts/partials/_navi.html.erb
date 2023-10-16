@@ -4,69 +4,39 @@
       <span class="navbar-toggler-icon"></span>
     </button>
     <div class="collapse navbar-collapse" id="navbarNavDropdown">
-      <a class="navbar-brand" href="#">
+      <a class="navbar-brand <%= flex_justify_align('', 'center') %>" href="#">
         <%= image_tag 'cis_logo.png', width: 150, class: 'mb-2 mb-lg-0 me-2' %>
-        <%# if current_user && current_user.userable_type == 'CoopUser' %>
-        <%#= current_user.userable.cooperative.name %>
-        <%# elsif current_user && current_user.userable_type == 'Employee' && current_user.userable.department_id == 19 %>
-        <%# Claims System %>
-        <%# elsif current_user && current_user.userable_type == 'Employee' && current_user.userable.department_id == 17 %>
-        <%# UND System %>
-        <%# end %>
-        <%#= content_tag :span, " DEMO VERSION", class: 'fw-bold text-danger' if ["localhost:3000"].include?(request.host_with_port) %>
+        <div class="" style="max-width: 500px;">
+          <% if current_user %>
+            <%= truncate(nav_header(current_user), length: 65) %>
+          <% end %>
+        </div>
       </a>
+
       <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
         <% if current_user %>
           <%= link_to "Home", authenticated_root_path, class: "nav-link" %>
-          <% if current_user.userable_type == 'CoopUser' %>
-            <li class="nav-item dropdown">
-              <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                Cooperative
-              </a>
-              <ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
-                <%= link_to "Members", coop_members_path, class: "dropdown-item" %>
-                <%# <%= link_to "Plan", coop_agreements_path, class: "dropdown-item" %>
-                <%= link_to "Claims Filed", index_coop_process_claims_path, class: "dropdown-item" %>
-                <%= link_to "Claims Message", claim_remarks_path, class: "dropdown-item" %>
-                <%# <%= link_to "Track claim", plans_path, class: "dropdown-item" %>
-                <%#= link_to "Evaluate", view_evaluate_process_claims_path(c: 4), class: "dropdown-item" if current_user.authority_level_id == 3 %>
-                <%#= link_to "VP Evaluation", view_evaluate_process_claims_path(c: 5), class: "dropdown-item" if current_user.authority_level_id == 3 %>
-                <%#= link_to "Reconsider", view_reconsider_process_claims_path, class: "dropdown-item"  if current_user.authority_level_id == 3 %>
-                <%#= link_to "Request for payment", root_path, class: "dropdown-item" %>
-              </ul>
-            </li>
-            <li class="nav-item dropdown">
-              <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                Insurance
-              </a>
-              <ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
-                <% @cooperative.agreements.includes(:plan).each do |a| %>
-                  <% case a.plan.acronym %>
-                  <% when 'LPPI' %>
+          
+          <% if coop_user?(current_user) %>
+            <%= render 'layouts/partials/nav_dropdown', title: 'Cooperative' do %>
+              <%= link_to "Members", coop_members_path, class: "dropdown-item" %>
+              <%= link_to "Claims Filed", index_coop_process_claims_path, class: "dropdown-item" %>
+              <%= link_to "Claims Message", claim_remarks_path, class: "dropdown-item" %>            
+            <% end %>
+            
+            <%= render 'layouts/partials/nav_dropdown', title: 'Insurance' do %>
+              <% @cooperative.agreements.includes(:plan).each do |a| %>
+                <% case a.plan.acronym %>
+                <% when 'LPPI' %>
                   <%= link_to "LPPI", loan_insurance_group_remits_path, class: "dropdown-item" %>
                 <% else %>
                   <%= link_to "GYRT", coop_agreement_path(a), class: "dropdown-item" %>
                 <% end %>
               <% end %>
-            </ul>
-          </li>
-          <%# if current_user.userable_type == 'CoopUser' %>
-        <% elsif current_user.userable.department_id == 15 %>
-          <li class="nav-item dropdown">
-            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-              Encoding
-            </a>
-            <ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
-              <%= link_to "Members", mis_members_path, class: "dropdown-item" %>
-            </ul>
-          </li>
-        <% else %>
-          <%# if current_user.userable.department_id == 19 %>
-          <li class="nav-item dropdown">
-            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-              Claims
-            </a>
-            <ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+            <% end %>
+
+          <% else %>
+            <%= render 'layouts/partials/nav_dropdown', title: 'Claims' do %>
               <%= link_to "Submitted", index_show_process_claims_path(p: 1), class: "dropdown-item" %>
               <%= link_to "Claims Filed", index_show_process_claims_path(p: 2), class: "dropdown-item" %>
               <%= link_to "Processing", index_show_process_claims_path(p: 3), class: "dropdown-item" %>
@@ -77,85 +47,47 @@
               <%= link_to "Documents", documents_path, class: "dropdown-item" %>
               <%= link_to "Claim Type", claim_types_path, class: "dropdown-item" %>
               <%= link_to "Claims Message", claim_remarks_path, class: "dropdown-item" %>
-            </ul>
-          </li>
-          <li class="nav-item dropdown">
-            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-              Treasury
-            </a>
-            <ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+            <% end %>
+
+            <%= render 'layouts/partials/nav_dropdown', title: 'Treasury' do %>
               <%= link_to "Payments", payments_path, class: "dropdown-item" %>
-            </ul>
-          </li>
-          <%# end %>
-          <%# if current_user.userable.department_id == 17 %>
-          <li class="nav-item dropdown">
-            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-              Underwriting
-            </a>
-            <ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+            <% end %>
+
+            <%= render 'layouts/partials/nav_dropdown', title: 'Underwriting' do %>
               <%= link_to "Process", process_coverages_path, class: "dropdown-item" %>
               <%= link_to "Medical Director", med_directors_home_path, class: "dropdown-item" %>
-              <%#= link_to "Evaluate", view_evaluate_process_claims_path(c: 4), class: "dropdown-item" if current_user.authority_level_id == 3 %>
-              <%#= link_to "VP Evaluation", view_evaluate_process_claims_path(c: 5), class: "dropdown-item" if current_user.authority_level_id == 3 %>
-              <%#= link_to "Reconsider", view_reconsider_process_claims_path, class: "dropdown-item"  if current_user.authority_level_id == 3 %>
-              <%#= link_to "Request for payment", root_path, class: "dropdown-item" %>
-            </ul>
-          </li>
-          <%# end %>
-          <%#= link_to "Evaluate", view_evaluate_process_claims_path, class: "nav-link" %>
-          <li class="nav-item dropdown">
-            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-              Data Entries
-            </a>
-            <ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+            <% end %>
+
+            <%= render 'layouts/partials/nav_dropdown', title: 'Data Entries' do %>
               <%= link_to "Agreement", agreements_path, class: "dropdown-item" %>
               <%= link_to "EmpAgreement", emp_agreements_path, class: "dropdown-item" %>
               <%= link_to "Approver", emp_approvers_path, class: "dropdown-item" %>
               <%= link_to "Authority Levels", authority_levels_path, class: "dropdown-item" %>
               <%= link_to "Plans", plans_path, class: "dropdown-item" %>
               <%= link_to "Benefits", benefits_path, class: "dropdown-item" %>
-              <%#= link_to "Benefits", benefits_path, class: "dropdown-item" %>
-              <%#= link_to "Causes", causes_path, class: "dropdown-item" %>
-              <%#= link_to "Requirements", requirements_path, class: "dropdown-item" %>
               <li><hr class="dropdown-divider"></li>
-              <%#= link_to "Agents", agents_path, class: "dropdown-item" %>
-              <%#= link_to "Plan", plans_path, class: "dropdown-item" %>
-              <%#= link_to "Status", statuses_path, class: "dropdown-item" %>
               <%= link_to "Cooperative", cooperatives_path, class: "dropdown-item" %>
-              <%# <%= link_to "Cooperative Type", coop_types_path, class: "dropdown-item" %>
-              <%#= link_to "Coop Branch", coop_branches_path, class: "dropdown-item" %>
-              <%# <li><hr class="dropdown-divider"></li> %>
-              <%# <%= link_to "Region", geo_regions_path, class: "dropdown-item" %>
-              <%# <%= link_to "Province", geo_provinces_path, class: "dropdown-item" %>
-              <%# <%= link_to "Municipality", geo_municipalities_path, class: "dropdown-item" %>
-              <%# <%= link_to "Barangay", geo_barangays_path, class: "dropdown-item" %>
               <li><hr class="dropdown-divider"></li>
               <%= link_to "Employees", employees_path, class: "dropdown-item" %>
               <%= link_to "User Levels", user_levels_path, class: "dropdown-item" %>
               <%= link_to "Cooperative User", coop_users_path, class: "dropdown-item" %>
               <%= link_to "Agents", agents_path, class: "dropdown-item" %>
               <%= link_to "Pending Users", user_index_path, class: "dropdown-item" %>
-              <%#= link_to "Authority Level", authority_levels_path, class: "dropdown-item" %>
-              <%#= link_to "Claim routes", claim_routes_path, class: "dropdown-item" %>
-            </ul>
-          </li>
-        <% end %>
-        <li class="nav-item dropdown">
-          <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-            <i class="bi bi-person-circle"></i> <small> Hi, <%= current_user.userable.get_fullname  %> </small>
-          </a>
-          <ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+            <% end %>
+
+          <% end %>
+          
+          <%= render 'layouts/partials/nav_dropdown', title: "<i class=\"bi bi-person-circle\"></i> <small> Hi, #{current_user.userable.get_fullname}</small>".html_safe do %>
             <li class="nav-item"> <a class="nav-link" href="#"><%= current_user.email %></a> </li>
             <li class="nav-item"> <%= link_to "Edit Account", edit_user_registration_path, class: "nav-link" %></li>
             <li class="nav-item"> <%= button_to "Sign Out", destroy_user_session_path, method: :delete, class: "btn btn-sm btn-primary mx-2" %></li>
-          </ul>
-        </li>
-      <% else %>
-        <li class="nav-item"> <%= link_to "Sign Up", new_user_registration_path, class: "nav-link"  %></li>
-        <li class="nav-item"> <%= link_to "Sign In", new_user_session_path, class: "nav-link"  %></li>
-      <% end %>
-    </ul>
+          <% end %>
+
+        <% else %>
+          <li class="nav-item"> <%= link_to "Sign Up", new_user_registration_path, class: "nav-link"  %></li>
+          <li class="nav-item"> <%= link_to "Sign In", new_user_session_path, class: "nav-link"  %></li>
+        <% end %>
+      </ul>
+    </div>
   </div>
-</div>
 </nav>
