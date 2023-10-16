@@ -2,9 +2,16 @@
 
 
 <div class="text-end mb-3">
-  <%= link_to new_cooperative_coop_branch_path, class: 'btn btn-primary' do %>
-    New Coop Branch
+  <% if current_user.userable_type == "CoopUser" %>
+    <%= link_to new_coop_branch_path(v: current_user.userable.cooperative), class: 'btn btn-primary', data: { turbo_frame: "remote_modal" } do %>
+      New Coop Branch
+    <% end %>
+  <% else %>
+    <%= link_to new_coop_branch_path(), class: 'btn btn-primary', data: { turbo_frame: "remote_modal" } do %>
+      New Coop Branch
+    <% end %>
   <% end %>
+    
 </div>
 
 <div class="table-responsive">
@@ -39,8 +46,8 @@
         <td><%= coop_branch.cooperative.name %></td>
     
           <td>
-            <%= link_to 'View', cooperative_coop_branch_path(id: coop_branch.id), class: 'btn' %>
-            <%= link_to 'Edit', edit_cooperative_coop_branch_path(id: coop_branch.id), class: 'btn' %>
+            <%= link_to 'View', coop_branch_path(id: coop_branch.id), class: 'btn' %>
+            <%= link_to 'Edit', edit_coop_branch_path(id: coop_branch.id), class: 'btn' %>
           </td>
 
         </tr>
