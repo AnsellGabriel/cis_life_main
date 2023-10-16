@@ -8,6 +8,7 @@
     <%= stylesheet_link_tag "application", "data-turbo-track": "reload" %>
     <%= stylesheet_link_tag "custom", "data-turbo-track": "reload" %>
     <%= stylesheet_link_tag "message", "data-turbo-track": "reload" %>
+    <%= favicon_link_tag 'favicon.ico' %>
     <link href="https://cdn.jsdelivr.net/npm/tom-select@2.0.3/dist/css/tom-select.css" rel="stylesheet">
     <link href="https://unpkg.com/slim-select@latest/dist/slimselect.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.2/font/bootstrap-icons.css">
@@ -28,52 +29,46 @@
       <%= yield %>
       <%= turbo_frame_tag "remote_modal", target: "_top" %>
     </div>
-
     <!-- New form Modal -->
-      <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true" data-controller="modal"
+    <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true" data-controller="modal"
       data-action="turbo:frame-load->modal#open turbo:submit-end->modal#close" data-bs-focus="false">
-        <div class="modal-dialog">
-          <div class="modal-content">
-            <%= turbo_frame_tag "modal" %>
-          </div>
-        </div>
-      </div>
-
-      <div class="modal fade" id="memberEnrollment" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true" data-controller="modal" data-action="turbo:frame-load->modal#open turbo:submit-end->modal#close" data-bs-focus="false">
-        <div class="modal-dialog modal-xl">
-          <div class="modal-content">
-            <%= turbo_frame_tag "modal-xl" %>
-          </div>
-        </div>
-      </div>
-
-      <div class="modal fade" id="memberEnrollment" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true" data-controller="modal" data-action="turbo:frame-load->modal#open turbo:submit-end->modal#close" data-bs-focus="false">
-        <div class="modal-dialog modal-lg">
-          <div class="modal-content">
-            <%= turbo_frame_tag "modal-lg" %>
-          </div>
-        </div>
-      </div>
-
-      <!-- registration forms modal -->
-      <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true" data-controller="modal"
-      data-action="turbo:frame-load->modal#open" data-bs-focus="false">
-        <div class="modal-dialog">
-          <div class="modal-content">
-            <%= turbo_frame_tag "reg_form_modal" %>
-          </div>
-        </div>
-      </div>
-
-      <div class="modal fade" id="memberEnrollment" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true" data-controller="modal" data-action="turbo:frame-load->modal#open" data-bs-focus="false">
-        <div class="modal-dialog modal-xl">
-          <div class="modal-content">
-            <%= turbo_frame_tag "reg_form_modal_xl" %>
-          </div>
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <%= turbo_frame_tag "modal" %>
         </div>
       </div>
     </div>
-    
-    <%= render 'layouts/partials/footer' %>
-  </body>
+    <div class="modal fade" id="memberEnrollment" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true" data-controller="modal" data-action="turbo:frame-load->modal#open turbo:submit-end->modal#close" data-bs-focus="false">
+      <div class="modal-dialog modal-xl">
+        <div class="modal-content">
+          <%= turbo_frame_tag "modal-xl" %>
+        </div>
+      </div>
+    </div>
+    <div class="modal fade" id="memberEnrollment" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true" data-controller="modal" data-action="turbo:frame-load->modal#open turbo:submit-end->modal#close" data-bs-focus="false">
+      <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+          <%= turbo_frame_tag "modal-lg" %>
+        </div>
+      </div>
+    </div>
+    <!-- registration forms modal -->
+    <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true" data-controller="modal"
+      data-action="turbo:frame-load->modal#open" data-bs-focus="false">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <%= turbo_frame_tag "reg_form_modal" %>
+        </div>
+      </div>
+    </div>
+    <div class="modal fade" id="memberEnrollment" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true" data-controller="modal" data-action="turbo:frame-load->modal#open" data-bs-focus="false">
+      <div class="modal-dialog modal-xl">
+        <div class="modal-content">
+          <%= turbo_frame_tag "reg_form_modal_xl" %>
+        </div>
+      </div>
+    </div>
+  </div>
+  <%= render 'layouts/partials/footer' %>
+</body>
 </html>
