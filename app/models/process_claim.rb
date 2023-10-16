@@ -12,6 +12,11 @@ class ProcessClaim < ApplicationRecord
     ADD: 5 # Accidental Death & Dismemberment
   }
 
+  enum entry_type: {
+    claim: 0,
+    coop: 1
+  }
+
   enum status: {
     approved: 0,
     denied: 1,
