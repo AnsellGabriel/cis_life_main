@@ -32,12 +32,28 @@
           class: small_btn('outline-primary'), 
           data: {turbo_confirm: 'Submit group remit?' } 
         %>
+
+        <% unless @group_remit.is_for_renewal? %>
+          <%= button_to "Delete remittance", group_remit_path(@group_remit), 
+            method: :delete,
+            data: { turbo_confirm: "Delete #{@group_remit}?"},
+            class: small_btn('outline-danger') 
+          %>
+        <% end %>
+
+        <% if short_term_insurance && @group_remit.is_batch_remit? && @group_remit.is_pending_or_renewal? %>
+          <%= button_to "Delete remittance", group_remit_path(@group_remit), 
+            method: :delete,
+            data: { turbo_confirm: 'Delete group remit?'},
+            class: small_btn('outline-danger') 
+          %>
+        <% end %>
         
         <%  if @group_remit.denied_members.present? %>
           <%= link_to group_remit_denied_members_path(@group_remit), class: "#{small_btn('outline-danger')} position-relative" do %>
-            Rejected members
+            Rejected
             <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
-              !
+              <%= @group_remit.denied_members.size < 100 ? @group_remit.denied_members.size : '99+'%>
               <span class="visually-hidden">unread messages</span>
             </span>
           <% end %>
@@ -45,21 +61,7 @@
 
       </div>
 
-      <% unless @group_remit.is_for_renewal? %>
-        <%= button_to "Delete remittance", group_remit_path(@group_remit), 
-          method: :delete,
-          data: { turbo_confirm: "Delete #{@group_remit}?"},
-          class: small_btn('outline-danger') 
-        %>
-      <% end %>
-
-      <% if short_term_insurance && @group_remit.is_batch_remit? && @group_remit.is_pending_or_renewal? %>
-        <%= button_to "Delete remittance", group_remit_path(@group_remit), 
-          method: :delete,
-          data: { turbo_confirm: 'Delete group remit?'},
-          class: small_btn('outline-danger') 
-        %>
-      <% end %>
+      
 
     <% elsif @group_remit.is_expired? && @group_remit.is_batch_remit? %>
       <%= button_to 'Renew', renewal_group_remit_path(@group_remit),
