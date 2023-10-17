@@ -13,6 +13,7 @@ class Accounting::CheckVouchersController < ApplicationController
   # GET /accounting/check_vouchers/new
   def new
     @accounting_check_voucher = Accounting::CheckVoucher.new
+    @cooperatives = Cooperative.all
   end
 
   # GET /accounting/check_vouchers/1/edit
@@ -21,7 +22,17 @@ class Accounting::CheckVouchersController < ApplicationController
 
   # POST /accounting/check_vouchers
   def create
-    @accounting_check_voucher = Accounting::CheckVoucher.new(accounting_check_voucher_params)
+    params[:accounting_check_voucher][:amount] = params[:accounting_check_voucher][:amount].gsub(',', '').to_d
+
+    @accounting_check_voucher = Accounting::CheckVoucher.new(accounting_check_voucher_params.reject { |key, value| key == "payable" })
+    @cooperatives = Cooperative.all
+
+    unless accounting_check_voucher_params[:payable].empty?
+      parsed_payable = JSON.parse(accounting_check_voucher_params[:payable])
+      payable = parsed_payable[1].constantize.find(parsed_payable[0])
+    end
+
+    @accounting_check_voucher.payable = payable
 
     if @accounting_check_voucher.save
       redirect_to @accounting_check_voucher, notice: "Check voucher was successfully created."
@@ -53,6 +64,6 @@ class Accounting::CheckVouchersController < ApplicationController
 
     # Only allow a list of trusted parameters through.
     def accounting_check_voucher_params
-      params.require(:accounting_check_voucher).permit(:date_voucher, :voucher, :payable_id, :payable_type, :address, :amount, :particulars)
+      params.require(:accounting_check_voucher).permit(:date_voucher, :voucher, :payable, :amount, :particulars)
     end
 end
