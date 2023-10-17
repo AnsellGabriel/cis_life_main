@@ -8,7 +8,10 @@
         <%= image_tag 'cis_logo.png', width: 150, class: 'mb-2 mb-lg-0 me-2' %>
         <div class="" style="max-width: 500px;">
           <% if current_user %>
-            <%= "#{truncate(nav_header(current_user), length: 65)} (#{current_user.userable.coop_branch.name})" %>
+            <%= "#{truncate(nav_header(current_user), length: 65)} " %>
+            <% if current_user.userable_type == 'CoopUser' %>
+              <%= content_tag :span, "(#{current_user.userable.coop_branch.name})" %>
+            <% end %>
           <% end %>
         </div>
       </a>

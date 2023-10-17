@@ -2,6 +2,9 @@
 require 'sidekiq/web'
 
 Rails.application.routes.draw do
+  namespace :accounting do
+    resources :check_vouchers
+  end
   resources :group_proposals
   resources :unit_benefits
   resources :plan_units do

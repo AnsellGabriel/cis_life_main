@@ -1,0 +1,46 @@
+<%= content_tag :h1, "List of Accounting Check Vouchers" %>
+
+
+<div class="text-end mb-3">
+  <%= link_to new_accounting_check_voucher_path, class: 'btn btn-primary' do %>
+    New Check Voucher
+  <% end %>
+</div>
+
+
+  <table class="table table-striped table-bordered table-hover">
+    <thead>
+      <tr>
+      <th>#</th>
+            <th>Date Voucher</th>
+            <th>Voucher</th>
+            <th>Payable</th>
+            <th>Address</th>
+            <th>Amount</th>
+            <th>Particulars</th>
+            <th></th>
+        </tr>
+    </thead>
+
+    <tbody>
+      <% @accounting_check_vouchers.each do |accounting_check_voucher| %>
+        <tr>
+
+        <th scope="row"><%= accounting_check_voucher.id %></th>
+        <td><%= accounting_check_voucher.date_voucher %></td>
+        <td><%= accounting_check_voucher.voucher %></td>
+        <td><%= accounting_check_voucher.payable %></td>
+        <td><%= accounting_check_voucher.address %></td>
+        <td><%= accounting_check_voucher.amount %></td>
+        <td><%= accounting_check_voucher.particulars %></td>
+    
+          <td>
+            <%= link_to 'View', accounting_check_voucher, class: 'btn btn-secondary btn-sm' %>
+            <%= link_to 'Edit', edit_accounting_check_voucher_path(accounting_check_voucher), class: 'btn btn-secondary btn-sm' %>
+            <%= link_to "Delete", accounting_check_voucher, class: "btn btn-danger btn-sm", method: :delete, data: { "turbo-method": :delete, turbo_confirm: "Are you sure?" } %>
+          </td>
+
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
