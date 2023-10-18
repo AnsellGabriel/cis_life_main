@@ -57,7 +57,9 @@ class Member < ApplicationRecord
   end
 
   def full_address
-    "#{self&.address}, #{geo_barangay&.name}, #{geo_municipality&.name}, #{geo_province&.name}, #{geo_region&.name}"
+    # "#{self&.address}, #{geo_barangay&.name}, #{geo_municipality&.name}, #{geo_province&.name}, #{geo_region&.name}"
+
+    [self&.street, geo_barangay&.name, geo_municipality&.name, geo_province&.name].compact.join(', ')
   end
 
   def full_name
@@ -107,7 +109,7 @@ class Member < ApplicationRecord
     end
 
     number = number.to_s.gsub(/[^0-9]/, '') # remove all non-digit characters
-    
+
     if number.length == 10 && number.start_with?('9') # mobile number
       number = "+63#{number}"
     elsif number.length == 7 && ['02', '03', '032', '033', '034', '035', '036', '037', '038', '039', '042', '043', '044', '045', '046', '047', '048', '049', '052', '053', '054', '055', '056', '057', '058', '072', '074', '075', '076', '077', '078'].include?(number[0..2]) # landline number
