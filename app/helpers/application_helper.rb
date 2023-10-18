@@ -202,7 +202,7 @@ module ApplicationHelper
 		user_type = current_user.userable_type
 
 		if user_type == 'CoopUser'
-			current_user.userable.cooperative.name.titleize
+			current_user.userable.coop_branch.name
 		elsif user_type == 'Employee'
 
 			case current_user.userable.department_id

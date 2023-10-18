@@ -24,7 +24,7 @@
       
       <%= f.input :amount, as: :text, wrapper_html: {class: 'col-4', data: {controller:"number-formatter"}}, input_html: {data: {number_formatter_target: 'input'}, class: 'form-control', style: 'height: 10px'} %>
     </div>
-    <%= f.input :payable, collection: @cooperatives.map { |c| [c.name, [c.id, c.class.name]] }, as: :select, label: 'Payee', input_html: {data: { controller: "slim-select" } %>
+    <%= f.input :payable, collection: @cooperatives.map { |c| [c.name, [c.id, c.class.name]] }, as: :select, label: 'Payee', input_html: {data: { controller: "slim-select" }} %>
     <%= f.input :particulars %>
   </div>
 

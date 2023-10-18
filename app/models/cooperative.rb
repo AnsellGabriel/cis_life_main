@@ -23,9 +23,11 @@ class Cooperative < ApplicationRecord
     end
 
     def get_address
-      unless geo_province_id.nil? && geo_municipality_id.nil? && geo_barangay_id.nil?
-        "#{street}, #{geo_municipality.name}, #{geo_province.name}, #{geo_region.name}"
-      end
+      # unless geo_province_id.nil? && geo_municipality_id.nil? && geo_barangay_id.nil?
+      #   "#{street}, #{geo_municipality.name}, #{geo_province.name}, #{geo_region.name}"
+      # end
+
+      [self&.street, geo_barangay&.name, geo_municipality&.name, geo_province&.name].compact.join(', ')
     end
 
     def unselected_coop_members(ids)
