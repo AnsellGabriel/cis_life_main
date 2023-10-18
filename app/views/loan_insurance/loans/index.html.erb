@@ -22,22 +22,30 @@
     </thead>
 
     <tbody>
-      <% @loan_insurance_loans.each do |loan_insurance_loan| %>
+      <% if @loans.count > 0 %>
+        <% @loans.each do |loan_insurance_loan| %>
+          <tr>
+
+          <th scope="row"><%= loan_insurance_loan.id %></th>
+          <td><%= loan_insurance_loan.name %></td>
+          <td><%= loan_insurance_loan.description %></td>
+          <td><%= loan_insurance_loan.cooperative %></td>
+      
+            <td>
+              <%= link_to 'View', loan_insurance_loan, class: 'btn btn-secondary btn-sm' %>
+              <%= link_to 'Edit', edit_loan_insurance_loan_path(loan_insurance_loan), class: 'btn btn-secondary btn-sm' %>
+              <%= link_to "Delete", loan_insurance_loan, class: "btn btn-danger btn-sm", method: :delete, data: { "turbo-method": :delete, turbo_confirm: "Are you sure?" } %>
+            </td>
+
+          </tr>
+        <% end %>
+
+      <% else %>
         <tr>
-
-        <th scope="row"><%= loan_insurance_loan.id %></th>
-        <td><%= loan_insurance_loan.name %></td>
-        <td><%= loan_insurance_loan.description %></td>
-        <td><%= loan_insurance_loan.cooperative %></td>
-    
-          <td>
-            <%= link_to 'View', loan_insurance_loan, class: 'btn btn-secondary btn-sm' %>
-            <%= link_to 'Edit', edit_loan_insurance_loan_path(loan_insurance_loan), class: 'btn btn-secondary btn-sm' %>
-            <%= link_to "Delete", loan_insurance_loan, class: "btn btn-danger btn-sm", method: :delete, data: { "turbo-method": :delete, turbo_confirm: "Are you sure?" } %>
-          </td>
-
+          <td colspan=5><%= content_tag :div, "NO RECORDS FOUND.", class: "text-center lead" %></td>
         </tr>
       <% end %>
+      
     </tbody>
   </table>
 </div>

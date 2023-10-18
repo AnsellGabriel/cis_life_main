@@ -12,7 +12,8 @@
     <thead>
       <tr>
 
-      <th>#</th>
+        <th>#</th>
+        <th>Coop/Plan</th>
         <th>Min Age</th>
         <th>Max Age</th>
         <th>Monthly Rate</th>
@@ -24,10 +25,15 @@
     </thead>
 
     <tbody>
-      <% @loan_insurance_rates.each do |loan_insurance_rate| %>
+      <% @rates.each do |loan_insurance_rate| %>
         <tr>
 
         <th scope="row"><%= loan_insurance_rate.id %></th>
+        <td>
+          <% unless loan_insurance_rate.agreement.nil? %>
+            <%= "#{loan_insurance_rate.agreement.cooperative.acronym} (#{loan_insurance_rate.agreement.plan.acronym})" %> 
+          <% end %>
+        </td>
         <td><%= loan_insurance_rate.min_age %></td>
         <td><%= loan_insurance_rate.max_age %></td>
         <td><%= loan_insurance_rate.monthly_rate %></td>

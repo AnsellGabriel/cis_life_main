@@ -39,6 +39,8 @@ class BatchesController < ApplicationController
             else
               Batch.find(params[:id])
             end
+        
+    @pagy, @batch_remarks = pagy(@batch.remarks, items: 2, params: { active_tab: 'stars' })
 
     @member = @batch.member_details
     @batch_health_dec = @batch.health_declaration
