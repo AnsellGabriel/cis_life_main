@@ -43,10 +43,12 @@
             <%= content_tag :span, "Premium after deductions", style: "font-size: .8rem" %>
             <%= content_tag :span, "#{to_curr(group_remit.commisionable_premium)}", style: "font-size: .8rem; color: var(--bs-blue)"%>
           </div> 
-          <div class="text-secondary d-flex justify-content-between">
-            <%= content_tag :span, "#{agreement.coop_sf}% Coop service fee", style: "font-size: .8rem" %>
-            <%= content_tag :span, "(#{to_curr(group_remit.total_coop_commissions)})", style: "font-size: .8rem; color: var(--bs-green)"%>
-          </div>  
+          <% if agreement.coop_sf %>
+            <div class="text-secondary d-flex justify-content-between">
+              <%= content_tag :span, "#{agreement.coop_sf}% Coop service fee", style: "font-size: .8rem" %>
+              <%= content_tag :span, "(#{to_curr(group_remit.total_coop_commissions)})", style: "font-size: .8rem; color: var(--bs-green)"%>
+            </div>  
+          <% end %>
         </div>
       </div>
       
