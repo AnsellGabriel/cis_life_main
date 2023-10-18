@@ -5,7 +5,11 @@ class CoopBranchesController < ApplicationController
 
   # GET /coop_branches or /coop_branches.json
   def index
-    @coop_branches = @cooperative.coop_branches.all
+    if current_user.userable_type == "CoopUser"
+      @coop_branches = @cooperative.coop_branches.all
+    else
+      @coop_branches = CoopBranch.all
+    end
 
     respond_to do |format|
       format.html # render the index view template
@@ -17,11 +21,19 @@ class CoopBranchesController < ApplicationController
   end
 
   # GET /coop_branches/new
-  def new
+  def new    
+    # @coop_branch = @cooperative.coop_branches.build
+    # @cooperative = Cooperative.find(params[:v])
+    # @coop_branch = @cooperative.coop_branches.build
     # @coop_branch = @cooperative.coop_branches.build
     # @cooperative = Cooperative.find(params[:v])
     @cooperative = Cooperative.find(params[:cooperative_id])
-    @coop_branch = @cooperative.coop_branches.build
+    
+    if current_user.userable_type == "CoopUser"
+      @coop_branch = @cooperative.coop_branches.build
+    else
+      @coop_branch = CoopBranch.new()
+    end
     # default_values
     @prov = @muni = @brgy = []
 
@@ -39,7 +51,12 @@ class CoopBranchesController < ApplicationController
 
   # POST /coop_branches or /coop_branches.json
   def create
-    @cooperative = Cooperative.find(params[:v])
+    binding.pry
+    if @cooperative.nil?
+      @cooperative = Cooperative.find_by(id: params[:coop_branch][:cooperative_id])
+    end
+    # @cooperative = Cooperative.find(params[:cooperative_id])
+    # @cooperative = Cooperative.find(params[:v])
     @coop_branch = @cooperative.coop_branches.build(coop_branch_params)
     respond_to do |format|
       if @coop_branch.save
