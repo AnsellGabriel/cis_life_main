@@ -21,14 +21,9 @@ class CoopBranchesController < ApplicationController
   end
 
   # GET /coop_branches/new
-  def new    
-    # @coop_branch = @cooperative.coop_branches.build
+  def new
     # @cooperative = Cooperative.find(params[:v])
-    # @coop_branch = @cooperative.coop_branches.build
-    # @coop_branch = @cooperative.coop_branches.build
-    # @cooperative = Cooperative.find(params[:v])
-    @cooperative = Cooperative.find(params[:cooperative_id])
-    
+
     if current_user.userable_type == "CoopUser"
       @coop_branch = @cooperative.coop_branches.build
     else
