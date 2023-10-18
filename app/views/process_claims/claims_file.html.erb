@@ -3,63 +3,58 @@
   <%= f.error_notification message: f.object.errors[:base].to_sentence if f.object.errors[:base].present? %>
   <div class="text-end mb-3">
     <%= link_to "Back", index_show_process_claims_path(p: 2), class: "btn btn-secondary btn-lg" %>
-    
     <%= f.button :submit, 'Save Claim', class: 'btn-success btn-lg' %>
   </div>
   <div class="row">
     <div class="col-md-6">
-        <%= render 'claims_detail' %>
-        <div class="card">
+      <%= render 'claims_detail' %>
+      <div class="card">
         <h5 class="card-header">Cause of Claims</h5>
         <div class="card-body">
-            <div class="row">
-              <%= f.association :cause, prompt: "Select a cause", collection: Cause.order(:name), wrapper_html: { class: 'col-md-6' } %>
-              <%= f.input :date_file, label: "Date Filed", as: :string, wrapper_html: { class: "col-md-6" }, 
+          <div class="row">
+            <%= f.association :cause, prompt: "Select a cause", collection: Cause.order(:name), wrapper_html: { class: 'col-md-6' } %>
+            <%= f.input :date_file, label: "Date Filed", as: :string, wrapper_html: { class: "col-md-6" }, 
               input_html: { data: { controller: "flatpickr",
                   flatpickr_max_date: Time.zone.now,
                   flatpickr_next_arrow: "Next",
                   flatpickr_prev_arrow: "Prev" } } %>
-              <%= f.input :date_incident, label: "Date incident", as: :string, wrapper_html: { class: "col-md-6" }, 
+            <%= f.input :date_incident, label: "Date incident", as: :string, wrapper_html: { class: "col-md-6" }, 
                   input_html: { data: { controller: "flatpickr",
                   flatpickr_max_date: Time.zone.now,
                   flatpickr_next_arrow: "Next",
                   flatpickr_prev_arrow: "Prev" } } %>
-            </div>
-            <%= f.simple_fields_for :claim_cause do |cc| %>
-              
-                    <%= cc.input :acd, label: "ACD" %>
-                    <%= cc.input :ucd, label: "UCD" %>
-                    <%= cc.input :icd, label: "ICD" %>
-                    <%= cc.input :osccd, label: "OSCCD" %>
-              
-          <%#= render 'question_fields', f: builder %>
-            <% end %>
+          </div>
+          <%= f.simple_fields_for :claim_cause do |cc| %>
+            <%= cc.input :acd, label: "ACD" %>
+            <%= cc.input :ucd, label: "UCD" %>
+            <%= cc.input :icd, label: "ICD" %>
+            <%= cc.input :osccd, label: "OSCCD" %>
+            <%#= render 'question_fields', f: builder %>
+          <% end %>
         </div>
-        </div>
+      </div>
     </div>
-
     <div class="col-md-6">
-       <% if @process_claim.claim_type == ClaimType.find_by(name: 'Hospital Confinement Claim') %>
-          <div class="card">
-            <%= content_tag :h5, 'Confinement', class: "card-header" %>
-            <div class="card-body">
-              <div class="row mb-3">
-                <div class="col-6">
-                  <% @benefit = Benefit.find_by(name: "Hospital Income Benefit") %>
-                  <% @hib = ProductBenefit.find_by(agreement_benefit: @process_claim.agreement_benefit, benefit: @benefit) %>
-                  <%= @hib.benefit %> - <%= @hib.coverage_amount %>
-                </div>
-                <div class="col-6">
-                  <div class="text-end">
-                    <%= link_to '<i class="bi bi-h-circle"></i> Add Confinement'.html_safe, new_claim_confinement_path(v: @process_claim), class: "btn btn-primary btn-sm", data: { turbo_frame: "remote_modal" }  %>
-                  </div>
+      <% if @process_claim.claim_type == ClaimType.find_by(name: 'Hospital Confinement Claim') %>
+        <div class="card">
+          <%= content_tag :h5, 'Confinement', class: "card-header" %>
+          <div class="card-body">
+            <div class="row mb-3">
+              <div class="col-6">
+                <% @benefit = Benefit.find_by(name: "Hospital Income Benefit") %>
+                <% @hib = ProductBenefit.find_by(agreement_benefit: @process_claim.agreement_benefit, benefit: @benefit) %>
+                <%= @hib.benefit %> - <%= @hib.coverage_amount %>
+              </div>
+              <div class="col-6">
+                <div class="text-end">
+                  <%= link_to '<i class="bi bi-h-circle"></i> Add Confinement'.html_safe, new_claim_confinement_path(v: @process_claim), class: "btn btn-primary btn-sm", data: { turbo_frame: "remote_modal" }  %>
                 </div>
               </div>
-                <%= render 'claim_confinements/show_confinement'  %>    
             </div>
+            <%= render 'claim_confinements/show_confinement'  %>
           </div>
-        <% end %>
-
+        </div>
+      <% end %>
       <div class="card mb-3">
         <div class="card-body">
           <div class="row">

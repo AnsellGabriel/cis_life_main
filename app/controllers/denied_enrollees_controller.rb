@@ -14,6 +14,10 @@ class DeniedEnrolleesController < ApplicationController
   def destroy_all
     @cooperative.denied_enrollees.destroy_all
 
-    redirect_to coop_members_path, notice: "Denied enrollees deleted successfully."
+    if current_user.userable_type == "CoopUser"
+      redirect_to coop_members_path, notice: "Denied enrollees deleted successfully."
+    else
+      redirect_to cooperative_path(@cooperative), notice: "Denied enrollees deleted successfully."
+    end
   end
 end

@@ -10,11 +10,8 @@ class Cooperative < ApplicationRecord
     has_many :denied_enrollees
     has_many :notifications, as: :notifiable, dependent: :destroy
 
-    # belongs_to :coop_type
-    # belongs_to :geo_region
-    # belongs_to :geo_province
-    # belongs_to :geo_municipality
-    # belongs_to :geo_barangay
+    has_many :check_vouchers, as: :payable, class_name: 'Accounting::CheckVoucher', dependent: :destroy
+
     belongs_to :coop_type, optional: true
     belongs_to :geo_region, optional: true
     belongs_to :geo_province, optional: true
@@ -26,11 +23,11 @@ class Cooperative < ApplicationRecord
     end
 
     def get_address
-      unless geo_province_id.nil? && geo_municipality_id.nil? && geo_barangay_id.nil?
-        geo_province.name + ', ' + geo_municipality.name + ', ' + geo_barangay.name + ', ' +
-        "#{self.street}"
-      end
-      # "#{self.street}" + ', ' geo_barangay.name + ', ' + geo_municipality.name + ', ' + geo_province.name
+      # unless geo_province_id.nil? && geo_municipality_id.nil? && geo_barangay_id.nil?
+      #   "#{street}, #{geo_municipality.name}, #{geo_province.name}, #{geo_region.name}"
+      # end
+
+      [self&.street, geo_barangay&.name, geo_municipality&.name, geo_province&.name].compact.join(', ')
     end
 
     def unselected_coop_members(ids)

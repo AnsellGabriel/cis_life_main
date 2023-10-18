@@ -1,4 +1,6 @@
 class AgreementDecorator < Draper::Decorator
+  include Rails.application.routes.url_helpers
+
   delegate_all
 
   # Define presentation-specific methods here. Helpers are accessed through
@@ -32,5 +34,12 @@ class AgreementDecorator < Draper::Decorator
     else object.plan.acronym
     end
   end
+
+  def insurance_path
+    case object.plan.acronym
+    when 'GYRT', 'GYRTF', 'GYRTBR', 'GYRTFR' then coop_agreement_path(object)
+    when 'LPPI' then loan_insurance_group_remits_path
+    end
+end
 
 end

@@ -255,7 +255,11 @@ class GroupRemit < ApplicationRecord
   end
 
   def total_coop_commissions
-    commisionable_premium * (agreement.coop_sf / 100)
+    if agreement.coop_sf
+      commisionable_premium * (agreement.coop_sf / 100)
+    else
+      0
+    end
   end
 
   def total_agent_commissions

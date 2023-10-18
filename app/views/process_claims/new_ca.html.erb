@@ -1,5 +1,4 @@
-<div class="card col-md-10" style="margin: auto">
-  <div class="card-body col-md-10" style="margin: auto">
-    <%= render "form_ca", process_claim: @process_claim %>
-  </div>
-</div>
+<%#= render "form_ca", process_claim: @process_claim %>
+<%# <div class="col-md-6" style="margin: auto"> %>
+<%= render "form_ca", url: create_coop_process_claims_path(v: @process_claim, cm: @coop_member), meth: 'post' %>
+<%# </div> %>

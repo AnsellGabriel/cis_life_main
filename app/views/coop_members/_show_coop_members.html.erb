@@ -11,9 +11,13 @@
       %>
       <%= render 'coop_members/member_import_btn' %>
       <%  if @cooperative.denied_enrollees.present? %>
-        <div class="">
-          <%= link_to 'Denied enrollees', denied_enrollees_path, class: small_btn('outline-secondary') %>
-        </div>
+        <%= link_to denied_enrollees_path, class: "#{small_btn('outline-danger')} position-relative" do %>
+          Denied Enrollees
+          <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+            !
+            <span class="visually-hidden">unread messages</span>
+          </span>
+        <% end %>
       <% end %>
     </div>
   <% end %>
@@ -70,7 +74,7 @@
               <%= link_to edit_member_path(member), class: small_btn('outline-primary'), data: {turbo_frame: 'modal-lg'}, title: 'Edit' do %>
                 <i class="bi bi-pencil"></i>
               <% end %>
-              <%= link_to '<i class="bi bi-clock-history"></i>'.html_safe, new_ca_process_claims_path(cm: coop_member), class: small_btn('outline-primary'), title: 'Coverages'  %>
+              <%= link_to '<i class="bi bi-clock-history"></i>'.html_safe, new_ca_process_claims_path(cm: coop_member), class: small_btn('outline-primary'), title: 'Coverages', data: { turbo: false }  %>
               <% if coop_member.batches.joins(:group_remits).where(group_remits: { type: 'BatchRemit' }).exists? %>
                 <%= link_to 'Insurance', member_agreements_coop_member_path(coop_member), class: 'btn btn-sm btn-primary' %>
               <% end %>
