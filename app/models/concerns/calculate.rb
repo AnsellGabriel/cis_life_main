@@ -30,13 +30,17 @@ module Calculate
 			self.coop_sf_amount = calculate_service_fee(group_remit.get_coop_sf, self.premium)
 			self.agent_sf_amount = calculate_service_fee(group_remit.get_agent_sf, self.premium)
 		end
-	
+
 		def calculate_premium(total_premium, terms)
 			(total_premium / 12.to_d) * terms
 		end
-		
+
 		def calculate_service_fee(service_fee_percentage, premium)
-			(service_fee_percentage / 100.to_d) * premium
+			if service_fee_percentage
+				(service_fee_percentage / 100.to_d) * premium
+			else
+				0
+			end
 		end
 
 		def total_premium
