@@ -41,7 +41,7 @@
 	<% end %>
 
 	<% if batch.batch_health_decs.exists? %>
-		<%= link_to health_dec_group_remit_batch_path(group_remit, batch, for_und: true), 
+		<%= link_to health_dec_group_remit_batch_path(group_remit, batch), 
 			class: small_btn('primary'), 
 			title: 'Health Declaration Form',
 			data: { turbo_frame: "reg_form_modal_xl" } do %>

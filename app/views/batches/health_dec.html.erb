@@ -13,17 +13,19 @@
 
     <ul class="nav nav-pills mb-3" id="pills-tab" role="tablist">
       <li class="nav-item" role="presentation">
-        <button class="nav-link active" id="pills-hd-tab" data-bs-toggle="pill" data-bs-target="#pills-hd" type="button" role="tab" aria-controls="pills-hd" aria-selected="true">Health Declaration</button>
+        <button class="nav-link <%= 'active' unless params[:active_tab] == 'stars' %>" id="pills-hd-tab" data-bs-toggle="pill" data-bs-target="#pills-hd" type="button" role="tab" aria-controls="pills-hd" aria-selected="true">Health Declaration</button>
       </li>
-      <li class="nav-item" role="presentation">
-        <button class="nav-link" id="pills-mem-tab" data-bs-toggle="pill" data-bs-target="#pills-mem" type="button" role="tab" aria-controls="pills-mem" aria-selected="false">Member's Details</button>
-      </li>
-      <li class="nav-item" role="presentation">
-        <button class="nav-link" id="pills-rem-tab" data-bs-toggle="pill" data-bs-target="#pills-rem" type="button" role="tab" aria-controls="pills-rem" aria-selected="false">Remarks/Recommendation</button>
-      </li>
+      <% if @for_und.present? %>
+        <li class="nav-item" role="presentation">
+          <button class="nav-link" id="pills-mem-tab" data-bs-toggle="pill" data-bs-target="#pills-mem" type="button" role="tab" aria-controls="pills-mem" aria-selected="false">Member's Details</button>
+        </li>
+        <li class="nav-item" role="presentation">
+          <button class="nav-link <%= 'active' if params[:active_tab] == 'stars' %>" id="pills-rem-tab" data-bs-toggle="pill" data-bs-target="#pills-rem" type="button" role="tab" aria-controls="pills-rem" aria-selected="false">Remarks/Recommendation</button>
+        </li>
+      <% end %>
     </ul>
     <div class="tab-content" id="pills-tabContent">
-      <div class="tab-pane fade show active" id="pills-hd" role="tabpanel" aria-labelledby="pills-hd-tab">
+      <div class="tab-pane fade show <%= 'active' unless params[:active_tab] == 'stars' %>" id="pills-hd" role="tabpanel" aria-labelledby="pills-hd-tab">
         <table class="table table-bordered">
           <thead>
             <tr>
@@ -58,35 +60,34 @@
       <div class="tab-pane fade" id="pills-mem" role="tabpanel" aria-labelledby="pills-mem-tab">
         <%= render 'coop_members/coop_member', member: @batch.coop_member.member, coop_member: @batch.coop_member %>
       </div>
-      <div class="tab-pane fade" id="pills-rem" role="tabpanel" aria-labelledby="pills-rem-tab">
-        <% if @md.present? %>
-          <div class="row">
-            <div class="card col-6 ms-3">
-              <div class="card-header">
-                Recommendation
-              </div>
-              <div class="card-body">
-                <% @batch.remarks.order(created_at: :desc).each do |rem| %>
-                  <%= content_tag :div, class: "d-flex justify-content-between align-items-center" do %>
-                    <%= content_tag :p, class: "mb-1" do %>
-                      <%= rem.denied? && rem.user_type == 'CoopUser' ? 'System' : rem.user %>
-                      <%= content_tag :small, "- #{time_ago_in_words(rem.created_at)} ago" %>
-                      <%= batch_rem_status(rem.status) %>
-                    <% end %>
-                  <% end %>
-                  <%= content_tag :p, rem.remark, class: "small mb-0 fst-italic" %>
-                  <%= content_tag :hr %>
+      <div class="tab-pane fade <%= 'active show' if params[:active_tab] == 'stars' %>" id="pills-rem" role="tabpanel" aria-labelledby="pills-rem-tab">
+        <div class="row">
+          <div class="col-6 ms-3">
+            <%= content_tag :p, "Recommendations/Remarks", class: "lead" %>
+            <%# @batch.remarks.order(created_at: :desc).each do |rem| %>
+            <% @batch_remarks.order(created_at: :desc).each do |rem| %>
+              <%= content_tag :div, class: "d-flex justify-content-between align-items-center" do %>
+                <%= content_tag :p, class: "mb-1" do %>
+                  <%= rem.denied? && rem.user_type == 'CoopUser' ? 'System' : rem.user %>
+                  <%= content_tag :small, "- #{time_ago_in_words(rem.created_at)} ago" %>
+                  <%= batch_rem_status(rem.status) %>
                 <% end %>
-                <%#= content_tag :h4, @batch.batch_remarks.where(status: 2).first.remark %>
-              </div>
-            </div>
+              <% end %>
+              <%= content_tag :p, rem.remark, class: "small mb-0 fst-italic" %>
+              <%= content_tag :hr %>
+            <% end %>
+            <%== pagy_bootstrap_nav(@pagy) %>
+            <%#= content_tag :h4, @batch.batch_remarks.where(status: 2).first.remark %>
+          </div>
+          <% if @md.present? %>
             <% unless @batch.insurance_status == "approved" || @batch.insurance_status == "denied" %>
               <div class="col-6">
                   <%= render "batch_remarks/form_md", locals: { batch_remark: @batch_remark, batch: @batch }  %>
               </div>
             <% end %>
-          </div>
-        <% end %>
+          <% end %>
+          
+        </div>
       </div>
     </div>
 
