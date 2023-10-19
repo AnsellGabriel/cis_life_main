@@ -109,6 +109,10 @@ class BatchImportService
     end
 
     dependent_spreadsheet.drop(1).each do |row|
+      if [row["Member First Name"], row["Member Middle Name"], row["Member Last Name"], row["Member Birthdate"]].any?(&:nil?)
+        next
+      end
+
       member_name = {
         first_name: row["Member First Name"].to_s.squish.upcase,
         middle_name: row["Member Middle Name"].to_s.squish.upcase,
@@ -348,9 +352,9 @@ class BatchImportService
       new_batch.insurance_status = :denied
 
       if member.age(@group_remit.effectivity_date) > new_batch.agreement_benefit.max_age
-        new_batch.batch_remarks.build(remark: "Member age is over the maximum age limit of the plan.", status: :denied, user_type: 'CoopUser', user_id: @current_user.userable.id)
+        new_batch.batch_remarks.build(remark: "Member age is over the maximum age limit of the plan.", status: :denied, user_type: @current_user.userable_type, user_id: @current_user.userable_id)
       else
-        new_batch.batch_remarks.build(remark: "Member age is below the minimum age limit of the plan.", status: :denied, user_type: 'CoopUser', user_id: @current_user.userable.id)
+        new_batch.batch_remarks.build(remark: "Member age is below the minimum age limit of the plan.", status: :denied, user_type: @current_user.userable_type, user_id: @current_user.userable_id)
       end
 
     end

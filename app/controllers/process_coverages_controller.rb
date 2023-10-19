@@ -363,7 +363,7 @@ class ProcessCoveragesController < ApplicationController
       @batch.update(for_md: true)
       format.html { redirect_to @process_coverage, notice: "Batch sent to M.D. for review"  }
     end
-    
+
   end
 
   def update_batch_prem
@@ -639,7 +639,7 @@ class ProcessCoveragesController < ApplicationController
     end
 
     def check_emp_department
-      unless (current_user.userable_type == 'Employee' && current_user.userable.department_id == 1) || current_user.senior_officer? #check if underwriting
+      unless (current_user.userable_type == 'Employee' && current_user.userable.department_id == 17) || current_user.senior_officer? #check if underwriting
         render file: "#{Rails.root}/public/404.html", status: :not_found
       end
     end
