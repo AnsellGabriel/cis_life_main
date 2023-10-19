@@ -219,6 +219,8 @@ Rails.application.routes.draw do
     get :deny_batch, on: :member
     get :pending_batch, on: :member
     get :reconsider_batch, on: :member
+    get :adjust_lppi_cov, on: :member
+    post :update_batch_cov, on: :member
     get :set_premium_batch, on: :member
     post :update_batch_prem, on: :member
     get :approve

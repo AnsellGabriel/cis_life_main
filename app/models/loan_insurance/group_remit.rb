@@ -22,6 +22,10 @@ class LoanInsurance::GroupRemit < GroupRemit
     batches.sum(:unused)
   end
 
+  def total_loan_amount
+    batches.sum(:loan_amount)
+  end
+
   def total_premium_due
     batches.sum(:premium_due)
   end

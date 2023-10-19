@@ -69,9 +69,12 @@ class PsheetPdf < Prawn::Document
   end
 
   def count_table
+    effectivity = @pro_cov.effectivity.nil? ? @pro_cov.group_remit.batches.first.effectivity_date : @pro_cov.effectivity
+    expiry = @pro_cov.expiry.nil? ? @pro_cov.group_remit.batches.first.expiry_date : @pro_cov.expiry
     table_data = [
       ["Count", "Amount of Coverage", "Effectivity", "Expiry", "Premium Due"],
-      [@pro_cov.group_remit.batches.count, @view.to_currency(@total_life_cov), @pro_cov.effectivity.strftime('%m/%d/%Y'), @pro_cov.expiry.strftime('%m/%d/%Y'), @view.to_currency(@pro_cov.group_remit.batches.sum(:premium))]
+      # [@pro_cov.group_remit.batches.count, @view.to_currency(@total_life_cov), @pro_cov.effectivity.strftime('%m/%d/%Y'), @pro_cov.expiry.strftime('%m/%d/%Y'), @view.to_currency(@pro_cov.group_remit.batches.sum(:premium))]
+      [@pro_cov.group_remit.batches.count, @view.to_currency(@total_life_cov), effectivity.strftime('%m/%d/%Y'), expiry.strftime('%m/%d/%Y'), @view.to_currency(@pro_cov.group_remit.batches.sum(:premium))]
     ]
     
     table table_data, position: :center

@@ -1,5 +1,5 @@
 class ProcessCoverage < ApplicationRecord
-  attr_accessor :premium
+  attr_accessor :premium, :loan_amount
   belongs_to :group_remit
   belongs_to :agent, optional: true
   belongs_to :processor, class_name: "Employee"

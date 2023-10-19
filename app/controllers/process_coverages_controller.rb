@@ -1,7 +1,7 @@
 class ProcessCoveragesController < ApplicationController
   before_action :authenticate_user!
   before_action :check_emp_department
-  before_action :set_process_coverage, only: %i[ show edit update destroy approve_batch deny_batch pending_batch reconsider_batch pdf set_premium_batch update_batch_prem transfer_to_md ]
+  before_action :set_process_coverage, only: %i[ show edit update destroy approve_batch deny_batch pending_batch reconsider_batch pdf set_premium_batch update_batch_prem transfer_to_md update_batch_cov adjust_lppi_cov ]
 
   # GET /process_coverages
   def index
@@ -35,8 +35,8 @@ class ProcessCoveragesController < ApplicationController
       # @process_coverages_x = ProcessCoverage.joins(group_remit: { agreement: { emp_agreements: {employee: :emp_approver} } }).where( emp_approver: { approver_id: current_user.userable_id }, emp_agreements: { active: true })
       # @process_coverages_x = ProcessCoverage.joins(group_remit: { agreement: { emp_agreements: {employee: :emp_approver} } }).where(approver: current_user.userable_id)
 
-      @process_coverages_x = ProcessCoverage.joins(group_remit: :agreement).where(approver: current_user.userable_id)
-      # @process_coverages_x = ProcessCoverage.all
+      # @process_coverages_x = ProcessCoverage.joins(group_remit: :agreement).where(approver: current_user.userable_id)
+      @process_coverages_x = ProcessCoverage.all
       @for_process_coverages = @process_coverages_x.where(status: :for_process)
       @approved_process_coverages = @process_coverages_x.where(status: :approved)
       # @pending_process_coverages = ProcessCoverage.where(status: :pending)
@@ -84,7 +84,8 @@ class ProcessCoveragesController < ApplicationController
     if current_user.senior_officer?
       @analysts = @analysts_x.joins(:emp_approver)
     elsif current_user.head?
-      @analysts = @analysts_x.joins(:emp_approver).where(emp_approver: { approver: current_user.userable_id })
+      @analysts = @analysts_x.joins(:emp_approver)
+      # @analysts = @analysts_x.joins(:emp_approver).where(emp_approver: { approver: current_user.userable_id })
     end
 
     # if params[:search].present?
@@ -122,7 +123,13 @@ class ProcessCoveragesController < ApplicationController
 
   def pdf
     @batches_x = @process_coverage.group_remit.batches
-    @total_life_cov = ProductBenefit.joins(agreement_benefit: :batches).where('batches.id IN (?)', @batches_x.pluck(:id)).where('product_benefits.benefit_id = ?', 1).sum(:coverage_amount)
+    @total_life_cov = case @process_coverage.get_plan_acronym 
+    when "LPPI"
+      @process_coverage.group_remit.total_loan_amount
+    else
+      ProductBenefit.joins(agreement_benefit: :batches).where('batches.id IN (?)', @batches_x.pluck(:id)).where('product_benefits.benefit_id = ?', 1).sum(:coverage_amount)
+    end
+    
 
     pdf = PsheetPdf.new(@process_coverage, @total_life_cov, view_context)
     send_data(pdf.render,
@@ -352,6 +359,10 @@ class ProcessCoveragesController < ApplicationController
     end
   end
 
+  def adjust_lppi_cov
+    @batch = LoanInsurance::Batch.find(params[:batch])
+  end
+
   def transfer_to_md
     case params[:batch_type]
     when "LoanInsurance::Batch"
@@ -401,6 +412,23 @@ class ProcessCoveragesController < ApplicationController
       end
     end
 
+  end
+
+  def update_batch_cov
+    @group_remit = @process_coverage.group_remit
+
+    @batch = LoanInsurance::Batch.find_by(id: params[:process_coverage][:batch])
+    loan_amount = params[:process_coverage][:loan_amount]
+    @batch.loan_amount = loan_amount
+    @batch.insurance_status = :pending
+    @batch.batch_remarks.build(remark: "Adjusted Coverage set. Coverage: #{@batch.loan_amount}", status: :pending, user_type: 'Employee', user_id: current_user.userable.id)
+
+    respond_to do |format|
+      if @batch.save!
+        @group_remit.update(status: :with_substandard_members)
+        format.html { redirect_to process_coverage_path(@process_coverage), notice: "Batch Coverage Updated!"}
+      end
+    end
   end
 
   def approve
