@@ -109,6 +109,10 @@ class BatchImportService
     end
 
     dependent_spreadsheet.drop(1).each do |row|
+      if [row["Member First Name"], row["Member Middle Name"], row["Member Last Name"], row["Member Birthdate"]].any?(&:nil?)
+        next
+      end
+
       member_name = {
         first_name: row["Member First Name"].to_s.squish.upcase,
         middle_name: row["Member Middle Name"].to_s.squish.upcase,
@@ -129,7 +133,7 @@ class BatchImportService
       }
 
       unless member.persisted?
-        create_denied_member(member, "Dependent denied: #{dependent_hash[:first_name]} #{dependent_hash[:middle_name]} #{dependent_hash[:last_name]} - Principal is not a cooperative member.")
+        create_denied_member(member, "Dependent denied: #{dependent_hash[:first_name]} #{dependent_hash[:middle_name]} #{dependent_hash[:last_name]} - Principal is not a cooperative member.", nil, true)
         progress_counter += 1
         update_progress(total_members, progress_counter)
         next
@@ -146,14 +150,14 @@ class BatchImportService
         dependent.save!
       rescue ActiveRecord::RecordInvalid => e
         message = e.message.gsub("Validation failed: ", "")
-        create_denied_member(member, "(Denied dependent: #{dependent.to_s}) - #{message}")
+        create_denied_member(member, "(Denied dependent: #{dependent.to_s}) - #{message}", nil, true)
         progress_counter += 1
         update_progress(total_members, progress_counter)
         next
       end
 
       unless member.persisted?
-        create_denied_member(member, "(Denied dependent: #{dependent.to_s}) - Principal not enrolled in the plan.")
+        create_denied_member(member, "(Denied dependent: #{dependent.to_s}) - Principal not enrolled in the plan.", nil, true)
         progress_counter += 1
         update_progress(total_members, progress_counter)
         next
@@ -163,7 +167,7 @@ class BatchImportService
       batch = @group_remit.batches.find_by(coop_member_id: coop_member.id)
 
       if member.nil? || batch.nil?
-        create_denied_member(member, "(Denied dependent: #{dependent.to_s}) - Principal not enrolled in the plan.")
+        create_denied_member(member, "(Denied dependent: #{dependent.to_s}) - Principal not enrolled in the plan.", nil, true)
         progress_counter += 1
         update_progress(total_members, progress_counter)
         next
@@ -184,7 +188,7 @@ class BatchImportService
         age_min_max = age_min_max_by_insured_type(agreement_benefits, dependent_agreement_benefits.name)
 
         if age_min_max.nil?
-          create_denied_member(member, "(DEPENDENT DENIED: #{dependent.to_s}) - '#{dependent_agreement_benefits.name}' option not found in the agreement")
+          create_denied_member(member, "(Denied dependent: #{dependent.to_s}) - '#{dependent_agreement_benefits.name}' option not found in the agreement", nil, true)
           progress_counter += 1
           update_progress(total_members, progress_counter)
           next
@@ -192,7 +196,10 @@ class BatchImportService
 
         term_insurance = @agreement.plan.acronym == 'PMFC' ? true : false
         batch_dependent.set_premium_and_service_fees(dependent_agreement_benefits, @group_remit, term_insurance)
-        batch_dependent.save!
+
+        if batch_dependent.save!
+          increment_dependents_counter
+        end
 
         if dependent.age < batch_dependent.agreement_benefit.min_age or dependent.age > batch_dependent.agreement_benefit.max_age
 
@@ -214,11 +221,14 @@ class BatchImportService
 
       progress_counter += 1
       update_progress(total_members, progress_counter)
+
     end
 
     import_result = {
       added_members_counter: @added_members_counter,
-      denied_members_counter: @denied_members_counter
+      denied_members_counter: @denied_members_counter,
+      added_dependents_counter: @added_dependents_counter,
+      denied_dependents_counter: @denied_dependents_counter
     }
 
   end
@@ -241,8 +251,8 @@ class BatchImportService
     @spreadsheet.sheet(sheet_name).parse(headers: true).delete_if { |row| row.all?(&:blank?) }
   end
 
-  def create_denied_member(member, reason, effectivity = nil)
-    age = member.instance_of?(MemberDependent) ? member.age : member.age(effectivity)
+  def create_denied_member(member, reason, effectivity = nil, dependent = nil)
+    age = member.instance_of?(MemberDependent)  ? member.age : member.age(effectivity)
 
     denied_member = DeniedMember.create!(
       name: "#{member.first_name} #{member.middle_name} #{member.last_name}",
@@ -252,7 +262,11 @@ class BatchImportService
     denied_member.reason = reason
     denied_member.save!
 
-    increment_denied_members_counter
+    if dependent
+      increment_denied_dependents_counter
+    else
+      increment_denied_members_counter
+    end
   end
 
   def age_min_max_by_insured_type(agreement_benefits, rank)
@@ -275,7 +289,9 @@ class BatchImportService
 
   def initialize_counters_and_arrays
     @added_members_counter = 0
+    @added_dependents_counter = 0
     @denied_members_counter = 0
+    @denied_dependents_counter = 0
   end
 
   def extract_batch_data(row)
@@ -307,6 +323,14 @@ class BatchImportService
     @denied_members_counter += 1
   end
 
+  def increment_denied_dependents_counter
+    @denied_dependents_counter += 1
+  end
+
+  def increment_dependents_counter
+    @added_dependents_counter += 1
+  end
+
   def find_duplicate_member(id)
     @group_remit.batches.find_by(coop_member_id: id)
   end
@@ -328,9 +352,9 @@ class BatchImportService
       new_batch.insurance_status = :denied
 
       if member.age(@group_remit.effectivity_date) > new_batch.agreement_benefit.max_age
-        new_batch.batch_remarks.build(remark: "Member age is over the maximum age limit of the plan.", status: :denied, user_type: 'CoopUser', user_id: @current_user.userable.id)
+        new_batch.batch_remarks.build(remark: "Member age is over the maximum age limit of the plan.", status: :denied, user_type: @current_user.userable_type, user_id: @current_user.userable_id)
       else
-        new_batch.batch_remarks.build(remark: "Member age is below the minimum age limit of the plan.", status: :denied, user_type: 'CoopUser', user_id: @current_user.userable.id)
+        new_batch.batch_remarks.build(remark: "Member age is below the minimum age limit of the plan.", status: :denied, user_type: @current_user.userable_type, user_id: @current_user.userable_id)
       end
 
     end

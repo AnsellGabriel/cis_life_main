@@ -4,7 +4,7 @@ class GroupRemitsController < InheritedResources::Base
   include BatchesLoader
 
   before_action :authenticate_user!
-  before_action :check_userable_type
+  # before_action :check_userable_type
   before_action :set_group_remit, only: %i[show edit update destroy submit payment]
   before_action :set_members, only: %i[new create edit update]
 

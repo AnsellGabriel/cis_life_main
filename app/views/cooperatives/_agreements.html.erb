@@ -1,0 +1,39 @@
+<table class="table table-striped table-bordered table-hover">
+  <thead>
+    <tr>
+      <th>Details</th>
+      <%# <th>Cooperative</th>
+        <th>Agent</th>
+        <th>Moa No</th>
+        <th>Contestability</th>
+        <th>Nel</th>
+        <th>Nml</th>
+        <th>Anniversary Type</th>
+        <th>Transferred</th>
+        <th>Transferred Date</th>
+        <th>Previous Provider</th>
+        <th>Comm Type</th>
+        <th>Claims Fund</th>
+        <th>Entry Age From</th>
+        <th>Entry Age To</th>
+        <th>Exit Age</th>
+        <th></th> %>
+    </tr>
+  </thead>
+  <tbody>
+    <% agreements.each do |agreement| %>
+      <% agreement = agreement.decorate %>
+      <tr>
+        <td> 
+          <strong><%= agreement.plan %></strong> <br>
+          <small class="text-muted">Agent: <%= agreement.agent %>
+          </small>
+        </td>
+        <td>
+          <%= link_to 'View', agreement.insurance_path, class: 'btn btn-outline-primary btn-sm' %>
+          <%= link_to "MOA", show_details_agreement_path(agreement), data: { turbo_frame: "remote_modal" }, class: 'btn btn-warning btn-sm' %>
+        </td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>

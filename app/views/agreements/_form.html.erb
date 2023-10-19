@@ -28,6 +28,15 @@
           flatpickr_prev_arrow: "Prev" } } %>
       <%= f.input :previous_provider, wrapper_html: { class: "col-md-5" } %>
     </div>
+    <div class="row">
+      <%= f.input :entry_age_from, wrapper_html: { class: "col-md-4" }, label: 'Min age' %>
+      <%= f.input :entry_age_to, wrapper_html: { class: "col-md-4" }, label: 'Max age' %>
+      <%= f.input :exit_age, wrapper_html: { class: "col-md-4" }, label: 'Exit age' %>
+    </div>
+    <div class="row">
+      <%= f.input :coop_sf, wrapper_html: { class: "col-md-4" }, label: 'Coop service fee' %>
+      <%= f.input :minimum_participation, wrapper_html: { class: "col-md-4" }, label: 'Minimum participants' %>
+    </div>
     <%#= f.association :proposal, input_html: { data: { controller: "ts--select" } }  %>
     <hr>
     <h4 class="text-primary">Agreement Benefits</h4>

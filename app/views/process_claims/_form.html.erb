@@ -1,8 +1,6 @@
-
 <%= simple_form_for(@process_claim) do |f| %>
   <%= f.error_notification %>
   <%= f.error_notification message: f.object.errors[:base].to_sentence if f.object.errors[:base].present? %>
-
   <% if params[:dependent_id].present? %>
     <% dependent = BatchDependent.find(params[:dependent_id]) %>
     <% batch_presenter = BatchPresenter.new(dependent, @agreement)%>
@@ -11,8 +9,6 @@
     <% batch_presenter = BatchPresenter.new(@batch, @agreement)%>
     <% claimable = @batch%>
   <% end %>
-
-
   <div class="form-inputs mb-3 " data-controller="toggler">
     <%= f.hidden_field :claimable_id, value: claimable.id %>
     <%= f.hidden_field :claimable_type, value: claimable.class.name %>
@@ -21,7 +17,6 @@
     <%= f.hidden_field :batch_id, value: @batch.id %>
     <%= f.hidden_field :agreement_benefit_id, value: batch_presenter.present_agreement_benefit.id %>
     <%= f.hidden_field :claim_route, value: :cooperative_filed  %>
-
     <%= f.hidden_field :entry_type, value: "coop" %>
     <div class="row <%= flex_justify_align('between', 'center') %>">
       <div class="d-flex gap-2 col-md-6">
@@ -38,11 +33,10 @@
               class: 'text-center'},
               label: "Incident Date : ",
               wrapper_html: {class: flex_justify_align('start', 'center')},
-              label_html: {style: "width: 170px; margin: 0"} %> 
+              label_html: {style: "width: 170px; margin: 0"} %>
       </div>
     </div>
     <div class="row mb-3">
-
       <% if params[:dependent_id].present? %>
         <div class="col-md-4 <%= flex_justify_align('', 'center') %> gap-2">
           <%= f.input :claimant_name, input_html: { value: @batch.coop_member.full_name.titleize, readonly: true }, label: 'Claimant' %>
@@ -60,23 +54,21 @@
             label: "Claimant : ",
             label_html: {style: "width: 170px; margin: 0"},
             wrapper_html: {class: "#{flex_justify_align('', 'center')} gap-2 mb-0" } %>
-            <div class="<%= flex_justify_align('center', 'center') %> mb-3">
-              <%= link_to new_group_remit_batch_beneficiary_path(@batch.group_remits.find_by(type: 'BatchRemit'), @batch, claims: true),
+          <div class="<%= flex_justify_align('center', 'center') %> mb-3">
+            <%= link_to new_group_remit_batch_beneficiary_path(@batch.group_remits.find_by(type: 'BatchRemit'), @batch, claims: true),
                 class: small_btn('success'),
                 data: { turbo_frame: "modal" },
                 title: 'Add Beneficiary' do %>
-                <i class="bi bi-plus-lg"></i>
-              <% end %>
-            </div>
+              <i class="bi bi-plus-lg"></i>
+            <% end %>
+          </div>
         </div>
-        
         <div class="col-md-3">
           <%= f.input :claimant_email, input_html: {placeholder: "Claimant's Email"}, label: false %>
         </div>
         <div class="col-md-3">
           <%= f.input :claimant_contact_no, input_html: {placeholder: "Claimant's Contact #"}, label: false %>
         </div>
-
       <% end %>
     </div>
     <div class="row">
@@ -86,7 +78,6 @@
         </div>
         <div class="<%= flex_justify_align('around', 'center') %> ps-3">
           <% claim_options = batch_presenter.present_product_info %>
-          
           <%= f.collection_radio_buttons :nature_of_claim,
             claim_options.reject { |acronym, _| acronym == 'BCA' },
             :first.to_sym, :second do |b| %>
@@ -100,7 +91,6 @@
             </div>
           <% end %>
         </div>
-  
       </div>
     </div>
     <div class="row">
@@ -134,60 +124,59 @@
           <div class="hidden" data-toggler-target="toggleable" data-id="<%= option[1] %>">
             <% case option[0].to_sym %>
             <% when :LIFE %>
-              <%= render 'required_document', 
+            <%= render 'required_document', 
                 form: f,
                 label: 'Certified True Copy of Certificate of Death (originally stamped/signed as certified true copy)',
                 value: :death_certificate   
               %>
-              <%= render 'required_document', 
+            <%= render 'required_document', 
                 form: f,
                 label: 'Attending Physician\'s Statement (if attended by a physician)',
                 value: :physician_statement   
               %>
-              <%= render 'required_document', 
+            <%= render 'required_document', 
                 form: f,
                 label: 'Police report',
                 value: :police_report   
               %>
-              <%= render 'required_document', 
+            <%= render 'required_document', 
                 form: f,
                 label: 'Notarized Claimant\'s Statement (Notarization can be waived provided that a Proof of Relationship will be submitted suchs as "Birth Certificate" or "Marriage Certificate")',
                 value: :claimant_statement 
               %>
-              <%= render 'required_document', 
+            <%= render 'required_document', 
                 form: f,
                 label: 'Official Receipt or Billing Statement (if available)',
                 value: :official_receipt   
-              %> 
+              %>
             <% when :HIB, :AMR, :AD, :TPD, :ADD %>
-              <%= render 'required_document', 
+            <%= render 'required_document', 
                 form: f,
                 label: 'Medical Certificate (including date of confinement and final diagnosis)',
                 value: :medical_certificate   
               %>
-              <% unless option[1] == :AMR %>
-                <%= render 'required_document', 
+            <% unless option[1] == :AMR %>
+              <%= render 'required_document', 
                   form: f,
                   label: 'Police Report',
                   value: :police_report   
                 %>
-              <% end %>
-              <%= render 'required_document', 
+            <% end %>
+            <%= render 'required_document', 
                 form: f,
                 label: 'Statement of Account/Hospital Bill',
                 value: :hospital_bills   
               %>
-              <%= render 'required_document', 
+            <%= render 'required_document', 
                 form: f,
                 label: 'Original Official Receipts',
                 value: :official_receipt   
               %>
-            <% end %>
-          </div>
-        <% end %>
-      </div>
+          <% end %>
+        </div>
+      <% end %>
     </div>
-
+  </div>
   <div class="form-actions text-center">
     <%= f.button :submit, 'Submit Claim', class: 'btn-success' %>
   </div>

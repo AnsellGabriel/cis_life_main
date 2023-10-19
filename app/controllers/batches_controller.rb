@@ -17,15 +17,19 @@ class BatchesController < ApplicationController
     )
 
     @import_result = import_service.import
-
+    
     if @import_result.is_a?(Hash)
       added_members_count = @import_result[:added_members_counter]
       denied_members_count = @import_result[:denied_members_counter]
+      added_dependents_count = @import_result[:added_dependents_counter]
+      denied_dependents_count = @import_result[:denied_dependents_counter]
 
-      added_message = "#{added_members_count} members successfully added." if added_members_count > 0
-      denied_message = "#{denied_members_count} members denied." if denied_members_count > 0
+      added_members_message = "#{added_members_count} members successfully added." if added_members_count > 0
+      denied_members_message = "#{denied_members_count} members denied." if denied_members_count > 0
+      added_dependents_message = "#{added_dependents_count} dependents successfully added." if added_dependents_count > 0
+      denied_dependents_message = "#{denied_dependents_count} dependents denied." if denied_dependents_count > 0
 
-      notice = [added_message, denied_message].compact.join(' ')
+      notice = [added_members_message, added_dependents_message, denied_members_message, denied_dependents_message].compact.join(' ')
       redirect_to group_remit_path(@group_remit), notice: notice
     else
       redirect_to group_remit_path(@group_remit), alert: @import_result

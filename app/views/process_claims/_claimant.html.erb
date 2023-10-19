@@ -1,0 +1,6 @@
+ <%= f.input :claimant_name, label: "Name" %>
+<label>Relationship</label>
+<%= f.select :relationship, options_for_select(ProcessClaim.claimant_relations.keys.map { |key| [key.humanize, key] }), { prompt: '' }, { class: 'form-control' } %>
+<%#= f.input :relationship, label: "Relationship with the Insured" %>
+<%= f.input :claimant_contact_no, label: "Contact Number" %>
+<%= f.input :claimant_email, label: "Email" %>

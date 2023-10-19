@@ -16,6 +16,7 @@ class CooperativesController < ApplicationController
     @member = Member.new
     @member.coop_members.build
     @coop_branches = CoopBranch.where(cooperative: @cooperative)
+    @agreements = @cooperative.agreements
 
     coop_members = @cooperative.coop_members
     f_members = Member.coop_member_details(coop_members)

@@ -1,0 +1,9 @@
+
+<%= render @accounting_check_voucher %>
+
+<div>
+  <%= link_to "Edit", edit_accounting_check_voucher_path(@accounting_check_voucher), class: 'btn btn-primary' %> |
+  <%= link_to "Back", accounting_check_vouchers_path, class: 'btn btn-primary' %>
+
+  <%= button_to "Delete", @accounting_check_voucher, method: :delete, class: 'btn btn-danger' %>
+</div>

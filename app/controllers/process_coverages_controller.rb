@@ -375,7 +375,7 @@ class ProcessCoveragesController < ApplicationController
       @batch.update(for_md: true)
       format.html { redirect_to @process_coverage, notice: "Batch sent to M.D. for review"  }
     end
-    
+
   end
 
   def update_batch_prem
@@ -475,7 +475,7 @@ class ProcessCoveragesController < ApplicationController
         format.html { redirect_to process_coverage_path(@process_coverage), notice: "Process Coverage Approved!" }
       end
     end
-    
+
     @process_coverage.group_remit.set_total_premiums_and_fees
     # if @process_coverage.update_attribute(:status, "approved")
     #   @process_coverage.group_remit.set_total_premiums_and_fees
@@ -670,7 +670,6 @@ class ProcessCoveragesController < ApplicationController
     end
 
     def check_emp_department
-
       unless (current_user.userable_type == 'Employee' && current_user.userable.department_id == 17) || current_user.senior_officer? #check if underwriting
         render file: "#{Rails.root}/public/404.html", status: :not_found
       end

@@ -255,7 +255,11 @@ class GroupRemit < ApplicationRecord
   end
 
   def total_coop_commissions
-    commisionable_premium * (agreement.coop_sf / 100)
+    if agreement.coop_sf
+      commisionable_premium * (agreement.coop_sf / 100)
+    else
+      0
+    end
   end
 
   def total_agent_commissions
@@ -299,9 +303,9 @@ class GroupRemit < ApplicationRecord
       self.effectivity_date = Date.today.beginning_of_month
     else
       terms = set_terms(anniversary_date)
-      self.terms = terms < 0 ? terms + 12 : terms
+      self.terms = terms <= 0 ? terms + 12 : terms
       self.effectivity_date = Date.today
-      self.expiry_date = terms < 0 ? anniversary_date.next_year : anniversary_date
+      self.expiry_date = terms <= 0 ? anniversary_date.next_year : anniversary_date
 
       if anniversary_date.day > Date.today.day
         self.terms += 1
