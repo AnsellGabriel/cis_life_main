@@ -1,9 +1,12 @@
-
+<div class="d-flex gap-1 mb-1">
+  <%= link_to "Back", accounting_check_vouchers_path, class: small_btn('secondary') %>
+  <%= link_to edit_accounting_check_voucher_path(@accounting_check_voucher), class: small_btn('outline-primary'), title: 'Edit' do %>
+    <i class="bi bi-pencil-square"></i>
+  <% end %>
+  <%= button_to @accounting_check_voucher, method: :delete, class: small_btn('outline-danger'), title: 'Delete' do %>
+    <i class="bi bi-trash"></i>
+  <% end %>
+</div>
 <%= render @accounting_check_voucher %>
 
-<div>
-  <%= link_to "Edit", edit_accounting_check_voucher_path(@accounting_check_voucher), class: 'btn btn-primary' %> |
-  <%= link_to "Back", accounting_check_vouchers_path, class: 'btn btn-primary' %>
 
-  <%= button_to "Delete", @accounting_check_voucher, method: :delete, class: 'btn btn-danger' %>
-</div>
