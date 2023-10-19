@@ -77,7 +77,12 @@ class Batch < ApplicationRecord
   end
 
   def get_group_remit
-    self.group_remits.find_by(type: "Remittance")
+    case self.class.name
+    when "Batch"
+      self.group_remits.find_by(type: "Remittance")
+    else
+      self.group_remit
+    end
   end
 
   def get_terms

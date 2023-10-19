@@ -46,10 +46,6 @@ class CoopBranchesController < ApplicationController
 
   # POST /coop_branches or /coop_branches.json
   def create
-    if Rails.env.development?
-      binding.pry
-    end
-
     if @cooperative.nil?
       @cooperative = Cooperative.find_by(id: params[:coop_branch][:cooperative_id])
     end

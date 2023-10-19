@@ -139,8 +139,15 @@ class GroupRemit < ApplicationRecord
     self.net_premium = net_premium
 
     unless self.type == 'BatchRemit'
-      self.status = :for_payment
-      Notification.create(notifiable: self.agreement.cooperative, message: "#{self.name} is approved and now for payment.")
+            
+      if self.process_coverage.status == "approved"
+        self.status = :for_payment
+        Notification.create(notifiable: self.agreement.cooperative, message: "#{self.name} is approved and now for payment.")
+      else
+        self.status.nil? ? "under_review" : self.status
+      end
+      # self.status = :for_payment
+      # Notification.create(notifiable: self.agreement.cooperative, message: "#{self.name} is approved and now for payment.")
     end
 
     self.save!

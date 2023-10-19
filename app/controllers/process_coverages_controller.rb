@@ -5,7 +5,6 @@ class ProcessCoveragesController < ApplicationController
 
   # GET /process_coverages
   def index
-    # raise 'errors'
     if current_user.rank == "senior_officer"
       @process_coverages_x = ProcessCoverage.all
       @process_coverages_x = ProcessCoverage.all
@@ -44,6 +43,8 @@ class ProcessCoveragesController < ApplicationController
       @reprocess_coverages = @process_coverages_x.where(status: :reprocess)
       @reassess_coverages = @process_coverages_x.where(status: :reassess)
       @denied_process_coverages = @process_coverages_x.where(status: :denied)
+
+      @coverages_total_processed = ProcessCoverage.where(status: [:approved, :denied, :reprocess])
 
       if params[:search].present?
         @process_coverages = @process_coverages_x.joins(group_remit: {agreement: :cooperative}).where("group_remits.name LIKE ? OR group_remits.description LIKE ? OR agreements.moa_no LIKE ? OR cooperatives.name LIKE ?", "%#{params[:search]}%", "%#{params[:search]}%", "%#{params[:search]}%", "%#{params[:search]}%")
@@ -411,7 +412,7 @@ class ProcessCoveragesController < ApplicationController
 
     @process_coverage = ProcessCoverage.find_by(id: params[:process_coverage_id])
     # compute group remit total premiums, fees and set status to :for_payment
-    @process_coverage.group_remit.set_total_premiums_and_fees
+    # @process_coverage.group_remit.set_total_premiums_and_fees
     klass_name = @process_coverage.group_remit.batches.first.class.name
 
     respond_to do |format|
@@ -446,6 +447,8 @@ class ProcessCoveragesController < ApplicationController
         format.html { redirect_to process_coverage_path(@process_coverage), notice: "Process Coverage Approved!" }
       end
     end
+
+    @process_coverage.group_remit.set_total_premiums_and_fees
     # if @process_coverage.update_attribute(:status, "approved")
     #   @process_coverage.group_remit.set_total_premiums_and_fees
     #   format.html { redirect_to process_coverage_path(@process_coverage), notice: "Process Coverage Approved!" }
