@@ -27,7 +27,7 @@ class ReinsurancesController < ApplicationController
 
     # @batches = LoanInsurance::Batch.get_ri_batches(@reinsurance.date_from..@reinsurance.date_to)
     @members = Member.get_ri
-
+    # raise 'errors'
     @members.each do |member|
       member.get_for_ri_sum(@reinsurance)
     end
