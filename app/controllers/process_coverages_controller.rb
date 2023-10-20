@@ -212,34 +212,38 @@ class ProcessCoveragesController < ApplicationController
     @pro_cov = ProcessCoverage.find_by(id: params[:p_id])
     ids = params[:b_ids]
 
-    if ids.nil?
-      redirect_to process_coverage_path(@pro_cov), alert: "Please select batch(es) to update!"
-
-    else
-
-      if params[:approve]
-        case @pro_cov.get_batch_class_name
-        when "LoanInsurance::Batch"
-          LoanInsurance::Batch.where(id: ids).update_all(insurance_status: :approved)
-        else
-          Batch.where(id: ids).update_all(insurance_status: :approved)
+    respond_to do |format|
+      if ids.nil?
+        format.html { redirect_to process_coverage_path(@pro_cov), alert: "Please select batch(es) to update!" }
+        # redirect_back fallback_location: @pro_cov, alert: "Please select batch(es) to update!"
+      else
+  
+        if params[:approve]
+          case @pro_cov.get_batch_class_name
+          when "LoanInsurance::Batch"
+            LoanInsurance::Batch.where(id: ids).update_all(insurance_status: :approved)
+          else
+            Batch.where(id: ids).update_all(insurance_status: :approved)
+          end
+  
+          @pro_cov.increment!(:approved_count, ids.length)
+          # redirect_to process_coverage_path(@pro_cov), notice: "Selected Coverages Approved!"
+          format.html { redirect_back fallback_location: @pro_cov, notice: "Selected Coverages Approved!" }
+          
+        elsif params[:deny]
+          case @pro_cov.get_batch_class_name
+          when "LoanInsurance::Batch"
+            LoanInsurance::Batch.where(id: ids).update_all(insurance_status: :denied)
+          else
+            Batch.where(id: ids).update_all(insurance_status: :denied)
+          end
+          
+          @pro_cov.increment!(:denied_count, ids.length)
+          # redirect_to process_coverage_path(@pro_cov), alert: "Selected Coverages Denied!"
+          format.html { redirect_back fallback_location: @pro_cov, notice: "Selected Coverages Denied!" }
         end
-
-        @pro_cov.increment!(:approved_count, ids.length)
-        redirect_to process_coverage_path(@pro_cov), notice: "Selected Coverages Approved!"
-
-      elsif params[:deny]
-        case @pro_cov.get_batch_class_name
-        when "LoanInsurance::Batch"
-          LoanInsurance::Batch.where(id: ids).update_all(insurance_status: :denied)
-        else
-          Batch.where(id: ids).update_all(insurance_status: :denied)
-        end
-
-        @pro_cov.increment!(:denied_count, ids.length)
-        redirect_to process_coverage_path(@pro_cov), alert: "Selected Coverages Denied!"
+  
       end
-
     end
 
 

@@ -142,7 +142,7 @@
           </div>
         </div>
         <div class="col-10">
-          <%= form_tag update_batch_selected_process_coverages_path(p_id: process_coverage, b_ids: []), method: :patch do %>
+          <%= form_tag update_batch_selected_process_coverages_path(p_id: process_coverage, b_ids: []), method: :patch, data: {turbo: false} do %>
             <% if ['for_process', 'pending', 'reconsiderations_processed'].include?(process_coverage.status) %>
               <% if process_coverage.group_remit.batches.where(insurance_status: [:pending, :for_review]).count > 0 %>
                 <div class="text-end">
