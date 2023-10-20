@@ -9,7 +9,7 @@
 </div>
 
 
-  <table class="table small table-striped table-bordered table-hover">
+  <table class="table table-sm table-striped table-bordered table-hover">
     <thead>
       <tr>
       <th>#</th>
@@ -17,12 +17,13 @@
             <th>Voucher</th>
             <th>Payee</th>
             <th>Amount</th>
-            <th>Actions</th>
+            <th></th>
         </tr>
     </thead>
 
     <tbody>
       <% @accounting_check_vouchers.each do |voucher| %>
+        
         <tr>
 
         <th scope="row"><%= voucher.id %></th>
@@ -31,10 +32,8 @@
         <td><%= voucher.payable %></td>
         <td><%= to_curr(voucher.amount) %></td>
     
-          <td>
+          <td class="text-center">
             <%= link_to 'View', voucher, class: 'btn btn-secondary btn-sm' %>
-            <%= link_to 'Edit', edit_accounting_check_voucher_path(voucher), class: 'btn btn-secondary btn-sm' %>
-            <%= link_to "Delete", voucher, class: "btn btn-danger btn-sm", method: :delete, data: { "turbo-method": :delete, turbo_confirm: "Are you sure?" } %>
           </td>
 
         </tr>

@@ -14,12 +14,10 @@ class ApplicationController < ActionController::Base
         redirect_to med_directors_home_path
       else
         case current_user.userable.department_id
-        when 17, 13
-          redirect_to process_coverages_path
-        when 15
-          redirect_to mis_dashboard_path
-        else
-          redirect_to employees_path
+        when 5 then redirect_to accounting_check_vouchers_path
+        when 17, 13 then redirect_to process_coverages_path
+        when 15 then redirect_to mis_dashboard_path
+        else redirect_to employees_path
         end
       end
 
