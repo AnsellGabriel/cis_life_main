@@ -1,6 +1,6 @@
 require "test_helper"
 
-class Accounting::CheckVoucherTest < ActiveSupport::TestCase
+class Accounting::VoucherTest < ActiveSupport::TestCase
   # test "the truth" do
   #   assert true
   # end

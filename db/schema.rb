@@ -10,17 +10,19 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_10_17_051755) do
-  create_table "accounting_check_vouchers", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+ActiveRecord::Schema[7.0].define(version: 2023_10_23_074343) do
+  create_table "accounting_vouchers", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.date "date_voucher"
-    t.string "voucher"
+    t.integer "voucher"
     t.string "payable_type", null: false
     t.bigint "payable_id", null: false
-    t.decimal "amount", precision: 15, scale: 2
+    t.bigint "treasury_account_id", null: false
+    t.decimal "amount", precision: 10, scale: 2
     t.text "particulars"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["payable_type", "payable_id"], name: "index_accounting_check_vouchers_on_payable"
+    t.index ["payable_type", "payable_id"], name: "index_accounting_vouchers_on_payable"
+    t.index ["treasury_account_id"], name: "index_accounting_vouchers_on_treasury_account_id"
   end
 
   create_table "action_text_rich_texts", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
@@ -935,7 +937,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_10_17_051755) do
   end
 
   create_table "progress_trackers", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
-    t.float "progress"
+    t.float "progress", default: 0.0
     t.string "trackable_type", null: false
     t.bigint "trackable_id", null: false
     t.datetime "created_at", null: false
@@ -958,6 +960,16 @@ ActiveRecord::Schema[7.0].define(version: 2023_10_17_051755) do
     t.date "date_to"
     t.decimal "ri_total_amount", precision: 10
     t.decimal "ri_total_prem", precision: 10
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  create_table "treasury_accounts", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+    t.string "name"
+    t.integer "account_type"
+    t.boolean "is_check_account", default: false
+    t.string "contact_number"
+    t.string "address"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
   end
@@ -1006,6 +1018,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_10_17_051755) do
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
   end
 
+  add_foreign_key "accounting_vouchers", "treasury_accounts"
   add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
   add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
   add_foreign_key "agreements_coop_members", "agreements"

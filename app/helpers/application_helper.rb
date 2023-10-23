@@ -207,6 +207,7 @@ module ApplicationHelper
 
 			case current_user.userable.department_id
 			when 15 then "Management Information System"
+			when 11 then "Accounting"
 			end
 
 		end

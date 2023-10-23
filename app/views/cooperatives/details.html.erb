@@ -1,0 +1,26 @@
+<%= turbo_frame_tag "modal" do %>
+  <div class="modal-header ">
+    <%= content_tag :h5, "#{@cooperative.name}", class: "modal-title text-center text-primary", id: "staticBackdropLabel" %>
+    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+  </div>
+  
+  <div class="modal-body">
+    <p>
+      <strong>Address:</strong>
+      <%= @cooperative.get_address %>
+    </p>
+      <strong>Contact number:</strong>
+      <%= @cooperative.contact_number %>
+    </p>
+    </p>
+      <strong>Email:</strong>
+      <%= @cooperative.email %>
+    </p>
+    </p>
+      <strong> TIN: </strong> <%= @cooperative.tin_number %>
+    </p>
+    <p>
+      <strong> Registration no.: </strong> <%= @cooperative.registration_number %>
+    </p>
+  </div>
+<% end %>
