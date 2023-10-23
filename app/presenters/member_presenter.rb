@@ -4,10 +4,10 @@ class MemberPresenter
 end
 
   def valid_dependents
-    case @member.civil_status
-    when "Married"
+    case @member.civil_status.downcase
+    when "married"
       ['Spouse', 'Child']
-    when "Single"
+    when "single"
       ['Parent', 'Sibling']
     else
       ['Parent', 'Child', 'Sibling']
