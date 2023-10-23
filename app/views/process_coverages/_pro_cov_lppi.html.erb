@@ -33,7 +33,7 @@
 </div>
 
 <div data-controller="checkbox-select-all">
-  <%= form_tag update_batch_selected_process_coverages_path(p_id: process_coverage, b_ids: []), method: :patch do %>
+  <%= form_tag update_batch_selected_process_coverages_path(p_id: process_coverage, b_ids: []), method: :patch, data: { turbo: false } do %>
     <div class="row mb-2">
       <div class="col-2">
         <%= check_box_tag 'btncheck1', '1', false, class: 'btn-check', data: { action: "change->checkbox-select-all#toggleChildren", checkbox_select_all_target: "parent" } %>
