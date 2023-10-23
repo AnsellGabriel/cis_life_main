@@ -1,0 +1,19 @@
+
+<%= simple_form_for(@treasury_account) do |f| %>
+  <%= f.error_notification %>
+  <%= f.error_notification message: f.object.errors[:base].to_sentence if f.object.errors[:base].present? %>
+
+  <div class="form-inputs mb-3">
+    <%= f.input :name %>
+<%= f.input :account_type, as: :select, collection: Treasury::Account.account_types.map { |k, v| [k.humanize.capitalize, k.to_s] } %>
+    <%= f.input :is_check_account, label: 'Check account?' %>
+    <%= f.input :contact_number %>
+    <%= f.input :address %>
+  </div>
+
+  <div class="form-actions text-center">
+    <%= f.button :submit, class: 'btn btn-sm btn-primary' %>
+  </div>
+<% end %>
+
+<% console %>
