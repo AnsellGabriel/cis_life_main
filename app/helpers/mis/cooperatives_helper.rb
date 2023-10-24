@@ -1,2 +1,0 @@
-module Mis::CooperativesHelper
-end

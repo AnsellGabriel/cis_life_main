@@ -4,7 +4,9 @@ require 'sidekiq/web'
 Rails.application.routes.draw do
   namespace :accounting do
     resources :vouchers
+    get 'dashboard', to: 'dashboard#index'
   end
+
   namespace :treasury do
     resources :accounts
   end

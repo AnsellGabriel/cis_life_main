@@ -1,2 +1,0 @@
-module LoanInsurance::HistoryHelper
-end
