@@ -25,6 +25,10 @@ class CooperativesController < ApplicationController
     @pagy, @filtered_members = pagy(f_members, items: 10, params: {active_tab: 'members'})
   end
 
+  def details
+    @cooperative = Cooperative.find(params[:id])
+  end
+
   # GET /cooperatives/new
   def new
     @cooperative = Cooperative.new

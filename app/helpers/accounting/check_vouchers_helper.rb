@@ -1,2 +1,0 @@
-module Accounting::CheckVouchersHelper
-end
