@@ -120,7 +120,7 @@
               </td>
               <td>
                 <% unless batch.unused_loan_id.nil? %>
-                  <%= link_to unuse_batch_loan_insurance_batch_path(batch.unused_loan_id), class: "btn btn-sm btn-info mb-1", data: { turbo_frame: "modal-xl" } do %>
+                  <%= link_to unuse_batch_loan_insurance_batch_path(batch.unused_loan_id), class: "btn btn-sm btn-info mb-1", data: { turbo_frame: "modal-xl", turbo: true } do %>
                     <%= bootstrap_icon "eye" %>
                   <% end %>
                 <% end %>
@@ -132,10 +132,10 @@
                     <%= link_to approve_batch_process_coverage_path(batch: batch, batch_type: batch.class.name), onclick: "return confirm('Are you sure?')", method: :get, title: "Approve", class: "btn btn-sm btn-success mb-1" do %>
                       <%= bootstrap_icon "check-lg" %>
                     <% end %>
-                    <%= link_to new_batch_remark_path(ref: batch, pro_cov: process_coverage, batch_status: "Pending", batch_type: batch.class.name), title: "Pending", class: "btn btn-sm btn-secondary mb-1", data: { turbo_frame: "reg_form_modal" } do %>
+                    <%= link_to new_batch_remark_path(ref: batch, pro_cov: process_coverage, batch_status: "Pending", batch_type: batch.class.name), title: "Pending", class: "btn btn-sm btn-secondary mb-1", data: { turbo_frame: "reg_form_modal", turbo: true } do %>
                       <%= bootstrap_icon "arrow-clockwise" %>
                     <% end %>
-                    <%= link_to new_batch_remark_path(ref: batch, pro_cov: process_coverage, batch_status: "Deny", batch_type: batch.class.name), title: "Deny", class: "btn btn-sm btn-danger mb-1", data: { turbo_frame: "reg_form_modal" } do %>
+                    <%= link_to new_batch_remark_path(ref: batch, pro_cov: process_coverage, batch_status: "Deny", batch_type: batch.class.name), title: "Deny", class: "btn btn-sm btn-danger mb-1", data: { turbo_frame: "reg_form_modal", turbo: true } do %>
                       <%= bootstrap_icon "x-lg" %>
                     <% end %>
                   </div>
@@ -147,10 +147,10 @@
 
                   <% unless batch.approved? %>
                     <% if current_user.head? && !batch.valid_health_dec? && batch.check_md_reco > 0 %>
-                      <%= link_to set_premium_batch_process_coverage_path(batch: batch, batch_type: batch.class.name), onclick: "return confirm('Are you sure?')", method: :get, class: "btn btn-sm btn-info mb-1", data: { turbo_frame: "reg_form_modal" } do %>
+                      <%= link_to set_premium_batch_process_coverage_path(batch: batch, batch_type: batch.class.name), onclick: "return confirm('Are you sure?')", method: :get, class: "btn btn-sm btn-info mb-1", data: { turbo_frame: "reg_form_modal", turbo: true } do %>
                         <%= bootstrap_icon "coin" %>
                       <% end %>
-                      <%= link_to adjust_lppi_cov_process_coverage_path(batch: batch, batch_type: batch.class.name), onclick: "return confirm('Are you sure?')", method: :get, class: "btn btn-sm btn-info mb-1", data: { turbo_frame: "reg_form_modal" } do %>
+                      <%= link_to adjust_lppi_cov_process_coverage_path(batch: batch, batch_type: batch.class.name), onclick: "return confirm('Are you sure?')", method: :get, class: "btn btn-sm btn-info mb-1", data: { turbo_frame: "reg_form_modal", turbo: true } do %>
                         <%= bootstrap_icon "cash" %>
                       <% end %>
                     <% end %>
@@ -159,13 +159,16 @@
 
                 <% end %>
                 <% if batch.batch_health_decs.present? %>
-                  <%= link_to health_dec_group_remit_batch_path(@group_remit, batch, for_und: true, batch_type: batch.class.name), class: "btn btn-sm btn-warning mb-1", data: { turbo_frame: "reg_form_modal_xl" } do %>
+                  <%= link_to health_dec_group_remit_batch_path(@group_remit, batch, for_und: true, batch_type: batch.class.name), class: "btn btn-sm btn-warning mb-1", data: { turbo_frame: "reg_form_modal_xl", turbo: true } do %>
                     <%= bootstrap_icon "file-earmark-medical" %>
                   <% end %>
-                  <% unless batch.for_md == true %>
-                    <% unless batch.insurance_status == "approved" || batch.insurance_status == "denied" %>
-                      <%= link_to transfer_to_md_process_coverage_path(batch: batch, batch_type: batch.class.name), onclick: "return confirm('Are you sure?')", method: :get, class: "btn btn-sm btn-warning mb-1" do %>
-                        <%= bootstrap_icon "arrow-up-right" %>
+
+                  <% if batch.valid_health_dec == false %>
+                    <% unless batch.for_md == true %>
+                      <% unless batch.insurance_status == "approved" || batch.insurance_status == "denied" %>
+                        <%= link_to transfer_to_md_process_coverage_path(batch: batch, batch_type: batch.class.name), onclick: "return confirm('Are you sure?')", method: :get, class: "btn btn-sm btn-warning mb-1" do %>
+                          <%= bootstrap_icon "arrow-up-right" %>
+                        <% end %>
                       <% end %>
                     <% end %>
                   <% end %>
@@ -178,11 +181,11 @@
                     <% if batch.insurance_status == "approved" %>
                       No Remark(s)
                     <% else %>
-                      <%= link_to "No Remark(s)", new_batch_remark_path(ref: batch, pro_cov: process_coverage, batch_status: "New", batch_type: batch.class.name), class: "text-dark", data: { turbo_frame: "reg_form_modal" } %>
+                      <%= link_to "No Remark(s)", new_batch_remark_path(ref: batch, pro_cov: process_coverage, batch_status: "New", batch_type: batch.class.name), class: "text-dark", data: { turbo_frame: "reg_form_modal", turbo: true } %>
                     <% end %>
                   <% end %>
                 <% else %>
-                  <%= link_to "View Remarks", modal_remarks_process_coverage_path(process_coverage, batch: batch, batch_type: batch.class.name), data: { turbo_frame: "reg_form_modal" } %>
+                  <%= link_to "View Remarks", modal_remarks_process_coverage_path(process_coverage, batch: batch, batch_type: batch.class.name), data: { turbo_frame: "reg_form_modal", turbo: true } %>
                   <%#= link_to "View Remarks", modal_remarks_process_coverage_path(process_coverage, batch: batch), data: { turbo_frame: "reg_form_modal" } %>
                 <% end %>
               </td>
@@ -200,4 +203,3 @@
 
   <% end %>
 </div>
-<%#= console %>

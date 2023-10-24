@@ -264,10 +264,12 @@
                             <%= bootstrap_icon "file-earmark-medical" %>
                           <% end %>
                           
-                          <% unless batch.for_md == true %>
-                            <% unless batch.insurance_status == "approved" || batch.insurance_status == "denied" %>
-                              <%= link_to transfer_to_md_process_coverage_path(batch: batch, batch_type: batch.class.name), onclick: "return confirm('Are you sure?')", method: :get, class: "btn btn-sm btn-warning mb-1" do %>
-                                <%= bootstrap_icon "arrow-up-right" %>
+                          <% if batch.valid_health_dec == true %>
+                            <% unless batch.for_md == true %>
+                              <% unless batch.insurance_status == "approved" || batch.insurance_status == "denied" %>
+                                <%= link_to transfer_to_md_process_coverage_path(batch: batch, batch_type: batch.class.name), onclick: "return confirm('Are you sure?')", method: :get, class: "btn btn-sm btn-warning mb-1" do %>
+                                  <%= bootstrap_icon "arrow-up-right" %>
+                                <% end %>
                               <% end %>
                             <% end %>
                           <% end %>

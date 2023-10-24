@@ -1,0 +1,9 @@
+
+<%= render @actuarial_reserve %>
+
+<div>
+  <%= link_to "Edit", edit_actuarial_reserf_path(@actuarial_reserve), class: 'btn btn-primary' %> |
+  <%= link_to "Back", actuarial_reserves_path, class: 'btn btn-primary' %>
+
+  <%= button_to "Delete", @actuarial_reserve, method: :delete, class: 'btn btn-danger' %>
+</div>
