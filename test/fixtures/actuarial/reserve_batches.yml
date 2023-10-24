@@ -1,0 +1,45 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  actuarial_reserve: one
+  batch: one
+  term: 1
+  rate: 9.99
+  coverage_less_ri: 9.99
+  prem_less_ri: 9.99
+  duration: 1
+  first_term: 2023-10-24
+  second_term: 2023-10-24
+  third_term: 2023-10-24
+  unearned_prem: 9.99
+  first_adv_prem: 9.99
+  second_adv_prem: 9.99
+  reserve: 9.99
+  cov_less_ret: 9.99
+  prem_less_ret: 9.99
+  unearned_pr: 9.99
+  first_adv_pr: 9.99
+  second_adv_pr: 9.99
+  reserve_ret: 9.99
+
+two:
+  actuarial_reserve: two
+  batch: two
+  term: 1
+  rate: 9.99
+  coverage_less_ri: 9.99
+  prem_less_ri: 9.99
+  duration: 1
+  first_term: 2023-10-24
+  second_term: 2023-10-24
+  third_term: 2023-10-24
+  unearned_prem: 9.99
+  first_adv_prem: 9.99
+  second_adv_prem: 9.99
+  reserve: 9.99
+  cov_less_ret: 9.99
+  prem_less_ret: 9.99
+  unearned_pr: 9.99
+  first_adv_pr: 9.99
+  second_adv_pr: 9.99
+  reserve_ret: 9.99

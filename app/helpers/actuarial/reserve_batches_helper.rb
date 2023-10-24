@@ -1,0 +1,2 @@
+module Actuarial::ReserveBatchesHelper
+end

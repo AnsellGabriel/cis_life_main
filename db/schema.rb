@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_10_17_051755) do
+ActiveRecord::Schema[7.0].define(version: 2023_10_24_053417) do
   create_table "accounting_check_vouchers", charset: "utf8mb4", force: :cascade do |t|
     t.date "date_voucher"
     t.string "voucher"
@@ -73,6 +73,51 @@ ActiveRecord::Schema[7.0].define(version: 2023_10_17_051755) do
     t.bigint "blob_id", null: false
     t.string "variation_digest", null: false
     t.index ["blob_id", "variation_digest"], name: "index_active_storage_variant_records_uniqueness", unique: true
+  end
+
+  create_table "actuarial_reserve_batches", charset: "utf8mb4", force: :cascade do |t|
+    t.bigint "actuarial_reserve_id"
+    t.bigint "batch_id"
+    t.integer "term"
+    t.decimal "rate", precision: 5, scale: 2
+    t.decimal "coverage_less_ri", precision: 10, scale: 2
+    t.decimal "prem_less_ri", precision: 10, scale: 2
+    t.integer "duration"
+    t.integer "first_term"
+    t.integer "second_term"
+    t.integer "third_term"
+    t.decimal "unearned_prem", precision: 10, scale: 2
+    t.decimal "first_adv_prem", precision: 10, scale: 2
+    t.decimal "second_adv_prem", precision: 10, scale: 2
+    t.decimal "reserve_amt", precision: 10, scale: 2
+    t.decimal "cov_less_ret", precision: 10, scale: 2
+    t.decimal "prem_less_ret", precision: 10, scale: 2
+    t.decimal "unearned_pr", precision: 10, scale: 2
+    t.decimal "first_adv_pr", precision: 10, scale: 2
+    t.decimal "second_adv_pr", precision: 10, scale: 2
+    t.decimal "reserve_ret_amt", precision: 10, scale: 2
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["actuarial_reserve_id"], name: "index_actuarial_reserve_batches_on_actuarial_reserve_id"
+    t.index ["batch_id"], name: "index_actuarial_reserve_batches_on_batch_id"
+  end
+
+  create_table "actuarial_reserves", charset: "utf8mb4", force: :cascade do |t|
+    t.date "first_term"
+    t.date "second_term"
+    t.date "third_term"
+    t.decimal "total_unearned_prem", precision: 10, scale: 2
+    t.decimal "total_first_advance_prem", precision: 10, scale: 2
+    t.decimal "total_second_advance_prem", precision: 10, scale: 2
+    t.decimal "total_reserve", precision: 10, scale: 2
+    t.decimal "total_unearned_pr", precision: 10, scale: 2
+    t.decimal "total_first_advance_pr", precision: 10, scale: 2
+    t.decimal "total_second_advance_pr", precision: 10, scale: 2
+    t.decimal "total_reserve_ret", precision: 10, scale: 2
+    t.bigint "plan_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["plan_id"], name: "index_actuarial_reserves_on_plan_id"
   end
 
   create_table "admin_users", charset: "utf8mb4", force: :cascade do |t|

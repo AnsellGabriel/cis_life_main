@@ -1,0 +1,58 @@
+<%= content_tag :h1, "List of Actuarial Reserves" %>
+
+
+<div class="text-end mb-3">
+  <%= link_to new_actuarial_reserf_path, class: 'btn btn-primary' do %>
+    New Reserve
+  <% end %>
+</div>
+
+
+  <table class="table table-striped table-bordered table-hover">
+    <thead>
+      <tr>
+      <th>#</th>
+            <th>First Term</th>
+            <th>Second Term</th>
+            <th>Third Term</th>
+            <th>Total Unearned Prem</th>
+            <th>Total First Advance Prem</th>
+            <th>Total Second Advance Prem</th>
+            <th>Total Reserve</th>
+            <th>Total Unearned Pr</th>
+            <th>Total First Advance Pr</th>
+            <th>Total Second Advance Pr</th>
+            <th>Total Reserve Ret</th>
+            <th>Plan</th>
+            <th></th>
+        </tr>
+    </thead>
+
+    <tbody>
+      <% @actuarial_reserves.each do |actuarial_reserf| %>
+        <tr>
+
+        <th scope="row"><%= actuarial_reserf.id %></th>
+        <td><%= actuarial_reserf.first_term %></td>
+        <td><%= actuarial_reserf.second_term %></td>
+        <td><%= actuarial_reserf.third_term %></td>
+        <td><%= actuarial_reserf.total_unearned_prem %></td>
+        <td><%= actuarial_reserf.total_first_advance_prem %></td>
+        <td><%= actuarial_reserf.total_second_advance_prem %></td>
+        <td><%= actuarial_reserf.total_reserve %></td>
+        <td><%= actuarial_reserf.total_unearned_pr %></td>
+        <td><%= actuarial_reserf.total_first_advance_pr %></td>
+        <td><%= actuarial_reserf.total_second_advance_pr %></td>
+        <td><%= actuarial_reserf.total_reserve_ret %></td>
+        <td><%= actuarial_reserf.plan %></td>
+    
+          <td>
+            <%= link_to 'View', actuarial_reserf, class: 'btn btn-secondary btn-sm' %>
+            <%= link_to 'Edit', edit_actuarial_reserf_path(actuarial_reserf), class: 'btn btn-secondary btn-sm' %>
+            <%= link_to "Delete", actuarial_reserf, class: "btn btn-danger btn-sm", method: :delete, data: { "turbo-method": :delete, turbo_confirm: "Are you sure?" } %>
+          </td>
+
+        </tr>
+      <% end %>
+    </tbody>
+  </table>

@@ -1,0 +1,26 @@
+
+<%= simple_form_for(@actuarial_reserve) do |f| %>
+  <%= f.error_notification %>
+  <%= f.error_notification message: f.object.errors[:base].to_sentence if f.object.errors[:base].present? %>
+
+  <div class="form-inputs mb-3">
+    <%= f.input :n_date, collection: Actuarial::Reserve.select_dates %>
+    <%= f.association :plan %>
+    <%#= f.input :first_term %>
+    <%#= f.input :second_term %>
+    <%#= f.input :third_term %>
+    <%#= f.input :total_unearned_prem %>
+    <%#= f.input :total_first_advance_prem %>
+    <%#= f.input :total_second_advance_prem %>
+    <%#= f.input :total_reserve %>
+    <%#= f.input :total_unearned_pr %>
+    <%#= f.input :total_first_advance_pr %>
+    <%#= f.input :total_second_advance_pr %>
+    <%#= f.input :total_reserve_ret %>
+  </div>
+
+  <div class="form-actions text-end">
+    <%= link_to "Back", actuarial_reserves_path, class: 'btn btn-secondary' %>
+    <%= f.button :submit, class: 'btn-success' %>
+  </div>
+<% end %>
