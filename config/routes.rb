@@ -8,7 +8,10 @@ Rails.application.routes.draw do
     resources :reserve_batches
   end
   namespace :accounting do
-    resources :check_vouchers
+    resources :vouchers
+  end
+  namespace :treasury do
+    resources :accounts
   end
   resources :group_proposals
   resources :unit_benefits
@@ -88,6 +91,7 @@ Rails.application.routes.draw do
 
   resources :cooperatives do
     get :selected, on: :member
+    get :details, on: :member
   end
   resources :coop_branches
 
