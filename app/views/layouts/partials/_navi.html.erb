@@ -37,7 +37,7 @@
 
           <% else %>
             <%= render 'layouts/partials/nav_dropdown', title: 'Accounting' do %>
-              <%#= link_to "Check Vouchers", accounting_check_vouchers_path, class: "dropdown-item" %>
+              <%= link_to "Check Vouchers", accounting_checks_path, class: "dropdown-item" %>
             <% end %>
 
             <%= render 'layouts/partials/nav_dropdown', title: 'Claims' do %>

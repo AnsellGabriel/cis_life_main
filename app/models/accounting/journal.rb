@@ -1,2 +1,2 @@
-class Accounting::Journal < ApplicationRecord
+class Accounting::Journal < Accounting::Voucher
 end

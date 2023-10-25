@@ -3,7 +3,8 @@ require 'sidekiq/web'
 
 Rails.application.routes.draw do
   namespace :accounting do
-    resources :vouchers
+    resources :journals
+    resources :checks
     get 'dashboard', to: 'dashboard#index'
   end
 

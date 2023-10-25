@@ -10,30 +10,18 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_10_24_054707) do
-  create_table "accounting_check_vouchers", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
-    t.date "date_voucher"
-    t.string "voucher"
-    t.string "payable_type", null: false
-    t.bigint "payable_id", null: false
-    t.decimal "amount", precision: 15, scale: 2
-    t.text "particulars"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.index ["payable_type", "payable_id"], name: "index_accounting_check_vouchers_on_payable"
-  end
-
+ActiveRecord::Schema[7.0].define(version: 2023_10_24_043954) do
   create_table "accounting_vouchers", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.date "date_voucher"
     t.integer "voucher"
     t.string "payable_type", null: false
     t.bigint "payable_id", null: false
     t.bigint "treasury_account_id", null: false
-    t.decimal "amount", precision: 10, scale: 2
+    t.decimal "amount", precision: 15, scale: 2
     t.text "particulars"
+    t.string "type"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.string "type"
     t.index ["payable_type", "payable_id"], name: "index_accounting_vouchers_on_payable"
     t.index ["treasury_account_id"], name: "index_accounting_vouchers_on_treasury_account_id"
   end
@@ -350,15 +338,6 @@ ActiveRecord::Schema[7.0].define(version: 2023_10_24_054707) do
     t.datetime "updated_at", null: false
     t.index ["coverageable_type", "coverageable_id"], name: "index_claim_coverages_on_coverageable"
     t.index ["process_claim_id"], name: "index_claim_coverages_on_process_claim_id"
-  end
-
-  create_table "claim_documents", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
-    t.bigint "process_claim_id", null: false
-    t.string "document"
-    t.integer "document_type"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.index ["process_claim_id"], name: "index_claim_documents_on_process_claim_id"
   end
 
   create_table "claim_remarks", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
@@ -959,25 +938,12 @@ ActiveRecord::Schema[7.0].define(version: 2023_10_24_054707) do
   end
 
   create_table "progress_trackers", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
-    t.float "progress"
+    t.float "progress", default: 0.0
     t.string "trackable_type", null: false
     t.bigint "trackable_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["trackable_type", "trackable_id"], name: "index_progress_trackers_on_trackable"
-  end
-
-  create_table "proposals", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
-    t.bigint "cooperative_id", null: false
-    t.integer "ave_age"
-    t.decimal "total_premium", precision: 10, scale: 2
-    t.decimal "coop_sf", precision: 10, scale: 2
-    t.decimal "agent_sf", precision: 10, scale: 2
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.integer "minimum_participation"
-    t.string "proposal_no"
-    t.index ["cooperative_id"], name: "index_proposals_on_cooperative_id"
   end
 
   create_table "reinsurance_batches", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
@@ -1071,7 +1037,6 @@ ActiveRecord::Schema[7.0].define(version: 2023_10_24_054707) do
   add_foreign_key "claim_attachments", "claim_type_documents"
   add_foreign_key "claim_attachments", "process_claims"
   add_foreign_key "claim_causes", "process_claims"
-  add_foreign_key "claim_documents", "process_claims"
   add_foreign_key "claim_remarks", "process_claims"
   add_foreign_key "claim_remarks", "users"
   add_foreign_key "coop_branches", "cooperatives"
@@ -1109,5 +1074,4 @@ ActiveRecord::Schema[7.0].define(version: 2023_10_24_054707) do
   add_foreign_key "process_tracks", "users"
   add_foreign_key "product_benefits", "agreement_benefits"
   add_foreign_key "product_benefits", "benefits"
-  add_foreign_key "proposals", "cooperatives"
 end

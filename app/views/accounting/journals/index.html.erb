@@ -1,0 +1,34 @@
+<%= content_tag :h1, "List of Accounting Journals" %>
+
+
+<div class="text-end mb-3">
+  <%= link_to new_accounting_journal_path, class: 'btn btn-primary' do %>
+    New Journal
+  <% end %>
+</div>
+
+
+  <table class="table table-striped table-bordered table-hover">
+    <thead>
+      <tr>
+      <th>#</th>
+            <th></th>
+        </tr>
+    </thead>
+
+    <tbody>
+      <% @accounting_journals.each do |accounting_journal| %>
+        <tr>
+
+        <th scope="row"><%= accounting_journal.id %></th>
+    
+          <td>
+            <%= link_to 'View', accounting_journal, class: 'btn btn-secondary btn-sm' %>
+            <%= link_to 'Edit', edit_accounting_journal_path(accounting_journal), class: 'btn btn-secondary btn-sm' %>
+            <%= link_to "Delete", accounting_journal, class: "btn btn-danger btn-sm", method: :delete, data: { "turbo-method": :delete, turbo_confirm: "Are you sure?" } %>
+          </td>
+
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
