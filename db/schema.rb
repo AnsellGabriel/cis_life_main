@@ -77,7 +77,8 @@ ActiveRecord::Schema[7.0].define(version: 2023_10_24_053417) do
 
   create_table "actuarial_reserve_batches", charset: "utf8mb4", force: :cascade do |t|
     t.bigint "actuarial_reserve_id"
-    t.bigint "batch_id"
+    t.string "batchable_type"
+    t.bigint "batchable_id"
     t.integer "term"
     t.decimal "rate", precision: 5, scale: 2
     t.decimal "coverage_less_ri", precision: 10, scale: 2
@@ -99,7 +100,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_10_24_053417) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["actuarial_reserve_id"], name: "index_actuarial_reserve_batches_on_actuarial_reserve_id"
-    t.index ["batch_id"], name: "index_actuarial_reserve_batches_on_batch_id"
+    t.index ["batchable_type", "batchable_id"], name: "index_actuarial_reserve_batches_on_batchable"
   end
 
   create_table "actuarial_reserves", charset: "utf8mb4", force: :cascade do |t|
