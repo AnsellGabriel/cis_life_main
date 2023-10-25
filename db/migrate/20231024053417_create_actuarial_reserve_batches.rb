@@ -2,7 +2,7 @@ class CreateActuarialReserveBatches < ActiveRecord::Migration[7.0]
   def change
     create_table :actuarial_reserve_batches do |t|
       t.belongs_to :actuarial_reserve#, null: false, foreign_key: true
-      t.belongs_to :batch#, null: false, foreign_key: true
+      t.belongs_to :batchable, polymorphic: true#, null: false, null: false, foreign_key: true
       t.integer :term
       t.decimal :rate, precision: 5, scale: 2
       t.decimal :coverage_less_ri, precision: 10, scale: 2

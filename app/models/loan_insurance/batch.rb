@@ -18,7 +18,7 @@ class LoanInsurance::Batch < Batch
   has_many :reinsurance_batches
   has_many :reinsurances, through: :reinsurance_batches
 
-  has_many :reserve_batches, class_name: "Actuarial::Reserve"
+  has_many :reserve_batches, as: :batchable, dependent: :destroy
   has_many :reserves, through: :reserve_batches, class_name: "Actuarial::Reserve"
 
 
@@ -84,7 +84,7 @@ class LoanInsurance::Batch < Batch
     joins(coop_member: :member).where(member: { id: member.id })
   end
 
-  def self.get_reserves(start_date, end_date)
+  def self.get_reserves(start_date=nil, end_date)
     reserve_date = end_date.end_of_year
     joins(coop_member: :member).where.not(insurance_status: :denied).where(created_loan_amount: 500.., expiry_date: reserve_date..)
   end
@@ -100,7 +100,7 @@ class LoanInsurance::Batch < Batch
   end
 
   def self.get_reserve_batches(date)
-    where(expiry_date: date.., insurance_status: :approved)
+    joins(coop_member: :member).where(expiry_date: date.., insurance_status: :approved)
   end
 
   def get_ri_date(ri)
@@ -154,6 +154,8 @@ class LoanInsurance::Batch < Batch
   def find_loan_rate(agreement)
     self.rate = agreement.loan_rates.where("min_age <= ? AND max_age >= ?", age, age).first
   end
+
+
 
 
 
