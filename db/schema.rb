@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_10_24_043954) do
+ActiveRecord::Schema[7.0].define(version: 2023_10_26_074357) do
   create_table "accounting_vouchers", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.date "date_voucher"
     t.integer "voucher"
@@ -975,6 +975,17 @@ ActiveRecord::Schema[7.0].define(version: 2023_10_24_043954) do
     t.datetime "updated_at", null: false
   end
 
+  create_table "treasury_business_checks", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+    t.integer "check_number"
+    t.date "check_date"
+    t.decimal "amount", precision: 15, scale: 2
+    t.integer "check_type"
+    t.bigint "voucher_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["voucher_id"], name: "index_treasury_business_checks_on_voucher_id"
+  end
+
   create_table "underwriting_routes", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.string "name"
     t.string "description"
@@ -1074,4 +1085,5 @@ ActiveRecord::Schema[7.0].define(version: 2023_10_24_043954) do
   add_foreign_key "process_tracks", "users"
   add_foreign_key "product_benefits", "agreement_benefits"
   add_foreign_key "product_benefits", "benefits"
+  add_foreign_key "treasury_business_checks", "accounting_vouchers", column: "voucher_id"
 end

@@ -1,0 +1,34 @@
+
+<%= simple_form_for(check, url: treasury_checks_path) do |f| %>
+  <%= f.error_notification %>
+  <%= f.error_notification message: f.object.errors[:base].to_sentence if f.object.errors[:base].present? %>
+
+  <div class="form-inputs mb-3">
+    <div class="row">
+      <div class="col-6">
+        <%= f.input :check_date, as: :string, input_html: {data: {
+          controller: "flatpickr",
+          flatpickr_max_date: Date.today,
+          flatpickr_next_arrow: "Next",
+          flatpickr_prev_arrow: "Prev"}
+          }, label: 'Check Date'
+        %> 
+      </div>
+      <div class="col-6">
+        <%= f.input :check_number %>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-6">
+        <%= f.input :amount %>
+      </div>
+      <div class="col-6">
+        <%= f.input :check_type %>
+      </div>
+    </div>
+  </div>
+
+  <div class="form-actions text-center">
+    <%= f.button :submit, class: 'btn-primary' %>
+  </div>
+<% end %>

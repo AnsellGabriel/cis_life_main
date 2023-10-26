@@ -41,6 +41,10 @@
               <%= link_to "Journal Vouchers", accounting_journals_path, class: "dropdown-item" %>
             <% end %>
 
+            <%= render 'layouts/partials/nav_dropdown', title: 'Treasury' do %>
+              <%= link_to "Business Checks", treasury_checks_path	, class: "dropdown-item" %>
+            <% end %>
+
             <%= render 'layouts/partials/nav_dropdown', title: 'Claims' do %>
               <%= link_to "Submitted", index_show_process_claims_path(p: 1), class: "dropdown-item" %>
               <%= link_to "Claims Filed", index_show_process_claims_path(p: 2), class: "dropdown-item" %>
@@ -52,10 +56,6 @@
               <%= link_to "Documents", documents_path, class: "dropdown-item" %>
               <%= link_to "Claim Type", claim_types_path, class: "dropdown-item" %>
               <%= link_to "Claims Message", claim_remarks_path, class: "dropdown-item" %>
-            <% end %>
-
-            <%= render 'layouts/partials/nav_dropdown', title: 'Treasury' do %>
-              <%= link_to "Payments", payments_path, class: "dropdown-item" %>
             <% end %>
 
             <%= render 'layouts/partials/nav_dropdown', title: 'Underwriting' do %>
