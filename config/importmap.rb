@@ -25,3 +25,7 @@ pin "tom-select", to: "https://ga.jspm.io/npm:tom-select@2.2.2/dist/js/tom-selec
 # pin "@rails/ujs", to: "https://ga.jspm.io/npm:@rails/ujs@7.0.6/lib/assets/compiled/rails-ujs.js"
 pin "trix"
 pin "@rails/actiontext", to: "actiontext.js"
+
+#for charts
+pin "chartkick", to: "chartkick.js"
+pin "Chart.bundle", to: "Chart.bundle.js"

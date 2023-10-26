@@ -1,2 +1,53 @@
-<h1>Actuarial#index</h1>
-<p>Find me in app/views/actuarial/index.html.erb</p>
+<section class="page-header container mb-4">
+  <h1><%= current_user.userable.signed_fullname.upcase %></h1>
+  <h6><%= current_user.userable.designation %></h6>
+</section>
+
+
+
+<div class="row mb-3">
+  <div class="col-lg-6">
+    <div class="card">
+      <div class="card-header">
+        <h4 class="text-secondary float-start">Profile</h4>
+        <%= approved_status(current_user.approved) %>
+      </div>
+      <div class="card-body">
+        <div class="row">
+          <div class="col">Employee ID</div>
+          <div class="col"><%= current_user.userable.employee_number %></div>
+          <div class="w-100"></div>
+          <div class="col">Email</div>
+          <div class="col"><%= current_user.email %></div>
+          <div class="w-100 mb-3"></div>
+          <div class="col">Birthdate</div>
+          <div class="col"><%= current_user.userable.birthdate.present? ? current_user.userable.birthdate : "-" %></div>
+          <div class="w-100"></div>
+          <div class="col">Mobile No.</div>
+          <div class="col"><%= current_user.userable.mobile_number.present? ? current_user.userable.mobile_number : "-" %></div>
+          <div class="w-100"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-lg-6">
+    <div class="card">
+      <div class="card-body">
+        <div class="row">
+          <div class="w-100 my-3"></div>
+          <div class="col">
+            <%= link_to "View Reinsurance", reinsurances_path, class: "btn btn-lg btn-outline-primary ms-5" %>
+          </div>
+          <div class="col">
+            <%= link_to "View Reserve", actuarial_reserves_path, class: "btn btn-lg btn-outline-primary ms-5" %>
+          </div>
+          <div class="w-100 my-3"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- <h1>Actuarial#index</h1>
+<p>Find me in app/views/actuarial/index.html.erb</p> -->

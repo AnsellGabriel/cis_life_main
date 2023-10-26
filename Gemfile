@@ -137,3 +137,7 @@ gem 'draper'
 
 # gem for making reusable components for rails views
 gem 'view_component'
+
+# gem for charts
+gem "chartkick"
+

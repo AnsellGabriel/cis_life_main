@@ -8,6 +8,18 @@ class Actuarial::ReservesController < ApplicationController
 
   # GET /actuarial/reserves/1
   def show
+    @pagy, @reserve_batches = pagy(@actuarial_reserve.reserve_batches, items: 2)
+
+    @chart_data_1 = [
+      ["#{@actuarial_reserve.first_term.year} Unearned Premium", @actuarial_reserve.total_unearned_prem],
+      ["#{@actuarial_reserve.second_term.year} Advance Premium", @actuarial_reserve.total_first_advance_prem],
+      ["#{@actuarial_reserve.third_term.year} Advance Premium", @actuarial_reserve.total_second_advance_prem]
+    ]
+    @chart_data_2 = [
+      ["#{@actuarial_reserve.first_term.year} Unearned Premium", @actuarial_reserve.total_unearned_pr],
+      ["#{@actuarial_reserve.second_term.year} Advance Premium", @actuarial_reserve.total_first_advance_pr],
+      ["#{@actuarial_reserve.third_term.year} Advance Premium", @actuarial_reserve.total_second_advance_pr]
+    ]
   end
 
   # GET /actuarial/reserves/new
