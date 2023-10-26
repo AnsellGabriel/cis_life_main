@@ -1,6 +1,6 @@
 
 
-<div class="<%= flex_justify_align('','center') %> gap-1">
+<div class="<%= flex_justify_align('','center') %> gap-1 mb-1">
   <%= link_to "Back", accounting_checks_path, class: 'btn btn-sm btn-secondary' %>
   <%= link_to edit_accounting_check_path(@check), data: {turbo_frame: 'modal'}, class: 'btn btn-sm btn-outline-primary', title: 'Edit' do %>
     <i class="bi bi-pencil"></i>

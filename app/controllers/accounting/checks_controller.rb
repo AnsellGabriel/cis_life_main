@@ -28,7 +28,6 @@ class Accounting::ChecksController < ApplicationController
   # POST /accounting/checks
   def create
     @check = Accounting::Check.new(modified_check_params)
-    @check.amount = check_params[:amount].to_f
 
     if @check.save
       redirect_to @check, notice: "Check was successfully created."
