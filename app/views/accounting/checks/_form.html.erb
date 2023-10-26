@@ -1,5 +1,5 @@
 
-<%= simple_form_for(accounting_check) do |f| %>
+<%= simple_form_for(check) do |f| %>
   <%= f.error_notification %>
   <%= f.error_notification message: f.object.errors[:base].to_sentence if f.object.errors[:base].present? %>
 
@@ -42,6 +42,5 @@
   <div class="form-actions text-center">
     <%= f.button :submit, class: 'btn btn-primary' %>
   </div>
-  <% console %>
 <% end %>
 

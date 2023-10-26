@@ -11,23 +11,29 @@
     </div>
     <div class="row mb-3">
       <div>
-        <p><strong>Payee</strong></p>
+        <p class="mb-0"><strong>Payee</strong></p>
         <%= check.payable %>
       </div>
     </div>
     <div class="row mb-3">
+      <div>
+        <p class="mb-0"><strong>Address</strong></p>
+        <%= check.payable.get_address %>
+      </div>
+    </div>
+    <div class="row mb-3">
       <div class="col-9">
-        <p><strong>Account</strong></p>
+        <p class="mb-0"><strong>Account</strong></p>
         <%= check.account %>
       </div>
       <div class="col-3">
-        <p><strong>Amount</strong></p>
+        <p class="mb-0"><strong>Amount</strong></p>
         <%= to_curr(check.amount) %>
       </div>
     </div>
     <div class="row mb-3">
       <div class="col-6">
-        <p><strong>Particulars</strong></p>
+        <p class="mb-0"><strong>Particulars</strong></p>
         <%= check.particulars %>
       </div>
     </div>

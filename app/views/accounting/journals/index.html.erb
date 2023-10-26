@@ -1,32 +1,35 @@
-<%= content_tag :h1, "List of Accounting Journals" %>
-
-
-<div class="text-end mb-3">
-  <%= link_to new_accounting_journal_path, class: 'btn btn-primary' do %>
+<div class="<%= flex_justify_align('','center') %> gap-3 mb-3">
+  <%= content_tag :h4, "Journal Vouchers", class: 'text-primary' %>
+  <%= link_to new_accounting_journal_path, class: 'btn btn-sm btn-primary', data: {turbo_frame: 'modal'} do %>
     New Journal
   <% end %>
 </div>
 
-
   <table class="table table-striped table-bordered table-hover">
     <thead>
       <tr>
-      <th>#</th>
-            <th></th>
-        </tr>
+        <th>#</th>
+        <th>Voucher</th>
+        <th>Date</th>
+        <th>Payee</th>
+        <th></th>
+      </tr>
     </thead>
 
     <tbody>
-      <% @accounting_journals.each do |accounting_journal| %>
+      <% @journals.each do |journal| %>
         <tr>
 
-        <th scope="row"><%= accounting_journal.id %></th>
-    
-          <td>
-            <%= link_to 'View', accounting_journal, class: 'btn btn-secondary btn-sm' %>
-            <%= link_to 'Edit', edit_accounting_journal_path(accounting_journal), class: 'btn btn-secondary btn-sm' %>
-            <%= link_to "Delete", accounting_journal, class: "btn btn-danger btn-sm", method: :delete, data: { "turbo-method": :delete, turbo_confirm: "Are you sure?" } %>
-          </td>
+        <th scope="row"><%= journal.id %></th>
+        <td><%= journal.formatted_voucher %></td>
+        <td><%= month_day_year(journal.date_voucher) %></td>
+        <td><%= journal.payable %></td>
+
+        <td class="text-center"> 
+          <%= link_to journal, class: 'btn btn-outline-primary btn-sm', title: 'View' do %>
+            <i class="bi bi-eye"></i>
+          <% end %>
+        </td>
 
         </tr>
       <% end %>

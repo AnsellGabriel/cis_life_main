@@ -16,7 +16,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_10_24_043954) do
     t.integer "voucher"
     t.string "payable_type", null: false
     t.bigint "payable_id", null: false
-    t.bigint "treasury_account_id", null: false
+    t.bigint "treasury_account_id"
     t.decimal "amount", precision: 15, scale: 2
     t.text "particulars"
     t.string "type"

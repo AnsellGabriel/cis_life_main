@@ -1,9 +1,10 @@
 class Accounting::JournalsController < ApplicationController
-  before_action :set_accounting_journal, only: %i[ show edit update destroy ]
+  before_action :set_journal, only: %i[ show edit update destroy ]
+  before_action :set_payables, only: %i[ new edit create update]
 
   # GET /accounting/journals
   def index
-    @accounting_journals = Accounting::Journal.all
+    @journals = Accounting::Journal.all
   end
 
   # GET /accounting/journals/1
@@ -12,19 +13,27 @@ class Accounting::JournalsController < ApplicationController
 
   # GET /accounting/journals/new
   def new
-    @accounting_journal = Accounting::Journal.new
+    last_voucher = Accounting::Journal.maximum(:voucher)
+    initiate_voucher = last_voucher ? last_voucher + 1 : 0
+
+    @journal = Accounting::Journal.new(voucher: initiate_voucher)
   end
 
   # GET /accounting/journals/1/edit
   def edit
+    string_voucher = @journal.voucher.to_s
+    @journal.voucher_year = string_voucher[0..2]
+    @journal.voucher_month = string_voucher[3..4]
+    @journal.voucher_series = string_voucher[5..7]
   end
 
   # POST /accounting/journals
   def create
-    @accounting_journal = Accounting::Journal.new(accounting_journal_params)
+    @journal = Accounting::Journal.new(journal_params)
+    @journal.voucher = voucher_series
 
-    if @accounting_journal.save
-      redirect_to @accounting_journal, notice: "Journal was successfully created."
+    if @journal.save
+      redirect_to @journal, notice: "Journal was successfully created."
     else
       render :new, status: :unprocessable_entity
     end
@@ -32,8 +41,11 @@ class Accounting::JournalsController < ApplicationController
 
   # PATCH/PUT /accounting/journals/1
   def update
-    if @accounting_journal.update(accounting_journal_params)
-      redirect_to @accounting_journal, notice: "Journal was successfully updated."
+    @journal.update(journal_params)
+    @journal.voucher = voucher_series
+
+    if @journal.save
+      redirect_to @journal, notice: "Journal was successfully updated."
     else
       render :edit, status: :unprocessable_entity
     end
@@ -41,18 +53,26 @@ class Accounting::JournalsController < ApplicationController
 
   # DELETE /accounting/journals/1
   def destroy
-    @accounting_journal.destroy
-    redirect_to accounting_journals_url, notice: "Journal was successfully destroyed.", status: :see_other
+    @journal.destroy
+    redirect_to accounting_journals_path, notice: "Journal was successfully destroyed.", status: :see_other
   end
 
   private
     # Use callbacks to share common setup or constraints between actions.
-    def set_accounting_journal
-      @accounting_journal = Accounting::Journal.find(params[:id])
+    def set_journal
+      @journal = Accounting::Journal.find(params[:id])
+    end
+
+    def set_payables
+      @payables = Cooperative.all
     end
 
     # Only allow a list of trusted parameters through.
-    def accounting_journal_params
-      params.fetch(:accounting_journal, {})
+    def journal_params
+      params.require(:accounting_journal).permit(:date_voucher, :voucher_year, :voucher_month, :voucher_series, :global_payable, :particulars)
+    end
+
+    def voucher_series
+      journal_params[:voucher_year] + journal_params[:voucher_month] + journal_params[:voucher_series]
     end
 end
