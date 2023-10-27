@@ -1,7 +1,56 @@
-
-<div class="card">
-  <h5 class="card-header">New Business Check</h5>
-  <div class="card-body">
-    <%= render "form", check: @check %>
+<%= link_to 'Back', treasury_checks_path, class: small_btn('secondary') %>
+<div class="d-flex gap-3 mb-3 mt-1">
+  <div class="">
+    <%= render 'accounting/checks/check', check: @voucher %>
   </div>
+
+  <div class="card" style="min-width: 520px; min-height: 350px;">
+    <h5 class="card-header text-primary">New Business Check</h5>
+    <div class="card-body">
+      <%= render "form", check: @check %>
+    </div>
+  </div>
+</div>
+
+<div class="">
+  <h4 class="text-primary">Business Checks</h4>
+  <table class="table table-striped table-bordered table-hover">
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>Check #</th>
+        <th>Check Date</th>
+        <th>Payee</th>
+        <th>Amount</th>
+        <th>Type</th>
+      </tr>
+    </thead>
+
+    <tbody>
+      <% if @business_checks.present? %>
+        <% @business_checks.each do |check| %>
+          <tr>
+
+            <th scope="row"><%= check.id %></th>
+            <td><%= check.number %></td>
+            <td><%= month_day_year(check.check_date) %></td>
+            <td><%= check.voucher.payable %></td>
+            <td><%= to_curr(check.amount) %></td>
+            <td><%= check.check_type&.capitalize %></td>
+        
+            <td class="text-center">
+              <%= link_to treasury_check_path(check), data: {turbo_confirm: 'Delete check?', turbo_method: :delete }, class: 'btn btn-outline-danger btn-sm', title: 'View' do %>
+                <i class="bi bi-trash"></i>
+              <% end %>
+            </td>
+
+          </tr>
+        <% end %>
+      <% else %>
+        <tr>
+          <td colspan="6" class="text-center">No business checks yet.</td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
 </div>
