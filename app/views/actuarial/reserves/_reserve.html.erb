@@ -1,0 +1,108 @@
+<div id="<%= dom_id reserve %>">
+  <div class="row">
+    <div class="col-6">      
+      <div class="card border-primary">
+        <div class="card-body">
+          <%= content_tag :h4, reserve.plan, class: "card-title" %>
+          <%= content_tag :h6, reserve.plan.acronym, class: "card-subtitle mb-2 text-muted" %>
+
+          <div class="row">
+            <div class="col-4">
+              <%= content_tag :h5, reserve.first_term.year %>
+              <%= content_tag :h4, to_currency(reserve.total_unearned_prem), class: "card-title text-success" %>
+              <%= content_tag :h6, "Total Unearned Premium (for 1CISP)", class: "card-subtitle text-muted mb-3" %>
+
+              <%= content_tag :h4, to_currency(reserve.total_unearned_pr), class: "card-title text-success" %>
+              <%= content_tag :h6, "Total Unearned Premium (less retention)", class: "card-subtitle text-muted" %>
+            </div>
+            <div class="col-4">
+              <%= content_tag :h5, reserve.second_term.year %>
+              <%= content_tag :h4, to_currency(reserve.total_first_advance_prem), class: "card-title text-success" %>
+              <%= content_tag :h6, "Total Advance Premium (for 1CISP)", class: "card-subtitle text-muted mb-3" %>
+
+              <%= content_tag :h4, to_currency(reserve.total_first_advance_pr), class: "card-title text-success" %>
+              <%= content_tag :h6, "Total Advance Premium (less retention)", class: "card-subtitle text-muted" %>
+            </div>
+            <div class="col-4">
+              <%= content_tag :h5, reserve.third_term.year %>
+              <%= content_tag :h4, to_currency(reserve.total_second_advance_prem), class: "card-title text-success" %>
+              <%= content_tag :h6, "Total Advance Premium (for 1CISP)", class: "card-subtitle text-muted mb-3" %>
+
+              <%= content_tag :h4, to_currency(reserve.total_second_advance_pr), class: "card-title text-success" %>
+              <%= content_tag :h6, "Total Advance Premium (less retention)", class: "card-subtitle text-muted" %>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+
+    <div class="col-6">
+      <div class="card col-6 border-primary">
+        <div class="card-body">
+          <%= content_tag :h2, to_currency(reserve.total_reserve), class: "text-success ps-2" %>
+          <%= content_tag :h6, "Total Reserves for 1CISP", class: "card-subtitle text-muted ps-2" %>
+        </div>
+      </div>
+      <div class="card col-6 border-primary">
+        <div class="card-body">
+          <%= content_tag :h2, to_currency(reserve.total_reserve_ret), class: "text-success ps-2" %>
+          <%= content_tag :h6, "Total Reserves for Reinsurance", class: "card-subtitle text-muted ps-2" %>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+  <table class="table">
+    <thead>
+      <th>Member Details</th>
+      <th>Coverage Details</th>
+      <th></th>
+      <th>Term Count (day)</th>
+      <th>Reserves for 1CISP</th>
+      <th>Reserves for RI</th>
+    </thead>
+    <tbody>
+      <% reserve.reserve_batches.each do |rb| %>
+        <tr>
+          <td>
+            <%= content_tag :span, rb.batchable.coop_member, class: "lead fw-bold" %> <br>
+            <%= content_tag :small, rb.batchable.coop_member.member.birth_date.strftime("%B %d, %Y") %> <br>
+            <%= content_tag :small, rb.batchable.coop_member.cooperative %>
+          </td>
+          <td>
+            <%= content_tag :small, "Effectivity: #{rb.batchable.effectivity_date.strftime("%B %d, %Y")}" %> <br>
+            <%= content_tag :small, "Expiry: #{rb.batchable.expiry_date.strftime("%B %d, %Y")}" %> <br>
+            <%= content_tag :small, "Coverage: #{to_currency(rb.batchable.loan_amount)}" %> <br>
+            <%= content_tag :small, "Premium: #{to_currency(rb.batchable.premium)}" %>
+          </td>
+          <td>
+            <%= content_tag :small, "Term (Month): #{rb.batchable.terms}" %> <br>
+            <%= content_tag :small, "Rate: #{rb.batchable.rate.annual_rate}" %> <br>
+            <%= content_tag :small, "Cov less of RI: #{to_currency(rb.coverage_less_ri)}" %> <br>
+            <%= content_tag :small, "Cov less of RI: #{to_currency(rb.prem_less_ri)}" %>
+          </td>
+          <td>
+            <%= content_tag :small, "Duration: #{rb.duration}" %> <br>
+            <%= content_tag :small, "Duration: #{rb.first_term}" %> <br>
+            <%= content_tag :small, "Duration: #{rb.second_term}" %> <br>
+            <%= content_tag :small, "Duration: #{rb.third_term}" %>
+          </td>
+          <td>
+            <%= content_tag :small, "Unearned Prem #{reserve.first_term.year}: #{to_currency(rb.unearned_prem)}" %> <br>
+            <%= content_tag :small, "Advance Prem #{reserve.second_term.year}: #{to_currency(rb.first_adv_prem)}" %> <br>
+            <%= content_tag :small, "Advance Prem #{reserve.third_term.year}: #{to_currency(rb.second_adv_prem)}" %> <br>
+          </td>
+          <td>
+            <%= content_tag :small, "Unearned Prem #{reserve.first_term.year}: #{to_currency(rb.unearned_pr)}" %> <br>
+            <%= content_tag :small, "Advance Prem #{reserve.second_term.year}: #{to_currency(rb.first_adv_pr)}" %> <br>
+            <%= content_tag :small, "Advance Prem #{reserve.third_term.year}: #{to_currency(rb.second_adv_pr)}" %> <br>
+          </td>
+        </tr>
+      <% end %>
+
+    </tbody>
+  </table>
+
+</div>

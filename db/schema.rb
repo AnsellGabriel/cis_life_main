@@ -78,7 +78,54 @@ ActiveRecord::Schema[7.0].define(version: 2023_10_24_043954) do
     t.index ["blob_id", "variation_digest"], name: "index_active_storage_variant_records_uniqueness", unique: true
   end
 
-  create_table "admin_users", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+  create_table "actuarial_reserve_batches", charset: "utf8mb4", force: :cascade do |t|
+    t.bigint "actuarial_reserve_id"
+    t.string "batchable_type"
+    t.bigint "batchable_id"
+    t.integer "term"
+    t.decimal "rate", precision: 5, scale: 2
+    t.decimal "coverage_less_ri", precision: 10, scale: 2
+    t.decimal "prem_less_ri", precision: 10, scale: 2
+    t.integer "duration"
+    t.integer "first_term"
+    t.integer "second_term"
+    t.integer "third_term"
+    t.decimal "unearned_prem", precision: 10, scale: 2
+    t.decimal "first_adv_prem", precision: 10, scale: 2
+    t.decimal "second_adv_prem", precision: 10, scale: 2
+    t.decimal "reserve_amt", precision: 10, scale: 2
+    t.decimal "cov_less_ret", precision: 10, scale: 2
+    t.decimal "prem_less_ret", precision: 10, scale: 2
+    t.decimal "unearned_pr", precision: 10, scale: 2
+    t.decimal "first_adv_pr", precision: 10, scale: 2
+    t.decimal "second_adv_pr", precision: 10, scale: 2
+    t.decimal "reserve_ret_amt", precision: 10, scale: 2
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["actuarial_reserve_id"], name: "index_actuarial_reserve_batches_on_actuarial_reserve_id"
+    t.index ["batchable_type", "batchable_id"], name: "index_actuarial_reserve_batches_on_batchable"
+  end
+
+  create_table "actuarial_reserves", charset: "utf8mb4", force: :cascade do |t|
+    t.date "first_term"
+    t.date "second_term"
+    t.date "third_term"
+    t.decimal "total_unearned_prem", precision: 10, scale: 2
+    t.decimal "total_first_advance_prem", precision: 10, scale: 2
+    t.decimal "total_second_advance_prem", precision: 10, scale: 2
+    t.decimal "total_reserve", precision: 10, scale: 2
+    t.decimal "total_unearned_pr", precision: 10, scale: 2
+    t.decimal "total_first_advance_pr", precision: 10, scale: 2
+    t.decimal "total_second_advance_pr", precision: 10, scale: 2
+    t.decimal "total_reserve_ret", precision: 10, scale: 2
+    t.bigint "plan_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["plan_id"], name: "index_actuarial_reserves_on_plan_id"
+  end
+
+  create_table "admin_users", charset: "utf8mb4", force: :cascade do |t|
+
     t.string "email", default: "", null: false
     t.string "encrypted_password", default: "", null: false
     t.string "reset_password_token"

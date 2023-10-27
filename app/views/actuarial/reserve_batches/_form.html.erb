@@ -1,0 +1,33 @@
+
+<%= simple_form_for(@actuarial_reserve_batch) do |f| %>
+  <%= f.error_notification %>
+  <%= f.error_notification message: f.object.errors[:base].to_sentence if f.object.errors[:base].present? %>
+
+  <div class="form-inputs mb-3">
+    <%= f.association :reserve %>
+    <%= f.association :batch %>
+    <%= f.input :term %>
+    <%= f.input :rate %>
+    <%= f.input :coverage_less_ri %>
+    <%= f.input :prem_less_ri %>
+    <%= f.input :duration %>
+    <%= f.input :first_term %>
+    <%= f.input :second_term %>
+    <%= f.input :third_term %>
+    <%= f.input :unearned_prem %>
+    <%= f.input :first_adv_prem %>
+    <%= f.input :second_adv_prem %>
+    <%= f.input :reserve %>
+    <%= f.input :cov_less_ret %>
+    <%= f.input :prem_less_ret %>
+    <%= f.input :unearned_pr %>
+    <%= f.input :first_adv_pr %>
+    <%= f.input :second_adv_pr %>
+    <%= f.input :reserve_ret %>
+  </div>
+
+  <div class="form-actions text-end">
+    <%= link_to "Back", actuarial_reserve_batches_path, class: 'btn btn-secondary' %>
+    <%= f.button :submit, class: 'btn-success' %>
+  </div>
+<% end %>

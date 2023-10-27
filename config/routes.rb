@@ -2,6 +2,11 @@
 require 'sidekiq/web'
 
 Rails.application.routes.draw do
+  get 'actuarial/index'
+  namespace :actuarial do
+    resources :reserves
+    resources :reserve_batches
+  end
   namespace :accounting do
     resources :journals
     resources :checks
@@ -16,7 +21,9 @@ Rails.application.routes.draw do
   resources :plan_units do
     get :find_units, on: :member
   end
-  resources :reinsurances
+  resources :reinsurances do
+    get :reserves_index, on: :collection
+  end
   resources :claim_types, :claim_type_documents, :claim_type_benefits, :claim_attachments, :claim_confinements, :claim_benefits, :claim_coverages
   resources :documents
   resources :causes
@@ -25,7 +32,7 @@ Rails.application.routes.draw do
   get 'med_director/index'
 
   resources :emp_agreements do
-    get :transfer_index, on: :collection
+      get :transfer_index, on: :collection
     get :update_ea_selected, on: :collection
     patch :transfer_agreements, on: :collection
     get :inactive_sub, on: :member

@@ -51,6 +51,9 @@ class Batch < ApplicationRecord
   has_many :process_claims, as: :claimable, dependent: :destroy
   has_many :claim_coverages, as: :coverageable, dependent: :destroy
 
+  has_many :reserve_batches, as: :batchable, dependent: :destroy
+  # alias_attribute :batches, :reserve_batches
+
   def update_valid_health_dec
     self.update_attribute(:valid_health_dec, true)
     self.save!
@@ -91,6 +94,10 @@ class Batch < ApplicationRecord
 
   def self.get_member_gyrt_coverages(member)
     joins(coop_member: :member).where(member: { id: member.id })
+  end
+
+  def self.get_reserves(date)
+    joins(coop_member: :member).where(expiry_date: date.., insurance_status: :approved)
   end
 
 

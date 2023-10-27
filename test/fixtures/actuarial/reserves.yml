@@ -1,0 +1,29 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  first_term: 2023-10-24
+  second_term: 2023-10-24
+  third_term: 2023-10-24
+  total_unearned_prem: 9.99
+  total_first_advance_prem: 9.99
+  total_second_advance_prem: 9.99
+  total_reserve: 9.99
+  total_unearned_pr: 9.99
+  total_first_advance_pr: 9.99
+  total_second_advance_pr: 9.99
+  total_reserve_ret: 9.99
+  plan: one
+
+two:
+  first_term: 2023-10-24
+  second_term: 2023-10-24
+  third_term: 2023-10-24
+  total_unearned_prem: 9.99
+  total_first_advance_prem: 9.99
+  total_second_advance_prem: 9.99
+  total_reserve: 9.99
+  total_unearned_pr: 9.99
+  total_first_advance_pr: 9.99
+  total_second_advance_pr: 9.99
+  total_reserve_ret: 9.99
+  plan: two
