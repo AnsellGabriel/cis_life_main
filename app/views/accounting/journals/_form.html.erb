@@ -1,0 +1,44 @@
+
+<%= simple_form_for(journal) do |f| %>
+  <%= f.error_notification %>
+  <%= f.error_notification message: f.object.errors[:base].to_sentence if f.object.errors[:base].present? %>
+
+  <div class="form-inputs mb-3">
+    <div class="row">
+      <div class="col-6">
+        <%= f.input :date_voucher, as: :string, input_html: {data: {
+          controller: "flatpickr",
+          flatpickr_max_date: Date.today,
+          flatpickr_next_arrow: "Next",
+          flatpickr_prev_arrow: "Prev"}
+          }, label: 'Voucher Date',
+          error: 'Voucher Date can\'t be blank'
+        %>
+      </div>
+      <div class="col-6">
+        <label class="form-label text required" for="accounting_journal_voucher">Voucher <abbr title="required">*</abbr></label>
+        <div class="<%= flex_justify_align('','center') %> gap-1">
+            <%= f.input :voucher_year, label: false, placeholder: '000', input_html: {data: {controller: "digit-only", digit_only_target: 'input'}, class: 'text-center', type: 'text', pattern: '\\d*', maxLength: 3}, error: '' %>
+            <span class="mb-3">-</span>
+            <%= f.input :voucher_month, label: false, placeholder: '00', input_html: {data: {controller: "digit-only", digit_only_target: 'input'}, class: 'text-center', maxLength: 2}, error: '' %>
+            <span class="mb-3">-</span>
+            <%= f.input :voucher_series, label: false, placeholder: '000', input_html: {data: {controller: "digit-only", digit_only_target: 'input'}, class: 'text-center', maxLength: 3}, error: '' %>
+        </div>
+      </div>
+    </div>
+    <%= f.input :global_payable, 
+      collection: @payables, 
+      label_method: :to_s, 
+      value_method: :to_global_id, 
+      label: 'Payee',
+      error: 'Payee can\'t be blank'
+     %>
+    <%= f.input :particulars %>
+  </div>
+
+  <div class="form-actions text-center">
+    <%= f.button :submit, class: 'btn btn-primary' %>
+  </div>
+  <% console %>
+<% end %>
+
