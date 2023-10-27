@@ -183,6 +183,14 @@ module ApplicationHelper
 
 	end
 
+	def approved_status(val)
+		if val == true
+			content_tag(:p, "ACTIVE", class: "badge rounded-pill bg-success mb-0 float-end")
+		else
+			content_tag(:p, "INACTIVE", class: "badge rounded-pill bg-danger mb-0 float-end")
+		end
+	end
+
 	def badge_pill(val)
     case val
       when true then content_tag :span, "ACTIVE", class: "badge rounded-pill bg-success"
