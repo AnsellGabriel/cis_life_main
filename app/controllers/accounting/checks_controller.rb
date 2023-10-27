@@ -5,7 +5,13 @@ class Accounting::ChecksController < ApplicationController
 
   # GET /accounting/checks
   def index
-    @checks = Accounting::Voucher.where(type: 'Accounting::Check')
+    if params[:check_number].present?
+      @checks = Accounting::Check.where(voucher: params[:check_number])
+    else
+      @checks = Accounting::Check.all
+    end
+
+    @pagy, @checks = pagy(@checks, items: 10)
   end
 
   # GET /accounting/checks/1

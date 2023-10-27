@@ -3,6 +3,10 @@ class Accounting::Voucher < ApplicationRecord
 
   belongs_to :payable, polymorphic: true
 
+  def to_s
+    voucher
+  end
+
   def global_payable
     self.payable.to_global_id if self.payable.present?
   end
