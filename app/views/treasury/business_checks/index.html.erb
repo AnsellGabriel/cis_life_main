@@ -11,6 +11,7 @@
       </div>
     <% end %>
   </div>
+  <%== pagy_bootstrap_nav(@pagy) %>
   <div class="d-flex gap-1">
     <%= render 'layouts/partials/search_bar', path: treasury_checks_path, type: :number, param_name: 'check_number',placeholder: 'Business Check #', button_name: 'Search', btn_css: 'btn btn-sm btn-outline-primary' %>
     <%= link_to 'All', treasury_checks_path, class: "#{small_btn('outline-primary')} pt-2", style: "width: 50px;" %>
@@ -51,7 +52,7 @@
         <% end %>
       <% else %>
         <tr>
-          <td colspan="7" class="text-center">No business checks yet.</td>
+          <td colspan="7" class="text-center">No business checks found.</td>
         </tr>
       <% end %>
     </tbody>
