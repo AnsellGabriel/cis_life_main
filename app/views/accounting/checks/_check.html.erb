@@ -1,0 +1,41 @@
+<div class="card" style="max-width: 500px;">
+  <div class="card-body">
+    <div class="row mb-3">
+      <div class="col-9">
+        <strong>Voucher Date: </strong>
+        <%= month_day_year(check.date_voucher) %>
+      </div>
+      <div class="col-3">
+        <strong><%= "CV#{check.voucher}" %></strong>
+      </div>
+    </div>
+    <div class="row mb-3">
+      <div>
+        <p class="mb-0"><strong>Payee</strong></p>
+        <%= check.payable %>
+      </div>
+    </div>
+    <div class="row mb-3">
+      <div>
+        <p class="mb-0"><strong>Address</strong></p>
+        <%= check.payable.get_address %>
+      </div>
+    </div>
+    <div class="row mb-3">
+      <div class="col-9">
+        <p class="mb-0"><strong>Account</strong></p>
+        <%= check.account %>
+      </div>
+      <div class="col-3">
+        <p class="mb-0"><strong>Amount</strong></p>
+        <%= to_curr(check.amount) %>
+      </div>
+    </div>
+    <div class="row mb-3">
+      <div class="col-6">
+        <p class="mb-0"><strong>Particulars</strong></p>
+        <%= check.particulars %>
+      </div>
+    </div>
+  </div>
+</div>

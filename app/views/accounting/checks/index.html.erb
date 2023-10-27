@@ -1,0 +1,40 @@
+<div class="<%= flex_justify_align('','center') %> gap-3 mb-3">
+  <%= content_tag :h4, "Check Vouchers", class: 'text-primary' %>
+  <%= link_to new_accounting_check_path, class: 'btn btn-sm btn-primary', data: {turbo_frame: 'modal'} do %>
+    New Check
+  <% end %>
+</div>
+
+
+  <table class="table table-striped table-bordered table-hover">
+    <thead>
+      <tr>
+        <th>#</th>
+        <th>Voucher</th>
+        <th>Date</th>
+        <th>Payee</th>
+        <th>Amount</th>
+        <th></th>
+      </tr>
+    </thead>
+
+    <tbody>
+      <% @checks.each do |check| %>
+        <tr>
+
+        <th scope="row"><%= check.id %></th>
+        <td>CV<%= check.voucher %></td>
+        <td><%= month_day_year(check.date_voucher) %></td>
+        <td><%= check.payable %></td>
+        <td><%= to_curr(check.amount) %></td>
+    
+        <td class="text-center">
+          <%= link_to check, class: 'btn btn-outline-primary btn-sm', title: 'View' do %>
+            <i class="bi bi-eye"></i>
+          <% end %>
+        </td>
+
+        </tr>
+      <% end %>
+    </tbody>
+  </table>

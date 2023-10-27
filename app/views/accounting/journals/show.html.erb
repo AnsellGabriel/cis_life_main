@@ -1,0 +1,12 @@
+<div class="<%= flex_justify_align('','center') %> gap-1 mb-1">
+  <%= link_to "Back", accounting_journals_path, class: 'btn btn-sm btn-secondary' %>
+  <%= link_to edit_accounting_journal_path(@journal), data: {turbo_frame: 'modal'}, class: 'btn btn-sm btn-outline-primary', title: 'Edit' do %>
+    <i class="bi bi-pencil"></i>
+  <% end %>
+  <%= link_to @journal, data: {turbo_confirm: 'Delete this journal voucher?', turbo_method: :delete}, class: 'btn btn-sm btn-outline-danger', title: 'Delete' do %>
+    <i class="bi bi-trash"></i>
+  <% end %>
+</div>
+
+<%= render @journal %>
+

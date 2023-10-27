@@ -10,16 +10,16 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-
-ActiveRecord::Schema[7.0].define(version: 2023_10_23_074343) do
+ActiveRecord::Schema[7.0].define(version: 2023_10_24_043954) do
   create_table "accounting_vouchers", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.date "date_voucher"
     t.integer "voucher"
     t.string "payable_type", null: false
     t.bigint "payable_id", null: false
-    t.bigint "treasury_account_id", null: false
-    t.decimal "amount", precision: 10, scale: 2
+    t.bigint "treasury_account_id"
+    t.decimal "amount", precision: 15, scale: 2
     t.text "particulars"
+    t.string "type"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["payable_type", "payable_id"], name: "index_accounting_vouchers_on_payable"
