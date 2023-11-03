@@ -1,4 +1,4 @@
-<%= link_to 'Back', treasury_checks_path, class: small_btn('secondary') %>
+<%= link_to 'Back', treasury_business_checks_path, class: small_btn('secondary') %>
 <div class="d-flex gap-3 mb-3 mt-1">
   <div class="">
     <%= render 'accounting/checks/check', check: @voucher %>
@@ -7,7 +7,7 @@
   <div class="card" style="min-width: 520px; min-height: 350px;">
     <h5 class="card-header text-primary">New Business Check</h5>
     <div class="card-body">
-      <%= render "form", check: @check %>
+      <%= render "form", check: @check, turbo: true %>
     </div>
   </div>
 </div>
@@ -39,7 +39,10 @@
             <td><%= check.check_type&.capitalize %></td>
         
             <td class="text-center">
-              <%= link_to treasury_check_path(check), data: {turbo_confirm: 'Delete check?', turbo_method: :delete }, class: 'btn btn-outline-danger btn-sm', title: 'View' do %>
+              <%= link_to edit_treasury_business_check_path(check), data: {turbo_frame: 'modal'}, class: 'btn btn-sm btn-outline-primary', title: 'Edit' do %>
+                <i class="bi bi-pencil"></i>
+              <% end %>
+              <%= link_to treasury_business_check_path(check), data: {turbo_confirm: 'Delete check?', turbo_method: :delete }, class: 'btn btn-outline-danger btn-sm', title: 'View' do %>
                 <i class="bi bi-trash"></i>
               <% end %>
             </td>

@@ -30,19 +30,17 @@
       <% if @checks.present? %>
         <% @checks.each do |check| %>
           <tr>
-
-          <th scope="row"><%= check.id %></th>
-          <td>CV<%= check.voucher %></td>
-          <td><%= month_day_year(check.date_voucher) %></td>
-          <td><%= check.payable %></td>
-          <td><%= to_curr(check.amount) %></td>
-      
-          <td class="text-center">
-            <%= link_to check, class: 'btn btn-outline-primary btn-sm', title: 'View' do %>
-              <i class="bi bi-eye"></i>
-            <% end %>
-          </td>
-
+            <th scope="row"><%= check.id %></th>
+            <td>CV<%= check.voucher %></td>
+            <td><%= month_day_year(check.date_voucher) %></td>
+            <td><%= check.payable %></td>
+            <td><%= to_curr(check.amount) %></td>
+        
+            <td class="text-center">
+              <%= link_to check, class: 'btn btn-outline-primary btn-sm', title: 'View' do %>
+                <i class="bi bi-eye"></i>
+              <% end %>
+            </td>
           </tr>
         <% end %>
       <% else %>

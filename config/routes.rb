@@ -9,7 +9,7 @@ Rails.application.routes.draw do
   end
 
   namespace :treasury do
-    resources :checks, controller: 'business_checks'
+    resources :business_checks
     resources :accounts
     get 'dashboard', to: 'dashboard#index'
   end
