@@ -1,0 +1,42 @@
+<div class="card" style="width: 600px">
+  <div class="card-body">
+    <div class="row">
+      <p class="col-6">
+        <strong>OR #</strong>
+        <%= cashier_entry.or_no %>
+      </p>
+
+      <p class="col-6">
+        <strong>OR Date:</strong>
+        <%= month_day_year(cashier_entry.or_date) %>
+      </p>
+    </div>
+
+    <p>
+      <strong>Payee</strong><br>
+      <%= cashier_entry.entriable %>
+    </p>
+
+    <p>
+      <strong>Address</strong><br>
+      <%= cashier_entry.entriable.get_address %>
+    </p>
+
+    <p>
+      <strong>Account</strong><br>
+      <%= cashier_entry.treasury_account %>
+    </p>
+    
+    <div class="row">
+      <p class="col-6">
+        <strong>Payment Type</strong><br>
+        <%= cashier_entry.payment.upcase %>
+      </p>
+
+      <p class="col-6">
+        <strong>Amount</strong><br>
+        <%= cashier_entry.amount %>
+      </p>
+    </div>
+  </div>
+</div>

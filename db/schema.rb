@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_10_26_074357) do
+ActiveRecord::Schema[7.0].define(version: 2023_11_03_005600) do
   create_table "accounting_vouchers", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.date "date_voucher"
     t.integer "voucher"
@@ -986,6 +986,20 @@ ActiveRecord::Schema[7.0].define(version: 2023_10_26_074357) do
     t.index ["voucher_id"], name: "index_treasury_business_checks_on_voucher_id"
   end
 
+  create_table "treasury_cashier_entries", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+    t.integer "or_no"
+    t.date "or_date"
+    t.string "entriable_type", null: false
+    t.bigint "entriable_id", null: false
+    t.integer "payment"
+    t.bigint "treasury_account_id", null: false
+    t.decimal "amount", precision: 15, scale: 2
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["entriable_type", "entriable_id"], name: "index_treasury_cashier_entries_on_entriable"
+    t.index ["treasury_account_id"], name: "index_treasury_cashier_entries_on_treasury_account_id"
+  end
+
   create_table "underwriting_routes", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.string "name"
     t.string "description"
@@ -1086,4 +1100,5 @@ ActiveRecord::Schema[7.0].define(version: 2023_10_26_074357) do
   add_foreign_key "product_benefits", "agreement_benefits"
   add_foreign_key "product_benefits", "benefits"
   add_foreign_key "treasury_business_checks", "accounting_vouchers", column: "voucher_id"
+  add_foreign_key "treasury_cashier_entries", "treasury_accounts"
 end

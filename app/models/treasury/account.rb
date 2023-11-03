@@ -8,6 +8,7 @@ class Treasury::Account < ApplicationRecord
   }
 
   has_many :check_vouchers, class_name: 'Accounting::CheckVoucher'
+  has_many :cashier_entries, class_name: 'Treasury::CashierEntry'
 
   def to_s
     name
