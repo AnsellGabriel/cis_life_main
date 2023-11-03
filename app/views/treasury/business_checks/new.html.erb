@@ -1,4 +1,6 @@
-<%= link_to 'Back', treasury_business_checks_path, class: small_btn('secondary') %>
+<%= link_to treasury_business_checks_path, class: small_btn('secondary'), title: 'Back' do %>
+  <i class="bi bi-arrow-90deg-left"></i>
+<% end %>
 <div class="d-flex gap-3 mb-3 mt-1">
   <div class="">
     <%= render 'accounting/checks/check', check: @voucher %>
@@ -17,7 +19,6 @@
   <table class="table table-striped table-bordered table-hover">
     <thead>
       <tr>
-        <th>ID</th>
         <th>Check #</th>
         <th>Check Date</th>
         <th>Payee</th>
@@ -31,7 +32,6 @@
         <% @business_checks.each do |check| %>
           <tr>
 
-            <th scope="row"><%= check.id %></th>
             <td><%= check.number %></td>
             <td><%= month_day_year(check.check_date) %></td>
             <td><%= check.voucher.payable %></td>
@@ -42,7 +42,7 @@
               <%= link_to edit_treasury_business_check_path(check), data: {turbo_frame: 'modal'}, class: 'btn btn-sm btn-outline-primary', title: 'Edit' do %>
                 <i class="bi bi-pencil"></i>
               <% end %>
-              <%= link_to treasury_business_check_path(check), data: {turbo_confirm: 'Delete check?', turbo_method: :delete }, class: 'btn btn-outline-danger btn-sm', title: 'View' do %>
+              <%= link_to treasury_business_check_path(check), data: {turbo_confirm: "Delete check #{check.number}?", turbo_method: :delete }, class: 'btn btn-outline-danger btn-sm', title: 'View' do %>
                 <i class="bi bi-trash"></i>
               <% end %>
             </td>

@@ -65,7 +65,7 @@ class Accounting::ChecksController < ApplicationController
 
   # collection of payees
   def set_payables
-    @payables = Cooperative.all
+    @payables = Cooperative.all.order(name: :asc)
   end
 
   # Only allow a list of trusted parameters through.
