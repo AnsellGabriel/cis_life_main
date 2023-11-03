@@ -19,9 +19,9 @@
     <thead>
       <tr>
         <th>Voucher</th>
-        <th>Date</th>
+        <th class="text-center">Date</th>
         <th>Payee</th>
-        <th>Amount</th>
+        <th class="text-center">Amount</th>
       </tr>
     </thead>
 
@@ -32,9 +32,9 @@
             <td>
               <%= link_to "CV#{check.voucher}", check, class: 'text-primary', title: 'View'%>
             </td>
-            <td><%= month_day_year(check.date_voucher) %></td>
+            <td class="text-center"><%= month_day_year(check.date_voucher) %></td>
             <td><%= check.payable %></td>
-            <td><%= to_curr(check.amount) %></td>
+            <td class="text-end"><%= to_curr(check.amount) %></td>
           </tr>
         <% end %>
       <% else %>

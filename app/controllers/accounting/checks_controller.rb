@@ -36,7 +36,7 @@ class Accounting::ChecksController < ApplicationController
     @check = Accounting::Check.new(modified_check_params)
 
     if @check.save
-      redirect_to @check, notice: "Check was successfully created."
+      redirect_to @check, notice: "Check voucher created."
     else
       render :new, status: :unprocessable_entity
     end
@@ -45,7 +45,7 @@ class Accounting::ChecksController < ApplicationController
   # PATCH/PUT /accounting/checks/1
   def update
     if @check.update(modified_check_params)
-      redirect_to @check, notice: "Check was successfully updated."
+      redirect_to @check, notice: "Check voucher updated."
     else
       render :edit, status: :unprocessable_entity
     end
@@ -54,7 +54,7 @@ class Accounting::ChecksController < ApplicationController
   # DELETE /accounting/checks/1
   def destroy
     @check.destroy
-    redirect_to accounting_checks_path, notice: "Check was successfully destroyed.", status: :see_other
+    redirect_to accounting_checks_path, notice: "Check voucher deleted.", status: :see_other
   end
 
   private

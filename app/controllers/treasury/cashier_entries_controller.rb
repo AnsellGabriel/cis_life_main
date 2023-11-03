@@ -55,7 +55,7 @@ class Treasury::CashierEntriesController < ApplicationController
   end
 
   def set_entriables
-    @entriables = Cooperative.all
+    @entriables = Cooperative.all.order(:name)
   end
 
   # Only allow a list of trusted parameters through.
