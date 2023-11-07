@@ -16,6 +16,7 @@ class Accounting::ChecksController < ApplicationController
 
   # GET /accounting/checks/1
   def show
+    @business_checks = @check.business_checks.where.not(id: nil).order(created_at: :desc)
   end
 
   # GET /accounting/checks/new
@@ -65,7 +66,7 @@ class Accounting::ChecksController < ApplicationController
 
   # collection of payees
   def set_payables
-    @payables = Cooperative.all.order(name: :asc)
+    @payables = (Cooperative.all + Payee.all).sort_by(&:name)
   end
 
   # Only allow a list of trusted parameters through.

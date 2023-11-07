@@ -1,0 +1,43 @@
+<div class="">
+  <h4 class="text-primary">Business Checks</h4>
+  <table class="table table-striped table-bordered table-hover">
+    <thead>
+      <tr>
+        <th class="text-center" style="min-width: 125px;">Date</th>
+        <th>Check #</th>
+        <th>Account</th>
+        <th class="text-center">Amount</th>
+      </tr>
+    </thead>
+
+    <tbody>
+      <% if checks.present? %>
+        <% checks.each do |check| %>
+          <tr>
+
+            <td class="text-center"><%= month_day_year(check.check_date) %></td>
+            <td><%= check.number %></td>
+            <td><%= check.voucher.account %></td>
+            <td class="text-end"><%= to_curr(check.amount) %></td>
+
+            <% if editable %>
+              <td class="text-center">
+                <%= link_to edit_treasury_business_check_path(check), data: {turbo_frame: 'modal'}, class: 'btn btn-sm btn-outline-primary', title: 'Edit' do %>
+                  <i class="bi bi-pencil"></i>
+                <% end %>
+                <%= link_to treasury_business_check_path(check), data: {turbo_confirm: "Delete check #{check.number}?", turbo_method: :delete }, class: 'btn btn-outline-danger btn-sm', title: 'View' do %>
+                  <i class="bi bi-trash"></i>
+                <% end %>
+              </td>
+            <% end %>
+
+          </tr>
+        <% end %>
+      <% else %>
+        <tr>
+          <td colspan="6" class="text-center">No business checks found.</td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+</div>

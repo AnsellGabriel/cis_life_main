@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_11_03_005600) do
+ActiveRecord::Schema[7.0].define(version: 2023_11_07_061316) do
   create_table "accounting_vouchers", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.date "date_voucher"
     t.integer "voucher"
@@ -803,6 +803,15 @@ ActiveRecord::Schema[7.0].define(version: 2023_11_03_005600) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["notifiable_type", "notifiable_id"], name: "index_notifications_on_notifiable"
+  end
+
+  create_table "payees", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+    t.string "name"
+    t.string "address"
+    t.text "description"
+    t.string "contact_number"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
   end
 
   create_table "payments", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
