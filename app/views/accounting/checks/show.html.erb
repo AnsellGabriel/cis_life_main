@@ -1,14 +1,24 @@
 
+<div class="d-flex gap-3">
 
-<div class="<%= flex_justify_align('','center') %> gap-1 mb-1">
-  <%= link_to "Back", accounting_checks_path, class: 'btn btn-sm btn-secondary' %>
-  <%= link_to edit_accounting_check_path(@check), data: {turbo_frame: 'modal'}, class: 'btn btn-sm btn-outline-primary', title: 'Edit' do %>
-    <i class="bi bi-pencil"></i>
-  <% end %>
-  <%= link_to @check, data: {turbo_confirm: 'Delete this check voucher?', turbo_method: :delete}, class: 'btn btn-sm btn-outline-danger', title: 'Delete' do %>
-    <i class="bi bi-trash"></i>
-  <% end %>
+  <div class="">
+    <div class="<%= flex_justify_align('','center') %> gap-1 mb-1">
+      <%= link_to accounting_checks_path, class: 'btn btn-sm btn-secondary', title: 'Back' do %>
+        <i class="bi bi-arrow-90deg-left"></i>
+      <% end %>
+      <%= link_to edit_accounting_check_path(@check), data: {turbo_frame: 'modal'}, class: 'btn btn-sm btn-outline-primary', title: 'Edit' do %>
+        <i class="bi bi-pencil"></i>
+      <% end %>
+      <%= link_to @check, data: {turbo_confirm: "Delete check voucher 'CV#{@check.voucher}' ?", turbo_method: :delete}, class: 'btn btn-sm btn-outline-danger', title: 'Delete' do %>
+        <i class="bi bi-trash"></i>
+      <% end %>
+    </div>
+
+    <%= render @check %>
+  </div>
+
+
+  <div class="w-75">
+    <%= render 'treasury/business_checks/checks', checks: @business_checks, editable: false %>
+  </div>
 </div>
-
-<%= render @check %>
-

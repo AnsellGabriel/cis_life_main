@@ -1,6 +1,6 @@
 require "test_helper"
 
-class AgentGroupsControllerTest < ActionDispatch::IntegrationTest
+class Treasury::CashierEntryTest < ActiveSupport::TestCase
   # test "the truth" do
   #   assert true
   # end

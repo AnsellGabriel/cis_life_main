@@ -4,7 +4,15 @@ class Accounting::JournalsController < ApplicationController
 
   # GET /accounting/journals
   def index
-    @journals = Accounting::Journal.all
+    # byebug
+
+    if params[:voucher_yr].present? || params[:voucher_month].present? || params[:voucher_series].present?
+      @journals = Accounting::Journal.where(type: 'Accounting::Journal').where("voucher like ?", "%#{params[:voucher_yr] + params[:voucher_month] + params[:voucher_series]}%")
+    else
+      @journals = Accounting::Journal.all
+    end
+
+    @pagy, @journals = pagy(@journals, items: 10)
   end
 
   # GET /accounting/journals/1
@@ -58,21 +66,21 @@ class Accounting::JournalsController < ApplicationController
   end
 
   private
-    # Use callbacks to share common setup or constraints between actions.
-    def set_journal
-      @journal = Accounting::Journal.find(params[:id])
-    end
+  # Use callbacks to share common setup or constraints between actions.
+  def set_journal
+    @journal = Accounting::Journal.find(params[:id])
+  end
 
-    def set_payables
-      @payables = Cooperative.all
-    end
+  def set_payables
+    @payables = Cooperative.all.order(:name)
+  end
 
-    # Only allow a list of trusted parameters through.
-    def journal_params
-      params.require(:accounting_journal).permit(:date_voucher, :voucher_year, :voucher_month, :voucher_series, :global_payable, :particulars)
-    end
+  # Only allow a list of trusted parameters through.
+  def journal_params
+    params.require(:accounting_journal).permit(:date_voucher, :voucher_year, :voucher_month, :voucher_series, :global_payable, :particulars)
+  end
 
-    def voucher_series
-      journal_params[:voucher_year] + journal_params[:voucher_month] + journal_params[:voucher_series]
-    end
+  def voucher_series
+    journal_params[:voucher_year] + journal_params[:voucher_month] + journal_params[:voucher_series]
+  end
 end

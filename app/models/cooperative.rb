@@ -11,6 +11,7 @@ class Cooperative < ApplicationRecord
     has_many :notifications, as: :notifiable, dependent: :destroy
 
     has_many :check_vouchers, as: :payable, class_name: 'Accounting::Check', dependent: :destroy
+    has_many :cashier_entries, as: :entriable, class_name: 'Treasury::CashierEntry', dependent: :destroy
 
     belongs_to :coop_type, optional: true
     belongs_to :geo_region, optional: true

@@ -18,7 +18,7 @@ class Treasury::BusinessChecksController < ApplicationController
 
   def new
     unless @voucher
-      return redirect_to treasury_checks_path, alert: "Check voucher not found"
+      return redirect_to treasury_business_checks_path, alert: "Check voucher not found"
     end
 
     set_checks
@@ -34,7 +34,7 @@ class Treasury::BusinessChecksController < ApplicationController
     @check = @voucher.business_checks.build(check_params)
 
     if @check.save
-      redirect_to new_treasury_check_path(voucher: @check.voucher.voucher), notice: "Business check was successfully created."
+      redirect_to new_treasury_business_check_path(voucher: @check.voucher.voucher), notice: "Business check was successfully created."
     else
       render :new, status: :unprocessable_entity
     end
@@ -42,15 +42,16 @@ class Treasury::BusinessChecksController < ApplicationController
 
   def update
     if @check.update(check_params)
-      redirect_to @check, notice: "Business check was successfully updated."
+      redirect_to new_treasury_business_check_path(voucher: @check.voucher.voucher), notice: "Business check was successfully updated."
     else
       render :edit, status: :unprocessable_entity
     end
   end
 
   def destroy
-    @check.destroy
-    redirect_to new_treasury_check_path(voucher: @check.voucher.voucher), notice: "Business check was successfully deleted.", status: :see_other
+    if @check.destroy
+      redirect_to new_treasury_business_check_path(voucher: @check.voucher.voucher), notice: "Business check was successfully deleted.", status: :see_other
+    end
   end
 
   private

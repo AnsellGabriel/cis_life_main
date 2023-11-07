@@ -1,5 +1,5 @@
 
-<%= simple_form_for(check, url: treasury_checks_path)  do |f| %>
+<%= simple_form_for(check)  do |f| %>
 
   <div class="form-inputs mb-3">
     <div class="row">
@@ -9,16 +9,17 @@
           flatpickr_max_date: Date.today,
           flatpickr_next_arrow: "Next",
           flatpickr_prev_arrow: "Prev"}
-          }, label: 'Check Date'
+          }, label: 'Check Date',
+          error: '*Required'
         %> 
       </div>
       <div class="col-6">
-        <%= f.input :check_number %>
+        <%= f.input :check_number, error: '*Required' %>
       </div>
     </div>
     <div class="row">
       <div class="col-6">
-        <%= f.input :amount %>
+        <%= f.input :amount, error: '*Required' %>
       </div>
       <div class="col-6">
         <%= f.input :check_type, as: :select, collection: Treasury::BusinessCheck.check_types.map {|k, v| [k.humanize.capitalize, k.to_s]} %>
@@ -27,6 +28,6 @@
   </div>
 
   <div class="form-actions text-center">
-    <%= f.button :submit, 'Add Business Check', class: 'btn-primary' %>
+    <%= f.button :submit, "#{turbo ? 'Add' : 'Update'} Check", class: 'btn-primary', data: {turbo: turbo} %>
   </div>
 <% end %>

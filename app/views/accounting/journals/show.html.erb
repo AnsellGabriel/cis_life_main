@@ -1,5 +1,7 @@
 <div class="<%= flex_justify_align('','center') %> gap-1 mb-1">
-  <%= link_to "Back", accounting_journals_path, class: 'btn btn-sm btn-secondary' %>
+  <%= link_to accounting_journals_path, class: 'btn btn-sm btn-secondary', title: 'Back' do %>
+    <i class="bi bi-arrow-90deg-left"></i>
+  <% end %>
   <%= link_to edit_accounting_journal_path(@journal), data: {turbo_frame: 'modal'}, class: 'btn btn-sm btn-outline-primary', title: 'Edit' do %>
     <i class="bi bi-pencil"></i>
   <% end %>

@@ -10,7 +10,7 @@ class EmpAgreementsController < ApplicationController
   def transfer_index
     @emp_agreements = EmpAgreement.all
   end
-  
+
 
   # GET /emp_agreements/1
   def show
@@ -97,11 +97,11 @@ class EmpAgreementsController < ApplicationController
       ids.each do |id|
         @old_emp_agreement = EmpAgreement.find_by(id: id)
         @old_emp_agreement.update_attribute(:active, false)
-  
+
         @emp_agreement = EmpAgreement.new(employee: @analyst, agreement: @old_emp_agreement.agreement, active: true, category_type: 1)
         @emp_agreement.save!
       end
-  
+
       redirect_to transfer_index_emp_agreements_path, notice: "Selected Agreements are successfully transferred."
     end
 
