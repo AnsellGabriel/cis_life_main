@@ -1,0 +1,40 @@
+<%= content_tag :h1, "List of Actuarial Reserves" %>
+
+
+<div class="text-end mb-3">
+  <%= link_to new_actuarial_reserf_path, class: 'btn btn-primary' do %>
+    New Reserve
+  <% end %>
+</div>
+
+
+  <table class="table table-striped table-bordered table-hover">
+    <thead>
+      <tr>
+        <th>#</th>
+        <th>Year</th>
+        <th>Plan</th>
+        <th>Generate Date</th>
+        <th></th>
+      </tr>
+    </thead>
+
+    <tbody>
+      <% @actuarial_reserves.each do |actuarial_reserve| %>
+        <tr>
+
+        <th scope="row"><%= actuarial_reserve.id %></th>
+        <td><%= content_tag :span, "#{actuarial_reserve.first_term.year} Reserves", class: "lead" %></td>
+        <td><%= content_tag :span, actuarial_reserve.plan, class: "lead" %></td>
+        <td><%= content_tag :span, actuarial_reserve.created_at.strftime("%m-%d-%Y") %></td>
+    
+          <td>
+            <%= link_to 'View', actuarial_reserve, class: 'btn btn-secondary btn-sm' %>
+            <%= link_to 'Edit', edit_actuarial_reserf_path(actuarial_reserve), class: 'btn btn-secondary btn-sm' %>
+            <%= link_to "Delete", actuarial_reserve, class: "btn btn-danger btn-sm", method: :delete, data: { "turbo-method": :delete, turbo_confirm: "Are you sure?" } %>
+          </td>
+
+        </tr>
+      <% end %>
+    </tbody>
+  </table>

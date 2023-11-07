@@ -1,0 +1,74 @@
+<%= content_tag :h1, "List of Actuarial Reserve Batches" %>
+
+
+<div class="text-end mb-3">
+  <%= link_to new_actuarial_reserve_batch_path, class: 'btn btn-primary' do %>
+    New Reserve Batch
+  <% end %>
+</div>
+
+
+  <table class="table table-striped table-bordered table-hover">
+    <thead>
+      <tr>
+      <th>#</th>
+            <th>Actuarial Reserve</th>
+            <th>Batch</th>
+            <th>Term</th>
+            <th>Rate</th>
+            <th>Coverage Less Ri</th>
+            <th>Prem Less Ri</th>
+            <th>Duration</th>
+            <th>First Term</th>
+            <th>Second Term</th>
+            <th>Third Term</th>
+            <th>Unearned Prem</th>
+            <th>First Adv Prem</th>
+            <th>Second Adv Prem</th>
+            <th>Reserve</th>
+            <th>Cov Less Ret</th>
+            <th>Prem Less Ret</th>
+            <th>Unearned Pr</th>
+            <th>First Adv Pr</th>
+            <th>Second Adv Pr</th>
+            <th>Reserve Ret</th>
+            <th></th>
+        </tr>
+    </thead>
+
+    <tbody>
+      <% @actuarial_reserve_batches.each do |actuarial_reserve_batch| %>
+        <tr>
+
+        <th scope="row"><%= actuarial_reserve_batch.id %></th>
+        <td><%= actuarial_reserve_batch.actuarial_reserve_id %></td>
+        <td><%= actuarial_reserve_batch.batch %></td>
+        <td><%= actuarial_reserve_batch.term %></td>
+        <td><%= actuarial_reserve_batch.rate %></td>
+        <td><%= actuarial_reserve_batch.coverage_less_ri %></td>
+        <td><%= actuarial_reserve_batch.prem_less_ri %></td>
+        <td><%= actuarial_reserve_batch.duration %></td>
+        <td><%= actuarial_reserve_batch.first_term %></td>
+        <td><%= actuarial_reserve_batch.second_term %></td>
+        <td><%= actuarial_reserve_batch.third_term %></td>
+        <td><%= actuarial_reserve_batch.unearned_prem %></td>
+        <td><%= actuarial_reserve_batch.first_adv_prem %></td>
+        <td><%= actuarial_reserve_batch.second_adv_prem %></td>
+        <td><%= actuarial_reserve_batch.reserve_amt %></td>
+        <td><%= actuarial_reserve_batch.cov_less_ret %></td>
+        <td><%= actuarial_reserve_batch.prem_less_ret %></td>
+        <td><%= actuarial_reserve_batch.unearned_pr %></td>
+        <td><%= actuarial_reserve_batch.first_adv_pr %></td>
+        <td><%= actuarial_reserve_batch.second_adv_pr %></td>
+        <td><%= actuarial_reserve_batch.reserve_ret_amt %></td>
+    
+          <td>
+            <%= link_to 'View', actuarial_reserve_batch, class: 'btn btn-secondary btn-sm' %>
+            <%= link_to 'Edit', edit_actuarial_reserve_batch_path(actuarial_reserve_batch), class: 'btn btn-secondary btn-sm' %>
+            <%= link_to "Delete", actuarial_reserve_batch, class: "btn btn-danger btn-sm", method: :delete, data: { "turbo-method": :delete, turbo_confirm: "Are you sure?" } %>
+          </td>
+
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
