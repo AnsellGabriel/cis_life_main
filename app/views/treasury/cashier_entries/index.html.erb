@@ -19,21 +19,23 @@
     <table class="table table-striped table-bordered table-hover">
       <thead>
         <tr>
-          <th>OR #</th>
-          <th>Date</th>
+          <th class="text-center">OR #</th>
+          <th class="text-center">Date</th>
           <th>Payee</th>
-          <th>Amount</th>
+          <th class="text-center">Amount</th>
         </tr>
       </thead>
 
       <tbody>
         <% if @entries.present? %>
           <% @entries.each do |entry| %>
+            <% entry.entriable = entry.entriable.class.name == 'Remittance' ? entry.entriable.agreement.cooperative : entry.entriable %>
+
             <tr>
-              <td><%= link_to entry.or_no, entry, class: 'text-primary' %></td>
-              <td><%= month_day_year(entry.or_date) %></td>
+              <td class="text-center"><%= link_to entry.or_no, entry, class: 'text-primary' %></td>
+              <td class="text-center"><%= month_day_year(entry.or_date) %></td>
               <td><%= entry.entriable %></td>
-              <td><%= to_curr(entry.amount) %></td>
+              <td class="text-end"><%= to_curr(entry.amount) %></td>
             </tr>
           <% end %>
         <% else %>

@@ -2,7 +2,8 @@ class PaymentsController < ApplicationController
   before_action :initialize_payment_data, only: %i[create]
 
   def index
-    @payments = Payment.all.includes(payable: {agreement: [:cooperative, :plan]})
+    @payments = Payment.all.includes(payable: {agreement: [:cooperative, :plan]}).order(created_at: :desc)
+    @pagy, @payments = pagy(@payments, items: 10)
   end
 
   def create
@@ -26,29 +27,29 @@ class PaymentsController < ApplicationController
     end
   end
 
-  def approve
-    payment = Payment.find(params[:id])
-    group_remit = payment.payable
+  # def approve
+  #   payment = Payment.find(params[:id])
+  #   group_remit = payment.payable
 
-    if payment.approved!
-      group_remit.paid!
-      Notification.create(notifiable: group_remit.agreement.cooperative, message: "#{group_remit.name} payment verified.")
+  #   if payment.approved!
+  #     group_remit.paid!
+  #     Notification.create(notifiable: group_remit.agreement.cooperative, message: "#{group_remit.name} payment verified.")
 
-      if group_remit.type == 'LoanInsurance::GroupRemit'
-        group_remit.update_members_total_loan
-        group_remit.update_batch_coverages
-        group_remit.terminate_unused_batches(current_user)
-      else
-        group_remit.update_batch_remit
-        group_remit.update_batch_coverages
-      end
+  #     if group_remit.type == 'LoanInsurance::GroupRemit'
+  #       group_remit.update_members_total_loan
+  #       group_remit.update_batch_coverages
+  #       group_remit.terminate_unused_batches(current_user)
+  #     else
+  #       group_remit.update_batch_remit
+  #       group_remit.update_batch_coverages
+  #     end
 
-      redirect_to payments_path, notice: "Remittance approved"
-    else
-      redirect_to payments_path, alert: "Something went wrong"
-    end
+  #     redirect_to payments_path, notice: "Remittance approved"
+  #   else
+  #     redirect_to payments_path, alert: "Something went wrong"
+  #   end
 
-  end
+  # end
 
   private
 

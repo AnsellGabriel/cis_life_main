@@ -18,7 +18,14 @@ class Treasury::CashierEntriesController < ApplicationController
   end
 
   def new
-    @entry = Treasury::CashierEntry.new(or_no: Treasury::CashierEntry.last&.or_no.to_i + 1)
+    @entry = Treasury::CashierEntry.new(or_no: Treasury::CashierEntry.last&.or_no.to_i + 1, or_date: Date.today)
+
+    if params[:gr_id].present?
+      @group_remit = GroupRemit.find(params[:gr_id])
+      @entry.amount = @group_remit.net_premium
+      @entry.payment = Treasury::CashierEntry.payments[@group_remit.agreement.plan.acronym.downcase]
+    end
+
   end
 
   def edit
@@ -28,10 +35,45 @@ class Treasury::CashierEntriesController < ApplicationController
     @entry = Treasury::CashierEntry.new(entry_params)
 
     if @entry.save
+      if @entry.entriable_type == 'Remittance'
+        approve_payment(@group_remit.payment.id)
+      end
+
       redirect_to treasury_cashier_entries_path, notice: "Entry added"
     else
+      if @entry.entriable_type == 'Remittance'
+        @group_remit = @entry.entriable
+      end
+
       render :new, status: :unprocessable_entity
     end
+  end
+
+
+  def create
+    @entry = Treasury::CashierEntry.new(entry_params)
+
+    if @entry.entriable_type == 'Remittance'
+      @group_remit = @entry.entriable
+
+      if @entry.save
+        approve_payment(@group_remit.payments.last.id)
+
+        redirect_to treasury_cashier_entries_path, notice: "Entry added"
+      else
+        render :new, status: :unprocessable_entity
+      end
+
+    else
+
+      if @entry.save
+        redirect_to treasury_cashier_entries_path, notice: "Entry added"
+      else
+        render :new, status: :unprocessable_entity
+      end
+
+    end
+
   end
 
   def update
@@ -62,4 +104,25 @@ class Treasury::CashierEntriesController < ApplicationController
   def entry_params
     params.require(:treasury_cashier_entry).permit(:or_no, :or_date, :global_entriable, :payment, :treasury_account_id, :amount)
   end
+
+  def approve_payment(payment_id)
+    payment = Payment.find(payment_id)
+    group_remit = payment.payable
+
+    if payment.approved!
+      group_remit.paid!
+      Notification.create(notifiable: group_remit.agreement.cooperative, message: "#{group_remit.name} payment verified.")
+
+      if group_remit.type == 'LoanInsurance::GroupRemit'
+        group_remit.update_members_total_loan
+        group_remit.update_batch_coverages
+        group_remit.terminate_unused_batches(current_user)
+      else
+        group_remit.update_batch_remit
+        group_remit.update_batch_coverages
+      end
+
+    end
+  end
+
 end

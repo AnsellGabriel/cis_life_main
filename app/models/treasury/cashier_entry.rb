@@ -1,4 +1,6 @@
 class Treasury::CashierEntry < ApplicationRecord
+  attr_accessor :dummy_payee
+  
   validates_presence_of :or_no, :or_date, :global_entriable, :payment, :treasury_account_id, :amount
 
   enum payment: {

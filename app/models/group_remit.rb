@@ -8,11 +8,16 @@ class GroupRemit < ApplicationRecord
 
   belongs_to :agreement
   belongs_to :anniversary, optional: true
+
   has_many :batch_group_remits
   has_many :batches, through: :batch_group_remits
   has_many :denied_members, dependent: :destroy
   has_many :payments, as: :payable, dependent: :destroy
   has_many :loan_batches, dependent: :destroy, class_name: 'LoanInsurance::Batch'
+  has_many :treasury_remittances, class_name: 'Treasury::Remittance', dependent: :destroy
+  has_many :cashier_entries, as: :entriable, class_name: 'Treasury::CashierEntry', dependent: :destroy
+
+
   has_one :process_coverage, dependent: :destroy
   # has_one :group_import_tracker, dependent: :destroy
   has_one :progress_tracker, as: :trackable, dependent: :destroy
@@ -139,7 +144,7 @@ class GroupRemit < ApplicationRecord
     self.net_premium = net_premium
 
     unless self.type == 'BatchRemit'
-            
+
       if self.process_coverage.status == "approved"
         self.status = :for_payment
         Notification.create(notifiable: self.agreement.cooperative, message: "#{self.name} is approved and now for payment.")

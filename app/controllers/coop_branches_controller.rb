@@ -1,5 +1,5 @@
 class CoopBranchesController < ApplicationController
-  before_action :authenticate_user!
+  # before_action :authenticate_user!
   # before_action :check_userable_type
   before_action :set_coop_branch, only: %i[ show edit update destroy ]
 

@@ -4,7 +4,7 @@
   <div class="form-inputs mb-3">
     <div class="row">
       <div class="col-6">
-        <%= f.input :or_no, label: 'OR Number', error: 'OR Number can\'t be blank' %>
+        <%= f.input :or_no, label: 'OR Number', error: '*Required' %>
       </div>
       <div class="col-6">
         <%= f.input :or_date, as: :string, input_html: {data: {
@@ -13,30 +13,40 @@
           flatpickr_next_arrow: "Next",
           flatpickr_prev_arrow: "Prev" }
           }, label: 'OR Date',
-          error: 'OR Date can\'t be blank'
+          error: '*Required'
         %> 
       </div>
     </div>
-    <%= f.input :global_entriable, 
-      collection: @entriables, 
-      label_method: :to_s, 
-      value_method: :to_global_id, 
-      label: 'Payee', 
-      error: 'Payee can\'t be blank',
-      input_html: { data: { controller: "slim-select" } }
-    %>
-    <%= f.association :treasury_account, label: 'Account', error: 'Account can\'t be blank', input_html: { data: { controller: "slim-select" } }  %>
+    <% if @group_remit.present? %>
+      <%= f.hidden_field :global_entriable, value: @group_remit.to_global_id  %>
+      <%= f.input :dummy_payee, label: 'Payee', input_html: {value: @group_remit.agreement.cooperative}, disabled: true  %>
+    <% else %>
+      <%= f.input :global_entriable, 
+        collection: @entriables, 
+        label_method: :to_s, 
+        value_method: :to_global_id, 
+        label: 'Payee', 
+        error: '*Required',
+        input_html: { data: { controller: "ts--select" } }
+      %>
+    <% end %>
+    <%= f.association :treasury_account, label: 'Account', error: '*Required', input_html: { data: { controller: "slim-select" } }  %>
     <div class="row">
       <div class="col-6">
-        <%= f.input :payment, as: :select, collection: Treasury::CashierEntry.payments.map {|k, v| [k.humanize.upcase, k.to_s]},label: 'Payment type', error: 'Please select a payment type' %>
+        <%= f.input :payment, as: :select, collection: Treasury::CashierEntry.payments.map {|k, v| [k.humanize.upcase, k.to_s]},label: 'Payment type', error: '*Required' %>
       </div>
       <div class="col-6">
-        <%= f.input :amount %>
+        <%= f.input :amount, error: '*Required' %>
       </div>
     </div>
   </div>
 
   <div class="form-actions text-center">
-    <%= f.button :submit, 'Add Entry', class: 'btn-primary' %>
+    <% if @group_remit.present? %> 
+      <%= f.button :submit, 'Add Entry', class: 'btn-primary', data: {turbo_confirm: 'Approve payment and add OR?', turbo_method: :get} %>
+    <% else %>
+      <%= f.button :submit, 'Add Entry', class: 'btn-primary' %>
+    <% end %>
   </div>
 <% end %>
+<% console %>
