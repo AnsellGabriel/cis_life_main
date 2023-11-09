@@ -23,7 +23,7 @@ class GroupRemitsController < InheritedResources::Base
   def submit
     if @group_remit.batches.empty?
       respond_to do |format|
-        format.html { redirect_to coop_agreement_group_remit_path(@group_remit.agreement, @group_remit), alert: "Unable to submit empty batch!" }
+        format.html { redirect_to coop_agreement_group_remit_path(@group_remit.agreement, @group_remit), alert: "Unable to submit empty remittance!" }
       end
 
       return
@@ -84,15 +84,10 @@ class GroupRemitsController < InheritedResources::Base
   def create
     @agreement = Agreement.find_by(id: params[:agreement_id])
 
-    if @agreement.is_term_insurance? && params[:group_remit][:terms].blank?
-      return redirect_to coop_agreement_path(@agreement), alert: 'Please select a term duration'
-    end
-
     @group_remit = @agreement.group_remits.build(type: 'Remittance')
     anniversary_date = set_anniversary(@agreement.anniversary_type, params[:anniversary_id])
-    terms = params[:group_remit][:terms] if params[:group_remit].present?
 
-    GroupRemit.process_group_remit(@group_remit, anniversary_date, params[:anniversary_id], terms)
+    GroupRemit.process_group_remit(@group_remit, anniversary_date, params[:anniversary_id])
 
     respond_to do |format|
       if @group_remit.save!
@@ -100,7 +95,7 @@ class GroupRemitsController < InheritedResources::Base
         if params[:type] == 'BatchRemit'
           batch_remit = @agreement.group_remits.build(type: 'BatchRemit')
 
-          GroupRemit.process_group_remit(batch_remit, anniversary_date, params[:anniversary_id], terms)
+          GroupRemit.process_group_remit(batch_remit, anniversary_date, params[:anniversary_id])
 
           batch_remit.save!
 

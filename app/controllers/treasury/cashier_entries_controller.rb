@@ -22,7 +22,7 @@ class Treasury::CashierEntriesController < ApplicationController
 
     if params[:gr_id].present?
       @group_remit = GroupRemit.find(params[:gr_id])
-      @entry.amount = @group_remit.net_premium
+      @entry.amount = @group_remit.coop_net_premium
       @entry.payment = Treasury::CashierEntry.payments[@group_remit.agreement.plan.acronym.downcase]
     end
 
@@ -34,51 +34,25 @@ class Treasury::CashierEntriesController < ApplicationController
   def create
     @entry = Treasury::CashierEntry.new(entry_params)
 
-    if @entry.save
-      if @entry.entriable_type == 'Remittance'
-        approve_payment(@group_remit.payment.id)
-      end
-
-      redirect_to treasury_cashier_entries_path, notice: "Entry added"
-    else
-      if @entry.entriable_type == 'Remittance'
-        @group_remit = @entry.entriable
-      end
-
-      render :new, status: :unprocessable_entity
-    end
-  end
-
-
-  def create
-    @entry = Treasury::CashierEntry.new(entry_params)
-
     if @entry.entriable_type == 'Remittance'
       @group_remit = @entry.entriable
+    end
 
-      if @entry.save
+    if @entry.save
+      if @entry.entriable_type == 'Remittance'
         approve_payment(@group_remit.payments.last.id)
-
-        redirect_to treasury_cashier_entries_path, notice: "Entry added"
-      else
-        render :new, status: :unprocessable_entity
       end
 
+      redirect_to @entry, notice: "Entry added"
     else
-
-      if @entry.save
-        redirect_to treasury_cashier_entries_path, notice: "Entry added"
-      else
-        render :new, status: :unprocessable_entity
-      end
-
+      render :new, status: :unprocessable_entity
     end
 
   end
 
   def update
     if @entry.update(entry_params)
-      redirect_to @entry, notice: "Entry updated"
+      redirect_to @entry, notice: "Entry updated" 
     else
       render :edit, status: :unprocessable_entity
     end

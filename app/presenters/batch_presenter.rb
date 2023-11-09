@@ -41,17 +41,8 @@ class BatchPresenter
 		present_product_benefits.joins(:benefit).pluck(:acronym, :name, :coverage_amount)
 	end
 
-	def is_term_insurance?
-		@agreement.plan.acronym == 'PMFC'
-	end
-
 	def life_benefit
-		if is_term_insurance?
-			product_benefits = @batch.get_term_insurance_product_benefit
-			life_benefit = product_benefits.select {|pb| pb.benefit.acronym == "LIFE" }
-		else
-			life_benefit = @batch.agreement_benefit.product_benefits.select {|pb| pb.benefit.acronym == "LIFE" || pb.benefit.acronym == "LI" }
-		end
+		life_benefit = @batch.agreement_benefit.product_benefits.select {|pb| pb.benefit.acronym == "LIFE" || pb.benefit.acronym == "LI" }
 	end
 
 

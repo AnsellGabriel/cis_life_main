@@ -1,5 +1,5 @@
 <div class="<%= flex_justify_align('', 'center') %> gap-1 mb-1">
-  <%= link_to treasury_cashier_entries_path, class: 'btn btn-sm btn-secondary' do %>
+  <%= link_to :back, class: 'btn btn-sm btn-secondary' do %>
     <i class="bi bi-arrow-90deg-left"></i>
   <% end %>
   <%= link_to edit_treasury_cashier_entry_path(@entry), class: 'btn btn-sm btn-outline-primary', data: {turbo_frame: 'modal'} do %>

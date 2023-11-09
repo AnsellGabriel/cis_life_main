@@ -18,9 +18,9 @@ module CisLifeMain
       config.redis = { url: 'redis://localhost:6379/0' }
     end
 
-    Sidekiq.configure_client do |config|
-      config.redis = { url: 'redis://localhost:6379/0' }
-    end
+    # Sidekiq.configure_client do |config|
+    #   config.redis = { url: 'redis://localhost:6379/0' }
+    # end
 
 
     # Configuration for the application, engines, and railties goes here.
@@ -31,7 +31,13 @@ module CisLifeMain
     config.time_zone = 'Singapore'
     config.active_record.default_timezone = :local
     # config.eager_load_paths << Rails.root.join("extras")
-    config.app_generators.scaffold_controller = :scaffold_controller
+    # config.app_generators.scaffold_controller = :scaffold_controller
+    config.generators do |g|
+      g.scaffold_controller :scaffold_controller
+      g.helper false
+      g.test_framework false
+      g.decorator false
+    end
     config.autoload_paths += %W(#{config.root}/app/services)
     config.active_job.queue_adapter = :sidekiq
 

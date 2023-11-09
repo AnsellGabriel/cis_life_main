@@ -200,7 +200,8 @@ Rails.application.routes.draw do
   get 'insurance/terminate', as: 'terminate_insurance'
 
   resources :payments, only: %i[index create] do
-    get :approve, on: :member
+    get :reject, on: :member
+    resources :remarks, controller: 'payments/remarks'
   end
 
   #* Underwriting Module Routes

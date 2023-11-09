@@ -1,4 +1,6 @@
 class Agent < ApplicationRecord
+  validates_presence_of :first_name, :middle_name, :last_name, :agent_group_id, :birthdate
+
   belongs_to :agent_group
 
   has_one :user, as: :userable, dependent: :destroy

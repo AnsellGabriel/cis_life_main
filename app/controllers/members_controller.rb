@@ -60,13 +60,16 @@ class MembersController < InheritedResources::Base
   end
 
   def create
-
     @member = Member.find_or_initialize_by(
       first_name: member_params[:first_name],
       last_name: member_params[:last_name],
       middle_name: member_params[:middle_name],
       birth_date: member_params[:birth_date]
     )
+
+    if @member.persisted?
+      persisted = true
+    end
 
     @member.assign_attributes(member_params)
 
@@ -76,9 +79,9 @@ class MembersController < InheritedResources::Base
           if current_user.userable_type == 'CoopUser'
             coop_member = @member.coop_members.find_by(cooperative_id: @cooperative.id)
             redirect_to coop_members_path(cooperative_id: @cooperative.id),
-            notice: "Member was successfully created."
+            notice: "#{persisted ? 'Member is already enrolled. Updated member\'s details instead.' : 'Member enrolled.'}"
           elsif current_user.userable_type == 'Employee'
-            redirect_to cooperative_path(@cooperative), notice: "Member was successfully created."
+            redirect_to cooperative_path(@cooperative), notice: "#{persisted ? 'Member already enrolled. Updated member\'s details' : 'Member enrolled.'}"
           end
         }
       else
@@ -123,25 +126,25 @@ class MembersController < InheritedResources::Base
 
   private
 
-    def set_member
-      @member = Member.find(params[:id])
-    end
-    def member_params
-      params.require(:member).permit(:birth_place, :address, :sss_no, :tin_no, :civil_status, :legal_spouse, :height, :weight, :occupation, :employer, :work_address, :work_phone_number, :last_name, :first_name, :middle_name, :suffix, :email, :mobile_number, :birth_date, :gender, :geo_region_id, :geo_province_id, :geo_municipality_id, :geo_barangay_id,
-        coop_members_attributes: [:id, :cooperative_id, :coop_branch_id, :membership_date, :transferred, :_destroy])
-    end
+  def set_member
+    @member = Member.find(params[:id])
+  end
+  def member_params
+    params.require(:member).permit(:birth_place, :address, :sss_no, :tin_no, :civil_status, :legal_spouse, :height, :weight, :occupation, :employer, :work_address, :work_phone_number, :last_name, :first_name, :middle_name, :suffix, :email, :mobile_number, :birth_date, :gender, :geo_region_id, :geo_province_id, :geo_municipality_id, :geo_barangay_id,
+      coop_members_attributes: [:id, :cooperative_id, :coop_branch_id, :membership_date, :transferred, :_destroy])
+  end
 
-    def check_userable_type
-      unless current_user.userable_type == 'CoopUser' || current_user.userable_type == 'Employee'
-        render file: "#{Rails.root}/public/404.html", status: :not_found
-      end
+  def check_userable_type
+    unless current_user.userable_type == 'CoopUser' || current_user.userable_type == 'Employee'
+      render file: "#{Rails.root}/public/404.html", status: :not_found
     end
+  end
 
-    def import_redirect(path, import_message)
-      if import_message.is_a?(String)
-        redirect_to path, alert: import_message
-      else
-        redirect_to path, notice: "#{import_message[:created_members_counter] > 0 ? "#{import_message[:created_members_counter]} members enrolled. " : '' } #{import_message[:updated_members_counter] > 0 ? "#{import_message[:updated_members_counter]} members updated." : ''} #{import_message[:denied_enrollees_counter] > 0 ? "#{import_message[:denied_enrollees_counter]} members denied." : ''}"
-      end
+  def import_redirect(path, import_message)
+    if import_message.is_a?(String)
+      redirect_to path, alert: import_message
+    else
+      redirect_to path, notice: "#{import_message[:created_members_counter] > 0 ? "#{import_message[:created_members_counter]} members enrolled. " : '' } #{import_message[:updated_members_counter] > 0 ? "#{import_message[:updated_members_counter]} members updated." : ''} #{import_message[:denied_enrollees_counter] > 0 ? "#{import_message[:denied_enrollees_counter]} members denied." : ''}"
     end
+  end
 end

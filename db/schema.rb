@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_11_07_061316) do
+ActiveRecord::Schema[7.0].define(version: 2023_11_09_061404) do
   create_table "accounting_vouchers", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.date "date_voucher"
     t.integer "voucher"
@@ -157,8 +157,6 @@ ActiveRecord::Schema[7.0].define(version: 2023_11_07_061316) do
 
   create_table "agreement_benefits", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.bigint "agreement_id"
-    t.bigint "plan_id"
-    t.bigint "option_id"
     t.string "name"
     t.text "description"
     t.decimal "min_age", precision: 10, scale: 3
@@ -169,8 +167,6 @@ ActiveRecord::Schema[7.0].define(version: 2023_11_07_061316) do
     t.decimal "exit_age", precision: 10, scale: 3
     t.boolean "with_dependent", default: false
     t.index ["agreement_id"], name: "index_agreement_benefits_on_agreement_id"
-    t.index ["option_id"], name: "index_agreement_benefits_on_option_id"
-    t.index ["plan_id"], name: "index_agreement_benefits_on_plan_id"
   end
 
   create_table "agreements", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
@@ -884,10 +880,6 @@ ActiveRecord::Schema[7.0].define(version: 2023_11_07_061316) do
   create_table "plans", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.string "name"
     t.text "description"
-    t.integer "entry_age_from"
-    t.integer "entry_age_to"
-    t.integer "exit_age"
-    t.integer "min_participation"
     t.string "acronym"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
@@ -1018,6 +1010,17 @@ ActiveRecord::Schema[7.0].define(version: 2023_11_07_061316) do
     t.decimal "ri_total_prem", precision: 10
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+  end
+
+  create_table "remarks", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+    t.text "remark"
+    t.string "remarkable_type", null: false
+    t.bigint "remarkable_id", null: false
+    t.bigint "user_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["remarkable_type", "remarkable_id"], name: "index_remarks_on_remarkable"
+    t.index ["user_id"], name: "index_remarks_on_user_id"
   end
 
   create_table "treasury_accounts", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|

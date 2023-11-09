@@ -42,6 +42,10 @@ class GroupRemitDecorator < Draper::Decorator
 		object.for_payment?
 	end
 
+	def is_for_reupload?
+		object.reupload_payment?
+	end
+
 	def remaining_days
 		remaining_days = (object.expiry_date - Date.today).to_i
 	end
@@ -81,12 +85,10 @@ class GroupRemitDecorator < Draper::Decorator
 
   def status_badge
     case object.status
-		when "pending", "for_renewal", "under_review"
-			"badge bg-warning text-dark"
-		when "expired", "with_pending_members"
-			"badge bg-danger"
-		when "for_payment", "payment_verification", "paid"
-			"badge bg-primary"
+			when "pending", "for_renewal", "under_review" then "badge bg-warning text-dark"
+			when "expired", "with_pending_members" then "badge bg-danger"
+			when "for_payment", "payment_verification", "paid" then "badge bg-primary"
+			when "reupload_payment" then "badge bg-warning text-dark"
 		end
 	end
 

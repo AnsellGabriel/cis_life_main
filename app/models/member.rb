@@ -59,7 +59,7 @@ class Member < ApplicationRecord
   def full_address
     # "#{self&.address}, #{geo_barangay&.name}, #{geo_municipality&.name}, #{geo_province&.name}, #{geo_region&.name}"
 
-    [self&.street, geo_barangay&.name, geo_municipality&.name, geo_province&.name].compact.join(', ')
+    [self&.address, geo_barangay&.name, geo_municipality&.name, geo_province&.name].compact.join(', ')
   end
 
   def full_name
@@ -77,9 +77,9 @@ class Member < ApplicationRecord
     total = 0
     self.coop_members.each do |cm|
     # self.joins(:coop_member).each do |cm|
-    
+
     binding.pry
-    
+
       total += cm.loan_batches.where("(effectivity_date <= ? and expiry_date >= ?) OR (effectivity_date <= ? and expiry_date >= ?)", ri_start, ri_start, ri_end, ri_end).sum(:loan_amount)
       if total >= 350000
         cm.loan_batches.where("(effectivity_date <= ? and expiry_date >= ?) OR (effectivity_date <= ? and expiry_date >= ?)", ri_start, ri_start, ri_end, ri_end).each do |batch|

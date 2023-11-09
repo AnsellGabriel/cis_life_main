@@ -146,7 +146,7 @@
     <div class="<%= flex_justify_align('between') %> " style="height: 100%; width: 460px;">
       <div style="width: 100%">
 
-        <% if @group_remit.is_for_payment? %>
+        <% if @group_remit.is_for_payment? || @group_remit.is_for_reupload? %>
           <%= render 'payment', group_remit: @group_remit %>
         <% end %>
 

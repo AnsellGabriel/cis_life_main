@@ -149,6 +149,7 @@ module ApplicationHelper
 			when "reprocess" then content_tag(:span, "Reprocessed", class: "badge rounded-pill bg-warning")
 			when "reprocess_request" then content_tag(:span, "For Reprocess Request", class: "badge rounded-pill bg-warning")
 			when "reprocess_approved" then content_tag(:span, "Reprocess Request Approved", class: "badge rounded-pill bg-success")
+			when "rejected" then content_tag(:span, "Rejected", class: "badge rounded-pill bg-danger")
 		end
 	end
 

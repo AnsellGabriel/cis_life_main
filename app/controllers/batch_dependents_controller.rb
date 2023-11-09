@@ -26,11 +26,11 @@ class BatchDependentsController < InheritedResources::Base
     agreement = group_remit.agreement
 
     begin
-      insured_type = initialize_dependent_and_insured_type 
+      insured_type = initialize_dependent_and_insured_type
     rescue NoMethodError
       return redirect_to group_remit_batch_path(@group_remit, @batch), alert: 'Please choose a dependent'
     end
-    
+
     #! dependent agreement benefits' prefix must be principal agreement benefit's name
     dependent_agreement_benefits = agreement.agreement_benefits
                                     .with_name_like(@batch.agreement_benefit.name)
@@ -40,18 +40,18 @@ class BatchDependentsController < InheritedResources::Base
       dependent_agreement_benefits = agreement.agreement_benefits.find_by(insured_type: insured_type)
     end
     # model/concerns/calculate.rb
-    @batch_dependent.set_premium_and_service_fees(dependent_agreement_benefits, group_remit, agreement.is_term_insurance?) 
+    @batch_dependent.set_premium_and_service_fees(dependent_agreement_benefits, group_remit)
 
     if @batch_dependent.save
-      redirect_to group_remit_batch_path(@group_remit, @batch), notice: "Dependent successfully added" 
+      redirect_to group_remit_batch_path(@group_remit, @batch), notice: "Dependent successfully added"
     else
-      redirect_to group_remit_batch_path(@group_remit, @batch), alert: @batch_dependent.errors.full_messages.join(', ') 
+      redirect_to group_remit_batch_path(@group_remit, @batch), alert: @batch_dependent.errors.full_messages.join(', ')
     end
   end
 
-  def destroy    
+  def destroy
     if @batch_dependent.destroy!
-      redirect_to group_remit_batch_path(@group_remit, @batch), alert: "Dependent removed" 
+      redirect_to group_remit_batch_path(@group_remit, @batch), alert: "Dependent removed"
     end
   end
 

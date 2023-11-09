@@ -1,0 +1,7 @@
+  <%= content_tag :p, class: "mb-1" do %>
+    <%= @remark.user %> 
+    
+    <%= content_tag :small, "- #{time_ago_in_words(@remark.created_at)} ago" %> 
+    <%= remarks_status(@remark.remarkable.status) %>
+  <% end %>
+  <%= content_tag :p, @remark.remark, class: "small mb-0 fst-italic" %>

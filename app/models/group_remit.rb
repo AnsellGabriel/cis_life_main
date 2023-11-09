@@ -14,7 +14,6 @@ class GroupRemit < ApplicationRecord
   has_many :denied_members, dependent: :destroy
   has_many :payments, as: :payable, dependent: :destroy
   has_many :loan_batches, dependent: :destroy, class_name: 'LoanInsurance::Batch'
-  has_many :treasury_remittances, class_name: 'Treasury::Remittance', dependent: :destroy
   has_many :cashier_entries, as: :entriable, class_name: 'Treasury::CashierEntry', dependent: :destroy
 
 
@@ -32,7 +31,8 @@ class GroupRemit < ApplicationRecord
     for_renewal: 5,
     expired: 6,
     with_pending_members: 7,
-    with_substandard_members: 8
+    with_substandard_members: 8,
+    reupload_payment: 9
   }
 
   def to_s
@@ -112,7 +112,7 @@ class GroupRemit < ApplicationRecord
   end
 
   #* group remit creation
-  def self.process_group_remit(group_remit, anniversary_date, anniv_id, terms = nil)
+  def self.process_group_remit(group_remit, anniversary_date, anniv_id)
     group_remit.set_terms_and_expiry_date(anniversary_date)
     agreement = group_remit.agreement
 
@@ -120,21 +120,18 @@ class GroupRemit < ApplicationRecord
       group_remit.anniversary_id = anniv_id
     end
 
-    set_group_remit_names_and_terms(group_remit, terms)
+    set_group_remit_names_and_terms(group_remit)
   end
 
-  def self.set_group_remit_names_and_terms(group_remit, terms = nil)
-    remit_name = group_remit.instance_of?(BatchRemit) ? 'BATCH' : 'REMITTANCE'
+  def self.set_group_remit_names_and_terms(group_remit)
     agreement = group_remit.agreement
 
-    if agreement.is_term_insurance?
-      group_remit.terms = terms
-      group_remit.name = "#{agreement.moa_no} #{group_remit.effectivity_date.strftime('%B').upcase} #{remit_name} - #{group_remit.terms} MONTHS"
-    elsif agreement.anniversary_type.downcase == '12 months' or agreement.anniversary_type.nil?
-      group_remit.name = "#{agreement.moa_no} #{group_remit.effectivity_date.strftime('%B').upcase} #{remit_name}"
+    if (agreement.anniversary_type.downcase == '12 months' or agreement.anniversary_type.nil?) && group_remit.instance_of?(BatchRemit)
+      group_remit.name = "#{agreement.moa_no} #{group_remit.effectivity_date.strftime('%B').upcase} BATCH"
     else
-      group_remit.name = "#{agreement.moa_no} #{remit_name}"
+      group_remit.name = "#{agreement.moa_no} REMITTANCE #{agreement.group_remits.where(type: 'Remittance').size + 1}"
     end
+
   end
 
   def set_total_premiums_and_fees

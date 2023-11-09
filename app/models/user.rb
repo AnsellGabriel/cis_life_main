@@ -8,6 +8,7 @@ class User < ApplicationRecord
   belongs_to :userable, polymorphic: true
   has_many :user_levels
   has_many :dependent_remarks
+  has_many :remarks, dependent: :destroy
   has_one :progress_tracker, as: :trackable, dependent: :destroy
 
 

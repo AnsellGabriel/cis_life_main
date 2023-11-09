@@ -1,6 +1,9 @@
 class Plan < ApplicationRecord
-    has_many :agreement_benefits
-    def to_s 
-        name
-    end
+  validates_presence_of :name, :acronym
+
+  has_many :agreement_benefits
+
+  def to_s
+    name
+  end
 end
