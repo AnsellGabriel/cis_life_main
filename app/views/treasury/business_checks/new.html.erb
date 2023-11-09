@@ -1,0 +1,17 @@
+<%= link_to treasury_business_checks_path, class: small_btn('secondary'), title: 'Back' do %>
+  <i class="bi bi-arrow-90deg-left"></i>
+<% end %>
+<div class="d-flex gap-3 mb-3 mt-1">
+  <div class="">
+    <%= render 'accounting/checks/check', check: @voucher %>
+  </div>
+
+  <div class="card" style="min-width: 520px; min-height: 350px;">
+    <h5 class="card-header text-primary">New Business Check</h5>
+    <div class="card-body">
+      <%= render "form", check: @check, turbo: true %>
+    </div>
+  </div>
+</div>
+
+<%= render 'checks', checks: @business_checks, editable: true %>

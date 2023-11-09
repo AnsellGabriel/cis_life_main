@@ -10,27 +10,16 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_10_24_053417) do
-  create_table "accounting_check_vouchers", charset: "utf8mb4", force: :cascade do |t|
-    t.date "date_voucher"
-    t.string "voucher"
-    t.string "payable_type", null: false
-    t.bigint "payable_id", null: false
-    t.decimal "amount", precision: 15, scale: 2
-    t.text "particulars"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.index ["payable_type", "payable_id"], name: "index_accounting_check_vouchers_on_payable"
-  end
-
-  create_table "accounting_vouchers", charset: "utf8mb4", force: :cascade do |t|
+ActiveRecord::Schema[7.0].define(version: 2023_11_07_061316) do
+  create_table "accounting_vouchers", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.date "date_voucher"
     t.integer "voucher"
     t.string "payable_type", null: false
     t.bigint "payable_id", null: false
-    t.bigint "treasury_account_id", null: false
-    t.decimal "amount", precision: 10, scale: 2
+    t.bigint "treasury_account_id"
+    t.decimal "amount", precision: 15, scale: 2
     t.text "particulars"
+    t.string "type"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["payable_type", "payable_id"], name: "index_accounting_vouchers_on_payable"
@@ -875,7 +864,16 @@ ActiveRecord::Schema[7.0].define(version: 2023_10_24_053417) do
     t.index ["notifiable_type", "notifiable_id"], name: "index_notifications_on_notifiable"
   end
 
-  create_table "payments", charset: "utf8mb4", force: :cascade do |t|
+  create_table "payees", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+    t.string "name"
+    t.string "address"
+    t.text "description"
+    t.string "contact_number"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  create_table "payments", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.string "receipt"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
@@ -1057,7 +1055,33 @@ ActiveRecord::Schema[7.0].define(version: 2023_10_24_053417) do
     t.datetime "updated_at", null: false
   end
 
-  create_table "underwriting_routes", charset: "utf8mb4", force: :cascade do |t|
+
+  create_table "treasury_business_checks", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+    t.integer "check_number"
+    t.date "check_date"
+    t.decimal "amount", precision: 15, scale: 2
+    t.integer "check_type"
+    t.bigint "voucher_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["voucher_id"], name: "index_treasury_business_checks_on_voucher_id"
+  end
+
+  create_table "treasury_cashier_entries", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+    t.integer "or_no"
+    t.date "or_date"
+    t.string "entriable_type", null: false
+    t.bigint "entriable_id", null: false
+    t.integer "payment"
+    t.bigint "treasury_account_id", null: false
+    t.decimal "amount", precision: 15, scale: 2
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["entriable_type", "entriable_id"], name: "index_treasury_cashier_entries_on_entriable"
+    t.index ["treasury_account_id"], name: "index_treasury_cashier_entries_on_treasury_account_id"
+  end
+
+  create_table "underwriting_routes", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.string "name"
     t.string "description"
     t.datetime "created_at", null: false
@@ -1158,5 +1182,6 @@ ActiveRecord::Schema[7.0].define(version: 2023_10_24_053417) do
   add_foreign_key "process_tracks", "users"
   add_foreign_key "product_benefits", "agreement_benefits"
   add_foreign_key "product_benefits", "benefits"
-  add_foreign_key "proposals", "cooperatives"
+  add_foreign_key "treasury_business_checks", "accounting_vouchers", column: "voucher_id"
+  add_foreign_key "treasury_cashier_entries", "treasury_accounts"
 end

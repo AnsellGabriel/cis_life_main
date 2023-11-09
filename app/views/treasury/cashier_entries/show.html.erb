@@ -1,0 +1,13 @@
+<div class="<%= flex_justify_align('', 'center') %> gap-1 mb-1">
+  <%= link_to treasury_cashier_entries_path, class: 'btn btn-sm btn-secondary' do %>
+    <i class="bi bi-arrow-90deg-left"></i>
+  <% end %>
+  <%= link_to edit_treasury_cashier_entry_path(@entry), class: 'btn btn-sm btn-outline-primary', data: {turbo_frame: 'modal'} do %>
+    <i class="bi bi-pencil"></i>
+  <% end %>
+  <%= link_to @entry, data: {turbo_confirm: 'Delete this entry?', turbo_method: :delete}, class: 'btn btn-sm btn-outline-danger' do %>
+    <i class="bi bi-trash"></i>
+  <% end %>
+</div>
+
+<%= render @entry %>

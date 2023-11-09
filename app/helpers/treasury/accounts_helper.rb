@@ -1,2 +1,0 @@
-module Treasury::AccountsHelper
-end

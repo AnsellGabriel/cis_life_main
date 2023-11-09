@@ -8,10 +8,16 @@ Rails.application.routes.draw do
     resources :reserve_batches
   end
   namespace :accounting do
-    resources :vouchers
+    resources :journals
+    resources :checks
+    get 'dashboard', to: 'dashboard#index'
   end
+
   namespace :treasury do
+    resources :cashier_entries
+    resources :business_checks
     resources :accounts
+    get 'dashboard', to: 'dashboard#index'
   end
   resources :group_proposals
   resources :unit_benefits

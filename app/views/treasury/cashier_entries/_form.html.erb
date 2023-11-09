@@ -1,0 +1,42 @@
+
+<%= simple_form_for(entry) do |f| %>
+
+  <div class="form-inputs mb-3">
+    <div class="row">
+      <div class="col-6">
+        <%= f.input :or_no, label: 'OR Number', error: 'OR Number can\'t be blank' %>
+      </div>
+      <div class="col-6">
+        <%= f.input :or_date, as: :string, input_html: {data: {
+          controller: "flatpickr",
+          flatpickr_max_date: Date.today,
+          flatpickr_next_arrow: "Next",
+          flatpickr_prev_arrow: "Prev" }
+          }, label: 'OR Date',
+          error: 'OR Date can\'t be blank'
+        %> 
+      </div>
+    </div>
+    <%= f.input :global_entriable, 
+      collection: @entriables, 
+      label_method: :to_s, 
+      value_method: :to_global_id, 
+      label: 'Payee', 
+      error: 'Payee can\'t be blank',
+      input_html: { data: { controller: "slim-select" } }
+    %>
+    <%= f.association :treasury_account, label: 'Account', error: 'Account can\'t be blank', input_html: { data: { controller: "slim-select" } }  %>
+    <div class="row">
+      <div class="col-6">
+        <%= f.input :payment, as: :select, collection: Treasury::CashierEntry.payments.map {|k, v| [k.humanize.upcase, k.to_s]},label: 'Payment type', error: 'Please select a payment type' %>
+      </div>
+      <div class="col-6">
+        <%= f.input :amount %>
+      </div>
+    </div>
+  </div>
+
+  <div class="form-actions text-center">
+    <%= f.button :submit, 'Add Entry', class: 'btn-primary' %>
+  </div>
+<% end %>
