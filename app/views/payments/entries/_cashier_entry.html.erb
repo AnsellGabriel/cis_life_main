@@ -1,0 +1,43 @@
+<div class="card" style="width: 600px; margin-left: 35px;">
+  <div class="card-header <%= flex_justify_align('between', '') %>">
+    <div class="">
+      <p class="mb-0 text-muted"><small>Receipt Number</small></p>
+      <h3 class="text-primary"><%= entry.or_no %></h3>
+      <p><small><strong>OR date:</strong> <span><%= month_day_year(entry.or_date) %></span></small></p>
+    </div>
+    <div class="">
+      <%= link_to edit_payment_entry_path(@payment, entry), class: 'btn btn-outline-primary mt-1', data: {turbo_frame: 'modal'}, title: 'Edit receipt' do %>
+        <i class="bi bi-pencil"></i><span> Edit</span>
+      <% end %>
+      <%= link_to @entry, data: {turbo_confirm: 'Cancel receipt?', turbo_method: :delete}, class: 'btn btn-outline-danger mt-1', title: 'Cancel receipt' do %>
+        <i class="bi bi-x-lg"></i><span> Cancel</span>
+      <% end %>
+    </div>
+  </div>
+  <div class="card-body">
+
+    <div class="row mb-3">
+      <span class="small fw-bold col-2">Payee: </span>
+      <span class="small col-10"><%= entry.coop %></span>
+    </div>
+
+    <div class="row mb-3">
+      <span class="small fw-bold col-2">Payment: </span>
+      <span class="small col-10"><%= entry.payment.upcase %></span>
+    </div>
+
+    <div class="row mb-3">
+      <span class="small fw-bold col-2">Bank: </span>
+      <span class="small col-10"><%= entry.treasury_account %></span>
+    </div>
+
+    <div class="row mb-3">
+      <span class="small fw-bold col-2">Agent: </span>
+      <span class="small col-10"><%= entry.agent %></span>
+    </div>
+
+    </div>
+  </div>
+</div>
+
+<% console %>

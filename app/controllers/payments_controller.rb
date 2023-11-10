@@ -6,6 +6,11 @@ class PaymentsController < ApplicationController
     @pagy, @payments = pagy(@payments, items: 10)
   end
 
+  def entries
+    @payment = Payment.find(params[:id])
+    @entries = @payment.entries
+  end
+
   def create
     if params[:file].nil?
       return no_file_redirect(@group_remit)

@@ -4,6 +4,7 @@ class Payment < ApplicationRecord
   belongs_to :payable, polymorphic: true
 
   has_many :remarks, as: :remarkable, dependent: :destroy
+  has_many :entries, class_name: "Treasury::CashierEntry", as: :entriable, dependent: :destroy
 
   enum status: { for_review: 0, approved: 1, rejected: 2 }
 

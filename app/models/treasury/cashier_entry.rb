@@ -1,7 +1,7 @@
 class Treasury::CashierEntry < ApplicationRecord
   attr_accessor :dummy_payee
 
-  validates_presence_of :or_no, :or_date, :global_entriable, :payment, :treasury_account_id, :amount
+  validates_presence_of :or_no, :or_date, :payment, :treasury_account_id, :amount
 
   enum payment: {
     gyrt: 1,
@@ -14,8 +14,6 @@ class Treasury::CashierEntry < ApplicationRecord
   has_many :payments, class_name: "Treasury::Payment", dependent: :destroy
   has_many :billing_statements, class_name: "Treasury::BillingStatement", dependent: :destroy
 
-  accepts_nested_attributes_for :payments, allow_destroy: true
-
   def to_s
     or_no
   end
@@ -26,5 +24,13 @@ class Treasury::CashierEntry < ApplicationRecord
 
   def global_entriable=(entriable)
     self.entriable = GlobalID::Locator.locate entriable
+  end
+
+  def coop
+    entriable.payable.agreement.cooperative
+  end
+
+  def agent
+    entriable.payable.agreement
   end
 end

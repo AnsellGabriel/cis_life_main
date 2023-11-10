@@ -15,11 +15,11 @@ class Treasury::CashierEntriesController < ApplicationController
   end
 
   def show
+    @coop = @entry.coop
   end
 
   def new
     @entry = Treasury::CashierEntry.new(or_no: Treasury::CashierEntry.last&.or_no.to_i + 1, or_date: Date.today)
-    @payment = @entry.payments.build
 
     if params[:gr_id].present?
       @group_remit = GroupRemit.find(params[:gr_id])
@@ -40,9 +40,9 @@ class Treasury::CashierEntriesController < ApplicationController
     end
 
     if @entry.save
-      if @entry.entriable_type == "Remittance"
-        approve_payment(@group_remit.payments.last.id)
-      end
+      # if @entry.entriable_type == "Remittance"
+      #   approve_payment(@group_remit.payments.last.id)
+      # end
 
       redirect_to @entry, notice: "Entry added"
     else
@@ -77,7 +77,7 @@ class Treasury::CashierEntriesController < ApplicationController
 
   # Only allow a list of trusted parameters through.
   def entry_params
-    params.require(:treasury_cashier_entry).permit(:or_no, :or_date, :global_entriable, :payment, :treasury_account_id, :amount, payments_attributes: [:id, :payment_type, :check_no, :amount, :account_id, :_destroy])
+    params.require(:treasury_cashier_entry).permit(:or_no, :or_date, :global_entriable, :payment, :treasury_account_id, :amount)
   end
 
   def approve_payment(payment_id)

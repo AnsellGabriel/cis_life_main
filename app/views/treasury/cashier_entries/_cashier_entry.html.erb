@@ -1,44 +1,46 @@
-<% cashier_entry.entriable = cashier_entry.entriable.class.name == 'Remittance' ? cashier_entry.entriable.agreement.cooperative : cashier_entry.entriable %>
-
-<div class="card" style="width: 600px">
-  <div class="card-body">
-    <div class="row">
-      <p class="col-6">
-        <strong>OR #</strong>
-        <%= cashier_entry.or_no %>
-      </p>
-
-      <p class="col-6">
-        <strong>OR Date:</strong>
-        <%= month_day_year(cashier_entry.or_date) %>
-      </p>
+<div class="card" style="width: 600px; margin-left: 35px;">
+  <div class="card-header <%= flex_justify_align('between', '') %>">
+    <div class="">
+      <p class="mb-0 text-muted"><small>Receipt Number</small></p>
+      <h3 class="text-primary"><%= entry.or_no %></h3>
+      <p><small><strong>OR date:</strong> <span><%= entry.or_date %></span></small></p>
     </div>
-
+    <div class="">
+      <%= link_to edit_treasury_cashier_entry_path(entry), class: 'btn btn-outline-primary mt-1', data: {turbo_frame: 'modal'}, title: 'Edit receipt' do %>
+        <i class="bi bi-pencil"></i>
+      <% end %>
+      <%= link_to @entry, data: {turbo_confirm: 'Cancel receipt?', turbo_method: :delete}, class: 'btn btn-outline-danger mt-1', title: 'Cancel receipt' do %>
+        <i class="bi bi-x-lg"></i>
+      <% end %>
+    </div>
+  </div>
+  <div class="card-body">
     <p>
       <strong>Payee</strong><br>
-      <%= cashier_entry.entriable %>
+      <%= coop %>
     </p>
 
     <p>
       <strong>Address</strong><br>
-      <%= cashier_entry.entriable.get_address %>
+      <%= coop.get_address %>
     </p>
 
     <p>
       <strong>Account</strong><br>
-      <%= cashier_entry.treasury_account %>
+      <%= entry.treasury_account %>
     </p>
     
     <div class="row">
       <p class="col-6">
         <strong>Payment Type</strong><br>
-        <%= cashier_entry.payment.upcase %>
+        <%= entry.payment.upcase %>
       </p>
 
       <p class="col-6">
         <strong>Amount</strong><br>
-        <%= cashier_entry.amount %>
+        <%= entry.amount %>
       </p>
+
     </div>
   </div>
 </div>
