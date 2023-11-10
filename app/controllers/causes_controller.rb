@@ -46,13 +46,13 @@ class CausesController < ApplicationController
   end
 
   private
-    # Use callbacks to share common setup or constraints between actions.
-    def set_cause
-      @cause = Cause.find(params[:id])
-    end
+  # Use callbacks to share common setup or constraints between actions.
+  def set_cause
+    @cause = Cause.find(params[:id])
+  end
 
-    # Only allow a list of trusted parameters through.
-    def claim_benefit_params
-      params.require(:claim_benefit).permit(:name, :description)
-    end
+  # Only allow a list of trusted parameters through.
+  def claim_benefit_params
+    params.require(:claim_benefit).permit(:name, :description)
+  end
 end

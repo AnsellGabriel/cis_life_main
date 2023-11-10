@@ -47,20 +47,20 @@ class PlanUnitsController < ApplicationController
 
   def find_units
     @plan_unit = PlanUnit.find_by(id: params[:id])
-    
+
     respond_to do |format|
       format.turbo_stream
     end
   end
 
   private
-    # Use callbacks to share common setup or constraints between actions.
-    def set_plan_unit
-      @plan_unit = PlanUnit.find(params[:id])
-    end
+  # Use callbacks to share common setup or constraints between actions.
+  def set_plan_unit
+    @plan_unit = PlanUnit.find(params[:id])
+  end
 
-    # Only allow a list of trusted parameters through.
-    def plan_unit_params
-      params.require(:plan_unit).permit(:plan_id, :name, :total_prem, unit_benefits_attributes: [:id, :benefit_id, :coverage_amount, :_destroy])
-    end
+  # Only allow a list of trusted parameters through.
+  def plan_unit_params
+    params.require(:plan_unit).permit(:plan_id, :name, :total_prem, unit_benefits_attributes: [:id, :benefit_id, :coverage_amount, :_destroy])
+  end
 end

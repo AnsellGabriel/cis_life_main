@@ -1,8 +1,8 @@
 
-require 'sidekiq/web'
+require "sidekiq/web"
 
 Rails.application.routes.draw do
-  get 'actuarial/index'
+  get "actuarial/index"
   namespace :actuarial do
     resources :reserves
     resources :reserve_batches
@@ -10,14 +10,16 @@ Rails.application.routes.draw do
   namespace :accounting do
     resources :journals
     resources :checks
-    get 'dashboard', to: 'dashboard#index'
+    get "dashboard", to: "dashboard#index"
   end
 
   namespace :treasury do
+    resources :billing_statements
+    resources :payments
     resources :cashier_entries
     resources :business_checks
     resources :accounts
-    get 'dashboard', to: 'dashboard#index'
+    get "dashboard", to: "dashboard#index"
   end
   resources :group_proposals
   resources :unit_benefits
@@ -31,11 +33,11 @@ Rails.application.routes.draw do
   resources :documents
   resources :causes
   resources :emp_approvers
-  get 'med_directors/home'
-  get 'med_director/index'
+  get "med_directors/home"
+  get "med_director/index"
 
   resources :emp_agreements do
-      get :transfer_index, on: :collection
+    get :transfer_index, on: :collection
     get :update_ea_selected, on: :collection
     patch :transfer_agreements, on: :collection
     get :inactive_sub, on: :member
@@ -90,9 +92,9 @@ Rails.application.routes.draw do
   get "/progress", to: "progress#show"
   get "/progress/update", to: "progress#update"
 
-  #* Coop Module
+  # * Coop Module
   namespace :coop do
-    get 'dashboard', to: 'dashboard#index'
+    get "dashboard", to: "dashboard#index"
   end
 
   resources :cooperatives do
@@ -125,9 +127,9 @@ Rails.application.routes.draw do
   end
 
   resources :group_remits do
-    get 'denied_members', to: 'denied_members#index'
-    get 'download_csv', to: 'denied_members#download_csv'
-    delete 'destroy_all', to: 'denied_members#destroy_all'
+    get "denied_members", to: "denied_members#index"
+    get "download_csv", to: "denied_members#download_csv"
+    delete "destroy_all", to: "denied_members#destroy_all"
     get :submit, on: :member
     get :renewal, on: :member
     resources :batches do
@@ -140,15 +142,15 @@ Rails.application.routes.draw do
       end
       # get :approve_selected, on: :collection
       # get :approve_all, on: :collection
-      resources :batch_health_decs, as: 'health_declarations'
-      resources :dependent_health_decs, as: 'dep_health_declarations'
-      resources :batch_dependents, as: 'dependents' do
+      resources :batch_health_decs, as: "health_declarations"
+      resources :dependent_health_decs, as: "dep_health_declarations"
+      resources :batch_dependents, as: "dependents" do
         get :health_dec, on: :member
         collection do
           get :show_all
         end
       end
-      resources :batch_beneficiaries, as: 'beneficiaries'
+      resources :batch_beneficiaries, as: "beneficiaries"
       resources :member_dependents do
         collection do
           post :create_beneficiary
@@ -178,7 +180,7 @@ Rails.application.routes.draw do
       end
 
       member do
-        get :show_unuse_batch, as: 'unuse_batch'
+        get :show_unuse_batch, as: "unuse_batch"
       end
 
       collection do
@@ -195,35 +197,35 @@ Rails.application.routes.draw do
   end
 
   # get 'loan_insurance', to: 'loan_insurance#index'
-  get 'insurance/accept', as: 'accept_insurance'
+  get "insurance/accept", as: "accept_insurance"
   # get 'insurance/reject', as: 'reject_insurance'
-  get 'insurance/terminate', as: 'terminate_insurance'
+  get "insurance/terminate", as: "terminate_insurance"
 
   resources :payments, only: %i[index create] do
     get :reject, on: :member
-    resources :remarks, controller: 'payments/remarks'
+    resources :remarks, controller: "payments/remarks"
   end
 
-  #* Underwriting Module Routes
+  # * Underwriting Module Routes
   resources :user_levels
   resources :authority_levels
   resources :claim_remarks do
-    get :new_status, to: 'claim_remarks#new_status', on: :collection
-    post :create_status, to: 'claim_remarks#create_status', on: :collection
+    get :new_status, to: "claim_remarks#new_status", on: :collection
+    post :create_status, to: "claim_remarks#create_status", on: :collection
     get :read_message, on: :member
   end
   resources :process_claims do
-    get :new_coop, to: 'process_claims#new_coop', on: :collection
-    post :create_coop, to: 'process_claims#create_coop', on: :collection
-    get :index_coop, to: 'process_claims#index_coop', on: :collection
+    get :new_coop, to: "process_claims#new_coop", on: :collection
+    post :create_coop, to: "process_claims#create_coop", on: :collection
+    get :index_coop, to: "process_claims#index_coop", on: :collection
     get :index_show, on: :collection
     get :show_coop, on: :member
     get :claim_route, on: :member
     get :claims_file, on: :member
     get :claim_process, on: :member
     get :update_status, on: :member
-    get :new_ca, to: 'process_claims#new_ca', on: :collection
-    post :create_ca, to: 'process_claims#create_ca', on: :collection
+    get :new_ca, to: "process_claims#new_ca", on: :collection
+    post :create_ca, to: "process_claims#create_ca", on: :collection
   end
   resources :underwriting_routes
   resources :batch_remarks do
@@ -255,36 +257,36 @@ Rails.application.routes.draw do
     get :transfer_to_md, on: :member
   end
 
-  get 'preview', to: 'process_coverages#preview'
-  get 'download', to: 'process_coverages#download'
-  get 'process_coverages/pdf/:id', to: "process_coverages#pdf", as: 'pc_pdf'
+  get "preview", to: "process_coverages#preview"
+  get "download", to: "process_coverages#download"
+  get "process_coverages/pdf/:id", to: "process_coverages#pdf", as: "pc_pdf"
 
-  #* MIS module routes
+  # * MIS module routes
   namespace :mis do
-    get 'dashboard', to: 'dashboard#index'
-    get 'cooperatives', to: 'cooperatives#index'
+    get "dashboard", to: "dashboard#index"
+    get "cooperatives", to: "cooperatives#index"
 
     resources :members do
       get :update_table, on: :collection
     end
   end
 
-  #* Authentication Routes
+  # * Authentication Routes
   devise_for :admin_users, ActiveAdmin::Devise.config
   ActiveAdmin.routes(self)
 
   devise_for :users, controllers: {
-    registrations: 'users/registrations'
+    registrations: "users/registrations"
   }
 
   devise_scope :user do
     authenticated :user do
       # mount Sidekiq::Web in your Rails app
-        root 'application#root', as: :authenticated_root
+      root "application#root", as: :authenticated_root
     end
 
     unauthenticated do
-      root 'devise/sessions#new', as: :unauthenticated_root
+      root "devise/sessions#new", as: :unauthenticated_root
     end
   end
 

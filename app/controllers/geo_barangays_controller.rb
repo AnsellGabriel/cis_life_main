@@ -46,13 +46,13 @@ class GeoBarangaysController < ApplicationController
   end
 
   private
-    # Use callbacks to share common setup or constraints between actions.
-    def set_geo_barangay
-      @geo_barangay = GeoBarangay.find(params[:id])
-    end
+  # Use callbacks to share common setup or constraints between actions.
+  def set_geo_barangay
+    @geo_barangay = GeoBarangay.find(params[:id])
+  end
 
-    # Only allow a list of trusted parameters through.
-    def geo_barangay_params
-      params.require(:geo_barangay).permit(:geo_region_id, :geo_province_id, :geo_municipality_id, :psgc_code)
-    end
+  # Only allow a list of trusted parameters through.
+  def geo_barangay_params
+    params.require(:geo_barangay).permit(:geo_region_id, :geo_province_id, :geo_municipality_id, :psgc_code)
+  end
 end

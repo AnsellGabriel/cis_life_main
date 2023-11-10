@@ -15,7 +15,7 @@ class PaymentsController < ApplicationController
       if @payment.save!
         @group_remit.update(status: :payment_verification)
 
-        if @group_remit.type == 'LoanInsurance::GroupRemit'
+        if @group_remit.type == "LoanInsurance::GroupRemit"
           format.html { redirect_to loan_insurance_group_remit_path(@group_remit), notice: "Proof of payment uploaded" }
         else
           format.html { redirect_to coop_agreement_group_remit_path(@agreement, @group_remit), notice: "Proof of payment uploaded" }
@@ -36,7 +36,7 @@ class PaymentsController < ApplicationController
   end
 
   def no_file_redirect(group_remit)
-    if group_remit.type == 'LoanInsurance::GroupRemit'
+    if group_remit.type == "LoanInsurance::GroupRemit"
       redirect_to loan_insurance_group_remit_path(group_remit), alert: "Please attach proof of payment"
     else
       redirect_to coop_agreement_group_remit_path(group_remit.agreement, group_remit), alert: "Please attach proof of payment"

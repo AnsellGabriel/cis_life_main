@@ -34,11 +34,11 @@ class DependentRemarksController < ApplicationController
     if @dependent_remark.save!
       @dependent.update_insurance_status(@dependent_remark.status)
       redirect_to dependent_remarks_path(
-        batch_dependent_id: @dependent.id, 
-        group_remit_id: params[:dependent_remark][:group_remit_id], 
-        batch_id: @dependent.batch, 
+        batch_dependent_id: @dependent.id,
+        group_remit_id: params[:dependent_remark][:group_remit_id],
+        batch_id: @dependent.batch,
         process_coverage_id: params[:dependent_remark][:process_coverage_id]
-      ), 
+      ),
         notice: "Dependent remark was successfully created."
     else
       render :new, status: :unprocessable_entity
@@ -61,17 +61,17 @@ class DependentRemarksController < ApplicationController
   end
 
   private
-    # Use callbacks to share common setup or constraints between actions.
-    def set_dependent_remark
-      @dependent_remark = DependentRemark.find(params[:id])
-    end
+  # Use callbacks to share common setup or constraints between actions.
+  def set_dependent_remark
+    @dependent_remark = DependentRemark.find(params[:id])
+  end
 
-    def set_dependent
-      @dependent = BatchDependent.find(params[:batch_dependent_id])
-    end
+  def set_dependent
+    @dependent = BatchDependent.find(params[:batch_dependent_id])
+  end
 
-    # Only allow a list of trusted parameters through.
-    def dependent_remark_params
-      params.require(:dependent_remark).permit(:userable_id, :batch_dependent_id, :remark, :status, :group_remit_id, :process_coverage_id)
-    end
+  # Only allow a list of trusted parameters through.
+  def dependent_remark_params
+    params.require(:dependent_remark).permit(:userable_id, :batch_dependent_id, :remark, :status, :group_remit_id, :process_coverage_id)
+  end
 end

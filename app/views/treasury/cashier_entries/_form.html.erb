@@ -30,15 +30,31 @@
         input_html: { data: { controller: "ts--select" } }
       %>
     <% end %>
-    <%= f.association :treasury_account, label: 'Account', error: '*Required', input_html: { data: { controller: "slim-select" } }  %>
+    <%= f.association :treasury_account, label: 'Account', error: '*Required', input_html: { data: { controller: "ts--select" } }  %>
     <div class="row">
       <div class="col-6">
-        <%= f.input :payment, as: :select, collection: Treasury::CashierEntry.payments.map {|k, v| [k.humanize.upcase, k.to_s]},label: 'Payment type', error: '*Required' %>
+        <%= f.input :payment, as: :select, collection: Treasury::CashierEntry.payments.map {|k, v| [k.humanize.upcase, k.to_s]},label: 'Entry type', error: '*Required' %>
       </div>
       <div class="col-6">
         <%= f.input :amount, error: '*Required' %>
       </div>
     </div>
+    <%= f.simple_fields_for @payment do |p| %>
+      <div class="row" data-controller="toggler">
+        <div class="col-6">
+          <div class="mb-3 select required treasury_cashier_entry_treasury_payment_payment_type">
+            <label class="form-label select required" for="treasury_cashier_entry_treasury_payment_payment_type">Payment type <abbr title="required">*</abbr></label>
+            <select class="form-select select required" name="treasury_cashier_entry[treasury_payment][payment_type]" id="treasury_cashier_entry_treasury_payment_payment_type" data-action="change->toggler#toggleSelect">
+              <option value="" label=" "></option>
+              <option value="cash">CASH</option>
+              <option data-id="payment_check" value="check">CHECK</option>
+            </select>
+          </div>
+        </div>
+
+        <div data-id="payment_check" class="col-6 hidden" data-toggler-target="toggleable"><%= p.input :check_no, label: 'Check #' %></div>
+      </div>
+    <% end %>
   </div>
 
   <div class="form-actions text-center">

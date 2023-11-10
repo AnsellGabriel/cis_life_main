@@ -47,7 +47,7 @@ class ProcessClaim < ApplicationRecord
     pending_claim: 11
   }
 
-  
+
 
   def self.get_route (i)
     claim_routes.key(i)

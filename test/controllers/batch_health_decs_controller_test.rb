@@ -17,7 +17,9 @@ class BatchHealthDecsControllerTest < ActionDispatch::IntegrationTest
 
   test "should create batch_health_dec" do
     assert_difference("BatchHealthDec.count") do
-      post batch_health_decs_url, params: { batch_health_dec: { ans_q1: @batch_health_dec.ans_q1, ans_q2: @batch_health_dec.ans_q2, ans_q3: @batch_health_dec.ans_q3, ans_q3_desc: @batch_health_dec.ans_q3_desc, ans_q4: @batch_health_dec.ans_q4, ans_q4_desc: @batch_health_dec.ans_q4_desc, ans_q5_a: @batch_health_dec.ans_q5_a, ans_q5_a_desc: @batch_health_dec.ans_q5_a_desc, ans_q5_b: @batch_health_dec.ans_q5_b, batch_id: @batch_health_dec.batch_id } }
+      post batch_health_decs_url,
+params: { batch_health_dec: { ans_q1: @batch_health_dec.ans_q1, ans_q2: @batch_health_dec.ans_q2, ans_q3: @batch_health_dec.ans_q3, ans_q3_desc: @batch_health_dec.ans_q3_desc,
+ans_q4: @batch_health_dec.ans_q4, ans_q4_desc: @batch_health_dec.ans_q4_desc, ans_q5_a: @batch_health_dec.ans_q5_a, ans_q5_a_desc: @batch_health_dec.ans_q5_a_desc, ans_q5_b: @batch_health_dec.ans_q5_b, batch_id: @batch_health_dec.batch_id } }
     end
 
     assert_redirected_to batch_health_dec_url(BatchHealthDec.last)
@@ -34,7 +36,9 @@ class BatchHealthDecsControllerTest < ActionDispatch::IntegrationTest
   end
 
   test "should update batch_health_dec" do
-    patch batch_health_dec_url(@batch_health_dec), params: { batch_health_dec: { ans_q1: @batch_health_dec.ans_q1, ans_q2: @batch_health_dec.ans_q2, ans_q3: @batch_health_dec.ans_q3, ans_q3_desc: @batch_health_dec.ans_q3_desc, ans_q4: @batch_health_dec.ans_q4, ans_q4_desc: @batch_health_dec.ans_q4_desc, ans_q5_a: @batch_health_dec.ans_q5_a, ans_q5_a_desc: @batch_health_dec.ans_q5_a_desc, ans_q5_b: @batch_health_dec.ans_q5_b, batch_id: @batch_health_dec.batch_id } }
+    patch batch_health_dec_url(@batch_health_dec),
+params: { batch_health_dec: { ans_q1: @batch_health_dec.ans_q1, ans_q2: @batch_health_dec.ans_q2, ans_q3: @batch_health_dec.ans_q3, ans_q3_desc: @batch_health_dec.ans_q3_desc,
+ans_q4: @batch_health_dec.ans_q4, ans_q4_desc: @batch_health_dec.ans_q4_desc, ans_q5_a: @batch_health_dec.ans_q5_a, ans_q5_a_desc: @batch_health_dec.ans_q5_a_desc, ans_q5_b: @batch_health_dec.ans_q5_b, batch_id: @batch_health_dec.batch_id } }
     assert_redirected_to batch_health_dec_url(@batch_health_dec)
   end
 

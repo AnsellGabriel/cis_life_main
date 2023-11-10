@@ -4,19 +4,19 @@ class LoanInsurance::HistoryController < ApplicationController
     @loans = @coop_member.loans.decorate
     @pagy, @loans = pagy(@loans, items: 10)
     @table_headers = [
-      'Date Created',
-      'Type',
-      'Amount',
-      'Effectivity',
-      'Expiry',
-      'Terms',
-      'Release',
-      'Maturity',
-      'Premium',
-      'Unused',
-      'Excess',
-      'Premium Due',
-      'Status'
+      "Date Created",
+      "Type",
+      "Amount",
+      "Effectivity",
+      "Expiry",
+      "Terms",
+      "Release",
+      "Maturity",
+      "Premium",
+      "Unused",
+      "Excess",
+      "Premium Due",
+      "Status"
     ]
   end
 end

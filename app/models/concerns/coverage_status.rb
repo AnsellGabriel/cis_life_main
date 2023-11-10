@@ -1,5 +1,5 @@
 module CoverageStatus
-	extend ActiveSupport::Concern
+  extend ActiveSupport::Concern
 
   included do
     def update_batch_and_existing_coverage(batch, existing_coverages, group_remit)
@@ -11,24 +11,24 @@ module CoverageStatus
       if month_difference > 24
         batch.status = :reinstated
         existing_coverages.update!(
-          status: 'reinstated',
+          status: "reinstated",
           expiry: batch.expiry_date,
           effectivity: batch.effectivity_date
         )
-      elsif batch.class.name == 'LoanInsurance::Batch'
+      elsif batch.class.name == "LoanInsurance::Batch"
         batch.status = :reloan
         existing_coverages.update!(
-          status: 'reloan',
+          status: "reloan",
           expiry: batch.expiry_date,
           effectivity: batch.effectivity_date
         )
-      # elsif existing_coverages.expiry <= Date.today
-      #   batch.status = :renewal
-      #   existing_coverages.update!(
-      #     status: 'renewal',
-      #     expiry: batch.expiry_date,
-      #     effectivity: batch.effectivity_date
-      #   )
+        # elsif existing_coverages.expiry <= Date.today
+        #   batch.status = :renewal
+        #   existing_coverages.update!(
+        #     status: 'renewal',
+        #     expiry: batch.expiry_date,
+        #     effectivity: batch.effectivity_date
+        #   )
       end
     end
 
@@ -41,7 +41,7 @@ module CoverageStatus
 
       agreement.agreements_coop_members.create!(
         coop_member_id: coop_member.id,
-        status: 'new',
+        status: "new",
         expiry: batch.expiry_date,
         effectivity: batch.effectivity_date
       )

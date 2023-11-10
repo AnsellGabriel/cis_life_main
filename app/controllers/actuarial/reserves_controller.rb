@@ -62,13 +62,14 @@ class Actuarial::ReservesController < ApplicationController
   end
 
   private
-    # Use callbacks to share common setup or constraints between actions.
-    def set_actuarial_reserve
-      @actuarial_reserve = Actuarial::Reserve.find(params[:id])
-    end
+  # Use callbacks to share common setup or constraints between actions.
+  def set_actuarial_reserve
+    @actuarial_reserve = Actuarial::Reserve.find(params[:id])
+  end
 
-    # Only allow a list of trusted parameters through.
-    def actuarial_reserve_params
-      params.require(:actuarial_reserve).permit(:first_term, :second_term, :third_term, :total_unearned_prem, :total_first_advance_prem, :total_second_advance_prem, :total_reserve, :total_unearned_pr, :total_first_advance_pr, :total_second_advance_pr, :total_reserve_ret, :plan_id)
-    end
+  # Only allow a list of trusted parameters through.
+  def actuarial_reserve_params
+    params.require(:actuarial_reserve).permit(:first_term, :second_term, :third_term, :total_unearned_prem, :total_first_advance_prem, :total_second_advance_prem, :total_reserve,
+:total_unearned_pr, :total_first_advance_pr, :total_second_advance_pr, :total_reserve_ret, :plan_id)
+  end
 end

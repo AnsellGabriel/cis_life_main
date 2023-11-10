@@ -1,0 +1,40 @@
+<%= content_tag :h1, "List of Treasury Billing Statements" %>
+
+
+<div class="text-end mb-3">
+  <%= link_to new_treasury_billing_statement_path, class: 'btn btn-primary' do %>
+    New Billing Statement
+  <% end %>
+</div>
+
+
+  <table class="table table-striped table-bordered table-hover">
+    <thead>
+      <tr>
+      <th>#</th>
+            <th>Bs No</th>
+            <th>Bs Date</th>
+            <th>Cashier Entry</th>
+            <th></th>
+        </tr>
+    </thead>
+
+    <tbody>
+      <% @treasury_billing_statements.each do |treasury_billing_statement| %>
+        <tr>
+
+        <th scope="row"><%= treasury_billing_statement.id %></th>
+        <td><%= treasury_billing_statement.bs_no %></td>
+        <td><%= treasury_billing_statement.bs_date %></td>
+        <td><%= treasury_billing_statement.cashier_entry %></td>
+    
+          <td>
+            <%= link_to 'View', treasury_billing_statement, class: 'btn btn-secondary btn-sm' %>
+            <%= link_to 'Edit', edit_treasury_billing_statement_path(treasury_billing_statement), class: 'btn btn-secondary btn-sm' %>
+            <%= link_to "Delete", treasury_billing_statement, class: "btn btn-danger btn-sm", method: :delete, data: { "turbo-method": :delete, turbo_confirm: "Are you sure?" } %>
+          </td>
+
+        </tr>
+      <% end %>
+    </tbody>
+  </table>

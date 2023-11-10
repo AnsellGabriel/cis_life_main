@@ -17,7 +17,7 @@ class BatchesController < ApplicationController
     )
 
     @import_result = import_service.import
-    
+
     if @import_result.is_a?(Hash)
       added_members_count = @import_result[:added_members_counter]
       denied_members_count = @import_result[:denied_members_counter]
@@ -29,7 +29,7 @@ class BatchesController < ApplicationController
       added_dependents_message = "#{added_dependents_count} dependents successfully added." if added_dependents_count > 0
       denied_dependents_message = "#{denied_dependents_count} dependents denied." if denied_dependents_count > 0
 
-      notice = [added_members_message, added_dependents_message, denied_members_message, denied_dependents_message].compact.join(' ')
+      notice = [added_members_message, added_dependents_message, denied_members_message, denied_dependents_message].compact.join(" ")
       redirect_to group_remit_path(@group_remit), notice: notice
     else
       redirect_to group_remit_path(@group_remit), alert: @import_result
@@ -42,9 +42,9 @@ class BatchesController < ApplicationController
               LoanInsurance::Batch.find(params[:id])
             else
               Batch.find(params[:id])
-            end
-        
-    @pagy, @batch_remarks = pagy(@batch.remarks, items: 2, params: { active_tab: 'stars' })
+             end
+
+    @pagy, @batch_remarks = pagy(@batch.remarks, items: 2, params: { active_tab: "stars" })
 
     @member = @batch.member_details
     @batch_health_dec = @batch.health_declaration
@@ -123,7 +123,7 @@ class BatchesController < ApplicationController
   end
 
   def create
-    if @agreement.plan.acronym == 'GYRTFR' && params[:batch][:rank].empty?
+    if @agreement.plan.acronym == "GYRTFR" && params[:batch][:rank].empty?
       return redirect_to group_remit_path(@group_remit), alert: "Rank is required"
     end
 
@@ -151,9 +151,9 @@ class BatchesController < ApplicationController
         # return redirect_to group_remit_path(@group_remit), alert: "Member age must be between #{@batch.agreement_benefit.min_age.to_i} and #{@batch.agreement_benefit.max_age.to_i} years old."
         @batch.insurance_status = :denied
         if member.age(@group_remit.effectivity_date) > @batch.agreement_benefit.max_age
-          @batch.batch_remarks.build(remark: "Member age is over the maximum age limit of the plan.", status: :denied, user_type: 'CoopUser', user_id: current_user.userable.id)
+          @batch.batch_remarks.build(remark: "Member age is over the maximum age limit of the plan.", status: :denied, user_type: "CoopUser", user_id: current_user.userable.id)
         else
-          @batch.batch_remarks.build(remark: "Member age is below the minimum age limit of the plan.", status: :denied, user_type: 'CoopUser', user_id: current_user.userable.id)
+          @batch.batch_remarks.build(remark: "Member age is below the minimum age limit of the plan.", status: :denied, user_type: "CoopUser", user_id: current_user.userable.id)
         end
       end
 
@@ -177,9 +177,9 @@ class BatchesController < ApplicationController
         end
       end
     rescue NoMethodError => e
-      return redirect_to group_remit_path(@group_remit), alert: e#.message
+      return redirect_to group_remit_path(@group_remit), alert: e# .message
     rescue ActiveRecord::RecordInvalid => e
-      return redirect_to group_remit_path(@group_remit), alert: e#.message.gsub!(/\AValidation failed:\s?/, '')
+      return redirect_to group_remit_path(@group_remit), alert: e# .message.gsub!(/\AValidation failed:\s?/, '')
     end
 
   end
@@ -220,11 +220,11 @@ class BatchesController < ApplicationController
         counters  # controller/concerns/counter.rb
         # delete_associated_batches
         format.html {
-          redirect_to group_remit_path(@group_remit), alert: 'Member removed'
+          redirect_to group_remit_path(@group_remit), alert: "Member removed"
         }
       else
         format.html {
-          redirect_to group_remit_batch_path(@group_remit, @batch), alert: 'Unable to destroy batch.'
+          redirect_to group_remit_batch_path(@group_remit, @batch), alert: "Unable to destroy batch."
         }
       end
 
@@ -240,51 +240,51 @@ class BatchesController < ApplicationController
   # end
 
   private
-    def batch_params
-      params.require(:batch).permit(
-        :rank,
-        :duration,
-        :active,
-        :coop_sf_amount,
-        :agent_sf_amount,
-        :status,
-        :premium,
-        :coop_member_id,
-        batch_dependents_attributes: [
-          :member_dependent_id,
-          :beneficiary,
-          :_destroy
-        ]
-      )
-    end
-
-    def set_group_remit_and_agreement
-      @group_remit = GroupRemit.find_by(id: params[:group_remit_id])
-      @agreement = @group_remit.agreement
-    end
-
-    def set_batch
-      set_group_remit_and_agreement
-      @batch = @group_remit.batches.find_by(id: params[:id])
-    end
-
-    def premiums_and_commissions
-      @gross_premium = @group_remit.gross_premium
-      @total_coop_commission = @group_remit.total_coop_commissions
-      @total_agent_commission = @group_remit.total_agent_commissions
-      @net_premium = @group_remit.net_premium
-    end
-
-    def check_userable_type
-      unless current_user.userable_type == 'CoopUser' || current_user.userable_type == 'Employee'
-        render file: "#{Rails.root}/public/404.html", status: :not_found
-      end
-    end
-
-    def delete_associated_batches
-      agreement = @batch.group_remits[0].agreement
-      coop_member = @batch.coop_member
-      agreement.coop_members.delete(coop_member) if @batch.status == 'recent'
-      @batch.batch_group_remits.destroy_all
+  def batch_params
+    params.require(:batch).permit(
+      :rank,
+      :duration,
+      :active,
+      :coop_sf_amount,
+      :agent_sf_amount,
+      :status,
+      :premium,
+      :coop_member_id,
+      batch_dependents_attributes: [
+        :member_dependent_id,
+        :beneficiary,
+        :_destroy
+      ]
+    )
   end
+
+  def set_group_remit_and_agreement
+    @group_remit = GroupRemit.find_by(id: params[:group_remit_id])
+    @agreement = @group_remit.agreement
+  end
+
+  def set_batch
+    set_group_remit_and_agreement
+    @batch = @group_remit.batches.find_by(id: params[:id])
+  end
+
+  def premiums_and_commissions
+    @gross_premium = @group_remit.gross_premium
+    @total_coop_commission = @group_remit.total_coop_commissions
+    @total_agent_commission = @group_remit.total_agent_commissions
+    @net_premium = @group_remit.net_premium
+  end
+
+  def check_userable_type
+    unless current_user.userable_type == "CoopUser" || current_user.userable_type == "Employee"
+      render file: "#{Rails.root}/public/404.html", status: :not_found
+    end
+  end
+
+  def delete_associated_batches
+    agreement = @batch.group_remits[0].agreement
+    coop_member = @batch.coop_member
+    agreement.coop_members.delete(coop_member) if @batch.status == "recent"
+    @batch.batch_group_remits.destroy_all
+end
 end

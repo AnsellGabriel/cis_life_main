@@ -1,7 +1,7 @@
 FactoryBot.define do
   factory :user do
     email { FFaker::Internet.email }
-    password { 'password' }
+    password { "password" }
     approved { true }
     association :userable, factory: :coop_user
   end
@@ -25,6 +25,6 @@ FactoryBot.define do
   end
 
   factory :agent_group do
-    name { 'Marketing Division'}
+    name { "Marketing Division"}
   end
 end

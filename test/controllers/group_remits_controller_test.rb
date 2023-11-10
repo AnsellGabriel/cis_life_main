@@ -17,7 +17,8 @@ class GroupRemitsControllerTest < ActionDispatch::IntegrationTest
 
   test "should create group_remit" do
     assert_difference("GroupRemit.count") do
-      post group_remits_url, params: { group_remit: { agreement_id: @group_remit.agreement_id, anniversary_id: @group_remit.anniversary_id, description: @group_remit.description, name: @group_remit.name } }
+      post group_remits_url,
+params: { group_remit: { agreement_id: @group_remit.agreement_id, anniversary_id: @group_remit.anniversary_id, description: @group_remit.description, name: @group_remit.name } }
     end
 
     assert_redirected_to group_remit_url(GroupRemit.last)
@@ -34,7 +35,8 @@ class GroupRemitsControllerTest < ActionDispatch::IntegrationTest
   end
 
   test "should update group_remit" do
-    patch group_remit_url(@group_remit), params: { group_remit: { agreement_id: @group_remit.agreement_id, anniversary_id: @group_remit.anniversary_id, description: @group_remit.description, name: @group_remit.name } }
+    patch group_remit_url(@group_remit),
+params: { group_remit: { agreement_id: @group_remit.agreement_id, anniversary_id: @group_remit.anniversary_id, description: @group_remit.description, name: @group_remit.name } }
     assert_redirected_to group_remit_url(@group_remit)
   end
 

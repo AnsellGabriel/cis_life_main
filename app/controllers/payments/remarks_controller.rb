@@ -14,8 +14,8 @@ class Payments::RemarksController < ApplicationController
 
     if @remark.save
       @payment.reject
-      
-      redirect_to payments_path, alert: 'Payment rejected.'
+
+      redirect_to payments_path, alert: "Payment rejected."
     else
       render :new, status: :unprocessable_entity
     end

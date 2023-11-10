@@ -46,13 +46,13 @@ class LoanInsurance::DetailsController < ApplicationController
   end
 
   private
-    # Use callbacks to share common setup or constraints between actions.
-    def set_loan_insurance_detail
-      @loan_insurance_detail = LoanInsurance::Detail.find(params[:id])
-    end
+  # Use callbacks to share common setup or constraints between actions.
+  def set_loan_insurance_detail
+    @loan_insurance_detail = LoanInsurance::Detail.find(params[:id])
+  end
 
-    # Only allow a list of trusted parameters through.
-    def loan_insurance_detail_params
-      params.require(:loan_insurance_detail).permit(:batch_id, :unuse, :loan_amount, :premium_due, :substandard_rate, :terminate, :terinate_date, :reinsurance, :terms, :date_release, :date_mature)
-    end
+  # Only allow a list of trusted parameters through.
+  def loan_insurance_detail_params
+    params.require(:loan_insurance_detail).permit(:batch_id, :unuse, :loan_amount, :premium_due, :substandard_rate, :terminate, :terinate_date, :reinsurance, :terms, :date_release, :date_mature)
+  end
 end

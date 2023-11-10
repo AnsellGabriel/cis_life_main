@@ -46,13 +46,13 @@ class UnderwritingRoutesController < ApplicationController
   end
 
   private
-    # Use callbacks to share common setup or constraints between actions.
-    def set_underwriting_route
-      @underwriting_route = UnderwritingRoute.find(params[:id])
-    end
+  # Use callbacks to share common setup or constraints between actions.
+  def set_underwriting_route
+    @underwriting_route = UnderwritingRoute.find(params[:id])
+  end
 
-    # Only allow a list of trusted parameters through.
-    def underwriting_route_params
-      params.require(:underwriting_route).permit(:name, :description)
-    end
+  # Only allow a list of trusted parameters through.
+  def underwriting_route_params
+    params.require(:underwriting_route).permit(:name, :description)
+  end
 end

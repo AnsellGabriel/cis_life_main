@@ -9,7 +9,7 @@ FactoryBot.define do
     birth_date { FFaker::Time.between(60.years.ago, 18.years.ago) }
     birth_place { FFaker::Address.city }
     address { FFaker::Address.street_address }
-    civil_status { 'Single' }
-    gender {'male'}
+    civil_status { "Single" }
+    gender {"male"}
   end
 end

@@ -17,7 +17,9 @@ class Treasury::AccountsControllerTest < ActionDispatch::IntegrationTest
 
   test "should create treasury_account" do
     assert_difference("Treasury::Account.count") do
-      post treasury_accounts_url, params: { treasury_account: { account_type: @treasury_account.account_type, address: @treasury_account.address, contact_number: @treasury_account.contact_number, is_check_account: @treasury_account.is_check_account, name: @treasury_account.name } }
+      post treasury_accounts_url,
+params: { treasury_account: { account_type: @treasury_account.account_type, address: @treasury_account.address, contact_number: @treasury_account.contact_number,
+is_check_account: @treasury_account.is_check_account, name: @treasury_account.name } }
     end
 
     assert_redirected_to treasury_account_url(Treasury::Account.last)
@@ -34,7 +36,9 @@ class Treasury::AccountsControllerTest < ActionDispatch::IntegrationTest
   end
 
   test "should update treasury_account" do
-    patch treasury_account_url(@treasury_account), params: { treasury_account: { account_type: @treasury_account.account_type, address: @treasury_account.address, contact_number: @treasury_account.contact_number, is_check_account: @treasury_account.is_check_account, name: @treasury_account.name } }
+    patch treasury_account_url(@treasury_account),
+params: { treasury_account: { account_type: @treasury_account.account_type, address: @treasury_account.address, contact_number: @treasury_account.contact_number,
+is_check_account: @treasury_account.is_check_account, name: @treasury_account.name } }
     assert_redirected_to treasury_account_url(@treasury_account)
   end
 

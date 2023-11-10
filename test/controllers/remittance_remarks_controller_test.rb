@@ -17,7 +17,8 @@ class RemittanceRemarksControllerTest < ActionDispatch::IntegrationTest
 
   test "should create remittance_remark" do
     assert_difference("RemittanceRemark.count") do
-      post remittance_remarks_url, params: { remittance_remark: { group_remit_id: @remittance_remark.group_remit_id, payment_id: @remittance_remark.payment_id, remark: @remittance_remark.remark, status: @remittance_remark.status } }
+      post remittance_remarks_url,
+params: { remittance_remark: { group_remit_id: @remittance_remark.group_remit_id, payment_id: @remittance_remark.payment_id, remark: @remittance_remark.remark, status: @remittance_remark.status } }
     end
 
     assert_redirected_to remittance_remark_url(RemittanceRemark.last)
@@ -34,7 +35,8 @@ class RemittanceRemarksControllerTest < ActionDispatch::IntegrationTest
   end
 
   test "should update remittance_remark" do
-    patch remittance_remark_url(@remittance_remark), params: { remittance_remark: { group_remit_id: @remittance_remark.group_remit_id, payment_id: @remittance_remark.payment_id, remark: @remittance_remark.remark, status: @remittance_remark.status } }
+    patch remittance_remark_url(@remittance_remark),
+params: { remittance_remark: { group_remit_id: @remittance_remark.group_remit_id, payment_id: @remittance_remark.payment_id, remark: @remittance_remark.remark, status: @remittance_remark.status } }
     assert_redirected_to remittance_remark_url(@remittance_remark)
   end
 

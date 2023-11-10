@@ -19,6 +19,7 @@ class Treasury::CashierEntriesController < ApplicationController
 
   def new
     @entry = Treasury::CashierEntry.new(or_no: Treasury::CashierEntry.last&.or_no.to_i + 1, or_date: Date.today)
+    @payment = @entry.payments.build
 
     if params[:gr_id].present?
       @group_remit = GroupRemit.find(params[:gr_id])
@@ -34,12 +35,12 @@ class Treasury::CashierEntriesController < ApplicationController
   def create
     @entry = Treasury::CashierEntry.new(entry_params)
 
-    if @entry.entriable_type == 'Remittance'
+    if @entry.entriable_type == "Remittance"
       @group_remit = @entry.entriable
     end
 
     if @entry.save
-      if @entry.entriable_type == 'Remittance'
+      if @entry.entriable_type == "Remittance"
         approve_payment(@group_remit.payments.last.id)
       end
 
@@ -52,7 +53,7 @@ class Treasury::CashierEntriesController < ApplicationController
 
   def update
     if @entry.update(entry_params)
-      redirect_to @entry, notice: "Entry updated" 
+      redirect_to @entry, notice: "Entry updated"
     else
       render :edit, status: :unprocessable_entity
     end
@@ -76,7 +77,7 @@ class Treasury::CashierEntriesController < ApplicationController
 
   # Only allow a list of trusted parameters through.
   def entry_params
-    params.require(:treasury_cashier_entry).permit(:or_no, :or_date, :global_entriable, :payment, :treasury_account_id, :amount)
+    params.require(:treasury_cashier_entry).permit(:or_no, :or_date, :global_entriable, :payment, :treasury_account_id, :amount, payments_attributes: [:id, :payment_type, :check_no, :amount, :account_id, :_destroy])
   end
 
   def approve_payment(payment_id)
@@ -87,7 +88,7 @@ class Treasury::CashierEntriesController < ApplicationController
       group_remit.paid!
       Notification.create(notifiable: group_remit.agreement.cooperative, message: "#{group_remit.name} payment verified.")
 
-      if group_remit.type == 'LoanInsurance::GroupRemit'
+      if group_remit.type == "LoanInsurance::GroupRemit"
         group_remit.update_members_total_loan
         group_remit.update_batch_coverages
         group_remit.terminate_unused_batches(current_user)

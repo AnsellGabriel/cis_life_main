@@ -1,5 +1,5 @@
 FactoryBot.define do
-  factory :loan, class: 'LoanInsurance::Loan' do
+  factory :loan, class: "LoanInsurance::Loan" do
     cooperative
 
     name { FFaker::Name.name }

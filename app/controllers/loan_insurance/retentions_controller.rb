@@ -46,13 +46,13 @@ class LoanInsurance::RetentionsController < ApplicationController
   end
 
   private
-    # Use callbacks to share common setup or constraints between actions.
-    def set_retention
-      @retention = LoanInsurance::Retention.find(params[:id])
-    end
+  # Use callbacks to share common setup or constraints between actions.
+  def set_retention
+    @retention = LoanInsurance::Retention.find(params[:id])
+  end
 
-    # Only allow a list of trusted parameters through.
-    def retention_params
-      params.require(:retention).permit(:amount, :active, :date_activated, :date_deactivated)
-    end
+  # Only allow a list of trusted parameters through.
+  def retention_params
+    params.require(:retention).permit(:amount, :active, :date_activated, :date_deactivated)
+  end
 end

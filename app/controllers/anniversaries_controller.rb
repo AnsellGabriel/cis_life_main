@@ -3,20 +3,20 @@ class AnniversariesController < InheritedResources::Base
   # before_action :check_userable_type
   before_action :set_anniversary, only: %i[ show edit update destroy ]
 
-  def index 
-    
-  end
-
-  def show 
+  def index
 
   end
 
-  def new 
+  def show
+
+  end
+
+  def new
     @agreement = Agreement.find(params[:v])
     @anniversary = @agreement.anniversaries.build
   end
 
-  def create 
+  def create
     @agreement = Agreement.find(params[:v])
     @anniversary = @agreement.anniversaries.build(anniversary_params)
     respond_to do |format|
@@ -32,11 +32,11 @@ class AnniversariesController < InheritedResources::Base
     end
   end
 
-  def edit 
+  def edit
 
   end
 
-  def update 
+  def update
     respond_to do |format|
       if @anniversary.update(anniversary_params)
         format.html { redirect_back fallback_location: @agreement, notice: "Anniversary was successfully updated." }
@@ -49,7 +49,7 @@ class AnniversariesController < InheritedResources::Base
     end
   end
 
-  def destroy 
+  def destroy
     @anniversary.destroy
     respond_to do |format|
       format.html { redirect_to @agreement, notice: "Anniversary was successfully destroyed." }
@@ -59,22 +59,22 @@ class AnniversariesController < InheritedResources::Base
 
   private
 
-    # def anniversary_params
-    #   params.require(:anniversary).permit(:name, :anniversary_date, :agreement_id)
-    # end
+  # def anniversary_params
+  #   params.require(:anniversary).permit(:name, :anniversary_date, :agreement_id)
+  # end
 
-    def set_anniversary
-      @anniversary = Anniversary.find(params[:id])
-      @agreement = Agreement.find(@anniversary.agreement.id)
-    end
+  def set_anniversary
+    @anniversary = Anniversary.find(params[:id])
+    @agreement = Agreement.find(@anniversary.agreement.id)
+  end
 
-    def anniversary_params
-      params.require(:anniversary).permit(:name, :anniversary_date, :agreement_id)
-    end
-    
-    # def check_userable_type
-    #   unless current_user.userable_type == 'CoopUser'
-    #     render file: "#{Rails.root}/public/404.html", status: :not_found
-    #   end
-    # end
+  def anniversary_params
+    params.require(:anniversary).permit(:name, :anniversary_date, :agreement_id)
+  end
+
+  # def check_userable_type
+  #   unless current_user.userable_type == 'CoopUser'
+  #     render file: "#{Rails.root}/public/404.html", status: :not_found
+  #   end
+  # end
 end

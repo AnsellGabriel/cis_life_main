@@ -16,7 +16,7 @@ set :branch, "main"
 append :linked_files, "config/master.key", "config/secrets.yml", "config/database.yml"
 append :linked_files, "config/database.yml"
 
-set :linked_files, fetch(:linked_files, []).push('config/master.key')
+set :linked_files, fetch(:linked_files, []).push("config/master.key")
 
 set :keep_releases, 5
 
@@ -25,13 +25,13 @@ namespace :deploy do
     before :linked_files, :set_master_key do
       on roles(:app), in: :sequence, wait: 10 do
         unless test("[ -f #{shared_path}/config/master.key ]")
-          upload! 'config/master.key', "#{shared_path}/config/master.key"
+          upload! "config/master.key", "#{shared_path}/config/master.key"
         end
         unless test("[ -f #{shared_path}/config/secrets.yml ]")
-          upload! 'config/secrets.yml', "#{shared_path}/config/secrets.yml"
+          upload! "config/secrets.yml", "#{shared_path}/config/secrets.yml"
         end
         unless test("[ -f #{shared_path}/config/database.yml ]")
-          upload! 'config/database.yml', "#{shared_path}/config/database.yml"
+          upload! "config/database.yml", "#{shared_path}/config/database.yml"
         end
       end
     end
@@ -39,7 +39,7 @@ namespace :deploy do
 end
 
 
-append :linked_dirs, 'log', 'tmp/pids', 'tmp/cache', 'tmp/sockets', 'vendor/bundle', '.bundle', 'public/system', 'public/uploads'
+append :linked_dirs, "log", "tmp/pids", "tmp/cache", "tmp/sockets", "vendor/bundle", ".bundle", "public/system", "public/uploads"
 # Default branch is :master
 # ask :branch, `git rev-parse --abbrev-ref HEAD`.chomp
 
@@ -48,13 +48,13 @@ set :migration_role, :app
 
 set :migration_servers, -> { primary(fetch(:migration_role)) }
 
-set :migration_command, 'db:migrate'
+set :migration_command, "db:migrate"
 
 set :conditionally_migrate, true
 
 set :assets_roles, [:web, :app]
 
-set :assets_manifests, ['app/assets/config/manifest.js']
+set :assets_manifests, ["app/assets/config/manifest.js"]
 
 set :rails_assets_groups, :assets
 

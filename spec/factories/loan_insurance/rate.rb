@@ -1,7 +1,7 @@
 FactoryBot.define do
-  factory :rate, class: 'LoanInsurance::Rate' do
+  factory :rate, class: "LoanInsurance::Rate" do
     agreement
-    
+
     min_age { rand(18..20) }
     max_age { rand(21..60) }
     monthly_rate { rand(1..5) }

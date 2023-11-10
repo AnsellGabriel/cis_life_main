@@ -46,13 +46,13 @@ class CoopTypesController < ApplicationController
   end
 
   private
-    # Use callbacks to share common setup or constraints between actions.
-    def set_coop_type
-      @coop_type = CoopType.find(params[:id])
-    end
+  # Use callbacks to share common setup or constraints between actions.
+  def set_coop_type
+    @coop_type = CoopType.find(params[:id])
+  end
 
-    # Only allow a list of trusted parameters through.
-    def coop_type_params
-      params.require(:coop_type).permit(:name, :description)
-    end
+  # Only allow a list of trusted parameters through.
+  def coop_type_params
+    params.require(:coop_type).permit(:name, :description)
+  end
 end

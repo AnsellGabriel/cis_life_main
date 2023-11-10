@@ -6,17 +6,18 @@ class BatchImportService
     @agreement = @group_remit.agreement
     @current_user = current_user
 
-    @gyrt_plans = ['GYRT', 'GYRTF']
-    @gyrt_ranking_plans = ['GYRTBR', 'GYRTFR']
-    @gyrt_family_plans = ['GYRTF', 'GYRTFR']
-    @special_term_insurance = ['PMFC']
+    @gyrt_plans = ["GYRT", "GYRTF"]
+    @gyrt_ranking_plans = ["GYRTBR", "GYRTFR"]
+    @gyrt_family_plans = ["GYRTF", "GYRTFR"]
+    @special_term_insurance = ["PMFC"]
 
     @principal_headers = ["First Name", "Middle Name", "Last Name", "Birthdate"]
-    @dependent_headers = ["Member First Name", "Member Middle Name", "Member Last Name", "Member Birthdate", "Dependent First Name", "Dependent Middle Name", "Dependent Last Name", "Relationship", "Beneficiary?"]
+    @dependent_headers = ["Member First Name", "Member Middle Name", "Member Last Name", "Member Birthdate", "Dependent First Name", "Dependent Middle Name", "Dependent Last Name", "Relationship",
+"Beneficiary?"]
 
     # @principal_headers << "Terms" if @special_term_insurance.include?(@agreement.plan.acronym)
     @principal_headers << "Rank" if @gyrt_ranking_plans.include?(@agreement.plan.acronym)
-    @dependent_headers << "Dependent?" if @agreement.plan.gyrt_type == 'family'
+    @dependent_headers << "Dependent?" if @agreement.plan.gyrt_type == "family"
 
     @progress_tracker = @group_remit.create_progress_tracker(progress: 0.0)
   end
@@ -25,26 +26,26 @@ class BatchImportService
     initialize_counters_and_arrays
     agreement_benefits = @agreement.agreement_benefits
     # Principal batch import section
-    principal_headers = extract_headers(@spreadsheet, 'PRINCIPAL')
+    principal_headers = extract_headers(@spreadsheet, "PRINCIPAL")
 
     if principal_headers.nil?
       return "Incorrect/Missing sheet name: PRINCIPAL"
     end
 
-    principal_spreadsheet = parse_file('PRINCIPAL')
-    missing_principal_headers = check_missing_headers('PRINCIPAL', @principal_headers, principal_headers)
+    principal_spreadsheet = parse_file("PRINCIPAL")
+    missing_principal_headers = check_missing_headers("PRINCIPAL", @principal_headers, principal_headers)
 
     return missing_principal_headers if missing_principal_headers
 
     # Dependent batch import section
-    dependent_headers = extract_headers(@spreadsheet, 'DEPENDENT')
+    dependent_headers = extract_headers(@spreadsheet, "DEPENDENT")
 
     if dependent_headers.nil?
       return "Incorrect/Missing sheet name: DEPENDENT"
     end
 
-    dependent_spreadsheet = parse_file('DEPENDENT')
-    missing_dependent_headers = check_missing_headers('DEPENDENT', @dependent_headers, dependent_headers)
+    dependent_spreadsheet = parse_file("DEPENDENT")
+    missing_dependent_headers = check_missing_headers("DEPENDENT", @dependent_headers, dependent_headers)
     return missing_dependent_headers if missing_dependent_headers
 
     available_member_list = @cooperative.unselected_coop_members(@agreement.group_remits.joins(:batches).pluck(:coop_member_id))
@@ -57,7 +58,7 @@ class BatchImportService
       member = find_or_initialize_member(batch_hash)
 
       unless member.persisted?
-        create_denied_member(member, 'Unenrolled member.')
+        create_denied_member(member, "Unenrolled member.")
         progress_counter += 1
         update_progress(total_members, progress_counter)
         next
@@ -68,7 +69,7 @@ class BatchImportService
       without_coverage_member = available_member_list.find_by(id: coop_member.id)
 
       if without_coverage_member.nil?
-        create_denied_member(member, 'Member already exist in other batch or remittance')
+        create_denied_member(member, "Member already exist in other batch or remittance")
         progress_counter += 1
         update_progress(total_members, progress_counter)
         next
@@ -78,7 +79,7 @@ class BatchImportService
         unless row["Rank"].present?
           progress_counter += 1
           update_progress(total_members, progress_counter)
-          create_denied_member(member, 'Option not present')
+          create_denied_member(member, "Option not present")
           next
         end
       end
@@ -96,7 +97,7 @@ class BatchImportService
 
       if duplicate_member
         # add_duplicate_member(member)
-        create_denied_member(member, 'Member already exist in the batch.')
+        create_denied_member(member, "Member already exist in the batch.")
         progress_counter += 1
         update_progress(total_members, progress_counter)
         next
@@ -133,7 +134,8 @@ class BatchImportService
       }
 
       unless member.persisted?
-        create_denied_member(member, "Dependent denied: #{dependent_hash[:first_name]} #{dependent_hash[:middle_name]} #{dependent_hash[:last_name]} - Principal is not a cooperative member.", nil, true)
+        create_denied_member(member, "Dependent denied: #{dependent_hash[:first_name]} #{dependent_hash[:middle_name]} #{dependent_hash[:last_name]} - Principal is not a cooperative member.", nil,
+true)
         progress_counter += 1
         update_progress(total_members, progress_counter)
         next
@@ -173,7 +175,7 @@ class BatchImportService
         next
       end
 
-      if dependent_hash[:dependent].to_s.strip.upcase == 'TRUE' && @agreement.plan.gyrt_type == 'family' && batch.agreement_benefit.with_dependent?
+      if dependent_hash[:dependent].to_s.strip.upcase == "TRUE" && @agreement.plan.gyrt_type == "family" && batch.agreement_benefit.with_dependent?
         batch_dependent = batch.batch_dependents.find_or_initialize_by(
           member_dependent_id: dependent.id,
         )
@@ -194,7 +196,7 @@ class BatchImportService
           next
         end
 
-        term_insurance = @agreement.plan.acronym == 'PMFC' ? true : false
+        term_insurance = @agreement.plan.acronym == "PMFC" ? true : false
         batch_dependent.set_premium_and_service_fees(dependent_agreement_benefits, @group_remit, term_insurance)
 
         if batch_dependent.save!
@@ -206,16 +208,16 @@ class BatchImportService
           batch_dependent.insurance_status = :denied
 
           if dependent.age > batch_dependent.agreement_benefit.max_age
-            batch_dependent.batch_remarks.build(remark: "Dependent age is over the maximum age limit of the plan.", status: :denied, user_type: 'CoopUser', user_id: @current_user.userable.id)
+            batch_dependent.batch_remarks.build(remark: "Dependent age is over the maximum age limit of the plan.", status: :denied, user_type: "CoopUser", user_id: @current_user.userable.id)
           else
-            batch_dependent.batch_remarks.build(remark: "Dependent age is below the minimum age limit of the plan.", status: :denied, user_type: 'CoopUser', user_id: @current_user.userable.id)
+            batch_dependent.batch_remarks.build(remark: "Dependent age is below the minimum age limit of the plan.", status: :denied, user_type: "CoopUser", user_id: @current_user.userable.id)
           end
 
           batch_dependent.save!
         end
       end
 
-      if dependent_hash[:beneficiary].to_s.strip.upcase == 'TRUE'
+      if dependent_hash[:beneficiary].to_s.strip.upcase == "TRUE"
         batch_beneficiary = batch.batch_beneficiaries.find_or_create_by(member_dependent_id: dependent.id)
       end
 

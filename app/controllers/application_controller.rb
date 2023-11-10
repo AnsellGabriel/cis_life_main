@@ -30,7 +30,7 @@ class ApplicationController < ActionController::Base
   private
 
   def set_cooperative
-    if current_user && current_user.userable_type == 'CoopUser'
+    if current_user && current_user.userable_type == "CoopUser"
       session[:c_id] ||= current_user.userable.cooperative_id
       @cooperative ||= Cooperative.find_by(id: session[:c_id])
     elsif params[:c_id]

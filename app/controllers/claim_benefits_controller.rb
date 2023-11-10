@@ -48,13 +48,13 @@ class ClaimBenefitsController < ApplicationController
   end
 
   private
-    # Use callbacks to share common setup or constraints between actions.
-    def set_claim_benefit
-      @claim_benefit = ClaimBenefit.find(params[:id])
-    end
+  # Use callbacks to share common setup or constraints between actions.
+  def set_claim_benefit
+    @claim_benefit = ClaimBenefit.find(params[:id])
+  end
 
-    # Only allow a list of trusted parameters through.
-    def claim_benefit_params
-      params.require(:claim_benefit).permit(:process_claim_id, :benefit_id, :amount, :status)
-    end
+  # Only allow a list of trusted parameters through.
+  def claim_benefit_params
+    params.require(:claim_benefit).permit(:process_claim_id, :benefit_id, :amount, :status)
+  end
 end

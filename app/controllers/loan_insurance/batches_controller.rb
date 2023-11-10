@@ -72,7 +72,7 @@ class LoanInsurance::BatchesController < ApplicationController
     @group_remit_id = params[:loan_insurance_batch][:group_remit_id]
     agreement = GroupRemit.find(@group_remit_id).agreement
     # params[:loan_insurance_batch][:unused_loan_id] = params[:loan_insurance_batch][:unused_loan_id].to_i if params[:loan_insurance_batch][:unused_loan_id].present?
-    params[:loan_insurance_batch][:loan_amount] = params[:loan_insurance_batch][:loan_amount].gsub(',', '').to_d
+    params[:loan_insurance_batch][:loan_amount] = params[:loan_insurance_batch][:loan_amount].gsub(",", "").to_d
     @batch = LoanInsurance::Batch.new(batch_params)
     result = @batch.process_batch
 
@@ -80,10 +80,13 @@ class LoanInsurance::BatchesController < ApplicationController
       if @batch.save
         format.html { redirect_to loan_insurance_group_remit_path(params[:loan_insurance_batch][:group_remit_id]), notice: "Member added" }
       elsif result == :no_loan_rate
-        format.html { redirect_to loan_insurance_group_remit_path(params[:loan_insurance_batch][:group_remit_id]), alert: "Acceptable age for this plan: #{agreement.entry_age_from}-#{agreement.exit_age}. Member's age: #{@batch.age}" }
+        format.html {
+ redirect_to loan_insurance_group_remit_path(params[:loan_insurance_batch][:group_remit_id]),
+alert: "Acceptable age for this plan: #{agreement.entry_age_from}-#{agreement.exit_age}. Member's age: #{@batch.age}" }
       else
         format.turbo_stream do
-          render turbo_stream: turbo_stream.replace("new_loan_insurance_batch", partial: "loan_insurance/batches/form", locals: {batch: @batch, coop_members: @coop_members, group_remit_id: @group_remit_id}), status: :unprocessable_entity
+          render turbo_stream: turbo_stream.replace("new_loan_insurance_batch", partial: "loan_insurance/batches/form", locals: {batch: @batch, coop_members: @coop_members, group_remit_id: @group_remit_id}),
+status: :unprocessable_entity
         end
       end
     end
@@ -126,7 +129,7 @@ class LoanInsurance::BatchesController < ApplicationController
     coop_member = batch.coop_member
 
     if batch.update(status: :terminated)
-      batch.batch_remarks.create!(remark: 'Loan terminated by the cooperative.', user: current_user, status: :terminated)
+      batch.batch_remarks.create!(remark: "Loan terminated by the cooperative.", user: current_user, status: :terminated)
 
       redirect_to show_insurance_coop_member_path(coop_member), alert: "Member loan terminated"
     end
@@ -153,17 +156,18 @@ class LoanInsurance::BatchesController < ApplicationController
   end
 
   private
-    # Only allow a list of trusted parameters through.
-    def batch_params
-      params.require(:loan_insurance_batch).permit(:group_remit_id, :coop_member_id, :loan_amount, :terms, :effectivity_date, :expiry_date, :date_release, :date_mature, :loan_insurance_loan_id, :unused_loan_id)
-    end
+  # Only allow a list of trusted parameters through.
+  def batch_params
+    params.require(:loan_insurance_batch).permit(:group_remit_id, :coop_member_id, :loan_amount, :terms, :effectivity_date, :expiry_date, :date_release, :date_mature, :loan_insurance_loan_id,
+:unused_loan_id)
+  end
 
-    # Use callbacks to share common setup or constraints between actions.
-    def set_batch
-      @batch = LoanInsurance::Batch.find(params[:id])
-    end
+  # Use callbacks to share common setup or constraints between actions.
+  def set_batch
+    @batch = LoanInsurance::Batch.find(params[:id])
+  end
 
-    def set_group_remit
-      @group_remit = LoanInsurance::GroupRemit.find(params[:group_remit_id])
-    end
+  def set_group_remit
+    @group_remit = LoanInsurance::GroupRemit.find(params[:group_remit_id])
+  end
 end

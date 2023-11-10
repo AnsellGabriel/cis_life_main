@@ -22,7 +22,8 @@ class Users::RegistrationsController < Devise::RegistrationsController
 
     # new instance of the "User" class associated with the "Employee" instance.
     if Rails.env.development?
-      @employee = Employee.new(last_name: FFaker::Name.last_name, first_name: FFaker::Name.first_name, middle_name: FFaker::Name.last_name, employee_number: FFaker::Number, mobile_number: FFaker::PhoneNumber, designation: FFaker::String)
+      @employee = Employee.new(last_name: FFaker::Name.last_name, first_name: FFaker::Name.first_name, middle_name: FFaker::Name.last_name, employee_number: FFaker::Number,
+mobile_number: FFaker::PhoneNumber, designation: FFaker::String)
     else
       @employee = Employee.new()
     end

@@ -1,6 +1,6 @@
 class AgreementBenefit < ApplicationRecord
   before_save :upcase_name
-	validates_presence_of :name, :min_age, :max_age, :exit_age, :insured_type # :with_dependent
+  validates_presence_of :name, :min_age, :max_age, :exit_age, :insured_type # :with_dependent
 
   scope :with_name_like, -> (name) { where("name LIKE ?", "%#{name}%") }
 
@@ -11,10 +11,10 @@ class AgreementBenefit < ApplicationRecord
   belongs_to :agreement, optional: true
   belongs_to :plan, optional: true
   belongs_to :proposal, optional: true
-#   belongs_to :option, optional: true
+  #   belongs_to :option, optional: true
 
-#   belongs_to :agreement
-#   belongs_to :proposal
+  #   belongs_to :agreement
+  #   belongs_to :proposal
   # belongs_to :options
   def to_s
     name

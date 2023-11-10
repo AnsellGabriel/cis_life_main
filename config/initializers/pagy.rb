@@ -74,7 +74,7 @@
 
 # Countless extra: Paginate without any count, saving one query per rendering
 # See https://ddnexus.github.io/pagy/docs/extras/countless
-require 'pagy/extras/countless'
+require "pagy/extras/countless"
 # Pagy::DEFAULT[:countless_minimal] = false   # default (eager loading)
 
 # Elasticsearch Rails extra: Paginate `ElasticsearchRails::Results` objects
@@ -127,7 +127,7 @@ require 'pagy/extras/countless'
 
 # Bootstrap extra: Add nav, nav_js and combo_nav_js helpers and templates for Bootstrap pagination
 # See https://ddnexus.github.io/pagy/docs/extras/bootstrap
-require 'pagy/extras/bootstrap'
+require "pagy/extras/bootstrap"
 
 # Bulma extra: Add nav, nav_js and combo_nav_js helpers and templates for Bulma pagination
 # See https://ddnexus.github.io/pagy/docs/extras/bulma

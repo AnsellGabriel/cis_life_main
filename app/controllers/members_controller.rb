@@ -15,7 +15,7 @@ class MembersController < InheritedResources::Base
 
     import_message = import_service.import
 
-    if current_user.userable_type == 'CoopUser'
+    if current_user.userable_type == "CoopUser"
       import_redirect(coop_members_path, import_message)
     else
       import_redirect(@cooperative, import_message)
@@ -76,11 +76,11 @@ class MembersController < InheritedResources::Base
     respond_to do |format|
       if @member.save
         format.html {
-          if current_user.userable_type == 'CoopUser'
+          if current_user.userable_type == "CoopUser"
             coop_member = @member.coop_members.find_by(cooperative_id: @cooperative.id)
             redirect_to coop_members_path(cooperative_id: @cooperative.id),
             notice: "#{persisted ? 'Member is already enrolled. Updated member\'s details instead.' : 'Member enrolled.'}"
-          elsif current_user.userable_type == 'Employee'
+          elsif current_user.userable_type == "Employee"
             redirect_to cooperative_path(@cooperative), notice: "#{persisted ? 'Member already enrolled. Updated member\'s details' : 'Member enrolled.'}"
           end
         }
@@ -111,10 +111,10 @@ class MembersController < InheritedResources::Base
     respond_to do |format|
       if @member.update(member_params)
         format.html {
-          if current_user.userable_type == 'CoopUser'
+          if current_user.userable_type == "CoopUser"
             redirect_to coop_members_path,
             notice: "Member was successfully updated."
-          elsif current_user.userable_type == 'Employee'
+          elsif current_user.userable_type == "Employee"
             redirect_to cooperative_path(@cooperative), notice: "Member was successfully updated."
           end
         }
@@ -135,7 +135,7 @@ class MembersController < InheritedResources::Base
   end
 
   def check_userable_type
-    unless current_user.userable_type == 'CoopUser' || current_user.userable_type == 'Employee'
+    unless current_user.userable_type == "CoopUser" || current_user.userable_type == "Employee"
       render file: "#{Rails.root}/public/404.html", status: :not_found
     end
   end
@@ -144,7 +144,8 @@ class MembersController < InheritedResources::Base
     if import_message.is_a?(String)
       redirect_to path, alert: import_message
     else
-      redirect_to path, notice: "#{import_message[:created_members_counter] > 0 ? "#{import_message[:created_members_counter]} members enrolled. " : '' } #{import_message[:updated_members_counter] > 0 ? "#{import_message[:updated_members_counter]} members updated." : ''} #{import_message[:denied_enrollees_counter] > 0 ? "#{import_message[:denied_enrollees_counter]} members denied." : ''}"
+      redirect_to path,
+notice: "#{import_message[:created_members_counter] > 0 ? "#{import_message[:created_members_counter]} members enrolled. " : '' } #{import_message[:updated_members_counter] > 0 ? "#{import_message[:updated_members_counter]} members updated." : ''} #{import_message[:denied_enrollees_counter] > 0 ? "#{import_message[:denied_enrollees_counter]} members denied." : ''}"
     end
   end
 end

@@ -1,7 +1,7 @@
-require 'sidekiq-scheduler'
+require "sidekiq-scheduler"
 
 class LoanStatusUpdater
-	include Sidekiq::Job
+  include Sidekiq::Job
 
   def perform
     expired_loans = LoanInsurance::Batch.where(insurance_status: :approved)

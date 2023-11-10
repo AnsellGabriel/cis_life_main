@@ -9,7 +9,7 @@ class ClaimBenefit < ApplicationRecord
    "Pending"
   ]
   def claim_benefit_amount(process_claim)
-    
+
     ClaimBenefit.where.not(status: "Denied").sum(:amount)
   end
 end

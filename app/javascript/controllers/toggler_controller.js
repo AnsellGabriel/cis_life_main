@@ -36,5 +36,25 @@ export default class extends Controller {
     });
   }
   
+  toggleSelect(event) {
+    event.preventDefault()
+
+    const selectElement = event.currentTarget
+    // Get the selected option
+    const selectedOption = selectElement.options[selectElement.selectedIndex];
+
+    // Get the value of the selected option
+    const selectedId = selectedOption.dataset.id;
+
+    this.toggleableTargets.forEach(element => {
+      console.log(selectedId, element.dataset)
+      if (selectedId === element.dataset.id) {
+        element.classList.remove("hidden")
+      } else {
+        element.classList.add("hidden")
+      }
+
+    })
+  }
 }
 

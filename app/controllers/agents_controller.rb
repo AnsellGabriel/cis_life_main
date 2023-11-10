@@ -15,7 +15,7 @@ class AgentsController < ApplicationController
   # GET /agents/new
   def new
     @agent = Agent.new(last_name: FFaker::Name.last_name, first_name: FFaker::Name.first_name, middle_name: FFaker::Name.last_name, mobile_number: FFaker::PhoneNumber)
-    
+
     # new instance of the "User" class associated with the "Agent" instance.
     @agent.build_user
   end
@@ -30,8 +30,8 @@ class AgentsController < ApplicationController
 
     respond_to do |format|
       if @agent.save
-        format.html { 
-          redirect_to unauthenticated_root_path, 
+        format.html {
+          redirect_to unauthenticated_root_path,
           notice: "Account created successfully. Please wait for the admin to approve your account."
         }
       else
@@ -61,13 +61,14 @@ class AgentsController < ApplicationController
   end
 
   private
-    # Use callbacks to share common setup or constraints between actions.
-    def set_agent
-      @agent = Agent.find(params[:id])
-    end
+  # Use callbacks to share common setup or constraints between actions.
+  def set_agent
+    @agent = Agent.find(params[:id])
+  end
 
-    # Only allow a list of trusted parameters through.
-    def agent_params
-      params.require(:agent).permit(:last_name, :first_name, :middle_name, :birthdate, :mobile_number, :agent_group_id, user_attributes: [:email, :password, :password_confirmation, :userable_type, :userable_id])
-    end
+  # Only allow a list of trusted parameters through.
+  def agent_params
+    params.require(:agent).permit(:last_name, :first_name, :middle_name, :birthdate, :mobile_number, :agent_group_id,
+user_attributes: [:email, :password, :password_confirmation, :userable_type, :userable_id])
+  end
 end

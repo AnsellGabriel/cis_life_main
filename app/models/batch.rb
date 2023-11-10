@@ -30,7 +30,7 @@ class Batch < ApplicationRecord
     joins(coop_member: :member)
       .where("members.first_name LIKE :name OR members.last_name LIKE :name", name: "%#{name}%")
   }
-  scope :coop_member, -> { joins(:member).where('members.coop_member = ?', true) }
+  scope :coop_member, -> { joins(:member).where("members.coop_member = ?", true) }
   # scope :approved, -> { where(insurance_status: :approved) }
 
   belongs_to :coop_member
@@ -106,7 +106,7 @@ class Batch < ApplicationRecord
     coop_member = batch.coop_member
     previous_coverage = agreement.agreements_coop_members.find_by(coop_member_id: coop_member.id)
     batch.expiry_date = group_remit.expiry_date
-    batch.effectivity_date = ['single', 'multiple'].include?(agreement.anniversary_type.downcase) ? Date.today : group_remit.effectivity_date
+    batch.effectivity_date = ["single", "multiple"].include?(agreement.anniversary_type.downcase) ? Date.today : group_remit.effectivity_date
     batch.age = batch.member_details.age(batch.effectivity_date)
 
     check_plan(agreement, batch, rank, duration, group_remit)
@@ -137,11 +137,11 @@ class Batch < ApplicationRecord
     acronym = agreement.plan.acronym
 
     case acronym
-    when 'GYRT', 'GYRTF'
+    when "GYRT", "GYRTF"
       batch.set_premium_and_service_fees(:principal, group_remit) # model/concerns/calculate.rb
-    when 'GYRTBR', 'GYRTFR'
+    when "GYRTBR", "GYRTFR"
       determine_premium(rank, batch, group_remit) # Determine premium based on rank and batch
-    when 'PMFC'
+    when "PMFC"
       batch.residency = (Date.today.year * 12 + Date.today.month) - (batch.coop_member.membership_date.year * 12 + batch.coop_member.membership_date.month)
       batch.duration = duration
       batch.set_premium_and_service_fees(:principal, group_remit, true) # model/concerns/calculate.rb

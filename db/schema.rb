@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_11_09_061404) do
+ActiveRecord::Schema[7.0].define(version: 2023_11_10_030858) do
   create_table "accounting_vouchers", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.date "date_voucher"
     t.integer "voucher"
@@ -1033,6 +1033,15 @@ ActiveRecord::Schema[7.0].define(version: 2023_11_09_061404) do
     t.datetime "updated_at", null: false
   end
 
+  create_table "treasury_billing_statements", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+    t.integer "bs_no"
+    t.date "bs_date"
+    t.bigint "cashier_entry_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["cashier_entry_id"], name: "index_treasury_billing_statements_on_cashier_entry_id"
+  end
+
   create_table "treasury_business_checks", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.integer "check_number"
     t.date "check_date"
@@ -1056,6 +1065,18 @@ ActiveRecord::Schema[7.0].define(version: 2023_11_09_061404) do
     t.datetime "updated_at", null: false
     t.index ["entriable_type", "entriable_id"], name: "index_treasury_cashier_entries_on_entriable"
     t.index ["treasury_account_id"], name: "index_treasury_cashier_entries_on_treasury_account_id"
+  end
+
+  create_table "treasury_payments", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+    t.integer "payment_type"
+    t.integer "check_no"
+    t.decimal "amount", precision: 15, scale: 2
+    t.bigint "account_id", null: false
+    t.bigint "cashier_entry_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["account_id"], name: "index_treasury_payments_on_account_id"
+    t.index ["cashier_entry_id"], name: "index_treasury_payments_on_cashier_entry_id"
   end
 
   create_table "underwriting_routes", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
@@ -1157,6 +1178,9 @@ ActiveRecord::Schema[7.0].define(version: 2023_11_09_061404) do
   add_foreign_key "process_tracks", "users"
   add_foreign_key "product_benefits", "agreement_benefits"
   add_foreign_key "product_benefits", "benefits"
+  add_foreign_key "treasury_billing_statements", "treasury_cashier_entries", column: "cashier_entry_id"
   add_foreign_key "treasury_business_checks", "accounting_vouchers", column: "voucher_id"
   add_foreign_key "treasury_cashier_entries", "treasury_accounts"
+  add_foreign_key "treasury_payments", "treasury_accounts", column: "account_id"
+  add_foreign_key "treasury_payments", "treasury_cashier_entries", column: "cashier_entry_id"
 end

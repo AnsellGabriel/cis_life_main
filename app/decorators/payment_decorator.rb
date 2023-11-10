@@ -12,12 +12,12 @@ class PaymentDecorator < Draper::Decorator
 
   def status_color
     case object.status
-    when 'for_review'
-      'text-primary'
-    when 'approved'
-      'text-success'
-    when 'rejected'
-      'text-danger'
+    when "for_review"
+      "text-primary"
+    when "approved"
+      "text-success"
+    when "rejected"
+      "text-danger"
     end
   end
 end

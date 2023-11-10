@@ -1,0 +1,16 @@
+
+<%= simple_form_for(@treasury_billing_statement) do |f| %>
+  <%= f.error_notification %>
+  <%= f.error_notification message: f.object.errors[:base].to_sentence if f.object.errors[:base].present? %>
+
+  <div class="form-inputs mb-3">
+    <%= f.input :bs_no %>
+    <%= f.input :bs_date %>
+    <%= f.association :cashier_entry %>
+  </div>
+
+  <div class="form-actions text-end">
+    <%= link_to "Back", treasury_billing_statements_path, class: 'btn btn-secondary' %>
+    <%= f.button :submit, class: 'btn-success' %>
+  </div>
+<% end %>

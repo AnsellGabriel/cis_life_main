@@ -46,13 +46,13 @@ class LoanInsurance::RatesController < ApplicationController
   end
 
   private
-    # Use callbacks to share common setup or constraints between actions.
-    def set_rate
-      @rate = LoanInsurance::Rate.find(params[:id])
-    end
+  # Use callbacks to share common setup or constraints between actions.
+  def set_rate
+    @rate = LoanInsurance::Rate.find(params[:id])
+  end
 
-    # Only allow a list of trusted parameters through.
-    def rate_params
-      params.require(:loan_insurance_rate).permit(:agreement_id, :min_age, :max_age, :monthly_rate, :annual_rate, :daily_rate)
-    end
+  # Only allow a list of trusted parameters through.
+  def rate_params
+    params.require(:loan_insurance_rate).permit(:agreement_id, :min_age, :max_age, :monthly_rate, :annual_rate, :daily_rate)
+  end
 end
