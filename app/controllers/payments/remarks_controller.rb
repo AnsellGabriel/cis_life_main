@@ -1,5 +1,5 @@
 class Payments::RemarksController < ApplicationController
-  before_action :initialize_payment_and_remark, only: %i[new create show]
+  before_action :initialize_payment, only: %i[new create show]
 
   def show
     @remark = @payment.remarks.find(params[:id])
@@ -27,7 +27,7 @@ class Payments::RemarksController < ApplicationController
     params.require(:remark).permit(:remark)
   end
 
-  def initialize_payment_and_remark
+  def initialize_payment
     @payment = Payment.find(params[:payment_id])
   end
 

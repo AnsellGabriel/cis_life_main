@@ -5,6 +5,7 @@ class CreateTreasuryCashierEntries < ActiveRecord::Migration[7.0]
       t.date :or_date
       t.references :entriable, polymorphic: true, null: false
       t.integer :payment
+      t.integer :status, default: 0
       t.references :treasury_account, null: false, foreign_key: true
       t.decimal :amount, precision: 15, scale: 2
 

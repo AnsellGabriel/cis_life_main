@@ -81,8 +81,8 @@ class LoanInsurance::BatchesController < ApplicationController
         format.html { redirect_to loan_insurance_group_remit_path(params[:loan_insurance_batch][:group_remit_id]), notice: "Member added" }
       elsif result == :no_loan_rate
         format.html {
- redirect_to loan_insurance_group_remit_path(params[:loan_insurance_batch][:group_remit_id]),
-alert: "Acceptable age for this plan: #{agreement.entry_age_from}-#{agreement.exit_age}. Member's age: #{@batch.age}" }
+          redirect_to loan_insurance_group_remit_path(params[:loan_insurance_batch][:group_remit_id]),
+          alert: "Acceptable age for this plan: #{agreement.entry_age_from.to_i}-#{agreement.exit_age.to_i}. Member's age: #{@batch.age}" }
       else
         format.turbo_stream do
           render turbo_stream: turbo_stream.replace("new_loan_insurance_batch", partial: "loan_insurance/batches/form", locals: {batch: @batch, coop_members: @coop_members, group_remit_id: @group_remit_id}),

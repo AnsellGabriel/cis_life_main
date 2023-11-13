@@ -8,8 +8,8 @@
       <tr>
         <th class="text-center" scope="col">Remittance</th>
         <th class="text-center" scope="col">Date</th>
-        <th class="text-center" scope="col">Cooperative</th>
-        <th class="text-center" scope="col">Plan</th>
+        <th class="text-center" scope="col">Payee</th>
+        <th class="text-center" scope="col">Payment</th>
         <th class="text-center" scope="col">Net Premium</th>
         <th class="text-center" scope="col">Status</th>
       </tr>
@@ -19,15 +19,16 @@
       <% if @payments.present? %>
 
         <% @payments.each do |payment| %>
+          <% group_remit = payment.payable %>
           <% payment = payment.decorate %>
           <tr>
             <td class="text-center">
-              <%= link_to payment.payable.name, payment_entries_path(payment), class: "text-primary" %>
+              <%= link_to group_remit.name, payment_entries_path(payment), class: "text-primary" %>
             </td>
-            <td class="text-center"><%= month_day_year(payment.payable.date_submitted) %></td>
-            <td><%= payment.payable.agreement.cooperative %></td>
-            <td class="text-center"><%= payment.payable.agreement.plan.acronym %></td>
-            <td class="text-end"><%= to_curr(payment.payable.coop_net_premium) %></td>
+            <td class="text-center"><%= month_day_year(payment.created_at) %></td>
+            <td><%= group_remit.agreement.cooperative %></td>
+            <td class="text-center"><%= group_remit.agreement.plan.acronym %></td>
+            <td class="text-end"><%= to_curr(group_remit.coop_net_premium) %></td>
             <td class="text-center <%= payment.status_color %>"><%= payment.status.titleize %></td>
           </tr>
         <% end %>

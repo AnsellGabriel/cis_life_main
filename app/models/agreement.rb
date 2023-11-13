@@ -1,5 +1,5 @@
 class Agreement < ApplicationRecord
-  validates_presence_of :cooperative_id, :plan_id, :agent_id, :moa_no, :anniversary_type, :contestability, :nel, :nml, :entry_age_from, :entry_age_to, :exit_age, :coop_sf, :agent_sf,
+  validates_presence_of :cooperative_id, :plan_id, :agent_id, :moa_no, :contestability, :nel, :nml, :entry_age_from, :entry_age_to, :exit_age, :coop_sf, :agent_sf,
 :minimum_participation
 
   scope :with_moa_like, -> (filter) { where("moa_no LIKE ?", "%#{filter}%") }

@@ -203,6 +203,7 @@ Rails.application.routes.draw do
 
   resources :payments, only: %i[index create] do
     resources :entries, controller: "payments/entries"
+    resources :remarks, controller: "payments/remarks"
   end
 
   # * Underwriting Module Routes

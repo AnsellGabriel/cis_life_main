@@ -14,6 +14,7 @@ class Payments::EntriesController < ApplicationController
 
   def create
     @entry = @entries.new(entry_params)
+    @entry.payment = Treasury::CashierEntry.payment_enum_value(@payment.plan.acronym.downcase)
 
     if @entry.save
       redirect_to @entry, notice: "Entry added"
@@ -29,7 +30,7 @@ class Payments::EntriesController < ApplicationController
   private
 
   def entry_params
-    params.require(:treasury_cashier_entry).permit(:or_no, :or_date, :payment, :treasury_account_id, :amount)
+    params.require(:treasury_cashier_entry).permit(:or_no, :or_date, :treasury_account_id, :amount)
   end
 
   def set_payment_and_entries

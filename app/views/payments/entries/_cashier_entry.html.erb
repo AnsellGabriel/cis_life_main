@@ -9,7 +9,7 @@
       <%= link_to edit_payment_entry_path(@payment, entry), class: 'btn btn-outline-primary mt-1', data: {turbo_frame: 'modal'}, title: 'Edit receipt' do %>
         <i class="bi bi-pencil"></i><span> Edit</span>
       <% end %>
-      <%= link_to @entry, data: {turbo_confirm: 'Cancel receipt?', turbo_method: :delete}, class: 'btn btn-outline-danger mt-1', title: 'Cancel receipt' do %>
+      <%= link_to entry, data: {turbo_confirm: 'Cancel receipt?', turbo_method: :delete}, class: 'btn btn-outline-danger mt-1', title: 'Cancel receipt' do %>
         <i class="bi bi-x-lg"></i><span> Cancel</span>
       <% end %>
     </div>
@@ -40,4 +40,3 @@
   </div>
 </div>
 
-<% console %>

@@ -16,11 +16,11 @@
         %> 
       </div>
     </div>
-    <%= f.input :dummy_payee, label: 'Payee', input_html: {value: @payment.payable.agreement.cooperative}, disabled: true  %>
+    <%= f.input :dummy_payee, label: 'Payee', input_html: {value: @payment.coop}, disabled: true  %>
     <%= f.association :treasury_account, label: 'Account', error: '*Required', input_html: { data: { controller: "ts--select" } }  %>
     <div class="row">
       <div class="col-6">
-        <%= f.input :payment, as: :select, collection: Treasury::CashierEntry.payments.map {|k, v| [k.humanize.upcase, k.to_s]},label: 'Entry type', error: '*Required' %>
+          <%= f.input :dummy_entry_type, label: 'Entry type', input_html: {value: @payment.plan.acronym}, disabled: true  %>
       </div>
       <div class="col-6">
         <%= f.input :amount, error: '*Required' %>
