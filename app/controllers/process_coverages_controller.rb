@@ -173,6 +173,19 @@ class ProcessCoveragesController < ApplicationController
      }
     ]
 
+    @cause_chart = [
+      ["Cardiovascular Diseases", 3890],
+      ["Respiratory Diseases", 2077],
+      ["Cancer/Carcinomas", 1931],
+      ["Kidney Diseases", 1231],
+      ["Cerebrovascular Diseases", 1207],
+      ["Diabetes", 627],
+      ["Liver Diseases", 419],
+      ["Vehicular Accident", 339],
+      ["Gastrointestinal Diseases", 239],
+      ["Accidental Death", 134]
+    ]
+
   end
 
   def preview

@@ -85,7 +85,11 @@ Rails.application.routes.draw do
   # resources :coop_users
   # resources :employees
   resources :benefits
-  # get 'pages/home'
+  get 'pages/home'
+  get 'pages/coso'
+  get 'pages/president'
+  get 'pages/find_graph'
+  get "update_charts", to: "pages#update_charts", as: "update_charts"
   # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
   get "/progress", to: "progress#show"
   get "/progress/update", to: "progress#update"
