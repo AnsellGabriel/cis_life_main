@@ -165,5 +165,11 @@
 </div>
 
 <div class="row mt-3">
-  <%= line_chart @line_chart_data2, title: "Premium & Claims per Month" %>
+  <%= line_chart @line_chart_data2, title: "Premium & Claims per Month", curve: false %>
+</div>
+
+<div class="row mt-3">
+  <div class="col-6">
+    <%= pie_chart @cause_chart, title: "Top Claim Causes" %>
+  </div>
 </div>

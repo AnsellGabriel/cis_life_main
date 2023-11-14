@@ -11,15 +11,26 @@
 # It's strongly recommended that you check this file into your version control system.
 
 ActiveRecord::Schema[7.0].define(version: 2023_11_07_061316) do
-  create_table "accounting_vouchers", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+  create_table "accounting_check_vouchers", charset: "utf8mb4", force: :cascade do |t|
+    t.date "date_voucher"
+    t.string "voucher"
+    t.string "payable_type", null: false
+    t.bigint "payable_id", null: false
+    t.decimal "amount", precision: 15, scale: 2
+    t.text "particulars"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["payable_type", "payable_id"], name: "index_accounting_check_vouchers_on_payable"
+  end
+
+  create_table "accounting_vouchers", charset: "utf8mb4", force: :cascade do |t|
     t.date "date_voucher"
     t.integer "voucher"
     t.string "payable_type", null: false
     t.bigint "payable_id", null: false
-    t.bigint "treasury_account_id"
-    t.decimal "amount", precision: 15, scale: 2
+    t.bigint "treasury_account_id", null: false
+    t.decimal "amount", precision: 10, scale: 2
     t.text "particulars"
-    t.string "type"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["payable_type", "payable_id"], name: "index_accounting_vouchers_on_payable"
@@ -149,16 +160,15 @@ ActiveRecord::Schema[7.0].define(version: 2023_11_07_061316) do
     t.string "middle_name"
     t.date "birthdate"
     t.string "mobile_number"
+    t.bigint "agent_group_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.bigint "agent_group_id", null: false
     t.index ["agent_group_id"], name: "index_agents_on_agent_group_id"
   end
 
   create_table "agreement_benefits", charset: "utf8mb4", force: :cascade do |t|
     t.bigint "agreement_id"
     t.bigint "plan_id"
-    t.bigint "proposal_id"
     t.bigint "option_id"
     t.string "name"
     t.text "description"
@@ -168,11 +178,10 @@ ActiveRecord::Schema[7.0].define(version: 2023_11_07_061316) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.decimal "exit_age", precision: 10, scale: 3
-    t.boolean "with_dependent"
+    t.boolean "with_dependent", default: false
     t.index ["agreement_id"], name: "index_agreement_benefits_on_agreement_id"
     t.index ["option_id"], name: "index_agreement_benefits_on_option_id"
     t.index ["plan_id"], name: "index_agreement_benefits_on_plan_id"
-    t.index ["proposal_id"], name: "index_agreement_benefits_on_proposal_id"
   end
 
   create_table "agreements", charset: "utf8mb4", force: :cascade do |t|
@@ -181,7 +190,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_11_07_061316) do
     t.bigint "agent_id"
     t.string "moa_no"
     t.integer "contestability"
-    t.decimal "nel", precision: 12, scale: 2
+    t.decimal "nel", precision: 12, scale: 2, default: "25000.0"
     t.decimal "nml", precision: 12, scale: 2
     t.string "anniversary_type"
     t.boolean "transferred"
@@ -194,7 +203,6 @@ ActiveRecord::Schema[7.0].define(version: 2023_11_07_061316) do
     t.decimal "exit_age", precision: 5, scale: 2
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.bigint "proposal_id", null: false
     t.string "description"
     t.decimal "coop_sf", precision: 10, scale: 2
     t.decimal "agent_sf", precision: 10, scale: 2
@@ -205,12 +213,11 @@ ActiveRecord::Schema[7.0].define(version: 2023_11_07_061316) do
     t.index ["agent_id"], name: "index_agreements_on_agent_id"
     t.index ["cooperative_id"], name: "index_agreements_on_cooperative_id"
     t.index ["plan_id"], name: "index_agreements_on_plan_id"
-    t.index ["proposal_id"], name: "index_agreements_on_proposal_id"
   end
 
   create_table "agreements_coop_members", charset: "utf8mb4", force: :cascade do |t|
-    t.bigint "agreement_id", null: false
     t.bigint "coop_member_id", null: false
+    t.bigint "agreement_id", null: false
     t.string "status"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
@@ -299,18 +306,18 @@ ActiveRecord::Schema[7.0].define(version: 2023_11_07_061316) do
     t.date "effectivity_date"
     t.date "expiry_date"
     t.boolean "active"
-    t.float "coop_sf_amount"
-    t.float "agent_sf_amount"
+    t.decimal "coop_sf_amount", precision: 10, scale: 2
+    t.decimal "agent_sf_amount", precision: 10, scale: 2
     t.integer "status"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.decimal "premium", precision: 10, scale: 2
+    t.integer "age"
+    t.integer "insurance_status", default: 3
     t.bigint "coop_member_id", null: false
     t.boolean "transferred"
     t.bigint "agreement_benefit_id", null: false
     t.boolean "valid_health_dec", default: false
-    t.integer "age"
-    t.integer "insurance_status", default: 3
     t.boolean "below_nel", default: false
     t.integer "duration"
     t.integer "residency"
@@ -402,7 +409,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_11_07_061316) do
   create_table "claim_remarks", charset: "utf8mb4", force: :cascade do |t|
     t.bigint "process_claim_id", null: false
     t.bigint "user_id", null: false
-    t.string "status"
+    t.integer "status"
     t.text "remark"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
@@ -744,8 +751,8 @@ ActiveRecord::Schema[7.0].define(version: 2023_11_07_061316) do
     t.boolean "terminated"
     t.date "terminate_date"
     t.integer "unused_loan_id"
-    t.boolean "substandard", default: false
     t.decimal "excess", precision: 10, scale: 2, default: "0.0"
+    t.boolean "substandard", default: false
     t.boolean "for_md", default: false
     t.index ["coop_member_id"], name: "index_loan_insurance_batches_on_coop_member_id"
     t.index ["group_remit_id"], name: "index_loan_insurance_batches_on_group_remit_id"
@@ -755,7 +762,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_11_07_061316) do
 
   create_table "loan_insurance_details", charset: "utf8mb4", force: :cascade do |t|
     t.bigint "batch_id", null: false
-    t.decimal "unuse", precision: 10, scale: 2
+    t.decimal "unused", precision: 10, scale: 2
     t.decimal "loan_amount", precision: 10, scale: 2
     t.decimal "premium_due", precision: 10, scale: 2
     t.decimal "substandard_rate", precision: 10, scale: 2
@@ -864,7 +871,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_11_07_061316) do
     t.index ["notifiable_type", "notifiable_id"], name: "index_notifications_on_notifiable"
   end
 
-  create_table "payees", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+  create_table "payees", charset: "utf8mb4", force: :cascade do |t|
     t.string "name"
     t.string "address"
     t.text "description"
@@ -873,7 +880,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_11_07_061316) do
     t.datetime "updated_at", null: false
   end
 
-  create_table "payments", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+  create_table "payments", charset: "utf8mb4", force: :cascade do |t|
     t.string "receipt"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
@@ -931,6 +938,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_11_07_061316) do
     t.boolean "approval"
     t.boolean "payment"
     t.bigint "claim_type_id"
+    t.integer "status"
     t.index ["agreement_benefit_id"], name: "index_process_claims_on_agreement_benefit_id"
     t.index ["agreement_id"], name: "index_process_claims_on_agreement_id"
     t.index ["cause_id"], name: "index_process_claims_on_cause_id"
@@ -1055,8 +1063,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_11_07_061316) do
     t.datetime "updated_at", null: false
   end
 
-
-  create_table "treasury_business_checks", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+  create_table "treasury_business_checks", charset: "utf8mb4", force: :cascade do |t|
     t.integer "check_number"
     t.date "check_date"
     t.decimal "amount", precision: 15, scale: 2
@@ -1067,7 +1074,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_11_07_061316) do
     t.index ["voucher_id"], name: "index_treasury_business_checks_on_voucher_id"
   end
 
-  create_table "treasury_cashier_entries", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+  create_table "treasury_cashier_entries", charset: "utf8mb4", force: :cascade do |t|
     t.integer "or_no"
     t.date "or_date"
     t.string "entriable_type", null: false
@@ -1081,7 +1088,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_11_07_061316) do
     t.index ["treasury_account_id"], name: "index_treasury_cashier_entries_on_treasury_account_id"
   end
 
-  create_table "underwriting_routes", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+  create_table "underwriting_routes", charset: "utf8mb4", force: :cascade do |t|
     t.string "name"
     t.string "description"
     t.datetime "created_at", null: false
@@ -1128,7 +1135,6 @@ ActiveRecord::Schema[7.0].define(version: 2023_11_07_061316) do
   add_foreign_key "accounting_vouchers", "treasury_accounts"
   add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
   add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
-  add_foreign_key "agents", "agent_groups"
   add_foreign_key "agreements_coop_members", "agreements"
   add_foreign_key "agreements_coop_members", "coop_members"
   add_foreign_key "anniversaries", "agreements"
@@ -1182,6 +1188,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_11_07_061316) do
   add_foreign_key "process_tracks", "users"
   add_foreign_key "product_benefits", "agreement_benefits"
   add_foreign_key "product_benefits", "benefits"
+  add_foreign_key "proposals", "cooperatives"
   add_foreign_key "treasury_business_checks", "accounting_vouchers", column: "voucher_id"
   add_foreign_key "treasury_cashier_entries", "treasury_accounts"
 end
