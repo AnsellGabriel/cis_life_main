@@ -1,5 +1,9 @@
 class Payments::RemarksController < ApplicationController
-  before_action :initialize_payment, only: %i[new create show]
+  before_action :initialize_payment, only: %i[index new create show]
+
+  def index
+    @remarks = @payment.remarks.order(created_at: :desc)
+  end
 
   def show
     @remark = @payment.remarks.find(params[:id])
@@ -13,9 +17,14 @@ class Payments::RemarksController < ApplicationController
     @remark = @payment.remarks.build(remark_params.merge(user: current_user))
 
     if @remark.save
-      @payment.reject
+      if !@payment.rejected?
+        @payment.reject
 
-      redirect_to payments_path, alert: "Payment rejected."
+        redirect_to payment_remarks_path(@payment), alert: "Payment rejected."
+      else
+        redirect_to payment_remarks_path(@payment), alert: "Remark added."
+      end
+
     else
       render :new, status: :unprocessable_entity
     end

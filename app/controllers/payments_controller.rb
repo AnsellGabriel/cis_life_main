@@ -6,7 +6,7 @@ class PaymentsController < ApplicationController
     @pagy, @payments = pagy(@payments, items: 10)
   end
 
-  def entries
+  def show
     @payment = Payment.find(params[:id])
     @entries = @payment.entries
   end
@@ -15,6 +15,8 @@ class PaymentsController < ApplicationController
     if params[:file].nil?
       return no_file_redirect(@group_remit)
     end
+
+    @payment.amount = @group_remit.coop_net_premium
 
     respond_to do |format|
       if @payment.save!

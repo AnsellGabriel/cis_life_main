@@ -1,4 +1,4 @@
-class PaymentDecorator < ApplicationDecorator
+class Treasury::CashierEntryDecorator < ApplicationDecorator
   delegate_all
 
   # Define presentation-specific methods here. Helpers are accessed through
@@ -10,9 +10,4 @@ class PaymentDecorator < ApplicationDecorator
   #     end
   #   end
 
-  def receiptable?
-    entries = object.entries
-
-    (entries.empty? or entries.last&.cancelled?) and !object.rejected?
-  end
 end

@@ -1,38 +1,13 @@
-<%= content_tag :h1, "List of Remarks" %>
-
-
-<div class="text-end mb-3">
-  <%= link_to new_remark_path, class: 'btn btn-primary' do %>
-    New Remark
-  <% end %>
-</div>
-
-
-  <table class="table table-striped table-bordered table-hover">
-    <thead>
-      <tr>
-      <th>#</th>
-            <th>Remark</th>
-            <th>Remarkable</th>
-            <th></th>
-        </tr>
-    </thead>
-
-    <tbody>
-      <% @remarks.each do |remark| %>
-        <tr>
-
-        <th scope="row"><%= remark.id %></th>
-        <td><%= remark.remark %></td>
-        <td><%= remark.remarkable %></td>
-    
-          <td>
-            <%= link_to 'View', remark, class: 'btn btn-secondary btn-sm' %>
-            <%= link_to 'Edit', edit_remark_path(remark), class: 'btn btn-secondary btn-sm' %>
-            <%= link_to "Delete", remark, class: "btn btn-danger btn-sm", method: :delete, data: { "turbo-method": :delete, turbo_confirm: "Are you sure?" } %>
-          </td>
-
-        </tr>
-      <% end %>
-    </tbody>
-  </table>
+<%= turbo_frame_tag "reg_form_modal" do %>
+  <div class="modal-header">
+    <div class="d-flex gap-1">
+      <%= content_tag :h5, 'Payment Remarks', class: "modal-title", id: "staticBackdropLabel" %>
+      <%= link_to 'Add Remark', new_payment_remark_path(@payment), class: 'btn btn-sm btn-danger', data: {turbo_frame: 'reg_form_modal'} %>
+    </div>
+    <%= link_to '', payment_path(@payment), class: 'btn-close', data: {turbo: false}%>
+  </div>
+  
+  <div class="modal-body">
+    <%= render @remarks %>
+  </div>
+<% end %>

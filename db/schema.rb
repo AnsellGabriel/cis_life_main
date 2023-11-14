@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_11_10_030858) do
+ActiveRecord::Schema[7.0].define(version: 2023_11_14_062757) do
   create_table "accounting_vouchers", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.date "date_voucher"
     t.integer "voucher"
@@ -613,6 +613,17 @@ ActiveRecord::Schema[7.0].define(version: 2023_11_10_030858) do
     t.index ["department_id"], name: "index_employees_on_department_id"
   end
 
+  create_table "general_ledgers", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+    t.string "ledgerable_type", null: false
+    t.bigint "ledgerable_id", null: false
+    t.text "description"
+    t.decimal "debit", precision: 15, scale: 2, default: "0.0"
+    t.decimal "credit", precision: 15, scale: 2, default: "0.0"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["ledgerable_type", "ledgerable_id"], name: "index_general_ledgers_on_ledgerable"
+  end
+
   create_table "geo_barangays", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.string "name"
     t.bigint "geo_region_id"
@@ -865,6 +876,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_11_10_030858) do
     t.integer "or_number"
     t.date "or_date"
     t.integer "status", default: 0
+    t.decimal "amount", precision: 15, scale: 2
     t.index ["payable_type", "payable_id"], name: "index_payments_on_payable"
   end
 
@@ -1063,6 +1075,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_11_10_030858) do
     t.decimal "amount", precision: 15, scale: 2
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.integer "status", default: 0
     t.index ["entriable_type", "entriable_id"], name: "index_treasury_cashier_entries_on_entriable"
     t.index ["treasury_account_id"], name: "index_treasury_cashier_entries_on_treasury_account_id"
   end

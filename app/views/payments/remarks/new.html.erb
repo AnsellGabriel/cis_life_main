@@ -1,7 +1,7 @@
-<%= turbo_frame_tag "modal" do %>
+<%= turbo_frame_tag "reg_form_modal" do %>
   <div class="modal-header">
     <h5 class="card-header">Payment remarks</h5>
-    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+    <%= link_to '', payment_path(@payment), class: 'btn-close', data: {turbo: false}%>
   </div>
   
   <div class="modal-body">

@@ -201,10 +201,20 @@ Rails.application.routes.draw do
   # get 'insurance/reject', as: 'reject_insurance'
   get "insurance/terminate", as: "terminate_insurance"
 
-  resources :payments, only: %i[index create] do
-    resources :entries, controller: "payments/entries"
+  # * Finance Module Routes
+  resources :payments, only: %i[index create show] do
+    resources :entries, controller: "payments/entries" do
+      get :cancel, on: :member
+    end
+
     resources :remarks, controller: "payments/remarks"
   end
+
+  resources :treasury_cashier_entries, as: 'entries' , controller: "treasury/cashier_entries" do
+    resources :general_ledgers, as: 'ledgers'
+  end
+
+
 
   # * Underwriting Module Routes
   resources :user_levels

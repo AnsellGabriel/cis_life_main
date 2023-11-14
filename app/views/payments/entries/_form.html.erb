@@ -1,4 +1,4 @@
-<%= simple_form_for(entry, url: payment_entries_path(@payment)) do |f| %>
+<%= simple_form_for(entry, url: entry.persisted? ? payment_entry_path(payment, entry) : payment_entries_path(payment)) do |f| %>
 
   <div class="form-inputs mb-3">
     <div class="row">
@@ -16,14 +16,14 @@
         %> 
       </div>
     </div>
-    <%= f.input :dummy_payee, label: 'Payee', input_html: {value: @payment.coop}, disabled: true  %>
+    <%= f.input :dummy_payee, label: 'Payee', input_html: {value: @payment.coop}, readonly: true  %>
     <%= f.association :treasury_account, label: 'Account', error: '*Required', input_html: { data: { controller: "ts--select" } }  %>
     <div class="row">
       <div class="col-6">
-          <%= f.input :dummy_entry_type, label: 'Entry type', input_html: {value: @payment.plan.acronym}, disabled: true  %>
+          <%= f.input :dummy_entry_type, label: 'Entry type', input_html: {value: @payment.plan.acronym}, readonly: true  %>
       </div>
       <div class="col-6">
-        <%= f.input :amount, error: '*Required' %>
+        <%= f.input :amount, input_html: {value: @payment.amount}, readonly: true, error: '*Required' %>
       </div>
     </div>
   </div>
