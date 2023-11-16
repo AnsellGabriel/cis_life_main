@@ -7,6 +7,7 @@ class Payments::EntriesController < ApplicationController
   def show
     @entry = @entries.find(params[:id])
     @ledgers = @entry.general_ledgers
+    @bills = @entry.bills
   end
 
   def new
@@ -15,7 +16,7 @@ class Payments::EntriesController < ApplicationController
 
   def create
     @entry = @entries.new(entry_params)
-    @entry.payment = Treasury::CashierEntry.payment_enum_value(@payment.plan.acronym.downcase)
+    @entry.payment_type = Treasury::CashierEntry.payment_enum_value(@payment.plan.acronym.downcase)
 
     if @entry.save
       redirect_to payment_entry_path(@payment, @entry), notice: "OR added"
@@ -39,7 +40,7 @@ class Payments::EntriesController < ApplicationController
     end
   end
 
-  
+
 
   def cancel
     @entry = @entries.find(params[:id])

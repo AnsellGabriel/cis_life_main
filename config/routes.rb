@@ -7,20 +7,7 @@ Rails.application.routes.draw do
     resources :reserves
     resources :reserve_batches
   end
-  namespace :accounting do
-    resources :journals
-    resources :checks
-    get "dashboard", to: "dashboard#index"
-  end
 
-  namespace :treasury do
-    resources :billing_statements
-    resources :payments
-    resources :cashier_entries
-    resources :business_checks
-    resources :accounts
-    get "dashboard", to: "dashboard#index"
-  end
   resources :group_proposals
   resources :unit_benefits
   resources :plan_units do
@@ -202,6 +189,21 @@ Rails.application.routes.draw do
   get "insurance/terminate", as: "terminate_insurance"
 
   # * Finance Module Routes
+
+  namespace :accounting do
+    resources :journals
+    resources :checks
+    get "dashboard", to: "dashboard#index"
+  end
+
+  namespace :treasury do
+    resources :payments
+    resources :cashier_entries
+    resources :business_checks
+    resources :accounts
+    get "dashboard", to: "dashboard#index"
+  end
+
   resources :payments, only: %i[index create show] do
     resources :entries, controller: "payments/entries" do
       get :cancel, on: :member
@@ -214,6 +216,8 @@ Rails.application.routes.draw do
     resources :general_ledgers, as: 'ledgers', path: 'ledger' do
       get :post, on: :collection
     end
+
+    resources :billing_statements, as: 'bills', controller: "treasury/billing_statements"
   end
 
 

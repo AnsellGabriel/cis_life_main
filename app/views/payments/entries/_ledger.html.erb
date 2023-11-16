@@ -27,7 +27,7 @@
             <td class="<%= "ps-5" if ledger.credit? %>">
               <%= ledger.account.name %> 
 
-              <% unless entry.posted? %>
+              <% if entry.pending? %>
                 <%= link_to edit_entry_ledger_path(entry, ledger), 
                   class: small_btn('outline-primary'), 
                   title: 'Edit entry', data: {turbo_frame: 'modal'} do %>

@@ -135,7 +135,7 @@ class GroupRemit < ApplicationRecord
   end
 
   def set_total_premiums_and_fees
-    self.gross_premium = gross_premium
+    self.gross_premium = commisionable_premium
     self.coop_commission = total_coop_commissions
     self.agent_commission = total_agent_commissions
     self.net_premium = net_premium
@@ -246,7 +246,7 @@ class GroupRemit < ApplicationRecord
     end
   end
 
-  def gross_premium
+  def initial_gross_premium
     total_principal_premium + total_dependent_premiums
   end
 
@@ -255,7 +255,7 @@ class GroupRemit < ApplicationRecord
   end
 
   def commisionable_premium
-    gross_premium - (denied_principal_premiums + denied_dependent_premiums)
+    initial_gross_premium - (denied_principal_premiums + denied_dependent_premiums)
   end
 
   def total_coop_commissions
@@ -279,7 +279,7 @@ class GroupRemit < ApplicationRecord
   end
 
   def net_premium
-    (gross_premium - (total_coop_commissions + total_agent_commissions) ) - (denied_principal_premiums + denied_dependent_premiums)
+    (commisionable_premium - (total_coop_commissions + total_agent_commissions) ) - (denied_principal_premiums + denied_dependent_premiums)
   end
 
   def batches_without_beneficiaries

@@ -1,7 +1,10 @@
-
-<div class="card">
-  <h5 class="card-header">New billing statement</h5>
-  <div class="card-body">
-    <%= render "form", treasury_billing_statement: @treasury_billing_statement %>
+<%= turbo_frame_tag "modal" do %>
+  <div class="modal-header">
+    <%= content_tag :h5, "New Billing Statement #{@group_remit.present? ? "for #{@group_remit.agreement.moa_no}" : ''}", class: "modal-title text-center", id: "staticBackdropLabel" %>
+    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
   </div>
-</div>
+  
+  <div class="modal-body">
+    <%= render "form", bill: @bill, entry: @entry %>
+  </div>
+<% end %>

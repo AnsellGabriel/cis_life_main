@@ -10,7 +10,7 @@ class Treasury::CashierEntry < ApplicationRecord
   belongs_to :entriable, polymorphic: true
 
   has_many :payments, class_name: "Treasury::Payment", dependent: :destroy
-  has_many :billing_statements, class_name: "Treasury::BillingStatement", dependent: :destroy
+  has_many :bills, class_name: "Treasury::BillingStatement", dependent: :destroy
   has_many :general_ledgers, as: :ledgerable
   # accepts_nested_attributes_for :general_ledgers,
   #                               allow_destroy: true
@@ -21,7 +21,7 @@ class Treasury::CashierEntry < ApplicationRecord
 
   def self.payment_enum_value(key)
     key = key.to_sym
-    payments[key] if payments.key?(key)
+    payment_types[key] if payment_types.key?(key)
   end
 
   def global_entriable
