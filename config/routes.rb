@@ -210,8 +210,10 @@ Rails.application.routes.draw do
     resources :remarks, controller: "payments/remarks"
   end
 
-  resources :treasury_cashier_entries, as: 'entries' , controller: "treasury/cashier_entries" do
-    resources :general_ledgers, as: 'ledgers'
+  resources :treasury_cashier_entries, as: 'entries', path: 'entries' , controller: "treasury/cashier_entries" do
+    resources :general_ledgers, as: 'ledgers', path: 'ledger' do
+      get :post, on: :collection
+    end
   end
 
 

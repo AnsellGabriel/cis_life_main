@@ -22,42 +22,7 @@
   </ul>
   <div class="tab-content" id="myTabContent">
     <div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">
-      <div class="p-3">
-        <table class="table table-bordered table-hover bg-white">
-          <thead style="border-bottom: 10px;">
-            <tr>
-              <th class="text-center">Account</th>
-              <th class="text-center">Debit</th>
-              <th class="text-center">Credit</th>
-            </tr>
-          </thead>
-          <tbody>
-            <% if @ledgers.present? %>
-              <% @ledgers.each do |ledger| %>
-                <tr>
-                  <td class="text-center"><%= ledger.account.name %></td>
-                  <td class="text-center"><%= number_to_currency ledger.debit %></td>
-                  <td class="text-center"><%= number_to_currency ledger.credit %></td>
-                </tr>
-              <% end %>
-            <% else %>
-              <tr>
-                <td colspan="3" class="text-center">No ledger entry yet.</td>
-              </tr>
-            <% end %>
-          </tbody>
-
-          <% if @ledgers.present? %>
-            <tfoot>
-              <tr>
-                <th class="text-center">Total</th>
-                <th class="text-center">0.00</th>
-                <th class="text-center">0.00</th>
-              </tr>
-            </tfoot>
-          <% end %>
-        </table>
-      </div>
+      <%= render 'ledger', ledgers: @ledgers, entry: @entry %>
     </div>
     <div class="tab-pane fade" id="profile" role="tabpanel" aria-labelledby="profile-tab">
     </div>

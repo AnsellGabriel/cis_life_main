@@ -14,6 +14,12 @@ class Payment < ApplicationRecord
     Notification.create(notifiable: self.coop, message: "#{self.payable.name} payment rejected. Please re-upload proof of payment.")
   end
 
+  def paid
+    self.approved!
+    self.payable.paid!
+    Notification.create(notifiable: self.coop, message: "#{self.payable.name} payment approved.")
+  end
+
   def coop
     payable.agreement.cooperative
   end

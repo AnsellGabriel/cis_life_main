@@ -1,5 +1,5 @@
 class Payments::EntriesController < ApplicationController
-  before_action :set_payment_and_entries, only: %i[new create show edit update cancel]
+  before_action :set_payment_and_entries, only: %i[new create show edit update cancel post]
 
   def index
   end
@@ -39,6 +39,8 @@ class Payments::EntriesController < ApplicationController
     end
   end
 
+  
+
   def cancel
     @entry = @entries.find(params[:id])
     @entry.cancelled!
@@ -49,7 +51,7 @@ class Payments::EntriesController < ApplicationController
   private
 
   def entry_params
-    params.require(:treasury_cashier_entry).permit(:or_no, :or_date, :treasury_account_id, :amount)
+    params.require(:treasury_cashier_entry).permit(:or_no, :or_date, :treasury_account_id, :amount, general_ledgers_attributes: [:account_id, :amount, :ledger_type, :id, :_destroy])
   end
 
   def set_payment_and_entries

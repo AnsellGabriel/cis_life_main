@@ -1,7 +1,10 @@
-
-<div class="card">
-  <h5 class="card-header">New general ledger</h5>
-  <div class="card-body">
-    <%= render "form", general_ledger: @general_ledger %>
+<%= turbo_frame_tag "modal" do %>
+  <div class="modal-header">
+    <h5 class="card-header">New Entry</h5>
+    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
   </div>
-</div>
+  
+  <div class="modal-body">
+    <%= render "form", ledger: @ledger, entry: @entry %>
+  </div>
+<% end %>

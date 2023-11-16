@@ -1,0 +1,66 @@
+<div class="p-3">
+
+  <% if entry.pending? %>
+    <div class="mb-3 <%= flex_justify_align('between') %>">
+      <%= link_to new_entry_ledger_path(entry), class: small_btn('primary'), data: {turbo_frame: 'modal'} do %>
+        <i class="bi bi-plus-lg"></i> Add Entry
+      <% end %>
+
+      <%= link_to post_entry_ledgers_path(entry), class: small_btn('success'), data: {turbo_confirm: "IMPORTANT: This process is not reversiable. Post ledger?", turbo_method: :get} do %>
+        <i class="bi bi-list-columns"></i> Post ledger
+      <% end %>
+    </div>
+  <% end %>
+
+  <table class="table table-bordered table-hover bg-white">
+    <thead style="border-bottom: 10px;">
+      <tr>
+        <th class="text-center">Account</th>
+        <th class="text-center">Debit</th>
+        <th class="text-center">Credit</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% if ledgers.present? %>
+        <% ledgers.each do |ledger| %>
+          <tr>
+            <td class="<%= "ps-5" if ledger.credit? %>">
+              <%= ledger.account.name %> 
+
+              <% unless entry.posted? %>
+                <%= link_to edit_entry_ledger_path(entry, ledger), 
+                  class: small_btn('outline-primary'), 
+                  title: 'Edit entry', data: {turbo_frame: 'modal'} do %>
+                  <i class="bi bi-pencil"></i>
+                <% end %>
+                <%= link_to entry_ledger_path(entry, ledger), 
+                  class: small_btn('outline-danger'), 
+                  title: 'Remove entry',
+                  data: {turbo_confirm: 'Remove entry?', turbo_method: :delete} do %>
+                  <i class="bi bi-trash"></i>
+                <% end %>
+              <% end %>
+              
+            </td>
+            <td class="text-end"><%= ledger.debit? ? to_curr(ledger.amount) : 0.00 %></td>
+            <td class="text-end"><%= ledger.credit? ? to_curr(ledger.amount) : 0.00 %></td>
+          </tr>
+        <% end %>
+      <% else %>
+        <tr>
+          <td colspan="3" class="text-center">No ledger entry yet.</td>
+        </tr>
+      <% end %>
+    </tbody>
+
+    <% if ledgers.present? %>
+      <tfoot>
+        <tr>
+          <th class="text-end">Total</th>
+          <th class="text-end"><%= to_curr entry.general_ledgers.debits.sum(:amount) %></th>
+          <th class="text-end"><%= to_curr entry.general_ledgers.credits.sum(:amount) %></th>
+        </tr>
+      </tfoot>
+    <% end %>
+  </table>
+</div>

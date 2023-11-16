@@ -8,7 +8,7 @@
         <p class="badge bg-<%= entry.decorate.status_color %>"><%= entry.status.humanize %></p>
       </div>
       <div class="">
-        <% unless entry.cancelled? %>
+        <% unless entry.cancelled? or entry.posted? %>
           <%= link_to edit_payment_entry_path(payment, entry), class: 'btn btn-outline-primary mt-1', data: {turbo_frame: 'modal'}, title: 'Edit receipt' do %>
             <i class="bi bi-pencil"></i><span> Edit</span>
           <% end %>
@@ -27,7 +27,7 @@
 
       <div class="row mb-3">
         <span class="small fw-bold col-2">Payment: </span>
-        <span class="small col-10"><%= entry.payment.upcase %></span>
+        <span class="small col-10"><%= entry.payment_type.upcase %></span>
       </div>
 
       <div class="row mb-3">

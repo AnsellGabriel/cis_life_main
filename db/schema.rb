@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_11_14_062757) do
+ActiveRecord::Schema[7.0].define(version: 2023_11_16_004420) do
   create_table "accounting_vouchers", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.date "date_voucher"
     t.integer "voucher"
@@ -616,11 +616,13 @@ ActiveRecord::Schema[7.0].define(version: 2023_11_14_062757) do
   create_table "general_ledgers", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.string "ledgerable_type", null: false
     t.bigint "ledgerable_id", null: false
+    t.bigint "account_id", null: false
     t.text "description"
-    t.decimal "debit", precision: 15, scale: 2, default: "0.0"
-    t.decimal "credit", precision: 15, scale: 2, default: "0.0"
+    t.integer "ledger_type"
+    t.decimal "amount", precision: 15, scale: 2, default: "0.0"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.index ["account_id"], name: "index_general_ledgers_on_account_id"
     t.index ["ledgerable_type", "ledgerable_id"], name: "index_general_ledgers_on_ledgerable"
   end
 
@@ -1070,7 +1072,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_11_14_062757) do
     t.date "or_date"
     t.string "entriable_type", null: false
     t.bigint "entriable_id", null: false
-    t.integer "payment"
+    t.integer "payment_type"
     t.bigint "treasury_account_id", null: false
     t.decimal "amount", precision: 15, scale: 2
     t.datetime "created_at", null: false
@@ -1170,6 +1172,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_11_14_062757) do
   add_foreign_key "dependent_remarks", "batch_dependents"
   add_foreign_key "emp_approvers", "employees", column: "approver_id"
   add_foreign_key "employees", "departments"
+  add_foreign_key "general_ledgers", "treasury_accounts", column: "account_id"
   add_foreign_key "group_remits", "agreements"
   add_foreign_key "health_dec_subquestions", "health_decs"
   add_foreign_key "loan_insurance_batches", "coop_members"

@@ -18,6 +18,7 @@ class ApplicationDecorator < Draper::Decorator
     when "terminated" then "danger"
     when "cancelled" then "danger"
     when "for_review" then "warning"
+    when "posted" then "success"
     end
   end
 end

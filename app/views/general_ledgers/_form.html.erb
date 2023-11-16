@@ -1,17 +1,13 @@
-
-<%= simple_form_for(@general_ledger) do |f| %>
-  <%= f.error_notification %>
-  <%= f.error_notification message: f.object.errors[:base].to_sentence if f.object.errors[:base].present? %>
+<%= simple_form_for(ledger, url: ledger.persisted? ? entry_ledger_path(entry, ledger) : entry_ledgers_path(entry)) do |f| %>
 
   <div class="form-inputs mb-3">
-    <%= f.association :ledgerable %>
-    <%= f.input :description %>
-    <%= f.input :debit %>
-    <%= f.input :credit %>
+    <%= f.association :account, input_html: {data: {controller: 'ts--select'}}, error: '*Required' %>
+    <%= f.input :description, error: '*Required' %>
+    <%= f.input :amount, error: '*Required' %>
+    <%= f.input :ledger_type, as: :select, collection: GeneralLedger.ledger_types.map {|k,v| [k.humanize, k]}, error: '*Required' %>
   </div>
 
-  <div class="form-actions text-end">
-    <%= link_to "Back", general_ledgers_path, class: 'btn btn-secondary' %>
-    <%= f.button :submit, class: 'btn-success' %>
+  <div class="form-actions text-center">
+    <%= f.button :submit, "#{ledger.persisted? ? 'Update' : 'Add'}", class: small_btn('primary') %>
   </div>
 <% end %>

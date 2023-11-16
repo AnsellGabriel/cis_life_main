@@ -1,48 +1,60 @@
 class GeneralLedgersController < ApplicationController
-  before_action :set_general_ledger, only: %i[ show edit update destroy ]
+  before_action :set_entry_and_ledgers, only: %i[new create destroy edit update post]
 
-  # GET /general_ledgers
+  def post
+    if @ledgers.total_debit != @ledgers.total_credit
+      return redirect_to payment_entry_path(@entry.entriable, @entry), alert: "Unable to post ledger, credit and debit total not equal."
+    end
+
+    if @entry.update(status: :posted)
+      @entry.entriable.paid
+
+      redirect_to payment_entry_path(@entry.entriable, @entry), notice: "OR posted"
+    end
+  end
+
   def index
     @general_ledgers = GeneralLedger.all
   end
 
-  # GET /general_ledgers/1
   def show
   end
 
-  # GET /general_ledgers/new
+  # GET /entries/:entry_id/ledger/new
   def new
-    @general_ledger = GeneralLedger.new
+    @ledger = @ledgers.new
   end
 
-  # GET /general_ledgers/1/edit
   def edit
+    @ledger = @ledgers.find(params[:id])
   end
 
-  # POST /general_ledgers
   def create
-    @general_ledger = GeneralLedger.new(general_ledger_params)
+    @ledger = @ledgers.new(general_ledger_params)
 
-    if @general_ledger.save
-      redirect_to @general_ledger, notice: "General ledger was successfully created."
+    if @ledger.save
+      redirect_to payment_entry_path(@entry.entriable, @entry), notice: "Entry added."
     else
       render :new, status: :unprocessable_entity
     end
   end
 
-  # PATCH/PUT /general_ledgers/1
   def update
-    if @general_ledger.update(general_ledger_params)
-      redirect_to @general_ledger, notice: "General ledger was successfully updated."
+    @ledger = @ledgers.find(params[:id])
+
+    if @ledger.update(general_ledger_params)
+      redirect_to payment_entry_path(@entry.entriable, @entry), notice: "Entry updated."
     else
       render :edit, status: :unprocessable_entity
     end
   end
 
-  # DELETE /general_ledgers/1
   def destroy
-    @general_ledger.destroy
-    redirect_to general_ledgers_url, notice: "General ledger was successfully destroyed.", status: :see_other
+    @ledger = @ledgers.find(params[:id])
+
+    if @ledger.destroy
+      redirect_to payment_entry_path(@entry.entriable, @entry), alert: "Entry deleted.", status: :see_other
+    end
   end
 
   private
@@ -51,8 +63,13 @@ class GeneralLedgersController < ApplicationController
       @general_ledger = GeneralLedger.find(params[:id])
     end
 
+    def set_entry_and_ledgers
+      @entry = Treasury::CashierEntry.find(params[:entry_id])
+      @ledgers = @entry.general_ledgers
+    end
+
     # Only allow a list of trusted parameters through.
     def general_ledger_params
-      params.require(:general_ledger).permit(:ledgerable_id, :ledgerable_type, :description, :debit, :credit)
+      params.require(:general_ledger).permit(:description, :account_id, :amount, :ledger_type)
     end
 end
