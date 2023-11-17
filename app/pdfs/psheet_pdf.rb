@@ -89,7 +89,7 @@ class PsheetPdf < Prawn::Document
     table_data = [[{content: "<b>DENIED MEMBERS</b>", colspan: 3, align: :center, inline_format: true}]]
     table_data += [
       ["Coverage Count", "Premium", "Coverage"],
-      [@pro_cov.denied_count, @view.to_currency(denied_batches.sum(:premium)), @view.to_currency(total_denied_cov)],
+      [@pro_cov.group_remit.batches.where(insurance_status: :denied).count, @view.to_currency(denied_batches.sum(:premium)), @view.to_currency(total_denied_cov)],
       [
         {content: "<i>Service Fee         #{@view.to_currency(0)}</i>\n <i>Total Denied Premium Fee         #{@view.to_currency(denied_batches.sum(:premium))}</i>", colspan: 3, align: :right,
 inline_format: true}
@@ -107,6 +107,10 @@ inline_format: true}
     move_down 10
 
     font_size(10) { text "<b>#{@pro_cov.processor.signed_fullname}</b>", inline_format: true}
+    
+    move_down 5
+
+    font_size(8) { text "<i>#{@pro_cov.processor.designation}</i>", inline_format: true }
 
     move_down 30
 
@@ -115,6 +119,10 @@ inline_format: true}
     move_down 10
 
     font_size(10) { text "<b>#{@pro_cov.processor.emp_approver.approver.signed_fullname}</b>", inline_format: true}
+
+    move_down 5
+    
+    font_size(8) { text "<i>#{@pro_cov.processor.emp_approver.approver.designation}</i>", inline_format: true }
   end
 
 end

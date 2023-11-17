@@ -4,8 +4,8 @@
   <%= f.error_notification message: f.object.errors[:base].to_sentence if f.object.errors[:base].present? %>
 
   <div class="form-inputs mb-3">
-    <%= f.input :n_date, collection: Actuarial::Reserve.select_dates %>
-    <%= f.association :plan %>
+    <%= f.input :n_date, label: "Select Year", collection: Actuarial::Reserve.select_dates %>
+    <%= f.association :plan, input_html: { data: { controller: "ts--select" } } %>
     <%#= f.input :first_term %>
     <%#= f.input :second_term %>
     <%#= f.input :third_term %>

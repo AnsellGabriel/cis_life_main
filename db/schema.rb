@@ -13,13 +13,24 @@
 ActiveRecord::Schema[7.0].define(version: 2023_11_17_081602) do
   create_table "accounting_vouchers", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.date "date_voucher"
+    t.string "voucher"
+    t.string "payable_type", null: false
+    t.bigint "payable_id", null: false
+    t.decimal "amount", precision: 15, scale: 2
+    t.text "particulars"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["payable_type", "payable_id"], name: "index_accounting_check_vouchers_on_payable"
+  end
+
+  create_table "accounting_vouchers", charset: "utf8mb4", force: :cascade do |t|
+    t.date "date_voucher"
     t.integer "voucher"
     t.string "payable_type", null: false
     t.bigint "payable_id", null: false
-    t.bigint "treasury_account_id"
-    t.decimal "amount", precision: 15, scale: 2
+    t.bigint "treasury_account_id", null: false
+    t.decimal "amount", precision: 10, scale: 2
     t.text "particulars"
-    t.string "type"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.integer "status", default: 0
@@ -158,6 +169,8 @@ ActiveRecord::Schema[7.0].define(version: 2023_11_17_081602) do
 
   create_table "agreement_benefits", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.bigint "agreement_id"
+    t.bigint "plan_id"
+    t.bigint "option_id"
     t.string "name"
     t.text "description"
     t.decimal "min_age", precision: 10, scale: 3
@@ -168,6 +181,8 @@ ActiveRecord::Schema[7.0].define(version: 2023_11_17_081602) do
     t.decimal "exit_age", precision: 10, scale: 3
     t.boolean "with_dependent", default: false
     t.index ["agreement_id"], name: "index_agreement_benefits_on_agreement_id"
+    t.index ["option_id"], name: "index_agreement_benefits_on_option_id"
+    t.index ["plan_id"], name: "index_agreement_benefits_on_plan_id"
   end
 
   create_table "agreements", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
@@ -861,7 +876,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_11_17_081602) do
     t.index ["notifiable_type", "notifiable_id"], name: "index_notifications_on_notifiable"
   end
 
-  create_table "payees", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+  create_table "payees", charset: "utf8mb4", force: :cascade do |t|
     t.string "name"
     t.string "address"
     t.text "description"
@@ -870,7 +885,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_11_17_081602) do
     t.datetime "updated_at", null: false
   end
 
-  create_table "payments", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+  create_table "payments", charset: "utf8mb4", force: :cascade do |t|
     t.string "receipt"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
@@ -1068,7 +1083,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_11_17_081602) do
     t.index ["voucher_id"], name: "index_treasury_business_checks_on_voucher_id"
   end
 
-  create_table "treasury_cashier_entries", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+  create_table "treasury_cashier_entries", charset: "utf8mb4", force: :cascade do |t|
     t.integer "or_no"
     t.date "or_date"
     t.string "entriable_type", null: false
@@ -1196,6 +1211,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_11_17_081602) do
   add_foreign_key "product_benefits", "agreement_benefits"
   add_foreign_key "product_benefits", "benefits"
   add_foreign_key "treasury_billing_statements", "treasury_cashier_entries", column: "cashier_entry_id"
+  add_foreign_key "proposals", "cooperatives"
   add_foreign_key "treasury_business_checks", "accounting_vouchers", column: "voucher_id"
   add_foreign_key "treasury_cashier_entries", "treasury_accounts"
   add_foreign_key "treasury_payments", "treasury_accounts", column: "account_id"

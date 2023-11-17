@@ -1,0 +1,24 @@
+<div class="container">
+
+  <%= content_tag :h3, "C.O.S.O." %>
+
+  <div class="row mt-3">
+    <%= line_chart @line_chart_data2, title: "Premium & Claims per Month", curve: false %>
+  </div>
+  <div class="row mt-3">
+    <div class="col-6">
+      <%= pie_chart @pie_chart_data1, donut: true, title: "Approved/Denied/Pending Claims" %>
+    </div>
+    <div class="col-6">
+      <%= pie_chart @pie_chart_gender, title: "Premium per Gender" %>
+    </div>
+  </div>
+  <div class="row mt-3">
+    <%= column_chart @column_chart_data1, title: "Premium & Claims per Agent" %>
+  </div>
+
+  <div class="row mt-3">
+    <%= column_chart @cause_chart, title: "Top Claim Causes" %>
+  </div>
+
+</div>
