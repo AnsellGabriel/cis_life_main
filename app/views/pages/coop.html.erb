@@ -1,0 +1,21 @@
+<div class="container">
+
+  <div class="row mb-2">
+    <div class="col-6">
+      <%= pie_chart @prem_v_claims, title: "Premium vs. Claims" %>
+    </div>
+    <div class="col-6">
+      <%= pie_chart @pie_chart_gender, title: "Premium per Gender" %>
+    </div>
+  </div>
+
+  <div data-controller="graph">
+    <div class="row mb-2 mt-2">
+      <div class="col-4">
+        <%= select_tag 'select_type', options_for_select([["2020", 0], ["2021", 1], ["2022", 2], ["2023", 3]]), data: { action: "change->graph#premAnnual", target: "annualData" }, id: "annual_id", class: "form-select" %>
+      </div>
+      <%= turbo_frame_tag "premAnnual charts" %>
+    </div>
+  </div>
+
+</div>
