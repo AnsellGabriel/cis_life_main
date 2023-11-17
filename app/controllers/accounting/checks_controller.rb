@@ -1,6 +1,6 @@
 class Accounting::ChecksController < ApplicationController
   before_action :authenticate_user!
-  before_action :set_check, only: %i[ show edit update destroy ]
+  before_action :set_check, only: %i[ show edit update destroy cancel]
   before_action :set_payables, only: %i[ new edit create update]
 
   # GET /accounting/checks
@@ -17,6 +17,7 @@ class Accounting::ChecksController < ApplicationController
   # GET /accounting/checks/1
   def show
     @business_checks = @check.business_checks.where.not(id: nil).order(created_at: :desc)
+    @ledgers = @check.general_ledgers
   end
 
   # GET /accounting/checks/new
@@ -56,6 +57,12 @@ class Accounting::ChecksController < ApplicationController
   def destroy
     @check.destroy
     redirect_to accounting_checks_path, notice: "Check voucher deleted.", status: :see_other
+  end
+
+  def cancel
+    @check.cancelled!
+
+    redirect_to @check, alert: "Voucher cancelled."
   end
 
   private

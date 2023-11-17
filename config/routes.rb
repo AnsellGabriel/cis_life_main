@@ -192,8 +192,11 @@ Rails.application.routes.draw do
 
   namespace :accounting do
     resources :journals
-    resources :checks
+    resources :checks do
+      get :cancel, on: :member
+    end
     get "dashboard", to: "dashboard#index"
+
   end
 
   namespace :treasury do

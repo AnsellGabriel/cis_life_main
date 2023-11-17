@@ -5,15 +5,15 @@ class GeneralLedgersController < ApplicationController
 
   def post
     if (@ledgers.total_debit != @ledgers.total_credit) || @ledgers.empty?
-      return redirect_to payment_entry_path(@entry.entriable, @entry), alert: "Unable to post ledger, #{@ledgers.empty? ? 'no entry.' : 'credit and debit total not equal.'}"
+      return redirect_to entry_path, alert: "Unable to post ledger, #{@ledgers.empty? ? 'no entry.' : 'credit and debit total not equal.'}"
     end
 
     if @entry.update(status: :posted)
-      if @entry.remittance?
+      if params[:e_t] == 'ce' && @entry.remittance?
         @entry.entriable.paid
       end
 
-      redirect_to payment_entry_path(@entry.entriable, @entry), notice: "OR posted"
+      redirect_to entry_path, notice: "#{params[:e_t] == 'ce' ? 'OR' : 'Voucher'} posted"
     end
   end
 
@@ -63,12 +63,13 @@ class GeneralLedgersController < ApplicationController
 
   private
     # Use callbacks to share common setup or constraints between actions.
-    def set_general_ledger
-      @general_ledger = GeneralLedger.find(params[:id])
-    end
-
     def set_entry_and_ledgers
-      @entry = Treasury::CashierEntry.find(params[:entry_id])
+      case params[:e_t]
+      when 'ce' then klass = Treasury::CashierEntry
+      when 'cv' then klass = Accounting::Check
+      end
+
+      @entry = klass.find(params[:entry_id])
       @ledgers = @entry.general_ledgers
     end
 
@@ -76,4 +77,5 @@ class GeneralLedgersController < ApplicationController
     def general_ledger_params
       params.require(:general_ledger).permit(:description, :account_id, :amount, :ledger_type)
     end
+
 end

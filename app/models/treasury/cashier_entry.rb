@@ -17,6 +17,10 @@ class Treasury::CashierEntry < ApplicationRecord
     or_no
   end
 
+  def entry_type
+    'ce'
+  end
+
   def self.payment_enum_value(key)
     key = key.to_sym
     payment_types[key] if payment_types.key?(key)
