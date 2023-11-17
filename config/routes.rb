@@ -198,7 +198,11 @@ Rails.application.routes.draw do
 
   namespace :treasury do
     resources :payments
-    resources :cashier_entries
+
+    resources :cashier_entries do
+      get :cancel, on: :member
+    end
+
     resources :business_checks
     resources :accounts
     get "dashboard", to: "dashboard#index"

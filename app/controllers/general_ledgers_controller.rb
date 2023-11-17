@@ -1,13 +1,17 @@
 class GeneralLedgersController < ApplicationController
+  include Treasuries::Path
+
   before_action :set_entry_and_ledgers, only: %i[new create destroy edit update post]
 
   def post
-    if @ledgers.total_debit != @ledgers.total_credit
-      return redirect_to payment_entry_path(@entry.entriable, @entry), alert: "Unable to post ledger, credit and debit total not equal."
+    if (@ledgers.total_debit != @ledgers.total_credit) || @ledgers.empty?
+      return redirect_to payment_entry_path(@entry.entriable, @entry), alert: "Unable to post ledger, #{@ledgers.empty? ? 'no entry.' : 'credit and debit total not equal.'}"
     end
 
     if @entry.update(status: :posted)
-      @entry.entriable.paid
+      if @entry.remittance?
+        @entry.entriable.paid
+      end
 
       redirect_to payment_entry_path(@entry.entriable, @entry), notice: "OR posted"
     end
@@ -33,7 +37,7 @@ class GeneralLedgersController < ApplicationController
     @ledger = @ledgers.new(general_ledger_params)
 
     if @ledger.save
-      redirect_to payment_entry_path(@entry.entriable, @entry), notice: "Entry added."
+      redirect_to entry_path, notice: "Entry added."
     else
       render :new, status: :unprocessable_entity
     end
@@ -43,7 +47,7 @@ class GeneralLedgersController < ApplicationController
     @ledger = @ledgers.find(params[:id])
 
     if @ledger.update(general_ledger_params)
-      redirect_to payment_entry_path(@entry.entriable, @entry), notice: "Entry updated."
+        redirect_to entry_path, notice: "Entry updated."
     else
       render :edit, status: :unprocessable_entity
     end
@@ -53,7 +57,7 @@ class GeneralLedgersController < ApplicationController
     @ledger = @ledgers.find(params[:id])
 
     if @ledger.destroy
-      redirect_to payment_entry_path(@entry.entriable, @entry), alert: "Entry deleted.", status: :see_other
+      redirect_to entry_path, alert: "Entry deleted.", status: :see_other
     end
   end
 

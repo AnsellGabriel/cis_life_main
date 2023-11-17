@@ -33,7 +33,7 @@
     <%= f.association :treasury_account, label: 'Account', error: '*Required', input_html: { data: { controller: "ts--select" } }  %>
     <div class="row">
       <div class="col-6">
-        <%= f.input :payment, as: :select, collection: Treasury::CashierEntry.payments.map {|k, v| [k.humanize.upcase, k.to_s]},label: 'Entry type', error: '*Required' %>
+        <%= f.input :payment_type, as: :select, collection: Treasury::CashierEntry.payment_types.map {|k, v| [k.humanize.upcase, k.to_s]},label: 'Entry type', error: '*Required' %>
       </div>
       <div class="col-6">
         <%= f.input :amount, error: '*Required' %>

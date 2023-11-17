@@ -1,5 +1,5 @@
 class Treasury::CashierEntriesController < ApplicationController
-  before_action :set_entry, only: %i[ show edit update destroy ]
+  before_action :set_entry, only: %i[ show edit update cancel ]
   before_action :set_entriables, only: %i[ new create edit update]
 
   def index
@@ -15,7 +15,9 @@ class Treasury::CashierEntriesController < ApplicationController
   end
 
   def show
-    @coop = @entry.coop
+    @coop = @entry.entriable
+    @ledgers = @entry.general_ledgers
+    @bills = @entry.bills
   end
 
   def new
@@ -59,11 +61,13 @@ class Treasury::CashierEntriesController < ApplicationController
     end
   end
 
-  def destroy
-    if @entry.destroy
-      redirect_to treasury_cashier_entries_path, notice: "Entry deleted", status: :see_other
-    end
+  def cancel
+    @entry.cancelled!
+
+    redirect_to treasury_cashier_entry_path(@entry), notice: "OR cancelled"
   end
+
+
 
   private
   # Use callbacks to share common setup or constraints between actions.
@@ -77,7 +81,7 @@ class Treasury::CashierEntriesController < ApplicationController
 
   # Only allow a list of trusted parameters through.
   def entry_params
-    params.require(:treasury_cashier_entry).permit(:or_no, :or_date, :global_entriable, :payment, :treasury_account_id, :amount)
+    params.require(:treasury_cashier_entry).permit(:or_no, :or_date, :global_entriable, :payment_type, :treasury_account_id, :amount)
   end
 
   def approve_payment(payment_id)

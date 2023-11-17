@@ -13,7 +13,7 @@
         <tr>
           <th class="text-center col-6">Billing Statement No.</th>
           <th class="text-center col-6">Date</th>
-          <% if bills.present? %><th></th><% end %>
+          <% if entry.pending? %><th></th><% end %>
         </tr>
       </thead>
       <tbody>
@@ -22,8 +22,8 @@
             <tr>
               <td class="text-center"><%= bill.bs_no %></td>
               <td class="text-center"><%= month_day_year bill.bs_date %></td>
-              <td class="text-center">
-                <% if entry.pending? %>
+              <% if entry.pending? %>
+                <td class="text-center">
                   <div class="d-flex gap-1">
                     <%= link_to edit_entry_bill_path(entry, bill), 
                       class: small_btn('outline-primary'), 
@@ -37,8 +37,8 @@
                       <i class="bi bi-trash"></i>
                     <% end %>
                   </div>
-                <% end %>
-              </td>
+                </td>
+              <% end %>
             </tr>
           <% end %>
         <% else %>

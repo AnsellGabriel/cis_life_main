@@ -3,7 +3,7 @@ class Treasury::CashierEntry < ApplicationRecord
 
   validates_presence_of :or_no, :or_date, :payment_type, :treasury_account_id
 
-  enum payment_type: { gyrt: 1, lppi: 2 }
+  enum payment_type: { gyrt: 1, lppi: 2, others: 3 }
   enum status: { pending: 0, posted: 1, cancelled: 2 }
 
   belongs_to :treasury_account, class_name: "Treasury::Account"
@@ -12,8 +12,6 @@ class Treasury::CashierEntry < ApplicationRecord
   has_many :payments, class_name: "Treasury::Payment", dependent: :destroy
   has_many :bills, class_name: "Treasury::BillingStatement", dependent: :destroy
   has_many :general_ledgers, as: :ledgerable
-  # accepts_nested_attributes_for :general_ledgers,
-  #                               allow_destroy: true
 
   def to_s
     or_no
@@ -33,11 +31,35 @@ class Treasury::CashierEntry < ApplicationRecord
   end
 
   def coop
-    entriable.payable.agreement.cooperative
+    if remittance?
+      entriable.payable.agreement.cooperative
+    else
+      entriable
+    end
   end
 
   def agent
     entriable.payable.agreement.agent
+  end
+
+  def total_amount
+    if remittance?
+      entriable.payable.gross_premium
+    else
+      amount
+    end
+  end
+
+  def net_amount
+    if remittance?
+      entriable.payable.coop_commission
+    else
+      amount
+    end
+  end
+
+  def remittance?
+    self.entriable_type == 'Payment'
   end
 
 end

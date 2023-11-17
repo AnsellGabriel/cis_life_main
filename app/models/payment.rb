@@ -8,6 +8,10 @@ class Payment < ApplicationRecord
 
   enum status: { for_review: 0, approved: 1, rejected: 2 }
 
+  def to_s
+    coop
+  end
+
   def reject
     self.rejected!
     self.payable.reupload_payment!

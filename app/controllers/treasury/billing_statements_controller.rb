@@ -1,4 +1,6 @@
 class Treasury::BillingStatementsController < ApplicationController
+  include Treasuries::Path
+
   before_action :set_entry_and_bills, only: %i[ new create edit update destroy]
 
   def index
@@ -21,7 +23,7 @@ class Treasury::BillingStatementsController < ApplicationController
     @bill = @bills.new(treasury_billing_statement_params)
 
     if @bill.save
-      redirect_to payment_entry_path(@entry.entriable, @entry), notice: "Billing statement added."
+      redirect_to entry_path, notice: "Billing statement added."
     else
       render :new, status: :unprocessable_entity
     end
@@ -31,7 +33,7 @@ class Treasury::BillingStatementsController < ApplicationController
     @bill = @bills.find(params[:id])
 
     if @bill.update(treasury_billing_statement_params)
-      redirect_to payment_entry_path(@entry.entriable, @entry), notice: "Billing statement updated."
+      redirect_to entry_path, notice: "Billing statement updated."
     else
       render :edit, status: :unprocessable_entity
     end
@@ -41,7 +43,7 @@ class Treasury::BillingStatementsController < ApplicationController
     @bill = @bills.find(params[:id])
 
     if @bill.destroy
-      redirect_to payment_entry_path(@entry.entriable, @entry), alert: "Billing statement deleted.", status: :see_other
+      redirect_to entry_path, alert: "Billing statement deleted.", status: :see_other
     end
   end
 

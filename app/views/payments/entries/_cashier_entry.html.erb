@@ -9,10 +9,10 @@
       </div>
       <div class="">
         <% unless entry.cancelled? or entry.posted? %>
-          <%= link_to edit_payment_entry_path(payment, entry), class: 'btn btn-outline-primary mt-1', data: {turbo_frame: 'modal'}, title: 'Edit receipt' do %>
+          <%= link_to entry.decorate.edit_path, class: 'btn btn-outline-primary mt-1', data: {turbo_frame: 'modal'}, title: 'Edit receipt' do %> 
             <i class="bi bi-pencil"></i><span> Edit</span>
           <% end %>
-          <%= link_to cancel_payment_entry_path(payment, entry), data: {turbo_confirm: 'Cancel receipt?', turbo_method: :get}, class: 'btn btn-outline-danger mt-1', title: 'Cancel receipt' do %>
+          <%= link_to entry.decorate.cancel_path, data: {turbo_confirm: 'Cancel receipt?', turbo_method: :get}, class: 'btn btn-outline-danger mt-1', title: 'Cancel receipt' do %>
             <i class="bi bi-x-lg"></i><span> Cancel OR</span>
           <% end %>
         <% end %>
@@ -35,14 +35,16 @@
         <span class="small col-10"><%= entry.treasury_account %></span>
       </div>
 
-      <div class="row mb-3">
-        <span class="small fw-bold col-2">Agent: </span>
-        <span class="small col-10"><%= entry.agent %></span>
-      </div>
+      <% if entry.remittance? %>
+        <div class="row mb-3">
+          <span class="small fw-bold col-2">Agent: </span>
+          <span class="small col-10"><%= entry.agent %></span>
+        </div>
+      <% end %>
 
     </div>
   </div>
-
+    
     <div class="card" style="width: 40%;">
       <div class="card-body">
         <div class="<%= flex_justify_align('between') %>">
@@ -52,17 +54,19 @@
         <hr style="opacity: 1; border-color: black !important">
         <div class="<%= flex_justify_align('between') %>">
           <span class="small">Amount</span>
-          <span class="small"><%= to_curr(payment.payable.gross_premium) %></span>
+          <span class="small"><%= to_curr(entry.total_amount) %></span>
         </div>
-        <hr>
-        <div class="<%= flex_justify_align('between') %>">
-          <span class="small">Service Fee</span>
-          <span class="small">(<%= to_curr(payment.payable.coop_commission) %>)</span>
-        </div>
+        <% if entry.remittance? %>
+          <hr>
+          <div class="<%= flex_justify_align('between') %>">
+            <span class="small">Service Fee</span>
+            <span class="small">(<%= to_curr(payment.payable.coop_commission) %>)</span>
+          </div>
+        <% end %>
         <hr style="opacity: 1; border-color: black !important">
         <div class="<%= flex_justify_align('between') %>">
           <span class="small">Deposit</span>
-          <span class="small"><%= to_curr(payment.payable.coop_net_premium) %></span>
+          <span class="small"><%= to_curr(entry.net_amount) %></span>
         </div>
       </div>
     </div>
