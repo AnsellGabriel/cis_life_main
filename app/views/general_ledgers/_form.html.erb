@@ -1,0 +1,15 @@
+<%= simple_form_for(ledger, url: ledger.persisted? ? entry_ledger_path(entry, ledger, e_t: entry.entry_type) : entry_ledgers_path(entry, e_t: entry.entry_type)) do |f| %>
+
+  <div class="form-inputs mb-3">
+    <%= f.association :account, input_html: {data: {controller: 'ts--select'}}, error: '*Required' %>
+    <%= f.input :description, error: '*Required' %>
+    <div class="row">
+      <%= f.input :amount, wrapper_class: 'col-6', error: '*Required' %>
+      <%= f.input :ledger_type, as: :select, collection: GeneralLedger.ledger_types.map {|k,v| [k.humanize, k]}, wrapper_class: 'col-6', error: '*Required' %>
+    </div>
+  </div>
+
+  <div class="form-actions text-center">
+    <%= f.button :submit, "#{ledger.persisted? ? 'Update' : 'Add'}", class: small_btn('primary') %>
+  </div>
+<% end %>

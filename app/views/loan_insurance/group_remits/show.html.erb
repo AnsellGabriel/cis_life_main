@@ -50,7 +50,7 @@
                 class: small_btn('outline-danger') 
               %>
             <% end %>
-          <% elsif @group_remit.is_for_payment? %>
+          <% elsif @group_remit.is_for_payment? or @group_remit.reupload_payment? %>
             <%= render 'group_remits/payment', group_remit: @group_remit %>
           <% end %>
 

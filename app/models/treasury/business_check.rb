@@ -5,6 +5,6 @@ class Treasury::BusinessCheck < ApplicationRecord
 
   enum check_type: { regular: 0, manager: 1 }
 
-  belongs_to :voucher, class_name: 'Accounting::Check'
+  belongs_to :voucher, class_name: "Accounting::Check"
 
 end

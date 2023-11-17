@@ -5,7 +5,7 @@ class ClaimTypeBenefitsController < ApplicationController
     @claim_type_benefit = @claim_type.claim_type_benefits.build
   end
 
-  def create 
+  def create
     @claim_type = ClaimType.find(params[:p])
     @claim_type_benefit = @claim_type.claim_type_benefits.build(claim_type_benefit_params)
     # @claim_benefit = ClaimBenefit.new(claim_benefit_params)
@@ -24,7 +24,7 @@ class ClaimTypeBenefitsController < ApplicationController
   def edit
   end
 
-  def update 
+  def update
     respond_to do |format|
       if @claim_type_benefit.update(claim_type_benefit_params)
         format.html { redirect_to @claim_type, notice: "Document was successfully updated." }
@@ -47,14 +47,14 @@ class ClaimTypeBenefitsController < ApplicationController
   end
 
   private
-    # Use callbacks to share common setup or constraints between actions.
-    def set_claim_type_benefit
-      @claim_type_benefit = ClaimTypeBenefit.find(params[:id])
-      @claim_type = @claim_type_benefit.claim_type
-    end
+  # Use callbacks to share common setup or constraints between actions.
+  def set_claim_type_benefit
+    @claim_type_benefit = ClaimTypeBenefit.find(params[:id])
+    @claim_type = @claim_type_benefit.claim_type
+  end
 
-    # Only allow a list of trusted parameters through.
-    def claim_type_benefit_params
-      params.require(:claim_type_benefit).permit(:claim_type_id, :benefit_id)
-    end
+  # Only allow a list of trusted parameters through.
+  def claim_type_benefit_params
+    params.require(:claim_type_benefit).permit(:claim_type_id, :benefit_id)
+  end
 end

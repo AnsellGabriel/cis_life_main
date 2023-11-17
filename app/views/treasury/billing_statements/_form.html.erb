@@ -1,0 +1,22 @@
+
+<%= simple_form_for(bill, url: bill.persisted? ? entry_bill_path(entry, bill) : entry_bills_path(entry) ) do |f| %>
+  <div class="form-inputs mb-3">
+    <div class="row">
+      <%= f.input :bs_no, label: 'Billing Statement No.', wrapper_html: {class: 'col-6'}, error: '*Required' %>
+      <%= f.input :bs_date, as: :string, input_html: {data: {
+        controller: "flatpickr",
+        flatpickr_max_date: Date.today,
+        flatpickr_next_arrow: "Next",
+        flatpickr_prev_arrow: "Prev"}
+        },
+        wrapper_html: {class: 'col-6'},
+        label: 'Date',
+        error: '*Required'
+      %>
+    </div>
+  </div>
+
+  <div class="form-actions text-center">
+    <%= f.button :submit, "#{bill.persisted? ? 'Update' : 'Add'}", class: small_btn('primary') %>
+  </div>
+<% end %>

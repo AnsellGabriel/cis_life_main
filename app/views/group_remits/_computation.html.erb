@@ -17,7 +17,7 @@
             <% end %>
           <div class="text-secondary d-flex justify-content-between">
             <%= content_tag :span, "Gross Premium", style: "font-size: .8rem" %>
-            <%= content_tag :span, "#{to_curr(group_remit.gross_premium)}", style: "color: var(--bs-blue); font-size: .8rem"%>
+            <%= content_tag :span, "#{to_curr(group_remit.initial_gross_premium)}", style: "color: var(--bs-blue); font-size: .8rem"%>
           </div>
           <hr>
         </div>
@@ -29,7 +29,7 @@
             <%= content_tag :span, "The sections below will update once reviewing process is completed", style: "font-size: .6rem" %>
           </div>    
           <div class="text-secondary d-flex justify-content-between">
-            <%= content_tag :span, "Unapprove Principal Premiums", style: "font-size: .8rem" %>
+            <%= content_tag :span, "#{group_remit.pending? ? 'For approval' : 'Denied'} Principal Premiums", style: "font-size: .8rem" %>
             <%= content_tag :span, "(#{to_curr(group_remit.denied_principal_premiums)})", style: "font-size: .8rem; color: var(--bs-red)"%>
           </div>       
           <% if agreement.plan.gyrt_type == 'family' %>

@@ -17,7 +17,9 @@ class GeoBarangaysControllerTest < ActionDispatch::IntegrationTest
 
   test "should create geo_barangay" do
     assert_difference("GeoBarangay.count") do
-      post geo_barangays_url, params: { geo_barangay: { geo_municipality_id: @geo_barangay.geo_municipality_id, geo_province_id: @geo_barangay.geo_province_id, geo_region_id: @geo_barangay.geo_region_id, psgc_code: @geo_barangay.psgc_code } }
+      post geo_barangays_url,
+params: { geo_barangay: { geo_municipality_id: @geo_barangay.geo_municipality_id, geo_province_id: @geo_barangay.geo_province_id, geo_region_id: @geo_barangay.geo_region_id,
+psgc_code: @geo_barangay.psgc_code } }
     end
 
     assert_redirected_to geo_barangay_url(GeoBarangay.last)
@@ -34,7 +36,9 @@ class GeoBarangaysControllerTest < ActionDispatch::IntegrationTest
   end
 
   test "should update geo_barangay" do
-    patch geo_barangay_url(@geo_barangay), params: { geo_barangay: { geo_municipality_id: @geo_barangay.geo_municipality_id, geo_province_id: @geo_barangay.geo_province_id, geo_region_id: @geo_barangay.geo_region_id, psgc_code: @geo_barangay.psgc_code } }
+    patch geo_barangay_url(@geo_barangay),
+params: { geo_barangay: { geo_municipality_id: @geo_barangay.geo_municipality_id, geo_province_id: @geo_barangay.geo_province_id, geo_region_id: @geo_barangay.geo_region_id,
+psgc_code: @geo_barangay.psgc_code } }
     assert_redirected_to geo_barangay_url(@geo_barangay)
   end
 

@@ -1,0 +1,9 @@
+
+<%= render @general_ledger %>
+
+<div>
+  <%= link_to "Edit", edit_general_ledger_path(@general_ledger), class: 'btn btn-primary' %> |
+  <%= link_to "Back", general_ledgers_path, class: 'btn btn-primary' %>
+
+  <%= button_to "Delete", @general_ledger, method: :delete, class: 'btn btn-danger' %>
+</div>

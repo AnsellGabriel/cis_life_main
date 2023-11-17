@@ -1,0 +1,44 @@
+<%= content_tag :h1, "List of Treasury Payments" %>
+
+
+<div class="text-end mb-3">
+  <%= link_to new_treasury_payment_path, class: 'btn btn-primary' do %>
+    New Payment
+  <% end %>
+</div>
+
+
+  <table class="table table-striped table-bordered table-hover">
+    <thead>
+      <tr>
+      <th>#</th>
+            <th>Payment Type</th>
+            <th>Check No</th>
+            <th>Account</th>
+            <th>Amount</th>
+            <th>Cashier Entry</th>
+            <th></th>
+        </tr>
+    </thead>
+
+    <tbody>
+      <% @treasury_payments.each do |treasury_payment| %>
+        <tr>
+
+        <th scope="row"><%= treasury_payment.id %></th>
+        <td><%= treasury_payment.payment_type %></td>
+        <td><%= treasury_payment.check_no %></td>
+        <td><%= treasury_payment.account %></td>
+        <td><%= treasury_payment.amount %></td>
+        <td><%= treasury_payment.cashier_entry %></td>
+    
+          <td>
+            <%= link_to 'View', treasury_payment, class: 'btn btn-secondary btn-sm' %>
+            <%= link_to 'Edit', edit_treasury_payment_path(treasury_payment), class: 'btn btn-secondary btn-sm' %>
+            <%= link_to "Delete", treasury_payment, class: "btn btn-danger btn-sm", method: :delete, data: { "turbo-method": :delete, turbo_confirm: "Are you sure?" } %>
+          </td>
+
+        </tr>
+      <% end %>
+    </tbody>
+  </table>

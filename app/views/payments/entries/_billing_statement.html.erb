@@ -1,0 +1,53 @@
+<div class="p-3">
+  <% if entry.pending? %>
+    <div class="mb-3">
+      <%= link_to new_entry_bill_path(entry), class: small_btn('primary'), data: {turbo_frame: 'modal'} do %>
+        <i class="bi bi-plus-lg"></i> Add Statement
+      <% end %>
+    </div>
+  <% end %>
+
+  <div class="<%= flex_justify_align('center')%>">
+    <table class="table table-bordered table-hover bg-white" style="width: 800px;">
+      <thead>
+        <tr>
+          <th class="text-center col-6">Billing Statement No.</th>
+          <th class="text-center col-6">Date</th>
+          <% if entry.pending? %><th></th><% end %>
+        </tr>
+      </thead>
+      <tbody>
+        <% if bills.present? %>
+          <% bills.each do |bill| %>
+            <tr>
+              <td class="text-center"><%= bill.bs_no %></td>
+              <td class="text-center"><%= month_day_year bill.bs_date %></td>
+              <% if entry.pending? %>
+                <td class="text-center">
+                  <div class="d-flex gap-1">
+                    <%= link_to edit_entry_bill_path(entry, bill), 
+                      class: small_btn('outline-primary'), 
+                      title: 'Edit entry', data: {turbo_frame: 'modal'} do %>
+                      <i class="bi bi-pencil-square"></i>
+                    <% end %>
+                    <%= link_to entry_bill_path(entry, bill), 
+                      class: small_btn('outline-danger'), 
+                      title: 'Remove statement?',
+                      data: {turbo_confirm: 'Remove statement?', turbo_method: :delete} do %>
+                      <i class="bi bi-trash"></i>
+                    <% end %>
+                  </div>
+                </td>
+              <% end %>
+            </tr>
+          <% end %>
+        <% else %>
+          <tr>
+            <td colspan="2" class="text-center">No billing statement yet.</td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+  </div>
+</div>
+

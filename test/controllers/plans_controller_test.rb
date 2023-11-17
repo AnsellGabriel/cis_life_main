@@ -17,7 +17,9 @@ class PlansControllerTest < ActionDispatch::IntegrationTest
 
   test "should create plan" do
     assert_difference("Plan.count") do
-      post plans_url, params: { plan: { acronym: @plan.acronym, description: @plan.description, entry_age_from: @plan.entry_age_from, entry_age_to: @plan.entry_age_to, exit_age: @plan.exit_age, min_participation: @plan.min_participation, name: @plan.name } }
+      post plans_url,
+params: { plan: { acronym: @plan.acronym, description: @plan.description, entry_age_from: @plan.entry_age_from, entry_age_to: @plan.entry_age_to, exit_age: @plan.exit_age,
+min_participation: @plan.min_participation, name: @plan.name } }
     end
 
     assert_redirected_to plan_url(Plan.last)
@@ -34,7 +36,9 @@ class PlansControllerTest < ActionDispatch::IntegrationTest
   end
 
   test "should update plan" do
-    patch plan_url(@plan), params: { plan: { acronym: @plan.acronym, description: @plan.description, entry_age_from: @plan.entry_age_from, entry_age_to: @plan.entry_age_to, exit_age: @plan.exit_age, min_participation: @plan.min_participation, name: @plan.name } }
+    patch plan_url(@plan),
+params: { plan: { acronym: @plan.acronym, description: @plan.description, entry_age_from: @plan.entry_age_from, entry_age_to: @plan.entry_age_to, exit_age: @plan.exit_age,
+min_participation: @plan.min_participation, name: @plan.name } }
     assert_redirected_to plan_url(@plan)
   end
 

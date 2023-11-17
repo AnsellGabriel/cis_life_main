@@ -15,6 +15,6 @@ module CsvGenerator
       end
     end
 
-    send_data csv_data, filename: "#{filename}.csv", type: 'text/csv'
+    send_data csv_data, filename: "#{filename}.csv", type: "text/csv"
   end
 end

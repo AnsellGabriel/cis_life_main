@@ -23,7 +23,7 @@ class InsuranceController < ApplicationController
 
     respond_to do |format|
       if existing_coverage.update(
-        status: 'terminated',
+        status: "terminated",
         expiry: @batch.previous_expiry_date,
         effectivity: @batch.previous_effectivity_date
       )

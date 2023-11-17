@@ -17,7 +17,9 @@ class Treasury::CashierEntriesControllerTest < ActionDispatch::IntegrationTest
 
   test "should create treasury_cashier_entry" do
     assert_difference("Treasury::CashierEntry.count") do
-      post treasury_cashier_entries_url, params: { treasury_cashier_entry: { amount: @treasury_cashier_entry.amount, entriable_id: @treasury_cashier_entry.entriable_id, entriable_type: @treasury_cashier_entry.entriable_type, or_date: @treasury_cashier_entry.or_date, or_no: @treasury_cashier_entry.or_no, payment: @treasury_cashier_entry.payment, treasury_account_id: @treasury_cashier_entry.treasury_account_id } }
+      post treasury_cashier_entries_url,
+params: { treasury_cashier_entry: { amount: @treasury_cashier_entry.amount, entriable_id: @treasury_cashier_entry.entriable_id, entriable_type: @treasury_cashier_entry.entriable_type,
+or_date: @treasury_cashier_entry.or_date, or_no: @treasury_cashier_entry.or_no, payment: @treasury_cashier_entry.payment, treasury_account_id: @treasury_cashier_entry.treasury_account_id } }
     end
 
     assert_redirected_to treasury_cashier_entry_url(Treasury::CashierEntry.last)
@@ -34,7 +36,9 @@ class Treasury::CashierEntriesControllerTest < ActionDispatch::IntegrationTest
   end
 
   test "should update treasury_cashier_entry" do
-    patch treasury_cashier_entry_url(@treasury_cashier_entry), params: { treasury_cashier_entry: { amount: @treasury_cashier_entry.amount, entriable_id: @treasury_cashier_entry.entriable_id, entriable_type: @treasury_cashier_entry.entriable_type, or_date: @treasury_cashier_entry.or_date, or_no: @treasury_cashier_entry.or_no, payment: @treasury_cashier_entry.payment, treasury_account_id: @treasury_cashier_entry.treasury_account_id } }
+    patch treasury_cashier_entry_url(@treasury_cashier_entry),
+params: { treasury_cashier_entry: { amount: @treasury_cashier_entry.amount, entriable_id: @treasury_cashier_entry.entriable_id, entriable_type: @treasury_cashier_entry.entriable_type,
+or_date: @treasury_cashier_entry.or_date, or_no: @treasury_cashier_entry.or_no, payment: @treasury_cashier_entry.payment, treasury_account_id: @treasury_cashier_entry.treasury_account_id } }
     assert_redirected_to treasury_cashier_entry_url(@treasury_cashier_entry)
   end
 

@@ -34,7 +34,7 @@ class ProcessClaimsController < ApplicationController
     @agreement = Agreement.find(params[:agreement_id])
     @group_remit = @agreement.group_remits.joins(:batches)
                            .where(batches: { coop_member_id: @coop_member.id })
-                           .order('group_remits.created_at DESC')
+                           .order("group_remits.created_at DESC")
                            .limit(1)
                            .first
     @batch = @group_remit.batches.find_by(coop_member_id: @coop_member.id)
@@ -66,9 +66,9 @@ class ProcessClaimsController < ApplicationController
 
   def set_dummy_value
     first_name = FFaker::NamePH.first_name
-    @process_claim.claimant_name = first_name + ' ' + FFaker::NamePH.last_name
+    @process_claim.claimant_name = first_name + " " + FFaker::NamePH.last_name
     @process_claim.claimant_contact_no = FFaker::PhoneNumber.phone_number
-    @process_claim.claimant_email = first_name + '@gmail.com'
+    @process_claim.claimant_email = first_name + "@gmail.com"
 
   end
 
@@ -134,7 +134,7 @@ class ProcessClaimsController < ApplicationController
     agreement = Agreement.find(process_claim_params[:agreement_id])
     @group_remit = agreement.group_remits.joins(:batches)
                            .where(batches: { coop_member_id: coop_member.id })
-                           .order('group_remits.created_at DESC')
+                           .order("group_remits.created_at DESC")
                            .limit(1)
                            .first
 
@@ -218,7 +218,7 @@ class ProcessClaimsController < ApplicationController
 
 
   def import_product_benefit
-    if @process_claim.claim_type == ClaimType.find_by(name: 'Hospital Confinement Claim')
+    if @process_claim.claim_type == ClaimType.find_by(name: "Hospital Confinement Claim")
       @benefit = Benefit.find_by(name: "Hospital Income Benefit")
       @process_claim.claim_benefits.create(process_claim_id: @process_claim.id, benefit: @benefit, amount: @process_claim.claim_confinements.sum(:amount))
     else
@@ -256,22 +256,22 @@ class ProcessClaimsController < ApplicationController
   end
 
   private
-    # Use callbacks to share common setup or constraints between actions.
-    def set_process_claim
-      @process_claim = ProcessClaim.find(params[:id])
-    end
+  # Use callbacks to share common setup or constraints between actions.
+  def set_process_claim
+    @process_claim = ProcessClaim.find(params[:id])
+  end
 
-    # Only allow a list of trusted parameters through.
-    def process_claim_params
-      params.require(:process_claim).permit(:cooperative_id, :claim_route, :agreement_id, :batch_id, :claimable_id, :cause_id, :claim_type_id, :date_file, :claim_filed, :processing, :approval, :payment, :claimable_type, :date_incident, :entry_type, :claimant_name, :claimant_email, :claimant_contact_no, :nature_of_claim, :agreement_benefit_id, :relationship,
-        claim_documents_attributes: [:id, :document, :document_type, :_destroy],
-        process_tracks_attributes: [:id, :description, :route_id, :trackable_type, :trackable_id ],
-        claim_benefits_param: [:id, :benefit_id, :amount, :status],
-        claim_cause_attributes: [:id, :acd, :ucd, :osccd, :icd],
-        claim_coverage_attributes: [:id, :amount_benefit, :coverage_type, :coverageale],
-        claim_remark_attributes: [:id, :user_id, :status, :remark, :coop, :read],
-        claim_attachment_attributes: [:id, :claim_type_id, :doc],
-        claim_confinement_attributes: [:id, :date_admit, :date_discharge, :terms, :amount])
-    end
+  # Only allow a list of trusted parameters through.
+  def process_claim_params
+    params.require(:process_claim).permit(:cooperative_id, :claim_route, :agreement_id, :batch_id, :claimable_id, :cause_id, :claim_type_id, :date_file, :claim_filed, :processing, :approval, :payment, :claimable_type, :date_incident, :entry_type, :claimant_name, :claimant_email, :claimant_contact_no, :nature_of_claim, :agreement_benefit_id, :relationship,
+      claim_documents_attributes: [:id, :document, :document_type, :_destroy],
+      process_tracks_attributes: [:id, :description, :route_id, :trackable_type, :trackable_id ],
+      claim_benefits_param: [:id, :benefit_id, :amount, :status],
+      claim_cause_attributes: [:id, :acd, :ucd, :osccd, :icd],
+      claim_coverage_attributes: [:id, :amount_benefit, :coverage_type, :coverageale],
+      claim_remark_attributes: [:id, :user_id, :status, :remark, :coop, :read],
+      claim_attachment_attributes: [:id, :claim_type_id, :doc],
+      claim_confinement_attributes: [:id, :date_admit, :date_discharge, :terms, :amount])
+  end
 
 end

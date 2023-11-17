@@ -17,7 +17,8 @@ class ProductBenefitsControllerTest < ActionDispatch::IntegrationTest
 
   test "should create product_benefit" do
     assert_difference("ProductBenefit.count") do
-      post product_benefits_url, params: { product_benefit: { agreement_benefit_id: @product_benefit.agreement_benefit_id, coverage_amount: @product_benefit.coverage_amount, premium: @product_benefit.premium } }
+      post product_benefits_url,
+params: { product_benefit: { agreement_benefit_id: @product_benefit.agreement_benefit_id, coverage_amount: @product_benefit.coverage_amount, premium: @product_benefit.premium } }
     end
 
     assert_redirected_to product_benefit_url(ProductBenefit.last)
@@ -34,7 +35,8 @@ class ProductBenefitsControllerTest < ActionDispatch::IntegrationTest
   end
 
   test "should update product_benefit" do
-    patch product_benefit_url(@product_benefit), params: { product_benefit: { agreement_benefit_id: @product_benefit.agreement_benefit_id, coverage_amount: @product_benefit.coverage_amount, premium: @product_benefit.premium } }
+    patch product_benefit_url(@product_benefit),
+params: { product_benefit: { agreement_benefit_id: @product_benefit.agreement_benefit_id, coverage_amount: @product_benefit.coverage_amount, premium: @product_benefit.premium } }
     assert_redirected_to product_benefit_url(@product_benefit)
   end
 

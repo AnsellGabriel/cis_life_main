@@ -23,7 +23,7 @@ class GroupRemitsController < InheritedResources::Base
   def submit
     if @group_remit.batches.empty?
       respond_to do |format|
-        format.html { redirect_to coop_agreement_group_remit_path(@group_remit.agreement, @group_remit), alert: "Unable to submit empty batch!" }
+        format.html { redirect_to coop_agreement_group_remit_path(@group_remit.agreement, @group_remit), alert: "Unable to submit empty remittance!" }
       end
 
       return
@@ -84,23 +84,18 @@ class GroupRemitsController < InheritedResources::Base
   def create
     @agreement = Agreement.find_by(id: params[:agreement_id])
 
-    if @agreement.is_term_insurance? && params[:group_remit][:terms].blank?
-      return redirect_to coop_agreement_path(@agreement), alert: 'Please select a term duration'
-    end
-
-    @group_remit = @agreement.group_remits.build(type: 'Remittance')
+    @group_remit = @agreement.group_remits.build(type: "Remittance")
     anniversary_date = set_anniversary(@agreement.anniversary_type, params[:anniversary_id])
-    terms = params[:group_remit][:terms] if params[:group_remit].present?
 
-    GroupRemit.process_group_remit(@group_remit, anniversary_date, params[:anniversary_id], terms)
+    GroupRemit.process_group_remit(@group_remit, anniversary_date, params[:anniversary_id])
 
     respond_to do |format|
       if @group_remit.save!
 
-        if params[:type] == 'BatchRemit'
-          batch_remit = @agreement.group_remits.build(type: 'BatchRemit')
+        if params[:type] == "BatchRemit"
+          batch_remit = @agreement.group_remits.build(type: "BatchRemit")
 
-          GroupRemit.process_group_remit(batch_remit, anniversary_date, params[:anniversary_id], terms)
+          GroupRemit.process_group_remit(batch_remit, anniversary_date, params[:anniversary_id])
 
           batch_remit.save!
 
@@ -140,7 +135,7 @@ class GroupRemitsController < InheritedResources::Base
     end
   end
 
-  #! moved to payments_controller
+  # ! moved to payments_controller
   # def payment
   #   agreement = @group_remit.agreement
 
@@ -172,42 +167,42 @@ class GroupRemitsController < InheritedResources::Base
 
   private
 
-    def set_group_remit
-      @group_remit = GroupRemit.includes(:batches).find(params[:id]).decorate
-    end
+  def set_group_remit
+    @group_remit = GroupRemit.includes(:batches).find(params[:id]).decorate
+  end
 
-    def set_members
-      @members = Member.coop_member_details(@cooperative.coop_members)
-    end
+  def set_members
+    @members = Member.coop_member_details(@cooperative.coop_members)
+  end
 
-    def group_remit_params
-      params.require(:group_remit).permit(:name, :description, :agreement_id, :anniversary_id,
-        process_coverage_attributes: [:group_remit_id, :effectivity, :expiry], payments_attributes: [:id, :receipt, :_destroy] )
-    end
+  def group_remit_params
+    params.require(:group_remit).permit(:name, :description, :agreement_id, :anniversary_id,
+      process_coverage_attributes: [:group_remit_id, :effectivity, :expiry], payments_attributes: [:id, :receipt, :_destroy] )
+  end
 
-    def set_anniversary(anniversary_type, anniv_id)
-      if anniversary_type.downcase == "single" || anniversary_type.downcase == "multiple"
-        anniv_date = @agreement.anniversaries.find_by(id: anniv_id)
-        anniv_date.anniversary_date
-      elsif (anniversary_type.downcase == "12 months" or anniversary_type.nil?)
-        Date.today.prev_month.end_of_month.next_year
-      end
+  def set_anniversary(anniversary_type, anniv_id)
+    if anniversary_type.downcase == "single" || anniversary_type.downcase == "multiple"
+      anniv_date = @agreement.anniversaries.find_by(id: anniv_id)
+      anniv_date.anniversary_date
+    elsif (anniversary_type.downcase == "12 months" or anniversary_type.nil?)
+      Date.today.prev_month.end_of_month.next_year
     end
+  end
 
-    def check_userable_type
-      unless current_user.userable_type == 'CoopUser'
-        render file: "#{Rails.root}/public/404.html", status: :not_found
-      end
+  def check_userable_type
+    unless current_user.userable_type == "CoopUser"
+      render file: "#{Rails.root}/public/404.html", status: :not_found
     end
+  end
 
-    def load_data
-      @agreement = @group_remit.agreement.decorate
-      @anniversary = @group_remit.anniversary
-      load_concerns
-    end
+  def load_data
+    @agreement = @group_remit.agreement.decorate
+    @anniversary = @group_remit.anniversary
+    load_concerns
+  end
 
-    def load_concerns
-      containers # controller/concerns/container.rb
-      counters  # controller/concerns/counter.rb
-    end
+  def load_concerns
+    containers # controller/concerns/container.rb
+    counters  # controller/concerns/counter.rb
+  end
 end

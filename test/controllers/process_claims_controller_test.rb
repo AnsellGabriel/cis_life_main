@@ -17,7 +17,9 @@ class ProcessClaimsControllerTest < ActionDispatch::IntegrationTest
 
   test "should create process_claim" do
     assert_difference("ProcessClaim.count") do
-      post process_claims_url, params: { process_claim: { agreement_id: @process_claim.agreement_id, batch_id: @process_claim.batch_id, cooperative_id: @process_claim.cooperative_id, date_incident: @process_claim.date_incident, entry_type: @process_claim.entry_type } }
+      post process_claims_url,
+params: { process_claim: { agreement_id: @process_claim.agreement_id, batch_id: @process_claim.batch_id, cooperative_id: @process_claim.cooperative_id, date_incident: @process_claim.date_incident,
+entry_type: @process_claim.entry_type } }
     end
 
     assert_redirected_to process_claim_url(ProcessClaim.last)
@@ -34,7 +36,9 @@ class ProcessClaimsControllerTest < ActionDispatch::IntegrationTest
   end
 
   test "should update process_claim" do
-    patch process_claim_url(@process_claim), params: { process_claim: { agreement_id: @process_claim.agreement_id, batch_id: @process_claim.batch_id, cooperative_id: @process_claim.cooperative_id, date_incident: @process_claim.date_incident, entry_type: @process_claim.entry_type } }
+    patch process_claim_url(@process_claim),
+params: { process_claim: { agreement_id: @process_claim.agreement_id, batch_id: @process_claim.batch_id, cooperative_id: @process_claim.cooperative_id, date_incident: @process_claim.date_incident,
+entry_type: @process_claim.entry_type } }
     assert_redirected_to process_claim_url(@process_claim)
   end
 

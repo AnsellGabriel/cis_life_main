@@ -1,0 +1,9 @@
+
+<%= render @treasury_billing_statement %>
+
+<div>
+  <%= link_to "Edit", edit_treasury_billing_statement_path(@treasury_billing_statement), class: 'btn btn-primary' %> |
+  <%= link_to "Back", treasury_billing_statements_path, class: 'btn btn-primary' %>
+
+  <%= button_to "Delete", @treasury_billing_statement, method: :delete, class: 'btn btn-danger' %>
+</div>

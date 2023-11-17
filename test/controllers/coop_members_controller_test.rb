@@ -17,7 +17,9 @@ class CoopMembersControllerTest < ActionDispatch::IntegrationTest
 
   test "should create coop_member" do
     assert_difference("CoopMember.count") do
-      post coop_members_url, params: { coop_member: { birthdate: @coop_member.birthdate, coop_branch_id: @coop_member.coop_branch_id, cooperative_id: @coop_member.cooperative_id, email: @coop_member.email, first_name: @coop_member.first_name, last_name: @coop_member.last_name, middle_name: @coop_member.middle_name, mobile_number: @coop_member.mobile_number, suffix: @coop_member.suffix } }
+      post coop_members_url,
+params: { coop_member: { birthdate: @coop_member.birthdate, coop_branch_id: @coop_member.coop_branch_id, cooperative_id: @coop_member.cooperative_id, email: @coop_member.email,
+first_name: @coop_member.first_name, last_name: @coop_member.last_name, middle_name: @coop_member.middle_name, mobile_number: @coop_member.mobile_number, suffix: @coop_member.suffix } }
     end
 
     assert_redirected_to coop_member_url(CoopMember.last)
@@ -34,7 +36,9 @@ class CoopMembersControllerTest < ActionDispatch::IntegrationTest
   end
 
   test "should update coop_member" do
-    patch coop_member_url(@coop_member), params: { coop_member: { birthdate: @coop_member.birthdate, coop_branch_id: @coop_member.coop_branch_id, cooperative_id: @coop_member.cooperative_id, email: @coop_member.email, first_name: @coop_member.first_name, last_name: @coop_member.last_name, middle_name: @coop_member.middle_name, mobile_number: @coop_member.mobile_number, suffix: @coop_member.suffix } }
+    patch coop_member_url(@coop_member),
+params: { coop_member: { birthdate: @coop_member.birthdate, coop_branch_id: @coop_member.coop_branch_id, cooperative_id: @coop_member.cooperative_id, email: @coop_member.email,
+first_name: @coop_member.first_name, last_name: @coop_member.last_name, middle_name: @coop_member.middle_name, mobile_number: @coop_member.mobile_number, suffix: @coop_member.suffix } }
     assert_redirected_to coop_member_url(@coop_member)
   end
 

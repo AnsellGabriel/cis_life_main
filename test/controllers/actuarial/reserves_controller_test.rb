@@ -17,7 +17,9 @@ class Actuarial::ReservesControllerTest < ActionDispatch::IntegrationTest
 
   test "should create actuarial_reserf" do
     assert_difference("Actuarial::Reserve.count") do
-      post actuarial_reserves_url, params: { actuarial_reserf: { first_term: @actuarial_reserf.first_term, plan_id: @actuarial_reserf.plan_id, second_term: @actuarial_reserf.second_term, third_term: @actuarial_reserf.third_term, total_first_advance_pr: @actuarial_reserf.total_first_advance_pr, total_first_advance_prem: @actuarial_reserf.total_first_advance_prem, total_reserve: @actuarial_reserf.total_reserve, total_reserve_ret: @actuarial_reserf.total_reserve_ret, total_second_advance_pr: @actuarial_reserf.total_second_advance_pr, total_second_advance_prem: @actuarial_reserf.total_second_advance_prem, total_unearned_pr: @actuarial_reserf.total_unearned_pr, total_unearned_prem: @actuarial_reserf.total_unearned_prem } }
+      post actuarial_reserves_url,
+params: { actuarial_reserf: { first_term: @actuarial_reserf.first_term, plan_id: @actuarial_reserf.plan_id, second_term: @actuarial_reserf.second_term, third_term: @actuarial_reserf.third_term,
+total_first_advance_pr: @actuarial_reserf.total_first_advance_pr, total_first_advance_prem: @actuarial_reserf.total_first_advance_prem, total_reserve: @actuarial_reserf.total_reserve, total_reserve_ret: @actuarial_reserf.total_reserve_ret, total_second_advance_pr: @actuarial_reserf.total_second_advance_pr, total_second_advance_prem: @actuarial_reserf.total_second_advance_prem, total_unearned_pr: @actuarial_reserf.total_unearned_pr, total_unearned_prem: @actuarial_reserf.total_unearned_prem } }
     end
 
     assert_redirected_to actuarial_reserf_url(Actuarial::Reserve.last)
@@ -34,7 +36,9 @@ class Actuarial::ReservesControllerTest < ActionDispatch::IntegrationTest
   end
 
   test "should update actuarial_reserf" do
-    patch actuarial_reserf_url(@actuarial_reserf), params: { actuarial_reserf: { first_term: @actuarial_reserf.first_term, plan_id: @actuarial_reserf.plan_id, second_term: @actuarial_reserf.second_term, third_term: @actuarial_reserf.third_term, total_first_advance_pr: @actuarial_reserf.total_first_advance_pr, total_first_advance_prem: @actuarial_reserf.total_first_advance_prem, total_reserve: @actuarial_reserf.total_reserve, total_reserve_ret: @actuarial_reserf.total_reserve_ret, total_second_advance_pr: @actuarial_reserf.total_second_advance_pr, total_second_advance_prem: @actuarial_reserf.total_second_advance_prem, total_unearned_pr: @actuarial_reserf.total_unearned_pr, total_unearned_prem: @actuarial_reserf.total_unearned_prem } }
+    patch actuarial_reserf_url(@actuarial_reserf),
+params: { actuarial_reserf: { first_term: @actuarial_reserf.first_term, plan_id: @actuarial_reserf.plan_id, second_term: @actuarial_reserf.second_term, third_term: @actuarial_reserf.third_term,
+total_first_advance_pr: @actuarial_reserf.total_first_advance_pr, total_first_advance_prem: @actuarial_reserf.total_first_advance_prem, total_reserve: @actuarial_reserf.total_reserve, total_reserve_ret: @actuarial_reserf.total_reserve_ret, total_second_advance_pr: @actuarial_reserf.total_second_advance_pr, total_second_advance_prem: @actuarial_reserf.total_second_advance_prem, total_unearned_pr: @actuarial_reserf.total_unearned_pr, total_unearned_prem: @actuarial_reserf.total_unearned_prem } }
     assert_redirected_to actuarial_reserf_url(@actuarial_reserf)
   end
 

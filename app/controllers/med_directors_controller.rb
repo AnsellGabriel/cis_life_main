@@ -17,10 +17,10 @@ class MedDirectorsController < ApplicationController
 
   private
 
-    def check_md
-      unless current_user.userable_type == 'Employee' && (current_user.userable.designation == 'Medical Director' || current_user.admin?)
-        render file: "#{Rails.root}/public/404.html", status: :not_found
-      end
+  def check_md
+    unless current_user.userable_type == "Employee" && (current_user.userable.designation == "Medical Director" || current_user.admin?)
+      render file: "#{Rails.root}/public/404.html", status: :not_found
     end
+  end
 
 end

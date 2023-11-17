@@ -1,7 +1,7 @@
-require 'sidekiq-scheduler'
+require "sidekiq-scheduler"
 
 class GroupRemitStatusUpdater
-	include Sidekiq::Job
+  include Sidekiq::Job
 
   def perform
     expired_group_remit = GroupRemit.where(status: :paid)
@@ -10,10 +10,10 @@ class GroupRemitStatusUpdater
     expired_group_remit.each do |gr|
       gr.update(status: :expired)
 
-      unless gr.type == 'Remittance'
+      unless gr.type == "Remittance"
         gr.agreement.cooperative.notifications.create(message: "#{gr.name} has expired. Please renew.")
       end
-      
+
     end
   end
 

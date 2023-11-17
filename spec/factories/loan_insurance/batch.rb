@@ -1,7 +1,7 @@
-FactoryBot.define do 
-  factory :batch, class: 'LoanInsurance::Batch' do
+FactoryBot.define do
+  factory :batch, class: "LoanInsurance::Batch" do
     coop_member
-    group_remit 
+    group_remit
     loan
     rate
     # retention

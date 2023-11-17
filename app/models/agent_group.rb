@@ -1,7 +1,9 @@
 class AgentGroup < ApplicationRecord
-    has_many :agents
+  validates_presence_of :name
 
-    def to_s 
-        name
-    end
+  has_many :agents
+
+  def to_s
+    name
+  end
 end

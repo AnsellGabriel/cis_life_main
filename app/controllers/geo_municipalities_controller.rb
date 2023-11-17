@@ -54,13 +54,13 @@ class GeoMunicipalitiesController < ApplicationController
   end
 
   private
-    # Use callbacks to share common setup or constraints between actions.
-    def set_geo_municipality
-      @geo_municipality = GeoMunicipality.find(params[:id])
-    end
+  # Use callbacks to share common setup or constraints between actions.
+  def set_geo_municipality
+    @geo_municipality = GeoMunicipality.find(params[:id])
+  end
 
-    # Only allow a list of trusted parameters through.
-    def geo_municipality_params
-      params.require(:geo_municipality).permit(:geo_region_id, :geo_provice_id)
-    end
+  # Only allow a list of trusted parameters through.
+  def geo_municipality_params
+    params.require(:geo_municipality).permit(:geo_region_id, :geo_provice_id)
+  end
 end

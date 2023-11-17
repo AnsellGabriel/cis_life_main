@@ -17,7 +17,9 @@ class Treasury::BusinessChecksControllerTest < ActionDispatch::IntegrationTest
 
   test "should create treasury_business_check" do
     assert_difference("Treasury::BusinessCheck.count") do
-      post treasury_business_checks_url, params: { treasury_business_check: { amount: @treasury_business_check.amount, check_date: @treasury_business_check.check_date, check_number: @treasury_business_check.check_number, check_type: @treasury_business_check.check_type } }
+      post treasury_business_checks_url,
+params: { treasury_business_check: { amount: @treasury_business_check.amount, check_date: @treasury_business_check.check_date, check_number: @treasury_business_check.check_number,
+check_type: @treasury_business_check.check_type } }
     end
 
     assert_redirected_to treasury_business_check_url(Treasury::BusinessCheck.last)
@@ -34,7 +36,9 @@ class Treasury::BusinessChecksControllerTest < ActionDispatch::IntegrationTest
   end
 
   test "should update treasury_business_check" do
-    patch treasury_business_check_url(@treasury_business_check), params: { treasury_business_check: { amount: @treasury_business_check.amount, check_date: @treasury_business_check.check_date, check_number: @treasury_business_check.check_number, check_type: @treasury_business_check.check_type } }
+    patch treasury_business_check_url(@treasury_business_check),
+params: { treasury_business_check: { amount: @treasury_business_check.amount, check_date: @treasury_business_check.check_date, check_number: @treasury_business_check.check_number,
+check_type: @treasury_business_check.check_type } }
     assert_redirected_to treasury_business_check_url(@treasury_business_check)
   end
 

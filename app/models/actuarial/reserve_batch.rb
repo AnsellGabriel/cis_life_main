@@ -16,7 +16,7 @@ class Actuarial::ReserveBatch < ApplicationRecord
     if batch.class.name == "LoanInsurance::Batch"
       batch.terms
     else
-      ((batch.expiry_date - batch.effectivity_date) / 30).to_i 
+      ((batch.expiry_date - batch.effectivity_date) / 30).to_i
     end
   end
 

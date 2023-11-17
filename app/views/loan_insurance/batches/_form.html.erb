@@ -11,7 +11,8 @@
             target: 'memberSelect',
             controller: "slim-select",
             action: "change->loan-form#selectMember focus->loan-form#selectMember", }  
-          }, label: false    
+          }, label: false,
+          error: '*Required'
     %>
   </div>
   
@@ -19,8 +20,8 @@
     <div class="form-inputs mb-3  "  >
       <div class="row">
         <div class="form-floating col-md-6">
-          <%= f.association :loan, collection: LoanInsurance::Loan.filtered_by_cooperative(@cooperative) , label: false, prompt: 'Select type', wrapper: false, input_html: {class: ' text-primary'}  %>
-          <%= f.label :loan, 'Loan type', class: 'ps-4' %>
+          <%= f.association :loan, collection: LoanInsurance::Loan.filtered_by_cooperative(@cooperative) , label: false, prompt: 'Select type', wrapper: false, input_html: {class: ' text-primary'}, error: '*Required'  %>
+          <%= f.label :loan, 'Loan type', class: 'ps-4', error: '*Required' %>
         </div>
         <div class="form-floating mb-3 col-md-6" data-controller="number-formatter">
           <%= f.input :loan_amount, as: :text, label: false, placeholder: 'Loan amount', class: 'form-control', wrapper: false, input_html: {class: 'text-primary', data: {number_formatter_target: 'input'}} %>

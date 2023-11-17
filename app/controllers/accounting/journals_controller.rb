@@ -7,7 +7,7 @@ class Accounting::JournalsController < ApplicationController
     # byebug
 
     if params[:voucher_yr].present? || params[:voucher_month].present? || params[:voucher_series].present?
-      @journals = Accounting::Journal.where(type: 'Accounting::Journal').where("voucher like ?", "%#{params[:voucher_yr] + params[:voucher_month] + params[:voucher_series]}%")
+      @journals = Accounting::Journal.where(type: "Accounting::Journal").where("voucher like ?", "%#{params[:voucher_yr] + params[:voucher_month] + params[:voucher_series]}%")
     else
       @journals = Accounting::Journal.all
     end

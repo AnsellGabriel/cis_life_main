@@ -13,7 +13,7 @@ class CoopMember < ApplicationRecord
   belongs_to :cooperative
   belongs_to :coop_branch
   belongs_to :member
-  has_many :loan_batches, class_name: 'LoanInsurance::Batch', foreign_key: 'coop_member_id'
+  has_many :loan_batches, class_name: "LoanInsurance::Batch", foreign_key: "coop_member_id"
   has_many :batches
   has_many :agreements_coop_members
   has_many :agreements, through: :agreements_coop_members
@@ -24,7 +24,7 @@ class CoopMember < ApplicationRecord
 
   def get_fullname
     # first_letters = member.middle_name.split.map { |word| word[0] }
-    member.last_name.titleize + ' ' + member.suffix + ', ' + member.first_name.titleize + ' ' + member.middle_name.chr + '. '
+    member.last_name.titleize + " " + member.suffix + ", " + member.first_name.titleize + " " + member.middle_name.chr + ". "
   end
 
   def set_full_name

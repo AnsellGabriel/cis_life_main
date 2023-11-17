@@ -29,12 +29,12 @@ class MemberDependentsController < InheritedResources::Base
       # relationship: "Family"
     )
     @claims = params[:claims]
-    
+
   end
 
   def create_beneficiary
     @member_dependent = @member.member_dependents.build(member_dependent_params)
-    
+
     respond_to do |format|
       if @member_dependent.save
         if member_dependent_params[:claims]
@@ -49,13 +49,13 @@ class MemberDependentsController < InheritedResources::Base
           format.html { render :new_beneficiary, status: :unprocessable_entity }
         end
       end
-      
+
     end
   end
 
   def create
     @member_dependent = @member.member_dependents.build(member_dependent_params)
-    
+
     respond_to do |format|
       if @member_dependent.save
         format.html { redirect_to new_group_remit_batch_dependent_path(@group_remit, @batch), notice: "Member dependent was successfully created." }
@@ -87,28 +87,28 @@ class MemberDependentsController < InheritedResources::Base
 
   private
 
-    def set_group_remit_batch
-      @group_remit = GroupRemit.find(params[:group_remit_id])
-      @batch = @group_remit.batches.find(params[:batch_id])
-    end
+  def set_group_remit_batch
+    @group_remit = GroupRemit.find(params[:group_remit_id])
+    @batch = @group_remit.batches.find(params[:batch_id])
+  end
 
-    def set_member
-      set_group_remit_batch
-      @coop_member = @batch.coop_member
-      @member = @coop_member.member
-    end
+  def set_member
+    set_group_remit_batch
+    @coop_member = @batch.coop_member
+    @member = @coop_member.member
+  end
 
-    def set_member_dependent
-      @member_dependent = @member.member_dependents.find(params[:id])
-    end
+  def set_member_dependent
+    @member_dependent = @member.member_dependents.find(params[:id])
+  end
 
-    def member_dependent_params
-      params.require(:member_dependent).permit(:last_name, :first_name, :middle_name, :suffix, :birth_date, :relationship, :claims)
-    end
+  def member_dependent_params
+    params.require(:member_dependent).permit(:last_name, :first_name, :middle_name, :suffix, :birth_date, :relationship, :claims)
+  end
 
-    def check_userable_type
-      unless current_user.userable_type == 'CoopUser'
-        render file: "#{Rails.root}/public/404.html", status: :not_found
-      end
+  def check_userable_type
+    unless current_user.userable_type == "CoopUser"
+      render file: "#{Rails.root}/public/404.html", status: :not_found
     end
+  end
 end
