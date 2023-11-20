@@ -50,18 +50,57 @@ class PagesController < ApplicationController
     ]
 
     @total_claims_filed = [
-      ["January", rand(20..100)],
-      ["February", rand(20..50)],
-      ["March", rand(50..100)],
-      ["April", rand(50..100)],
-      ["May", rand(50..100)],
-      ["June", rand(20..40)],
-      ["July", rand(80..100)],
-      ["August", rand(50..100)],
-      ["September", rand(50..100)],
-      ["October", rand(50..100)],
-      ["November", rand(50..100)],
-      ["December", rand(50..100)]
+      {
+        name: "Approved Claims",
+        data: [
+        ["January", rand(20..100)],
+        ["February", rand(20..50)],
+        ["March", rand(50..100)],
+        ["April", rand(50..100)],
+        ["May", rand(50..100)],
+        ["June", rand(20..40)],
+        ["July", rand(80..100)],
+        ["August", rand(50..100)],
+        ["September", rand(50..100)],
+        ["October", rand(50..100)],
+        ["November", rand(50..100)],
+        ["December", rand(50..100)]
+        ]
+      },
+      {
+        name: "Pending Claims",
+        data: [
+        ["January", rand(10..25)],
+        ["February", rand(15..50)],
+        ["March", rand(20..100)],
+        ["April", rand(30..100)],
+        ["May", rand(10..100)],
+        ["June", rand(30..40)],
+        ["July", rand(30..100)],
+        ["August", rand(30..100)],
+        ["September", rand(20..60)],
+        ["October", rand(10..50)],
+        ["November", rand(10..20)],
+        ["December", rand(30..40)]
+        ]
+      },
+      {
+        name: "Denied Claims",
+        data: [
+        ["January", rand(3..10)],
+        ["February", rand(15..20)],
+        ["March", rand(1..10)],
+        ["April", rand(1..10)],
+        ["May", rand(10..30)],
+        ["June", rand(30..50)],
+        ["July", rand(30..50)],
+        ["August", rand(10..20)],
+        ["September", rand(20..60)],
+        ["October", rand(10..50)],
+        ["November", rand(30..50)],
+        ["December", rand(10..30)]
+        ]
+      }
     ]
 
     
@@ -70,7 +109,7 @@ class PagesController < ApplicationController
   def president
     @coso_prem = [
       {
-        name: "Jackelyn Ballena",
+        name: "Luzon",
         data: [
           ["January", 1000000],
           ["February", 2000000],
@@ -88,7 +127,7 @@ class PagesController < ApplicationController
         
       },
       {
-        name: "Sylvia Quinesio",
+        name: "Visayas",
         data: [
           ["January", 20000000],
           ["February",10040000],
@@ -105,7 +144,7 @@ class PagesController < ApplicationController
         ]
       },
       {
-        name: "Cecille Laguna",
+        name: "Mindanao",
         data: [
           ["January", 10000000],
           ["February", 5000000],
@@ -125,7 +164,7 @@ class PagesController < ApplicationController
 
     @claims_coso = [
       {
-        name: "Jackelyn Ballena",
+        name: "Luzon",
         data: [
           ["January", @coso_prem[0][:data][0][1] * 0.3],
           ["February", @coso_prem[0][:data][1][1] * 0.3],
@@ -142,7 +181,7 @@ class PagesController < ApplicationController
         ]
       },
       {
-        name: "Sylvia Quinesion",
+        name: "Visayas",
         data: [
           ["January", @coso_prem[1][:data][0][1] * 0.3],
           ["February", @coso_prem[1][:data][1][1] * 0.3],
@@ -159,7 +198,7 @@ class PagesController < ApplicationController
         ]
       },
       {
-        name: "Cecille Laguna",
+        name: "Mindanao",
         data: [
           ["January", @coso_prem[2][:data][0][1] * 0.3],
           ["February", @coso_prem[2][:data][1][1] * 0.3],
