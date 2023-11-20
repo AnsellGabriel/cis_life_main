@@ -192,21 +192,25 @@ Rails.application.routes.draw do
 
   namespace :accounting do
     resources :journals
+
     resources :checks do
       get :cancel, on: :member
+      resources :business_checks, as: 'business', except: %i[index]
     end
+
+    get :search, as: 'business_check_search', path: 'search_business_check', to: "business_checks#search"
+    get :index, as: 'business_check_index', path: 'business_checks', to: "business_checks#index"
+
     get "dashboard", to: "dashboard#index"
 
   end
 
   namespace :treasury do
     resources :payments
-
     resources :cashier_entries do
       get :cancel, on: :member
     end
 
-    resources :business_checks
     resources :accounts
     get "dashboard", to: "dashboard#index"
   end

@@ -1,30 +1,5 @@
-<!--
-<div class="d-flex gap-3">
-
-  <div class="">
-    <div class="<%= flex_justify_align('','center') %> gap-1 mb-1">
-      <%= link_to accounting_checks_path, class: 'btn btn-sm btn-secondary', title: 'Back' do %>
-        <i class="bi bi-arrow-90deg-left"></i>
-      <% end %>
-      <%= link_to edit_accounting_check_path(@check), data: {turbo_frame: 'modal'}, class: 'btn btn-sm btn-outline-primary', title: 'Edit' do %>
-        <i class="bi bi-pencil"></i>
-      <% end %>
-      <%= link_to @check, data: {turbo_confirm: "Delete check voucher 'CV#{@check.voucher}' ?", turbo_method: :delete}, class: 'btn btn-sm btn-outline-danger', title: 'Delete' do %>
-        <i class="bi bi-trash"></i>
-      <% end %>
-    </div>
-
-    <%= render @check %>
-  </div>
-
-
-  <div class="w-75">
-    <%= render 'treasury/business_checks/checks', checks: @business_checks, editable: false %>
-  </div>
-</div>
--->
 <div class="<%= flex_justify_align('', 'center') %> gap-1 mb-1">
-  <%= link_to accounting_checks_path, class: 'btn btn-sm btn-secondary' do %>
+  <%= link_to :back, class: 'btn btn-sm btn-secondary' do %>
     <i class="bi bi-arrow-90deg-left"></i>
   <% end %>
 
@@ -35,18 +10,27 @@
 
 <div class="card" style="margin-left: 35px;">
   <ul class="nav nav-tabs" id="myTab" role="tablist">
-    <li class="nav-item" role="presentation">
-      <button class="nav-link active" id="ledger-tab" data-bs-toggle="tab" data-bs-target="#ledger" type="button" role="tab" aria-controls="ledger" aria-selected="true">Ledger</button>
-    </li>
+
+    <% if current_user.is_accountant? %>
+      <li class="nav-item" role="presentation">
+        <button class="nav-link active" id="ledger-tab" data-bs-toggle="tab" data-bs-target="#ledger" type="button" role="tab" aria-controls="ledger" aria-selected="true">Ledger</button>
+      </li>
+    <% end %>
+
     <li class="nav-item" role="presentation">
       <button class="nav-link" id="check-tab" data-bs-toggle="tab" data-bs-target="#check" type="button" role="tab" aria-controls="check" aria-selected="false">Business Checks</button>
     </li>
   </ul>
   <div class="tab-content" id="myTabContent">
-    <div class="tab-pane fade show active" id="ledger" role="tabpanel" aria-labelledby="ledger-tab">
-      <%= render 'payments/entries/ledger', ledgers: @ledgers, entry: @check %>
-    </div>
-    <div class="tab-pane fade" id="check" role="tabpanel" aria-labelledby="check-tab">
+
+    <% if current_user.is_accountant? %>
+      <div class="tab-pane fade show active" id="ledger" role="tabpanel" aria-labelledby="ledger-tab">
+        <%= render 'payments/entries/ledger', ledgers: @ledgers, entry: @check %>
+      </div>
+    <% end %>
+
+    <div class="tab-pane fade <%= 'show active' if current_user.is_treasurer? %>" id="check" role="tabpanel" aria-labelledby="check-tab">
+      <%= render 'business_checks', business_checks: @business_checks, voucher: @check %>
     </div>
   </div>
 </div>

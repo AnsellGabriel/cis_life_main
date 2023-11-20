@@ -1,0 +1,64 @@
+<div class="p-3">
+
+  <% if current_user.is_treasurer? && !voucher.cancelled? %>
+    <div class="mb-3 <%= flex_justify_align('between') %>">
+      <%= link_to new_accounting_check_business_path(voucher), class: small_btn('primary'), data: {turbo_frame: 'modal'} do %>
+        <i class="bi bi-plus-lg"></i> Add Business Check
+      <% end %>
+    </div>
+  <% end %>
+
+  <table class="table table-bordered table-hover bg-white">
+    <thead style="border-bottom: 10px;">
+      <tr>
+        <th class="text-center">Check No.</th>
+        <th class="text-center">Date</th>
+        <th class="text-center">Type</th>
+        <th class="text-center">Amount</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% if business_checks.present? %>
+        <% business_checks.each do |check| %>
+          <tr>
+            <td class='text-center' >
+              <%= check.check_number %>
+
+               <% if !voucher.cancelled? %>
+                <%= link_to edit_accounting_check_business_path(voucher, check), 
+                  class: small_btn('outline-primary'), 
+                  title: 'Edit check', data: {turbo_frame: 'modal'} do %>
+                  <i class="bi bi-pencil"></i>
+                <% end %>
+                <%= link_to accounting_check_business_path(voucher, check), 
+                  class: small_btn('outline-danger'), 
+                  title: 'Remove check',
+                  data: {turbo_confirm: 'Remove check?', turbo_method: :delete} do %>
+                  <i class="bi bi-trash"></i>
+                <% end %>
+              <% end %>
+
+            </td>
+            <td class='text-center' ><%= month_day_year check.check_date %></td>
+            <td class='text-center'><%= check.check_type&.humanize %></td>
+            <td class="text-end"><%= to_curr check.amount %></td>
+          </tr>
+        <% end %>
+      <% else %>
+        <tr>
+          <td colspan="4" class="text-center">No business check yet.</td>
+        </tr>
+      <% end %>
+    </tbody>
+
+    <% if business_checks.present? %>
+      <tfoot>
+        <tr>
+          <th class="text-end" colspan="3">Total</th>
+          <th class="text-end"><%= to_curr voucher.business_checks.sum(:amount) %></th>
+        </tr>
+      </tfoot>
+    <% end %>
+  </table>
+</div>
+

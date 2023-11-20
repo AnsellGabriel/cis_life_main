@@ -36,4 +36,12 @@ class User < ApplicationRecord
     super && approved?
   end
 
+  def is_accountant?
+    userable.department_id == 11
+  end
+
+  def is_treasurer?
+    userable.department_id == 26
+  end
+
 end

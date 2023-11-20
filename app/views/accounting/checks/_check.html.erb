@@ -8,12 +8,12 @@
         <p class="badge bg-<%= check.decorate.status_color %>"><%= check.status.humanize %></p>
       </div>
       <div class="">
-        <% unless check.cancelled? or check.posted? %>
+        <% if check.pending? and current_user.is_accountant? %>
           <%= link_to edit_accounting_check_path(check), class: 'btn btn-outline-primary mt-1', data: {turbo_frame: 'modal'}, title: 'Edit receipt' do %> 
             <i class="bi bi-pencil"></i><span> Edit</span>
           <% end %>
-          <%= link_to cancel_accounting_check_path(check), data: {turbo_confirm: 'Cancel receipt?', turbo_method: :get}, class: 'btn btn-outline-danger mt-1', title: 'Cancel receipt' do %>
-            <i class="bi bi-x-lg"></i><span> Cancel OR</span>
+          <%= link_to cancel_accounting_check_path(check), data: {turbo_confirm: 'Cancel voucher?', turbo_method: :get}, class: 'btn btn-outline-danger mt-1', title: 'Cancel Voucher' do %>
+            <i class="bi bi-x-lg"></i><span> Cancel Voucher</span>
           <% end %>
         <% end %>
       </div>
