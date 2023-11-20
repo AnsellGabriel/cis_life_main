@@ -54,13 +54,13 @@ class Treasury::CashierEntry < ApplicationRecord
     end
   end
 
-  def net_amount
-    if remittance?
-      entriable.payable.coop_commission
-    else
-      amount
-    end
-  end
+  # def net_amount
+  #   if remittance?
+  #     entriable.payable.gross_premium
+  #   else
+  #     amount
+  #   end
+  # end
 
   def remittance?
     self.entriable_type == 'Payment'

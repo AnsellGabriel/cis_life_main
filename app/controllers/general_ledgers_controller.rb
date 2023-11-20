@@ -10,10 +10,13 @@ class GeneralLedgersController < ApplicationController
 
     if @entry.update(status: :posted)
       if params[:e_t] == 'ce' && @entry.remittance?
-        @entry.entriable.paid
+        pay_service = PaymentService.new(@entry.entriable, current_user)
+        result = pay_service.post_payment
+      else
+        result = 'Voucher posted.'
       end
 
-      redirect_to entry_path, notice: "#{params[:e_t] == 'ce' ? 'OR' : 'Voucher'} posted"
+      redirect_to entry_path, notice: result
     end
   end
 
