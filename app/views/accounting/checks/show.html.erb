@@ -3,12 +3,11 @@
     <i class="bi bi-arrow-90deg-left"></i>
   <% end %>
 
-  <%= content_tag :h1, 'Check Voucher', class: 'mb-0' %>
 </div>
 
 <%= render @check %>
 
-<div class="card" style="margin-left: 35px;">
+<div class="card">
   <ul class="nav nav-tabs" id="myTab" role="tablist">
 
     <% if current_user.is_accountant? %>

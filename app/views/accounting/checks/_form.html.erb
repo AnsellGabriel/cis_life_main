@@ -30,7 +30,7 @@
      %>
     <div class="row">
       <div class="col-7">
-        <%= f.association :treasury_account, error: '*Required' %>
+        <%= f.association :treasury_account, label: 'Bank', error: '*Required' %>
       </div>
       <div class="col-5" data-controller="number-formatter">
         <%= f.input :amount, as: :string, error: '*Required', input_html: {data: {number_formatter_target: 'input'}} %>

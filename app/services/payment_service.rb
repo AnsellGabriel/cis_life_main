@@ -1,4 +1,3 @@
-# app/services/csv_import_service.rb
 class PaymentService
   def initialize(payment, current_user)
     @payment = payment

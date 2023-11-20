@@ -1,9 +1,9 @@
 <div class="d-flex gap-3">
-  <div class="card" style="width: 60%; margin-left: 35px;">
+  <div class="card" style="width: 60%;">
     <div class="card-header <%= flex_justify_align('between', '') %>">
       <div class="">
-        <p class="mb-0 text-muted"><small>Voucher</small></p>
-        <h3 class="text-primary"><%= "CV#{check.voucher}" %></h3>
+        <p class="mb-0 text-muted"><small>Check Voucher</small></p>
+        <h3 class="text-primary"><%= "#{check.voucher}" %></h3>
         <p><small><strong>Voucher date:</strong> <span><%= month_day_year(check.date_voucher) %></span></small></p>
         <p class="badge bg-<%= check.decorate.status_color %>"><%= check.status.humanize %></p>
       </div>

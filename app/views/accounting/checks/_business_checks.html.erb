@@ -11,6 +11,9 @@
   <table class="table table-bordered table-hover bg-white">
     <thead style="border-bottom: 10px;">
       <tr>
+        <% if business_checks.present? %>
+          <th></th>
+        <% end %>
         <th class="text-center">Check No.</th>
         <th class="text-center">Date</th>
         <th class="text-center">Type</th>
@@ -21,14 +24,12 @@
       <% if business_checks.present? %>
         <% business_checks.each do |check| %>
           <tr>
-            <td class='text-center' >
-              <%= check.check_number %>
-
-               <% if !voucher.cancelled? %>
+            <% if !voucher.cancelled? %>
+              <td class="text-center">
                 <%= link_to edit_accounting_check_business_path(voucher, check), 
                   class: small_btn('outline-primary'), 
                   title: 'Edit check', data: {turbo_frame: 'modal'} do %>
-                  <i class="bi bi-pencil"></i>
+                  <i class="bi bi-pencil-square"></i>
                 <% end %>
                 <%= link_to accounting_check_business_path(voucher, check), 
                   class: small_btn('outline-danger'), 
@@ -36,8 +37,10 @@
                   data: {turbo_confirm: 'Remove check?', turbo_method: :delete} do %>
                   <i class="bi bi-trash"></i>
                 <% end %>
-              <% end %>
-
+              </td>
+            <% end %>
+            <td class='text-center' >
+              <%= check.check_number %>
             </td>
             <td class='text-center' ><%= month_day_year check.check_date %></td>
             <td class='text-center'><%= check.check_type&.humanize %></td>
@@ -54,7 +57,7 @@
     <% if business_checks.present? %>
       <tfoot>
         <tr>
-          <th class="text-end" colspan="3">Total</th>
+          <th class="text-end" colspan="4">Total</th>
           <th class="text-end"><%= to_curr voucher.business_checks.sum(:amount) %></th>
         </tr>
       </tfoot>
