@@ -1,0 +1,38 @@
+<div class="container">
+
+  <%= content_tag :h3, "Cooperative" %>
+
+  <div class="row mb-2">
+    <div class="col-6">
+      <%= pie_chart @prem_v_claims, title: "Premium vs. Claims" %>
+    </div>
+    <div class="col-6">
+      <%#= pie_chart @pie_chart_gender, title: "Premium per Gender" %>
+      <%= render "pages/graphs/gender_chart", chart_data: @pie_chart_gender %>
+    </div>
+  </div>
+
+  <div class="row mb-2">
+    <div class="col-6">
+      <%= column_chart @prem_per_gr, title: "Premium per Group Remit", colors: ["#0DD823"] %>
+    </div>
+    <div class="col-6">
+      <%= column_chart @claims_per_gr, title: "Claims per Group Remit", colors: ["#EE2525"] %>
+    </div>
+  </div>
+
+  <div class="row mb-2">
+    <%= render "pages/graphs/causes_chart", chart_data: @cause_chart %>
+  </div>
+
+  <div data-controller="graph">
+    <div class="row mb-2 mt-2">
+      <div class="col-4">
+        <%= select_tag 'select_type', options_for_select([["2020", 0], ["2021", 1], ["2022", 2], ["2023", 3]]), data: { action: "change->graph#premAnnual", target: "annualData" }, id: "annual_id", class: "form-select" %>
+        <%= content_tag :p, "Please select year to view graph...", class: "lead text-secondary" %>
+      </div>
+      <%= turbo_frame_tag "premAnnual charts" %>
+    </div>
+  </div>
+
+</div>

@@ -63,6 +63,13 @@
                 <%= link_to "Medical Director", med_directors_home_path, class: "dropdown-item" %>
               <% end %>
 
+              <%= render 'layouts/partials/nav_dropdown', title: "Dashboard" do %>
+                <%= link_to "Cooperative", pages_coop_path, class: "dropdown-item", data: { turbo: false } %>
+                <%= link_to "C.O.S.O.", pages_coso_path, class: "dropdown-item", data: { turbo: false } %>
+                <%= link_to "President", pages_president_path, class: "dropdown-item", data: { turbo: false } %>
+              <% end %>
+              
+
               <%= render 'layouts/partials/nav_dropdown', title: 'Data Entries' do %>
                 <%= link_to "Agreement", agreements_path, class: "dropdown-item" %>
                 <%= link_to "EmpAgreement", emp_agreements_path, class: "dropdown-item" %>

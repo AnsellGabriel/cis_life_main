@@ -1,0 +1,66 @@
+<div class="container">
+
+  <%= content_tag :h3, "President" %>
+
+
+  <div class="row mt-3">
+    <%= line_chart @coso_prem, title: "Premium per COSO" %>
+  </div>
+
+  <div class="row mt-3">
+    <%= column_chart @claims_coso, title: "Claims per COSO" %>
+  </div>
+
+  <div class="row mt-3">
+    <%= render "pages/graphs/agent_prem_claims", chart_data: @prem_claim_agent %>
+  </div>
+
+  <div class="row mt-2">
+    <div class="col-4">
+      <%#= pie_chart @premium_per_plan, id: "premium-per-plan", title: "Premium per Plan" %>
+      <%= render "pages/graphs/prem_per_plan", chart_data: @premium_per_plan %>
+    </div>
+    <div class="col-4">
+      <%#= pie_chart @claims_per_plan, id: "claims-per-plan", title: "Claims per Plan" %>
+      <%= render "pages/graphs/claims_per_plan", chart_data: @claims_per_plan %>
+    </div>
+    <div class="col-4">
+      <%#= pie_chart @pie_chart_gender, title: "Premium per Gender" %>
+      <%= render "pages/graphs/gender_chart", chart_data: @pie_chart_gender %>
+    </div>
+  </div>
+
+  <div class="row mt-3">
+    <%#= column_chart @cause_chart, title: "Top Claim Causes" %>
+    <%= render "pages/graphs/causes_chart", chart_data: @cause_chart %>
+  </div>
+  
+
+  <div data-controller="graph">
+    <div class="row mb-2 mt-2">
+      <div class="col-4">
+        <%= select_tag 'data_type', options_for_select([['Small',0], ['Medium',1], ['Large',2]]), data: { action: "change->graph#selectType", target: "selectType" }, id: "type_id", class: "form-select" %>
+      </div>
+      <%= content_tag :p, "Please select Category to view graph...", class: "lead text-secondary" %>
+    </div>
+
+    <%#= turbo_frame_tag 'update charts'%>
+    <%= turbo_frame_tag 'update charts' do %>
+      <%#= column_chart @chart_data, id: "coops-chart", xtitle: @c_title, ytitle: 'Amount' %>
+    <% end %>
+  </div>
+
+
+  <div data-controller="graph">
+    <div class="row mb-2 mt-2">
+      <div class="col-4">
+        <%= select_tag 'select_type', options_for_select([["Premium", 0], ["Claims", 1], ["Both", 2]]), data: { action: "change->graph#dataSelect", target: "selectData" }, id: "select_id", class: "form-select" %>
+      </div>
+      <%= content_tag :p, "Please select type to view graph...", class: "lead text-secondary" %>
+    </div>
+    <%= turbo_frame_tag "select charts" %>
+  </div>
+
+ 
+</div>
+<%#= console %>

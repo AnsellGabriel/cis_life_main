@@ -98,6 +98,98 @@ only: %i[ show edit update destroy approve_batch deny_batch pending_batch recons
     #   @process_coverages = @process_coverages_x
     # end
 
+    @pie_chart_data1 = [
+      ["Approved Claims", 150],
+      ["Denied Claims", 54],
+      ["Pending Claims", 123]
+    ]
+
+    min_value = 1_000_000  # 1 million
+    max_value = 2_000_000  # 2 million
+    step = 100_000
+
+    random_number1 = min_value + (step * rand(((max_value - min_value) / step) + 1))
+    random_number2 = min_value + (step * rand(((max_value - min_value) / step) + 1))
+    
+    @pie_chart_data2 = [
+      ["Male", random_number1],
+      ["Female", random_number2]
+    ]
+
+    @column_chart_data1 = [
+      {
+        name: "Premium",
+        data: [
+          ["Agent 1", 900000],
+          ["Agent 2", 1500000],
+          ["Agent 3", 200000],
+          ["Agent 4", 5000000],
+          ["Agent 5", 2500000]
+        ]
+      },
+      {
+        name: "Claims",
+        data: [
+          ["Agent 1", 150000],
+          ["Agent 2", 800000],
+          ["Agent 3", 700000],
+          ["Agent 4", 2000000],
+          ["Agent 5", 4000000]
+        ]
+      }
+    ]
+
+
+    @line_chart_data2 = [
+     {
+      name: "Premium",
+      data: [
+        ["January", 20000000],
+        ["February",10040000],
+        ["March",30000200],
+        ["April",35000000],
+        ["May",60000000],
+        ["June",20400100],
+        ["July",40120398],
+        ["August",50002010],
+        ["September",28172881],
+        ["October",30560000],
+        ["November",20102491],
+        ["December",40123800]
+      ]
+     },
+     {
+      name: "Claims",
+      data: [
+        ["January", 10000000],
+        ["February", 5000000],
+        ["March", 20000100],
+        ["April", 40123800],
+        ["May", 39010765],
+        ["June", 19920100],
+        ["July", 8000000],
+        ["August", 10202900],
+        ["September", 15120890],
+        ["October", 5000190],
+        ["November", 19012400],
+        ["December", 25012780]
+      ]
+     }
+    ]
+
+    @cause_chart = [
+      ["Cardiovascular Diseases", 3890],
+      ["Respiratory Diseases", 2077],
+      ["Cancer/Carcinomas", 1931],
+      ["Kidney Diseases", 1231],
+      ["Cerebrovascular Diseases", 1207],
+      ["Diabetes", 627],
+      ["Liver Diseases", 419],
+      ["Vehicular Accident", 339],
+      ["Gastrointestinal Diseases", 239],
+      ["Accidental Death", 134]
+    ]
+
   end
 
   def preview
