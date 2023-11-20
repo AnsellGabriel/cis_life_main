@@ -49,6 +49,21 @@ class PagesController < ApplicationController
      }
     ]
 
+    @total_claims_filed = [
+      ["January", rand(20..100)],
+      ["February", rand(20..50)],
+      ["March", rand(50..100)],
+      ["April", rand(50..100)],
+      ["May", rand(50..100)],
+      ["June", rand(20..40)],
+      ["July", rand(80..100)],
+      ["August", rand(50..100)],
+      ["September", rand(50..100)],
+      ["October", rand(50..100)],
+      ["November", rand(50..100)],
+      ["December", rand(50..100)]
+    ]
+
     
   end
 
@@ -469,7 +484,7 @@ class PagesController < ApplicationController
 
   def update_prem_annum
     @prem_per_year = case params[:data_type].to_i
-    when 0 #2020
+    when 0 # 2020
       [{
         name: "Premium",
         data: [
@@ -505,7 +520,7 @@ class PagesController < ApplicationController
         ]
       }]
 
-    when 1 #2021
+    when 1 # 2021
       [{
         name: "Premium",
         data: [
@@ -541,9 +556,9 @@ class PagesController < ApplicationController
         ]
       }]
 
-    when 2
-      [
-        name: "2022",
+    when 2 # 2022
+      [{
+        name: "Premium",
         data: [
           ["January", 32100000],
           ["February",12940000],
@@ -558,10 +573,27 @@ class PagesController < ApplicationController
           ["November",28002491],
           ["December",39023800]
         ]
-      ]
-    when 3
-      [
-        name: "2023",
+      },
+    {
+      name: "Claims",
+        data: [
+          ["January", 32100000 * 0.23],
+          ["February",12940000 * 0.21],
+          ["March",21000200 * 0.36],
+          ["April",40000000 * 0.24],
+          ["May",41100000 * 0.28],
+          ["June",10200100 * 0.31],
+          ["July",41200398 * 0.33],
+          ["August",35002010 * 0.25],
+          ["September",18972881 * 0.29],
+          ["October",21060000 * 0.30],
+          ["November",28002491 * 0.31],
+          ["December",39023800 * 0.40]
+        ]
+    }]
+    when 3 # 2023
+      [{
+        name: "Premium",
         data: [
           ["January", 30000000],
           ["February",21040000],
@@ -574,7 +606,22 @@ class PagesController < ApplicationController
           ["September",30072881],
           ["October",29060000]
         ]
+      },
+    {
+      name: "Claims",
+      data: [
+        ["January", 30000000 * 0.31],
+        ["February",21040000 * 0.32],
+        ["March",40000200 * 0.33],
+        ["April",30000000 * 0.34],
+        ["May",51000000 * 0.35],
+        ["June",31000100 * 0.29],
+        ["July",33020398 * 0.28],
+        ["August",41002010 * 0.42],
+        ["September",30072881 * 0.27],
+        ["October",29060000 * 1.2]
       ]
+    }]
     end
 
     respond_to do |format|
