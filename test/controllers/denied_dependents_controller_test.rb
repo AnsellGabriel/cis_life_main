@@ -17,7 +17,8 @@ class DeniedDependentsControllerTest < ActionDispatch::IntegrationTest
 
   test "should create denied_dependent" do
     assert_difference("DeniedDependent.count") do
-      post denied_dependents_url, params: { denied_dependent: { age: @denied_dependent.age, group_remit_id: @denied_dependent.group_remit_id, name: @denied_dependent.name, reason: @denied_dependent.reason } }
+      post denied_dependents_url,
+params: { denied_dependent: { age: @denied_dependent.age, group_remit_id: @denied_dependent.group_remit_id, name: @denied_dependent.name, reason: @denied_dependent.reason } }
     end
 
     assert_redirected_to denied_dependent_url(DeniedDependent.last)
@@ -34,7 +35,8 @@ class DeniedDependentsControllerTest < ActionDispatch::IntegrationTest
   end
 
   test "should update denied_dependent" do
-    patch denied_dependent_url(@denied_dependent), params: { denied_dependent: { age: @denied_dependent.age, group_remit_id: @denied_dependent.group_remit_id, name: @denied_dependent.name, reason: @denied_dependent.reason } }
+    patch denied_dependent_url(@denied_dependent),
+params: { denied_dependent: { age: @denied_dependent.age, group_remit_id: @denied_dependent.group_remit_id, name: @denied_dependent.name, reason: @denied_dependent.reason } }
     assert_redirected_to denied_dependent_url(@denied_dependent)
   end
 

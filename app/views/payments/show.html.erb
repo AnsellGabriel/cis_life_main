@@ -1,0 +1,116 @@
+<%= content_tag :h1, "#{@payment.payable.name} Payment", class: 'mb-3' %>
+
+<div class="d-flex gap-3 mb-2">
+  <div class="card" style="width: 60%">
+    <div class="card-header <%= flex_justify_align('between', 'center') %>">
+      <div class="">
+        <h3 class="badge bg-<%= @payment.decorate.status_color %> mb-0"><%= @payment.status.humanize %></h3>
+      </div>
+      <div class="<%= flex_justify_align('', 'center') %> gap-1 mb-1">
+        <%= link_to @payment.receipt.url, class: 'btn btn-sm btn-outline-primary' do %>
+          <i class="bi bi-cash"></i> Show Payment
+        <% end %> 
+
+        <% if @payment.rejected?  %>
+          <%= link_to payment_remarks_path(@payment), class: 'btn btn-sm btn-outline-danger', data: {turbo_frame: 'reg_form_modal'} do %>
+            <i class="bi bi-card-list"></i> Remarks
+          <% end %>
+        <% else %>
+          <%= link_to new_payment_remark_path(@payment), class: 'btn btn-sm btn-outline-danger', data: {turbo_frame: 'reg_form_modal'} do %>
+            <i class="bi bi-hand-thumbs-down"></i> Reject
+          <% end %>
+        <% end %>
+      </div>
+    </div>
+    <div class="card-body">
+      <div class="row mb-3">
+        <span class="small fw-bold col-2">Payment date: </span>
+        <span class="small col-10"><%= month_day_year(@payment.created_at) %></span>
+      </div>
+
+      <div class="row mb-3">
+        <span class="small fw-bold col-2">Payee: </span>
+        <span class="small col-10"><%= @payment.coop %></span>
+      </div>
+
+      <div class="row mb-3">
+        <span class="small fw-bold col-2">Payment: </span>
+        <span class="small col-10"><%= @payment.plan.acronym %></span>
+      </div>
+
+      <div class="row mb-3">
+        <span class="small fw-bold col-2">Agent: </span>
+        <span class="small col-10"><%= @payment.agent %></span>
+      </div>
+    </div>
+  </div>
+
+  <div class="card" style="width: 40%">
+    <div class="card-body">
+      <div class="<%= flex_justify_align('between') %>">
+        <span class="small fw-bold">Details</span>
+        <span class="small fw-bold">Amount</span>
+      </div>
+      <hr style="opacity: 1; border-color: black !important">
+      <div class="<%= flex_justify_align('between') %>">
+        <span class="small">Gross Premium</span>
+        <span class="small"><%= to_curr(@payment.payable.gross_premium) %></span>
+      </div>
+      <hr>
+      <div class="<%= flex_justify_align('between') %>">
+        <span class="small">Coop Service Fee</span>
+        <span class="small">(<%= to_curr(@payment.payable.coop_commission) %>)</span>
+      </div>
+      <hr style="opacity: 1; border-color: black !important">
+      <div class="<%= flex_justify_align('between') %>">
+        <span class="small">Net Premium</span>
+        <span class="small"><%= to_curr(@payment.payable.coop_net_premium) %></span>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<% if @payment.decorate.receiptable? %>
+  <%= link_to new_payment_entry_path(@payment), class: 'btn btn-sm btn-primary mb-3', data: {turbo_frame: 'modal'} do %>
+    <i class="bi bi-plus-lg"></i> Generate OR
+  <% end %>   
+<% end %>
+
+<div class="">
+  <table class="table table-bordered table-hover bg-white">
+    <thead style="border-bottom: 10px;">
+      <tr>
+        <th class="text-center">OR #</th>
+        <th class="text-center">Date</th>
+        <th class="text-center">Amount</th>
+        <th class="text-center">Status</th>
+      </tr>
+    </thead>
+
+    <tbody>
+      <% if @entries.present? %>
+        <% @entries.order(created_at: :desc).each do |entry| %>
+          <tr>
+            <td class="text-center">
+              <%= link_to entry.or_no, payment_entry_path(@payment, entry), class: 'text-primary' %>
+            </td>
+            <td class="text-center">
+              <%= month_day_year(entry.or_date) %>
+            </td>
+            <td class="text-end">
+              <%= to_curr(entry.amount) %>
+            </td>
+            <td class="text-center text-<%= entry.decorate.status_color %>">
+              <%= to_curr(entry.status.humanize) %>
+            </td>
+          </tr>
+        <% end %>
+      <% else %>
+        <tr>
+          <td colspan="7" class="text-center">No OR yet.</td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+</div>

@@ -21,7 +21,7 @@ class AgreementBenefitsController < ApplicationController
     # raise "errors"
     default_value
   end
-  
+
 
   # GET /agreement_benefits/1/edit
   def edit
@@ -56,26 +56,26 @@ class AgreementBenefitsController < ApplicationController
   end
 
   private
-    # Use callbacks to share common setup or constraints between actions.
-    def set_agreement_benefit
-      @agreement_benefit = AgreementBenefit.find(params[:id])
-    end
+  # Use callbacks to share common setup or constraints between actions.
+  def set_agreement_benefit
+    @agreement_benefit = AgreementBenefit.find(params[:id])
+  end
 
-    # Only allow a list of trusted parameters through.
-    def agreement_benefit_params
-      # params.require(:agreement_benefit).permit(:agreement_id, :plan_id, :proposal_id, :option_id, :name, :description, :min_age, :max_age, :insured_type)
-      params.require(:agreement_benefit).permit(:agreement_id, :plan_id, :proposal_id, :option_id, :name, :description, :min_age, :max_age, :insured_type, 
-        product_benefits_param: [:id, :coverage_amount, :premium, :agreement_benefit_id, :benefit_id, :duration, :residency_floor, :residency_ceiling])
-    end
+  # Only allow a list of trusted parameters through.
+  def agreement_benefit_params
+    # params.require(:agreement_benefit).permit(:agreement_id, :plan_id, :proposal_id, :option_id, :name, :description, :min_age, :max_age, :insured_type)
+    params.require(:agreement_benefit).permit(:agreement_id, :plan_id, :proposal_id, :option_id, :name, :description, :min_age, :max_age, :insured_type,
+      product_benefits_param: [:id, :coverage_amount, :premium, :agreement_benefit_id, :benefit_id, :duration, :residency_floor, :residency_ceiling])
+  end
 
-    def default_value 
-      @agreement_benefit.min_age = 18
-      @agreement_benefit.max_age = 65
-    end
-    
-    # def check_userable_type
-    #   unless current_user.userable_type == 'CoopUser'
-    #     render file: "#{Rails.root}/public/404.html", status: :not_found
-    #   end
-    # end
+  def default_value
+    @agreement_benefit.min_age = 18
+    @agreement_benefit.max_age = 65
+  end
+
+  # def check_userable_type
+  #   unless current_user.userable_type == 'CoopUser'
+  #     render file: "#{Rails.root}/public/404.html", status: :not_found
+  #   end
+  # end
 end

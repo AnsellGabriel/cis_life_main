@@ -28,7 +28,7 @@ class AgreementsController < ApplicationController
     @agreement.agreement_benefits.build
     set_dummy_value
   end
-  
+
   # GET /agreements/1/edit
   def edit
   end
@@ -37,7 +37,7 @@ class AgreementsController < ApplicationController
   def create
     # raise 'errors'
     @agreement = Agreement.new(agreement_params)
-    
+
     if @agreement.save!
       redirect_to @agreement, notice: "Agreement was successfully created."
     else
@@ -61,22 +61,22 @@ class AgreementsController < ApplicationController
   end
 
   private
-    # Use callbacks to share common setup or constraints between actions.
-    def set_agreement
-      @agreement = Agreement.find(params[:id])
-    end
+  # Use callbacks to share common setup or constraints between actions.
+  def set_agreement
+    @agreement = Agreement.find(params[:id])
+  end
 
-    # Only allow a list of trusted parameters through.
-    def agreement_params
-      # params.require(:agreement).permit(:plan_id, :cooperative_id, :proposal_id, :agent_id, :moa_no, :contestability, :nel, :nml, :anniversary_type, :transferred, :transferred_date, :previous_provider, :comm_type, :claims_fund, :entry_age_from, :entry_age_to, :exit_age)
-      params.require(:agreement).permit(:plan_id, :cooperative_id, :agent_id, :moa_no, :contestability, :nel, :nml, :anniversary_type, :transferred, :transferred_date, :previous_provider, :comm_type, :claims_fund, :claims_fund_amount, :entry_age_from, :entry_age_to, :exit_age, 
-        agreement_benefits_attributes: [:id, :name, :description, :min_age, :max_age, :exit_age, :insured_type, :_destroy],
-        anniversaries_attributes: [:id, :name, :anniversary_date, :_destroy])
-    end
+  # Only allow a list of trusted parameters through.
+  def agreement_params
+    # params.require(:agreement).permit(:plan_id, :cooperative_id, :proposal_id, :agent_id, :moa_no, :contestability, :nel, :nml, :anniversary_type, :transferred, :transferred_date, :previous_provider, :comm_type, :claims_fund, :entry_age_from, :entry_age_to, :exit_age)
+    params.require(:agreement).permit(:plan_id, :cooperative_id, :agent_id, :moa_no, :contestability, :nel, :nml, :anniversary_type, :transferred, :transferred_date, :previous_provider, :comm_type, :claims_fund, :claims_fund_amount, :entry_age_from, :entry_age_to, :exit_age, :coop_sf, :agent_sf, :minimum_participation, :reconsiderable, :unusable,
+      agreement_benefits_attributes: [:id, :name, :description, :min_age, :max_age, :exit_age, :insured_type, :with_dependent, :_destroy],
+      anniversaries_attributes: [:id, :name, :anniversary_date, :_destroy])
+  end
 
-    def set_dummy_value 
-      @agreement.contestability = 12
-      @agreement.nel  = 25000
-      @agreement.nml = 5000000
-    end
+  def set_dummy_value
+    @agreement.contestability = 12
+    @agreement.nel  = 25000
+    @agreement.nml = 5000000
+  end
 end

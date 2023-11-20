@@ -53,19 +53,20 @@ class CoopAgreementsController < ApplicationController
   end
 
   private
-    # Use callbacks to share common setup or constraints between actions.
-    def set_agreement
-      @agreement = Agreement.find(params[:id])
-    end
+  # Use callbacks to share common setup or constraints between actions.
+  def set_agreement
+    @agreement = Agreement.find(params[:id])
+  end
 
-    # Only allow a list of trusted parameters through.
-    def agreement_params
-      params.require(:agreement).permit(:plan_id, :cooperative_id, :agent_id, :moa_no, :contestability, :nel, :nml, :anniversary_type, :transferred, :transferred_date, :previous_provider, :comm_type, :claims_fund, :entry_age_from, :entry_age_to, :exit_age)
-    end
+  # Only allow a list of trusted parameters through.
+  def agreement_params
+    params.require(:agreement).permit(:plan_id, :cooperative_id, :agent_id, :moa_no, :contestability, :nel, :nml, :anniversary_type, :transferred, :transferred_date, :previous_provider, :comm_type,
+:claims_fund, :entry_age_from, :entry_age_to, :exit_age)
+  end
 
-    def check_userable_type
-      unless current_user.userable_type == 'CoopUser'
-        render file: "#{Rails.root}/public/404.html", status: :not_found
-      end
+  def check_userable_type
+    unless current_user.userable_type == "CoopUser"
+      render file: "#{Rails.root}/public/404.html", status: :not_found
     end
+  end
 end

@@ -1,0 +1,40 @@
+
+<div class="<%= flex_justify_align('', 'center') %> gap-1 mb-3">
+  <%= content_tag :h4, @payment.payable.name, class: 'text-primary mb-0' %>
+  <%= link_to new_treasury_cashier_entry_path(gr_id: @payment.payable), class: 'btn btn-sm btn-primary', data: {turbo_frame: 'modal'} do %>
+    New Entry
+  <% end %>  
+</div>
+
+<div class="">
+    <table class="table table-striped table-bordered table-hover">
+      <thead>
+        <tr>
+          <th class="text-center">OR #</th>
+          <th class="text-center">Date</th>
+          <th>Payee</th>
+          <th class="text-center">Amount</th>
+        </tr>
+      </thead>
+
+      <tbody>
+        <% if @entries.present? %>
+          <% @entries.each do |entry| %>
+            <% entry.entriable = entry.entriable.class.name == 'Remittance' ? entry.entriable.agreement.cooperative : entry.entriable %>
+
+            <tr>
+              <td class="text-center"><%= link_to entry.or_no, entry, class: 'text-primary' %></td>
+              <td class="text-center"><%= month_day_year(entry.or_date) %></td>
+              <td><%= entry.entriable %></td>
+              <td class="text-end"><%= to_curr(entry.amount) %></td>
+            </tr>
+          <% end %>
+        <% else %>
+          <tr>
+            <td colspan="7" class="text-center">No entries found.</td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+  </div>
+  <% console %>

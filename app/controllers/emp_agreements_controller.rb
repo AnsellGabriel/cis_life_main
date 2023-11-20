@@ -108,13 +108,13 @@ class EmpAgreementsController < ApplicationController
   end
 
   private
-    # Use callbacks to share common setup or constraints between actions.
-    def set_emp_agreement
-      @emp_agreement = EmpAgreement.find(params[:id])
-    end
+  # Use callbacks to share common setup or constraints between actions.
+  def set_emp_agreement
+    @emp_agreement = EmpAgreement.find(params[:id])
+  end
 
-    # Only allow a list of trusted parameters through.
-    def emp_agreement_params
-      params.require(:emp_agreement).permit(:employee_id, :agreement_id, :active, :category_type)
-    end
+  # Only allow a list of trusted parameters through.
+  def emp_agreement_params
+    params.require(:emp_agreement).permit(:employee_id, :agreement_id, :active, :category_type)
+  end
 end

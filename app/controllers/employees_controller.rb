@@ -14,8 +14,9 @@ class EmployeesController < ApplicationController
 
   # GET /employees/new
   def new
-    @employee = Employee.new(last_name: FFaker::Name.last_name, first_name: FFaker::Name.first_name, middle_name: FFaker::Name.last_name, employee_number: FFaker::Number, mobile_number: FFaker::PhoneNumber, designation: FFaker::String)
-    
+    @employee = Employee.new(last_name: FFaker::Name.last_name, first_name: FFaker::Name.first_name, middle_name: FFaker::Name.last_name, employee_number: FFaker::Number,
+mobile_number: FFaker::PhoneNumber, designation: FFaker::String)
+
     # new instance of the "User" class associated with the "Employee" instance.
     @employee.build_user
   end
@@ -58,13 +59,14 @@ class EmployeesController < ApplicationController
   end
 
   private
-    # Use callbacks to share common setup or constraints between actions.
-    def set_employee
-      @employee = Employee.find(params[:id])
-    end
+  # Use callbacks to share common setup or constraints between actions.
+  def set_employee
+    @employee = Employee.find(params[:id])
+  end
 
-    # Only allow a list of trusted parameters through.
-    def employee_params
-      params.require(:employee).permit(:last_name, :first_name, :middle_name, :birthdate, :employee_number, :mobile_number, :designation, :department_id, user_attributes: [:email, :password, :password_confirmation, :userable_type, :userable_id])
-    end
+  # Only allow a list of trusted parameters through.
+  def employee_params
+    params.require(:employee).permit(:last_name, :first_name, :middle_name, :birthdate, :employee_number, :mobile_number, :designation, :department_id,
+user_attributes: [:email, :password, :password_confirmation, :userable_type, :userable_id])
+  end
 end

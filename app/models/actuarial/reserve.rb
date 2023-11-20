@@ -2,8 +2,8 @@ class Actuarial::Reserve < ApplicationRecord
   attr_accessor :n_date
   self.table_name = "actuarial_reserves"
   belongs_to :plan
-  has_many :reserve_batches, class_name: 'Actuarial::ReserveBatch', foreign_key: 'actuarial_reserve_id' 
-  has_many :batches#, class_name: "LoanInsurance::Batch", dependent: :destroy, through: :reserve_batches
+  has_many :reserve_batches, class_name: "Actuarial::ReserveBatch", foreign_key: "actuarial_reserve_id"
+  has_many :batches# , class_name: "LoanInsurance::Batch", dependent: :destroy, through: :reserve_batches
 
 
   DATES = (Date.today.year - 2..Date.today.year).to_a
@@ -73,7 +73,7 @@ class Actuarial::Reserve < ApplicationRecord
         r_batch.reserve_ret_amt = ((r_batch.unearned_pr + r_batch.first_adv_pr + r_batch.second_adv_pr) * 0.5)
 
       else
-        r_batch.term = ((batch.expiry_date - batch.effectivity_date) / 30).to_i 
+        r_batch.term = ((batch.expiry_date - batch.effectivity_date) / 30).to_i
         r_batch.rate = ProductBenefit.get_premium(batch)
         life_cov = ProductBenefit.get_life_cov(batch)
         r_batch.coverage_less_ri = life_cov >= 550000 ? 550000 : life_cov

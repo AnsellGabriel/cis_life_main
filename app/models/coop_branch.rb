@@ -20,7 +20,7 @@ class CoopBranch < ApplicationRecord
     #   "#{self.street}"
     # end
 
-    [self&.street, geo_barangay&.name, geo_municipality&.name, geo_province&.name].compact.join(', ')
+    [self&.street, geo_barangay&.name, geo_municipality&.name, geo_province&.name].compact.join(", ")
   end
 
   def to_upcase

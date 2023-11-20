@@ -3,7 +3,7 @@ class CoopUsersController < ApplicationController
 
   def home
   end
-  
+
   # GET /coop_users or /coop_users.json
   def index
     # @coop_users = CoopUser.all
@@ -18,13 +18,13 @@ class CoopUsersController < ApplicationController
   # GET /coop_users/new
   def new
     @coop_user = CoopUser.new(
-      last_name: FFaker::Name.last_name, 
-      first_name: FFaker::Name.first_name, 
-      middle_name: FFaker::Name.last_name, 
-      mobile_number: FFaker::PhoneNumber, 
+      last_name: FFaker::Name.last_name,
+      first_name: FFaker::Name.first_name,
+      middle_name: FFaker::Name.last_name,
+      mobile_number: FFaker::PhoneNumber,
       designation: FFaker::String
     )
-    
+
     # new instance of the "User" class associated with the "Coop_user" instance.
     @coop_user.build_user
   end
@@ -67,20 +67,20 @@ class CoopUsersController < ApplicationController
   end
 
   private
-    # Use callbacks to share common setup or constraints between actions.
-    def set_coop_user
-      @coop_user = CoopUser.find(params[:id])
-    end
+  # Use callbacks to share common setup or constraints between actions.
+  def set_coop_user
+    @coop_user = CoopUser.find(params[:id])
+  end
 
-    # Only allow a list of trusted parameters through.
-    def coop_user_params
-      params.require(:coop_user).permit(:last_name, :first_name, :middle_name, :birthdate, :mobile_number, :designation, :cooperative_id, :coop_branch_id, 
-        user_attributes: [:email, :password, :password_confirmation, :userable_type, :userable_id])
-    end
+  # Only allow a list of trusted parameters through.
+  def coop_user_params
+    params.require(:coop_user).permit(:last_name, :first_name, :middle_name, :birthdate, :mobile_number, :designation, :cooperative_id, :coop_branch_id,
+      user_attributes: [:email, :password, :password_confirmation, :userable_type, :userable_id])
+  end
 
-    def check_userable_type
-      unless current_user.userable_type == 'CoopUser'
-        render file: "#{Rails.root}/public/404.html", status: :not_found
-      end
+  def check_userable_type
+    unless current_user.userable_type == "CoopUser"
+      render file: "#{Rails.root}/public/404.html", status: :not_found
     end
+  end
 end

@@ -1,8 +1,8 @@
 module BatchesLoader
-	extend ActiveSupport::Concern
+  extend ActiveSupport::Concern
 
-	included do
-		def load_batches
+  included do
+    def load_batches
       batches_eager_loaded = @group_remit.batches.includes(
         {coop_member: :member, batch_dependents: :member_dependent, batch_beneficiaries: :member_dependent},
         :batch_health_decs,
@@ -19,15 +19,15 @@ module BatchesLoader
         @f_batches = @group_remit.batches.joins(:agreement_benefit).where(agreement_benefits: params[:rank_filter])
       elsif params[:insurance_status].present?
         case params[:insurance_status]
-        when 'approved'
+        when "approved"
           @f_batches = batches_eager_loaded.where(insurance_status: :approved)
-        when 'pending'
+        when "pending"
           @f_batches = batches_eager_loaded.where(insurance_status: :pending)
-        when 'denied'
+        when "denied"
           @f_batches = batches_eager_loaded.where(insurance_status: :denied)
-        when 'for_review'
+        when "for_review"
           @f_batches = batches_eager_loaded.where(insurance_status: :for_review)
-        when 'for_reconsideration'
+        when "for_reconsideration"
           @f_batches = batches_eager_loaded.where(status: :for_reconsideration)
         end
       else
@@ -38,6 +38,6 @@ module BatchesLoader
     def paginate_batches
       @pagy, @batches = pagy(@f_batches, items: 10)
     end
-	end
+  end
 
 end

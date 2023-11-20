@@ -39,4 +39,4 @@ class CsvImportService
     spreadsheet = Roo::Spreadsheet.open(file.path, headers: true)
   end
 
-  end
+end

@@ -13,6 +13,7 @@
     <%= f.input :min_age %>
     <%= f.input :max_age %>
     <%= f.input :insured_type, collection: AgreementBenefit::InsuredType %>
+    <%= f.input :with_dependent, label: 'With Dependents?' %>
   </div>
   <br>
   <div class="form-actions text-end">

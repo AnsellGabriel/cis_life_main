@@ -1,4 +1,4 @@
-require 'rails_helper'
+require "rails_helper"
 
 RSpec.describe "loan_insurance/batch_remits/show", type: :view do
   before(:each) do

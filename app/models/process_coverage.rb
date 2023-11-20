@@ -53,7 +53,7 @@ class ProcessCoverage < ApplicationRecord
       # when 2..5 then self.group_remit.batches.where(agreement_benefit: type.id).count
     when 2..5 then self.group_remit.batches.joins(:batch_dependents).where(batch_dependents: { agreement_benefit: type.id }).count
     else
-       self.group_remit.batches.where(agreement_benefit: type.id).count
+      self.group_remit.batches.where(agreement_benefit: type.id).count
     end
   end
 
@@ -61,7 +61,7 @@ class ProcessCoverage < ApplicationRecord
     case i_type
     when 2..5 then self.group_remit.batches.joins(:batch_dependents).where(batch_dependents: { agreement_benefit: type.id }, insurance_status: "approved").count
     else
-       self.group_remit.batches.where(agreement_benefit: type.id, insurance_status: "approved").count
+      self.group_remit.batches.where(agreement_benefit: type.id, insurance_status: "approved").count
     end
   end
 
@@ -69,7 +69,7 @@ class ProcessCoverage < ApplicationRecord
     case i_type
     when 2..5 then self.group_remit.batches.joins(:batch_dependents).where(batch_dependents: { agreement_benefit: type.id }, insurance_status: "denied").count
     else
-       self.group_remit.batches.where(agreement_benefit: type.id, insurance_status: "denied").count
+      self.group_remit.batches.where(agreement_benefit: type.id, insurance_status: "denied").count
     end
   end
 
@@ -77,7 +77,7 @@ class ProcessCoverage < ApplicationRecord
     case i_type
     when 2..5 then self.group_remit.batches.joins(:batch_dependents).where(batch_dependents: { agreement_benefit: type.id }, insurance_status: "pending").count
     else
-       self.group_remit.batches.where(agreement_benefit: type.id, insurance_status: "pending").count
+      self.group_remit.batches.where(agreement_benefit: type.id, insurance_status: "pending").count
     end
   end
 
@@ -110,11 +110,11 @@ class ProcessCoverage < ApplicationRecord
     end
   end
 
-  def sum_batches_net_premium #gyrt
+  def sum_batches_net_premium # gyrt
     self.group_remit.batches.where(insurance_status: :approved).sum(:premium) - (self.group_remit.batches.where(insurance_status: :approved).sum(:coop_sf_amount) + self.group_remit.batches.where(insurance_status: :approved).sum(:agent_sf_amount))
   end
 
-  
+
   def count_batches_denied(klass)
     case klass
     when "LoanInsurance::Batch"
@@ -164,7 +164,7 @@ class ProcessCoverage < ApplicationRecord
   def get_lppi_expiry
     self.group_remit.batches.order(expiry_date: :asc).pluck(:expiry_date).last
   end
-  
+
 
   def self.index_cov_list(approver_id, status, date_range)
     # joins(group_remit: { agreement: { emp_agreements: {employee: :emp_approver} } }).where( emp_approver: { approver_id: approver_id }, emp_agreements: { active: true}).where(status: status, created_at: date_range)

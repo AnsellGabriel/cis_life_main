@@ -19,10 +19,11 @@
     <table class="table table-striped table-bordered table-hover">
       <thead>
         <tr>
-          <th>OR #</th>
-          <th>Date</th>
+          <th class="text-center">OR #</th>
+          <th class="text-center">Date</th>
           <th>Payee</th>
-          <th>Amount</th>
+          <th class="text-center">Amount</th>
+          <th class="text-center">Status</th>
         </tr>
       </thead>
 
@@ -30,10 +31,11 @@
         <% if @entries.present? %>
           <% @entries.each do |entry| %>
             <tr>
-              <td><%= link_to entry.or_no, entry, class: 'text-primary' %></td>
-              <td><%= month_day_year(entry.or_date) %></td>
+              <td class="text-center"><%= link_to entry.or_no, entry.decorate.show_path, class: 'text-primary' %></td>
+              <td class="text-center"><%= month_day_year(entry.or_date) %></td>
               <td><%= entry.entriable %></td>
-              <td><%= to_curr(entry.amount) %></td>
+              <td class="text-end"><%= to_curr(entry.amount) %></td>
+              <td class="text-center text-<%= entry.decorate.status_color %>"><%= entry.status.titleize %></td>
             </tr>
           <% end %>
         <% else %>

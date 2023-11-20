@@ -17,7 +17,9 @@ class MemberDependentsControllerTest < ActionDispatch::IntegrationTest
 
   test "should create member_dependent" do
     assert_difference("MemberDependent.count") do
-      post member_dependents_url, params: { member_dependent: { birth_date: @member_dependent.birth_date, first_name: @member_dependent.first_name, last_name: @member_dependent.last_name, member_id: @member_dependent.member_id, middle_name: @member_dependent.middle_name, relationship: @member_dependent.relationship, suffix: @member_dependent.suffix } }
+      post member_dependents_url,
+params: { member_dependent: { birth_date: @member_dependent.birth_date, first_name: @member_dependent.first_name, last_name: @member_dependent.last_name, member_id: @member_dependent.member_id,
+middle_name: @member_dependent.middle_name, relationship: @member_dependent.relationship, suffix: @member_dependent.suffix } }
     end
 
     assert_redirected_to member_dependent_url(MemberDependent.last)
@@ -34,7 +36,9 @@ class MemberDependentsControllerTest < ActionDispatch::IntegrationTest
   end
 
   test "should update member_dependent" do
-    patch member_dependent_url(@member_dependent), params: { member_dependent: { birth_date: @member_dependent.birth_date, first_name: @member_dependent.first_name, last_name: @member_dependent.last_name, member_id: @member_dependent.member_id, middle_name: @member_dependent.middle_name, relationship: @member_dependent.relationship, suffix: @member_dependent.suffix } }
+    patch member_dependent_url(@member_dependent),
+params: { member_dependent: { birth_date: @member_dependent.birth_date, first_name: @member_dependent.first_name, last_name: @member_dependent.last_name, member_id: @member_dependent.member_id,
+middle_name: @member_dependent.middle_name, relationship: @member_dependent.relationship, suffix: @member_dependent.suffix } }
     assert_redirected_to member_dependent_url(@member_dependent)
   end
 

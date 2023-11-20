@@ -46,15 +46,15 @@ class ClaimTypesController < ApplicationController
   end
 
   private
-    # Use callbacks to share common setup or constraints between actions.
-    def set_claim_type
-      @claim_type = ClaimType.find(params[:id])
-    end
+  # Use callbacks to share common setup or constraints between actions.
+  def set_claim_type
+    @claim_type = ClaimType.find(params[:id])
+  end
 
-    # Only allow a list of trusted parameters through.
-    def claim_type_params
-      params.require(:claim_type).permit(:name, :description, 
-        claim_type_benefit_attributes: [:id, :benefit_id],
-        claim_type_document_attributes: [:id, :document_id, :requred])
-    end
+  # Only allow a list of trusted parameters through.
+  def claim_type_params
+    params.require(:claim_type).permit(:name, :description,
+      claim_type_benefit_attributes: [:id, :benefit_id],
+      claim_type_document_attributes: [:id, :document_id, :requred])
+  end
 end

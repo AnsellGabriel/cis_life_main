@@ -17,7 +17,9 @@ class CoopsControllerTest < ActionDispatch::IntegrationTest
 
   test "should create coop" do
     assert_difference("Coop.count") do
-      post coops_url, params: { coop: { birthdate: @coop.birthdate, coop_branch_id: @coop.coop_branch_id, cooperative_id: @coop.cooperative_id, designation: @coop.designation, first_name: @coop.first_name, last_name: @coop.last_name, middle_name: @coop.middle_name, mobile_number: @coop.mobile_number } }
+      post coops_url,
+params: { coop: { birthdate: @coop.birthdate, coop_branch_id: @coop.coop_branch_id, cooperative_id: @coop.cooperative_id, designation: @coop.designation, first_name: @coop.first_name,
+last_name: @coop.last_name, middle_name: @coop.middle_name, mobile_number: @coop.mobile_number } }
     end
 
     assert_redirected_to coop_url(Coop.last)
@@ -34,7 +36,9 @@ class CoopsControllerTest < ActionDispatch::IntegrationTest
   end
 
   test "should update coop" do
-    patch coop_url(@coop), params: { coop: { birthdate: @coop.birthdate, coop_branch_id: @coop.coop_branch_id, cooperative_id: @coop.cooperative_id, designation: @coop.designation, first_name: @coop.first_name, last_name: @coop.last_name, middle_name: @coop.middle_name, mobile_number: @coop.mobile_number } }
+    patch coop_url(@coop),
+params: { coop: { birthdate: @coop.birthdate, coop_branch_id: @coop.coop_branch_id, cooperative_id: @coop.cooperative_id, designation: @coop.designation, first_name: @coop.first_name,
+last_name: @coop.last_name, middle_name: @coop.middle_name, mobile_number: @coop.mobile_number } }
     assert_redirected_to coop_url(@coop)
   end
 

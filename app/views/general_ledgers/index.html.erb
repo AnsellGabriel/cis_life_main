@@ -1,0 +1,42 @@
+<%= content_tag :h1, "List of General Ledgers" %>
+
+
+<div class="text-end mb-3">
+  <%= link_to new_general_ledger_path, class: 'btn btn-primary' do %>
+    New General Ledger
+  <% end %>
+</div>
+
+
+  <table class="table table-striped table-bordered table-hover">
+    <thead>
+      <tr>
+      <th>#</th>
+            <th>Ledgerable</th>
+            <th>Description</th>
+            <th>Debit</th>
+            <th>Credit</th>
+            <th></th>
+        </tr>
+    </thead>
+
+    <tbody>
+      <% @general_ledgers.each do |general_ledger| %>
+        <tr>
+
+        <th scope="row"><%= general_ledger.id %></th>
+        <td><%= general_ledger.ledgerable %></td>
+        <td><%= general_ledger.description %></td>
+        <td><%= general_ledger.debit %></td>
+        <td><%= general_ledger.credit %></td>
+    
+          <td>
+            <%= link_to 'View', general_ledger, class: 'btn btn-secondary btn-sm' %>
+            <%= link_to 'Edit', edit_general_ledger_path(general_ledger), class: 'btn btn-secondary btn-sm' %>
+            <%= link_to "Delete", general_ledger, class: "btn btn-danger btn-sm", method: :delete, data: { "turbo-method": :delete, turbo_confirm: "Are you sure?" } %>
+          </td>
+
+        </tr>
+      <% end %>
+    </tbody>
+  </table>

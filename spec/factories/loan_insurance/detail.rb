@@ -1,5 +1,5 @@
 FactoryBot.define do
-  factory :detail, class: 'LoanInsurance::Detail' do
+  factory :detail, class: "LoanInsurance::Detail" do
     batch
     loan
     rate

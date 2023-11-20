@@ -35,7 +35,12 @@
     </div>
     <div class="row">
       <%= f.input :coop_sf, wrapper_html: { class: "col-md-4" }, label: 'Coop service fee' %>
+      <%= f.input :agent_sf, wrapper_html: { class: "col-md-4" }, label: 'Agent service fee' %>
       <%= f.input :minimum_participation, wrapper_html: { class: "col-md-4" }, label: 'Minimum participants' %>
+    </div>
+    <div class="row">
+      <%= f.input :reconsiderable, wrapper_html: { class: "col-md-4" }, label: 'Reconsiderable?' %>
+      <%= f.input :unusable, wrapper_html: { class: "col-md-4" }, label: 'Unusable?' %>
     </div>
     <%#= f.association :proposal, input_html: { data: { controller: "ts--select" } }  %>
     <hr>

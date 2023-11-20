@@ -17,7 +17,8 @@ class ReinsurancesControllerTest < ActionDispatch::IntegrationTest
 
   test "should create reinsurance" do
     assert_difference("Reinsurance.count") do
-      post reinsurances_url, params: { reinsurance: { date_from: @reinsurance.date_from, date_to: @reinsurance.date_to, ri_total_amount: @reinsurance.ri_total_amount, ri_total_prem: @reinsurance.ri_total_prem } }
+      post reinsurances_url,
+params: { reinsurance: { date_from: @reinsurance.date_from, date_to: @reinsurance.date_to, ri_total_amount: @reinsurance.ri_total_amount, ri_total_prem: @reinsurance.ri_total_prem } }
     end
 
     assert_redirected_to reinsurance_url(Reinsurance.last)
@@ -34,7 +35,8 @@ class ReinsurancesControllerTest < ActionDispatch::IntegrationTest
   end
 
   test "should update reinsurance" do
-    patch reinsurance_url(@reinsurance), params: { reinsurance: { date_from: @reinsurance.date_from, date_to: @reinsurance.date_to, ri_total_amount: @reinsurance.ri_total_amount, ri_total_prem: @reinsurance.ri_total_prem } }
+    patch reinsurance_url(@reinsurance),
+params: { reinsurance: { date_from: @reinsurance.date_from, date_to: @reinsurance.date_to, ri_total_amount: @reinsurance.ri_total_amount, ri_total_prem: @reinsurance.ri_total_prem } }
     assert_redirected_to reinsurance_url(@reinsurance)
   end
 

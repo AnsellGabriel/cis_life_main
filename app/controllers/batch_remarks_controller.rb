@@ -24,7 +24,7 @@ class BatchRemarksController < ApplicationController
       when "MD" then "Med Dir"
       when "New" then "New Remark"
       when "For reconsideration" then "Request for reconsideration"
-    end
+             end
 
     @batch_status = params[:batch_status]
     @rem_status = remark_status(@batch_status)
@@ -34,9 +34,9 @@ class BatchRemarksController < ApplicationController
   end
 
   def form_md
-    
+
     # binding.pry
-    
+
     #  @batch_status = "MD"
 
     #  @rem_status = :md_reco
@@ -71,7 +71,7 @@ class BatchRemarksController < ApplicationController
 
     @process_coverage = ProcessCoverage.find_by(id: params[:batch_remark][:process_coverage])&.id
 
-    if !params[:batch_type] == 'BatchDependent' && params[:batch_remark][:status] == "denied" && (@batch.batch_dependents.for_review.count > 0 || @batch.batch_dependents.pending.count > 0)
+    if !params[:batch_type] == "BatchDependent" && params[:batch_remark][:status] == "denied" && (@batch.batch_dependents.for_review.count > 0 || @batch.batch_dependents.pending.count > 0)
       redirect_to process_coverage_path(@process_coverage), alert: "Please check pending and/or for review dependent(s) for that coverage."
     else
 
@@ -92,10 +92,10 @@ class BatchRemarksController < ApplicationController
           if params[:batch_remark][:batch_status] == "Pending"
             # format.html { redirect_to pending_batch_process_coverage_path(id: @process_coverage, batch: @batch)}
             @batch.update(insurance_status: :pending)
-            if params[:batch_type] == 'BatchDependent'
+            if params[:batch_type] == "BatchDependent"
               format.html { redirect_to dependent_remarks_path(
                 batch_dependent_id: @batch.id,
-                group_remit_id: @batch.batch.group_remits.find_by(type: 'Remittance').id,
+                group_remit_id: @batch.batch.group_remits.find_by(type: "Remittance").id,
                 batch_id: @batch.batch.id,
                 process_coverage_id: @process_coverage,
                 for_und: true) }
@@ -106,10 +106,10 @@ class BatchRemarksController < ApplicationController
           elsif params[:batch_remark][:batch_status] == "Deny"
             # format.html { redirect_to deny_batch_process_coverage_path(id: @process_coverage, batch: @batch)}
             @batch.update(insurance_status: :denied)
-            if params[:batch_type] == 'BatchDependent'
+            if params[:batch_type] == "BatchDependent"
               format.html { redirect_to dependent_remarks_path(
                 batch_dependent_id: @batch.id,
-                group_remit_id: @batch.batch.group_remits.find_by(type: 'Remittance').id,
+                group_remit_id: @batch.batch.group_remits.find_by(type: "Remittance").id,
                 batch_id: @batch.batch.id,
                 process_coverage_id: @process_coverage,
                 for_und: true) }
@@ -120,10 +120,10 @@ class BatchRemarksController < ApplicationController
             # elsif params[:batch_remark][:batch_status] == "Deny"
             #   format.html { redirect_to deny_batch_process_coverage_path(id: @process_coverage.id, batch: @batch, batch_type: params[:batch_remark][:batch_type])}
           elsif params[:batch_remark][:batch_status] == "New"
-            if params[:batch_type] == 'BatchDependent'
+            if params[:batch_type] == "BatchDependent"
               format.html { redirect_to dependent_remarks_path(
                 batch_dependent_id: @batch.id,
-                group_remit_id: @batch.batch.group_remits.find_by(type: 'Remittance').id,
+                group_remit_id: @batch.batch.group_remits.find_by(type: "Remittance").id,
                 batch_id: @batch.batch.id,
                 process_coverage_id: @process_coverage,
                 for_und: true) }
@@ -138,11 +138,11 @@ class BatchRemarksController < ApplicationController
             format.html { redirect_to med_directors_home_path, notice: "Recommendation created." }
           elsif params[:batch_remark][:batch_status] == "For reconsideration"
 
-            if params[:batch_type] == 'BatchDependent'
+            if params[:batch_type] == "BatchDependent"
               @batch.update(insurance_status: :for_reconsideration)
               format.html { redirect_to dependent_remarks_path(
                 batch_dependent_id: @batch.id,
-                group_remit_id: @batch.batch.group_remits.find_by(type: 'Remittance'),
+                group_remit_id: @batch.batch.group_remits.find_by(type: "Remittance"),
                 batch_id: @batch.batch.id, coop: true) }
             else
               @batch.update(status: :for_reconsideration)
@@ -164,9 +164,9 @@ class BatchRemarksController < ApplicationController
           # if params[:batch_remark][:batch_status] == "For reconsideration"
           #   format.html { render :new, status: :unprocessable_entity }
           # else
-            format.html { render :new, status: :unprocessable_entity }
-            # format.json { render json: @batch_remark.errors, status: :unprocessable_entity }
-            # format.turbo_stream { render :form_update, status: :unprocessable_entity }
+          format.html { render :new, status: :unprocessable_entity }
+          # format.json { render json: @batch_remark.errors, status: :unprocessable_entity }
+          # format.turbo_stream { render :form_update, status: :unprocessable_entity }
           # end
 
         end
@@ -193,33 +193,33 @@ class BatchRemarksController < ApplicationController
   end
 
   private
-    # Use callbacks to share common setup or constraints between actions.
-    def set_batch_remark
-      @batch_remark = BatchRemark.find(params[:id])
-    end
+  # Use callbacks to share common setup or constraints between actions.
+  def set_batch_remark
+    @batch_remark = BatchRemark.find(params[:id])
+  end
 
-    # Only allow a list of trusted parameters through.
-    def batch_remark_params
-      params.require(:batch_remark).permit(:batch_id, :remark, :status, :user_id, :user_type, :batch_status, :process_coverage, :batch_type)
-    end
+  # Only allow a list of trusted parameters through.
+  def batch_remark_params
+    params.require(:batch_remark).permit(:batch_id, :remark, :status, :user_id, :user_type, :batch_status, :process_coverage, :batch_type)
+  end
 
-    def check_class(class_name, id)
-      case class_name
-      when 'Batch'
-        Batch.find(id)
-      when 'BatchDependent'
-        BatchDependent.find(id)
-      when 'LoanInsurance::Batch'
-        LoanInsurance::Batch.find(id)
-      end
+  def check_class(class_name, id)
+    case class_name
+    when "Batch"
+      Batch.find(id)
+    when "BatchDependent"
+      BatchDependent.find(id)
+    when "LoanInsurance::Batch"
+      LoanInsurance::Batch.find(id)
     end
+  end
 
-    def remark_status(batch_status)
-      case batch_status
-        when "Pending" then :pending
-        when "Deny" then :denied
-        when "MD" then :md_reco
-        when "For reconsideration" then :request
-      end
+  def remark_status(batch_status)
+    case batch_status
+      when "Pending" then :pending
+      when "Deny" then :denied
+      when "MD" then :md_reco
+      when "For reconsideration" then :request
     end
+  end
 end

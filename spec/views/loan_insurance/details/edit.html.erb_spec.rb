@@ -1,4 +1,4 @@
-require 'rails_helper'
+require "rails_helper"
 
 RSpec.describe "loan_insurance/details/edit", type: :view do
   let(:loan_insurance_detail) {

@@ -31,21 +31,21 @@ class ReinsurancesController < ApplicationController
     @members.each do |member|
       member.get_for_ri_sum(@reinsurance)
     end
-        
+
     if @reinsurance.batches.empty?
       redirect_to reinsurances_path, alert: "No for reinsurance for that period."
     else
-      
+
       if @reinsurance.save
-        @reinsurance.set_total_prem_and_amount        
+        @reinsurance.set_total_prem_and_amount
         # @reinsurance.set_batches_ri_date
         redirect_to @reinsurance, notice: "Reinsurance was successfully created."
       else
         render :new, status: :unprocessable_entity
       end
-      
+
     end
-    
+
   end
 
   # PATCH/PUT /reinsurances/1
@@ -64,13 +64,13 @@ class ReinsurancesController < ApplicationController
   end
 
   private
-    # Use callbacks to share common setup or constraints between actions.
-    def set_reinsurance
-      @reinsurance = Reinsurance.find(params[:id])
-    end
+  # Use callbacks to share common setup or constraints between actions.
+  def set_reinsurance
+    @reinsurance = Reinsurance.find(params[:id])
+  end
 
-    # Only allow a list of trusted parameters through.
-    def reinsurance_params
-      params.require(:reinsurance).permit(:date_from, :date_to)
-    end
+  # Only allow a list of trusted parameters through.
+  def reinsurance_params
+    params.require(:reinsurance).permit(:date_from, :date_to)
+  end
 end

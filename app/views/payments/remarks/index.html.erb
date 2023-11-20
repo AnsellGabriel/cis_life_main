@@ -1,0 +1,13 @@
+<%= turbo_frame_tag "reg_form_modal" do %>
+  <div class="modal-header">
+    <div class="d-flex gap-1">
+      <%= content_tag :h5, 'Payment Remarks', class: "modal-title", id: "staticBackdropLabel" %>
+      <%= link_to 'Add Remark', new_payment_remark_path(@payment), class: 'btn btn-sm btn-danger', data: {turbo_frame: 'reg_form_modal'} %>
+    </div>
+    <%= link_to '', payment_path(@payment), class: 'btn-close', data: {turbo: false}%>
+  </div>
+  
+  <div class="modal-body">
+    <%= render @remarks %>
+  </div>
+<% end %>

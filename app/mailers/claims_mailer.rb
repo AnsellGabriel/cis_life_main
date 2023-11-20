@@ -9,11 +9,11 @@ class ClaimsMailer < ApplicationMailer
     @process_claim = params[:process_claim]
     #  @name = @process_claim.claimable.get_fullname
 
-    attachments.inline['cis_logo.png'] = File.read('app/assets/images/cis_logo.png')
+    attachments.inline["cis_logo.png"] = File.read("app/assets/images/cis_logo.png")
     mail(
           from: "1cispga@gmail.com",
-          to:"ansellgabriel@gmail.com", 
-          cc: "1cispga@gmail.com", 
+          to:"ansellgabriel@gmail.com",
+          cc: "1cispga@gmail.com",
           subject: "CIS Claims for process "
     )
     # @greeting = "Hi"

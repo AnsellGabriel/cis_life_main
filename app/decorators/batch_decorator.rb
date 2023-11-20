@@ -11,39 +11,39 @@ class BatchDecorator < Draper::Decorator
   #   end
 
   def status_color
-		case object.insurance_status
-		when 'for_review' then 'text-warning'
-		when 'approved' then 'text-success'
-		when 'pending' then 'text-secondary'
-		when 'denied' then 'text-danger'
-		when 'terminated' then 'text-danger'
-		end
-	end
+    case object.insurance_status
+    when "for_review" then "text-warning"
+    when "approved" then "text-success"
+    when "pending" then "text-secondary"
+    when "denied" then "text-danger"
+    when "terminated" then "text-danger"
+    end
+  end
 
   def insurance_badge
     if object.approved?
-      'primary'
+      "primary"
     elsif object.denied?
-      'danger'
+      "danger"
     else
-      'warning text-dark'
+      "warning text-dark"
     end
   end
 
   def status_badge
     if object.recent?
-      'primary'
+      "primary"
     elsif object.reloan?
-      'warning text-dark'
+      "warning text-dark"
     else
-      'danger'
+      "danger"
     end
   end
 
   def capitalized_insured_type
-		object.agreement_benefit
-				.name
-				.titleize
-	end
+    object.agreement_benefit
+        .name
+        .titleize
+  end
 
 end

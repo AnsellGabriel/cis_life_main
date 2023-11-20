@@ -47,13 +47,13 @@ class EmpApproversController < ApplicationController
   end
 
   private
-    # Use callbacks to share common setup or constraints between actions.
-    def set_emp_approver
-      @emp_approver = EmpApprover.find(params[:id])
-    end
+  # Use callbacks to share common setup or constraints between actions.
+  def set_emp_approver
+    @emp_approver = EmpApprover.find(params[:id])
+  end
 
-    # Only allow a list of trusted parameters through.
-    def emp_approver_params
-      params.require(:emp_approver).permit(:employee_id, :approver_id)
-    end
+  # Only allow a list of trusted parameters through.
+  def emp_approver_params
+    params.require(:emp_approver).permit(:employee_id, :approver_id)
+  end
 end

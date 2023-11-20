@@ -1,4 +1,4 @@
-require 'rails_helper'
+require "rails_helper"
 
 RSpec.describe "loan_insurance/batch_remits/index", type: :view do
   before(:each) do
@@ -10,6 +10,6 @@ RSpec.describe "loan_insurance/batch_remits/index", type: :view do
 
   it "renders a list of loan_insurance/batch_remits" do
     render
-    cell_selector = Rails::VERSION::STRING >= '7' ? 'div>p' : 'tr>td'
+    cell_selector = Rails::VERSION::STRING >= "7" ? "div>p" : "tr>td"
   end
 end

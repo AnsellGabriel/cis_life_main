@@ -10,6 +10,7 @@
           <%= f.input :min_age, wrapper_html: { class: "col-md-4" }  %>
           <%= f.input :max_age, wrapper_html: { class: "col-md-4" } %>
           <%= f.input :exit_age, wrapper_html: { class: "col-md-4" } %>
+          <%= f.input :with_dependent, label: 'With Dependents?' %>
         </div>
         <%= f.select :insured_type, options_for_select(AgreementBenefit.insured_types.keys.map { |key| [key.humanize, key] }), { prompt: 'Select Type' }, { class: 'form-control' } %>
       </div>

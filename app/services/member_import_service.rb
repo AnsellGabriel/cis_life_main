@@ -1,20 +1,21 @@
 class MemberImportService
-    def initialize(spreadsheet, cooperative, current_user)
-      @spreadsheet = spreadsheet
-      @cooperative = cooperative
-      @current_user = current_user
-      @required_headers = ["Birth Place", "First Name", "Middle Name", "Last Name", "Suffix", "Birthdate", "Gender", "Address", "SSS #", "TIN #", "Mobile #", "Email", "Civil Status", "Height (cm)", "Weight (kg)", "Occupation", "Employer", "Work Address", "Spouse", "Work Phone #"]
-      @progress = @current_user.create_progress_tracker(progress: 0.0)
-    end
+  def initialize(spreadsheet, cooperative, current_user)
+    @spreadsheet = spreadsheet
+    @cooperative = cooperative
+    @current_user = current_user
+    @required_headers = ["Birth Place", "First Name", "Middle Name", "Last Name", "Suffix", "Birthdate", "Gender", "Address", "SSS #", "TIN #", "Mobile #", "Email", "Civil Status", "Height (cm)",
+"Weight (kg)", "Occupation", "Employer", "Work Address", "Spouse", "Work Phone #"]
+    @progress = @current_user.create_progress_tracker(progress: 0.0)
+  end
 
-    def import
-    headers = extract_headers(@spreadsheet, 'Members_Data')
+  def import
+    headers = extract_headers(@spreadsheet, "Members_Data")
 
     if headers.nil?
       return "Incorrect/Missing sheet name: Members_Data"
     end
 
-    members_spreadsheet = parse_file('Members_Data')
+    members_spreadsheet = parse_file("Members_Data")
 
     missing_headers = find_missing_headers(@required_headers, headers)
 
@@ -109,35 +110,35 @@ class MemberImportService
         updated_members_counter: updated_members_counter,
         denied_enrollees_counter: denied_enrollees_counter
       }
-    end
+  end
 
     private
 
-    def extract_headers(spreadsheet, sheet_name)
-      begin
-        spreadsheet.sheet(sheet_name).row(1).map(&:strip)
-      rescue RangeError
-        return nil
-      end
+  def extract_headers(spreadsheet, sheet_name)
+    begin
+      spreadsheet.sheet(sheet_name).row(1).map(&:strip)
+    rescue RangeError
+      return nil
     end
+  end
 
-    def parse_file(sheet_name)
-      @spreadsheet.sheet(sheet_name).parse(headers: true).delete_if { |row| row.all?(&:blank?) }
-    end
+  def parse_file(sheet_name)
+    @spreadsheet.sheet(sheet_name).parse(headers: true).delete_if { |row| row.all?(&:blank?) }
+  end
 
-    def find_missing_headers(required_headers, headers)
-      required_headers - headers
-    end
+  def find_missing_headers(required_headers, headers)
+    required_headers - headers
+  end
 
-    def update_progress(total, processed_members)
-      @progress.update(progress: (processed_members.to_f / total.to_f * 100))
-    end
+  def update_progress(total, processed_members)
+    @progress.update(progress: (processed_members.to_f / total.to_f * 100))
+  end
 
-    def create_denied_enrollee(first_name, middle_name, last_name, reason)
-      denied_enrollee = DeniedEnrollee.create(
-        name: "#{first_name} #{middle_name} #{last_name}",
-        reason: reason,
-        cooperative_id: @cooperative.id
-      )
-    end
+  def create_denied_enrollee(first_name, middle_name, last_name, reason)
+    denied_enrollee = DeniedEnrollee.create(
+      name: "#{first_name} #{middle_name} #{last_name}",
+      reason: reason,
+      cooperative_id: @cooperative.id
+    )
+  end
 end

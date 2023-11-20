@@ -59,7 +59,7 @@ class Member < ApplicationRecord
   def full_address
     # "#{self&.address}, #{geo_barangay&.name}, #{geo_municipality&.name}, #{geo_province&.name}, #{geo_region&.name}"
 
-    [self&.street, geo_barangay&.name, geo_municipality&.name, geo_province&.name].compact.join(', ')
+    [self&.address, geo_barangay&.name, geo_municipality&.name, geo_province&.name].compact.join(", ")
   end
 
   def full_name
@@ -76,10 +76,10 @@ class Member < ApplicationRecord
 
     total = 0
     self.coop_members.each do |cm|
-    # self.joins(:coop_member).each do |cm|
-    
-    binding.pry
-    
+      # self.joins(:coop_member).each do |cm|
+
+      binding.pry
+
       total += cm.loan_batches.where("(effectivity_date <= ? and expiry_date >= ?) OR (effectivity_date <= ? and expiry_date >= ?)", ri_start, ri_start, ri_end, ri_end).sum(:loan_amount)
       if total >= 350000
         cm.loan_batches.where("(effectivity_date <= ? and expiry_date >= ?) OR (effectivity_date <= ? and expiry_date >= ?)", ri_start, ri_start, ri_end, ri_end).each do |batch|
@@ -111,11 +111,11 @@ class Member < ApplicationRecord
       return number
     end
 
-    number = number.to_s.gsub(/[^0-9]/, '') # remove all non-digit characters
+    number = number.to_s.gsub(/[^0-9]/, "") # remove all non-digit characters
 
-    if number.length == 10 && number.start_with?('9') # mobile number
+    if number.length == 10 && number.start_with?("9") # mobile number
       number = "+63#{number}"
-    elsif number.length == 7 && ['02', '03', '032', '033', '034', '035', '036', '037', '038', '039', '042', '043', '044', '045', '046', '047', '048', '049', '052', '053', '054', '055', '056', '057', '058', '072', '074', '075', '076', '077', '078'].include?(number[0..2]) # landline number
+    elsif number.length == 7 && ["02", "03", "032", "033", "034", "035", "036", "037", "038", "039", "042", "043", "044", "045", "046", "047", "048", "049", "052", "053", "054", "055", "056", "057", "058", "072", "074", "075", "076", "077", "078"].include?(number[0..2]) # landline number
       number = "+63#{number}"
     else
       number = nil
@@ -124,10 +124,10 @@ class Member < ApplicationRecord
   end
 
   def uppercase_fields
-    self.last_name = self.last_name == nil ? '' : self.last_name.strip.upcase
-    self.first_name = self.first_name == nil ? '' : self.first_name.strip.upcase
-    self.middle_name = self.middle_name == nil ? '' : self.middle_name.strip.upcase
-    self.suffix = self.suffix == nil ? '' : self.suffix.strip.upcase
+    self.last_name = self.last_name == nil ? "" : self.last_name.strip.upcase
+    self.first_name = self.first_name == nil ? "" : self.first_name.strip.upcase
+    self.middle_name = self.middle_name == nil ? "" : self.middle_name.strip.upcase
+    self.suffix = self.suffix == nil ? "" : self.suffix.strip.upcase
     self.civil_status = self.civil_status.strip.upcase
     self.gender = self.gender.strip.upcase
   end

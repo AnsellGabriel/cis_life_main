@@ -34,7 +34,8 @@ class GroupProposalsControllerTest < ActionDispatch::IntegrationTest
   end
 
   test "should update group_proposal" do
-    patch group_proposal_url(@group_proposal), params: { group_proposal: { cooperative_id: @group_proposal.cooperative_id, plan_id: @group_proposal.plan_id, plan_unit_id: @group_proposal.plan_unit_id } }
+    patch group_proposal_url(@group_proposal),
+params: { group_proposal: { cooperative_id: @group_proposal.cooperative_id, plan_id: @group_proposal.plan_id, plan_unit_id: @group_proposal.plan_unit_id } }
     assert_redirected_to group_proposal_url(@group_proposal)
   end
 

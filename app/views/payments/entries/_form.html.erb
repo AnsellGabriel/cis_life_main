@@ -1,0 +1,38 @@
+<%= simple_form_for(entry, url: entry.persisted? ? payment_entry_path(payment, entry) : payment_entries_path(payment)) do |f| %>
+
+  <div class="form-inputs mb-3">
+    <div class="row">
+      <div class="col-6">
+        <%= f.input :or_no, label: 'OR Number', error: '*Required' %>
+      </div>
+      <div class="col-6">
+        <%= f.input :or_date, as: :string, input_html: {data: {
+          controller: "flatpickr",
+          flatpickr_max_date: Date.today,
+          flatpickr_next_arrow: "Next",
+          flatpickr_prev_arrow: "Prev" }
+          }, label: 'OR Date',
+          error: '*Required'
+        %> 
+      </div>
+    </div>
+    <%= f.input :dummy_payee, label: 'Payee', input_html: {value: @payment.coop}, readonly: true  %>
+    <%= f.association :treasury_account, label: 'Account', error: '*Required', input_html: { data: { controller: "ts--select" } }  %>
+    <div class="row">
+      <div class="col-6">
+          <%= f.input :dummy_entry_type, label: 'Entry type', input_html: {value: @payment.plan.acronym}, readonly: true  %>
+      </div>
+      <div class="col-6">
+        <%= f.input :amount, input_html: {value: @payment.amount}, readonly: true, error: '*Required' %>
+      </div>
+    </div>
+  </div>
+
+  <div class="form-actions text-center">
+    <% if @group_remit.present? %> 
+      <%= f.button :submit, 'Add Entry', class: 'btn-primary', data: {turbo_confirm: 'Approve payment and generate official receipt?', turbo_method: :get} %>
+    <% else %>
+      <%= f.button :submit, "#{entry.persisted? ? 'Update' : 'Add'}", class: 'btn-primary' %>
+    <% end %>
+  </div>
+<% end %>

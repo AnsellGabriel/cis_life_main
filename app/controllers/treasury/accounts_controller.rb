@@ -46,13 +46,13 @@ class Treasury::AccountsController < ApplicationController
   end
 
   private
-    # Use callbacks to share common setup or constraints between actions.
-    def set_treasury_account
-      @treasury_account = Treasury::Account.find(params[:id])
-    end
+  # Use callbacks to share common setup or constraints between actions.
+  def set_treasury_account
+    @treasury_account = Treasury::Account.find(params[:id])
+  end
 
-    # Only allow a list of trusted parameters through.
-    def treasury_account_params
-      params.require(:treasury_account).permit(:name, :account_type, :is_check_account, :contact_number, :address)
-    end
+  # Only allow a list of trusted parameters through.
+  def treasury_account_params
+    params.require(:treasury_account).permit(:name, :account_type, :is_check_account, :contact_number, :address)
+  end
 end

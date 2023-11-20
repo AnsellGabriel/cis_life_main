@@ -1,10 +1,10 @@
-require 'rails_helper'
+require "rails_helper"
 
 RSpec.describe LoanInsurance::Detail, type: :model do
   let(:detail) { create(:detail) }
 
-  describe 'A valid loan detail' do
-    it 'will create a new loan detail with valid attributes' do
+  describe "A valid loan detail" do
+    it "will create a new loan detail with valid attributes" do
       expect(detail).to be_valid
       expect(detail).to be_an_instance_of(LoanInsurance::Detail)
     end
@@ -25,7 +25,7 @@ RSpec.describe LoanInsurance::Detail, type: :model do
       expect(detail).to_not be_valid
     end
 
-    it "is not valid without a loan amount" do 
+    it "is not valid without a loan amount" do
       detail.loan_amount = nil
       expect(detail).to_not be_valid
     end

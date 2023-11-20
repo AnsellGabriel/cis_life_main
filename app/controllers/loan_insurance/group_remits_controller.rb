@@ -36,8 +36,8 @@ class LoanInsurance::GroupRemitsController < ApplicationController
         #   format.html { redirect_to coop_agreement_group_remit_path(@group_remit.agreement, @group_remit), alert: "Process Coverage not created!" }
         #   @group_remit.status = :pending
         #   @group_remit.save!
-      # else
-      #   format.html { redirect_to coop_agreement_group_remit_path(@group_remit.agreement, @group_remit), alert: "Please see members below and complete the necessary details." }
+        # else
+        #   format.html { redirect_to coop_agreement_group_remit_path(@group_remit.agreement, @group_remit), alert: "Please see members below and complete the necessary details." }
       end
     end
   end
@@ -53,11 +53,11 @@ class LoanInsurance::GroupRemitsController < ApplicationController
   end
 
   def new
-    @group_remit = @agreement.group_remits.new(type: 'LoanInsurance::GroupRemit')
+    @group_remit = @agreement.group_remits.new(type: "LoanInsurance::GroupRemit")
   end
 
   def create
-    @group_remit = @agreement.group_remits.new(type: 'LoanInsurance::GroupRemit')
+    @group_remit = @agreement.group_remits.new(type: "LoanInsurance::GroupRemit")
     @group_remit.name = params[:loan_insurance_group_remit][:name]
 
     begin
@@ -67,7 +67,7 @@ class LoanInsurance::GroupRemitsController < ApplicationController
         render :new
       end
     rescue ActiveRecord::RecordInvalid => e
-      redirect_to loan_insurance_group_remits_path, alert: e.message.gsub(/^Validation failed: /, '')
+      redirect_to loan_insurance_group_remits_path, alert: e.message.gsub(/^Validation failed: /, "")
     end
   end
 
@@ -78,11 +78,11 @@ class LoanInsurance::GroupRemitsController < ApplicationController
   end
 
   private
-    def set_agreement
-      @agreement = @cooperative.agreements.lppi.decorate
-    end
+  def set_agreement
+    @agreement = @cooperative.agreements.lppi.decorate
+  end
 
-    def set_group_remit
-      @group_remit = LoanInsurance::GroupRemit.find(params[:id]).decorate
-    end
+  def set_group_remit
+    @group_remit = LoanInsurance::GroupRemit.find(params[:id]).decorate
+  end
 end
