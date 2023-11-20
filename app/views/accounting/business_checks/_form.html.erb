@@ -1,5 +1,5 @@
 
-<%= simple_form_for(check)  do |f| %>
+<%= simple_form_for(check, url: check.persisted? ? accounting_check_business_path : accounting_check_business_index_path)  do |f| %>
 
   <div class="form-inputs mb-3">
     <div class="row">
@@ -28,6 +28,6 @@
   </div>
 
   <div class="form-actions text-center">
-    <%= f.button :submit, "#{turbo ? 'Add' : 'Update'} Check", class: 'btn-primary', data: {turbo: turbo} %>
+    <%= f.button :submit, class: 'btn-primary' %>
   </div>
 <% end %>

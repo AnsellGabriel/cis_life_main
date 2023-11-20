@@ -58,7 +58,7 @@
       </div>
       <hr>
       <div class="<%= flex_justify_align('between') %>">
-        <span class="small">Coop Service Fee</span>
+        <span class="small">Coop Service Fee (<%= to_curr(@payment.payable.agreement.coop_sf) %> %)</span>
         <span class="small">(<%= to_curr(@payment.payable.coop_commission) %>)</span>
       </div>
       <hr style="opacity: 1; border-color: black !important">

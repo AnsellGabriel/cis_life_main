@@ -18,11 +18,26 @@ class Payment < ApplicationRecord
     Notification.create(notifiable: self.coop, message: "#{self.payable.name} payment rejected. Please re-upload proof of payment.")
   end
 
-  def paid
-    self.approved!
-    self.payable.paid!
-    Notification.create(notifiable: self.coop, message: "#{self.payable.name} payment approved.")
-  end
+  # def paid
+
+  #   group_remit = self.payable
+
+  #   ActiveRecord::Base.transaction do
+  #     self.approved!
+  #     group_remit.paid!
+  #     Notification.create!(notifiable: group_remit.agreement.cooperative, message: "#{group_remit.name} payment verified.")
+
+  #     if group_remit.type == "LoanInsurance::GroupRemit"
+  #       group_remit.update_members_total_loan
+  #       group_remit.update_batch_coverages
+  #       group_remit.terminate_unused_batches(current_user)
+  #     else
+  #       group_remit.update_batch_remit
+  #       group_remit.update_batch_coverages
+  #     end
+  #   end
+
+  # end
 
   def coop
     payable.agreement.cooperative

@@ -1,7 +1,7 @@
 class Treasury::CashierEntry < ApplicationRecord
   attr_accessor :dummy_payee, :dummy_entry_type
 
-  validates_presence_of :or_no, :or_date, :payment_type, :treasury_account_id
+  validates_presence_of :or_no, :or_date, :payment_type, :treasury_account_id, :global_entriable, :amount
 
   enum payment_type: { gyrt: 1, lppi: 2, others: 3 }
   enum status: { pending: 0, posted: 1, cancelled: 2 }
@@ -54,13 +54,13 @@ class Treasury::CashierEntry < ApplicationRecord
     end
   end
 
-  def net_amount
-    if remittance?
-      entriable.payable.coop_commission
-    else
-      amount
-    end
-  end
+  # def net_amount
+  #   if remittance?
+  #     entriable.payable.gross_premium
+  #   else
+  #     amount
+  #   end
+  # end
 
   def remittance?
     self.entriable_type == 'Payment'

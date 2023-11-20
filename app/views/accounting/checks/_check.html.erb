@@ -1,19 +1,19 @@
 <div class="d-flex gap-3">
-  <div class="card" style="width: 60%; margin-left: 35px;">
+  <div class="card" style="width: 60%;">
     <div class="card-header <%= flex_justify_align('between', '') %>">
       <div class="">
-        <p class="mb-0 text-muted"><small>Voucher</small></p>
-        <h3 class="text-primary"><%= "CV#{check.voucher}" %></h3>
+        <p class="mb-0 text-muted"><small>Check Voucher</small></p>
+        <h3 class="text-primary"><%= "#{check.voucher}" %></h3>
         <p><small><strong>Voucher date:</strong> <span><%= month_day_year(check.date_voucher) %></span></small></p>
         <p class="badge bg-<%= check.decorate.status_color %>"><%= check.status.humanize %></p>
       </div>
       <div class="">
-        <% unless check.cancelled? or check.posted? %>
+        <% if check.pending? and current_user.is_accountant? %>
           <%= link_to edit_accounting_check_path(check), class: 'btn btn-outline-primary mt-1', data: {turbo_frame: 'modal'}, title: 'Edit receipt' do %> 
             <i class="bi bi-pencil"></i><span> Edit</span>
           <% end %>
-          <%= link_to cancel_accounting_check_path(check), data: {turbo_confirm: 'Cancel receipt?', turbo_method: :get}, class: 'btn btn-outline-danger mt-1', title: 'Cancel receipt' do %>
-            <i class="bi bi-x-lg"></i><span> Cancel OR</span>
+          <%= link_to cancel_accounting_check_path(check), data: {turbo_confirm: 'Cancel voucher?', turbo_method: :get}, class: 'btn btn-outline-danger mt-1', title: 'Cancel Voucher' do %>
+            <i class="bi bi-x-lg"></i><span> Cancel Voucher</span>
           <% end %>
         <% end %>
       </div>

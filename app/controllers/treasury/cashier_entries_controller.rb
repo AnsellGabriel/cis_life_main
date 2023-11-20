@@ -84,24 +84,4 @@ class Treasury::CashierEntriesController < ApplicationController
     params.require(:treasury_cashier_entry).permit(:or_no, :or_date, :global_entriable, :payment_type, :treasury_account_id, :amount)
   end
 
-  def approve_payment(payment_id)
-    payment = Payment.find(payment_id)
-    group_remit = payment.payable
-
-    if payment.approved!
-      group_remit.paid!
-      Notification.create(notifiable: group_remit.agreement.cooperative, message: "#{group_remit.name} payment verified.")
-
-      if group_remit.type == "LoanInsurance::GroupRemit"
-        group_remit.update_members_total_loan
-        group_remit.update_batch_coverages
-        group_remit.terminate_unused_batches(current_user)
-      else
-        group_remit.update_batch_remit
-        group_remit.update_batch_coverages
-      end
-
-    end
-  end
-
 end
