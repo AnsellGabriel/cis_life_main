@@ -37,10 +37,11 @@
   
 
   <div data-controller="graph">
-    <div class="row mb-2 mt-2">
+    <div class="row mb-2 mt-3">
       <div class="col-4">
         <%= select_tag 'data_type', options_for_select([['Small',0], ['Medium',1], ['Large',2]]), data: { action: "change->graph#selectType", target: "selectType" }, id: "type_id", class: "form-select" %>
       </div>
+      <%= content_tag :p, "Please select Category to view graph...", class: "lead text-secondary" %>
     </div>
 
     <%#= turbo_frame_tag 'update charts'%>
