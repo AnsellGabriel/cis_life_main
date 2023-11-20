@@ -11,31 +11,6 @@ class PagesController < ApplicationController
       ["Pending Claims", 123]
     ]
 
-    
-
-    @column_chart_data1 = [
-      {
-        name: "Premium",
-        data: [
-          ["John Doe", 900000],
-          ["Jane Doe", 1500000],
-          ["Richard Roe", 200000],
-          ["Peter Parker", 5000000],
-          ["Tony Stark", 2500000]
-        ]
-      },
-      {
-        name: "Claims",
-        data: [
-          ["John Doe", 150000],
-          ["Jane Doe", 800000],
-          ["Richard Roe", 700000],
-          ["Peter Parker", 2000000],
-          ["Tony Stark", 4000000]
-        ]
-      }
-    ]
-
 
     @line_chart_data2 = [
      {
@@ -74,18 +49,7 @@ class PagesController < ApplicationController
      }
     ]
 
-    @cause_chart = [
-      ["Cardiovascular Diseases", 3890],
-      ["Respiratory Diseases", 2077],
-      ["Cancer/Carcinomas", 1931],
-      ["Kidney Diseases", 1231],
-      ["Cerebrovascular Diseases", 1207],
-      ["Diabetes", 627],
-      ["Liver Diseases", 419],
-      ["Vehicular Accident", 339],
-      ["Gastrointestinal Diseases", 239],
-      ["Accidental Death", 134]
-    ]
+    
   end
 
   def president
@@ -251,43 +215,22 @@ class PagesController < ApplicationController
       },
     ]
     # column_chart_data = params[:data_type] || 'Net Premium'
-    data_type = case params[:data_type]
-    when 1 then "Share Capital"
-    when 2 then "Interest on Capital"
-    when 3 then "Patronage Refund"
-    when 4 then "Experience Refund"
-    else
-      "Net Premium"
-    end
-    column_chart_data = data_type || 'Net Premium'
+    # data_type = case params[:data_type]
+    # when 1 then "Share Capital"
+    # when 2 then "Interest on Capital"
+    # when 3 then "Patronage Refund"
+    # when 4 then "Experience Refund"
+    # else
+    #   "Net Premium"
+    # end
+    # column_chart_data = data_type || 'Net Premium'
 
-    @chart_data = @top_small.map do |entry|
-      {
-        name: entry[:name],
-        data: [[column_chart_data, entry[:data].find { |d| d[0] == column_chart_data }[1]]]
-      }
-    end
-
-    @premium_per_plan = [
-      ["LPPI", 575331381.13],
-      ["GYRT", 160646128.98],
-      ["BLISS", 16951508.32],
-      ["ICARD", 1282713],
-      ["KOOPAMILYA", 59841676.66],
-      ["SII", 69638935.22],
-      ["SIP", 826656.56]
-    ]
-
-    @claims_per_plan = [
-      [@premium_per_plan[0][0], @premium_per_plan[0][1] * 0.6],
-      [@premium_per_plan[1][0], @premium_per_plan[1][1] * 0.2],
-      [@premium_per_plan[2][0], @premium_per_plan[2][1] * 0.3],
-      [@premium_per_plan[3][0], @premium_per_plan[3][1] * 0.4],
-      [@premium_per_plan[4][0], @premium_per_plan[4][1] * 0.5],
-      [@premium_per_plan[5][0], @premium_per_plan[5][1] * 0.6],
-      [@premium_per_plan[6][0], @premium_per_plan[6][1] * 0.7]
-      
-    ]
+    # @chart_data = @top_small.map do |entry|
+    #   {
+    #     name: entry[:name],
+    #     data: [[column_chart_data, entry[:data].find { |d| d[0] == column_chart_data }[1]]]
+    #   }
+    # end
 
     @cause_chart = [
       ["Cardiovascular Diseases", 3890],
@@ -310,13 +253,11 @@ class PagesController < ApplicationController
       ["Claims", 2192800]
     ]
 
-    
 
+    @prem_per_gr = GroupRemit.where(type: "Remittance", net_premium: 0..).pluck(:name, :net_premium)
+    # @prem_per_gr = GroupRemit.where(type: "Remittance").pluck(:name, :net_premium).map { |name, net_premium| [name, net_premium || 0] }
+    @claims_per_gr = GroupRemit.where(type: "Remittance", net_premium: 0..).pluck(:name, :net_premium).map { |name, premium| [name, premium * (rand(0.3..0.6))] }
 
-    # @pie_chart_data = [
-    #   ["Male", random_number1],
-    #   ["Female", random_number2]
-    # ]
   end
 
   def update_charts
@@ -656,6 +597,64 @@ class PagesController < ApplicationController
       ["Male", random_number1],
       ["Female", random_number2]
     ]
+
+    @cause_chart = [
+      ["Cardiovascular Diseases", 3890],
+      ["Respiratory Diseases", 2077],
+      ["Cancer/Carcinomas", 1931],
+      ["Kidney Diseases", 1231],
+      ["Cerebrovascular Diseases", 1207],
+      ["Diabetes", 627],
+      ["Liver Diseases", 419],
+      ["Vehicular Accident", 339],
+      ["Gastrointestinal Diseases", 239],
+      ["Accidental Death", 134]
+    ]
+
+    @premium_per_plan = [
+      ["LPPI", 575331381.13],
+      ["GYRT", 160646128.98],
+      ["BLISS", 16951508.32],
+      ["ICARD", 1282713],
+      ["KOOPAMILYA", 59841676.66],
+      ["SII", 69638935.22],
+      ["SIP", 826656.56]
+    ]
+
+    @claims_per_plan = [
+      [@premium_per_plan[0][0], @premium_per_plan[0][1] * 0.6],
+      [@premium_per_plan[1][0], @premium_per_plan[1][1] * 0.2],
+      [@premium_per_plan[2][0], @premium_per_plan[2][1] * 0.3],
+      [@premium_per_plan[3][0], @premium_per_plan[3][1] * 0.4],
+      [@premium_per_plan[4][0], @premium_per_plan[4][1] * 0.5],
+      [@premium_per_plan[5][0], @premium_per_plan[5][1] * 0.6],
+      [@premium_per_plan[6][0], @premium_per_plan[6][1] * 0.7]
+      
+    ]
+
+    @prem_claim_agent = [
+      {
+        name: "Premium",
+        data: [
+          ["John Doe", 900000],
+          ["Jane Doe", 1500000],
+          ["Richard Roe", 200000],
+          ["Peter Parker", 5000000],
+          ["Tony Stark", 2500000]
+        ]
+      },
+      {
+        name: "Claims",
+        data: [
+          ["John Doe", 150000],
+          ["Jane Doe", 800000],
+          ["Richard Roe", 700000],
+          ["Peter Parker", 2000000],
+          ["Tony Stark", 4000000]
+        ]
+      }
+    ]
+
   end
   
   
