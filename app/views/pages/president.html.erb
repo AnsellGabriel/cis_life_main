@@ -56,6 +56,7 @@
       <div class="col-4">
         <%= select_tag 'select_type', options_for_select([["Premium", 0], ["Claims", 1], ["Both", 2]]), data: { action: "change->graph#dataSelect", target: "selectData" }, id: "select_id", class: "form-select" %>
       </div>
+      <%= content_tag :p, "Please select type to view graph...", class: "lead text-secondary" %>
     </div>
     <%= turbo_frame_tag "select charts" %>
   </div>
