@@ -12,13 +12,17 @@
     </div>
   </div>
 
-  <div class="row mb-2">
+  <!-- <div class="row mb-2">
     <div class="col-6">
       <%= column_chart @prem_per_gr, title: "Premium per Group Remit", colors: ["#0DD823"] %>
     </div>
     <div class="col-6">
       <%= column_chart @claims_per_gr, title: "Claims per Group Remit", colors: ["#EE2525"] %>
     </div>
+  </div> -->
+
+  <div class="row mb-2">
+    <%= column_chart @gr_chart, title: "Premium & Claims per Group Remit", colors: ["#0DD823", "#EE2525"] %>
   </div>
 
   <div class="row mb-2">
