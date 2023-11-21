@@ -308,9 +308,22 @@ class PagesController < ApplicationController
     ]
 
 
-    @prem_per_gr = GroupRemit.where(type: "Remittance", net_premium: 0..).pluck(:name, :net_premium)
-    # @prem_per_gr = GroupRemit.where(type: "Remittance").pluck(:name, :net_premium).map { |name, net_premium| [name, net_premium || 0] }
-    @claims_per_gr = GroupRemit.where(type: "Remittance", net_premium: 0..).pluck(:name, :net_premium).map { |name, premium| [name, premium * (rand(0.3..0.6))] }
+    
+
+    # @prem_per_gr = GroupRemit.where(type: "Remittance", net_premium: 0..).pluck(:name, :net_premium)
+    # # @prem_per_gr = GroupRemit.where(type: "Remittance").pluck(:name, :net_premium).map { |name, net_premium| [name, net_premium || 0] }
+    # @claims_per_gr = GroupRemit.where(type: "Remittance", net_premium: 0..).pluck(:name, :net_premium).map { |name, premium| [name, premium * (rand(0.3..0.6))] }
+
+    @gr_chart = [
+      {
+        name: "Premium",
+        data: GroupRemit.where(type: "Remittance", net_premium: 0..).pluck(:name, :net_premium) 
+      },
+      {
+        name: "Claims",
+        data: GroupRemit.where(type: "Remittance", net_premium: 0..).pluck(:name, :net_premium).map { |name, premium| [name, premium * (rand(0.3..0.6))] }
+      }
+    ]
 
   end
 
