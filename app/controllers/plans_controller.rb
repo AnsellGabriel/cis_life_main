@@ -1,7 +1,7 @@
 class PlansController < InheritedResources::Base
   before_action :authenticate_user!
-  before_action :check_userable_type
-  before_action :set_cooperative, only: %i[index new create show]
+  # before_action :check_userable_type
+  # before_action :set_cooperative, only: %i[index new create show]
 
   def selected
     @target = params[:target]
@@ -18,7 +18,7 @@ class PlansController < InheritedResources::Base
   end
 
   def set_cooperative
-    @cooperative = current_user.userable.cooperative
+    # @cooperative = current_user.userable.cooperative
   end
 
   def check_userable_type

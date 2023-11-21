@@ -23,44 +23,54 @@ class GroupProposalsController < ApplicationController
   def create
     @group_proposal = GroupProposal.new(group_proposal_params)
 
-    if @group_proposal.save
+    ctr = Agreement.joins(:plan).where(plan: {acronym: @group_proposal.plan.acronym}).count.to_s.rjust(4, '0')
+    respond_to do |format|
+        
+      if @group_proposal.save
 
-      @agreement = Agreement.find_or_initialize_by(cooperative: @group_proposal.cooperative, plan: @group_proposal.plan)
-      @agreement.entry_age_from = @group_proposal.plan.entry_age_from
-      @agreement.entry_age_to = @group_proposal.plan.entry_age_to
-      @agreement.exit_age = @group_proposal.plan.exit_age
-      @agreement.proposal_id = @group_proposal.id     # default
-      @agreement.nel = 25000      # default value
-      @agreement.nml = 2000000    # default value
-      @agreement.coop_sf = 10     # change this value
-      @agreement.agent_sf = 10    # change this value
-      @agreement_benefits = @agreement.agreement_benefits.build(
-        proposal_id: @group_proposal.id,
-        name: "Principal",
-        plan: @group_proposal.plan,
-        min_age: @agreement.entry_age_from,
-        max_age: @agreement.entry_age_to,
-        insured_type: 1,
-        exit_age: @agreement.exit_age
-      )
+        @agreement = Agreement.find_or_initialize_by(cooperative: @group_proposal.cooperative, plan: @group_proposal.plan)
+        @agreement.agent_id = 1 # change value to actual agent_id
+        @agreement.moa_no = "#{@group_proposal.plan.acronym}-#{@group_proposal.cooperative.acronym}-#{ctr}"
+        @agreement.entry_age_from = @group_proposal.plan.entry_age_from
+        @agreement.entry_age_to = @group_proposal.plan.entry_age_to
+        @agreement.exit_age = @group_proposal.plan.exit_age
+        @agreement.contestability = 12
+        @agreement.minimum_participation = @group_proposal.plan.min_participation 
+        # @agreement.proposal_id = @group_proposal.id     # default
+        @agreement.nel = 25000      # default value
+        @agreement.nml = 2000000    # default value
+        @agreement.coop_sf = 10     # change this value
+        @agreement.agent_sf = 10    # change this value
+        @agreement_benefits = @agreement.agreement_benefits.build(
+          # proposal_id: @group_proposal.id,
+          name: "Principal",
+          plan: @group_proposal.plan,
+          min_age: @agreement.entry_age_from,
+          max_age: @agreement.entry_age_to,
+          insured_type: 1,
+          exit_age: @agreement.exit_age
+        )      
+                
+        prem = @group_proposal.plan_unit.total_prem / @group_proposal.plan_unit.unit_benefits.count
+        @group_proposal.plan_unit.unit_benefits.each do |ub|
+          @agreement_benefits.product_benefits.build(
+            coverage_amount: ub.coverage_amount,
+            benefit: ub.benefit,
+            premium: prem
+          )
+        end
+        binding.pry
 
-      prem = @group_proposal.plan_unit.total_prem / @group_proposal.plan_unit.unit_benefits.count
-      @group_proposal.plan_unit.unit_benefits.each do |ub|
-        @agreement_benefits.product_benefits.build(
-          coverage_amount: ub.coverage_amount,
-          benefit: ub.benefit,
-          premium: prem
-        )
-      end
+        if @agreement.save!
 
-      if @agreement.save!
-
-        redirect_to @agreement, notice: "#{@agreement.plan} agreement was successfully created."
+          format.html { redirect_to @agreement, notice: "#{@agreement.plan} agreement was successfully created." }
+        else
+          format.html { redirect_to @group_proposal, notice: "Group proposal was successfully created. No agreement created." }
+        end
       else
-        redirect_to @group_proposal, notice: "Group proposal was successfully created. No agreement created."
+       format.html { render :new, status: :unprocessable_entity }
       end
-    else
-      render :new, status: :unprocessable_entity
+
     end
   end
 
