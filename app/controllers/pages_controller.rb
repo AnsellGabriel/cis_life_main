@@ -315,13 +315,10 @@ class PagesController < ApplicationController
       ["76-80", rand(10..15)]
     ]
 
-    @job_demo = [
-      [FFaker::Job.title, rand(1..10)],
-      [FFaker::Job.title, rand(5..10)],
-      [FFaker::Job.title, rand(50..70)],
-      [FFaker::Job.title, rand(20..25)],
-      [FFaker::Job.title, rand(10..50)]
-    ]
+    @job_demo = Member.pluck(:occupation).compact.sample(10).map do |occ|
+      [occ, rand(10.50)]
+    end
+    
 
     # @prem_per_gr = GroupRemit.where(type: "Remittance", net_premium: 0..).pluck(:name, :net_premium)
     # # @prem_per_gr = GroupRemit.where(type: "Remittance").pluck(:name, :net_premium).map { |name, net_premium| [name, net_premium || 0] }
