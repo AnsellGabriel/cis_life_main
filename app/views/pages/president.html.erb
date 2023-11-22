@@ -16,16 +16,21 @@
   </div>
 
   <div class="row mt-3">
-    <div class="col-4">
+    <div class="col-6">
       <%#= pie_chart @premium_per_plan, id: "premium-per-plan", title: "Premium per Plan" %>
       <%= render "pages/graphs/prem_per_plan", chart_data: @premium_per_plan %>
     </div>
-    <div class="col-4">
+    <div class="col-6">
       <%#= pie_chart @claims_per_plan, id: "claims-per-plan", title: "Claims per Plan" %>
       <%= render "pages/graphs/claims_per_plan", chart_data: @claims_per_plan %>
     </div>
-    <div class="col-4">
-      <%#= pie_chart @pie_chart_gender, title: "Premium per Gender" %>
+  </div>
+
+  <div class="row mt-3">
+    <div class="col-6">
+      <%= pie_chart @lives_insured, title: "No. of Insured per Area" %>
+    </div>
+    <div class="col-6">
       <%= render "pages/graphs/gender_chart", chart_data: @pie_chart_gender %>
     </div>
   </div>
