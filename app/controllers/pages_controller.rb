@@ -1,5 +1,6 @@
 class PagesController < ApplicationController
   before_action :set_gender_chart, only: %i[ coso president coop ]
+  before_action :set_sample_coop, only: %i[ coop]
 
   def home
   end
@@ -308,10 +309,18 @@ class PagesController < ApplicationController
     ]
 
     @age_bracket = [
-      ["18-65", 100..150],
-      ["16-70", 20..30],
-      ["71-75", 50..70],
-      ["76-80", 10..15]
+      ["18-65", rand(100..150)],
+      ["16-70", rand(20..30)],
+      ["71-75", rand(50..70)],
+      ["76-80", rand(10..15)]
+    ]
+
+    @job_demo = [
+      [FFaker::Job.title, rand(1..10)],
+      [FFaker::Job.title, rand(5..10)],
+      [FFaker::Job.title, rand(50..70)],
+      [FFaker::Job.title, rand(20..25)],
+      [FFaker::Job.title, rand(10..50)]
     ]
 
     # @prem_per_gr = GroupRemit.where(type: "Remittance", net_premium: 0..).pluck(:name, :net_premium)
@@ -688,6 +697,10 @@ class PagesController < ApplicationController
 
   private
 
+  def set_sample_coop
+    @coop_name = Cooperative.find(4).name
+  end
+
   def set_gender_chart
     min_value = 1_000_000  # 1 million
     max_value = 2_000_000  # 2 million
@@ -758,6 +771,9 @@ class PagesController < ApplicationController
       }
     ]
 
+    @benefits_chart = Benefit.all.map do |b|
+      [b.name, rand(100000..1000000)]
+    end
   end
   
   
