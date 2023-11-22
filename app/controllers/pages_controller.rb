@@ -300,6 +300,12 @@ class PagesController < ApplicationController
       ["Accidental Death", 134]
     ]
 
+    @lives_insured = [
+      ["Luzon", 1020400],
+      ["Visayas", 1201298],
+      ["Mindanao", 768910]
+    ]
+
   end
 
   def coop
