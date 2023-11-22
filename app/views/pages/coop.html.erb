@@ -3,10 +3,13 @@
   <%= content_tag :h3, "Cooperative" %>
 
   <div class="row mb-2">
-    <div class="col-6">
+    <div class="col-4">
+      <%= pie_chart @age_bracket, title: "Age Demographic" %>
+    </div>
+    <div class="col-4">
       <%= pie_chart @prem_v_claims, title: "Premium vs. Claims" %>
     </div>
-    <div class="col-6">
+    <div class="col-4">
       <%#= pie_chart @pie_chart_gender, title: "Premium per Gender" %>
       <%= render "pages/graphs/gender_chart", chart_data: @pie_chart_gender %>
     </div>

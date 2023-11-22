@@ -307,8 +307,12 @@ class PagesController < ApplicationController
       ["Claims", 2192800]
     ]
 
-
-    
+    @age_bracket = [
+      ["18-65", 100..150],
+      ["16-70", 20..30],
+      ["71-75", 50..70],
+      ["76-80", 10..15]
+    ]
 
     # @prem_per_gr = GroupRemit.where(type: "Remittance", net_premium: 0..).pluck(:name, :net_premium)
     # # @prem_per_gr = GroupRemit.where(type: "Remittance").pluck(:name, :net_premium).map { |name, net_premium| [name, net_premium || 0] }
