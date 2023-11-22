@@ -15,7 +15,7 @@
     <%= render "pages/graphs/agent_prem_claims", chart_data: @prem_claim_agent %>
   </div>
 
-  <div class="row mt-2">
+  <div class="row mt-3">
     <div class="col-4">
       <%#= pie_chart @premium_per_plan, id: "premium-per-plan", title: "Premium per Plan" %>
       <%= render "pages/graphs/prem_per_plan", chart_data: @premium_per_plan %>
@@ -28,6 +28,10 @@
       <%#= pie_chart @pie_chart_gender, title: "Premium per Gender" %>
       <%= render "pages/graphs/gender_chart", chart_data: @pie_chart_gender %>
     </div>
+  </div>
+
+  <div class="row mt-3">
+    <%= render "pages/graphs/benefit_chart", chart_data: @benefits_chart %>
   </div>
 
   <div class="row mt-3">
