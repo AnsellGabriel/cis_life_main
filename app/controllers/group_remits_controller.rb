@@ -29,23 +29,19 @@ class GroupRemitsController < InheritedResources::Base
       return
     end
 
-    if @group_remit.batches_all_renewal?
-      @group_remit.approve_insurance_status_of_batches
-      @group_remit.set_for_payment_status
-    else
-      @group_remit.set_under_review_status
-    end
+    # if @group_remit.batches_all_renewal?
+    #   @group_remit.approve_insurance_status_of_batches
+    #   @group_remit.set_for_payment_status
+    # else
+    #   @group_remit.set_under_review_status
+    # end
 
+    @group_remit.set_under_review_status
     @group_remit.date_submitted = Date.today
 
     respond_to do |format|
       if @group_remit.save!
-        @process_coverage = @group_remit.build_process_coverage
-        @process_coverage.effectivity = @group_remit.effectivity_date
-        @process_coverage.expiry = @group_remit.expiry_date
-        @process_coverage.processor_id  = @group_remit.agreement.emp_agreements.find_by(agreement: @group_remit.agreement, active: true).employee_id
-        @process_coverage.approver_id  = @group_remit.agreement.emp_agreements.find_by(agreement: @group_remit.agreement, active: true).employee.emp_approver.approver_id
-        @process_coverage.set_default_attributes
+        create_process_coverage(@group_remit) # @process_coverage
         # raise 'errors'
         if @process_coverage.save
           format.html { redirect_to coop_agreement_group_remit_path(@group_remit.agreement, @group_remit), notice: "Group remit submitted" }
@@ -135,36 +131,6 @@ class GroupRemitsController < InheritedResources::Base
     end
   end
 
-  # ! moved to payments_controller
-  # def payment
-  #   agreement = @group_remit.agreement
-
-  #   if params[:file].nil?
-  #     return redirect_to coop_agreement_group_remit_path(agreement, @group_remit), alert: "Please attach proof of payment"
-  #   end
-
-  #   # anniv_type = agreement.anniversary_type
-  #   @group_remit.payments.build(receipt: params[:file])
-  #   @group_remit.status = :payment_verification
-
-  #   respond_to do |format|
-  #     if @group_remit.save!
-  #       # approved_batches = @group_remit.batches.approved
-  #       # approved_members = CoopMember.approved_members(approved_batches)
-  #       # current_batch_remit = BatchRemit.find(@group_remit.batch_remit_id)
-  #       # duplicate_batches = current_batch_remit.batch_group_remits.existing_members(approved_members)
-
-  #       # BatchRemit.process_batch_remit(current_batch_remit, duplicate_batches, approved_batches)
-
-  #       # current_batch_remit.save!
-  #       format.html { redirect_to coop_agreement_group_remit_path(agreement, @group_remit), notice: "Proof of payment sent" }
-  #     else
-  #       format.html { redirect_to coop_agreement_group_remit_path(agreement, @group_remit), alert: "Invalid proof of payment" }
-  #     end
-  #   end
-  # end
-
-
   private
 
   def set_group_remit
@@ -204,5 +170,14 @@ class GroupRemitsController < InheritedResources::Base
   def load_concerns
     containers # controller/concerns/container.rb
     counters  # controller/concerns/counter.rb
+  end
+
+  def create_process_coverage(group_remit)
+    @process_coverage = group_remit.build_process_coverage
+    @process_coverage.effectivity = group_remit.effectivity_date
+    @process_coverage.expiry = group_remit.expiry_date
+    @process_coverage.processor_id  = group_remit.agreement.emp_agreements.find_by(agreement: group_remit.agreement, active: true).employee_id
+    @process_coverage.approver_id  = group_remit.agreement.emp_agreements.find_by(agreement: group_remit.agreement, active: true).employee.emp_approver.approver_id
+    @process_coverage.set_default_attributes
   end
 end

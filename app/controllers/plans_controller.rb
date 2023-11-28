@@ -1,7 +1,7 @@
 class PlansController < InheritedResources::Base
   before_action :authenticate_user!
   before_action :check_userable_type
-  before_action :set_cooperative, only: %i[index new create show]
+  before_action :set_cooperative, only: %i[index new create show edit]
 
   def selected
     @target = params[:target]
@@ -14,7 +14,7 @@ class PlansController < InheritedResources::Base
   private
 
   def plan_params
-    params.require(:plan).permit(:name, :description, :acronym, :gyrt_type, :entry_age_from, :entry_age_to, :exit_age, :min_participation)
+    params.require(:plan).permit(:name, :description, :acronym, :dependable, :entry_age_from, :entry_age_to, :exit_age, :min_participation)
   end
 
   def set_cooperative

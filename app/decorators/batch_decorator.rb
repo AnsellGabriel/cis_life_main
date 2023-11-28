@@ -33,7 +33,7 @@ class BatchDecorator < Draper::Decorator
   def status_badge
     if object.recent?
       "primary"
-    elsif object.reloan?
+    elsif object.reloan? || object.renewal?
       "warning text-dark"
     else
       "danger"

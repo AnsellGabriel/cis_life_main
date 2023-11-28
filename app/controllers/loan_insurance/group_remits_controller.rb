@@ -58,7 +58,7 @@ class LoanInsurance::GroupRemitsController < ApplicationController
 
   def create
     @group_remit = @agreement.group_remits.new(type: "LoanInsurance::GroupRemit")
-    @group_remit.name = params[:loan_insurance_group_remit][:name]
+    @group_remit.name = "#{@agreement.cooperative.acronym}-LPPI-#{params[:loan_insurance_group_remit][:name]}"
 
     begin
       if @group_remit.save!
