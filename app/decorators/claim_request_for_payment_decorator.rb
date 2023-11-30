@@ -1,4 +1,4 @@
-class ApplicationDecorator < Draper::Decorator
+class ClaimRequestForPaymentDecorator < ApplicationDecorator
   delegate_all
 
   # Define presentation-specific methods here. Helpers are accessed through
@@ -10,11 +10,4 @@ class ApplicationDecorator < Draper::Decorator
   #     end
   #   end
 
-  def status_color
-    case object.status
-    when "approved", "posted", "voucher_generated" then "success"
-    when "pending", "for_review" then "warning"
-    when "rejected", "terminated", "cancelled" then "danger"
-    end
-  end
 end

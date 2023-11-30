@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_11_28_012140) do
+ActiveRecord::Schema[7.0].define(version: 2023_11_30_073123) do
   create_table "accounting_vouchers", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.date "date_voucher"
     t.integer "voucher"
@@ -23,6 +23,9 @@ ActiveRecord::Schema[7.0].define(version: 2023_11_28_012140) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.integer "status", default: 0
+    t.bigint "claim_request_for_payment_id"
+    t.boolean "claimable", default: false
+    t.index ["claim_request_for_payment_id"], name: "index_accounting_vouchers_on_claim_request_for_payment_id"
     t.index ["payable_type", "payable_id"], name: "index_accounting_vouchers_on_payable"
     t.index ["treasury_account_id"], name: "index_accounting_vouchers_on_treasury_account_id"
   end
@@ -383,6 +386,15 @@ ActiveRecord::Schema[7.0].define(version: 2023_11_28_012140) do
     t.index ["process_claim_id"], name: "index_claim_coverages_on_process_claim_id"
   end
 
+  create_table "claim_payments", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+    t.string "beneficiary"
+    t.decimal "amount", precision: 15, scale: 2
+    t.bigint "process_claim_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["process_claim_id"], name: "index_claim_payments_on_process_claim_id"
+  end
+
   create_table "claim_remarks", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.bigint "process_claim_id", null: false
     t.bigint "user_id", null: false
@@ -395,6 +407,16 @@ ActiveRecord::Schema[7.0].define(version: 2023_11_28_012140) do
     t.boolean "pin"
     t.index ["process_claim_id"], name: "index_claim_remarks_on_process_claim_id"
     t.index ["user_id"], name: "index_claim_remarks_on_user_id"
+  end
+
+  create_table "claim_request_for_payments", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+    t.bigint "process_claim_id", null: false
+    t.decimal "amount", precision: 15, scale: 2
+    t.integer "status", default: 0
+    t.string "analyst"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["process_claim_id"], name: "index_claim_request_for_payments_on_process_claim_id"
   end
 
   create_table "claim_type_benefits", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
@@ -1139,6 +1161,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_11_28_012140) do
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
   end
 
+  add_foreign_key "accounting_vouchers", "claim_request_for_payments"
   add_foreign_key "accounting_vouchers", "treasury_accounts"
   add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
   add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
@@ -1157,8 +1180,10 @@ ActiveRecord::Schema[7.0].define(version: 2023_11_28_012140) do
   add_foreign_key "claim_attachments", "claim_type_documents"
   add_foreign_key "claim_attachments", "process_claims"
   add_foreign_key "claim_causes", "process_claims"
+  add_foreign_key "claim_payments", "process_claims"
   add_foreign_key "claim_remarks", "process_claims"
   add_foreign_key "claim_remarks", "users"
+  add_foreign_key "claim_request_for_payments", "process_claims"
   add_foreign_key "coop_branches", "cooperatives"
   add_foreign_key "coop_members", "coop_branches"
   add_foreign_key "coop_members", "cooperatives"

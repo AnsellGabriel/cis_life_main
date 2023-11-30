@@ -22,6 +22,7 @@
         <th class="text-center" style="min-width: 125px;">Date</th>
         <th>Payee</th>
         <th class="text-center">Amount</th>
+        <th class="text-center">Status</th>
       </tr>
     </thead>
 
@@ -35,6 +36,7 @@
             <td class="text-center"><%= month_day_year(check.date_voucher) %></td>
             <td><%= check.payable %></td>
             <td class="text-end"><%= to_curr(check.amount) %></td>
+            <td class="text-center text-<%= check.decorate.status_color %>"><%= check.status.titleize %></td>
           </tr>
         <% end %>
       <% else %>

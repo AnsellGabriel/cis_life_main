@@ -1,0 +1,40 @@
+<%= content_tag :h1, "List of Claim Payments" %>
+
+
+<div class="text-end mb-3">
+  <%= link_to new_claim_payment_path, class: 'btn btn-primary' do %>
+    New Claim Payment
+  <% end %>
+</div>
+
+
+  <table class="table table-striped table-bordered table-hover">
+    <thead>
+      <tr>
+      <th>#</th>
+            <th>Beneficiary</th>
+            <th>Amount</th>
+            <th>Process Claim</th>
+            <th></th>
+        </tr>
+    </thead>
+
+    <tbody>
+      <% @claim_payments.each do |claim_payment| %>
+        <tr>
+
+        <th scope="row"><%= claim_payment.id %></th>
+        <td><%= claim_payment.beneficiary %></td>
+        <td><%= claim_payment.amount %></td>
+        <td><%= claim_payment.process_claim %></td>
+    
+          <td>
+            <%= link_to 'View', claim_payment, class: 'btn btn-secondary btn-sm' %>
+            <%= link_to 'Edit', edit_claim_payment_path(claim_payment), class: 'btn btn-secondary btn-sm' %>
+            <%= link_to "Delete", claim_payment, class: "btn btn-danger btn-sm", method: :delete, data: { "turbo-method": :delete, turbo_confirm: "Are you sure?" } %>
+          </td>
+
+        </tr>
+      <% end %>
+    </tbody>
+  </table>

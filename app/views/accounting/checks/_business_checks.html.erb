@@ -1,17 +1,24 @@
 <div class="p-3">
 
-  <% if current_user.is_treasurer? && !voucher.cancelled? %>
+  <% if current_user.is_treasurer? && !voucher.cancelled? && !voucher.claimable? %>
     <div class="mb-3 <%= flex_justify_align('between') %>">
       <%= link_to new_accounting_check_business_path(voucher), class: small_btn('primary'), data: {turbo_frame: 'modal'} do %>
         <i class="bi bi-plus-lg"></i> Add Business Check
       <% end %>
+
+      <% if @claim.present? %>
+        <%= link_to claimable_process_claims_path(v: voucher.id), class: small_btn('success'), data: {turbo_confirm: 'Are you sure?', turbo_method: :get} do %>
+          Ready for claim
+        <% end %>
+      <% end %>
     </div>
+
   <% end %>
 
   <table class="table table-bordered table-hover bg-white">
     <thead style="border-bottom: 10px;">
       <tr>
-        <% if business_checks.present? %>
+        <% if current_user.is_treasurer? && !voucher.claimable?  %>
           <th></th>
         <% end %>
         <th class="text-center">Check No.</th>
@@ -24,7 +31,7 @@
       <% if business_checks.present? %>
         <% business_checks.each do |check| %>
           <tr>
-            <% if !voucher.cancelled? %>
+            <% if !voucher.cancelled? && current_user.is_treasurer? && !voucher.claimable? %>
               <td class="text-center">
                 <%= link_to edit_accounting_check_business_path(voucher, check), 
                   class: small_btn('outline-primary'), 
@@ -57,7 +64,7 @@
     <% if business_checks.present? %>
       <tfoot>
         <tr>
-          <th class="text-end" colspan="4">Total</th>
+          <th class="text-end" colspan="<%= current_user.is_treasurer? && !voucher.claimable? ? '4' : '3' %>">Total</th>
           <th class="text-end"><%= to_curr voucher.business_checks.sum(:amount) %></th>
         </tr>
       </tfoot>

@@ -2,6 +2,8 @@
 require "sidekiq/web"
 
 Rails.application.routes.draw do
+  resources :claim_request_for_payments
+  resources :claim_payments
   get "actuarial/index"
   namespace :actuarial do
     resources :reserves
@@ -196,23 +198,26 @@ Rails.application.routes.draw do
   get "insurance/terminate", as: "terminate_insurance"
 
   # * Finance Module Routes
-
+  # accounting
   namespace :accounting do
     resources :journals
 
     resources :checks do
       get :cancel, on: :member
-      resources :business_checks, as: 'business', except: %i[index]
+      resources :business_checks, as: 'business', except: [:index]
+      get :requests, on: :collection
     end
 
-    get :search, as: 'business_check_search', path: 'search_business_check', to: "business_checks#search"
-    get :index, as: 'business_check_index', path: 'business_checks', to: "business_checks#index"
-
     get "dashboard", to: "dashboard#index"
-
   end
 
+  # treasury
   namespace :treasury do
+    resources :business_checks, as: 'checks', path: 'checks', only: [:index] do
+      get :requests, on: :collection
+      get :search, on: :collection
+    end
+
     resources :payments
     resources :cashier_entries do
       get :cancel, on: :member
@@ -248,6 +253,7 @@ Rails.application.routes.draw do
     post :create_status, to: "claim_remarks#create_status", on: :collection
     get :read_message, on: :member
   end
+
   resources :process_claims do
     get :new_coop, to: "process_claims#new_coop", on: :collection
     post :create_coop, to: "process_claims#create_coop", on: :collection
@@ -260,6 +266,7 @@ Rails.application.routes.draw do
     get :update_status, on: :member
     get :new_ca, to: "process_claims#new_ca", on: :collection
     post :create_ca, to: "process_claims#create_ca", on: :collection
+    get :claimable, on: :collection
   end
   resources :underwriting_routes
   resources :batch_remarks do

@@ -25,7 +25,7 @@
   <tfoot class="fw-bold border-top border-primary">
     <td>TOTAL</td>
     <%# <td class="text-end"><%= to_curr(@process_claim.claim_benefits.where.not(status: "Denied").sum(:amount)) %></td>
-    <td class="text-end"><%= to_currency(@process_claim.get_benefit_claim_total(@process_claim)) %></td>
+    <td class="text-end"><%= to_currency(@process_claim.get_benefit_claim_total) %></td>
     <td class="text-end"></td>
   </tfoot>
 </table>
