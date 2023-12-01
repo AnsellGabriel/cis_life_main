@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_11_17_081602) do
+ActiveRecord::Schema[7.0].define(version: 2023_11_30_004654) do
   create_table "accounting_check_vouchers", charset: "utf8mb4", force: :cascade do |t|
     t.date "date_voucher"
     t.string "voucher"
@@ -815,6 +815,8 @@ ActiveRecord::Schema[7.0].define(version: 2023_11_17_081602) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.bigint "agreement_id", null: false
+    t.decimal "min_amount", precision: 15, scale: 2
+    t.decimal "max_amount", precision: 15, scale: 2
     t.index ["agreement_id"], name: "index_loan_insurance_rates_on_agreement_id"
   end
 

@@ -31,12 +31,12 @@
       <%= pie_chart @lives_insured, title: "No. of Insured per Area" %>
     </div>
     <div class="col-6">
-      <%= render "pages/graphs/gender_chart", chart_data: @pie_chart_gender %>
+      <%= render "pages/graphs/gender_chart", chart_data: @pie_chart_gender, c_id: "chart-gen" %>
     </div>
   </div>
 
   <div class="row mt-3">
-    <%= render "pages/graphs/benefit_chart", chart_data: @benefits_chart %>
+    <%= render "pages/graphs/benefit_chart", chart_data: @benefits_chart, c_id: "chart-ben" %>
   </div>
 
   <div class="row mt-3">

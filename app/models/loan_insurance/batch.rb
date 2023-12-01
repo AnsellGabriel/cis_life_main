@@ -18,7 +18,7 @@ class LoanInsurance::Batch < Batch
   has_many :reinsurance_batches
   has_many :reinsurances, through: :reinsurance_batches
 
-  has_many :reserve_batches, as: :batchable, dependent: :destroy
+  has_many :reserve_batches, class_name: "Actuarial::ReserveBatch", as: :batchable, dependent: :destroy
   has_many :reserves, through: :reserve_batches, class_name: "Actuarial::Reserve"
 
 
@@ -152,7 +152,8 @@ class LoanInsurance::Batch < Batch
   end
 
   def find_loan_rate(agreement)
-    self.rate = agreement.loan_rates.where("min_age <= ? AND max_age >= ?", age, age).first
+    # self.rate = agreement.loan_rates.where("min_age <= ? AND max_age >= ?", age, age).first
+    self.rate = agreement.loan_rates.where("min_age <= ? AND max_age >= ?", age, age).where("? BETWEEN min_amount AND max_amount", loan_amount).first
   end
 
 
