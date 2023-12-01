@@ -1,0 +1,46 @@
+<%= turbo_frame_tag 'reg_form_modal_xl' do %>
+  <div class="modal-header">
+    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+  </div>
+  <div class="modal-body">
+    <% if  @q == "pg" %>
+      <div class="row">
+        <div class="col-6">
+          <%= render "pages/graphs/gender_chart", chart_data: @chart_data, c_id: @c_id %>
+        </div>
+        <div class="col-6">
+          <table class="table">
+            <thead>
+              <th>Data</th>
+              <th>Value</th>
+            </thead>
+            <tbody>
+              <% @chart_data.each do |cd| %>
+                <tr>
+                  <td><%= cd[0] %></td>
+                  <td><%= number_with_delimiter(cd[1]) %></td>
+                </tr>
+              <% end %>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    <% elsif @q == "cb" %>
+      <%= render "pages/graphs/benefit_chart", chart_data: @chart_data, c_id: @c_id %>
+    <% elsif @q == "pca" %>
+      <div data-controller="graph">
+        <div class="row mb-2 mt-2">
+          <div class="col-4">
+            <%= select_tag 'select_type', options_for_select([["2020", 0], ["2021", 1], ["2022", 2], ["2023", 3]]), data: { action: "change->graph#premAnnual", target: "annualData" }, id: "annual_id", class: "form-select" %>
+            <%= content_tag :p, "Please select year to view graph...", class: "lead text-secondary" %>
+          </div>
+          <%= turbo_frame_tag "premAnnual charts" %>
+        </div>
+      </div>
+    <% else %>
+      <h1>This is Modal Charts</h1>
+      <h3>located at pages/modals/modal_charts.html.erb</h3>
+    <% end %>
+  </div>
+
+<% end %>

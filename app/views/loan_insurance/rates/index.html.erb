@@ -7,47 +7,43 @@
   <% end %>
 </div>
 
-<table class ="table table-striped">
-  <table class="table table-striped table-bordered table-hover">
-    <thead>
-      <tr>
+<div class="row">
+  <% @grouped_rates.each do |agreement, grs| %>
+    <div class="col-xl-6 mb-3">
+      <div class="card">
+        <div class="card-header">
+          <%= content_tag :span, agreement.cooperative.name, class: "lead" %>
+        </div>
+        <div class="card-body">
+          <table class="table">
+            <thead>
+              <th>Age</th>
+              <th>Amount</th>
+              <th>Rates</th>
+              <th></th>
+            </thead>
+            <tbody>
+              <% grs.each do |rate| %>
+                <tr>
+                  <td><%= rate.min_age %> - <%= rate.max_age %> years old</td>
+                  <td><%= to_currency(rate.min_amount) %> - <%= to_currency(rate.max_amount) %></td>
+                  <td>
+                    Monthly: <%= to_currency(rate.monthly_rate) %> <br>
+                    Annual: <%= to_currency(rate.annual_rate) %>
+                  </td>
+                  <td>
+                    <%= link_to "Edit", edit_loan_insurance_rate_path(rate), class: "btn btn-sm btn-success" %> | 
+                    <%= link_to "Delete", rate, data: { turbo_method: :delete, turbo_confirm: "Are you sure?" }, class: "btn btn-sm btn-danger" %>
+                  </td>
+                </tr>
+              <% end %>
+            </tbody>
 
-        <th>#</th>
-        <th>Coop/Plan</th>
-        <th>Min Age</th>
-        <th>Max Age</th>
-        <th>Monthly Rate</th>
-        <th>Annual Rate</th>
-        <th>Daily Rate</th>
-        <th></th>
+          </table>
+        </div>
+      </div>
+    </div>
+  <% end %>
+</div>
 
-      </tr>
-    </thead>
-
-    <tbody>
-      <% @rates.each do |loan_insurance_rate| %>
-        <tr>
-
-        <th scope="row"><%= loan_insurance_rate.id %></th>
-        <td>
-          <% unless loan_insurance_rate.agreement.nil? %>
-            <%= "#{loan_insurance_rate.agreement.cooperative.acronym} (#{loan_insurance_rate.agreement.plan.acronym})" %> 
-          <% end %>
-        </td>
-        <td><%= loan_insurance_rate.min_age %></td>
-        <td><%= loan_insurance_rate.max_age %></td>
-        <td><%= loan_insurance_rate.monthly_rate %></td>
-        <td><%= loan_insurance_rate.annual_rate %></td>
-        <td><%= loan_insurance_rate.daily_rate %></td>
-    
-          <td>
-            <%= link_to 'View', loan_insurance_rate, class: 'btn btn-secondary btn-sm' %>
-            <%= link_to 'Edit', edit_loan_insurance_rate_path(loan_insurance_rate), class: 'btn btn-secondary btn-sm' %>
-            <%= link_to "Delete", loan_insurance_rate, class: "btn btn-danger btn-sm", method: :delete, data: { "turbo-method": :delete, turbo_confirm: "Are you sure?" } %>
-          </td>
-
-        </tr>
-      <% end %>
-    </tbody>
-  </table>
 </div>

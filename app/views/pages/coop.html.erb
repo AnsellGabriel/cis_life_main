@@ -2,6 +2,16 @@
 
   <%= content_tag :h3, @coop_name %>
 
+  <div class="mb-2">
+    <%#= link_to "Premium per Gender", modal_charts_path(q: "pg", chart_data: @pie_chart_gender.to_json, c_id: "gen-chart"), class: "btn btn-lg btn-outline-primary", data: { turbo_frame: "reg_form_modal_xl" } %>
+
+    <%#= link_to "Claims per Benefit", modal_charts_path(q: "cb", chart_data: @benefits_chart.to_json, c_id: "ben-chart"), class: "btn btn-lg btn-outline-secondary", data: { turbo_frame: "reg_form_modal_xl" } %>
+
+    <%#= link_to "Premium & Claims per Annum", modal_charts_path(q: "pca"), class: "btn btn-lg btn-outline-success", data: { turbo_frame: "reg_form_modal_xl" } %>
+
+    <%#= link_to "graph modal", graph_modal_path, class: "btn btn-lg btn-primary" %>
+  </div>
+
   <div class="row mb-2">
     <div class="col-6">
       <%= pie_chart @age_bracket, title: "Age Demographic" %>
@@ -17,12 +27,14 @@
     </div>
     <div class="col-6">
       <%#= pie_chart @pie_chart_gender, title: "Premium per Gender" %>
-      <%= render "pages/graphs/gender_chart", chart_data: @pie_chart_gender %>
+      <%= render "pages/graphs/gender_chart", chart_data: @pie_chart_gender, c_id: "chart-gen" %>
     </div>
   </div>
+  <%#= @pie_chart_gender %>
+
 
   <div class="row mb-2">
-    <%= render "pages/graphs/benefit_chart", chart_data: @benefits_chart %>
+    <%= render "pages/graphs/benefit_chart", chart_data: @benefits_chart, c_id: "chart-ben" %>
   </div>
 
   <!-- <div class="row mb-2">

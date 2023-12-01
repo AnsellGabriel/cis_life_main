@@ -87,7 +87,7 @@ class BatchesController < ApplicationController
       if batch.insurance_status == "for_review" || batch.insurance_status == "pending"
         # if (18..65).include?(batch.age)
         if (batch.agreement_benefit.min_age..batch.agreement_benefit.max_age).include?(batch.age)
-          batch.update_attribute(:insurance_status, "approved")
+          batch.update_attribute(:insurance_status, "approved") if batch.valid_health_dec
           @process_coverage.increment!(:approved_count)
         end
       end

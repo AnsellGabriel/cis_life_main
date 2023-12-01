@@ -1,0 +1,37 @@
+<%#= turbo_frame_tag 'reg_form_modal_xl' do %>
+  <div class="modal-header">
+    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+  </div>
+
+  <div class="modal-body">
+    <% if  @q == "pg" %>
+      <div class="row">
+        <div class="col-6">
+          <%= render "pages/graphs/gender_chart", chart_data: @chart_data, c_id: @c_id %>
+        </div>
+        <div class="col-6">
+          <table class="table">
+            <thead>
+              <th>Data</th>
+              <th>Value</th>
+            </thead>
+            <tbody>
+              <% @chart_data.each do |cd| %>
+                <tr>
+                  <td><%= cd[0] %></td>
+                  <td><%= cd[1] %></td>
+                </tr>
+              <% end %>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    <% elsif %>
+      <%= render "pages/graphs/benefit_chart", chart_data: @chart_data, c_id: @c_id %>
+    <% else %>
+      <h1>This is Modal Charts</h1>
+      <h3>located at pages/modals/modal_charts.html.erb</h3>
+    <% end %>
+  </div>
+
+<%# end %>

@@ -343,6 +343,17 @@ class PagesController < ApplicationController
 
   end
 
+  def modal_charts
+    @q = params[:q]
+    unless @q == "pca"
+      @chart_data = JSON.parse(params[:chart_data])
+      @c_id = params[:c_id]
+    end
+    
+    # render template: "pages/modal_charts"
+  end
+
+
   def update_charts
     # @top = [
     #   {
