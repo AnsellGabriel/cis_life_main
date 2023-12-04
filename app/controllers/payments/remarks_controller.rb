@@ -19,6 +19,7 @@ class Payments::RemarksController < ApplicationController
     if @remark.save
       if !@payment.rejected?
         @payment.reject
+        @payment.entries.map(&:cancelled!)
 
         redirect_to payment_remarks_path(@payment), alert: "Payment rejected."
       else

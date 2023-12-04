@@ -17,6 +17,7 @@ class CoopMember < ApplicationRecord
   has_many :batches
   has_many :agreements_coop_members
   has_many :agreements, through: :agreements_coop_members
+  has_many :process_claims, as: :claimable
 
   def to_s
     "#{full_name.titleize}"

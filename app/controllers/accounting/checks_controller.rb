@@ -3,6 +3,11 @@ class Accounting::ChecksController < ApplicationController
   before_action :set_check, only: %i[ show edit update destroy cancel]
   before_action :set_payables, only: %i[ new edit create update]
 
+  def requests
+    @claim_requests = ClaimRequestForPayment.all
+    @pagy, @claim_requests = pagy(@claim_requests, items: 10)
+  end
+
   # GET /accounting/checks
   def index
     if params[:check_number].present?
@@ -18,14 +23,24 @@ class Accounting::ChecksController < ApplicationController
   def show
     @business_checks = @check.business_checks.where.not(id: nil).order(created_at: :desc)
     @ledgers = @check.general_ledgers
+    @claim = @check.claim_request_for_payment.process_claim if @check.claim_request_for_payment.present?
   end
 
   # GET /accounting/checks/new
   def new
     last_voucher = Accounting::Check.maximum(:voucher)
-    initiate_voucher = last_voucher ? last_voucher + 1 : 0
+    initiate_voucher = last_voucher ? last_voucher + 1 : 1
 
-    @check = Accounting::Check.new(voucher: initiate_voucher)
+    if params[:rid].present?
+      claim_request = ClaimRequestForPayment.find(params[:rid])
+      amount = claim_request.amount
+      coop = claim_request.process_claim.cooperative
+
+      @check = Accounting::Check.new(voucher: initiate_voucher, payable: coop, amount: amount, date_voucher: Date.today)
+    else
+      @check = Accounting::Check.new(voucher: initiate_voucher, date_voucher: Date.today)
+    end
+
   end
 
   # GET /accounting/checks/1/edit
@@ -38,6 +53,12 @@ class Accounting::ChecksController < ApplicationController
     @check = Accounting::Check.new(modified_check_params)
 
     if @check.save
+      if params[:rid].present?
+        claim_request = ClaimRequestForPayment.find(params[:rid])
+        claim_request.voucher_generated!
+        @check.update(claim_request_for_payment: claim_request)
+      end
+
       redirect_to @check, notice: "Check voucher created."
     else
       render :new, status: :unprocessable_entity
@@ -60,7 +81,10 @@ class Accounting::ChecksController < ApplicationController
   end
 
   def cancel
-    @check.cancelled!
+    @check.transaction do
+      @check.cancelled!
+      @check.claim_request_for_payment.pending! if @check.claim_request_for_payment.present?
+    end
 
     redirect_to @check, alert: "Voucher cancelled."
   end

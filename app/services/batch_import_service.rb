@@ -17,7 +17,7 @@ class BatchImportService
 
     # @principal_headers << "Terms" if @special_term_insurance.include?(@agreement.plan.acronym)
     @principal_headers << "Rank" if @gyrt_ranking_plans.include?(@agreement.plan.acronym)
-    @dependent_headers << "Dependent?" if @agreement.plan.gyrt_type == "family"
+    @dependent_headers << "Dependent?" if @agreement.plan.dependable?
 
     @progress_tracker = @group_remit.create_progress_tracker(progress: 0.0)
   end
@@ -175,7 +175,7 @@ true)
         next
       end
 
-      if dependent_hash[:dependent].to_s.strip.upcase == "TRUE" && @agreement.plan.gyrt_type == "family" && batch.agreement_benefit.with_dependent?
+      if dependent_hash[:dependent].to_s.strip.upcase == "TRUE" && @agreement.plan.dependable? && batch.agreement_benefit.with_dependent?
         batch_dependent = batch.batch_dependents.find_or_initialize_by(
           member_dependent_id: dependent.id,
         )

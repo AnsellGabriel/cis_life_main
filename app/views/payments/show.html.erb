@@ -15,7 +15,7 @@
           <%= link_to payment_remarks_path(@payment), class: 'btn btn-sm btn-outline-danger', data: {turbo_frame: 'reg_form_modal'} do %>
             <i class="bi bi-card-list"></i> Remarks
           <% end %>
-        <% else %>
+        <% elsif @payment.for_review? %>
           <%= link_to new_payment_remark_path(@payment), class: 'btn btn-sm btn-outline-danger', data: {turbo_frame: 'reg_form_modal'} do %>
             <i class="bi bi-hand-thumbs-down"></i> Reject
           <% end %>

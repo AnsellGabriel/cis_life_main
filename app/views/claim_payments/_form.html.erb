@@ -1,0 +1,16 @@
+
+<%= simple_form_for(@claim_payment) do |f| %>
+  <%= f.error_notification %>
+  <%= f.error_notification message: f.object.errors[:base].to_sentence if f.object.errors[:base].present? %>
+
+  <div class="form-inputs mb-3">
+    <%= f.input :beneficiary %>
+    <%= f.input :amount %>
+    <%= f.association :process_claim %>
+  </div>
+
+  <div class="form-actions text-end">
+    <%= link_to "Back", claim_payments_path, class: 'btn btn-secondary' %>
+    <%= f.button :submit, class: 'btn-success' %>
+  </div>
+<% end %>

@@ -32,7 +32,7 @@
           <div class="col-sm-3">
             <%= batch_member.member.civil_status.capitalize %>
           </div>
-          <% if @agreement.plan.gyrt_type == 'family' %>
+          <% if @agreement.plan.dependable? %>
             <div class="col-sm-3">
               <span class="mb-0 text-secondary">Rank</span>
             </div>
@@ -94,7 +94,7 @@
 </div>
 
 <div class="row <%= flex_justify_align('center') %> sm-secondary-text">
-  <% if (@agreement.plan.gyrt_type.present? && @agreement.plan.gyrt_type == 'basic') || !@batch.agreement_benefit.with_dependent? %>
+  <% if !@agreement.plan.dependable? || !@batch.agreement_benefit.with_dependent? %>
     <div class="col-md-10" style="margin: auto;">
   <% else %>
     <div class="col-md-4" style="margin-left: auto;">
@@ -102,7 +102,7 @@
     <div class="card mb-3">
       <div class="card-body">
         <div class="row"> 
-          <% if (@agreement.plan.gyrt_type.present? && @agreement.plan.gyrt_type == 'basic') || !@batch.agreement_benefit.with_dependent? %>
+          <% if !@agreement.plan.dependable? || !@batch.agreement_benefit.with_dependent? %>
             <div class="col-sm-12 <%= flex_justify_align('', 'center') %> gap-2">
           <% else %>
             <div class="col-sm-12 <%= flex_justify_align('center', 'center') %> gap-2">
@@ -189,7 +189,7 @@
     </div>
   </div>
 
-  <% if @agreement.plan.gyrt_type.present? && @agreement.plan.gyrt_type == 'family' && @batch.agreement_benefit.with_dependent? %>
+  <% if @agreement.plan.dependable? && @batch.agreement_benefit.with_dependent? %>
     <div class="col-md-6" style="margin-right: auto;">
       <div class="card mb-3">
         <div class="card-body">

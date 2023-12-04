@@ -22,7 +22,7 @@
           <% group_remit = payment.payable %>
           <% payment = payment.decorate %>
           <tr>
-            <td class="text-center">
+            <td>
               <%= link_to group_remit.name, payment_path(payment), class: "text-primary" %>
             </td>
             <td class="text-center"><%= month_day_year(payment.created_at) %></td>
