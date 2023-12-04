@@ -1,5 +1,6 @@
 class PagesController < ApplicationController
   before_action :set_gender_chart, only: %i[ coso president coop ]
+  before_action :set_sample_coop, only: %i[ coop]
 
   def home
   end
@@ -50,18 +51,57 @@ class PagesController < ApplicationController
     ]
 
     @total_claims_filed = [
-      ["January", rand(20..100)],
-      ["February", rand(20..50)],
-      ["March", rand(50..100)],
-      ["April", rand(50..100)],
-      ["May", rand(50..100)],
-      ["June", rand(20..40)],
-      ["July", rand(80..100)],
-      ["August", rand(50..100)],
-      ["September", rand(50..100)],
-      ["October", rand(50..100)],
-      ["November", rand(50..100)],
-      ["December", rand(50..100)]
+      {
+        name: "Approved Claims",
+        data: [
+        ["January", rand(20..100)],
+        ["February", rand(20..50)],
+        ["March", rand(50..100)],
+        ["April", rand(50..100)],
+        ["May", rand(50..100)],
+        ["June", rand(20..40)],
+        ["July", rand(80..100)],
+        ["August", rand(50..100)],
+        ["September", rand(50..100)],
+        ["October", rand(50..100)],
+        ["November", rand(50..100)],
+        ["December", rand(50..100)]
+        ]
+      },
+      {
+        name: "Pending Claims",
+        data: [
+        ["January", rand(10..25)],
+        ["February", rand(15..50)],
+        ["March", rand(20..100)],
+        ["April", rand(30..100)],
+        ["May", rand(10..100)],
+        ["June", rand(30..40)],
+        ["July", rand(30..100)],
+        ["August", rand(30..100)],
+        ["September", rand(20..60)],
+        ["October", rand(10..50)],
+        ["November", rand(10..20)],
+        ["December", rand(30..40)]
+        ]
+      },
+      {
+        name: "Denied Claims",
+        data: [
+        ["January", rand(3..10)],
+        ["February", rand(15..20)],
+        ["March", rand(1..10)],
+        ["April", rand(1..10)],
+        ["May", rand(10..30)],
+        ["June", rand(30..50)],
+        ["July", rand(30..50)],
+        ["August", rand(10..20)],
+        ["September", rand(20..60)],
+        ["October", rand(10..50)],
+        ["November", rand(30..50)],
+        ["December", rand(10..30)]
+        ]
+      }
     ]
 
     
@@ -70,7 +110,7 @@ class PagesController < ApplicationController
   def president
     @coso_prem = [
       {
-        name: "Jackelyn Ballena",
+        name: "Luzon",
         data: [
           ["January", 1000000],
           ["February", 2000000],
@@ -88,7 +128,7 @@ class PagesController < ApplicationController
         
       },
       {
-        name: "Sylvia Quinesio",
+        name: "Visayas",
         data: [
           ["January", 20000000],
           ["February",10040000],
@@ -105,7 +145,7 @@ class PagesController < ApplicationController
         ]
       },
       {
-        name: "Cecille Laguna",
+        name: "Mindanao",
         data: [
           ["January", 10000000],
           ["February", 5000000],
@@ -125,7 +165,7 @@ class PagesController < ApplicationController
 
     @claims_coso = [
       {
-        name: "Jackelyn Ballena",
+        name: "Luzon",
         data: [
           ["January", @coso_prem[0][:data][0][1] * 0.3],
           ["February", @coso_prem[0][:data][1][1] * 0.3],
@@ -142,7 +182,7 @@ class PagesController < ApplicationController
         ]
       },
       {
-        name: "Sylvia Quinesion",
+        name: "Visayas",
         data: [
           ["January", @coso_prem[1][:data][0][1] * 0.3],
           ["February", @coso_prem[1][:data][1][1] * 0.3],
@@ -159,7 +199,7 @@ class PagesController < ApplicationController
         ]
       },
       {
-        name: "Cecille Laguna",
+        name: "Mindanao",
         data: [
           ["January", @coso_prem[2][:data][0][1] * 0.3],
           ["February", @coso_prem[2][:data][1][1] * 0.3],
@@ -260,6 +300,12 @@ class PagesController < ApplicationController
       ["Accidental Death", 134]
     ]
 
+    @lives_insured = [
+      ["Luzon", 1020400],
+      ["Visayas", 1201298],
+      ["Mindanao", 768910]
+    ]
+
   end
 
   def coop
@@ -268,12 +314,45 @@ class PagesController < ApplicationController
       ["Claims", 2192800]
     ]
 
+    @age_bracket = [
+      ["18-65", rand(100..150)],
+      ["16-70", rand(20..30)],
+      ["71-75", rand(50..70)],
+      ["76-80", rand(10..15)]
+    ]
 
-    @prem_per_gr = GroupRemit.where(type: "Remittance", net_premium: 0..).pluck(:name, :net_premium)
-    # @prem_per_gr = GroupRemit.where(type: "Remittance").pluck(:name, :net_premium).map { |name, net_premium| [name, net_premium || 0] }
-    @claims_per_gr = GroupRemit.where(type: "Remittance", net_premium: 0..).pluck(:name, :net_premium).map { |name, premium| [name, premium * (rand(0.3..0.6))] }
+    @job_demo = Member.pluck(:occupation).compact.sample(10).map do |occ|
+      [occ, rand(10.50)]
+    end
+    
+
+    # @prem_per_gr = GroupRemit.where(type: "Remittance", net_premium: 0..).pluck(:name, :net_premium)
+    # # @prem_per_gr = GroupRemit.where(type: "Remittance").pluck(:name, :net_premium).map { |name, net_premium| [name, net_premium || 0] }
+    # @claims_per_gr = GroupRemit.where(type: "Remittance", net_premium: 0..).pluck(:name, :net_premium).map { |name, premium| [name, premium * (rand(0.3..0.6))] }
+
+    @gr_chart = [
+      {
+        name: "Premium",
+        data: GroupRemit.where(type: "Remittance", net_premium: 0..).pluck(:name, :net_premium) 
+      },
+      {
+        name: "Claims",
+        data: GroupRemit.where(type: "Remittance", net_premium: 0..).pluck(:name, :net_premium).map { |name, premium| [name, premium * (rand(0.3..0.6))] }
+      }
+    ]
 
   end
+
+  def modal_charts
+    @q = params[:q]
+    unless @q == "pca"
+      @chart_data = JSON.parse(params[:chart_data])
+      @c_id = params[:c_id]
+    end
+    
+    # render template: "pages/modal_charts"
+  end
+
 
   def update_charts
     # @top = [
@@ -632,6 +711,10 @@ class PagesController < ApplicationController
 
   private
 
+  def set_sample_coop
+    @coop_name = Cooperative.find(4).name
+  end
+
   def set_gender_chart
     min_value = 1_000_000  # 1 million
     max_value = 2_000_000  # 2 million
@@ -702,6 +785,9 @@ class PagesController < ApplicationController
       }
     ]
 
+    @benefits_chart = Benefit.all.map do |b|
+      [b.name, rand(100000..1000000)]
+    end
   end
   
   

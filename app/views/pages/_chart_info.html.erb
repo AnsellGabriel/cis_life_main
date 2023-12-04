@@ -1,1 +1,29 @@
-<%= column_chart chart_data, id: "coops-chart", xtitle: c_title, ytitle: 'Amount', thousands: ",", title: title, colors: [color] %>
+<div class="row">
+  <div class="col-6">
+    <%= column_chart chart_data, id: "coops-chart", xtitle: c_title, ytitle: 'Amount', thousands: ",", title: title, colors: [color] %>
+  </div>
+
+  <div class="col-6">
+    <div class="card">
+      <div class="card-body">
+        <table class="table">
+          <thead>
+            <th></th>
+            <th>Cooperative</th>
+            <th>Net Premium</th>
+          </thead>
+          <tbody>
+            <% chart_data.each.with_index do |(coop_name, prem), index| %>
+              <tr>
+                <td><%= index + 1 %></td>
+                <td><%= coop_name.titleize %></td>
+                <td><%= to_currency(prem) %></td>
+              </tr>
+            <% end %>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+</div>

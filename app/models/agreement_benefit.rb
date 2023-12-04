@@ -16,6 +16,7 @@ class AgreementBenefit < ApplicationRecord
   #   belongs_to :agreement
   #   belongs_to :proposal
   # belongs_to :options
+
   def to_s
     name
   end

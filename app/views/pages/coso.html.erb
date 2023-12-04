@@ -24,7 +24,7 @@
   </div>
 
   <div class="row mt-3">
-    <%= line_chart @total_claims_filed, title: "Total Claims Filed" %>
+    <%= line_chart @total_claims_filed, title: "Total Claims Filed", colors: ["#28EE25", "#C7CFC7", "#EE2525"] %>
   </div>
 
   <div class="row mt-3">
@@ -35,18 +35,26 @@
     <%= render "pages/graphs/causes_chart", chart_data: @cause_chart %>
   </div>
 
-  <div data-controller="graph">
-    <div class="row mb-2 mt-2">
-      <div class="col-4">
-        <%= select_tag 'data_type', options_for_select([['Small',0], ['Medium',1], ['Large',2]]), data: { action: "change->graph#selectType", target: "selectType" }, id: "type_id", class: "form-select" %>
-      </div>
-      <%= content_tag :p, "Please select Category to view graph...", class: "lead text-secondary" %>
-    </div>
+  <div class="row mt-3">
+    <%= render "pages/graphs/benefit_chart", chart_data: @benefits_chart %>
+  </div>
 
-    <%#= turbo_frame_tag 'update charts'%>
-    <%= turbo_frame_tag 'update charts' do %>
-      <%#= column_chart @chart_data, id: "coops-chart", xtitle: @c_title, ytitle: 'Amount' %>
-    <% end %>
+  <div class="card mt-3">
+    <div class="card-body">
+      <div data-controller="graph">
+        <div class="row mb-2 mt-3">
+          <div class="col-4">
+            <%= select_tag 'data_type', options_for_select([['Small',0], ['Medium',1], ['Large',2]]), data: { action: "change->graph#selectType", target: "selectType" }, id: "type_id", class: "form-select" %>
+          </div>
+          <%= content_tag :p, "Please select Category to view graph...", class: "lead text-secondary" %>
+        </div>
+
+        <%#= turbo_frame_tag 'update charts'%>
+        <%= turbo_frame_tag 'update charts' do %>
+          <%#= column_chart @chart_data, id: "coops-chart", xtitle: @c_title, ytitle: 'Amount' %>
+        <% end %>
+      </div>
+    </div>
   </div>
 
 </div>

@@ -144,7 +144,7 @@ status: :unprocessable_entity
         # if (18..65).include?(batch.age)
         # if (batch.agreement_benefit.min_age..batch.agreement_benefit.max_age).include?(batch.age)
         if batch.get_rate_age_range
-          batch.update_attribute(:insurance_status, "approved")
+          batch.update_attribute(:insurance_status, "approved") if batch.valid_health_dec
           # @process_coverage.increment!(:approved_count)
 
         end
