@@ -51,7 +51,8 @@ class Batch < ApplicationRecord
   has_many :process_claims, as: :claimable, dependent: :destroy
   has_many :claim_coverages, as: :coverageable, dependent: :destroy
 
-  has_many :reserve_batches, as: :batchable, dependent: :destroy
+  # commented due to demo having errors comment out if needed
+  # has_many :reserve_batches, as: :batchable, dependent: :destroy
   # alias_attribute :batches, :reserve_batches
 
   def update_valid_health_dec
