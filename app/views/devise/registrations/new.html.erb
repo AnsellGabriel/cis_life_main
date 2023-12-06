@@ -1,12 +1,11 @@
-<div class="card col-md-6 ps-0 pe-0" style="margin: auto">
-  <h5 class="card-header text-center">Register</h5>
-  <div class="card-body"> 
-    <div class="d-flex justify-content-center">
-			<div class="form-group col-md-4">
-					<%= select_tag :category, options_for_select([['Select a role', '', {disabled: true, selected: true}],'Agent', 'Coop', 'Employee']), id: "formCategory", class: "form-select mb-3" %>
-			</div>
-		</div>
+<%= turbo_frame_tag "reg_form_modal" do %>
+  <div class="modal-header">
+    <%= content_tag :h5, 'Sign up', class: "modal-title text-center", id: "staticBackdropLabel" %>
+    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+  </div>
 
+
+		<!--
 		<div class="hidden" id="agentForm">
 				<%= render "agents/form", agent: @agent %>
 		</div>
@@ -18,16 +17,40 @@
 		<div class="hidden" id="employeeForm">
 				<%= render "employees/form", employee: @employee %>
 		</div>
+		-->
 
-	</div>
-</div>
+		<div class="small">
+			<ul class="nav nav-tabs" id="myTab" role="tablist">
+				<li class="nav-item" role="presentation">
+					<button class="nav-link <%= 'active' if @form == :coop %>" id="coop-tab" data-bs-toggle="tab" data-bs-target="#coop" type="button" role="tab" aria-controls="home" aria-selected="true">Coop User</button>
+				</li>
+				<li class="nav-item" role="presentation">
+					<button class="nav-link <%= 'active' if @form == :agent %>" id="agent-tab" data-bs-toggle="tab" data-bs-target="#agent" type="button" role="tab" aria-controls="agent" aria-selected="false">Agent</button>
+				</li>
+				<li class="nav-item" role="presentation">
+					<button class="nav-link <%= 'active' if @form == :employee %>" id="employee-tab" data-bs-toggle="tab" data-bs-target="#employee" type="button" role="tab" aria-controls="employee" aria-selected="false">Employee</button>
+				</li>
+			</ul>
+			<div class="tab-content p-3" id="myTabContent">
+				<div class="tab-pane fade <%= 'show active' if @form == :coop %>" id="coop" role="tabpanel" aria-labelledby="coop-tab">
+					<%= render "coop_users/form", coop_user: @coop_user %>
+				</div>
+				<div class="tab-pane fade <%= 'show active' if @form == :agent %>" id="agent" role="tabpanel" aria-labelledby="agent-tab">
+					<%= render "agents/form", agent: @agent %>
+				</div>
+				<div class="tab-pane fade <%= 'show active' if @form == :employee %>" id="employee" role="tabpanel" aria-labelledby="employee-tab">
+					<%= render "employees/form", employee: @employee %>
+				</div>
+			</div>
+		</div>
 
-<%= javascript_include_tag 'toggleForms' %>
-<script type="module">
-    toggleForms();
-</script>
+<% end %>
 
 
 
-
-
+<!--
+	<%= javascript_include_tag 'toggleForms' %>
+	<script type="module">
+			toggleForms();
+	</script>
+-->

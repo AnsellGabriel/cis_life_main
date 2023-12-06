@@ -16,6 +16,10 @@
 
 @import "bootstrap";
 
+.half-visible {
+  opacity: 0.7 !important;
+}
+
 .hidden {
   display: none !important;
 }
@@ -258,4 +262,3 @@ ul.timeline > li:before {
 .pagination {
   margin-bottom: 0;
 }
-

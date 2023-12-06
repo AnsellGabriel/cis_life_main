@@ -1,17 +1,19 @@
-<nav class="navbar navbar-expand-lg navbar-light bg-white border-bottom py-3 mb-4">
+<nav class="navbar navbar-expand-lg navbar-light <%= 'bg-white border-bottom' if current_user %> py-3 mb-4">
   <div class="container">
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
     </button>
     <div class="collapse navbar-collapse" id="navbarNavDropdown">
-      <a class="navbar-brand <%= flex_justify_align('', 'center') %>" href="#">
-        <%= image_tag 'cis_logo.png', width: 150, class: 'mb-2 mb-lg-0 me-2' %>
-        <div class="" style="max-width: 500px;">
-          <% if current_user %>
-            <%= "#{truncate(nav_header(current_user), length: 65)} " %>
-          <% end %>
-        </div>
-      </a>
+      <% if current_user %>
+        <a class="navbar-brand <%= flex_justify_align('', 'center') %>" href="#">
+          <%= image_tag 'cis_logo.png', width: 150, class: 'mb-2 mb-lg-0 me-2' %>
+          <div class="" style="max-width: 500px;">
+            <% if current_user %>
+              <%= "#{truncate(nav_header(current_user), length: 65)} " %>
+            <% end %>
+          </div>
+        </a>
+      <% end %>
 
       <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
         <% if current_user %>
@@ -103,8 +105,10 @@
           <% end %>
 
         <% else %>
-          <li class="nav-item"> <%= link_to "Sign Up", new_user_registration_path, class: "nav-link"  %></li>
-          <li class="nav-item"> <%= link_to "Sign In", new_user_session_path, class: "nav-link"  %></li>
+          <!--
+            <li class="nav-item"> <%= link_to "Sign Up", new_user_registration_path, class: "nav-link"  %></li>
+            <li class="nav-item"> <%= link_to "Sign In", new_user_session_path, class: "nav-link"  %></li>
+          -->
         <% end %>
       </ul>
     </div>
