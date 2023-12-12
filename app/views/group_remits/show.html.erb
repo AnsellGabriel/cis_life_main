@@ -1,7 +1,6 @@
 <%= turbo_stream_from @cooperative, "batches" %>
 <% agreement_presenter = AgreementPresenter.new(@agreement) %>
 <% plan_acronym = @agreement.plan.acronym %>
-<% short_term_insurance = plan_acronym == 'PMFC' %>
 
 <!-- Benefits & Coverages Modal -->
 <% if ['GYRT'].include?(agreement_presenter.plan_acronym) %>
@@ -14,7 +13,7 @@
 <!-- Member's count Modal -->
 <%= render "member_count_modal" %>
 
-<div class="<%= flex_justify_align('', 'center') %> gap-1">
+<div class="<%= flex_justify_align('', 'center') %> gap-1 mb-3">
   <%= link_to coop_agreement_path(@agreement), class: small_btn('outline-secondary'), title: 'Back' do %>
     <i class="bi bi-arrow-left"></i>
   <% end %>
@@ -41,7 +40,7 @@
           %>
         <% end %>
 
-        <% if short_term_insurance && @group_remit.is_batch_remit? && @group_remit.is_pending_or_renewal? %>
+        <% if @group_remit.is_batch_remit? && @group_remit.is_pending_or_renewal? %>
           <%= button_to "Delete remittance", group_remit_path(@group_remit), 
             method: :delete,
             data: { turbo_confirm: 'Delete group remit?'},
@@ -116,7 +115,7 @@
   </div>
 </div>
 
-<div class="<%= flex_justify_align('between', 'center') %> mb-3 gap-3">
+<div class="<%= flex_justify_align('between', 'base') %> mb-3 gap-3">
   <div class="d-flex flex-column " style="height: 260px; width: 100%">
 
       <div class="card mb-2">
@@ -189,7 +188,7 @@
       </div>
     </div>
   </div>
-  <div class="card" style="height: 260px; width: 100%">
+  <div class="card" style="height: 330px; width: 100%">
     <div class="card-body <%= flex_justify_align('around', '', true) %> ">
       <div class="<%= flex_justify_align('center') %>">
         <%= content_tag :h6, "#{@agreement.plan.name}", class: 'text-primary' %>
@@ -288,7 +287,7 @@
         <th class="text-center" scope="col">Premium</th>
         <th class="text-center" scope="col">Beneficiaries</th>
 
-        <% if @agreement.plan.gyrt_type == 'family' %>
+        <% if @agreement.plan.dependable? %>
           <th class="text-center" scope="col">Dependents</th>
         <% end %>
 

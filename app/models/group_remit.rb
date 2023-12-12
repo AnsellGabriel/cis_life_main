@@ -221,7 +221,7 @@ class GroupRemit < ApplicationRecord
   end
 
   def total_principal_premium
-    if self.class.name == "LoanInsurance::GroupRemit"
+    if self.instance_of?(LoanInsurance::GroupRemit)
       batches.sum(:premium_due)
     else
       batches.sum(:premium)
@@ -229,7 +229,7 @@ class GroupRemit < ApplicationRecord
   end
 
   def denied_principal_premiums
-    if self.class.name == "LoanInsurance::GroupRemit"
+    if self.instance_of?(LoanInsurance::GroupRemit)
       batches.where.not(insurance_status: :approved).sum(:premium_due)
     else
       batches.where.not(insurance_status: :approved).sum(:premium)
@@ -275,7 +275,7 @@ class GroupRemit < ApplicationRecord
   end
 
   def coop_net_premium
-    commisionable_premium - total_coop_commissions
+    commisionable_premium - (total_coop_commissions)
   end
 
   def net_premium
@@ -332,11 +332,11 @@ class GroupRemit < ApplicationRecord
 
   def update_batch_remit
     approved_batches = batches.approved
-    approved_members = CoopMember.approved_members(approved_batches)
+    # approved_members = CoopMember.approved_members(approved_batches)
     current_batch_remit = BatchRemit.find(self.batch_remit_id)
-    duplicate_batches = current_batch_remit.batch_group_remits.existing_members(approved_members)
+    # duplicate_batches = current_batch_remit.batch_group_remits.existing_members(approved_members)
 
-    BatchRemit.process_batch_remit(current_batch_remit, approved_batches, duplicate_batches)
+    BatchRemit.process_batch_remit(current_batch_remit, approved_batches)
     current_batch_remit.save!
   end
 

@@ -1,0 +1,52 @@
+<div class="<%= flex_justify_align('between', 'center') %> gap-1 mb-3">
+  <%= content_tag :h4, "Check Voucher Requests", class: 'text-primary mb-0' %>
+  <%== pagy_bootstrap_nav(@pagy) %>
+</div>
+
+<table class="table table-bordered table-hover bg-white">
+    <thead class="table-dark">
+      <tr>
+        <th class="text-center" scope="col"></th>
+        <th class="text-center" scope="col">Payee</th>
+        <th class="text-center" scope="col">Requested by</th>
+        <th class="text-center" scope="col">Amount</th>
+        <th class="text-center" scope="col">Status</th>
+        <th></th>
+      </tr>
+    </thead>
+
+    <tbody id="batches_body">
+      <% if @claim_requests.present? %>
+
+        <% @claim_requests.each do |request| %>
+          <tr>
+            <td class="text-center"><%= request.id %></td>
+            <td><%= request.process_claim.cooperative %></td>
+            <td><%= to_curr request.analyst %></td>
+            <td class="text-end"><%= to_curr request.amount %></td>
+            <td class="text-center">
+                <span class="text-<%= request.decorate.status_color %>"><%= request.status.titleize %></span>
+            </td>
+            <td class="text-center">
+              <% if request.check_vouchers.present? &&  !request.check_vouchers.last.cancelled? %>
+                <%= link_to accounting_check_path(request.check_vouchers.last), class: 'btn btn-sm btn-success', title: "View Check Voucher" do %>
+                  <i class="bi bi-receipt"></i>                
+                <% end %>
+              <% else %>
+                <%= link_to new_accounting_check_path(rid: request.id), class: 'btn btn-sm btn-primary', data: {turbo_frame: 'modal'}, title: "Add Check Voucher" do %>
+                  <i class="bi bi-receipt-cutoff"></i>
+                <% end %>
+              <% end %>
+            </td>
+          </tr>
+
+        <% end %>
+
+      <% else %>
+        <tr>
+          <td colspan="6" class="text-center">No requests found</td>
+        </tr>
+      <% end %>
+
+    </tbody>
+  </table>

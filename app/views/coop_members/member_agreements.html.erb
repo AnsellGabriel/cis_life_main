@@ -98,7 +98,7 @@
 							</div>
 						</div>
 
-						<% if agreement.plan.gyrt_type == 'family' %>
+						<% if agreement.plan.dependable? %>
 							<% batch.batch_dependents.includes(:member_dependent, :agreement_benefit).each do |dependent| %>
 								<div class="card mb-3">
 									<div class="card-body">

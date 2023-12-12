@@ -1,0 +1,9 @@
+
+<%= render @claim_payment %>
+
+<div>
+  <%= link_to "Edit", edit_claim_payment_path(@claim_payment), class: 'btn btn-primary' %> |
+  <%= link_to "Back", claim_payments_path, class: 'btn btn-primary' %>
+
+  <%= button_to "Delete", @claim_payment, method: :delete, class: 'btn btn-danger' %>
+</div>

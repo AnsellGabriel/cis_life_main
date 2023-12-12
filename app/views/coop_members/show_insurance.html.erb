@@ -18,7 +18,12 @@
               <tr>
                 <td colspan=5> <strong><%= agreement_benefit.agreement.plan %></strong> <br>
                   <%= agreement_benefit.name %> <br>
-                  <%= link_to 'File Claims', new_coop_process_claims_path(cm: @coop_member, ab: agreement_benefit, a: agreement_benefit.agreement), class: 'btn btn-sm btn-warning' %>
+                  <%# add view claims button %>
+                <% if @coop_member.process_claims.present? %>
+                    <%= link_to 'View Claims', show_coop_process_claim_path(@coop_member.process_claims.last), class: 'btn btn-sm btn-warning' %>
+                  <% else %>
+                    <%= link_to 'File Claims', new_coop_process_claims_path(cm: @coop_member, ab: agreement_benefit, a: agreement_benefit.agreement), class: 'btn btn-sm btn-warning' %>
+                  <% end %>
                   <%= agreement_benefit.description %>
                 </td>
                 <td>
@@ -53,7 +58,7 @@
                     <small>Terms</small><br>
                     <%= b.get_terms %>
                   </td>
-                  <td> <%= b.insurance_status.to_s.humanize %></td>
+                  <td> <%= b.insurance_status.to_s.humanize.titleize %></td>
                   <td> Submitted <%#= to_longdate(b.group_remits.find_by(type: "Remittance").process_coverage.created_at) %> </td>
                 </tr>
               <% end %>
