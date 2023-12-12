@@ -57,8 +57,11 @@ only: %i[ show edit update destroy approve_batch deny_batch pending_batch recons
       # raise 'errors'
       if params[:emp_id].present?
         # raise 'errors'
-        date_from = params[:date_from]
-        date_to = params[:date_to]
+        date_from = Date.strptime(params[:date_from], "%m-%d-%Y")
+        date_to = Date.strptime(params[:date_to], "%m-%d-%Y")
+        
+        binding.pry
+        
         @process_coverages = @process_coverages_x.where(processor_id: params[:emp_id], status: params[:process_type], created_at: date_from..date_to)
       end
 
@@ -295,8 +298,8 @@ only: %i[ show edit update destroy approve_batch deny_batch pending_batch recons
         elsif current_user.senior_officer?
           ProcessCoverage.where(status: :denied, created_at: start_date..end_date)
         end
-      when "head approval" then ProcessCoverage.for_approvals(current_user.rank, current_user.userable_id)# where(status: :for_head_approval)
-      when "vp approval" then ProcessCoverage.for_approvals(current_user.rank, current_user.userable_id)# where(status: :for_head_approval)
+      when "head approval" then ProcessCoverage.for_head_approvals(current_user) #(current_user, current_user.userable_id)# where(status: :for_head_approval)
+      when "vp approval" then ProcessCoverage.for_vp_approvals(current_user) #(current_user, current_user.userable_id)# where(status: :for_head_approval)
                          end
 
     @title = params[:title]
@@ -534,6 +537,7 @@ only: %i[ show edit update destroy approve_batch deny_batch pending_batch recons
   end
 
   def approve
+        
     @max_amount = params[:max_amount].to_i
     @total_life_cov = params[:total_life_cov].to_i
     # @total_net_prem = params[:total_net_prem].to_i
@@ -547,14 +551,17 @@ only: %i[ show edit update destroy approve_batch deny_batch pending_batch recons
 
     respond_to do |format|
       if current_user.rank == "analyst"
+                
         if @max_amount >= @total_gross_prem
 
           if @process_coverage.count_batches_denied(klass_name) > 0
             # if @process_coverage.group_remit.batches.where(batches: { insurance_status: :denied }).count > 0
-            @process_coverage.update_attribute(:status, "for_head_approval")
+            # @process_coverage.update_attribute(:status, "for_head_approval")
+            @process_coverage.update(status: :for_head_approval, process_date: Date.today)
             format.html { redirect_to process_coverage_path(@process_coverage), notice: "Process Coverage for Head Approval!" }
           else
-            @process_coverage.update_attribute(:status, "approved")
+            # @process_coverage.update_attribute(:status, "approved")
+            @process_coverage.update(status: :approved, process_date: Date.today, evaluate_date: Date.today)
             # @process_coverage.group_remit.set_total_premiums_and_fees
             format.html { redirect_to process_coverage_path(@process_coverage), notice: "Process Coverage Approved!" }
           end
@@ -564,7 +571,8 @@ only: %i[ show edit update destroy approve_batch deny_batch pending_batch recons
         end
       elsif current_user.rank == "head"
         if @max_amount >= @total_gross_prem
-          @process_coverage.update_attribute(:status, "approved")
+          # @process_coverage.update_attribute(:status, "approved")
+          @process_coverage.update(status: :approved, evaluate_date: Date.today)
           # @process_coverage.group_remit.set_total_premiums_and_fees
           format.html { redirect_to process_coverage_path(@process_coverage), notice: "Process Coverage Approved!" }
         else
@@ -572,7 +580,8 @@ only: %i[ show edit update destroy approve_batch deny_batch pending_batch recons
           format.html { redirect_to process_coverage_path(@process_coverage), notice: "Process Coverage for VP approval!" }
         end
       elsif current_user.rank == "senior_officer"
-        @process_coverage.update_attribute(:status, "approved")
+        # @process_coverage.update_attribute(:status, "approved")
+        @process_coverage.update(status: :approved, evaluate_date: Date.today)
         # @process_coverage.group_remit.set_total_premiums_and_fees
         format.html { redirect_to process_coverage_path(@process_coverage), notice: "Process Coverage Approved!" }
       end

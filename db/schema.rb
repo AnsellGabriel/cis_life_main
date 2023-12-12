@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_11_30_004654) do
+ActiveRecord::Schema[7.0].define(version: 2023_12_06_080247) do
   create_table "accounting_check_vouchers", charset: "utf8mb4", force: :cascade do |t|
     t.date "date_voucher"
     t.string "voucher"
@@ -982,6 +982,8 @@ ActiveRecord::Schema[7.0].define(version: 2023_11_30_004654) do
     t.bigint "processor_id"
     t.bigint "approver_id"
     t.boolean "reprocess"
+    t.date "process_date"
+    t.date "evaluate_date"
     t.index ["agent_id"], name: "index_process_coverages_on_agent_id"
     t.index ["approver_id"], name: "index_process_coverages_on_approver_id"
     t.index ["group_remit_id"], name: "index_process_coverages_on_group_remit_id"

@@ -286,5 +286,6 @@ class BatchesController < ApplicationController
     coop_member = @batch.coop_member
     agreement.coop_members.delete(coop_member) if @batch.status == "recent"
     @batch.batch_group_remits.destroy_all
-end
+  end
+  
 end
