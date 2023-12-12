@@ -1,0 +1,15 @@
+<div class="row">
+  <div class="col-6">
+    <div class="card text-dark bg-light">
+      <div class="card-header">
+        For VP Approval
+      </div>
+      <div class="card-body">
+      <%= link_to pluralize(process_coverages.where(status: "for_vp_approval").count, "Coverage"), cov_list_process_coverages_path(cov_type: "vp approval", title: "For Head Approval PCs"), class: "link-dark", data: { turbo_frame: "remote_modal" } %> <br>
+      </div>
+    </div>
+  </div>
+  <div class="col-6">
+    <%= render "process_coverages/partials/head_approval", process_coverages: process_coverages, vp: true %>
+  </div>
+</div>

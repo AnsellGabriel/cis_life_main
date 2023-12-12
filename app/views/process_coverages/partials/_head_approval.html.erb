@@ -1,0 +1,13 @@
+<div class="card text-dark bg-light">
+  <div class="card-header">
+    For Head Approval
+  </div>
+  <div class="card-body">
+  <% if vp.present? %>
+    <%= link_to pluralize(process_coverages.where(status: "for_head_approval").count, "Coverage"), cov_list_process_coverages_path(cov_type: "head approval", title: "For Head Approval PCs"), class: "link-dark", data: { turbo_frame: "remote_modal" } %> <br>
+  <% else %>
+    <%= link_to pluralize(process_coverages.where(status: "for_head_approval", approver: current_user.userable).count, "Coverage"), cov_list_process_coverages_path(cov_type: "head approval", title: "For Head Approval PCs"), class: "link-dark", data: { turbo_frame: "remote_modal" } %> <br>
+  <% end %>
+  
+  </div>
+</div>

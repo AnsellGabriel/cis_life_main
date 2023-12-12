@@ -6,7 +6,7 @@
       <%= f.error_notification message: f.object.errors[:base].to_sentence if f.object.errors[:base].present? %>
 
       <div class="form-inputs mb-3">
-        <%= f.association :user %>
+        <%= f.association :user, input_html: { data: { controller: "ts--select" } } %>
         <%# authority_levels = AuthorityLevel.all.map { |au| [to_currency(au.maxAmount ), au.id] } %>
         <%= f.association :authority_level,  prompt: "Select Authority Level" %>
         <%= f.input :active %>

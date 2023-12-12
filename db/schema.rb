@@ -976,6 +976,8 @@ ActiveRecord::Schema[7.0].define(version: 2023_11_30_073123) do
     t.bigint "processor_id"
     t.bigint "approver_id"
     t.boolean "reprocess"
+    t.date "process_date"
+    t.date "evaluate_date"
     t.index ["agent_id"], name: "index_process_coverages_on_agent_id"
     t.index ["approver_id"], name: "index_process_coverages_on_approver_id"
     t.index ["group_remit_id"], name: "index_process_coverages_on_group_remit_id"
