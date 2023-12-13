@@ -279,6 +279,11 @@ GEM
       ruby-rc4
       ttfunk
     popper_js (2.11.8)
+    postmark (1.25.0)
+      json
+    postmark-rails (0.22.1)
+      actionmailer (>= 3.0.0)
+      postmark (>= 1.21.3, < 2.0)
     prawn (2.4.0)
       pdf-core (~> 0.9.0)
       ttfunk (~> 1.7)
@@ -533,6 +538,7 @@ DEPENDENCIES
   matrix (~> 0.4.2)
   mysql2 (~> 0.5)
   pagy
+  postmark-rails
   prawn (~> 2.4)
   prawn-table
   prawn-templates (~> 0.1.2)

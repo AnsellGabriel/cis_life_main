@@ -140,3 +140,6 @@ gem "view_component"
 
 # gem for charts
 gem "chartkick"
+
+# gem for sending emails
+gem 'postmark-rails'

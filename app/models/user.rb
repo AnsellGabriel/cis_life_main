@@ -4,6 +4,9 @@ class User < ApplicationRecord
   devise :database_authenticatable, :registerable,
          :recoverable, :rememberable, :validatable
 
+  validate :password_complexity
+
+
   # belongs_to :coop_user, optional: true
   belongs_to :userable, polymorphic: true
   has_many :user_levels
@@ -43,5 +46,28 @@ class User < ApplicationRecord
   def is_treasurer?
     userable.department_id == 26
   end
+
+  private
+
+  def password_complexity
+    return if password.blank?
+
+    unless password.match?(/\d/)
+      errors.add :password, 'at least one digit'
+    end
+
+    unless password.match?(/[a-z]/)
+      errors.add :password, 'at least one lowercase letter'
+    end
+
+    unless password.match?(/[A-Z]/)
+      errors.add :password, 'at least one uppercase letter'
+    end
+
+    unless password.match?(/[[:^alnum:]]/)
+      errors.add :password, 'at least one special character'
+    end
+  end
+
 
 end

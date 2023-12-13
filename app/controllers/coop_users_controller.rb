@@ -37,7 +37,7 @@ class CoopUsersController < ApplicationController
   def create
     @form = :coop
     @coop_user = CoopUser.new(coop_user_params)
-    
+    @branches = @coop_user&.cooperative&.coop_branches
     # initialize other forms
     # new agent
     @agent = Agent.new()

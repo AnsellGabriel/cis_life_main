@@ -16,6 +16,7 @@ class Users::RegistrationsController < Devise::RegistrationsController
     # new coop_user
     @coop_user = CoopUser.new()
     @coop_user.build_user
+    @branches = []
 
     # new employee
     @employee = Employee.new()
