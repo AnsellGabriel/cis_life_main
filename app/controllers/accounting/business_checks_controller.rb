@@ -1,34 +1,14 @@
 class Accounting::BusinessChecksController < ApplicationController
   before_action :set_check, only: %i[ show edit update destroy ]
-  # before_action :cache_voucher_id, only: %i[ new ]
   before_action :set_voucher_and_checks, only: %i[ new create edit update destroy]
 
-  def index
-    if params[:check_number].present?
-      @checks = Treasury::BusinessCheck.where(check_number: params[:check_number])
-    else
-      @checks = Treasury::BusinessCheck.all.order(created_at: :desc)
-    end
-
-    @pagy, @checks = pagy(@checks, items: 10)
-  end
-
   def show
-
-  end
-
-  def search
-    search_voucher
-
-    if @voucher
-      redirect_to accounting_check_path(@voucher)
-    else
-     redirect_to accounting_business_check_index_path, alert: "Check voucher not found"
-    end
   end
 
   def new
-    @check = @business_checks.build(amount: @voucher.amount)
+    last_check_no = @business_checks.maximum(:check_number)
+    initiate_check_no = last_check_no ? last_check_no + 1 : 1
+    @check = @business_checks.build(amount: @voucher.amount, check_date: Date.today, check_number: initiate_check_no, check_type: :regular)
   end
 
   def edit
@@ -36,6 +16,11 @@ class Accounting::BusinessChecksController < ApplicationController
 
   def create
     @check = @business_checks.build(check_params)
+    @total_amount = @business_checks.sum(:amount) + @check.amount
+
+    if @total_amount > @voucher.amount
+      return redirect_to accounting_check_path(@voucher), alert: "Business check denied. Total amount of business checks is greater than the voucher amount."
+    end
 
     if @check.save
       redirect_to accounting_check_path(@voucher), notice: "Business check added."
@@ -67,10 +52,6 @@ class Accounting::BusinessChecksController < ApplicationController
   def set_voucher_and_checks
     @voucher = Accounting::Check.find(params[:check_id])
     @business_checks = @voucher.business_checks
-  end
-
-  def search_voucher
-    @voucher = Accounting::Check.find_by(voucher: params[:voucher])
   end
 
   # Only allow a list of trusted parameters through.
