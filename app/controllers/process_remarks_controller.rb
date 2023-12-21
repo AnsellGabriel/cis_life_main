@@ -77,6 +77,8 @@ class ProcessRemarksController < ApplicationController
   def view_all
     @process_coverage = ProcessCoverage.find(params[:process_coverage])
     @process_remarks = @process_coverage.process_remarks
+
+    @pagy_rem, @filtered_remarks  = pagy(@process_remarks, items: 5, page_param: :pr, link_extra: 'data-turbo-frame="pagination1"')
   end
 
   # GET /process_remarks/1/edit

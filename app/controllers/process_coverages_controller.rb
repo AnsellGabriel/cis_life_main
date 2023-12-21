@@ -7,11 +7,10 @@ only: %i[ show edit update destroy approve_batch deny_batch pending_batch recons
   # GET /process_coverages
   def index
     if current_user.rank == "senior_officer"
-      @process_coverages_x = ProcessCoverage.all
+
       @process_coverages_x = ProcessCoverage.all
       @for_process_coverages = ProcessCoverage.where(status: :for_process)
       @approved_process_coverages = ProcessCoverage.where(status: :approved)
-      # @pending_process_coverages = ProcessCoverage.where(status: :pending)
       @reprocess_coverages = ProcessCoverage.where(status: :reprocess)
       @reassess_coverages = ProcessCoverage.where(status: :reassess)
       @denied_process_coverages = ProcessCoverage.where(status: :denied)
@@ -20,7 +19,7 @@ only: %i[ show edit update destroy approve_batch deny_batch pending_batch recons
 
       if params[:search].present?
         @process_coverages = @process_coverages_x.joins(group_remit: {agreement: :cooperative}).where(
-"group_remits.name LIKE ? OR group_remits.description LIKE ? OR agreements.moa_no LIKE ? OR cooperatives.name LIKE ?", "%#{params[:search]}%", "%#{params[:search]}%", "%#{params[:search]}%", "%#{params[:search]}%")
+        "group_remits.name LIKE ? OR group_remits.description LIKE ? OR agreements.moa_no LIKE ? OR cooperatives.name LIKE ?", "%#{params[:search]}%", "%#{params[:search]}%", "%#{params[:search]}%", "%#{params[:search]}%")
       else
         @process_coverages = @process_coverages_x
       end
@@ -33,11 +32,7 @@ only: %i[ show edit update destroy approve_batch deny_batch pending_batch recons
       end
 
     elsif current_user.rank == "head"
-      # @process_coverages_x = ProcessCoverage.joins(group_remit: { agreement: :emp_agreements }).where( emp_agreements: { approver_id: current_user.userable_id, active: true })
-      # @process_coverages_x = ProcessCoverage.joins(group_remit: { agreement: { emp_agreements: {employee: :emp_approver} } }).where( emp_approver: { approver_id: current_user.userable_id }, emp_agreements: { active: true })
-      # @process_coverages_x = ProcessCoverage.joins(group_remit: { agreement: { emp_agreements: {employee: :emp_approver} } }).where(approver: current_user.userable_id)
 
-      # @process_coverages_x = ProcessCoverage.joins(group_remit: :agreement).where(approver: current_user.userable_id)
       @process_coverages_x = ProcessCoverage.all
       @for_process_coverages = @process_coverages_x.where(status: :for_process)
       @approved_process_coverages = @process_coverages_x.where(status: :approved)
@@ -50,17 +45,18 @@ only: %i[ show edit update destroy approve_batch deny_batch pending_batch recons
 
       if params[:search].present?
         @process_coverages = @process_coverages_x.joins(group_remit: {agreement: :cooperative}).where(
-"group_remits.name LIKE ? OR group_remits.description LIKE ? OR agreements.moa_no LIKE ? OR cooperatives.name LIKE ?", "%#{params[:search]}%", "%#{params[:search]}%", "%#{params[:search]}%", "%#{params[:search]}%")
+        "group_remits.name LIKE ? OR group_remits.description LIKE ? OR agreements.moa_no LIKE ? OR cooperatives.name LIKE ? OR cooperatives.acronym LIKE ?", "%#{params[:search]}%", "%#{params[:search]}%", "%#{params[:search]}%", "%#{params[:search]}%", "%#{params[:search]}%")
       else
         @process_coverages = @process_coverages_x
       end
       # raise 'errors'
       if params[:emp_id].present?
         # raise 'errors'
-        date_from = Date.strptime(params[:date_from], "%m-%d-%Y")
-        date_to = Date.strptime(params[:date_to], "%m-%d-%Y")
+        # date_from = Date.strptime(params[:date_from], "%m-%d-%Y")
+        date_from = Date.strptime(params[:date_from], "%Y-%m-%d")
+        # date_to = Date.strptime(params[:date_to], "%m-%d-%Y")
+        date_to = Date.strptime(params[:date_to], "%Y-%m-%d")
         
-        binding.pry
         
         @process_coverages = @process_coverages_x.where(processor_id: params[:emp_id], status: params[:process_type], created_at: date_from..date_to)
       end
@@ -71,15 +67,17 @@ only: %i[ show edit update destroy approve_batch deny_batch pending_batch recons
 
       if params[:search].present?
         @process_coverages = @process_coverages_x.joins("INNER JOIN cooperatives ON cooperatives.id = agreements.cooperative_id").where(
-"group_remits.name LIKE ? OR group_remits.description LIKE ? OR agreements.moa_no LIKE ? OR cooperatives.name LIKE ? OR agreements.description LIKE ? OR plans.name LIKE ? OR plans.acronym LIKE ?", "%#{params[:search]}%", "%#{params[:search]}%", "%#{params[:search]}%", "%#{params[:search]}%", "%#{params[:search]}%", "%#{params[:search]}%", "%#{params[:search]}%")
+        "group_remits.name LIKE ? OR group_remits.description LIKE ? OR agreements.moa_no LIKE ? OR cooperatives.name LIKE ? OR agreements.description LIKE ? OR plans.name LIKE ? OR plans.acronym LIKE ? OR cooperatives.acronym LIKE ?", "%#{params[:search]}%", "%#{params[:search]}%", "%#{params[:search]}%", "%#{params[:search]}%", "%#{params[:search]}%", "%#{params[:search]}%", "%#{params[:search]}%", "%#{params[:search]}%")
       else
         @process_coverages = @process_coverages_x
       end
 
       if params[:emp_id].present?
         # raise 'errors'
-        date_from = Date.strptime(params[:date_from], "%m-%d-%Y")
-        date_to = Date.strptime(params[:date_to], "%m-%d-%Y")
+         # date_from = Date.strptime(params[:date_from], "%m-%d-%Y")
+         date_from = Date.strptime(params[:date_from], "%Y-%m-%d")
+         # date_to = Date.strptime(params[:date_to], "%m-%d-%Y")
+         date_to = Date.strptime(params[:date_to], "%Y-%m-%d")
         @process_coverages = @process_coverages_x.where(processor_id: params[:emp_id], status: params[:process_type], created_at: date_from..date_to)
       end
 
@@ -99,100 +97,7 @@ only: %i[ show edit update destroy approve_batch deny_batch pending_batch recons
     #   @process_coverages = @process_coverages_x.joins(group_remit: {agreement: :cooperative}).where("group_remits.name LIKE ? OR group_remits.description LIKE ? OR agreements.moa_no LIKE ? OR cooperatives.name LIKE ?", "%#{params[:search]}%", "%#{params[:search]}%", "%#{params[:search]}%", "%#{params[:search]}%")
     # else
     #   @process_coverages = @process_coverages_x
-    # end
-
-    @pie_chart_data1 = [
-      ["Approved Claims", 150],
-      ["Denied Claims", 54],
-      ["Pending Claims", 123]
-    ]
-
-    min_value = 1_000_000  # 1 million
-    max_value = 2_000_000  # 2 million
-    step = 100_000
-
-    random_number1 = min_value + (step * rand(((max_value - min_value) / step) + 1))
-    random_number2 = min_value + (step * rand(((max_value - min_value) / step) + 1))
-    
-    @pie_chart_data2 = [
-      ["Male", random_number1],
-      ["Female", random_number2]
-    ]
-
-    @column_chart_data1 = [
-      {
-        name: "Premium",
-        data: [
-          ["Agent 1", 900000],
-          ["Agent 2", 1500000],
-          ["Agent 3", 200000],
-          ["Agent 4", 5000000],
-          ["Agent 5", 2500000]
-        ]
-      },
-      {
-        name: "Claims",
-        data: [
-          ["Agent 1", 150000],
-          ["Agent 2", 800000],
-          ["Agent 3", 700000],
-          ["Agent 4", 2000000],
-          ["Agent 5", 4000000]
-        ]
-      }
-    ]
-
-
-    @line_chart_data2 = [
-     {
-      name: "Premium",
-      data: [
-        ["January", 20000000],
-        ["February",10040000],
-        ["March",30000200],
-        ["April",35000000],
-        ["May",60000000],
-        ["June",20400100],
-        ["July",40120398],
-        ["August",50002010],
-        ["September",28172881],
-        ["October",30560000],
-        ["November",20102491],
-        ["December",40123800]
-      ]
-     },
-     {
-      name: "Claims",
-      data: [
-        ["January", 10000000],
-        ["February", 5000000],
-        ["March", 20000100],
-        ["April", 40123800],
-        ["May", 39010765],
-        ["June", 19920100],
-        ["July", 8000000],
-        ["August", 10202900],
-        ["September", 15120890],
-        ["October", 5000190],
-        ["November", 19012400],
-        ["December", 25012780]
-      ]
-     }
-    ]
-
-    @cause_chart = [
-      ["Cardiovascular Diseases", 3890],
-      ["Respiratory Diseases", 2077],
-      ["Cancer/Carcinomas", 1931],
-      ["Kidney Diseases", 1231],
-      ["Cerebrovascular Diseases", 1207],
-      ["Diabetes", 627],
-      ["Liver Diseases", 419],
-      ["Vehicular Accident", 339],
-      ["Gastrointestinal Diseases", 239],
-      ["Accidental Death", 134]
-    ]
-
+    # endx``
   end
 
   def preview
@@ -374,7 +279,7 @@ only: %i[ show edit update destroy approve_batch deny_batch pending_batch recons
 "%#{params[:search_member]}%", "%#{params[:search_member]}%")
       end
 
-      @pagy_batch, @filtered_batches  = pagy(@batches, items: 10, page_param: :batch)
+      @pagy_batch, @filtered_batches  = pagy(@batches, items: 10, page_param: :batch, link_extra: 'data-turbo-frame="pc_pagination"')
       @group_remit = @process_coverage.group_remit
 
       @total_net_prem = @process_coverage.sum_batches_net_premium
@@ -413,7 +318,7 @@ only: %i[ show edit update destroy approve_batch deny_batch pending_batch recons
 "%#{params[:search_member]}%", "%#{params[:search_member]}%")
       end
 
-      @pagy_batch, @filtered_batches  = pagy(@batches, items: 10, page_param: :batch)
+      @pagy_batch, @filtered_batches  = pagy(@batches, items: 10, page_param: :batch, link_extra: 'data-turbo-frame="pc_pagination"')
 
       @process_cov = ProcessCoverage.includes(group_remit: { batches: [:batch_remarks, coop_member: :member ] }).find(params[:id])
 
@@ -443,7 +348,7 @@ only: %i[ show edit update destroy approve_batch deny_batch pending_batch recons
 
     @process_remarks = @process_coverage.process_remarks
 
-    @pagy_rem, @filtered_remarks = pagy(@process_remarks, items: 3, page_param: :remark)
+    @pagy_rem, @filtered_remarks = pagy(@process_remarks, items: 3, page_param: :remark, link_extra: 'data-turbo-frame="pagination"')
 
     klass_name = @process_coverage.group_remit.batches.first.class.name
     @total_gross_prem = @process_coverage.sum_batches_gross_prem(klass_name)
