@@ -2,9 +2,11 @@
   <div class="card-header">
     Remarks
   </div>
+  <%= turbo_frame_tag 'pagination' do %>
   <div class="card-body">
    
     <%# if process_coverage.process_remarks.count <= 0 %>
+    
     <% if process_remarks.count <= 0 %>
       <%= content_tag :td, "NO REMARKS", colspan: 2, class: "text-center" %>
     <% else %>
@@ -31,8 +33,11 @@
         <%= link_to "View All", view_all_process_remarks_path(process_coverage: process_coverage), class: "btn btn-outline-secondary mb-2 btn-sm", data: { turbo_frame: "remote_modal" } %>
       </div>
       <div class="col">
-        <%== pagy_bootstrap_nav(@pagy_rem) if @pagy_rem.pages > 1 %>
+        <%#== pagy_bootstrap_nav(@pagy_rem) if @pagy_rem.pages > 1 %>
+        <%= render PaginationComponent.new(results: @pagy_rem) %>
       </div>
     </div>
   </div>
+  <% end %>
+
 </div>

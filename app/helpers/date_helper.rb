@@ -10,7 +10,11 @@ module DateHelper
   end
 
   def month_day_year(date)
-    date.strftime("%m-%d-%Y")
+    if date == "-"
+      date
+    else
+      date.strftime("%m-%d-%Y")
+    end
   end
 
   def remaining_days(date)
