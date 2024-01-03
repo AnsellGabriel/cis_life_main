@@ -900,8 +900,6 @@ ActiveRecord::Schema[7.0].define(version: 2023_11_30_073123) do
     t.datetime "updated_at", null: false
     t.string "payable_type", null: false
     t.bigint "payable_id", null: false
-    t.integer "or_number"
-    t.date "or_date"
     t.integer "status", default: 0
     t.decimal "amount", precision: 15, scale: 2
     t.index ["payable_type", "payable_id"], name: "index_payments_on_payable"
@@ -1098,11 +1096,11 @@ ActiveRecord::Schema[7.0].define(version: 2023_11_30_073123) do
     t.string "entriable_type", null: false
     t.bigint "entriable_id", null: false
     t.integer "payment_type"
+    t.integer "status", default: 0
     t.bigint "treasury_account_id", null: false
     t.decimal "amount", precision: 15, scale: 2
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.integer "status", default: 0
     t.index ["entriable_type", "entriable_id"], name: "index_treasury_cashier_entries_on_entriable"
     t.index ["treasury_account_id"], name: "index_treasury_cashier_entries_on_treasury_account_id"
   end

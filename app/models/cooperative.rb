@@ -1,4 +1,6 @@
 class Cooperative < ApplicationRecord
+  before_save :upcase_name
+
   has_many :coop_users
   has_many :coop_branches
 
@@ -46,5 +48,11 @@ class Cooperative < ApplicationRecord
 
   def filtered_agreements(filter)
     agreements.with_moa_like(filter).includes({anniversaries: :group_remits}, :agent, :group_remits).order(updated_at: :desc)
+  end
+
+  private
+
+  def upcase_name
+    self.name = name.upcase if name.present?
   end
 end

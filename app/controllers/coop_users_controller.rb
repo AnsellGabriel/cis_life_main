@@ -38,12 +38,13 @@ class CoopUsersController < ApplicationController
     @form = :coop
     @coop_user = CoopUser.new(coop_user_params)
     @branches = @coop_user&.cooperative&.coop_branches
-    # initialize other forms
+
+    # initialize other forms for bootstrap tabs
     # new agent
-    @agent = Agent.new()
+    @agent = Agent.new
     @agent.build_user
     # new employee
-    @employee = Employee.new()
+    @employee = Employee.new
     @employee.build_user
 
     respond_to do |format|

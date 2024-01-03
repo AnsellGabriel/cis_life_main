@@ -1,4 +1,3 @@
-
 <%= simple_form_for(@coop_user) do |f| %>
   <div class="" data-controller="password-strength">
     <%# fields for User model associated with Coop_user %>
@@ -76,7 +75,7 @@
                   }
                 },
                 placeholder: 'Password' %>
-              <ul class="small text-danger half-visible mb-0">
+              <ul class="small text-danger half-visible mb-0 ">
                 <li data-password-strength-target="min_char">min 8 characters</li>
                 <li data-password-strength-target="lowercase">at least one lowercase letter</li>
                 <li data-password-strength-target="uppercase">at least one uppercase letter</li>
@@ -139,7 +138,12 @@
     <% end %>
 
     <div class="form-actions d-flex justify-content-center gap-1 mt-5">
-      <%= f.button :submit, 'Sign Up', class: 'btn btn-sm btn-success', data: {password_strength_target: 'btn'}, disabled: true %>
+      <%= f.button :submit, 'Sign Up', class: 'btn btn-sm btn-success', 
+        data: {
+          password_strength_target: 'btn'
+        }, 
+        disabled: true 
+      %>
     </div>
   </div>
 <% end %>

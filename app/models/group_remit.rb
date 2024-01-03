@@ -1,4 +1,6 @@
 class GroupRemit < ApplicationRecord
+  include SubstringExtractor
+
   before_destroy :delete_associated_batches
 
   validates_presence_of :name # , :effectivity_date, :expiry_date, :terms
@@ -15,7 +17,6 @@ class GroupRemit < ApplicationRecord
   has_many :payments, as: :payable, dependent: :destroy
   has_many :loan_batches, dependent: :destroy, class_name: "LoanInsurance::Batch"
   has_many :cashier_entries, as: :entriable, class_name: "Treasury::CashierEntry", dependent: :destroy
-
 
   has_one :process_coverage, dependent: :destroy
   # has_one :group_import_tracker, dependent: :destroy
@@ -46,7 +47,7 @@ class GroupRemit < ApplicationRecord
     # new_group_remit.expiry_date = self.expiry_date + 1.year # Assuming the renewal duration is 1 year from the current date
     new_group_remit.status = :for_renewal
     new_group_remit.type = "Remittance"
-    new_group_remit.name = "#{self.name} RENEWAL"
+    new_group_remit.name = "#{GroupRemit.extract_from_substring(self.name, ('GYRT' or 'LPPI'))} RENEWAL"
     new_group_remit.batch_remit_id = self.id
     self.status = :for_renewal
     self.set_terms_and_expiry_date(self.expiry_date + 1.year)
@@ -127,9 +128,9 @@ class GroupRemit < ApplicationRecord
     agreement = group_remit.agreement
 
     if (agreement.anniversary_type.downcase == "12 months" or agreement.anniversary_type.nil?) && group_remit.instance_of?(BatchRemit)
-      group_remit.name = "#{agreement.moa_no} #{group_remit.effectivity_date.strftime('%B').upcase} BATCH"
+      group_remit.name = "#{extract_from_substring(agreement.moa_no, ('GYRT' or 'LPPI'))} #{group_remit.effectivity_date.strftime('%B').upcase} BATCH"
     else
-      group_remit.name = "#{agreement.moa_no} REMITTANCE #{agreement.group_remits.where(type: 'Remittance').size + 1}"
+      group_remit.name = "#{extract_from_substring(agreement.moa_no, ('GYRT' or 'LPPI'))} REMITTANCE #{agreement.group_remits.where(type: 'Remittance').size + 1}"
     end
 
   end
@@ -333,11 +334,10 @@ class GroupRemit < ApplicationRecord
   def update_batch_remit
     approved_batches = batches.approved
     # approved_members = CoopMember.approved_members(approved_batches)
-    current_batch_remit = BatchRemit.find(self.batch_remit_id)
+    # current_batch_remit = batch_remit
     # duplicate_batches = current_batch_remit.batch_group_remits.existing_members(approved_members)
 
-    BatchRemit.process_batch_remit(current_batch_remit, approved_batches)
-    current_batch_remit.save!
+    BatchRemit.process_batch_remit(batch_remit, approved_batches)
   end
 
   def update_batch_coverages
@@ -352,6 +352,14 @@ class GroupRemit < ApplicationRecord
     end
   end
 
+  def approved_payment
+    payments.approved.last
+  end
+
+  def posted_or
+    approved_payment.entries.posted.last
+  end
+
   private
 
   def delete_associated_batches
@@ -362,5 +370,9 @@ class GroupRemit < ApplicationRecord
       batch.batch_group_remits.destroy_all
       batch.destroy!
     end
+  end
+
+  def batch_remit
+    BatchRemit.find(self.batch_remit_id)
   end
 end
