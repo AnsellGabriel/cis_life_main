@@ -1,7 +1,7 @@
 class GeneralLedgersController < ApplicationController
   include Treasuries::Path
 
-  before_action :set_entry_and_ledgers, only: %i[new create destroy edit update post]
+  before_action :set_entry_and_ledgers, only: %i[new create destroy edit update post autofill]
 
   def post
     if (@ledgers.total_debit != @ledgers.total_credit) || @ledgers.empty?
@@ -13,6 +13,7 @@ class GeneralLedgersController < ApplicationController
     end
 
     if @entry.update(status: :posted)
+      # params[:e_t] = entry type
       if params[:e_t] == 'ce' && @entry.remittance?
         pay_service = PaymentService.new(@entry.entriable, current_user)
         result = pay_service.post_payment
@@ -48,6 +49,12 @@ class GeneralLedgersController < ApplicationController
     else
       render :new, status: :unprocessable_entity
     end
+  end
+
+  def autofill
+    GeneralLedger.autofill(params[:e_t], @entry)
+
+    redirect_to entry_path, notice: "Ledger entries autofilled."
   end
 
   def update

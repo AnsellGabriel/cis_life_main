@@ -20,5 +20,8 @@ FactoryBot.define do
       name { 'Premium Income - LPPI' }
     end
 
+    trait :claims do
+      name { 'Claims' }
+    end
   end
 end
