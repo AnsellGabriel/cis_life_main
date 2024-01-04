@@ -60,6 +60,7 @@ class ProcessClaimsController < ApplicationController
     @process_claim.claimable = @coop_member
     @process_claim.cooperative = @coop_member.cooperative
     @claim_cause = @process_claim.build_claim_cause
+    set_dummy_value
   end
 
   def set_dummy_value

@@ -55,6 +55,11 @@
                   flatpickr_max_date: Time.zone.now,
                   flatpickr_next_arrow: "Next",
                   flatpickr_prev_arrow: "Prev" } } %>
+            <div data-controller="agreements">
+              <%= f.association :agreement, CS.countries, { prompt: "Select agreement" }, collection: @process_claim.cooperative.agreements, input_html: { class: 'form-select', data: { action: "change->agreements#search_province" } } %>
+              <%#= f.association  %>
+              <%= f.association :agreement_benefit, label: "Agreement Benefit", wrapper_html: { class: "col col-md-3" }, input_html: { class: 'form-select', id: 'barangay_id', data: { geographs_target: "agreementSelect" } }  %>
+            </div>
           </div>
           <%= f.simple_fields_for :claim_cause do |cc| %>
             <%= cc.input :acd, label: "ACD" %>

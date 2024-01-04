@@ -11,7 +11,7 @@ class UserController < ApplicationController
         else
             @approve = 1
         end
-         
+          
         #   @user.approved = @approve
         #   @registration.attend_date = DateTime.now
       

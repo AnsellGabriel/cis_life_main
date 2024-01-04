@@ -14,10 +14,10 @@ class EmployeesController < ApplicationController
 
   # GET /employees/new
   def new
-    @employee = Employee.new(last_name: FFaker::Name.last_name, first_name: FFaker::Name.first_name, middle_name: FFaker::Name.last_name, employee_number: FFaker::Number, mobile_number: FFaker::PhoneNumber, designation: FFaker::String)
     
     # new instance of the "User" class associated with the "Employee" instance.
     @employee.build_user
+    @employee = Employee.new(last_name: FFaker::Name.last_name, first_name: FFaker::Name.first_name, middle_name: FFaker::Name.last_name, mobile_number: FFaker::PhoneNumber.phone_calling_code, designation: FFaker::Job.job_noun)
   end
 
   # GET /employees/1/edit

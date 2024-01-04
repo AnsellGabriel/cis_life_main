@@ -9,7 +9,7 @@ class User < ApplicationRecord
   has_many :user_levels
   has_many :dependent_remarks
   has_one :progress_tracker, as: :trackable, dependent: :destroy
-
+  # accepts_nested_attributes_for :ff
 
   enum rank: {
     rank_and_file: 0,

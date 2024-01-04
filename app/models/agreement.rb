@@ -22,7 +22,7 @@ class Agreement < ApplicationRecord
 
     delegate :acronym, to: :plan, prefix: true
     def to_s
-      moa_no
+      plan
     end
 
     def coop_name

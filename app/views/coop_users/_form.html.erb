@@ -1,8 +1,6 @@
-
 <%= simple_form_for(@coop_user) do |f| %>
   <%= f.error_notification %>
   <%= f.error_notification message: f.object.errors[:base].to_sentence if f.object.errors[:base].present? %>
-
   <div class="form-inputs mb-3 d-flex flex-column justify-content-center align-items-center" >
     <%# fields for User model associated with Coop_user %>
     <% unless current_user %>
@@ -10,7 +8,7 @@
         <div class="card-title">Login details:</div>
         <%= f.fields_for :user do |u| %>
           <div class="row">
-              <%= u.input :email,
+            <%= u.input :email,
                       required: true,
                       autofocus: true,
                       input_html: { autocomplete: "email", placeholder: "Email" },
@@ -30,27 +28,26 @@
                         label: false %>
             </div>
           </div>
-            <%= u.hidden_field :userable_type, value: "Coop" %>
-            <%= u.hidden_field :userable_id, value: @coop_user.id %>
-          <% end %>
+          <%= u.hidden_field :userable_type, value: "Coop" %>
+          <%= u.hidden_field :userable_id, value: @coop_user.id %>
         <% end %>
-      </div>
-      <div class="card col-md-11 ps-3 pe-3 pt-3 mb-3">
-        <div data-controller="coop">
-          <div class="row">
-            <%= f.association :cooperative, input_html: { id: "coop_id", data: { action: "change->coop#change", controller: "slim-select" }  } %>
+      <% end %>
+    </div>
+    <div class="card col-md-11 ps-3 pe-3 pt-3 mb-3">
+      <div data-controller="coop">
+        <div class="row">
+          <%= f.association :cooperative, input_html: { id: "coop_id", data: { action: "change->coop#change", controller: "slim-select" }  } %>
+        </div>
+        <div class="row">
+          <div class="col-md-6">
+            <%= f.association :coop_branch, collection: [], input_html: { id: "branch_id", data: { coop_target: "branchSelect" } } %>
           </div>
-          <div class="row">
-            <div class="col-md-6">
-              <%= f.association :coop_branch, collection: [], input_html: { id: "branch_id", data: { coop_target: "branchSelect" } } %>
-            </div>
-            <div class="col-md-6">
-              <%= f.input :designation %>
-            </div>
+          <div class="col-md-6">
+            <%= f.input :designation %>
           </div>
         </div>
       </div>
-    
+    </div>
     <div class="card col-md-11 ps-3 pe-3 pt-3">
       <div class="card-title">Name</div>
       <div class="row">
@@ -77,9 +74,7 @@
         </div>
       </div>
     </div>
-    
   </div>
-
   <div class="form-actions d-flex justify-content-center gap-1">
     <%= f.button :submit, class: 'btn-success' %>
     <%= link_to "Back", new_user_registration_path	, class: 'btn btn-secondary' %>
