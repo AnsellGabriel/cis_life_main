@@ -8,6 +8,10 @@ class GeneralLedgersController < ApplicationController
       return redirect_to entry_path, alert: "Unable to post ledger, #{@ledgers.empty? ? 'no entry.' : 'credit and debit total not equal.'}"
     end
 
+    if (@ledgers.total_debit != @entry.total_amount) || (@ledgers.total_credit != @entry.total_amount)
+      return redirect_to entry_path, alert: "Unable to post ledger, credit and debit total not equal to total amount"
+    end
+
     if @entry.update(status: :posted)
       if params[:e_t] == 'ce' && @entry.remittance?
         pay_service = PaymentService.new(@entry.entriable, current_user)

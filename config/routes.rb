@@ -223,6 +223,7 @@ Rails.application.routes.draw do
     resources :payments
     resources :cashier_entries do
       get :cancel, on: :member
+      get :autofill, on: :member
     end
 
     resources :accounts
