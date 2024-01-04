@@ -53,6 +53,12 @@ class Treasury::CashierEntriesController < ApplicationController
 
   end
 
+  # def autofill
+  #   @entry.autofill(@entry.entriable)
+
+  #   redirect_to payment_entry_path(params[:p_id], @entry), notice: "Ledger entries added!"
+  # end
+
   def update
     if @entry.update(entry_params)
       redirect_to @entry, notice: "Entry updated"
@@ -62,9 +68,9 @@ class Treasury::CashierEntriesController < ApplicationController
   end
 
   def cancel
-    @entry.cancelled!
-
-    redirect_to treasury_cashier_entry_path(@entry), notice: "OR cancelled"
+    if @entry.cancelled!
+      redirect_to treasury_cashier_entry_path(@entry), notice: "OR cancelled"
+    end
   end
 
 

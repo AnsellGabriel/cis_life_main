@@ -6,8 +6,8 @@ Rails.application.configure do
   # In the development environment your application's code is reloaded any time
   # it changes. This slows down response time but is perfect for development
   # since you don't have to restart the web server when you make code changes.
-  # config.action_mailer.perform_deliveries = true
   # config.cache_classes = false
+  # config.action_mailer.perform_deliveries = true
   # config.action_mailer.delivery_method = :smtp
   # config.action_mailer.smtp_settings = {
   #   address:              'smtp.gmail.com',
@@ -86,6 +86,17 @@ Rails.application.configure do
   # Uncomment if you wish to allow Action Cable access from any origin.
   # config.action_cable.disable_request_forgery_protection = true
   config.action_mailer.default_url_options = { host: "localhost", port: 3000 }
+  config.action_mailer.perform_deliveries = true
+  config.action_mailer.delivery_method = :smtp
+  config.action_mailer.smtp_settings = {
+    address:              'smtp.gmail.com',
+    port:                 587,
+    user_name:            Rails.application.credentials.gmail_username,
+    password:             Rails.application.credentials.gmail_password,
+    authentication:       'plain',
+    enable_starttls_auto: true
+  }
+
 
   # Bullet gem configuration
   # config.after_initialize do
@@ -96,4 +107,6 @@ Rails.application.configure do
   #   Bullet.rails_logger = true
   #   Bullet.skip_html_injection = false
   # end
+
+
 end

@@ -111,12 +111,35 @@
       </div>
     <% end %>
     <div class="card">
-        <div class="card-body">
-          <%#= link_to "Evaluate", evaluate_process_claim_path(@process_claim.id), class: "btn btn-warning" %>
-          <h4 class="text-primary">Claims Benefit</h4>
-          <%= render 'claim_benefits/show_benefit' %>
-        </div>
+      <div class="card-body">
+        <%#= link_to "Evaluate", evaluate_process_claim_path(@process_claim.id), class: "btn btn-warning" %>
+        <h4 class="text-primary">Claims Benefit</h4>
+        <%= render 'claim_benefits/show_benefit' %>
       </div>
+    </div>
+    <div class="card">
+      <div class="card-body">
+        <h4 class="text-primary">Claimable Checks</h4>
+        <table class="table table-bordered table-hover bg-white">
+          <thead style="border-bottom: 10px;">
+            <tr>
+              <th class="text-center">Check No.</th>
+              <th class="text-center">Amount</th>
+            </tr>
+          </thead>
+          <tbody>
+            <% @process_claim.claim_request_for_payment.check_vouchers.posted.last.business_checks.each do |check| %>
+              <tr>
+                <td class='text-center' >
+                  <%= check.check_number %>
+                </td>
+                <td class="text-end"><%= to_curr check.amount %></td>
+              </tr>
+            <% end %>
+          </tbody>
+        </table>
+      </div>
+    </div>
   </div>
   <%# <div class="card">
       <div class="card-body"> %>

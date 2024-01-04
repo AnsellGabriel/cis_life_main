@@ -22,6 +22,7 @@ FactoryBot.define do
     first_name { FFaker::Name.first_name }
     last_name { FFaker::Name.last_name }
     middle_name { FFaker::Name.last_name }
+    birthdate { Date.today - 19.years }
   end
 
   factory :agent_group do

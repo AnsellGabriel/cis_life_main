@@ -44,6 +44,11 @@ module ApplicationHelper
     min == 0 && max == 0 ? "" : "(#{min} to #{max} years old)"
   end
 
+  def extract_from_substring(original_string, substring)
+    index = original_string.index(substring)
+    index ? original_string[index..-1] : nil
+  end
+
   def contestable_period(period, type)
     period <= 0 ? "Waived Contestability" : "#{pluralize(sprintf('%g', period), type)}"
   end

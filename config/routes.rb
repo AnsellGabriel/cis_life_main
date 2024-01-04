@@ -223,6 +223,7 @@ Rails.application.routes.draw do
     resources :payments
     resources :cashier_entries do
       get :cancel, on: :member
+      # get :autofill, on: :member
     end
 
     resources :accounts
@@ -240,6 +241,7 @@ Rails.application.routes.draw do
   resources :treasury_cashier_entries, as: 'entries', path: 'entries' , controller: "treasury/cashier_entries" do
     resources :general_ledgers, as: 'ledgers', path: 'ledger' do
       get :post, on: :collection
+      get :autofill, on: :collection
     end
 
     resources :billing_statements, as: 'bills', controller: "treasury/billing_statements"

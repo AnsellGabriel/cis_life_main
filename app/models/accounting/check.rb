@@ -11,4 +11,8 @@ class Accounting::Check < Accounting::Voucher
   def entry_type
     'cv'
   end
+
+  def total_amount
+    amount
+  end
 end

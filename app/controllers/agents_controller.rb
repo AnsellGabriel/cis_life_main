@@ -26,7 +26,17 @@ class AgentsController < ApplicationController
 
   # POST /agents or /agents.json
   def create
+    @form = :agent
     @agent = Agent.new(agent_params)
+
+    # initialize other forms
+    # new coop_user
+    @coop_user = CoopUser.new()
+    @coop_user.build_user
+
+    # new employee
+    @employee = Employee.new()
+    @employee.build_user
 
     respond_to do |format|
       if @agent.save
@@ -35,7 +45,7 @@ class AgentsController < ApplicationController
           notice: "Account created successfully. Please wait for the admin to approve your account."
         }
       else
-        format.html { render :new, status: :unprocessable_entity }
+        format.html { render 'devise/registrations/new', status: :unprocessable_entity }
       end
     end
   end

@@ -128,17 +128,35 @@
             <%= content_tag :h6, "Expiry Date", class: 'sm-secondary-text text-primary', style: "width: 150px" %>
             <%= content_tag :h6, ": #{month_day_year(@group_remit.expiry_date)}", class: 'sm-secondary-text', style: "width: 150px" %>
           </div>
+
           <% if @group_remit.instance_of?(Remittance)%>
             <div class="<%= flex_justify_align('center') %>">
               <%= content_tag :h6, "Submitted Date ", class: 'sm-secondary-text text-primary', style: "width: 150px" %>
               <%= content_tag :h6, ": #{@group_remit.date_submitted.present? ? month_day_year(@group_remit.date_submitted) : 'Pending'}", class: 'sm-secondary-text', style: "width: 150px" %>
             </div>
           <% end %>
+          
           <div class="<%= flex_justify_align('center') %>">
             <%= content_tag :h6, "Terms", class: 'sm-secondary-text text-primary', style: "width: 150px" %>
             <%= content_tag :h6, ": #{@group_remit.terms} months", class: 'sm-secondary-text', style: "width: 150px"%>
           </div>
-          
+
+          <% if @group_remit.paid? %>
+            <% if @group_remit.instance_of?(BatchRemit) %>
+              <% @group_remit.paid_remittances.each do |remittance| %>
+                <div class="<%= flex_justify_align('center') %>">
+
+                  <%= content_tag :h6, "#{extract_from_substring(remittance.name, 'REMITTANCE')} OR #", class: 'sm-secondary-text text-primary', style: "width: 150px" %>
+                  <%= content_tag :h6, ": #{remittance.posted_or.or_no}", class: 'sm-secondary-text', style: "width: 150px"%>
+                </div>
+              <% end %>
+            <% else %>
+              <div class="<%= flex_justify_align('center') %>">
+                <%= content_tag :h6, "OR #", class: 'sm-secondary-text text-primary', style: "width: 150px" %>
+                <%= content_tag :h6, ": #{@group_remit.posted_or.or_no}", class: 'sm-secondary-text', style: "width: 150px"%>
+              </div>
+            <% end %>
+          <% end %>
         </div>
       </div>
 
