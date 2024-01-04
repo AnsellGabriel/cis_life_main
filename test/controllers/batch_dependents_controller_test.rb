@@ -17,7 +17,9 @@ class BatchDependentsControllerTest < ActionDispatch::IntegrationTest
 
   test "should create batch_dependent" do
     assert_difference("BatchDependent.count") do
-      post batch_dependents_url, params: { batch_dependent: { agreement_benefit_id: @batch_dependent.agreement_benefit_id, batch_id: @batch_dependent.batch_id, coop_dependent_id: @batch_dependent.coop_dependent_id, premium: @batch_dependent.premium } }
+      post batch_dependents_url,
+params: { batch_dependent: { agreement_benefit_id: @batch_dependent.agreement_benefit_id, batch_id: @batch_dependent.batch_id, coop_dependent_id: @batch_dependent.coop_dependent_id,
+premium: @batch_dependent.premium } }
     end
 
     assert_redirected_to batch_dependent_url(BatchDependent.last)
@@ -34,7 +36,9 @@ class BatchDependentsControllerTest < ActionDispatch::IntegrationTest
   end
 
   test "should update batch_dependent" do
-    patch batch_dependent_url(@batch_dependent), params: { batch_dependent: { agreement_benefit_id: @batch_dependent.agreement_benefit_id, batch_id: @batch_dependent.batch_id, coop_dependent_id: @batch_dependent.coop_dependent_id, premium: @batch_dependent.premium } }
+    patch batch_dependent_url(@batch_dependent),
+params: { batch_dependent: { agreement_benefit_id: @batch_dependent.agreement_benefit_id, batch_id: @batch_dependent.batch_id, coop_dependent_id: @batch_dependent.coop_dependent_id,
+premium: @batch_dependent.premium } }
     assert_redirected_to batch_dependent_url(@batch_dependent)
   end
 

@@ -17,7 +17,9 @@ class BatchesControllerTest < ActionDispatch::IntegrationTest
 
   test "should create batch" do
     assert_difference("Batch.count") do
-      post batches_url, params: { batch: { active: @batch.active, agent_sf_amount: @batch.agent_sf_amount, coop_member_id: @batch.coop_member_id, coop_sf_amount: @batch.coop_sf_amount, effectivity_date: @batch.effectivity_date, expiry_date: @batch.expiry_date, group_remit_id: @batch.group_remit_id } }
+      post batches_url,
+params: { batch: { active: @batch.active, agent_sf_amount: @batch.agent_sf_amount, coop_member_id: @batch.coop_member_id, coop_sf_amount: @batch.coop_sf_amount,
+effectivity_date: @batch.effectivity_date, expiry_date: @batch.expiry_date, group_remit_id: @batch.group_remit_id } }
     end
 
     assert_redirected_to batch_url(Batch.last)
@@ -34,7 +36,9 @@ class BatchesControllerTest < ActionDispatch::IntegrationTest
   end
 
   test "should update batch" do
-    patch batch_url(@batch), params: { batch: { active: @batch.active, agent_sf_amount: @batch.agent_sf_amount, coop_member_id: @batch.coop_member_id, coop_sf_amount: @batch.coop_sf_amount, effectivity_date: @batch.effectivity_date, expiry_date: @batch.expiry_date, group_remit_id: @batch.group_remit_id } }
+    patch batch_url(@batch),
+params: { batch: { active: @batch.active, agent_sf_amount: @batch.agent_sf_amount, coop_member_id: @batch.coop_member_id, coop_sf_amount: @batch.coop_sf_amount,
+effectivity_date: @batch.effectivity_date, expiry_date: @batch.expiry_date, group_remit_id: @batch.group_remit_id } }
     assert_redirected_to batch_url(@batch)
   end
 

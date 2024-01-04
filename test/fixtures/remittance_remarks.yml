@@ -1,0 +1,13 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  remark: MyString
+  status: 1
+  group_remit: one
+  payment: one
+
+two:
+  remark: MyString
+  status: 1
+  group_remit: two
+  payment: two

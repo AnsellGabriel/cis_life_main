@@ -1,4 +1,4 @@
-<div class="card" style="max-height: 340px; max-width: <%= agreement.is_lppi? ? '50%' : '100%' %>; margin-left: auto; min-width: 400px;">
+<div class="card" style="height: 330px; max-width: <%= agreement.is_lppi? ? '50%' : '100%' %>; margin-left: auto; min-width: 400px;">
   <div class="card-body">
       <div class="d-flex gap-3">
         <div style="width: 100%">
@@ -17,7 +17,7 @@
             <% end %>
           <div class="text-secondary d-flex justify-content-between">
             <%= content_tag :span, "Gross Premium", style: "font-size: .8rem" %>
-            <%= content_tag :span, "#{to_curr(group_remit.gross_premium)}", style: "color: var(--bs-blue); font-size: .8rem"%>
+            <%= content_tag :span, "#{to_curr(group_remit.initial_gross_premium)}", style: "color: var(--bs-blue); font-size: .8rem"%>
           </div>
           <hr>
         </div>
@@ -25,28 +25,32 @@
       </div>
       <div class="d-flex gap-3">
         <div style="width: 100%">
-          <div class="text-secondary d-flex justify-content-between">
-            <%= content_tag :span, "The sections below will update once reviewing process is completed", style: "font-size: .6rem" %>
-          </div>    
-          <div class="text-secondary d-flex justify-content-between">
-            <%= content_tag :span, "Unapprove Principal Premiums", style: "font-size: .8rem" %>
-            <%= content_tag :span, "(#{to_curr(group_remit.denied_principal_premiums)})", style: "font-size: .8rem; color: var(--bs-red)"%>
-          </div>       
-          <% if agreement.plan.gyrt_type == 'family' %>
+          <% unless @group_remit.is_batch_remit? %>
             <div class="text-secondary d-flex justify-content-between">
-              <%= content_tag :span, "Unapprove Dependent Premiums", style: "font-size: .8rem" %>
-              <%= content_tag :span, "(#{to_curr(group_remit.denied_dependent_premiums)})", style: "font-size: .8rem; color: var(--bs-red)"%>
-            </div>   
+              <%= content_tag :span, "The sections below will update once reviewing process is completed", style: "font-size: .6rem" %>
+            </div>    
+            <div class="text-secondary d-flex justify-content-between">
+              <%= content_tag :span, "#{group_remit.pending? || group_remit.under_review? || group_remit.for_renewal?  ? 'For approval' : 'Denied'} Principal Premiums", style: "font-size: .8rem" %>
+              <%= content_tag :span, "(#{to_curr(group_remit.denied_principal_premiums)})", style: "font-size: .8rem; color: var(--bs-red)"%>
+            </div>       
+            <% if agreement.plan.dependable? %>
+              <div class="text-secondary d-flex justify-content-between">
+                <%= content_tag :span, "Unapprove Dependent Premiums", style: "font-size: .8rem" %>
+                <%= content_tag :span, "(#{to_curr(group_remit.denied_dependent_premiums)})", style: "font-size: .8rem; color: var(--bs-red)"%>
+              </div>   
+            <% end %>
+            <hr>
+            <div class="text-secondary d-flex justify-content-between">
+              <%= content_tag :span, "Premium after deductions", style: "font-size: .8rem" %>
+              <%= content_tag :span, "#{to_curr(group_remit.commisionable_premium)}", style: "font-size: .8rem; color: var(--bs-blue)"%>
+            </div> 
           <% end %>
-          <hr>
-          <div class="text-secondary d-flex justify-content-between">
-            <%= content_tag :span, "Premium after deductions", style: "font-size: .8rem" %>
-            <%= content_tag :span, "#{to_curr(group_remit.commisionable_premium)}", style: "font-size: .8rem; color: var(--bs-blue)"%>
-          </div> 
-          <div class="text-secondary d-flex justify-content-between">
-            <%= content_tag :span, "#{agreement.coop_sf}% Coop service fee", style: "font-size: .8rem" %>
-            <%= content_tag :span, "(#{to_curr(group_remit.total_coop_commissions)})", style: "font-size: .8rem; color: var(--bs-green)"%>
-          </div>  
+          <% if agreement.coop_sf %>
+            <div class="text-secondary d-flex justify-content-between">
+              <%= content_tag :span, "#{agreement.coop_sf}% Coop service fee", style: "font-size: .8rem" %>
+              <%= content_tag :span, "(#{to_curr(group_remit.total_coop_commissions)})", style: "font-size: .8rem; color: var(--bs-green)"%>
+            </div>  
+          <% end %>
         </div>
       </div>
       

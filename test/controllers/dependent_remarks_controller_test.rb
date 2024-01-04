@@ -34,7 +34,8 @@ class DependentRemarksControllerTest < ActionDispatch::IntegrationTest
   end
 
   test "should update dependent_remark" do
-    patch dependent_remark_url(@dependent_remark), params: { dependent_remark: { batch_dependent_id: @dependent_remark.batch_dependent_id, remark: @dependent_remark.remark, status: @dependent_remark.status } }
+    patch dependent_remark_url(@dependent_remark),
+params: { dependent_remark: { batch_dependent_id: @dependent_remark.batch_dependent_id, remark: @dependent_remark.remark, status: @dependent_remark.status } }
     assert_redirected_to dependent_remark_url(@dependent_remark)
   end
 

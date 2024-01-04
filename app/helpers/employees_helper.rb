@@ -1,7 +1,7 @@
 module EmployeesHelper
 
   def emp_name(head, name)
-    if head == true 
+    if head == true
       content_tag(:span, name, class: "lead fw-bold")
     else
       content_tag(:span, name, class: "lead")
@@ -16,5 +16,5 @@ module EmployeesHelper
     when "senior_officer" then content_tag(:span, "Senior Officer", class: "fw-italic")
     end
   end
-  
+
 end

@@ -22,7 +22,11 @@ class CooperativesController < ApplicationController
     f_members = Member.coop_member_details(coop_members)
       .filter_by_name(params[:last_name_filter], params[:first_name_filter])
 
-    @pagy, @filtered_members = pagy(f_members, items: 10, params: {active_tab: 'members'})
+    @pagy, @filtered_members = pagy(f_members, items: 10, params: {active_tab: "members"})
+  end
+
+  def details
+    @cooperative = Cooperative.find(params[:id])
   end
 
   # GET /cooperatives/new
@@ -87,33 +91,33 @@ class CooperativesController < ApplicationController
   end
 
   private
-    # Only allow a list of trusted parameters through.
-    def cooperative_params
-      # params.require(:cooperative).permit(:coop_type_id, :geo_region_id, :geo_province_id, :geo_municipality_id, :geo_barangay_id, :street, :name, :description, :registration_no, :tin, :acronym, :contact_no, :email)
-      params.require(:cooperative).permit(:coop_type_id, :geo_region_id, :geo_province_id, :geo_municipality_id, :geo_barangay_id, :street, :name, :description, :registration_number, :tin_number, :acronym, :contact_details, :email,
-        coop_branches_params: [:id, :name, :geo_region_id, :geo_province_id, :geo_municipality_id, :geo_barangay_id, :street, :contact_details])
-    end
+  # Only allow a list of trusted parameters through.
+  def cooperative_params
+    # params.require(:cooperative).permit(:coop_type_id, :geo_region_id, :geo_province_id, :geo_municipality_id, :geo_barangay_id, :street, :name, :description, :registration_no, :tin, :acronym, :contact_no, :email)
+    params.require(:cooperative).permit(:coop_type_id, :geo_region_id, :geo_province_id, :geo_municipality_id, :geo_barangay_id, :street, :name, :description, :registration_number, :tin_number, :acronym, :contact_details, :email,
+      coop_branches_params: [:id, :name, :geo_region_id, :geo_province_id, :geo_municipality_id, :geo_barangay_id, :street, :contact_details])
+  end
 
-    def default_values
-      @geo_region = GeoRegion.all
-      @coop_type = CoopType.all
-      @cooperative.geo_region_id = @geo_region.shuffle.first.id
-      @geo_province = GeoProvince.where(geo_region_id: @cooperative.geo_region_id)
-      @cooperative.geo_province_id = @geo_province.shuffle.first.id
-      @geo_municipality = GeoMunicipality.where(geo_province_id: @cooperative.geo_province_id)
-      @cooperative.geo_municipality_id = @geo_municipality.shuffle.first.id
-      @geo_barangay = GeoBarangay.where(geo_municipality_id: @cooperative.geo_municipality_id)
-      @cooperative.geo_barangay_id = @geo_barangay.shuffle.first.id
-      @cooperative.street = FFaker::Address.neighborhood + ' ' + FFaker::Address.city_suffix
-      @coop_typ = @coop_type.shuffle.first
-      @cooperative.coop_type_id = @coop_typ.id
-      @cooperative.name = FFaker::Venue.name + ' ' + @coop_typ.name
-      @cooperative.description = FFaker::HipsterIpsum.paragraph
-      first_letters = @cooperative.name.split.map { |word| word[0] }
-      @cooperative.acronym = first_letters.join
-      @cooperative.email = "support@" + first_letters.join + '.com'
-      @cooperative.contact_details = FFaker::PhoneNumber.phone_number
-      @cooperative.registration_no = FFaker::PhoneNumber.phone_number
-      @cooperative.tin = FFaker::PhoneNumber.phone_number
-    end
+  def default_values
+    @geo_region = GeoRegion.all
+    @coop_type = CoopType.all
+    @cooperative.geo_region_id = @geo_region.shuffle.first.id
+    @geo_province = GeoProvince.where(geo_region_id: @cooperative.geo_region_id)
+    @cooperative.geo_province_id = @geo_province.shuffle.first.id
+    @geo_municipality = GeoMunicipality.where(geo_province_id: @cooperative.geo_province_id)
+    @cooperative.geo_municipality_id = @geo_municipality.shuffle.first.id
+    @geo_barangay = GeoBarangay.where(geo_municipality_id: @cooperative.geo_municipality_id)
+    @cooperative.geo_barangay_id = @geo_barangay.shuffle.first.id
+    @cooperative.street = FFaker::Address.neighborhood + " " + FFaker::Address.city_suffix
+    @coop_typ = @coop_type.shuffle.first
+    @cooperative.coop_type_id = @coop_typ.id
+    @cooperative.name = FFaker::Venue.name + " " + @coop_typ.name
+    @cooperative.description = FFaker::HipsterIpsum.paragraph
+    first_letters = @cooperative.name.split.map { |word| word[0] }
+    @cooperative.acronym = first_letters.join
+    @cooperative.email = "support@" + first_letters.join + ".com"
+    @cooperative.contact_details = FFaker::PhoneNumber.phone_number
+    @cooperative.registration_no = FFaker::PhoneNumber.phone_number
+    @cooperative.tin = FFaker::PhoneNumber.phone_number
+  end
 end

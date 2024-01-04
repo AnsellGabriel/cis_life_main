@@ -11,10 +11,9 @@ export default class extends Controller {
   formatNumber() {
     this.inputTarget.addEventListener('input', () => {
       // Remove non-numeric characters
-      let numericValue = this.inputTarget.value.replace(/\D/g, '');
-
+      let numericValue = this.inputTarget.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');
       // Format the number with commas
-      let formattedValue = Number(numericValue).toLocaleString();
+      let formattedValue = numericValue.toLocaleString();
 
       // Update the input field with the formatted number
       this.inputTarget.value = formattedValue;

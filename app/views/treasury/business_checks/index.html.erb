@@ -1,0 +1,54 @@
+<div class="<%= flex_justify_align('','center') %> gap-3 mb-3">
+  <%= content_tag :h4, "Business Checks", class: 'text-primary' %>
+  <div class="<%= flex_justify_align('','center') %> gap-3">
+    <%= form_with url: search_treasury_checks_path, method: :get do %>
+      <div class="form-group d-flex gap-1">
+        <div class="input-group">
+          <span class="input-group-text" id="basic-addon1">CV</span>
+          <%= number_field_tag :voucher, nil, class: 'form-control', placeholder: '00000', style: 'max-width: 80px' %>
+        </div>
+        <%= submit_tag 'Search voucher', class: small_btn('primary') %>
+      </div>
+    <% end %>
+  </div>
+</div>
+
+<div class="<%= flex_justify_align('between','center') %> gap-3 mb-3">   
+  <%== pagy_bootstrap_nav(@pagy) %>
+  <div class="d-flex gap-1">
+    <%= render 'layouts/partials/search_bar', path: treasury_checks_path, type: :number, param_name: 'check_number',placeholder: 'Business Check #', button_name: 'Search', btn_css: 'btn btn-sm btn-outline-primary' %>
+    <%= link_to 'All', treasury_checks_path, class: "#{small_btn('outline-primary')} pt-2", style: "width: 50px;" %>
+  </div>
+</div>
+
+  <table class="table table-striped table-bordered table-hover">
+    <thead>
+      <tr>
+        <th>Check</th>
+        <th class="text-center">Date</th>
+        <th>Payee</th>
+        <th class="text-center">Amount</th>
+      </tr>
+    </thead>
+
+    <tbody>
+      <% if @checks.present? %>
+        <% @checks.each do |check| %>
+          <tr>
+
+            <td>
+              <%= link_to check.check_number, accounting_check_path(check.voucher), class: 'text-primary', title: 'View'%>
+            </td>
+            <td class="text-center"><%= month_day_year(check.check_date) %></td>
+            <td><%= check.voucher.payable %></td>
+            <td class="text-end"><%= to_curr(check.amount) %></td>
+            
+          </tr>
+        <% end %>
+      <% else %>
+        <tr>
+          <td colspan="7" class="text-center">No business checks found.</td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>

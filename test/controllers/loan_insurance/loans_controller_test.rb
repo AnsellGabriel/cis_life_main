@@ -17,7 +17,8 @@ class LoanInsurance::LoansControllerTest < ActionDispatch::IntegrationTest
 
   test "should create loan_insurance_loan" do
     assert_difference("LoanInsurance::Loan.count") do
-      post loan_insurance_loans_url, params: { loan_insurance_loan: { cooperative_id: @loan_insurance_loan.cooperative_id, description: @loan_insurance_loan.description, name: @loan_insurance_loan.name } }
+      post loan_insurance_loans_url,
+params: { loan_insurance_loan: { cooperative_id: @loan_insurance_loan.cooperative_id, description: @loan_insurance_loan.description, name: @loan_insurance_loan.name } }
     end
 
     assert_redirected_to loan_insurance_loan_url(LoanInsurance::Loan.last)
@@ -34,7 +35,8 @@ class LoanInsurance::LoansControllerTest < ActionDispatch::IntegrationTest
   end
 
   test "should update loan_insurance_loan" do
-    patch loan_insurance_loan_url(@loan_insurance_loan), params: { loan_insurance_loan: { cooperative_id: @loan_insurance_loan.cooperative_id, description: @loan_insurance_loan.description, name: @loan_insurance_loan.name } }
+    patch loan_insurance_loan_url(@loan_insurance_loan),
+params: { loan_insurance_loan: { cooperative_id: @loan_insurance_loan.cooperative_id, description: @loan_insurance_loan.description, name: @loan_insurance_loan.name } }
     assert_redirected_to loan_insurance_loan_url(@loan_insurance_loan)
   end
 

@@ -6,7 +6,7 @@ class ClaimConfinement < ApplicationRecord
   end
 
   def amount_confinement
-      
-      amount * days_confinement
+
+    amount * days_confinement
   end
 end

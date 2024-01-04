@@ -8,7 +8,7 @@
         <%= image_tag 'cis_logo.png', width: 150, class: 'mb-2 mb-lg-0 me-2' %>
         <div class="" style="max-width: 500px;">
           <% if current_user %>
-            <%= truncate(nav_header(current_user), length: 65) %>
+            <%= "#{truncate(nav_header(current_user), length: 65)} " %>
           <% end %>
         </div>
       </a>
@@ -32,6 +32,21 @@
             <% end %>
           <% end %>
         <% else %>
+          <% case current_user.userable.department_id %>
+          <% when 11 %>
+          <%= render 'layouts/partials/nav_dropdown', title: 'Vouchers' do %>
+            <%= link_to "Requests", requests_accounting_checks_path, class: "dropdown-item" %>
+            <%= link_to "Check Vouchers", accounting_checks_path, class: "dropdown-item" %>
+            <%= link_to "Journal Vouchers", accounting_journals_path, class: "dropdown-item" %>
+          <% end %>
+          <% when 26 %>
+          <%= render 'layouts/partials/nav_dropdown', title: 'Business Checks' do %>
+            <%= link_to "Index", treasury_checks_path	, class: "dropdown-item" %>
+            <%= link_to "Requests", requests_treasury_checks_path	, class: "dropdown-item" %>
+          <% end %>
+          <%= link_to "Cashier Entries", treasury_cashier_entries_path	, class: "nav-link" %>
+          <%= link_to "Remittances", payments_path	, class: "nav-link" %>
+        <% else %>
           <%= render 'layouts/partials/nav_dropdown', title: 'Claims' do %>
             <%= link_to "Submitted", index_show_process_claims_path(p: 1), class: "dropdown-item" %>
             <%= link_to "Claims Filed", index_show_process_claims_path(p: 2), class: "dropdown-item" %>
@@ -43,14 +58,15 @@
             <%= link_to "Documents", documents_path, class: "dropdown-item" %>
             <%= link_to "Claim Type", claim_types_path, class: "dropdown-item" %>
             <%= link_to "Claims Message", claim_remarks_path, class: "dropdown-item" %>
-            <%= link_to "New Claim Process", new_ca_process_claims_path, class: "dropdown-item" %>
-          <% end %>
-          <%= render 'layouts/partials/nav_dropdown', title: 'Treasury' do %>
-            <%= link_to "Payments", payments_path, class: "dropdown-item" %>
           <% end %>
           <%= render 'layouts/partials/nav_dropdown', title: 'Underwriting' do %>
             <%= link_to "Process", process_coverages_path, class: "dropdown-item" %>
             <%= link_to "Medical Director", med_directors_home_path, class: "dropdown-item" %>
+          <% end %>
+          <%= render 'layouts/partials/nav_dropdown', title: "Dashboard" do %>
+            <%= link_to "Cooperative", pages_coop_path, class: "dropdown-item", data: { turbo: false } %>
+            <%= link_to "C.O.S.O.", pages_coso_path, class: "dropdown-item", data: { turbo: false } %>
+            <%= link_to "President", pages_president_path, class: "dropdown-item", data: { turbo: false } %>
           <% end %>
           <%= render 'layouts/partials/nav_dropdown', title: 'Data Entries' do %>
             <%= link_to "Agreement", agreements_path, class: "dropdown-item" %>
@@ -69,16 +85,17 @@
             <%= link_to "Pending Users", user_index_path, class: "dropdown-item" %>
           <% end %>
         <% end %>
-        <%= render 'layouts/partials/nav_dropdown', title: "<i class=\"bi bi-person-circle\"></i> <small> Hi, #{current_user.userable.get_fullname}</small>".html_safe do %>
-          <li class="nav-item"> <a class="nav-link" href="#"><%= current_user.email %></a> </li>
-          <li class="nav-item"> <%= link_to "Edit Account", edit_user_registration_path, class: "nav-link" %></li>
-          <li class="nav-item"> <%= button_to "Sign Out", destroy_user_session_path, method: :delete, class: "btn btn-sm btn-primary mx-2" %></li>
-        <% end %>
-      <% else %>
-        <li class="nav-item"> <%= link_to "Sign Up", new_user_registration_path, class: "nav-link"  %></li>
-        <li class="nav-item"> <%= link_to "Sign In", new_user_session_path, class: "nav-link"  %></li>
       <% end %>
-    </ul>
-  </div>
+      <%= render 'layouts/partials/nav_dropdown', title: "<i class=\"bi bi-person-circle\"></i> <small> Hi, #{current_user.userable.first_name}</small>".html_safe do %>
+        <li class="nav-item"> <a class="nav-link" href="#"><%= current_user.email %></a> </li>
+        <li class="nav-item"> <%= link_to "Change Password", edit_user_registration_path, class: "nav-link" %></li>
+        <li class="nav-item"> <%= button_to "Sign Out", destroy_user_session_path, method: :delete, class: "btn btn-sm btn-primary mx-2" %></li>
+      <% end %>
+    <% else %>
+      <li class="nav-item"> <%= link_to "Sign Up", new_user_registration_path, class: "nav-link"  %></li>
+      <li class="nav-item"> <%= link_to "Sign In", new_user_session_path, class: "nav-link"  %></li>
+    <% end %>
+  </ul>
+</div>
 </div>
 </nav>

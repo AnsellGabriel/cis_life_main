@@ -1,0 +1,19 @@
+<%= turbo_frame_tag "reg_form_modal" do %>
+  <div class="modal-header">
+    <div class="d-flex gap-1">
+      <%= content_tag :h5, 'Payment Remarks', class: "modal-title", id: "staticBackdropLabel" %>
+      <% if current_user.userable_type == 'Employee' %>
+        <%= link_to 'Add Remark', new_payment_remark_path(@payment), class: 'btn btn-sm btn-danger', data: {turbo_frame: 'reg_form_modal'} %>
+      <% end %>
+    </div>
+    <% if current_user.userable_type == 'Employee' %>
+      <%= link_to '', payment_path(@payment), class: 'btn-close', data: {turbo: false}%>
+    <% else %>
+      <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+    <% end %>
+  </div>
+  
+  <div class="modal-body">
+    <%= render @remarks %>
+  </div>
+<% end %>

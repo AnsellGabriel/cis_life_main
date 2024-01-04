@@ -1,7 +1,5 @@
 
 <%= simple_form_for(member) do |f| %>
-  <%= f.error_notification %>
-  <%= f.error_notification message: f.object.errors[:base].to_sentence if f.object.errors[:base].present? %>
   <div class="form-inputs mb-3">
     <div class="row ps-3 pe-3">
       <div class="col-12">
@@ -11,7 +9,7 @@
               <%= member.hidden_field :cooperative_id, value: @cooperative.id %>
 
               <div class="col-md-6">
-                <%= member.input :coop_branch_id, collection: @cooperative.coop_branches.map {|branch| [branch.name, branch.id]}, style: "width: auto" ,class: "form-select mb-3", label_html: {class: 'text-secondary sm-secondary-text'}  %>
+                <%= member.input :coop_branch_id, collection: @cooperative.coop_branches.map {|branch| [branch.name, branch.id]}, style: "width: auto" , error: '*Required', class: "form-select mb-3", label_html: {class: 'text-secondary sm-secondary-text'}  %>
               </div>
             </div>
           <% end %>
@@ -22,13 +20,13 @@
     </div>
     <div class="row ps-3 pe-3">
       <div class="col-3">
-        <%= f.input :first_name, label_html: {class: 'text-secondary sm-secondary-text'} %>
+        <%= f.input :first_name, label_html: {class: 'text-secondary sm-secondary-text'}, error: '*Required' %>
       </div>
       <div class="col-3">
-        <%= f.input :middle_name, label_html: {class: 'text-secondary sm-secondary-text'} %>
+        <%= f.input :middle_name, label_html: {class: 'text-secondary sm-secondary-text'}, error: '*Required' %>
       </div>
       <div class="col-3">
-       <%= f.input :last_name, label_html: {class: 'text-secondary sm-secondary-text'}%>
+       <%= f.input :last_name, label_html: {class: 'text-secondary sm-secondary-text'}, error: '*Required'%>
       </div>
       <div class="col-2">
         <%= f.input :suffix, label_html: {class: 'text-secondary sm-secondary-text'} %>
@@ -36,14 +34,13 @@
     </div>
     <div class="row ps-3 pe-3">
       <div class="col-3">
-        <%= f.input :gender, collection: [['Male', 'MALE'], ['Female', 'FEMALE']] ,class: 'form-select mb-3', label_html: {class: 'text-secondary sm-secondary-text'} %>
+        <%= f.input :gender, collection: [['Male', 'MALE'], ['Female', 'FEMALE']] , error: '*Required', class: 'form-select mb-3', label_html: {class: 'text-secondary sm-secondary-text'} %>
       </div>
       <div class="col-3">
-        <%= f.input :birth_date, as: :string, input_html: {data: {
+        <%= f.input :birth_date, as: :string, error: '*Required', input_html: {data: {
             controller: "flatpickr",
             flatpickr_max_date: Time.zone.now,
             flatpickr_next_arrow: "Next",
-            flatpickr_date_format: "m-d-Y",
             flatpickr_prev_arrow: "Prev"}}, label_html: {class: 'text-secondary sm-secondary-text'} %>
       </div>
       <div class="col-6">
@@ -110,7 +107,7 @@
     </div>
     <div class="row ps-3 pe-3">
       <div class="col-3">
-        <%= f.input :civil_status, collection: [["Single", "SINGLE"], ["Married", "MARRIED"], ["Divorced", "DIVORCED"], ["Separated", "SEPARATED"], ["Widowed", "WIDOWED"]], class: "form-select", label_html: {class: 'text-secondary sm-secondary-text'} %>
+        <%= f.input :civil_status, collection: [["Single", "SINGLE"], ["Married", "MARRIED"], ["Divorced", "DIVORCED"], ["Separated", "SEPARATED"], ["Widowed", "WIDOWED"]], error: '*Required', class: "form-select", label_html: {class: 'text-secondary sm-secondary-text'} %>
       </div>
       <div class="col-6">
         <%= f.input :legal_spouse, label_html: {class: 'text-secondary sm-secondary-text'} %>
@@ -120,6 +117,6 @@
   </div>
 
   <div class="form-actions text-center">
-    <%= f.button :submit, 'Enroll', class: small_btn('primary') %>
+    <%= f.button :submit, "#{member.persisted? ? 'Update' : 'Enroll'}", class: small_btn('primary') %>
   </div>
 <% end %>

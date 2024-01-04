@@ -1,30 +1,47 @@
 class ProcessClaimsController < ApplicationController
   before_action :set_process_claim, only: %i[ show edit update destroy show_coop claim_route claims_file claim_process update_status ]
-
   # GET /process_claims
+
+  def claimable
+    voucher = Accounting::Check.find(params[:v])
+    claim = voucher.claim_request_for_payment.process_claim
+    total_business_checks = voucher.business_checks.sum(:amount)
+
+    if voucher.amount != total_business_checks
+      return redirect_to accounting_check_path(voucher), alert: "Claim cannot proceed. Total amount of business checks is not equal to the voucher amount."
+    end
+
+    ActiveRecord::Base.transaction do
+      claim.update!(claim_route: 12, payment: 1)
+      voucher.update!(claimable: true)
+    end
+
+    redirect_to accounting_check_path(voucher), notice: "Checks ready for claim"
+  end
+
   def index
     @process_claims = ProcessClaim.where(claim_route: :submitted)
   end
-  
+
   def index_coop
     @process_claims = ProcessClaim.where(cooperative: @cooperative)
 
   end
 
-  def index_show 
+  def index_show
     @process_claims = ProcessClaim.where(claim_route: params[:p])
     @display = ProcessClaim.get_route(params[:p].to_i).to_s.humanize.titleize
     # raise "errors"
   end
   # GET /process_claims/1
   def show
-    
+
   end
 
-  def show_coop 
+  def show_coop
     @agreement_benefit = AgreementBenefit.where(agreement: @process_claim.agreement)
     @claim_type_document = ClaimTypeDocument.where(claim_type: @process_claim.claim_type)
-    
+
   end
   # GET /process_claims/new
   def new
@@ -34,7 +51,7 @@ class ProcessClaimsController < ApplicationController
     @agreement = Agreement.find(params[:agreement_id])
     @group_remit = @agreement.group_remits.joins(:batches)
                            .where(batches: { coop_member_id: @coop_member.id })
-                           .order('group_remits.created_at DESC')
+                           .order("group_remits.created_at DESC")
                            .limit(1)
                            .first
     @batch = @group_remit.batches.find_by(coop_member_id: @coop_member.id)
@@ -48,12 +65,14 @@ class ProcessClaimsController < ApplicationController
     @coop_member = CoopMember.find(params[:cm])
     @process_claim.claimable = @coop_member
     @process_claim.cooperative = @coop_member.cooperative
-    
-    set_dummy_value
+
+    if Rails.env.development?
+      set_dummy_value
+    end
     # raise "error"
   end
 
-  def new_ca 
+  def new_ca
     # raise "errors"
     @process_claim = ProcessClaim.new
     @coop_member = CoopMember.find(params[:cm])
@@ -64,19 +83,19 @@ class ProcessClaimsController < ApplicationController
   end
 
   def set_dummy_value
-    first_name = FFaker::NamePH.first_name 
-    @process_claim.claimant_name = first_name + ' ' + FFaker::NamePH.last_name
+    first_name = FFaker::NamePH.first_name
+    @process_claim.claimant_name = first_name + " " + FFaker::NamePH.last_name
     @process_claim.claimant_contact_no = FFaker::PhoneNumber.phone_number
-    @process_claim.claimant_email = first_name + '@gmail.com'
+    @process_claim.claimant_email = first_name + "@gmail.com"
 
   end
 
-  def create_coop 
+  def create_coop
     @process_claim = ProcessClaim.new(process_claim_params)
     @process_claim.entry_type = :coop
     @process_claim.claim_route = :file_claim
     @process_claim.age = @process_claim.get_age.to_i
-    
+
     respond_to do |format|
       if @process_claim.save!
         @process_claim.process_track.create(route_id: 0, user: current_user)
@@ -90,12 +109,12 @@ class ProcessClaimsController < ApplicationController
     end
   end
 
-  def create_ca 
+  def create_ca
     @process_claim = ProcessClaim.new(process_claim_params)
     @process_claim.entry_type = :claim
     @process_claim.claim_route = :file_claim
     @process_claim.age = @process_claim.get_age.to_i
-    
+
     respond_to do |format|
       if @process_claim.save!
         @process_claim.process_track.create(route_id: 0, user: current_user)
@@ -114,7 +133,7 @@ class ProcessClaimsController < ApplicationController
   end
 
   def claims_file
-    if @process_claim.claim_cause.present? 
+    if @process_claim.claim_cause.present?
       @claim_cause = @process_claim.claim_cause
     else
       @claim_cause = @process_claim.build_claim_cause
@@ -122,8 +141,8 @@ class ProcessClaimsController < ApplicationController
     @process_claim.date_file = Date.today if @process_claim.date_file.nil?
   end
 
-  def claim_process 
-    
+  def claim_process
+
   end
   # POST /process_claims
   def create
@@ -133,7 +152,7 @@ class ProcessClaimsController < ApplicationController
     agreement = Agreement.find(process_claim_params[:agreement_id])
     @group_remit = agreement.group_remits.joins(:batches)
                            .where(batches: { coop_member_id: coop_member.id })
-                           .order('group_remits.created_at DESC')
+                           .order("group_remits.created_at DESC")
                            .limit(1)
                            .first
 
@@ -148,7 +167,7 @@ class ProcessClaimsController < ApplicationController
         @process_claim.claimant_name = BatchBeneficiary.find(process_claim_params[:claimant_name]).member_dependent.full_name.titleize
       rescue ActiveRecord::RecordNotFound
         return redirect_to new_process_claim_path, alert: "The claim cannot be processed. The claimant name is not found."
-      end 
+      end
 
     end
 
@@ -174,10 +193,10 @@ class ProcessClaimsController < ApplicationController
     rescue ActiveRecord::RecordInvalid => e
       redirect_to new_process_claim_path, alert: "The claim cannot be processed. Please check: #{e.record.errors.full_messages.join(', ')}"
     end
-    
+
   end
 
-  def claim_route 
+  def claim_route
     # @process_claim.claim_track = ProcessTrack.build
     # @claim_track = ProcessTrack.new
     @claim_track = @process_claim.process_track.build
@@ -198,9 +217,17 @@ class ProcessClaimsController < ApplicationController
           # RegisterMailer.with(registration: @registration, event_hub: @event_hub).register_created.deliver_later
           @process_claim.update!(claim_route: @claim_track.route_id, processing: 1)
           format.html { redirect_to claim_process_process_claim_path(@process_claim), notice: "#{@process_claim.claim_route.to_s.humanize.titleize} by #{current_user}"  }
-          
-        elsif @claim_track.route_id == 8 
-          @process_claim.update!(claim_route: @claim_track.route_id, status: :approved, approval: 1)
+
+        elsif @claim_track.route_id == 8
+          ActiveRecord::Base.transaction do
+            @process_claim.update!(claim_route: @claim_track.route_id, status: :approved, approval: 1)
+            request = @process_claim.create_claim_request_for_payment(
+              amount: @process_claim.get_benefit_claim_total,
+              status: :pending,
+              analyst: current_user.userable.signed_fullname
+            )
+          end
+
           format.html { redirect_to show_coop_process_claim_path(@process_claim), notice: "#{@process_claim.claim_route.to_s.humanize.titleize} by #{current_user}"  }
         else
           @process_claim.update_attribute(:claim_route, @claim_track.route_id)
@@ -215,9 +242,9 @@ class ProcessClaimsController < ApplicationController
     end
   end
 
-  
+
   def import_product_benefit
-    if @process_claim.claim_type == ClaimType.find_by(name: 'Hospital Confinement Claim')
+    if @process_claim.claim_type == ClaimType.find_by(name: "Hospital Confinement Claim")
       @benefit = Benefit.find_by(name: "Hospital Income Benefit")
       @process_claim.claim_benefits.create(process_claim_id: @process_claim.id, benefit: @benefit, amount: @process_claim.claim_confinements.sum(:amount))
     else
@@ -238,7 +265,7 @@ class ProcessClaimsController < ApplicationController
   def update
     # raise "error"
     if @process_claim.update(process_claim_params)
-      if @process_claim.claim_filed? 
+      if @process_claim.claim_filed?
         redirect_to index_show_process_claims_path(p: 2), notice: "Process claim was successfully updated."
       else
         redirect_to index_show_process_claims_path(p: 3), notice: "Process claim was successfully updated."
@@ -255,22 +282,22 @@ class ProcessClaimsController < ApplicationController
   end
 
   private
-    # Use callbacks to share common setup or constraints between actions.
-    def set_process_claim
-      @process_claim = ProcessClaim.find(params[:id])
-    end
+  # Use callbacks to share common setup or constraints between actions.
+  def set_process_claim
+    @process_claim = ProcessClaim.find(params[:id])
+  end
 
-    # Only allow a list of trusted parameters through.
-    def process_claim_params
-      params.require(:process_claim).permit(:cooperative_id, :claim_route, :agreement_id, :batch_id, :claimable_id, :cause_id, :claim_type_id, :date_file, :claim_filed, :processing, :approval, :payment, :claimable_type, :date_incident, :entry_type, :claimant_name, :claimant_email, :claimant_contact_no, :nature_of_claim, :agreement_benefit_id, :relationship, 
-        claim_documents_attributes: [:id, :document, :document_type, :_destroy],
-        process_tracks_attributes: [:id, :description, :route_id, :trackable_type, :trackable_id ],
-        claim_benefits_param: [:id, :benefit_id, :amount, :status],
-        claim_cause_attributes: [:id, :acd, :ucd, :osccd, :icd],
-        claim_coverage_attributes: [:id, :amount_benefit, :coverage_type, :coverageale],
-        claim_remark_attributes: [:id, :user_id, :status, :remark, :coop, :read],
-        claim_attachment_attributes: [:id, :claim_type_id, :doc],
-        claim_confinement_attributes: [:id, :date_admit, :date_discharge, :terms, :amount])
-    end
+  # Only allow a list of trusted parameters through.
+  def process_claim_params
+    params.require(:process_claim).permit(:cooperative_id, :claim_route, :agreement_id, :batch_id, :claimable_id, :cause_id, :claim_type_id, :date_file, :claim_filed, :processing, :approval, :payment, :claimable_type, :date_incident, :entry_type, :claimant_name, :claimant_email, :claimant_contact_no, :nature_of_claim, :agreement_benefit_id, :relationship,
+      claim_documents_attributes: [:id, :document, :document_type, :_destroy],
+      process_tracks_attributes: [:id, :description, :route_id, :trackable_type, :trackable_id ],
+      claim_benefits_param: [:id, :benefit_id, :amount, :status],
+      claim_cause_attributes: [:id, :acd, :ucd, :osccd, :icd],
+      claim_coverage_attributes: [:id, :amount_benefit, :coverage_type, :coverageale],
+      claim_remark_attributes: [:id, :user_id, :status, :remark, :coop, :read],
+      claim_attachment_attributes: [:id, :claim_type_id, :doc],
+      claim_confinement_attributes: [:id, :date_admit, :date_discharge, :terms, :amount])
+  end
 
 end

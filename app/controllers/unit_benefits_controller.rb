@@ -46,13 +46,13 @@ class UnitBenefitsController < ApplicationController
   end
 
   private
-    # Use callbacks to share common setup or constraints between actions.
-    def set_unit_benefit
-      @unit_benefit = UnitBenefit.find(params[:id])
-    end
+  # Use callbacks to share common setup or constraints between actions.
+  def set_unit_benefit
+    @unit_benefit = UnitBenefit.find(params[:id])
+  end
 
-    # Only allow a list of trusted parameters through.
-    def unit_benefit_params
-      params.require(:unit_benefit).permit(:plan_unit_id, :benefit_id, :coverage_amount)
-    end
+  # Only allow a list of trusted parameters through.
+  def unit_benefit_params
+    params.require(:unit_benefit).permit(:plan_unit_id, :benefit_id, :coverage_amount)
+  end
 end

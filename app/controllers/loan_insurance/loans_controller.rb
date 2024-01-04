@@ -46,13 +46,13 @@ class LoanInsurance::LoansController < ApplicationController
   end
 
   private
-    # Use callbacks to share common setup or constraints between actions.
-    def set_loan
-      @loan = LoanInsurance::Loan.find(params[:id])
-    end
+  # Use callbacks to share common setup or constraints between actions.
+  def set_loan
+    @loan = LoanInsurance::Loan.find(params[:id])
+  end
 
-    # Only allow a list of trusted parameters through.
-    def loan_params
-      params.require(:loan).permit(:name, :description, :cooperative_id)
-    end
+  # Only allow a list of trusted parameters through.
+  def loan_params
+    params.require(:loan_insurance_loan).permit(:name, :description, :cooperative_id)
+  end
 end

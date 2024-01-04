@@ -2,26 +2,26 @@ module ProcessCoveragesHelper
 
   def approve_deny_button_pro_cov(rank, status)
     if rank == "analyst"
-      
+
       case status
         when "for_process", "pending" then "d-inline"
         when "approved", "for_head_approval", "for_vp_approval", "denied", "reprocess", "reprocess_request" then "d-none"
       end
 
-    elsif rank == "head" 
-      
-      case status 
+    elsif rank == "head"
+
+      case status
         when "for_vp_approval", "approved", "reprocess", "reprocess_request" then "d-none"
         when "for_head_approval" then "d-inline"
       end
 
     elsif rank == "senior_officer"
 
-      case status 
+      case status
         when "for_vp_approval" then "d-inline"
         when "approved", "reprocess" then "d-none"
       end
-      
+
     end
   end
 
@@ -45,7 +45,8 @@ module ProcessCoveragesHelper
   def reconsider_button(rank, batch_status, pro_cov_status)
     if rank == "analyst"
       case pro_cov_status
-      when "approved", "denied", "for_head_approval", "for_vp_approval" then "d-none"
+        when "approved", "denied", "for_head_approval", "for_vp_approval", "reprocess_request" then "d-none"
+        # when "reprocess_approved" then "d-inline"
       else
         case batch_status
           when "approved", "denied" then "d-inline"
@@ -53,6 +54,7 @@ module ProcessCoveragesHelper
         end
       end
     else
+      # "d-none"
       "d-none"
     end
   end
@@ -71,5 +73,5 @@ module ProcessCoveragesHelper
     end
 
   end
-  
+
 end

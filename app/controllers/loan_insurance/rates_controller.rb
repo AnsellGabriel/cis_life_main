@@ -4,6 +4,7 @@ class LoanInsurance::RatesController < ApplicationController
   # GET /loan_insurance/rates
   def index
     @rates = LoanInsurance::Rate.all
+    @grouped_rates = @rates.group_by(&:agreement)
   end
 
   # GET /loan_insurance/rates/1
@@ -46,13 +47,13 @@ class LoanInsurance::RatesController < ApplicationController
   end
 
   private
-    # Use callbacks to share common setup or constraints between actions.
-    def set_rate
-      @rate = LoanInsurance::Rate.find(params[:id])
-    end
+  # Use callbacks to share common setup or constraints between actions.
+  def set_rate
+    @rate = LoanInsurance::Rate.find(params[:id])
+  end
 
-    # Only allow a list of trusted parameters through.
-    def rate_params
-      params.require(:rate).permit(:min_age, :max_age, :monthly_rate, :annual_rate, :daily_rate)
-    end
+  # Only allow a list of trusted parameters through.
+  def rate_params
+    params.require(:loan_insurance_rate).permit(:agreement_id, :min_age, :max_age, :monthly_rate, :annual_rate, :daily_rate, :min_amount, :max_amount)
+  end
 end

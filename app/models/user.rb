@@ -8,6 +8,7 @@ class User < ApplicationRecord
   belongs_to :userable, polymorphic: true
   has_many :user_levels
   has_many :dependent_remarks
+  has_many :remarks, dependent: :destroy
   has_one :progress_tracker, as: :trackable, dependent: :destroy
   # accepts_nested_attributes_for :ff
 
@@ -33,6 +34,14 @@ class User < ApplicationRecord
   # Override Devise method to prevent login if not approved
   def active_for_authentication?
     super && approved?
+  end
+
+  def is_accountant?
+    userable.department_id == 11
+  end
+
+  def is_treasurer?
+    userable.department_id == 26
   end
 
 end

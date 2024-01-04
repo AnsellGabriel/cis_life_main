@@ -34,7 +34,8 @@ class BatchRemarksControllerTest < ActionDispatch::IntegrationTest
   end
 
   test "should update batch_remark" do
-    patch batch_remark_url(@batch_remark), params: { batch_remark: { batch_id: @batch_remark.batch_id, remark: @batch_remark.remark, user_id: @batch_remark.user_id, user_type: @batch_remark.user_type } }
+    patch batch_remark_url(@batch_remark),
+params: { batch_remark: { batch_id: @batch_remark.batch_id, remark: @batch_remark.remark, user_id: @batch_remark.user_id, user_type: @batch_remark.user_type } }
     assert_redirected_to batch_remark_url(@batch_remark)
   end
 

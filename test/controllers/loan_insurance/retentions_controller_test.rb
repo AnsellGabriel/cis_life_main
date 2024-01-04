@@ -17,7 +17,9 @@ class LoanInsurance::RetentionsControllerTest < ActionDispatch::IntegrationTest
 
   test "should create loan_insurance_retention" do
     assert_difference("LoanInsurance::Retention.count") do
-      post loan_insurance_retentions_url, params: { loan_insurance_retention: { active: @loan_insurance_retention.active, amount: @loan_insurance_retention.amount, date_activated: @loan_insurance_retention.date_activated, date_deactivated: @loan_insurance_retention.date_deactivated } }
+      post loan_insurance_retentions_url,
+params: { loan_insurance_retention: { active: @loan_insurance_retention.active, amount: @loan_insurance_retention.amount, date_activated: @loan_insurance_retention.date_activated,
+date_deactivated: @loan_insurance_retention.date_deactivated } }
     end
 
     assert_redirected_to loan_insurance_retention_url(LoanInsurance::Retention.last)
@@ -34,7 +36,9 @@ class LoanInsurance::RetentionsControllerTest < ActionDispatch::IntegrationTest
   end
 
   test "should update loan_insurance_retention" do
-    patch loan_insurance_retention_url(@loan_insurance_retention), params: { loan_insurance_retention: { active: @loan_insurance_retention.active, amount: @loan_insurance_retention.amount, date_activated: @loan_insurance_retention.date_activated, date_deactivated: @loan_insurance_retention.date_deactivated } }
+    patch loan_insurance_retention_url(@loan_insurance_retention),
+params: { loan_insurance_retention: { active: @loan_insurance_retention.active, amount: @loan_insurance_retention.amount, date_activated: @loan_insurance_retention.date_activated,
+date_deactivated: @loan_insurance_retention.date_deactivated } }
     assert_redirected_to loan_insurance_retention_url(@loan_insurance_retention)
   end
 

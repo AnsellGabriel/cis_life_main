@@ -12,23 +12,5 @@
   </div>
 
 </div>
-<%= link_to "Add Benefits", new_agreement_benefit_path, class: "btn btn-secondary btn-sm mb-3", data: { turbo_frame: "remote_modal" } %>
-<% @agreement_benefits = AgreementBenefit.where(plan_id: @plan) %>
-<div class="row">
-  <% @agreement_benefits.each do |ab| %>
-    <div class="col-md-4 mb-4">
-      <div class="card">
-        <div class="card-header">
-        <strong> <%= ab.name %> </strong> <small class="text-primary"> <%= ab.insured_type %> </small> <br>
-        <small> <%= ab.description %> </small>
-        </div>
-        <div class="card-body">
-          ab.
-        </div>
-        <div class="card-footer">
-          <%= link_to "Edit", edit_agreement_benefit_path(ab), class: "btn btn-secondary btn-sm", data: { turbo_frame: "remote_modal" } %>
-        </div>
-      </div>
-    </div>
-  <% end %>
-</div>
+
+

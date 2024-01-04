@@ -17,7 +17,9 @@ class LoanInsurance::RatesControllerTest < ActionDispatch::IntegrationTest
 
   test "should create loan_insurance_rate" do
     assert_difference("LoanInsurance::Rate.count") do
-      post loan_insurance_rates_url, params: { loan_insurance_rate: { annual_rate: @loan_insurance_rate.annual_rate, daily_rate: @loan_insurance_rate.daily_rate, max_age: @loan_insurance_rate.max_age, min_age: @loan_insurance_rate.min_age, monthly_rate: @loan_insurance_rate.monthly_rate } }
+      post loan_insurance_rates_url,
+params: { loan_insurance_rate: { annual_rate: @loan_insurance_rate.annual_rate, daily_rate: @loan_insurance_rate.daily_rate, max_age: @loan_insurance_rate.max_age,
+min_age: @loan_insurance_rate.min_age, monthly_rate: @loan_insurance_rate.monthly_rate } }
     end
 
     assert_redirected_to loan_insurance_rate_url(LoanInsurance::Rate.last)
@@ -34,7 +36,9 @@ class LoanInsurance::RatesControllerTest < ActionDispatch::IntegrationTest
   end
 
   test "should update loan_insurance_rate" do
-    patch loan_insurance_rate_url(@loan_insurance_rate), params: { loan_insurance_rate: { annual_rate: @loan_insurance_rate.annual_rate, daily_rate: @loan_insurance_rate.daily_rate, max_age: @loan_insurance_rate.max_age, min_age: @loan_insurance_rate.min_age, monthly_rate: @loan_insurance_rate.monthly_rate } }
+    patch loan_insurance_rate_url(@loan_insurance_rate),
+params: { loan_insurance_rate: { annual_rate: @loan_insurance_rate.annual_rate, daily_rate: @loan_insurance_rate.daily_rate, max_age: @loan_insurance_rate.max_age,
+min_age: @loan_insurance_rate.min_age, monthly_rate: @loan_insurance_rate.monthly_rate } }
     assert_redirected_to loan_insurance_rate_url(@loan_insurance_rate)
   end
 

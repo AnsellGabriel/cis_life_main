@@ -1,4 +1,4 @@
-require 'rails_helper'
+require "rails_helper"
 
 RSpec.describe LoanInsurance::Batch, type: :model do
   let(:batch) { create(:batch) }
@@ -8,7 +8,7 @@ RSpec.describe LoanInsurance::Batch, type: :model do
       expect(batch).to be_valid
       expect(batch).to be_an_instance_of(LoanInsurance::Batch)
     end
-    
+
     it "is not valid without an effectivity date" do
       batch.effectivity_date = nil
       expect(batch).not_to be_valid
@@ -44,32 +44,32 @@ RSpec.describe LoanInsurance::Batch, type: :model do
       expect(batch).not_to be_valid
     end
 
-    it "is not valid without an age" do 
+    it "is not valid without an age" do
       batch.age = nil
       expect(batch).not_to be_valid
     end
 
-    it "is not valid without an insurance status" do 
+    it "is not valid without an insurance status" do
       batch.insurance_status = nil
       expect(batch).not_to be_valid
     end
 
     context "with associations" do
-      it "is not valid without a coop member" do 
+      it "is not valid without a coop member" do
         batch.coop_member = nil
         expect(batch).not_to be_valid
       end
 
-      it 'is not valid without group remit' do
+      it "is not valid without group remit" do
         batch.group_remit = nil
         expect(batch).not_to be_valid
       end
 
-      it 'is not valid without loan' do
+      it "is not valid without loan" do
         batch.loan = nil
         expect(batch).not_to be_valid
       end
     end
-    
+
   end
 end

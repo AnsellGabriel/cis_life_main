@@ -1,0 +1,67 @@
+<div class="container">
+
+  <%= content_tag :h3, @coop_name %>
+
+  <div class="mb-2">
+    <%#= link_to "Premium per Gender", modal_charts_path(q: "pg", chart_data: @pie_chart_gender.to_json, c_id: "gen-chart"), class: "btn btn-lg btn-outline-primary", data: { turbo_frame: "reg_form_modal_xl" } %>
+
+    <%#= link_to "Claims per Benefit", modal_charts_path(q: "cb", chart_data: @benefits_chart.to_json, c_id: "ben-chart"), class: "btn btn-lg btn-outline-secondary", data: { turbo_frame: "reg_form_modal_xl" } %>
+
+    <%#= link_to "Premium & Claims per Annum", modal_charts_path(q: "pca"), class: "btn btn-lg btn-outline-success", data: { turbo_frame: "reg_form_modal_xl" } %>
+
+    <%#= link_to "graph modal", graph_modal_path, class: "btn btn-lg btn-primary" %>
+  </div>
+
+  <div class="row mb-2">
+    <div class="col-6">
+      <%= pie_chart @age_bracket, title: "Age Demographic" %>
+    </div>
+    <div class="col-6">
+      <%= pie_chart @job_demo, title: "Job Demographic" %>
+    </div>
+  </div>
+
+  <div class="row mb-2">
+    <div class="col-6">
+      <%= pie_chart @prem_v_claims, title: "Premium vs. Claims" %>
+    </div>
+    <div class="col-6">
+      <%#= pie_chart @pie_chart_gender, title: "Premium per Gender" %>
+      <%= render "pages/graphs/gender_chart", chart_data: @pie_chart_gender, c_id: "chart-gen" %>
+    </div>
+  </div>
+  <%#= @pie_chart_gender %>
+
+
+  <div class="row mb-2">
+    <%= render "pages/graphs/benefit_chart", chart_data: @benefits_chart, c_id: "chart-ben" %>
+  </div>
+
+  <!-- <div class="row mb-2">
+    <div class="col-6">
+      <%= column_chart @prem_per_gr, title: "Premium per Group Remit", colors: ["#0DD823"] %>
+    </div>
+    <div class="col-6">
+      <%= column_chart @claims_per_gr, title: "Claims per Group Remit", colors: ["#EE2525"] %>
+    </div>
+  </div> -->
+
+  <div class="row mb-2">
+    <%= column_chart @gr_chart, title: "Premium & Claims per Group Remit", colors: ["#0DD823", "#EE2525"] %>
+  </div>
+
+  <div class="row mb-2">
+    <%= render "pages/graphs/causes_chart", chart_data: @cause_chart %>
+  </div>
+
+  <div data-controller="graph">
+    <div class="row mb-2 mt-2">
+      <div class="col-4">
+        <%= select_tag 'select_type', options_for_select([["2020", 0], ["2021", 1], ["2022", 2], ["2023", 3]]), data: { action: "change->graph#premAnnual", target: "annualData" }, id: "annual_id", class: "form-select" %>
+        <%= content_tag :p, "Please select year to view graph...", class: "lead text-secondary" %>
+      </div>
+      <%= turbo_frame_tag "premAnnual charts" %>
+    </div>
+  </div>
+
+</div>

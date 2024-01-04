@@ -1,11 +1,15 @@
 class CoopBranchesController < ApplicationController
-  before_action :authenticate_user!
+  # before_action :authenticate_user!
   # before_action :check_userable_type
   before_action :set_coop_branch, only: %i[ show edit update destroy ]
 
   # GET /coop_branches or /coop_branches.json
   def index
-    @coop_branches = @cooperative.coop_branches.all
+    if current_user.userable_type == "CoopUser"
+      @coop_branches = @cooperative.coop_branches.all
+    else
+      @coop_branches = CoopBranch.all
+    end
 
     respond_to do |format|
       format.html # render the index view template
@@ -18,9 +22,13 @@ class CoopBranchesController < ApplicationController
 
   # GET /coop_branches/new
   def new
-    # @coop_branch = @cooperative.coop_branches.build
-    @cooperative = Cooperative.find(params[:v])
-    @coop_branch = @cooperative.coop_branches.build
+    # @cooperative = Cooperative.find(params[:v])
+
+    if current_user.userable_type == "CoopUser"
+      @coop_branch = @cooperative.coop_branches.build
+    else
+      @coop_branch = CoopBranch.new()
+    end
     # default_values
     @prov = @muni = @brgy = []
 
@@ -38,7 +46,11 @@ class CoopBranchesController < ApplicationController
 
   # POST /coop_branches or /coop_branches.json
   def create
-    @cooperative = Cooperative.find(params[:v])
+    if @cooperative.nil?
+      @cooperative = Cooperative.find_by(id: params[:coop_branch][:cooperative_id])
+    end
+    # @cooperative = Cooperative.find(params[:cooperative_id])
+    # @cooperative = Cooperative.find(params[:v])
     @coop_branch = @cooperative.coop_branches.build(coop_branch_params)
     respond_to do |format|
       if @coop_branch.save
@@ -78,40 +90,40 @@ class CoopBranchesController < ApplicationController
   end
 
   private
-    # Use callbacks to share common setup or constraints between actions.
+  # Use callbacks to share common setup or constraints between actions.
 
-    def set_coop_branch
-      # set_cooperative
-      # @coop_branch = @cooperative.coop_branches.find(params[:id])
-      @coop_branch = CoopBranch.find(params[:id])
-      @cooperative = Cooperative.find(@coop_branch.cooperative.id)
-    end
+  def set_coop_branch
+    # set_cooperative
+    # @coop_branch = @cooperative.coop_branches.find(params[:id])
+    @coop_branch = CoopBranch.find(params[:id])
+    @cooperative = Cooperative.find(@coop_branch.cooperative.id)
+  end
 
-    # Only allow a list of trusted parameters through.
-    # def coop_branch_params
-    #   params.require(:coop_branch).permit(:name, :region, :province, :municipality, :barangay, :contact_details, :cooperative_id)
-    # end
-    def coop_branch_params
-      params.require(:coop_branch).permit(:name, :geo_region_id, :geo_province_id, :geo_municipality_id, :geo_barangay_id, :street, :contact_details, :cooperative_id)
-    end
+  # Only allow a list of trusted parameters through.
+  # def coop_branch_params
+  #   params.require(:coop_branch).permit(:name, :region, :province, :municipality, :barangay, :contact_details, :cooperative_id)
+  # end
+  def coop_branch_params
+    params.require(:coop_branch).permit(:name, :geo_region_id, :geo_province_id, :geo_municipality_id, :geo_barangay_id, :street, :contact_details, :cooperative_id)
+  end
 
-    # def check_userable_type
-    #   unless current_user.userable_type == 'CoopUser' || current_user.userable_type == 'Employee'
-    #     render file: "#{Rails.root}/public/404.html", status: :not_found
-    #   end
-    # end
+  # def check_userable_type
+  #   unless current_user.userable_type == 'CoopUser' || current_user.userable_type == 'Employee'
+  #     render file: "#{Rails.root}/public/404.html", status: :not_found
+  #   end
+  # end
 
-    def default_values
-      @geo_region = GeoRegion.all
-      @coop_branch.geo_region_id = @geo_region.shuffle.first.id
-      @geo_province = GeoProvince.where(geo_region_id: @cooperative.geo_region_id)
-      @coop_branch.geo_province_id = @geo_province.shuffle.first.id
-      @geo_municipality = GeoMunicipality.where(geo_province_id: @cooperative.geo_province_id)
-      @coop_branch.geo_municipality_id = @geo_municipality.shuffle.first.id
-      @geo_barangay = GeoBarangay.where(geo_municipality_id: @cooperative.geo_municipality_id)
-      @coop_branch.geo_barangay_id = @geo_barangay.shuffle.first.id
-      @coop_branch.street = FFaker::Address.neighborhood
-      @coop_branch.name = @coop_branch.street
-      @coop_branch.contact_details = FFaker::PhoneNumber.phone_number
-    end
+  def default_values
+    @geo_region = GeoRegion.all
+    @coop_branch.geo_region_id = @geo_region.shuffle.first.id
+    @geo_province = GeoProvince.where(geo_region_id: @cooperative.geo_region_id)
+    @coop_branch.geo_province_id = @geo_province.shuffle.first.id
+    @geo_municipality = GeoMunicipality.where(geo_province_id: @cooperative.geo_province_id)
+    @coop_branch.geo_municipality_id = @geo_municipality.shuffle.first.id
+    @geo_barangay = GeoBarangay.where(geo_municipality_id: @cooperative.geo_municipality_id)
+    @coop_branch.geo_barangay_id = @geo_barangay.shuffle.first.id
+    @coop_branch.street = FFaker::Address.neighborhood
+    @coop_branch.name = @coop_branch.street
+    @coop_branch.contact_details = FFaker::PhoneNumber.phone_number
+  end
 end

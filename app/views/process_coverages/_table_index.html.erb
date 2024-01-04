@@ -8,6 +8,7 @@
       <%# <th>Terms</th> %>
       <%# <th>Count</th> %>
       <th>Summary</th>
+      <th>OR No. & Date</th>
       <th>Analyst</th>
       <th></th>
     </tr>
@@ -32,6 +33,10 @@
           <td class="text-end"><%= pluralize(pc.group_remit.batches.count, "Members") %> <br>
             <small>Premium <%= to_curr(sum_prem) %></small> <br>
             <small>Net <%= to_curr(sum_prem - pc.group_remit.batches.sum(:coop_sf_amount)) %></small>
+          </td>
+          <td>
+            <%= pc.get_or_number %> <br>
+            <%= month_day_year(pc.get_or_date) %>
           </td>
           <td>
             <%#= pc.group_remit.agreement.emp_agreements.empty? ? "-" : pc.group_remit.agreement.emp_agreements.find_by(active: true).employee %>

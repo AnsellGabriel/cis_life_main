@@ -3,11 +3,11 @@
     controller: "flatpickr",
     flatpickr_max_date: max_date,
     flatpickr_next_arrow: "Next",
-    flatpickr_prev_arrow: "Prev",
-    flatpickr_date_format: "m-d-Y"},
+    flatpickr_prev_arrow: "Prev"},
     class: 'text-primary',
     placeholder: placeholder}, label: false,
-    wrapper: false
+    wrapper: false, 
+    error: '*Required'
   %>
   <%= form.label attribute, placeholder, class: 'ps-4' %>
 </div>

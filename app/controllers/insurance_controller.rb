@@ -22,23 +22,24 @@ class InsuranceController < ApplicationController
     existing_coverage = agreement.agreements_coop_members.find_by(coop_member_id: @batch.coop_member.id)
 
     respond_to do |format|
-      if existing_coverage.update(
-        status: 'terminated',
-        expiry: @batch.previous_expiry_date,
-        effectivity: @batch.previous_effectivity_date
-      )
-        @batch.update(status: :terminated)
-        format.html { redirect_to group_remit_path(@group_remit), alert: "Member insurance coverage terminated" }
-      else
-        format.html { redirect_to group_remit_path(@group_remit), alert: "Unsuccessful insurance coverage termination" }
+      ActiveRecord::Base.transaction do
+        existing_coverage.update(
+          status: "terminated",
+          expiry: @batch.previous_expiry_date,
+          effectivity: @batch.previous_effectivity_date
+        )
+
+        @batch.update(status: :terminated, insurance_status: :denied)
       end
+
+      format.html { redirect_to group_remit_path(@group_remit), alert: "Member insurance coverage terminated" }
     end
   end
 
   private
 
   def set_variables
-    @batch = Batch.find(params[:batch])
-    @group_remit = GroupRemit.find(params[:group_remit])
+    @batch = Batch.find(params[:b])
+    @group_remit = GroupRemit.find(params[:gr])
   end
 end

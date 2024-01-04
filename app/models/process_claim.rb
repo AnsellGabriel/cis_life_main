@@ -44,10 +44,11 @@ class ProcessClaim < ApplicationRecord
     payment_procedure: 8, # payment
     denied_claim: 9, # denied
     reconsider_review: 10,
-    pending_claim: 11
+    pending_claim: 11,
+    claimable: 12
   }
 
-  
+
 
   def self.get_route (i)
     claim_routes.key(i)
@@ -57,8 +58,10 @@ class ProcessClaim < ApplicationRecord
     claim_route.to_s.humanize.titleize
   end
 
-  def get_benefit_claim_total(pc)
-    ClaimBenefit.where(process_claim: pc).sum(:amount)
+  def get_benefit_claim_total
+    # ClaimBenefit.where(process_claim: pc).sum(:amount)
+
+    claim_benefits.sum(:amount)
   end
 
   def get_age
@@ -84,6 +87,7 @@ class ProcessClaim < ApplicationRecord
   has_many :claim_remarks, dependent: :destroy
   has_many :claim_attachments, dependent: :destroy
   has_many :claim_confinements, dependent: :destroy
+  has_one :claim_request_for_payment, dependent: :destroy
   accepts_nested_attributes_for :claim_cause
   # belongs_to :batch
   has_many :claim_documents, dependent: :destroy

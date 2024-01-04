@@ -51,30 +51,30 @@ gem "tzinfo-data", platforms: %i[ mingw mswin x64_mingw jruby ]
 # Use Active Storage variants [https://guides.rubyonrails.org/active_storage_overview.html#transforming-images]
 gem "image_processing", "~> 1.2"
 
-gem 'bootstrap', '~> 5.1', '>= 5.1.3'
-gem 'bootstrap-icons-helper'
-gem 'simple_form'
-gem 'devise'
-gem 'activeadmin'
+gem "bootstrap", "~> 5.1", ">= 5.1.3"
+gem "bootstrap-icons-helper"
+gem "simple_form"
+gem "devise"
+gem "activeadmin"
 gem "roo", "~> 2.10.0"
-gem 'csv'
-gem 'requestjs-rails'
-gem 'pagy'
-gem 'ransack'
-gem 'jquery-rails'
-gem 'cocoon'
-gem 'sidekiq'
-gem 'sidekiq-scheduler'
-gem 'bullet', group: 'development'
-gem 'carrierwave', '~> 3.0'
-gem 'humanize'
+gem "csv"
+gem "requestjs-rails"
+gem "pagy"
+gem "ransack"
+gem "jquery-rails"
+gem "cocoon"
+gem "sidekiq"
+gem "sidekiq-scheduler"
+gem "bullet", group: "development"
+gem "carrierwave", "~> 3.0"
+gem "humanize"
 
 
 
 group :development, :test do
   # See https://guides.rubyonrails.org/debugging_rails_applications.html#debugging-with-the-debug-gem
   # gem "debug", platforms: %i[ mri mingw x64_mingw ]
-  gem 'byebug'
+  gem "byebug"
   gem "ffaker"
   # gem "debug"
 
@@ -101,24 +101,24 @@ group :test do
   gem "selenium-webdriver"
   gem "webdrivers"
   gem "factory_bot_rails"
-  gem 'rspec-rails'
-  gem 'coderay'
+  gem "rspec-rails"
+  gem "coderay"
 end
 
 
-gem 'store_base_sti_class'
+gem "store_base_sti_class"
 
 
-gem 'capistrano', '~> 3.11'
-gem 'capistrano-rails', '~> 1.4'
-gem 'capistrano-passenger', '~> 0.2.0'
-gem 'capistrano-rbenv', '~> 2.1', '>= 2.1.4'
-gem 'capistrano-linked-files'
+gem "capistrano", "~> 3.11"
+gem "capistrano-rails", "~> 1.4"
+gem "capistrano-passenger", "~> 0.2.0"
+gem "capistrano-rbenv", "~> 2.1", ">= 2.1.4"
+gem "capistrano-linked-files"
 
-gem 'ed25519'
-gem 'bcrypt_pbkdf'
+gem "ed25519"
+gem "bcrypt_pbkdf"
 
-gem 'asset_ram'
+gem "asset_ram"
 gem "prawn", "~> 2.4"
 
 gem "prawn-templates", "~> 0.1.2"
@@ -133,7 +133,10 @@ gem "ruby-lsp", require: false
 gem "solargraph", require: false
 
 # decorator gem
-gem 'draper'
+gem "draper"
 
 # gem for making reusable components for rails views
-gem 'view_component'
+gem "view_component"
+
+# gem for charts
+gem "chartkick"

@@ -22,7 +22,10 @@ class ProcessRemarksController < ApplicationController
     else
       "Add Remark"
     end
-
+    
+    
+    # binding.pry
+    
     @process_status = params[:pro_status]
     @total_life_cov = params[:total_life_cov].to_i
     @max_amount = params[:max_amount].to_i
@@ -54,7 +57,7 @@ class ProcessRemarksController < ApplicationController
           @rem_status = "for_vp_approval"
         end
       elsif current_user.rank == "senior_officer"
-          @rem_status = "approved"
+        @rem_status = "approved"
       end
 
     else
@@ -74,6 +77,8 @@ class ProcessRemarksController < ApplicationController
   def view_all
     @process_coverage = ProcessCoverage.find(params[:process_coverage])
     @process_remarks = @process_coverage.process_remarks
+
+    @pagy_rem, @filtered_remarks  = pagy(@process_remarks, items: 5, page_param: :pr, link_extra: 'data-turbo-frame="pagination1"')
   end
 
   # GET /process_remarks/1/edit
@@ -114,7 +119,9 @@ class ProcessRemarksController < ApplicationController
     # raise 'errors'
     respond_to do |format|
       if @process_remark.save
+        # binding.pry
         if params[:process_remark][:process_status] == "Approve"
+
           if agreement.is_lppi?
             group_remit = @process_coverage.group_remit
             group_remit.batches.where(insurance_status: :denied).each do |batch|
@@ -124,7 +131,7 @@ class ProcessRemarksController < ApplicationController
             end
           end
 
-          format.html { redirect_to process_coverage_approve_path(process_coverage_id: params[:process_remark][:process_coverage_id], total_life_cov: params[:process_remark][:total_life_cov], max_amount: params[:process_remark][:max_amount], total_net_prem: params[:process_remark][:total_net_prem])}
+          format.html { redirect_to process_coverage_approve_path(process_coverage_id: params[:process_remark][:process_coverage_id], total_life_cov: params[:process_remark][:total_life_cov], max_amount: params[:process_remark][:max_amount], total_gross_prem: params[:process_remark][:total_gross_prem])}
         elsif params[:process_remark][:process_status] == "Deny"
           format.html { redirect_to process_coverage_deny_path(process_coverage_id: params[:process_remark][:process_coverage_id])}
         elsif params[:process_remark][:process_status] == "Reassess"
@@ -170,13 +177,13 @@ class ProcessRemarksController < ApplicationController
   end
 
   private
-    # Use callbacks to share common setup or constraints between actions.
-    def set_process_remark
-      @process_remark = ProcessRemark.find(params[:id])
-    end
+  # Use callbacks to share common setup or constraints between actions.
+  def set_process_remark
+    @process_remark = ProcessRemark.find(params[:id])
+  end
 
-    # Only allow a list of trusted parameters through.
-    def process_remark_params
-      params.require(:process_remark).permit(:process_coverage_id, :remark, :status, :user_id, :user_type)
-    end
+  # Only allow a list of trusted parameters through.
+  def process_remark_params
+    params.require(:process_remark).permit(:process_coverage_id, :remark, :status, :user_id, :user_type)
+  end
 end

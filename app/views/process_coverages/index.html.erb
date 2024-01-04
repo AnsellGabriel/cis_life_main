@@ -15,22 +15,24 @@
             <div id="collapseTwo" class="accordion-collapse collapse" aria-labelledby="headingTwo" data-bs-parent="#accordionExample">
               <div class="accordion-body">
                 <%= form_with url: process_coverages_path, builder: SimpleForm::FormBuilder, method: :get do |f| %>
-                  <% if current_user.senior_officer? %>
+                  <%# if current_user.senior_officer? %>
                     <% analysts = Employee::ANALYSTS.map { |analyst| [analyst.signed_fullname, analyst.id] } %>
-                  <% else %>
-                    <% analysts = Employee::ANALYSTS.joins(:emp_approver).where(emp_approver: { approver: current_user.userable_id }) %>
-                  <% end %>
+                  <%# else %>
+                    <%# analysts = Employee::ANALYSTS.joins(:emp_approver).where(emp_approver: { approver: current_user.userable_id }) %>
+                  <%# end %>
                   <% process_types = ProcessCoverage::FILTERED_STATUSES %>
                   <div class="row">
                     <%= f.input :emp_id, as: :select, label: "Select UA", collection: analysts, input_html: { class: "form-select" }, wrapper_html: { class: "col-md-3" } %>
                     <%= f.input :date_from, as: :string, label: "From", input_html: { data: { controller: "flatpickr",
                         flatpickr_max_date: Time.zone.now,
                         flatpickr_next_arrow: "Next",
-                        flatpickr_prev_arrow: "Prev" } }, wrapper_html: { class: "col-md-3" } %>
+                        flatpickr_prev_arrow: "Prev",
+                        flatpickr_date_format: "m-d-Y" } }, wrapper_html: { class: "col-md-3" } %>
                     <%= f.input :date_to, as: :string, label: "To", input_html: { data: { controller: "flatpickr",
                         flatpickr_max_date: Time.zone.now,
                         flatpickr_next_arrow: "Next",
-                        flatpickr_prev_arrow: "Prev" } }, wrapper_html: { class: "col-md-3" } %>
+                        flatpickr_prev_arrow: "Prev",
+                        flatpickr_date_format: "m-d-Y" } }, wrapper_html: { class: "col-md-3" } %>
                     <%= f.input :process_type, as: :select, collection: process_types, wrapper_html: { class: "col-md-3" } %>
                   </div>
                   <%= f.button :submit, "Filter", class: small_btn('outline-primary') %>
@@ -90,13 +92,11 @@
                     <%= f.input :date_from, as: :string, label: "From", input_html: { data: { controller: "flatpickr",
                         flatpickr_max_date: Time.zone.now,
                         flatpickr_next_arrow: "Next",
-                        flatpickr_prev_arrow: "Prev",
-                        flatpickr_date_format: "m-d-Y" } }, wrapper_html: { class: "col-md-4"} %>
+                        flatpickr_prev_arrow: "Prev"} }, wrapper_html: { class: "col-md-4"} %>
                     <%= f.input :date_to, as: :string, label: "To", input_html: { data: { controller: "flatpickr",
                         flatpickr_max_date: Time.zone.now,
                         flatpickr_next_arrow: "Next",
-                        flatpickr_prev_arrow: "Prev",
-                        flatpickr_date_format: "m-d-Y" } }, wrapper_html: { class: "col-md-4"} %>
+                        flatpickr_prev_arrow: "Prev"} }, wrapper_html: { class: "col-md-4"} %>
                     <%= f.input :process_type, as: :select, collection: process_types, wrapper_html: { class: "col-md-4"} %>
                   </div>
                   <%= f.submit "Filter", class: small_btn('outline-primary') %>
@@ -149,3 +149,28 @@
     <%= render "process_coverages/table_index", process_coverages: @process_coverages %>
   <% end %>
 <% end %>
+
+<!-- 
+<div class="row">
+  <div class="col-6">
+    <%= pie_chart @pie_chart_data1, donut: true, title: "Approved/Denied/Pending Claims" %>
+  </div>
+  <div class="col-6">
+    <%= pie_chart @pie_chart_data2, title: "Premium per Gender" %>
+  </div>
+</div>
+<div class="row mt-3">
+  <div class="col-10">
+    <%= column_chart @column_chart_data1, title: "Premium & Claims per Agent" %>
+  </div>
+</div>
+
+<div class="row mt-3">
+  <%= line_chart @line_chart_data2, title: "Premium & Claims per Month", curve: false %>
+</div>
+
+<div class="row mt-3">
+  <div class="col-6">
+    <%= pie_chart @cause_chart, title: "Top Claim Causes" %>
+  </div>
+</div> -->

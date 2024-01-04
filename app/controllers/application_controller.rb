@@ -2,7 +2,7 @@ class ApplicationController < ActionController::Base
   include Pagy::Backend
 
   add_flash_types :warning
-  before_action :set_cooperative, :set_authority_level
+  before_action :set_cooperative, :set_authority_level, :set_current_date
 
   def root
     case current_user.userable_type
@@ -14,12 +14,11 @@ class ApplicationController < ActionController::Base
         redirect_to med_directors_home_path
       else
         case current_user.userable.department_id
-        when 17, 13
-          redirect_to process_coverages_path
-        when 15
-          redirect_to mis_dashboard_path
-        else
-          redirect_to employees_path
+        when 26 then redirect_to treasury_dashboard_path
+        when 11 then redirect_to accounting_dashboard_path
+        when 17, 13 then redirect_to process_coverages_path
+        when 15 then redirect_to mis_dashboard_path
+        else redirect_to employees_path
         end
       end
 
@@ -31,14 +30,14 @@ class ApplicationController < ActionController::Base
   private
 
   def set_cooperative
-    if current_user && current_user.userable_type == 'CoopUser'
-      session[:cooperative_id] ||= current_user.userable.cooperative_id
-      @cooperative ||= Cooperative.find_by(id: session[:cooperative_id])
-    elsif params[:cooperative_id]
-      session[:cooperative_id] = params[:cooperative_id]
-      @cooperative = Cooperative.find_by(id: session[:cooperative_id])
+    if current_user && current_user.userable_type == "CoopUser"
+      session[:c_id] ||= current_user.userable.cooperative_id
+      @cooperative ||= Cooperative.find_by(id: session[:c_id])
+    elsif params[:c_id]
+      session[:c_id] = params[:c_id]
+      @cooperative = Cooperative.find_by(id: session[:c_id])
     else
-      @cooperative = Cooperative.find_by(id: session[:cooperative_id])
+      @cooperative = Cooperative.find_by(id: session[:c_id])
     end
 
   end
@@ -51,6 +50,10 @@ class ApplicationController < ActionController::Base
       # raise "error"
       session[:max_amount] = @cur_user_max_amount.nil? ? 0 : @cur_user_max_amount
     end
+  end
+
+  def set_current_date
+    @current_date = Time.now
   end
 
   # def set_retention_limit

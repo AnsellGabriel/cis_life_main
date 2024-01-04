@@ -46,13 +46,13 @@ class AuthorityLevelsController < ApplicationController
   end
 
   private
-    # Use callbacks to share common setup or constraints between actions.
-    def set_authority_level
-      @authority_level = AuthorityLevel.find(params[:id])
-    end
+  # Use callbacks to share common setup or constraints between actions.
+  def set_authority_level
+    @authority_level = AuthorityLevel.find(params[:id])
+  end
 
-    # Only allow a list of trusted parameters through.
-    def authority_level_params
-      params.require(:authority_level).permit(:name, :maxAmount)
-    end
+  # Only allow a list of trusted parameters through.
+  def authority_level_params
+    params.require(:authority_level).permit(:name, :maxAmount)
+  end
 end

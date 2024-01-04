@@ -1,5 +1,5 @@
 class LoanInsurance::GroupRemit < GroupRemit
-  validates :type, inclusion: { in: ['LoanInsurance::GroupRemit'], message: 'is not valid' }
+  validates :type, inclusion: { in: ["LoanInsurance::GroupRemit"], message: "is not valid" }
 
   has_many :batches, class_name: "LoanInsurance::Batch", foreign_key: "group_remit_id", dependent: :destroy
   # has_many :payments, as: :payable, dependent: :destroy, class_name: "Payment"
@@ -14,7 +14,8 @@ class LoanInsurance::GroupRemit < GroupRemit
       member.update!(for_reinsurance: false) if member.total_loan_amount < 550_000
 
       batch.update!(terminate_date: Date.today)
-      batch.remarks.create(remark: "Insurance terminated, tagged as unused by system on #{Date.today.strftime("%B %d, %Y")}", user: current_user, remarkable: batch, status: :terminated, batch_status: 'terminated')
+      batch.remarks.create(remark: "Insurance terminated, tagged as unused by system on #{Date.today.strftime("%B %d, %Y")}", user: current_user, remarkable: batch, status: :terminated,
+batch_status: "terminated")
     end
   end
 
@@ -22,12 +23,16 @@ class LoanInsurance::GroupRemit < GroupRemit
     batches.sum(:unused)
   end
 
+  def total_loan_amount
+    batches.sum(:loan_amount)
+  end
+
   def total_premium_due
     batches.sum(:premium_due)
   end
 
   def payments
-    Payment.where(payable_type: 'LoanInsurance::GroupRemit', payable_id: self.id)
+    Payment.where(payable_type: "LoanInsurance::GroupRemit", payable_id: self.id)
   end
 
   def update_members_total_loan

@@ -17,7 +17,9 @@ class MembersControllerTest < ActionDispatch::IntegrationTest
 
   test "should create member" do
     assert_difference("Member.count") do
-      post members_url, params: { member: { birth_date: @member.birth_date, email: @member.email, first_name: @member.first_name, gender: @member.gender, last_name: @member.last_name, middle_name: @member.middle_name, mobile_number: @member.mobile_number, suffix: @member.suffix } }
+      post members_url,
+params: { member: { birth_date: @member.birth_date, email: @member.email, first_name: @member.first_name, gender: @member.gender, last_name: @member.last_name, middle_name: @member.middle_name,
+mobile_number: @member.mobile_number, suffix: @member.suffix } }
     end
 
     assert_redirected_to member_url(Member.last)
@@ -34,7 +36,9 @@ class MembersControllerTest < ActionDispatch::IntegrationTest
   end
 
   test "should update member" do
-    patch member_url(@member), params: { member: { birth_date: @member.birth_date, email: @member.email, first_name: @member.first_name, gender: @member.gender, last_name: @member.last_name, middle_name: @member.middle_name, mobile_number: @member.mobile_number, suffix: @member.suffix } }
+    patch member_url(@member),
+params: { member: { birth_date: @member.birth_date, email: @member.email, first_name: @member.first_name, gender: @member.gender, last_name: @member.last_name, middle_name: @member.middle_name,
+mobile_number: @member.mobile_number, suffix: @member.suffix } }
     assert_redirected_to member_url(@member)
   end
 

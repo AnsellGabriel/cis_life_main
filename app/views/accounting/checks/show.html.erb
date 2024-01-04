@@ -1,0 +1,35 @@
+<div class="<%= flex_justify_align('', 'center') %> gap-1 mb-1">
+  <%= link_to :back, class: 'btn btn-sm btn-secondary' do %>
+    <i class="bi bi-arrow-90deg-left"></i>
+  <% end %>
+
+</div>
+
+<%= render @check %>
+
+<div class="card">
+  <ul class="nav nav-tabs" id="myTab" role="tablist">
+
+    <% if current_user.is_accountant? %>
+      <li class="nav-item" role="presentation">
+        <button class="nav-link active" id="ledger-tab" data-bs-toggle="tab" data-bs-target="#ledger" type="button" role="tab" aria-controls="ledger" aria-selected="true">Ledger</button>
+      </li>
+    <% end %>
+
+    <li class="nav-item" role="presentation">
+      <button class="nav-link" id="check-tab" data-bs-toggle="tab" data-bs-target="#check" type="button" role="tab" aria-controls="check" aria-selected="false">Business Checks</button>
+    </li>
+  </ul>
+  <div class="tab-content" id="myTabContent">
+
+    <% if current_user.is_accountant? %>
+      <div class="tab-pane fade show active" id="ledger" role="tabpanel" aria-labelledby="ledger-tab">
+        <%= render 'payments/entries/ledger', ledgers: @ledgers, entry: @check %>
+      </div>
+    <% end %>
+
+    <div class="tab-pane fade <%= 'show active' if current_user.is_treasurer? %>" id="check" role="tabpanel" aria-labelledby="check-tab">
+      <%= render 'business_checks', business_checks: @business_checks, voucher: @check %>
+    </div>
+  </div>
+</div>

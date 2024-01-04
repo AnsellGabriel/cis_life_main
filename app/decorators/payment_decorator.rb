@@ -1,4 +1,4 @@
-class PaymentDecorator < Draper::Decorator
+class PaymentDecorator < ApplicationDecorator
   delegate_all
 
   # Define presentation-specific methods here. Helpers are accessed through
@@ -10,4 +10,9 @@ class PaymentDecorator < Draper::Decorator
   #     end
   #   end
 
+  def receiptable?
+    entries = object.entries
+
+    (entries.empty? or entries.last&.cancelled?) and !object.rejected?
+  end
 end

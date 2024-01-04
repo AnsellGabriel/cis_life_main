@@ -41,7 +41,7 @@
 	<% end %>
 
 	<% if batch.batch_health_decs.exists? %>
-		<%= link_to health_dec_group_remit_batch_path(group_remit, batch, for_und: true), 
+		<%= link_to health_dec_group_remit_batch_path(group_remit, batch), 
 			class: small_btn('primary'), 
 			title: 'Health Declaration Form',
 			data: { turbo_frame: "reg_form_modal_xl" } do %>
@@ -74,7 +74,7 @@
 		<% end %>
 
 		<% if batch.renewal? && !batch.denied? && !batch.terminated? %>
-			<%= link_to terminate_insurance_path(group_remit: group_remit, batch: batch),
+			<%= link_to terminate_insurance_path(gr: group_remit, b: batch),
 				data: {
 					turbo_method: :get, 
 					turbo_confirm: "Terminate #{batch.coop_member.full_name}'s insurance?" , turbo_frame: "_top"

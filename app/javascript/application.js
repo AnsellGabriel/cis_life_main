@@ -11,6 +11,9 @@ import "controllers"
 import "@nathanvda/cocoon"
 // import 'cocoon-js'
 
+import "chartkick"
+import "Chart.bundle"
+
 Turbo.session.drive = true
 window.bootstrap = bootstrap
 

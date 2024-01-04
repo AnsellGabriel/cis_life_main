@@ -17,7 +17,9 @@ class ProcessRemarksControllerTest < ActionDispatch::IntegrationTest
 
   test "should create process_remark" do
     assert_difference("ProcessRemark.count") do
-      post process_remarks_url, params: { process_remark: { process_coverage_id: @process_remark.process_coverage_id, remark: @process_remark.remark, status: @process_remark.status, user_id: @process_remark.user_id, user_type: @process_remark.user_type } }
+      post process_remarks_url,
+params: { process_remark: { process_coverage_id: @process_remark.process_coverage_id, remark: @process_remark.remark, status: @process_remark.status, user_id: @process_remark.user_id,
+user_type: @process_remark.user_type } }
     end
 
     assert_redirected_to process_remark_url(ProcessRemark.last)
@@ -34,7 +36,9 @@ class ProcessRemarksControllerTest < ActionDispatch::IntegrationTest
   end
 
   test "should update process_remark" do
-    patch process_remark_url(@process_remark), params: { process_remark: { process_coverage_id: @process_remark.process_coverage_id, remark: @process_remark.remark, status: @process_remark.status, user_id: @process_remark.user_id, user_type: @process_remark.user_type } }
+    patch process_remark_url(@process_remark),
+params: { process_remark: { process_coverage_id: @process_remark.process_coverage_id, remark: @process_remark.remark, status: @process_remark.status, user_id: @process_remark.user_id,
+user_type: @process_remark.user_type } }
     assert_redirected_to process_remark_url(@process_remark)
   end
 

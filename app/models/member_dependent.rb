@@ -38,11 +38,11 @@ class MemberDependent < ApplicationRecord
 
     allowed_relationships = case principal_civil_status
                               when "MARRIED"
-                                ['SPOUSE', 'CHILD']
+                                ["SPOUSE", "CHILD"]
                               when "SINGLE"
-                                ['PARENT', 'SIBLING']
+                                ["PARENT", "SIBLING"]
                               else
-                                ['PARENT', 'CHILD', 'SIBLING']
+                                ["PARENT", "CHILD", "SIBLING"]
                             end
 
     unless allowed_relationships.include?(self.relationship)
@@ -55,7 +55,7 @@ class MemberDependent < ApplicationRecord
     self.last_name = self.last_name.upcase
     self.first_name = self.first_name.upcase
     self.middle_name = self.middle_name.upcase
-    self.suffix = self.suffix == nil ? '' : self.suffix.upcase
+    self.suffix = self.suffix == nil ? "" : self.suffix.upcase
     self.relationship = self.relationship.upcase
     # repeat the above line for each field you want to make all caps
   end

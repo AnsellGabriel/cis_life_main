@@ -1,0 +1,74 @@
+<div class="d-flex gap-3">
+  <div class="card" style="width: 60%; margin-left: 35px;">
+    <div class="card-header <%= flex_justify_align('between', '') %>">
+      <div class="">
+        <p class="mb-0 text-muted"><small>Receipt Number</small></p>
+        <h3 class="text-primary"><%= entry.or_no %></h3>
+        <p><small><strong>OR date:</strong> <span><%= month_day_year(entry.or_date) %></span></small></p>
+        <p class="badge bg-<%= entry.decorate.status_color %>"><%= entry.status.humanize %></p>
+      </div>
+      <div class="">
+        <% if entry.pending? %>
+          <%= link_to entry.decorate.edit_path, class: 'btn btn-outline-primary mt-1', data: {turbo_frame: 'modal'}, title: 'Edit receipt' do %> 
+            <i class="bi bi-pencil"></i><span> Edit</span>
+          <% end %>
+          <%= link_to entry.decorate.cancel_path, data: {turbo_confirm: 'Cancel receipt?', turbo_method: :get}, class: 'btn btn-outline-danger mt-1', title: 'Cancel receipt' do %>
+            <i class="bi bi-x-lg"></i><span> Cancel OR</span>
+          <% end %>
+        <% end %>
+      </div>
+    </div>
+    <div class="card-body">
+
+      <div class="row mb-3">
+        <span class="small fw-bold col-2">Payee: </span>
+        <span class="small col-10"><%= entry.coop %></span>
+      </div>
+
+      <div class="row mb-3">
+        <span class="small fw-bold col-2">Payment: </span>
+        <span class="small col-10"><%= entry.payment_type.upcase %></span>
+      </div>
+
+      <div class="row mb-3">
+        <span class="small fw-bold col-2">Bank: </span>
+        <span class="small col-10"><%= entry.treasury_account %></span>
+      </div>
+
+      <% if entry.remittance? %>
+        <div class="row mb-3">
+          <span class="small fw-bold col-2">Agent: </span>
+          <span class="small col-10"><%= entry.agent %></span>
+        </div>
+      <% end %>
+
+    </div>
+  </div>
+    
+    <div class="card" style="width: 40%;">
+      <div class="card-body">
+        <div class="<%= flex_justify_align('between') %>">
+          <span class="small fw-bold">Details</span>
+          <span class="small fw-bold">Amount</span>
+        </div>
+        <hr style="opacity: 1; border-color: black !important">
+        <div class="<%= flex_justify_align('between') %>">
+          <span class="small">Amount</span>
+          <span class="small"><%= to_curr(entry.total_amount) %></span>
+        </div>
+        <% if entry.remittance? %>
+          <hr>
+          <div class="<%= flex_justify_align('between') %>">
+            <span class="small">Service Fee (<%= to_curr(payment.payable.agreement.coop_sf) %> %)</span>
+            <span class="small">(<%= to_curr(payment.payable.coop_commission) %>)</span>
+          </div>
+        <% end %>
+        <hr style="opacity: 1; border-color: black !important">
+        <div class="<%= flex_justify_align('between') %>">
+          <span class="small">Deposit</span>
+          <span class="small"><%= to_curr(entry.amount) %></span>
+        </div>
+      </div>
+    </div>
+
+</div>

@@ -23,29 +23,25 @@ class GroupRemitsController < InheritedResources::Base
   def submit
     if @group_remit.batches.empty?
       respond_to do |format|
-        format.html { redirect_to coop_agreement_group_remit_path(@group_remit.agreement, @group_remit), alert: "Unable to submit empty batch!" }
+        format.html { redirect_to coop_agreement_group_remit_path(@group_remit.agreement, @group_remit), alert: "Unable to submit empty remittance!" }
       end
 
       return
     end
 
-    if @group_remit.batches_all_renewal?
-      @group_remit.approve_insurance_status_of_batches
-      @group_remit.set_for_payment_status
-    else
-      @group_remit.set_under_review_status
-    end
+    # if @group_remit.batches_all_renewal?
+    #   @group_remit.approve_insurance_status_of_batches
+    #   @group_remit.set_for_payment_status
+    # else
+    #   @group_remit.set_under_review_status
+    # end
 
+    @group_remit.set_under_review_status
     @group_remit.date_submitted = Date.today
 
     respond_to do |format|
       if @group_remit.save!
-        @process_coverage = @group_remit.build_process_coverage
-        @process_coverage.effectivity = @group_remit.effectivity_date
-        @process_coverage.expiry = @group_remit.expiry_date
-        @process_coverage.processor_id  = @group_remit.agreement.emp_agreements.find_by(agreement: @group_remit.agreement, active: true).employee_id
-        @process_coverage.approver_id  = @group_remit.agreement.emp_agreements.find_by(agreement: @group_remit.agreement, active: true).employee.emp_approver.approver_id
-        @process_coverage.set_default_attributes
+        create_process_coverage(@group_remit) # @process_coverage
         # raise 'errors'
         if @process_coverage.save
           format.html { redirect_to coop_agreement_group_remit_path(@group_remit.agreement, @group_remit), notice: "Group remit submitted" }
@@ -84,23 +80,18 @@ class GroupRemitsController < InheritedResources::Base
   def create
     @agreement = Agreement.find_by(id: params[:agreement_id])
 
-    if @agreement.is_term_insurance? && params[:group_remit][:terms].blank?
-      return redirect_to coop_agreement_path(@agreement), alert: 'Please select a term duration'
-    end
-
-    @group_remit = @agreement.group_remits.build(type: 'Remittance')
+    @group_remit = @agreement.group_remits.build(type: "Remittance")
     anniversary_date = set_anniversary(@agreement.anniversary_type, params[:anniversary_id])
-    terms = params[:group_remit][:terms] if params[:group_remit].present?
 
-    GroupRemit.process_group_remit(@group_remit, anniversary_date, params[:anniversary_id], terms)
+    GroupRemit.process_group_remit(@group_remit, anniversary_date, params[:anniversary_id])
 
     respond_to do |format|
       if @group_remit.save!
 
-        if params[:type] == 'BatchRemit'
-          batch_remit = @agreement.group_remits.build(type: 'BatchRemit')
+        if params[:type] == "BatchRemit"
+          batch_remit = @agreement.group_remits.build(type: "BatchRemit")
 
-          GroupRemit.process_group_remit(batch_remit, anniversary_date, params[:anniversary_id], terms)
+          GroupRemit.process_group_remit(batch_remit, anniversary_date, params[:anniversary_id])
 
           batch_remit.save!
 
@@ -140,74 +131,53 @@ class GroupRemitsController < InheritedResources::Base
     end
   end
 
-  #! moved to payments_controller
-  # def payment
-  #   agreement = @group_remit.agreement
-
-  #   if params[:file].nil?
-  #     return redirect_to coop_agreement_group_remit_path(agreement, @group_remit), alert: "Please attach proof of payment"
-  #   end
-
-  #   # anniv_type = agreement.anniversary_type
-  #   @group_remit.payments.build(receipt: params[:file])
-  #   @group_remit.status = :payment_verification
-
-  #   respond_to do |format|
-  #     if @group_remit.save!
-  #       # approved_batches = @group_remit.batches.approved
-  #       # approved_members = CoopMember.approved_members(approved_batches)
-  #       # current_batch_remit = BatchRemit.find(@group_remit.batch_remit_id)
-  #       # duplicate_batches = current_batch_remit.batch_group_remits.existing_members(approved_members)
-
-  #       # BatchRemit.process_batch_remit(current_batch_remit, duplicate_batches, approved_batches)
-
-  #       # current_batch_remit.save!
-  #       format.html { redirect_to coop_agreement_group_remit_path(agreement, @group_remit), notice: "Proof of payment sent" }
-  #     else
-  #       format.html { redirect_to coop_agreement_group_remit_path(agreement, @group_remit), alert: "Invalid proof of payment" }
-  #     end
-  #   end
-  # end
-
-
   private
 
-    def set_group_remit
-      @group_remit = GroupRemit.includes(:batches).find(params[:id]).decorate
-    end
+  def set_group_remit
+    @group_remit = GroupRemit.includes(:batches).find(params[:id]).decorate
+  end
 
-    def set_members
-      @members = Member.coop_member_details(@cooperative.coop_members)
-    end
+  def set_members
+    @members = Member.coop_member_details(@cooperative.coop_members)
+  end
 
-    def group_remit_params
-      params.require(:group_remit).permit(:name, :description, :agreement_id, :anniversary_id,
-        process_coverage_attributes: [:group_remit_id, :effectivity, :expiry], payments_attributes: [:id, :receipt, :_destroy] )
-    end
+  def group_remit_params
+    params.require(:group_remit).permit(:name, :description, :agreement_id, :anniversary_id,
+      process_coverage_attributes: [:group_remit_id, :effectivity, :expiry], payments_attributes: [:id, :receipt, :_destroy] )
+  end
 
-    def set_anniversary(anniversary_type, anniv_id)
-      if anniversary_type.downcase == "single" || anniversary_type.downcase == "multiple"
-        anniv_date = @agreement.anniversaries.find_by(id: anniv_id)
-        anniv_date.anniversary_date
-      elsif (anniversary_type.downcase == "12 months" or anniversary_type.nil?)
-        Date.today.prev_month.end_of_month.next_year
-      end
+  def set_anniversary(anniversary_type, anniv_id)
+    if anniversary_type.downcase == "single" || anniversary_type.downcase == "multiple"
+      anniv_date = @agreement.anniversaries.find_by(id: anniv_id)
+      anniv_date.anniversary_date
+    elsif (anniversary_type.downcase == "12 months" or anniversary_type.nil?)
+      Date.today.prev_month.end_of_month.next_year
     end
+  end
 
-    def check_userable_type
-      unless current_user.userable_type == 'CoopUser'
-        render file: "#{Rails.root}/public/404.html", status: :not_found
-      end
+  def check_userable_type
+    unless current_user.userable_type == "CoopUser"
+      render file: "#{Rails.root}/public/404.html", status: :not_found
     end
+  end
 
-    def load_data
-      @agreement = @group_remit.agreement.decorate
-      @anniversary = @group_remit.anniversary
-      load_concerns
-    end
+  def load_data
+    @agreement = @group_remit.agreement.decorate
+    @anniversary = @group_remit.anniversary
+    load_concerns
+  end
 
-    def load_concerns
-      containers # controller/concerns/container.rb
-      counters  # controller/concerns/counter.rb
-    end
+  def load_concerns
+    containers # controller/concerns/container.rb
+    counters  # controller/concerns/counter.rb
+  end
+
+  def create_process_coverage(group_remit)
+    @process_coverage = group_remit.build_process_coverage
+    @process_coverage.effectivity = group_remit.effectivity_date
+    @process_coverage.expiry = group_remit.expiry_date
+    @process_coverage.processor_id  = group_remit.agreement.emp_agreements.find_by(agreement: group_remit.agreement, active: true).employee_id
+    @process_coverage.approver_id  = group_remit.agreement.emp_agreements.find_by(agreement: group_remit.agreement, active: true).employee.emp_approver.approver_id
+    @process_coverage.set_default_attributes
+  end
 end

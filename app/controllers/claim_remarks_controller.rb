@@ -1,23 +1,23 @@
 class ClaimRemarksController < ApplicationController
   before_action :set_claim_remark, only: %i[ show edit update destroy ]
-  
+
 
   def index
-      if current_user.userable == "CoopUser"
-        @cooperative = current_user.userable.cooperative
-        @claim_remarks = ClaimRemark.joins(:process_claim).where(read: 0, process_claim: { cooperative_id: @cooperative.id }).where.not(user: current_user)
-      else
-        @claim_remarks = ClaimRemark.joins(:process_claim).where(read: 0).where.not(user: current_user)
-      end
+    if current_user.userable == "CoopUser"
+      @cooperative = current_user.userable.cooperative
+      @claim_remarks = ClaimRemark.joins(:process_claim).where(read: 0, process_claim: { cooperative_id: @cooperative.id }).where.not(user: current_user)
+    else
+      @claim_remarks = ClaimRemark.joins(:process_claim).where(read: 0).where.not(user: current_user)
+    end
 
-      @process_claims = ProcessClaim.where(cooperative: @cooperative)
+    @process_claims = ProcessClaim.where(cooperative: @cooperative)
   end
 
-  def new_status 
+  def new_status
     @process_claim = ProcessClaim.find(params[:v])
     @claim_remark = @process_claim.claim_remarks.build
     @status = params[:s]
-    
+
     if @status == "1"
       @claim_remark.status = :denied
     elsif @status == "2"
@@ -26,7 +26,7 @@ class ClaimRemarksController < ApplicationController
       @claim_remark.status = :reconsider
     end
     @claim_remark.remark = FFaker::HealthcareIpsum.paragraph
-    # @claim_remark.status = 
+    # @claim_remark.status =
     # raise "error"
   end
   def new
@@ -35,7 +35,7 @@ class ClaimRemarksController < ApplicationController
     @claim_remarks = ClaimRemark.where(process_claim: @process_claim, coop: 1)
     # raise "error"
     # @claim_remark.coop = params[:c]
-      set_dummy_param
+    set_dummy_param
   end
 
   def set_dummy_param
@@ -53,7 +53,7 @@ class ClaimRemarksController < ApplicationController
   def edit
   end
 
-  def create_status 
+  def create_status
     @process_claim = ProcessClaim.find(params[:v])
     @claim_remark = @process_claim.claim_remarks.build(claim_remark_params)
     @claim_remark.user = current_user
@@ -63,7 +63,7 @@ class ClaimRemarksController < ApplicationController
     # raise "error"
     respond_to do |format|
       if @claim_remark.save
-        if @claim_remark.denied? 
+        if @claim_remark.denied?
           pt = ProcessTrack.create(route_id: 9, user: current_user, trackable: @process_claim)
           @process_claim.update(status: :denied)
         elsif @claim_remark.pending?
@@ -83,7 +83,7 @@ class ClaimRemarksController < ApplicationController
     end
   end
 
-  def create 
+  def create
     @process_claim = ProcessClaim.find(params[:v])
     @claim_remark = @process_claim.claim_remarks.build(claim_remark_params)
     @claim_remark.user = current_user
@@ -102,7 +102,7 @@ class ClaimRemarksController < ApplicationController
     end
   end
 
-  def update 
+  def update
     respond_to do |format|
       if @claim_remark.update(claim_remark_params)
         format.html { redirect_back fallback_location: @process_claim, notice: "Claim remark was successfully updated." }
@@ -115,7 +115,7 @@ class ClaimRemarksController < ApplicationController
     end
   end
 
-  def read_message 
+  def read_message
     @claim_remark
     respond_to do |format|
       if @registration.update_attribute(:attend, @attend)
@@ -129,20 +129,20 @@ class ClaimRemarksController < ApplicationController
     @claim_remark.destroy
 
     respond_to do |format|
-      format.html { redirect_back fallback_location: @process_claim, notice: "Claim remark was successfully destroyed." } 
+      format.html { redirect_back fallback_location: @process_claim, notice: "Claim remark was successfully destroyed." }
       format.json { head :no_content }
     end
   end
 
   private
-    # Use callbacks to share common setup or constraints between actions.
-    def set_claim_remark
-      @claim_remark = ClaimRemark.find(params[:id])
-      @process_claim = @claim_remark.process_claim
-    end
+  # Use callbacks to share common setup or constraints between actions.
+  def set_claim_remark
+    @claim_remark = ClaimRemark.find(params[:id])
+    @process_claim = @claim_remark.process_claim
+  end
 
-    # Only allow a list of trusted parameters through.
-    def claim_remark_params
-      params.require(:claim_remark).permit(:process_claim_id, :user_id, :status, :remark, :coop, :read)
-    end
+  # Only allow a list of trusted parameters through.
+  def claim_remark_params
+    params.require(:claim_remark).permit(:process_claim_id, :user_id, :status, :remark, :coop, :read)
+  end
 end

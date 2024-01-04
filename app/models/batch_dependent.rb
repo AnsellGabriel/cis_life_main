@@ -24,10 +24,10 @@ class BatchDependent < ApplicationRecord
   # [relationship] is used to retrieve the value from the hash based on the given relationship parameter
   def insured_type(relationship)
     {
-      'SPOUSE' => 2,
-      'PARENT' => 3,
-      'CHILD' => 4,
-      'SIBLING' => 5
+      "SPOUSE" => 2,
+      "PARENT" => 3,
+      "CHILD" => 4,
+      "SIBLING" => 5
     }[relationship]
   end
 

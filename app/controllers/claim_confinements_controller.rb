@@ -5,7 +5,7 @@ class ClaimConfinementsController < ApplicationController
     @claim_confinement = @process_claim.claim_confinements.build
   end
 
-  def create 
+  def create
     @process_claim = ProcessClaim.find(params[:v])
     @claim_confinement = @process_claim.claim_confinements.build(claim_confinement_params)
     @claim_confinement.terms = @claim_confinement.days_confinement
@@ -48,7 +48,7 @@ class ClaimConfinementsController < ApplicationController
     end
   end
 
-  def destroy 
+  def destroy
     @claim_confinement.destroy
     compute_confinement
     respond_to do |format|
@@ -57,21 +57,21 @@ class ClaimConfinementsController < ApplicationController
     end
   end
 
-  def compute_confinement 
-      @claim_benefit = @process_claim.claim_benefits.where(benefit: @benefit)
-      @claim_benefit.update!(amount: @process_claim.claim_confinements.sum(:amount)) unless @claim_benefit.nil?
+  def compute_confinement
+    @claim_benefit = @process_claim.claim_benefits.where(benefit: @benefit)
+    @claim_benefit.update!(amount: @process_claim.claim_confinements.sum(:amount)) unless @claim_benefit.nil?
   end
 
   private
-    # Use callbacks to share common setup or constraints between actions.
-    def set_claim_confinement
-      @claim_confinement = ClaimConfinement.find(params[:id])
-      @process_claim = @claim_confinement.process_claim
-      @benefit = Benefit.find_by(name: "Hospital Income Benefit")
-    end
+  # Use callbacks to share common setup or constraints between actions.
+  def set_claim_confinement
+    @claim_confinement = ClaimConfinement.find(params[:id])
+    @process_claim = @claim_confinement.process_claim
+    @benefit = Benefit.find_by(name: "Hospital Income Benefit")
+  end
 
-    # Only allow a list of trusted parameters through.
-    def claim_confinement_params
-      params.require(:claim_confinement).permit(:process_claim_id, :date_admit, :date_discharge, :terms, :amount)
-    end
+  # Only allow a list of trusted parameters through.
+  def claim_confinement_params
+    params.require(:claim_confinement).permit(:process_claim_id, :date_admit, :date_discharge, :terms, :amount)
+  end
 end

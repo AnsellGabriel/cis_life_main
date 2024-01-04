@@ -5,10 +5,11 @@
   </div>
 
   <div class="modal-body">
+    <% label = @process_coverage.get_plan_acronym == "LPPI" ? "Input monthly rate" : "Set premium" %>
    
     <%= simple_form_for @process_coverage, url: update_batch_prem_process_coverage_path(), method: :post do |f| %>
       <%= f.input :batch, input_html: { value: @batch.id }, as: :hidden %>
-      <%= f.input :premium %>
+      <%= f.input :premium, label: label %>
       
       <%= f.button :submit, "Adjust", data: { turbo: false }, class: "btn btn-sm btn-success" %>
     <% end %>

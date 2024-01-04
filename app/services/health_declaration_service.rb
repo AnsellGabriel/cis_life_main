@@ -19,17 +19,17 @@ class HealthDeclarationService
           health_dec_answer = health_dec.batch_health_decs.build(answer: answer, healthdecable: @batch)
           health_dec_answer.save!
           sub_questions = q_data[:subquestion]
-    
+
           if sub_questions.present? && answer == "true"
             process_subquestion(@batch, sub_questions)
           end
 
         end
-    
+
         @batch.update!(valid_health_dec: true) if @pre_approved_health_dec
         ActiveRecord::Base.connection.commit_db_transaction
         return true
-        
+
       rescue ActiveRecord::Rollback => e
         return e.message
       end

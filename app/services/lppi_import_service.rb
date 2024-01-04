@@ -12,14 +12,14 @@ class LppiImportService
 
   def import
     initialize_counters_and_arrays
-    headers = extract_headers(@spreadsheet, 'LPPI')
+    headers = extract_headers(@spreadsheet, "LPPI")
 
     if headers.nil?
       return "Incorrect/Missing sheet name: LPPI"
     end
 
-    spreadsheet = parse_file('LPPI')
-    missing_headers = check_missing_headers('LPPI', @headers, headers)
+    spreadsheet = parse_file("LPPI")
+    missing_headers = check_missing_headers("LPPI", @headers, headers)
     return missing_headers if missing_headers
 
     total_members = spreadsheet.drop(1).count
@@ -30,7 +30,7 @@ class LppiImportService
       member = find_or_initialize_member(batch_hash)
 
       unless member.persisted?
-        create_denied_member(member, 'Unenrolled member.')
+        create_denied_member(member, "Unenrolled member.")
         progress_counter += 1
         update_progress(total_members, progress_counter)
         next

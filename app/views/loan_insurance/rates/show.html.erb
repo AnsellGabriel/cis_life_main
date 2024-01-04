@@ -1,8 +1,8 @@
 
-<%= render @loan_insurance_rate %>
+<%= render @rate %>
 
 <div>
-  <%= link_to "Edit", edit_loan_insurance_rate_path(@loan_insurance_rate), class: 'btn btn-primary' %> |
+  <%= link_to "Edit", edit_loan_insurance_rate_path(@rate), class: 'btn btn-primary' %> |
   <%= link_to "Back", loan_insurance_rates_path, class: 'btn btn-primary' %>
 
   <%= button_to "Delete", @loan_insurance_rate, method: :delete, class: 'btn btn-danger' %>

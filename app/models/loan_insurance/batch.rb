@@ -6,17 +6,20 @@ class LoanInsurance::Batch < Batch
   validate :agreement_benefit, unless: :skip_validation # skip agreement_benefit validation
   validates_presence_of :date_release, :date_mature, :coop_member_id, :insurance_status, :loan_amount, :effectivity_date, :expiry_date
 
-  belongs_to :group_remit, class_name: 'LoanInsurance::GroupRemit', foreign_key: 'group_remit_id'
-  belongs_to :loan, class_name: 'LoanInsurance::Loan', foreign_key: 'loan_insurance_loan_id'
-  belongs_to :rate, class_name: 'LoanInsurance::Rate', foreign_key: 'loan_insurance_rate_id'
+  belongs_to :group_remit, class_name: "LoanInsurance::GroupRemit", foreign_key: "group_remit_id"
+  belongs_to :loan, class_name: "LoanInsurance::Loan", foreign_key: "loan_insurance_loan_id"
+  belongs_to :rate, class_name: "LoanInsurance::Rate", foreign_key: "loan_insurance_rate_id"
 
   # belongs_to :retention, class_name: 'LoanInsurance::Retention', foreign_key: 'loan_insurance_retention_id'
-  has_many :details, class_name: 'LoanInsurance::Detail'
+  has_many :details, class_name: "LoanInsurance::Detail"
   has_many :batch_health_decs, as: :healthdecable, dependent: :destroy
   # has_many :batch_remarks, source: :remarkable, source_type: "LoanInsurance::Batch", dependent: :destroy
   has_many :batch_remarks, as: :remarkable, dependent: :destroy
   has_many :reinsurance_batches
   has_many :reinsurances, through: :reinsurance_batches
+
+  has_many :reserve_batches, class_name: "Actuarial::ReserveBatch", as: :batchable, dependent: :destroy
+  has_many :reserves, through: :reserve_batches, class_name: "Actuarial::Reserve"
 
 
   def process_batch
@@ -81,6 +84,11 @@ class LoanInsurance::Batch < Batch
     joins(coop_member: :member).where(member: { id: member.id })
   end
 
+  def self.get_reserves(start_date=nil, end_date)
+    reserve_date = end_date.end_of_year
+    joins(coop_member: :member).where.not(insurance_status: :denied).where(created_loan_amount: 500.., expiry_date: reserve_date..)
+  end
+
 
   def check_md_reco
     self.batch_remarks.where(status: 2).count
@@ -89,6 +97,10 @@ class LoanInsurance::Batch < Batch
   def self.get_ri_batches(ri_period)
     where(effectivity_date: ri_period, loan_amount: 350000.., insurance_status: :approved)
     # where(effectivity_date: ri_period, loan_amount: 350000.., insurance_status: :approved)
+  end
+
+  def self.get_reserve_batches(date)
+    joins(coop_member: :member).where(expiry_date: date.., insurance_status: :approved)
   end
 
   def get_ri_date(ri)
@@ -140,8 +152,11 @@ class LoanInsurance::Batch < Batch
   end
 
   def find_loan_rate(agreement)
-    self.rate = agreement.loan_rates.where("min_age <= ? AND max_age >= ?", age, age).first
+    # self.rate = agreement.loan_rates.where("min_age <= ? AND max_age >= ?", age, age).first
+    self.rate = agreement.loan_rates.where("min_age <= ? AND max_age >= ?", age, age).where("? BETWEEN min_amount AND max_amount", loan_amount).first
   end
+
+
 
 
 

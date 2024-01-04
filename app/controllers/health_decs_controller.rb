@@ -47,13 +47,13 @@ class HealthDecsController < ApplicationController
   end
 
   private
-    # Use callbacks to share common setup or constraints between actions.
-    def set_health_dec
-      @health_dec = HealthDec.find(params[:id])
-    end
+  # Use callbacks to share common setup or constraints between actions.
+  def set_health_dec
+    @health_dec = HealthDec.find(params[:id])
+  end
 
-    # Only allow a list of trusted parameters through.
-    def health_dec_params
-      params.require(:health_dec).permit(:question, :active, :with_details, :valid_answer, :question_sort)
-    end
+  # Only allow a list of trusted parameters through.
+  def health_dec_params
+    params.require(:health_dec).permit(:question, :active, :with_details, :valid_answer, :question_sort)
+  end
 end

@@ -1,0 +1,13 @@
+<%= form_with url: path, method: :get do %>
+  <div class="form-group d-flex gap-1">
+    <div class="input-group">
+      <% case type %>
+      <% when :text %>
+        <%= text_field_tag param_name.to_sym, nil, class: 'form-control', placeholder: placeholder %>
+      <% when :number %>
+        <%= number_field_tag param_name.to_sym, nil, class: 'form-control', placeholder: placeholder %>
+      <% end %>
+    </div>
+    <%= submit_tag button_name, class: btn_css %>
+  </div>
+<% end %>

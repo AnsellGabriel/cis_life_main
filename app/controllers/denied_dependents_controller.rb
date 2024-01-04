@@ -1,19 +1,19 @@
 class DeniedDependentsController < ApplicationController
   include CsvGenerator
 
-	before_action :set_group_remit
+  before_action :set_group_remit
   before_action :set_denied_dependent, only: %i[ show edit update destroy ]
 
   # GET /denied_dependents
   def index
-		@denied_dependents = @group_remit.denied_dependents.order(created_at: :desc)
+    @denied_dependents = @group_remit.denied_dependents.order(created_at: :desc)
   end
 
   def download_csv
-		@denied_dependents = @group_remit.denied_dependents.order(:name)
+    @denied_dependents = @group_remit.denied_dependents.order(:name)
 
-		generate_csv(@denied_dependents, "#{@group_remit.agreement.moa_no}-denied_dependents")
-	end
+    generate_csv(@denied_dependents, "#{@group_remit.agreement.moa_no}-denied_dependents")
+  end
 
   # GET /denied_dependents/1
   def show
@@ -55,17 +55,17 @@ class DeniedDependentsController < ApplicationController
   end
 
   private
-    # Use callbacks to share common setup or constraints between actions.
-    def set_denied_dependent
-      @denied_dependent = DeniedDependent.find(params[:id])
-    end
+  # Use callbacks to share common setup or constraints between actions.
+  def set_denied_dependent
+    @denied_dependent = DeniedDependent.find(params[:id])
+  end
 
-    # Only allow a list of trusted parameters through.
-    def denied_dependent_params
-      params.require(:denied_dependent).permit(:name, :age, :reason, :group_remit_id)
-    end
+  # Only allow a list of trusted parameters through.
+  def denied_dependent_params
+    params.require(:denied_dependent).permit(:name, :age, :reason, :group_remit_id)
+  end
 
-    def set_group_remit
-      @group_remit = GroupRemit.find(params[:group_remit_id])
-    end
+  def set_group_remit
+    @group_remit = GroupRemit.find(params[:group_remit_id])
+  end
 end
