@@ -60,14 +60,12 @@
 
       </div>
 
-      
-
     <% elsif @group_remit.is_expired? && @group_remit.is_batch_remit? %>
       <%= button_to 'Renew', renewal_group_remit_path(@group_remit),
-          method: :get, 
-          class: small_btn('outline-warning'), 
-          data: {turbo_confirm: 'Renew group remit?' } 
-        %>
+        method: :get, 
+        class: small_btn('outline-warning'), 
+        data: {turbo_confirm: 'Renew group remit?' } 
+      %>
     <% elsif !@group_remit.is_for_renewal? && @group_remit.is_batch_remit? && @group_remit.is_none_anniversary? && @group_remit.effectivity_date == Date.today.beginning_of_month %>
       <%= button_to "Add Members", group_remits_path, 
         method: :post, 
@@ -141,7 +139,7 @@
             <%= content_tag :h6, ": #{@group_remit.terms} months", class: 'sm-secondary-text', style: "width: 150px"%>
           </div>
 
-          <% if @group_remit.paid? %>
+          <% if @group_remit.paid? or @group_remit.expired? %>
             <% if @group_remit.instance_of?(BatchRemit) %>
               <% @group_remit.paid_remittances.each do |remittance| %>
                 <div class="<%= flex_justify_align('center') %>">
