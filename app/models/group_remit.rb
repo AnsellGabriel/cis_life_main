@@ -55,7 +55,7 @@ class GroupRemit < ApplicationRecord
     # new_group_remit.effectivity_date = self.effectivity_date + 1.year
     new_group_remit.save!
 
-    agreement = new_group_remit.agreement
+    # agreement = new_group_remit.agreement
 
     removed_batches = [] # To store the batches that are removed from the renewal
 

@@ -59,4 +59,17 @@ class CoopMember < ApplicationRecord
   def loans
     LoanInsurance::Batch.where(coop_member_id: self).order(created_at: :desc)
   end
+
+  def with_coverages?
+    # Retrieve all batches of the coop_member
+    member_batches = self.batches
+
+    # Retrieve all group_remits associated with the member_batches
+    group_remits = GroupRemit.joins(:batches).where(batches: { id: member_batches })
+
+    # Filter the group_remits with a status of "paid"
+    paid_group_remits = group_remits.where(status: ["paid", "expired"]).distinct
+
+    paid_group_remits.present?
+  end
 end
