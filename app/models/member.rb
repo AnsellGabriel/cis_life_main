@@ -21,7 +21,8 @@ class Member < ApplicationRecord
 
   validates_presence_of :last_name, :first_name, :middle_name, :birth_date, :civil_status, :gender
   # validates :email, format: { with: URI::MailTo::EMAIL_REGEXP }
-
+  validates :email, uniqueness: true
+  validates :mobile_number, uniqueness: true
   # belongs_to :coop_branch
 
   has_many :coop_members, dependent: :destroy
@@ -142,6 +143,15 @@ class Member < ApplicationRecord
 
   def self.filter_by_name(last_name_filter, first_name_filter)
     where("last_name LIKE ? AND first_name LIKE ?", "%#{last_name_filter}%", "%#{first_name_filter}%")
+  end
+
+  # Ransack custom search
+  def self.ransackable_attributes(auth_object = nil)
+    ["email", "first_name", "last_name", "middle_name", "mobile_number"]
+  end
+
+  def self.ransackable_associations(auth_object = nil)
+    []
   end
 
 end
