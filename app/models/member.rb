@@ -21,8 +21,6 @@ class Member < ApplicationRecord
 
   validates_presence_of :last_name, :first_name, :middle_name, :birth_date, :civil_status, :gender
   # validates :email, format: { with: URI::MailTo::EMAIL_REGEXP }
-  validates :email, uniqueness: true
-  validates :mobile_number, uniqueness: true
   # belongs_to :coop_branch
 
   has_many :coop_members, dependent: :destroy

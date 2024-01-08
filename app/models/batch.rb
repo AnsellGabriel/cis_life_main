@@ -140,12 +140,10 @@ class Batch < ApplicationRecord
     case acronym
     when "GYRT", "GYRTF"
       batch.set_premium_and_service_fees(:principal, group_remit) # model/concerns/calculate.rb
+      batch.valid_health_dec = true
     when "GYRTBR", "GYRTFR"
       determine_premium(rank, batch, group_remit) # Determine premium based on rank and batch
-    when "PMFC"
-      batch.residency = (Date.today.year * 12 + Date.today.month) - (batch.coop_member.membership_date.year * 12 + batch.coop_member.membership_date.month)
-      batch.duration = duration
-      batch.set_premium_and_service_fees(:principal, group_remit, true) # model/concerns/calculate.rb
+      batch.valid_health_dec = true
     end
 
   end
