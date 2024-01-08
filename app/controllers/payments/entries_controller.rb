@@ -16,9 +16,10 @@ class Payments::EntriesController < ApplicationController
 
   def create
     @entry = @entries.new(entry_params)
-    @entry.payment_type = Treasury::CashierEntry.payment_enum_value(@payment.plan.acronym.downcase)
-
-    if @entry.save!
+    payment_type = @payment.plan.acronym.downcase.include?("gyrt") ? "gyrt" : @payment.plan.acronym.downcase
+    @entry.payment_type = Treasury::CashierEntry.payment_enum_value(payment_type)
+    binding.pry
+    if @entry.save
       redirect_to payment_entry_path(@payment, @entry), notice: "OR added"
     else
       render :new, status: :unprocessable_entity
