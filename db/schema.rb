@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_12_06_080247) do
+ActiveRecord::Schema[7.0].define(version: 2024_01_09_030344) do
   create_table "accounting_check_vouchers", charset: "utf8mb4", force: :cascade do |t|
     t.date "date_voucher"
     t.string "voucher"
@@ -1077,13 +1077,26 @@ ActiveRecord::Schema[7.0].define(version: 2023_12_06_080247) do
   end
 
   create_table "reinsurance_batches", charset: "utf8mb4", force: :cascade do |t|
-    t.bigint "reinsurance_id"
     t.bigint "batch_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.date "ri_date"
+    t.date "ri_effectivity"
+    t.date "ri_expiry"
+    t.integer "ri_terms"
+    t.bigint "reinsurance_member_id"
     t.index ["batch_id"], name: "index_reinsurance_batches_on_batch_id"
-    t.index ["reinsurance_id"], name: "index_reinsurance_batches_on_reinsurance_id"
+    t.index ["reinsurance_member_id"], name: "index_reinsurance_batches_on_reinsurance_member_id"
+  end
+
+  create_table "reinsurance_members", charset: "utf8mb4", force: :cascade do |t|
+    t.bigint "reinsurance_id"
+    t.bigint "member_id"
+    t.decimal "total_loan_amount", precision: 20, scale: 2
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["member_id"], name: "index_reinsurance_members_on_member_id"
+    t.index ["reinsurance_id"], name: "index_reinsurance_members_on_reinsurance_id"
   end
 
   create_table "reinsurances", charset: "utf8mb4", force: :cascade do |t|
@@ -1091,6 +1104,24 @@ ActiveRecord::Schema[7.0].define(version: 2023_12_06_080247) do
     t.date "date_to"
     t.decimal "ri_total_amount", precision: 10
     t.decimal "ri_total_prem", precision: 10
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  create_table "reinsurer_ri_batches", charset: "utf8mb4", force: :cascade do |t|
+    t.bigint "reinsurance_batch_id"
+    t.bigint "reinsurer_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["reinsurance_batch_id"], name: "index_reinsurer_ri_batches_on_reinsurance_batch_id"
+    t.index ["reinsurer_id"], name: "index_reinsurer_ri_batches_on_reinsurer_id"
+  end
+
+  create_table "reinsurers", charset: "utf8mb4", force: :cascade do |t|
+    t.string "name"
+    t.string "short_name"
+    t.string "address"
+    t.string "contact_no"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
   end

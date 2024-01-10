@@ -2,6 +2,9 @@
 require "sidekiq/web"
 
 Rails.application.routes.draw do
+  resources :reinsurance_members
+  resources :reinsurer_ri_batches
+  resources :reinsurers
   resources :claim_request_for_payments
   resources :claim_payments
   get "actuarial/index"

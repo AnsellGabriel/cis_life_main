@@ -2,7 +2,7 @@ class ApplicationController < ActionController::Base
   include Pagy::Backend
 
   add_flash_types :warning
-  before_action :set_cooperative, :set_authority_level, :set_current_date
+  before_action :set_cooperative, :set_authority_level, :set_current_date, :set_retention_limit
 
   def root
     case current_user.userable_type
@@ -54,6 +54,10 @@ class ApplicationController < ActionController::Base
 
   def set_current_date
     @current_date = Time.now
+  end
+
+  def set_retention_limit
+    @retention_limit = LoanInsurance::Retention.find_by(active: true).amount
   end
 
   # def set_retention_limit

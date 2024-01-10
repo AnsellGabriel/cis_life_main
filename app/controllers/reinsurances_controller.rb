@@ -26,25 +26,38 @@ class ReinsurancesController < ApplicationController
     @reinsurance = Reinsurance.new(reinsurance_params)
 
     # @batches = LoanInsurance::Batch.get_ri_batches(@reinsurance.date_from..@reinsurance.date_to)
-    @members = Member.get_ri
-    # raise 'errors'
-    @members.each do |member|
-      member.get_for_ri_sum(@reinsurance)
-    end
+    @members = Member.get_ri(@reinsurance.date_from, @reinsurance.date_to)
 
-    if @reinsurance.batches.empty?
+    if @members.empty?
       redirect_to reinsurances_path, alert: "No for reinsurance for that period."
     else
-
       if @reinsurance.save
-        @reinsurance.set_total_prem_and_amount
+        @reinsurance.add_members(@members, @retention_limit)
+        # @reinsurance.set_total_prem_and_amount
         # @reinsurance.set_batches_ri_date
         redirect_to @reinsurance, notice: "Reinsurance was successfully created."
       else
         render :new, status: :unprocessable_entity
       end
-
     end
+    # raise 'errors'
+    # @members.each do |member|
+    #   member.get_for_ri_sum(@reinsurance)
+    # end
+
+    # if @reinsurance.batches.empty?
+    #   redirect_to reinsurances_path, alert: "No for reinsurance for that period."
+    # else
+
+    #   if @reinsurance.save
+    #     @reinsurance.set_total_prem_and_amount
+    #     # @reinsurance.set_batches_ri_date
+    #     redirect_to @reinsurance, notice: "Reinsurance was successfully created."
+    #   else
+    #     render :new, status: :unprocessable_entity
+    #   end
+
+    # end
 
   end
 

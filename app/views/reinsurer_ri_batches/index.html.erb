@@ -1,0 +1,38 @@
+<%= content_tag :h1, "List of Reinsurer Ri Batches" %>
+
+
+<div class="text-end mb-3">
+  <%= link_to new_reinsurer_ri_batch_path, class: 'btn btn-primary' do %>
+    New Reinsurer Ri Batch
+  <% end %>
+</div>
+
+
+  <table class="table table-striped table-bordered table-hover">
+    <thead>
+      <tr>
+      <th>#</th>
+            <th>Reinsurance Batch</th>
+            <th>Reinsurer</th>
+            <th></th>
+        </tr>
+    </thead>
+
+    <tbody>
+      <% @reinsurer_ri_batches.each do |reinsurer_ri_batch| %>
+        <tr>
+
+        <th scope="row"><%= reinsurer_ri_batch.id %></th>
+        <td><%= reinsurer_ri_batch.reinsurance_batch %></td>
+        <td><%= reinsurer_ri_batch.reinsurer %></td>
+    
+          <td>
+            <%= link_to 'View', reinsurer_ri_batch, class: 'btn btn-secondary btn-sm' %>
+            <%= link_to 'Edit', edit_reinsurer_ri_batch_path(reinsurer_ri_batch), class: 'btn btn-secondary btn-sm' %>
+            <%= link_to "Delete", reinsurer_ri_batch, class: "btn btn-danger btn-sm", method: :delete, data: { "turbo-method": :delete, turbo_confirm: "Are you sure?" } %>
+          </td>
+
+        </tr>
+      <% end %>
+    </tbody>
+  </table>

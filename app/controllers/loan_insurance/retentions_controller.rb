@@ -42,7 +42,7 @@ class LoanInsurance::RetentionsController < ApplicationController
   # DELETE /loan_insurance/retentions/1
   def destroy
     @retention.destroy
-    redirect_to retentions_url, notice: "Retention was successfully destroyed.", status: :see_other
+    redirect_to loan_insurance_retentions_url, notice: "Retention was successfully destroyed.", status: :see_other
   end
 
   private
@@ -53,6 +53,6 @@ class LoanInsurance::RetentionsController < ApplicationController
 
   # Only allow a list of trusted parameters through.
   def retention_params
-    params.require(:retention).permit(:amount, :active, :date_activated, :date_deactivated)
+    params.require(:loan_insurance_retention).permit(:amount, :active, :date_activated, :date_deactivated)
   end
 end
