@@ -289,7 +289,7 @@ class GroupRemit < ApplicationRecord
 
   def batches_without_health_dec
     # batches.recent.where.not(id: self.batches.joins(:batch_health_decs).select(:id))
-    batches.recent.where.missing(:batch_health_decs)
+    batches.recent.where.missing(:batch_health_decs).where.not(loan_amount: 0..agreement.nel)
   end
 
   def all_batches_have_beneficiaries?

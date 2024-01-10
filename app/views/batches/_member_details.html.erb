@@ -2,9 +2,6 @@
 
 <div class="">
 	<%= content_tag :span, "#{member}", class: 'text-primary' %>
-	<% if batch.status == 'recent' && batch.batch_health_decs.blank? %>
-			<span class="text-danger" data-bs-toggle="tooltip" data-bs-placement="top" title="No health declaration" style="cursor: pointer;">!!!</span>
-	<% end %>
 	<div class="small">
 		<%= content_tag :span, batch.age, class: 'text-secondary' %>
 	  <%= content_tag :span, "(#{to_shortdate(member.birth_date)})", class: 'text-secondary' %>
