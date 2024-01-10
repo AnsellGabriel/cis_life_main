@@ -117,7 +117,7 @@
         <%= render 'claim_benefits/show_benefit' %>
       </div>
     </div>
-    <% if @process_claim.claim_request_for_payment.present? %>
+    <% if @process_claim.claim_request_for_payment.check_vouchers.present? %>
       <div class="card">
         <div class="card-body">
           <h4 class="text-primary">Claimable Checks</h4>
