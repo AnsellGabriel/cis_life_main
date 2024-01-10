@@ -1,0 +1,42 @@
+<%= content_tag :h1, "List of Reinsurers" %>
+
+
+<div class="text-end mb-3">
+  <%= link_to new_reinsurer_path, class: 'btn btn-primary' do %>
+    New Reinsurer
+  <% end %>
+</div>
+
+
+  <table class="table table-striped table-bordered table-hover">
+    <thead>
+      <tr>
+      <th>#</th>
+            <th>Name</th>
+            <th>Short Name</th>
+            <th>Address</th>
+            <th>Contact No</th>
+            <th></th>
+        </tr>
+    </thead>
+
+    <tbody>
+      <% @reinsurers.each do |reinsurer| %>
+        <tr>
+
+        <th scope="row"><%= reinsurer.id %></th>
+        <td><%= reinsurer.name %></td>
+        <td><%= reinsurer.short_name %></td>
+        <td><%= reinsurer.address %></td>
+        <td><%= reinsurer.contact_no %></td>
+    
+          <td>
+            <%= link_to 'View', reinsurer, class: 'btn btn-secondary btn-sm' %>
+            <%= link_to 'Edit', edit_reinsurer_path(reinsurer), class: 'btn btn-secondary btn-sm' %>
+            <%= link_to "Delete", reinsurer, class: "btn btn-danger btn-sm", method: :delete, data: { "turbo-method": :delete, turbo_confirm: "Are you sure?" } %>
+          </td>
+
+        </tr>
+      <% end %>
+    </tbody>
+  </table>

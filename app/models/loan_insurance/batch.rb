@@ -16,7 +16,8 @@ class LoanInsurance::Batch < Batch
   # has_many :batch_remarks, source: :remarkable, source_type: "LoanInsurance::Batch", dependent: :destroy
   has_many :batch_remarks, as: :remarkable, dependent: :destroy
   has_many :reinsurance_batches
-  has_many :reinsurances, through: :reinsurance_batches
+  has_many :reinsurance_members, through: :reinsurance_batches
+  has_many :reinsurer_ri_batches, through: :reinsurance_batches
 
   has_many :reserve_batches, class_name: "Actuarial::ReserveBatch", as: :batchable, dependent: :destroy
   has_many :reserves, through: :reserve_batches, class_name: "Actuarial::Reserve"
@@ -89,7 +90,6 @@ class LoanInsurance::Batch < Batch
     joins(coop_member: :member).where.not(insurance_status: :denied).where(created_loan_amount: 500.., expiry_date: reserve_date..)
   end
 
-
   def check_md_reco
     self.batch_remarks.where(status: 2).count
   end
@@ -105,6 +105,20 @@ class LoanInsurance::Batch < Batch
 
   def get_ri_date(ri)
     self.reinsurance_batches.find_by(reinsurance: ri, batch: self).ri_date
+  end
+
+  def get_ri_eff_exp(ri, type)
+    if type == "eff"
+      self.reinsurance_batches.joins(:reinsurance_member).find_by(reinsurance_member: { reinsurance: ri }, batch: self).ri_effectivity
+    elsif type == "exp"
+      self.reinsurance_batches.joins(:reinsurance_member).find_by(reinsurance_member: { reinsurance: ri }, batch: self).ri_expiry
+    elsif type == "terms"
+      self.reinsurance_batches.joins(:reinsurance_member).find_by(reinsurance_member: { reinsurance: ri }, batch: self).ri_terms
+    end
+  end
+
+  def get_ri_batch_id(ri)
+    self.reinsurance_batches.joins(:reinsurance_member).find_by(reinsurance_member: { reinsurance: ri }, batch: self).id
   end
 
   def batch_dependents

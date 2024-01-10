@@ -1,17 +1,17 @@
 
-<%= simple_form_for(@retention) do |f| %>
+<%= simple_form_for(@reinsurer) do |f| %>
   <%= f.error_notification %>
   <%= f.error_notification message: f.object.errors[:base].to_sentence if f.object.errors[:base].present? %>
 
   <div class="form-inputs mb-3">
-    <%= f.input :amount %>
-    <%= f.input :active %>
-    <%= f.input :date_activated %>
-    <%#= f.input :date_deactivated %>
+    <%= f.input :name %>
+    <%= f.input :short_name %>
+    <%= f.input :address %>
+    <%= f.input :contact_no %>
   </div>
 
   <div class="form-actions text-end">
-    <%= link_to "Back", loan_insurance_retentions_path, class: 'btn btn-secondary' %>
+    <%= link_to "Back", reinsurers_path, class: 'btn btn-secondary' %>
     <%= f.button :submit, class: 'btn-success' %>
   </div>
 <% end %>

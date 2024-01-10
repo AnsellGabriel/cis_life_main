@@ -1,0 +1,9 @@
+
+<%= render @reinsurer_ri_batch %>
+
+<div>
+  <%= link_to "Edit", edit_reinsurer_ri_batch_path(@reinsurer_ri_batch), class: 'btn btn-primary' %> |
+  <%= link_to "Back", reinsurer_ri_batches_path, class: 'btn btn-primary' %>
+
+  <%= button_to "Delete", @reinsurer_ri_batch, method: :delete, class: 'btn btn-danger' %>
+</div>

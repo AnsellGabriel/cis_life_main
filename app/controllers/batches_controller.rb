@@ -84,11 +84,15 @@ class BatchesController < ApplicationController
     @batches = @process_coverage.group_remit.batches
 
     @batches.each do |batch|
+            
       if batch.insurance_status == "for_review" || batch.insurance_status == "pending"
         # if (18..65).include?(batch.age)
         if (batch.agreement_benefit.min_age..batch.agreement_benefit.max_age).include?(batch.age)
-          batch.update_attribute(:insurance_status, "approved") if batch.valid_health_dec
-          @process_coverage.increment!(:approved_count)
+          if batch.valid_health_dec
+            # batch.update_attribute(:insurance_status, "approved") if batch.valid_health_dec
+            batch.update_attribute(:insurance_status, "approved") 
+            @process_coverage.increment!(:approved_count)
+          end
         end
       end
     end
