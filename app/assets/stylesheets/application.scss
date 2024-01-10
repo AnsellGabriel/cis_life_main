@@ -16,8 +16,25 @@
 
 @import "bootstrap";
 
+abbr[title="required"] {
+  display: none;
+}
+
+input::placeholder {
+  opacity: 0.7 !important;
+  font-size: 0.8rem;
+}
+
+.half-visible {
+  opacity: 0.8 !important;
+}
+
 .hidden {
   display: none !important;
+}
+
+.small option {
+  font-size: 0.8rem !important;
 }
 
 .alert {
@@ -258,4 +275,3 @@ ul.timeline > li:before {
 .pagination {
   margin-bottom: 0;
 }
-

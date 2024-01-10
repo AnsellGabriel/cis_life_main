@@ -9,6 +9,7 @@ class PaymentsController < ApplicationController
   def show
     @payment = Payment.find(params[:id])
     @entries = @payment.entries
+    @payment_type = @payment.plan.acronym.downcase.include?("gyrt") ? "GYRT" : @payment.plan.acronym
   end
 
   def create

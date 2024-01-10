@@ -15,19 +15,19 @@ class CoopUsersController < ApplicationController
   def show
   end
 
-  # GET /coop_users/new
-  def new
-    @coop_user = CoopUser.new(
-      last_name: FFaker::Name.last_name,
-      first_name: FFaker::Name.first_name,
-      middle_name: FFaker::Name.last_name,
-      mobile_number: FFaker::PhoneNumber,
-      designation: FFaker::String
-    )
+  # # GET /coop_users/new
+  # def new
+  #   @coop_user = CoopUser.new(
+  #     last_name: FFaker::Name.last_name,
+  #     first_name: FFaker::Name.first_name,
+  #     middle_name: FFaker::Name.last_name,
+  #     mobile_number: FFaker::PhoneNumber,
+  #     designation: FFaker::String
+  #   )
 
-    # new instance of the "User" class associated with the "Coop_user" instance.
-    @coop_user.build_user
-  end
+  #   # new instance of the "User" class associated with the "Coop_user" instance.
+  #   @coop_user.build_user
+  # end
 
   # GET /coop_users/1/edit
   def edit
@@ -35,13 +35,23 @@ class CoopUsersController < ApplicationController
 
   # POST /coop_users or /coop_users.json
   def create
+    @form = :coop
     @coop_user = CoopUser.new(coop_user_params)
+    @branches = @coop_user&.cooperative&.coop_branches
+
+    # initialize other forms for bootstrap tabs
+    # new agent
+    @agent = Agent.new
+    @agent.build_user
+    # new employee
+    @employee = Employee.new
+    @employee.build_user
 
     respond_to do |format|
       if @coop_user.save
         format.html { redirect_to unauthenticated_root_path, notice: "Account was successfully created. Please contact the administrator to activate your account." }
       else
-        format.html { render :new, status: :unprocessable_entity }
+        format.html { render 'devise/registrations/new', status: :unprocessable_entity }
       end
     end
   end

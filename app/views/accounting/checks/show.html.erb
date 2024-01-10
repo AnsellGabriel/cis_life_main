@@ -1,10 +1,3 @@
-<div class="<%= flex_justify_align('', 'center') %> gap-1 mb-1">
-  <%= link_to :back, class: 'btn btn-sm btn-secondary' do %>
-    <i class="bi bi-arrow-90deg-left"></i>
-  <% end %>
-
-</div>
-
 <%= render @check %>
 
 <div class="card">
@@ -24,7 +17,7 @@
 
     <% if current_user.is_accountant? %>
       <div class="tab-pane fade show active" id="ledger" role="tabpanel" aria-labelledby="ledger-tab">
-        <%= render 'payments/entries/ledger', ledgers: @ledgers, entry: @check %>
+        <%= render 'payments/entries/ledger', ledgers: @ledgers, entry: @check  %>
       </div>
     <% end %>
 
