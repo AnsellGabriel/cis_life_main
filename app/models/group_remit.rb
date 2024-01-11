@@ -289,7 +289,11 @@ class GroupRemit < ApplicationRecord
 
   def batches_without_health_dec
     # batches.recent.where.not(id: self.batches.joins(:batch_health_decs).select(:id))
-    batches.recent.where.missing(:batch_health_decs).where.not(loan_amount: 0..agreement.nel)
+    if self.agreement.plan.acronym.include?("LPPI")
+      batches.recent.where.missing(:batch_health_decs).where.not(loan_amount: 0..agreement.nel)
+    else
+      batches.recent.where.missing(:batch_health_decs)
+    end
   end
 
   def all_batches_have_beneficiaries?
@@ -304,8 +308,6 @@ class GroupRemit < ApplicationRecord
       self.terms = 12
       self.effectivity_date = Date.today.beginning_of_month
       self.expiry_date = anniversary_date
-    elsif plan == "PMFC"
-      self.effectivity_date = Date.today.beginning_of_month
     else
       terms = set_terms(anniversary_date)
       self.terms = terms <= 0 ? terms + 12 : terms
