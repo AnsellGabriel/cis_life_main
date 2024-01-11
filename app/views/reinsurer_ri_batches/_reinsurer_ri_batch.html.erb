@@ -1,0 +1,44 @@
+<div id="<%= dom_id reinsurer_ri_batch %>">
+  <p>
+    <strong>Reinsurance batch id:</strong>
+    <%= reinsurer_ri_batch.reinsurance_batch_id %>
+  </p>
+  <p>
+    <strong>Coverage Code:</strong>
+    <%= reinsurer_ri_batch.reinsurance_batch.batch.id %>
+  </p>
+  <p>
+    <strong>Name:</strong>
+    <%= reinsurer_ri_batch.reinsurance_batch.batch.coop_member %>
+  </p>
+  <p>
+    <strong>Cooperative:</strong>
+    <%= reinsurer_ri_batch.reinsurance_batch.batch.coop_member.cooperative %>
+  </p>
+  <p>
+    <strong>Loan Amount:</strong>
+    <%= reinsurer_ri_batch.reinsurance_batch.batch.loan_amount %>
+  </p>
+  <p>
+    <strong>Effectivity:</strong>
+    <%= reinsurer_ri_batch.reinsurance_batch.batch.effectivity_date %>
+  </p>
+  <p>
+    <strong>Expiry:</strong>
+    <%= reinsurer_ri_batch.reinsurance_batch.batch.expiry_date %>
+  </p>
+  <p>
+    <strong>Terms:</strong>
+    <%= reinsurer_ri_batch.reinsurance_batch.batch.terms %>
+  </p>
+  <p>
+    <strong>Premium:</strong>
+    <%= reinsurer_ri_batch.reinsurance_batch.batch.premium %>
+  </p>
+
+  <p>
+    <strong>Reinsurer:</strong>
+    <b><%= reinsurer_ri_batch.reinsurer.name %></b>(<%= reinsurer_ri_batch.reinsurer.short_name %>)
+  </p>
+
+</div>

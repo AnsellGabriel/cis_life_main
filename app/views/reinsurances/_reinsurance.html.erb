@@ -29,6 +29,7 @@
       <th>Terms</th>
       <th>Premium</th>
       <th>RI Date</th>
+      <th></th>
     </thead>
     <tbody>
       <% reinsurance.get_batches.each do |ri| %>
@@ -42,7 +43,19 @@
             <%= process_dates("Terms", ri.terms) %><br>
           </td>
           <td><%= to_currency(ri.premium_due) %></td>
-          <td><%= process_dates("RI Date", month_day_year(ri.get_ri_date(reinsurance.id))) %></td>
+          <td>
+            <%= process_dates("RI Eff", month_day_year(ri.get_ri_eff_exp(reinsurance.id, "eff"))) %> <br>
+            <%= process_dates("RI Exp", month_day_year(ri.get_ri_eff_exp(reinsurance.id, "exp"))) %> <br>
+            <%= process_dates("RI Terms", ri.get_ri_eff_exp(reinsurance.id, "terms")) %>
+          </td>
+          <td>
+            <% unless ri.reinsurance_batches.find_by(reinsurance: reinsurance).reinsurer_ri_batch %>
+              <%= link_to "Set", new_reinsurer_ri_batch_path(reinsurance_batch: ri.get_ri_batch_id(reinsurance)) %>
+            <% else %>
+              <%= link_to "View", ri.reinsurance_batches.find_by(reinsurance: reinsurance).reinsurer_ri_batch %>
+            <% end %>
+            
+          </td>
         </tr>
       <% end %>
     </tbody>

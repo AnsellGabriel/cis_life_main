@@ -65,34 +65,66 @@ class Member < ApplicationRecord
     "#{last_name.capitalize} #{suffix}, #{first_name.capitalize} #{middle_name.capitalize.chr}."
   end
 
-  def self.get_ri
-    where(for_reinsurance: true)
+  def self.get_ri(date_from, date_to)
+    # where(for_reinsurance: true)
+    joins(coop_members: :loan_batches)
+    .where(for_reinsurance: true)
+    .where("(loan_insurance_batches.effectivity_date <= ? and loan_insurance_batches.expiry_date >= ?) OR (loan_insurance_batches.effectivity_date <= ? and loan_insurance_batches.expiry_date >= ?)", date_from, date_from, date_to, date_to)
   end
 
-  def get_for_ri_sum(ri)
-    ri_start = ri.date_from
-    ri_end = ri.date_to
+  def get_for_ri_sum(ri, retention)
+    ri_start = ri.reinsurance.date_from
+    ri_end = ri.reinsurance.date_to
 
-    total = 0
-    self.coop_members.each do |cm|
-      # self.joins(:coop_member).each do |cm|
+    total_loan_amount = self.coop_members.joins(:loan_batches).where("(loan_insurance_batches.effectivity_date <= ? and loan_insurance_batches.expiry_date >= ?) OR (loan_insurance_batches.effectivity_date <= ? and loan_insurance_batches.expiry_date >= ?)", ri_start, ri_start, ri_end, ri_end).sum(:loan_amount)
 
-      # binding.pry
-
-      total += cm.loan_batches.where("(effectivity_date <= ? and expiry_date >= ?) OR (effectivity_date <= ? and expiry_date >= ?)", ri_start, ri_start, ri_end, ri_end).sum(:loan_amount)
-      if total >= 350000
-        cm.loan_batches.where("(effectivity_date <= ? and expiry_date >= ?) OR (effectivity_date <= ? and expiry_date >= ?)", ri_start, ri_start, ri_end, ri_end).each do |batch|
-          ri_date = batch.reinsurance_batches.find_by(batch: batch).nil? ? ri.date_from : batch.reinsurance_batches.find_by(batch: batch).ri_date
-
-          # binding.pry
+    if total_loan_amount >= retention
+      self.coop_members.each do |cm|
+        cm.loan_batches.where("(loan_insurance_batches.effectivity_date <= ? and loan_insurance_batches.expiry_date >= ?) OR (loan_insurance_batches.effectivity_date <= ? and loan_insurance_batches.expiry_date >= ?)", ri_start, ri_start, ri_end, ri_end).each do |batch|
+          ri_date = batch.reinsurance_batches.find_by(batch: batch).nil? ? ri.reinsurance.date_from : batch.reinsurance_batches.find_by(batch: batch).ri_date
 
           # ri.batches << batch
-          ri_batch = ReinsuranceBatch.find_or_initialize_by(reinsurance: ri, batch: batch)
+          ri_batch = ReinsuranceBatch.find_or_initialize_by(reinsurance_member: ri, batch: batch)
           ri_batch.ri_date = ri_date
+          if ri.reinsurance.date_from < ri_batch.batch.effectivity_date
+            ri_batch.ri_effectivity = ri_batch.batch.effectivity_date.beginning_of_month
+          else
+            ri_batch.ri_effectivity = ri_start
+          end
+          ri_batch.ri_expiry = ri_end
+          ri_batch.ri_terms = ((ri_batch.ri_expiry - ri_batch.ri_effectivity) / 30).to_i
           ri_batch.save!
+
         end
       end
     end
+
+    
+
+    # self.coop_members.each do |cm|
+            
+    #   # self.joins(:coop_member).each do |cm|
+    #   total = cm.loan_batches.where("(loan_insurance_batches.effectivity_date <= ? and loan_insurance_batches.expiry_date >= ?) OR (loan_insurance_batches.effectivity_date <= ? and loan_insurance_batches.expiry_date >= ?)", ri_start, ri_start, ri_end, ri_end).sum(:loan_amount)
+    #   # total += cm.loan_batches.where("(effectivity_date <= ? and expiry_date >= ?) OR (effectivity_date <= ? and expiry_date >= ?)", ri_start, ri_start, ri_end, ri_end).sum(:loan_amount)
+    #   if total >= retention  
+    #     cm.loan_batches.where("(effectivity_date <= ? and expiry_date >= ?) OR (effectivity_date <= ? and expiry_date >= ?)", ri_start, ri_start, ri_end, ri_end).each do |batch|
+    #     # cm.loan_batches.joins(:member).where("(effectivity_date <= ? and expiry_date >= ?) OR (effectivity_date <= ? and expiry_date >= ?)", ri_start, ri_start, ri_end, ri_end).where(member: self).each do |batch|
+    #       ri_date = batch.reinsurance_batches.find_by(batch: batch).nil? ? ri.reinsurance.date_from : batch.reinsurance_batches.find_by(batch: batch).ri_date
+
+    #       # ri.batches << batch
+    #       ri_batch = ReinsuranceBatch.find_or_initialize_by(reinsurance_member: ri, batch: batch)
+    #       ri_batch.ri_date = ri_date
+    #       if ri.reinsurance.date_from < ri_batch.batch.effectivity_date
+    #         ri_batch.ri_effectivity = ri_batch.batch.effectivity_date.beginning_of_month
+    #       else
+    #         ri_batch.ri_effectivity = ri_start
+    #       end
+    #       ri_batch.ri_expiry = ri_end
+    #       ri_batch.ri_terms = ((ri_batch.ri_expiry - ri_batch.ri_effectivity) / 30).to_i
+    #       ri_batch.save!
+    #     end
+    #   end
+    # end
 
   end
 
