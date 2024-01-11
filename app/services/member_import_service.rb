@@ -33,27 +33,27 @@ class MemberImportService
         last_name: row["Last Name"] == nil ? nil : row["Last Name"].strip,
         first_name: row["First Name"] == nil ? nil : row["First Name"].strip,
         middle_name: row["Middle Name"] == nil ? nil : row["Middle Name"].strip,
-        suffix: row["Suffix"] == nil ? nil : row["Suffix"].strip,
-        birth_place: row["Birth Place"],
         birth_date: row["Birthdate"],
         gender: row["Gender"],
-        address: row["Address"],
-        geo_region: row["Region"] == nil ? nil : GeoRegion.find_by(name: row["Region"].strip),
-        geo_province: row["Province"] == nil ? nil : GeoProvince.find_by(name: row["Province"].strip),
-        geo_municipality: row["Municipality"] == nil ? nil : GeoMunicipality.find_by(name: row["Municipality"].strip),
-        geo_barangay: row["Barangay"] == nil ? nil : GeoBarangay.find_by(name: row["Barangay"].strip),
-        sss_no: row["SSS #"],
-        tin_no: row["TIN #"],
-        mobile_number: row["Mobile #"],
-        email: row["Email"],
-        civil_status: row["Civil Status"],
-        height: row["Height (cm)"],
-        weight: row["Weight (kg)"],
-        occupation: row["Occupation"],
-        employer: row["Employer"],
-        work_address: row["Work Address"],
-        legal_spouse: row["Spouse"],
-        work_phone_number: row["Work Phone #"]
+        civil_status: row["Civil Status"]
+        # suffix: row["Suffix"] == nil ? nil : row["Suffix"].strip,
+        # birth_place: row["Birth Place"],
+        # address: row["Address"],
+        # geo_region: row["Region"] == nil ? nil : GeoRegion.find_by(name: row["Region"].strip),
+        # geo_province: row["Province"] == nil ? nil : GeoProvince.find_by(name: row["Province"].strip),
+        # geo_municipality: row["Municipality"] == nil ? nil : GeoMunicipality.find_by(name: row["Municipality"].strip),
+        # geo_barangay: row["Barangay"] == nil ? nil : GeoBarangay.find_by(name: row["Barangay"].strip),
+        # sss_no: row["SSS #"],
+        # tin_no: row["TIN #"],
+        # mobile_number: row["Mobile #"],
+        # email: row["Email"],
+        # height: row["Height (cm)"],
+        # weight: row["Weight (kg)"],
+        # occupation: row["Occupation"],
+        # employer: row["Employer"],
+        # work_address: row["Work Address"],
+        # legal_spouse: row["Spouse"],
+        # work_phone_number: row["Work Phone #"]
       }
 
       # Extract cooperative member data from CSV row
@@ -88,8 +88,10 @@ class MemberImportService
       else
         # If a member does not exist, create a new record
         new_member = Member.create(member_hash)
+
         begin
           new_coop_member = new_member.coop_members.create(coop_member_hash) if new_member.save!
+          created_members_counter += 1 if new_coop_member.save!
         rescue ActiveRecord::RecordInvalid => e
           create_denied_enrollee(row["First Name"], row["Middle Name"], row["Last Name"], e.message)
           denied_enrollees_counter += 1
@@ -98,18 +100,17 @@ class MemberImportService
           next
         end
 
-        created_members_counter += 1 if new_coop_member.save!
       end
 
       progress_counter += 1
       update_progress(total_members, progress_counter)
-      # byebug
     end
+
     counters = {
-        created_members_counter: created_members_counter,
-        updated_members_counter: updated_members_counter,
-        denied_enrollees_counter: denied_enrollees_counter
-      }
+      created_members_counter: created_members_counter,
+      updated_members_counter: updated_members_counter,
+      denied_enrollees_counter: denied_enrollees_counter
+    }
   end
 
     private

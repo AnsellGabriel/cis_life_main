@@ -1,82 +1,147 @@
 <%= simple_form_for(@coop_user) do |f| %>
-  <%= f.error_notification %>
-  <%= f.error_notification message: f.object.errors[:base].to_sentence if f.object.errors[:base].present? %>
-  <div class="form-inputs mb-3 d-flex flex-column justify-content-center align-items-center" >
+  <div class="" data-controller="password-strength">
     <%# fields for User model associated with Coop_user %>
     <% unless current_user %>
-      <div class="card col-md-11 ps-3 pe-3 pt-3 mb-3">
-        <div class="card-title">Login details:</div>
-        <%= f.fields_for :user do |u| %>
-          <div class="row">
-            <%= u.input :email,
-                      required: true,
-                      autofocus: true,
-                      input_html: { autocomplete: "email", placeholder: "Email" },
-                      label: false %>
-          </div>
-          <div class="row">
-            <div class="col-md-6">
-              <%= u.input :password,
-                        required: true,
-                        input_html: { autocomplete: "new-password", placeholder: "Password (min 6 characters)" },
-                        label: false %>
-            </div>
-            <div class="col-md-6">
-              <%= u.input :password_confirmation,
-                        required: true,
-                        input_html: { autocomplete: "new-password", placeholder: "Confirm password" },
-                        label: false %>
-            </div>
-          </div>
-          <%= u.hidden_field :userable_type, value: "Coop" %>
-          <%= u.hidden_field :userable_id, value: @coop_user.id %>
-        <% end %>
-      <% end %>
-    </div>
-    <div class="card col-md-11 ps-3 pe-3 pt-3 mb-3">
-      <div data-controller="coop">
-        <div class="row">
-          <%= f.association :cooperative, input_html: { id: "coop_id", data: { action: "change->coop#change", controller: "slim-select" }  } %>
+      <div class="row mb-3">
+        <div class="col-md-4">
+          <%= f.input :first_name, 
+              input_html: {style: 'font-size: 0.8rem;'},
+              wrapper: false,
+              label: false,
+              placeholder: 'First name',
+              error: '*Required'  %>
         </div>
-        <div class="row">
-          <div class="col-md-6">
-            <%= f.association :coop_branch, collection: [], input_html: { id: "branch_id", data: { coop_target: "branchSelect" } } %>
-          </div>
-          <div class="col-md-6">
-            <%= f.input :designation %>
-          </div>
+        <div class="col-md-4">
+          <%= f.input :middle_name, 
+              input_html: {style: 'font-size: 0.8rem;'},
+              wrapper: false,
+              label: false,
+              placeholder: 'Middle name',
+              error: '*Required' %>
+        </div>
+        <div class="col-md-4">
+          <%= f.input :last_name, 
+              input_html: {style: 'font-size: 0.8rem;'},
+              wrapper: false,
+              label: false,
+              placeholder: 'Last name',
+              error: '*Required' %>
         </div>
       </div>
-    </div>
-    <div class="card col-md-11 ps-3 pe-3 pt-3">
-      <div class="card-title">Name</div>
-      <div class="row">
-        <div class="col-md-4">
-          <%= f.input :first_name, input_html: {placeholder: "First name"}, label: false %>
-        </div>
-        <div class="col-md-4">
-          <%= f.input :middle_name, input_html: {placeholder: "Middle name"}, label: false %>
-        </div>
-        <div class="col-md-4">
-          <%= f.input :last_name, input_html: {placeholder: "Last name"}, label: false %>
-        </div>
-      </div>
-      <div class="row">
+      <div class="row mb-3">
         <div class="col-md-6">
           <%= f.input :birthdate, as: :string, input_html: {data: {
-            controller: "flatpickr",
-            flatpickr_max_date: Time.zone.now,
-            flatpickr_next_arrow: "Next",
-            flatpickr_prev_arrow: "Prev"}} %>
+              controller: "flatpickr",
+              flatpickr_max_date: Time.zone.now,
+              flatpickr_next_arrow: "Next",
+              flatpickr_prev_arrow: "Prev"},
+              style: 'font-size: 0.8rem;'},
+              wrapper: false,
+              label: false,
+              placeholder: 'Birthdate',
+              error: '*Required' %>
         </div>
         <div class="col-md-6">
-          <%= f.input :mobile_number %>
+          <%= f.input :mobile_number, 
+              input_html: {style: 'font-size: 0.8rem;'},
+              wrapper: false,
+              label: false,
+              placeholder: 'Mobile No.',
+              error: '*Required' %>
         </div>
       </div>
+      <%= f.fields_for :user do |u| %>
+        <div class="row mb-3">
+          <div class="col-md-12">
+            <%= u.input :email, 
+                wrapper: false,
+                label: false,
+                input_html: { autocomplete: "email", style: 'font-size: 0.8rem;'},
+                placeholder: 'Email' %>
+          </div>
+        </div>
+        <div class="row mb-3">
+          <div class="col-md-6">
+            <%= u.input :password, 
+                wrapper: false,
+                label: false,
+                error: '',
+                input_html: { 
+                  autocomplete: "password", 
+                  style: 'font-size: 0.8rem;', 
+                  class: 'mb-3',
+                  data: {
+                    action: "input->password-strength#change"
+                  }
+                },
+                placeholder: 'Password' %>
+            <ul class="small text-danger half-visible mb-0 ">
+              <li data-password-strength-target="min_char">min 8 characters</li>
+              <li data-password-strength-target="lowercase">at least one lowercase letter</li>
+              <li data-password-strength-target="uppercase">at least one uppercase letter</li>
+              <li data-password-strength-target="digit">at least one digit</li>
+              <li data-password-strength-target="special">at least one special character</li>
+            </ul>
+          </div>
+          <div class="col-md-6">
+            <%= u.input :password_confirmation, 
+                wrapper: false,
+                label: false,
+                error: 'Passwords do not match',
+                input_html: { autocomplete: "password", style: 'font-size: 0.8rem;' },
+                placeholder: 'Confirm password' %>
+          </div>
+        </div>
+        <%= u.hidden_field :userable_type, value: "Coop" %>
+        <%= u.hidden_field :userable_id, value: @coop_user.id %>
+      <% end %>
+      <hr>
+      <div data-controller='coop'>
+        <div class="row">
+          <%= f.association :cooperative, 
+              input_html: { 
+                id: "coop_id", 
+                data: { 
+                  action: "change->coop#change", 
+                  controller: "ts--select" 
+                }
+              }, 
+              label: false,
+              prompt: "Select a Cooperative",
+              error: '*Required' %>
+        </div>
+        <div class="row">
+          <div class="col-md-6">
+            <%= f.association :coop_branch, collection: @branches, 
+                input_html: { 
+                  id: "branch_id", 
+                  style: 'font-size: 0.8rem;',
+                  data: { 
+                    coop_target: "branchSelect"
+                  }
+                }, 
+                label: false,
+                prompt: "Select Branch",
+                wrapper_html: {style: 'margin-bottom: 0 !important;'},
+                error: '*Required' %>
+          </div>
+          <div class="col-md-6">
+            <%= f.input :designation, 
+                label: false,
+                input_html: {style: 'font-size: 0.8rem;'},
+                wrapper_html: {style: 'margin-bottom: 0 !important'},
+                placeholder: 'Designation'%>
+          </div>
+        </div>
+      </div>
+    <% end %>
+    <div class="form-actions d-flex justify-content-center gap-1 mt-5">
+      <%= f.button :submit, 'Sign Up', class: 'btn btn-sm btn-success', 
+        data: {
+          password_strength_target: 'btn'
+        }, 
+        disabled: true 
+      %>
     </div>
-  </div>
-  <div class="form-actions d-flex justify-content-center gap-1">
-    <%= f.button :submit, class: 'btn-success' %>
-    <%= link_to "Back", new_user_registration_path	, class: 'btn btn-secondary' %>
   </div>
 <% end %>

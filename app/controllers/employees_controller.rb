@@ -28,13 +28,23 @@ mobile_number: FFaker::PhoneNumber, designation: FFaker::String)
 
   # POST /employees or /employees.json
   def create
+    @form = :employee
     @employee = Employee.new(employee_params)
+
+    # initialize other forms
+    # new agent
+    @agent = Agent.new()
+    @agent.build_user
+
+    # new coop_user
+    @coop_user = CoopUser.new()
+    @coop_user.build_user
 
     respond_to do |format|
       if @employee.save
         format.html { redirect_to unauthenticated_root_path, notice: "Account created successfully. Please wait for the admin to approve your account." }
       else
-        format.html { render :new, status: :unprocessable_entity }
+        format.html { render 'devise/registrations/new', status: :unprocessable_entity }
       end
     end
   end

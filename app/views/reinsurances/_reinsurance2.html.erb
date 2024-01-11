@@ -1,0 +1,82 @@
+<p>
+  <strong>Date from:</strong>
+  <%= reinsurance.date_from %>
+</p>
+
+<p>
+  <strong>Date to:</strong>
+  <%= reinsurance.date_to %>
+</p>
+
+<p>
+  <strong>Ri total amount:</strong>
+  <%= to_currency(reinsurance.ri_total_amount) %>
+</p>
+
+<p>
+  <strong>Ri total prem:</strong>
+  <%= to_currency(reinsurance.ri_total_prem) %>
+</p>
+
+  <table class="table">
+    <thead>
+      <th>Name</th>
+    </thead>
+    <tbody>
+      <% reinsurance.get_members.each do |ri_member| %>
+        <tr>
+          <td>
+            <%= content_tag :h3, ri_member.member %> <br>
+            
+            <table class="table">
+              <thead>
+                <th>Cooperative</th>
+                <th>Loan Amount</th>
+                <th>Terms</th>
+                <th>Premium</th>
+                <th>RI Date</th>
+              </thead>
+              <tbody>
+                <% ri_member.reinsurance_batches.each do |ri_batch| %>
+                 <tr>
+                    <td><%= ri_batch.batch.coop_member.cooperative %></td>
+                    <td><%= to_currency(ri_batch.batch.loan_amount) %></td>
+                    <td>
+                      <%= process_dates("Eff", month_day_year(ri_batch.batch.effectivity_date)) %> <br>
+                      <%= process_dates("Exp", month_day_year(ri_batch.batch.expiry_date)) %> <br>
+                      <%= process_dates("Terms", ri_batch.batch.terms) %><br>
+                    </td>
+                    <td><%= to_currency(ri_batch.batch.premium_due) %></td>
+                    <td>
+                      <%= process_dates("RI Eff", month_day_year(ri_batch.batch.get_ri_eff_exp(reinsurance.id, "eff"))) %> <br>
+                      <%= process_dates("RI Exp", month_day_year(ri_batch.batch.get_ri_eff_exp(reinsurance.id, "exp"))) %> <br>
+                      <%= process_dates("RI Terms", ri_batch.batch.get_ri_eff_exp(reinsurance.id, "terms")) %>
+                    </td>
+                    <td>
+                      <% unless ri_batch.batch.reinsurance_batches.joins(:reinsurance_member).find_by(reinsurance_member: {reinsurance: reinsurance}).reinsurer_ri_batch %>
+                        <%= link_to "Set", new_reinsurer_ri_batch_path(reinsurance_batch: ri_batch.batch.get_ri_batch_id(reinsurance)) %>
+                      <% else %>
+                        <%= link_to "View", ri_batch.batch.reinsurance_batches.find_by(reinsurance: reinsurance).reinsurer_ri_batch %>
+                      <% end %>
+                      
+                    </td>
+                  </tr>
+                 
+                <% end %>
+                <tr>
+                  <td></td>
+                  <td> 
+                    Total Loan Amount: <%= to_currency(ri_member.sum_loan_amount) %>
+                  </td>
+                  <td colspan=4>
+                    Reinsurance Amount: <%= to_currency(ri_member.sum_loan_amount - @retention_limit) %>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+            <hr>
+          </td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>

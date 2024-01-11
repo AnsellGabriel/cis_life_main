@@ -1,0 +1,15 @@
+
+<%= simple_form_for(@reinsurer_ri_batch) do |f| %>
+  <%= f.error_notification %>
+  <%= f.error_notification message: f.object.errors[:base].to_sentence if f.object.errors[:base].present? %>
+
+  <div class="form-inputs mb-3">
+    <%= f.association :reinsurance_batch %>
+    <%= f.association :reinsurer %>
+  </div>
+
+  <div class="form-actions text-end">
+    <%= link_to "Back", reinsurer_ri_batches_path, class: 'btn btn-secondary' %>
+    <%= f.button :submit, class: 'btn-success' %>
+  </div>
+<% end %>

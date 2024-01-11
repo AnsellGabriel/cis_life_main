@@ -1,0 +1,9 @@
+
+<%= render @reinsurance_member %>
+
+<div>
+  <%= link_to "Edit", edit_reinsurance_member_path(@reinsurance_member), class: 'btn btn-primary' %> |
+  <%= link_to "Back", reinsurance_members_path, class: 'btn btn-primary' %>
+
+  <%= button_to "Delete", @reinsurance_member, method: :delete, class: 'btn btn-danger' %>
+</div>

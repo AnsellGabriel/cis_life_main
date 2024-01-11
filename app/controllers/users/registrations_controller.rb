@@ -6,28 +6,22 @@ class Users::RegistrationsController < Devise::RegistrationsController
 
   # GET /resource/sign_up
   def new
+    @form = :coop
 
-    # new instance of the "User" class associated with the "Agent" instance.
-    if Rails.env.development?
-      @agent = Agent.new(last_name: FFaker::Name.last_name, first_name: FFaker::Name.first_name, middle_name: FFaker::Name.last_name, mobile_number: FFaker::PhoneNumber)
-    else
-      @agent = Agent.new()
-    end
+    # initialize forms
+    # new agent
+    @agent = Agent.new()
     @agent.build_user
 
+    # new coop_user
     @coop_user = CoopUser.new()
-    # last_name: FFaker::Name.last_name, first_name: FFaker::Name.first_name, middle_name: FFaker::Name.last_name, mobile_number: FFaker::PhoneNumber, designation: FFaker::String
-    # new instance of the "User" class associated with the "Coop" instance.
     @coop_user.build_user
+    @branches = []
 
-    # new instance of the "User" class associated with the "Employee" instance.
-    if Rails.env.development?
-      @employee = Employee.new(last_name: FFaker::Name.last_name, first_name: FFaker::Name.first_name, middle_name: FFaker::Name.last_name, employee_number: FFaker::Number,
-mobile_number: FFaker::PhoneNumber, designation: FFaker::String)
-    else
-      @employee = Employee.new()
-    end
+    # new employee
+    @employee = Employee.new()
     @employee.build_user
+
   end
 
   # POST /resource

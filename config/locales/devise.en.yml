@@ -57,6 +57,7 @@ en:
       unlocked: "Your account has been unlocked successfully. Please sign in to continue."
   errors:
     messages:
+      too_short: 'min 8 characters'
       not_approved: 'Your account has not been approved by your administrator yet.'
       already_confirmed: "was already confirmed, please try signing in"
       confirmation_period_expired: "needs to be confirmed within %{period}, please request a new one"
@@ -66,3 +67,4 @@ en:
       not_saved:
         one: "1 error prohibited this %{resource} from being saved:"
         other: "%{count} errors prohibited this %{resource} from being saved:"
+
