@@ -48,6 +48,11 @@ class LoanInsurance::Batch < Batch
       end
     end
 
+    # requires no health declaration if loan amount is less than or equal to agreement's nel
+    if self.loan_amount <= agreement.nel
+      self.valid_health_dec = true
+    end
+
     if loan_rate.nil?
       :no_loan_rate
     else
