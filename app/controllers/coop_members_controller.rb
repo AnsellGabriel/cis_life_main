@@ -1,6 +1,6 @@
 class CoopMembersController < InheritedResources::Base
   before_action :authenticate_user!
-  before_action :check_userable_type
+  # before_action :check_userable_type
   before_action :set_coop_member, only: %i[show edit update destroy selected member_agreements show_insurance]
 
   def index
@@ -12,6 +12,12 @@ class CoopMembersController < InheritedResources::Base
     f_members = Member.coop_member_details(coop_members)
       .filter_by_name(params[:last_name_filter], params[:first_name_filter])
     @pagy, @filtered_members = pagy(f_members, items: 10)
+  end
+
+  def new_ca 
+    @cooperative = Cooperative.find(params[:s])
+    @member = Member.new
+    @member.
   end
 
   def new
