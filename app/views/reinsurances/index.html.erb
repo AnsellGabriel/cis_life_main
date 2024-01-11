@@ -13,12 +13,9 @@
       <tr>
 
       <th>#</th>
-        <th>Date From</th>
-        <th>Date To</th>
-        <th>Total Coverage</th>
-        <th>Total Premium</th>
-        <th>Count</th>
+        <th>Reinsurance Period</th>
         <th></th>
+        <th>Actions</th>
 
       </tr>
     </thead>
@@ -28,15 +25,22 @@
         <tr>
 
         <th scope="row"><%= reinsurance.id %></th>
-        <td><%= reinsurance.date_from %></td>
-        <td><%= reinsurance.date_to %></td>
-        <td><%= to_currency(reinsurance.ri_total_amount) %></td>
-        <td><%= to_currency(reinsurance.ri_total_prem) %></td>
-        <td><%= pluralize(reinsurance.count_batches, "Coverage") %></td>
+        <td>
+          <small>
+            <%= to_longdate(reinsurance.date_from) %> to <%= to_longdate(reinsurance.date_to) %>
+          </small>
+        </td>
+        <td>
+          <small>
+            Total Coverage: <b><%= to_currency(reinsurance.get_total_ri_amount(@retention_limit)) %></b> <br>
+            Total Premium: <b><%= to_currency(reinsurance.ri_total_prem).nil? ? to_currency(0) : to_currency(reinsurance.ri_total_prem) %></b> <br>
+            Coverage Count: <b><%= pluralize(reinsurance.count_batches, "Coverage") %></b>
+          </small>
+        </td>
     
           <td>
             <%= link_to 'View', reinsurance, class: 'btn btn-secondary btn-sm' %>
-            <%= link_to 'Edit', edit_reinsurance_path(reinsurance), class: 'btn btn-secondary btn-sm' %>
+            <%#= link_to 'Edit', edit_reinsurance_path(reinsurance), class: 'btn btn-secondary btn-sm' %>
             <%= link_to "Delete", reinsurance, class: "btn btn-danger btn-sm", method: :delete, data: { "turbo-method": :delete, turbo_confirm: "Are you sure?" } %>
           </td>
 
