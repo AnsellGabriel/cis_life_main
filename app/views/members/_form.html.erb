@@ -37,6 +37,15 @@
         <%= f.input :gender, collection: [['Male', 'MALE'], ['Female', 'FEMALE']] , error: '*Required', class: 'form-select mb-3', label_html: {class: 'text-secondary sm-secondary-text'} %>
       </div>
       <div class="col-3">
+        <%= f.input :height, label: "Height (cm)", label_html: {class: 'text-secondary sm-secondary-text'} %>
+      </div>
+      <div class="col-3">
+        <%= f.input :weight, label: "Weight (kg)", label_html: {class: 'text-secondary sm-secondary-text'}%>
+      </div>
+    </div>
+
+    <div class="row ps-3 pe-3">
+      <div class="col-3">
         <%= f.input :birth_date, as: :string, error: '*Required', input_html: {data: {
             controller: "flatpickr",
             flatpickr_max_date: Time.zone.now,
@@ -46,8 +55,17 @@
       <div class="col-6">
         <%= f.input :birth_place, label_html: {class: 'text-secondary sm-secondary-text'} %>
       </div>
-    
     </div>
+
+    <div class="row ps-3 pe-3">
+      <div class="col-3">
+        <%= f.input :civil_status, collection: [["Single", "SINGLE"], ["Married", "MARRIED"], ["Divorced", "DIVORCED"], ["Separated", "SEPARATED"], ["Widowed", "WIDOWED"]], error: '*Required', class: "form-select", label_html: {class: 'text-secondary sm-secondary-text'} %>
+      </div>
+      <div class="col-6">
+        <%= f.input :legal_spouse, label_html: {class: 'text-secondary sm-secondary-text'} %>
+      </div>
+    </div>
+
     <div class="row">
       <h6 class="text-primary mt-3"><i class="bi bi-telephone"></i> Contact</h6>
     </div>
@@ -98,21 +116,8 @@
       <div class="col-3">
         <%= f.input :tin_no, label: "TIN #", label_html: {class: 'text-secondary sm-secondary-text'} %>
       </div>
-      <div class="col-3">
-        <%= f.input :height, label: "Height (cm)", label_html: {class: 'text-secondary sm-secondary-text'} %>
-      </div>
-      <div class="col-3">
-        <%= f.input :weight, label: "Weight (kg)", label_html: {class: 'text-secondary sm-secondary-text'}%>
-      </div>
     </div>
-    <div class="row ps-3 pe-3">
-      <div class="col-3">
-        <%= f.input :civil_status, collection: [["Single", "SINGLE"], ["Married", "MARRIED"], ["Divorced", "DIVORCED"], ["Separated", "SEPARATED"], ["Widowed", "WIDOWED"]], error: '*Required', class: "form-select", label_html: {class: 'text-secondary sm-secondary-text'} %>
-      </div>
-      <div class="col-6">
-        <%= f.input :legal_spouse, label_html: {class: 'text-secondary sm-secondary-text'} %>
-      </div>
-    </div>
+
     
   </div>
 

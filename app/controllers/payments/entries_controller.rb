@@ -12,12 +12,15 @@ class Payments::EntriesController < ApplicationController
 
   def new
     @entry = @entries.new(or_no: Treasury::CashierEntry.last&.or_no.to_i + 1, or_date: Date.today)
+    @payment_type = @payment.plan.acronym.downcase.include?("gyrt") ? "GYRT" : @payment.plan.acronym
   end
 
   def create
     @entry = @entries.new(entry_params)
-    @entry.payment_type = Treasury::CashierEntry.payment_enum_value(@payment.plan.acronym.downcase)
+    @payment_type = @payment.plan.acronym.downcase.include?("gyrt") ? "GYRT" : @payment.plan.acronym
 
+    @entry.payment_type = Treasury::CashierEntry.payment_enum_value(@payment_type.downcase)
+    # binding.pry
     if @entry.save
       redirect_to payment_entry_path(@payment, @entry), notice: "OR added"
     else
