@@ -39,9 +39,11 @@
 
             <%= link_to '#', class: "nav-link position-relative" do  %>
               <i class="bi bi-bell-fill"></i>
-              <span class="position-absolute top-1 start-90 translate-middle badge rounded-pill bg-warning text-dark">
-                <%= @cooperative.notifications.unread.size < 100 ? @cooperative.notifications.unread.size : '99+'%>
-              </span>
+              <% unless @cooperative.notifications.unread.size == 0%>
+                <span class="position-absolute top-1 start-90 translate-middle badge rounded-pill bg-warning text-dark">
+                  <%= @cooperative.notifications.unread.size < 100 ? @cooperative.notifications.unread.size : '99+'%>
+                </span>
+              <% end %>
             <% end %>
 
           <% else %>

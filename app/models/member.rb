@@ -62,7 +62,7 @@ class Member < ApplicationRecord
   end
 
   def full_name
-    "#{last_name.capitalize} #{suffix}, #{first_name.capitalize} #{middle_name.capitalize.chr}."
+    "#{last_name.capitalize}, #{first_name.capitalize} #{middle_name.capitalize}"
   end
 
   def self.get_ri(date_from, date_to)
@@ -99,14 +99,14 @@ class Member < ApplicationRecord
       end
     end
 
-    
+
 
     # self.coop_members.each do |cm|
-            
+
     #   # self.joins(:coop_member).each do |cm|
     #   total = cm.loan_batches.where("(loan_insurance_batches.effectivity_date <= ? and loan_insurance_batches.expiry_date >= ?) OR (loan_insurance_batches.effectivity_date <= ? and loan_insurance_batches.expiry_date >= ?)", ri_start, ri_start, ri_end, ri_end).sum(:loan_amount)
     #   # total += cm.loan_batches.where("(effectivity_date <= ? and expiry_date >= ?) OR (effectivity_date <= ? and expiry_date >= ?)", ri_start, ri_start, ri_end, ri_end).sum(:loan_amount)
-    #   if total >= retention  
+    #   if total >= retention
     #     cm.loan_batches.where("(effectivity_date <= ? and expiry_date >= ?) OR (effectivity_date <= ? and expiry_date >= ?)", ri_start, ri_start, ri_end, ri_end).each do |batch|
     #     # cm.loan_batches.joins(:member).where("(effectivity_date <= ? and expiry_date >= ?) OR (effectivity_date <= ? and expiry_date >= ?)", ri_start, ri_start, ri_end, ri_end).where(member: self).each do |batch|
     #       ri_date = batch.reinsurance_batches.find_by(batch: batch).nil? ? ri.reinsurance.date_from : batch.reinsurance_batches.find_by(batch: batch).ri_date

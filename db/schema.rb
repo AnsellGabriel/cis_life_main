@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2024_01_11_024121) do
+ActiveRecord::Schema[7.0].define(version: 2024_01_16_011913) do
   create_table "accounting_vouchers", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.date "date_voucher"
     t.integer "voucher"
@@ -313,6 +313,11 @@ ActiveRecord::Schema[7.0].define(version: 2024_01_11_024121) do
     t.date "previous_effectivity_date"
     t.date "previous_expiry_date"
     t.boolean "for_md", default: false
+    t.string "first_name"
+    t.string "middle_name"
+    t.string "last_name"
+    t.string "civil_status"
+    t.date "birthdate"
     t.index ["agreement_benefit_id"], name: "index_batches_on_agreement_benefit_id"
     t.index ["coop_member_id"], name: "index_batches_on_coop_member_id"
   end

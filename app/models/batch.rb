@@ -55,6 +55,10 @@ class Batch < ApplicationRecord
 
   # alias_attribute :batches, :reserve_batches
 
+  def full_name
+    "#{self.last_name}, #{self.first_name} #{self.middle_name}"
+  end
+
   def update_valid_health_dec
     self.update_attribute(:valid_health_dec, true)
     self.save!
@@ -108,6 +112,11 @@ class Batch < ApplicationRecord
     previous_coverage = agreement.agreements_coop_members.find_by(coop_member_id: coop_member.id)
     batch.expiry_date = group_remit.expiry_date
     batch.effectivity_date = ["single", "multiple"].include?(agreement.anniversary_type.downcase) ? Date.today : group_remit.effectivity_date
+    batch.first_name = coop_member.member.first_name
+    batch.middle_name = coop_member.member.middle_name
+    batch.last_name = coop_member.member.last_name
+    batch.birthdate = coop_member.member.birth_date
+    batch.civil_status = coop_member.member.civil_status
     batch.age = batch.member_details.age(batch.effectivity_date)
 
     check_plan(agreement, batch, rank, duration, group_remit)
