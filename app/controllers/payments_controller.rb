@@ -20,17 +20,12 @@ class PaymentsController < ApplicationController
     @payment.amount = @group_remit.coop_net_premium
 
     respond_to do |format|
-      if @payment.save!
+      if @payment.save
         @group_remit.update(status: :payment_verification)
 
-        if @group_remit.type == "LoanInsurance::GroupRemit"
-          format.html { redirect_to loan_insurance_group_remit_path(@group_remit), notice: "Proof of payment uploaded" }
-        else
-          format.html { redirect_to coop_agreement_group_remit_path(@agreement, @group_remit), notice: "Proof of payment uploaded" }
-        end
-
+        route_path(format, :notice, "Proof of payment uploaded")
       else
-        format.html { redirect_to coop_agreement_group_remit_path(@agreement, @group_remit), alert: "Invalid proof of payment" }
+        route_path(format, :alert, "Invalid file. Allowed file types: jpg, jpeg, png")
       end
     end
   end
@@ -51,6 +46,14 @@ class PaymentsController < ApplicationController
     end
   end
 
-  # def create_or_update_coverage
+  def route_path(format, message_type, message)
+    flash[message_type] = message
+
+    if @group_remit.type == "LoanInsurance::GroupRemit"
+      format.html { redirect_to loan_insurance_group_remit_path(@group_remit)}
+    else
+      format.html { redirect_to coop_agreement_group_remit_path(@agreement, @group_remit)}
+    end
+  end
 
 end

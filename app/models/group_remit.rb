@@ -47,7 +47,8 @@ class GroupRemit < ApplicationRecord
     # new_group_remit.expiry_date = self.expiry_date + 1.year # Assuming the renewal duration is 1 year from the current date
     new_group_remit.status = :for_renewal
     new_group_remit.type = "Remittance"
-    new_group_remit.name = "#{GroupRemit.extract_from_substring(self.name, ('GYRT' or 'LPPI'))} RENEWAL"
+    # new_group_remit.name = "#{GroupRemit.extract_from_substring(self.name, ('GYRT' or 'LPPI'))} RENEWAL"
+    new_group_remit.name = "#{self.name} RENEWAL"
     new_group_remit.batch_remit_id = self.id
     self.status = :for_renewal
     self.set_terms_and_expiry_date(self.expiry_date + 1.year)
@@ -116,8 +117,9 @@ class GroupRemit < ApplicationRecord
   def self.process_group_remit(group_remit, anniversary_date, anniv_id)
     group_remit.set_terms_and_expiry_date(anniversary_date)
     agreement = group_remit.agreement
+    anniv_type = agreement.anniversary_type
 
-    if agreement.anniversary_type.downcase == "multiple" || agreement.anniversary_type.downcase == "single"
+    if anniv_type.downcase == "multiple" || anniv_type.downcase == "single"
       group_remit.anniversary_id = anniv_id
     end
 
@@ -126,11 +128,15 @@ class GroupRemit < ApplicationRecord
 
   def self.set_group_remit_names_and_terms(group_remit)
     agreement = group_remit.agreement
+    anniv_type = agreement.anniversary_type
 
-    if (agreement.anniversary_type.downcase == "12 months" or agreement.anniversary_type.nil?) && group_remit.instance_of?(BatchRemit)
-      group_remit.name = "#{extract_from_substring(agreement.moa_no, ('GYRT' or 'LPPI'))} #{group_remit.effectivity_date.strftime('%B').upcase} BATCH"
+    if (anniv_type.downcase == "12 months" or anniv_type.nil?) && group_remit.instance_of?(BatchRemit)
+      # group_remit.name = "#{extract_from_substring(agreement.moa_no, ('GYRT' or 'LPPI'))} #{group_remit.effectivity_date.strftime('%B').upcase} BATCH"
+      group_remit.name = "#{group_remit.effectivity_date.strftime('%B').upcase} BATCH"
     else
-      group_remit.name = "#{extract_from_substring(agreement.moa_no, ('GYRT' or 'LPPI'))} REMITTANCE #{agreement.group_remits.where(type: 'Remittance').size + 1}"
+      # group_remit.name = "#{extract_from_substring(agreement.moa_no, ('GYRT' or 'LPPI'))} REMITTANCE #{agreement.group_remits.where(type: 'Remittance').size + 1}"
+      group_remit.name = "REMITTANCE #{agreement.group_remits.where(type: 'Remittance').size + 1}"
+
     end
 
   end
@@ -289,7 +295,11 @@ class GroupRemit < ApplicationRecord
 
   def batches_without_health_dec
     # batches.recent.where.not(id: self.batches.joins(:batch_health_decs).select(:id))
-    batches.recent.where.missing(:batch_health_decs)
+    if self.agreement.plan.acronym.include?("LPPI")
+      batches.recent.where.missing(:batch_health_decs).where.not(loan_amount: 0..agreement.nel)
+    else
+      batches.recent.where.missing(:batch_health_decs)
+    end
   end
 
   def all_batches_have_beneficiaries?
@@ -304,8 +314,6 @@ class GroupRemit < ApplicationRecord
       self.terms = 12
       self.effectivity_date = Date.today.beginning_of_month
       self.expiry_date = anniversary_date
-    elsif plan == "PMFC"
-      self.effectivity_date = Date.today.beginning_of_month
     else
       terms = set_terms(anniversary_date)
       self.terms = terms <= 0 ? terms + 12 : terms

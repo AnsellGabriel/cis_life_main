@@ -35,7 +35,7 @@
             </div>       
             <% if agreement.plan.dependable? %>
               <div class="text-secondary d-flex justify-content-between">
-                <%= content_tag :span, "Unapprove Dependent Premiums", style: "font-size: .8rem" %>
+                <%= content_tag :span, "#{group_remit.pending? || group_remit.under_review? || group_remit.for_renewal?  ? 'For approval' : 'Denied'} Dependent Premiums", style: "font-size: .8rem" %>
                 <%= content_tag :span, "(#{to_curr(group_remit.denied_dependent_premiums)})", style: "font-size: .8rem; color: var(--bs-red)"%>
               </div>   
             <% end %>

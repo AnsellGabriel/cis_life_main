@@ -148,15 +148,19 @@ class ProcessCoverage < ApplicationRecord
   def get_batches
     self.group_remit.batches
   end
-  
+
   def get_or_number
-    self.group_remit.payments.first.nil? ? "-" : self.group_remit.payments.first.entries.first.or_no
+    # self.group_remit.payments.first.nil? ? "-" : self.group_remit.payments.first.entries.first.or_no
+    approved_payments = self.group_remit.payments.approved
+    approved_payments.first.nil? ? "-" : approved_payments.first.entries.first.or_no
   end
-  
+
   def get_or_date
-    self.group_remit.payments.first.nil? ? "-" : self.group_remit.payments.first.entries.first.or_date
+    # self.group_remit.payments.first.nil? ? "-" : self.group_remit.payments.first.entries.first.or_date
+    approved_payments = self.group_remit.payments.approved
+    approved_payments.first.nil? ? "-" : approved_payments.first.entries.first.or_date
   end
-  
+
 
   def get_principal_prem
     prem = self.group_remit.batches.where(insurance_status: "approved").sum(:premium)
