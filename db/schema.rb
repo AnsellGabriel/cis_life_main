@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2024_01_16_011913) do
+ActiveRecord::Schema[7.0].define(version: 2024_01_17_022008) do
   create_table "accounting_vouchers", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.date "date_voucher"
     t.integer "voucher"
@@ -328,6 +328,7 @@ ActiveRecord::Schema[7.0].define(version: 2024_01_16_011913) do
     t.string "description"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.integer "benefit_type"
   end
 
   create_table "causes", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
@@ -452,10 +453,6 @@ ActiveRecord::Schema[7.0].define(version: 2024_01_16_011913) do
 
   create_table "coop_branches", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.string "name"
-    t.string "region"
-    t.string "province"
-    t.string "municipality"
-    t.string "barangay"
     t.string "contact_details"
     t.bigint "cooperative_id", null: false
     t.datetime "created_at", null: false
@@ -514,12 +511,10 @@ ActiveRecord::Schema[7.0].define(version: 2024_01_16_011913) do
 
   create_table "cooperatives", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.string "name"
-    t.string "contact_details"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.text "description"
     t.string "registration_number"
-    t.integer "tin_number"
     t.string "cooperative_type"
     t.string "acronym"
     t.string "street"

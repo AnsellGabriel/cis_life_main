@@ -45,7 +45,8 @@ class ProcessClaim < ApplicationRecord
     denied_claim: 9, # denied
     reconsider_review: 10,
     pending_claim: 11,
-    claimable: 12
+    claimable: 12,
+    paid: 13 # paid
   }
 
 

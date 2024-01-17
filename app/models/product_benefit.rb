@@ -1,5 +1,5 @@
 class ProductBenefit < ApplicationRecord
-  validates_presence_of :coverage_amount, :premium, :benefit_id#, :agreement_benefit_id
+  validates_presence_of :coverage_amount, :benefit_id #, :agreement_benefit_id, :premium
 
   belongs_to :agreement_benefit
   belongs_to :benefit

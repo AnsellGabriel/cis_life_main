@@ -30,7 +30,7 @@
     <% if @claims == 'true' %>
       <%= link_to "Back", new_group_remit_batch_beneficiary_path(@group_remit, @batch, claims: true), class: 'btn btn-secondary', data: {turbo_frame: "modal"} %>
     <% else %>
-      <%= link_to "Back", new_group_remit_batch_beneficiary_path(@group_remit, @batch), class: 'btn btn-secondary', data: {turbo_frame: "modal"} %>
+      <%= link_to "Back", new_group_remit_batch_beneficiary_path(@group_remit, @batch), class: 'btn btn-secondary', data: {turbo_frame: "reg_form_modal"} %>
     <% end %>
     
     <%= f.button :submit, 'Enroll Beneficiary', class: 'btn-success' %>
