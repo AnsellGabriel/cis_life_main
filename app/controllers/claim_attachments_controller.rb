@@ -12,6 +12,12 @@ class ClaimAttachmentsController < ApplicationController
 
   def create
     @process_claim = ProcessClaim.find(params[:v])
+
+    # redirect if file is empty
+    if params[:claim_attachment][:doc].blank?
+      return redirect_to show_coop_process_claim_path(@process_claim.id) , alert: "No file uploaded."
+    end
+
     @claim_attachment = @process_claim.claim_attachments.build(claim_attachment_params)
     # @claim_benefit = ClaimBenefit.new(claim_benefit_params)
     respond_to do |format|

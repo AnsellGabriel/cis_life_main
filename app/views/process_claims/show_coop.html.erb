@@ -71,7 +71,7 @@
         </div>
       </div>
     <% end %>
-
+    <% console %>
     <% if @process_claim.file_claim? %>
       <div class="card">
       <div class="card-body">
@@ -87,15 +87,19 @@
               <% @claim_type_document.each do |doc| %>
               <tr>
                 <% @claim_attach = ClaimAttachment.find_by(process_claim_id: @process_claim, claim_type_document: doc) %>
-                <td><%= doc.document %> <%= content_tag :span, '<i class="bi bi-asterisk"></i>'.html_safe, class: "badge rounded-pill text-bg-warning" if doc.required %> <br>
-                <%= content_tag :small, @claim_attach.created_at, class: "text-muted" unless @claim_attach.nil? %></td>
+                <td><%= doc.document %> 
+                  <%= content_tag :span, '<i class="bi bi-asterisk"></i>'.html_safe, class: "badge rounded-pill text-bg-warning" if doc.required %> 
+                  <br>
+                  <%= content_tag :small, @claim_attach.created_at, class: "text-muted" unless @claim_attach.nil? %>
+                </td>
                 <td class="text-end">
-                <% unless @claim_attach.nil? %>
-                <%= link_to '<i class="bi bi-eye"></i>'.html_safe, rails_blob_url(@claim_attach.doc), target: :_blank, class: 'btn btn-outline-primary btn-sm' if @claim_attach.doc.attached?  %>
-                <%= link_to '<i class="bi bi-trash-fill"></i>'.html_safe, @claim_attach, class: "btn btn-danger btn-sm", method: :delete, data: { "turbo-method": :delete, turbo_confirm: "Are you sure?" } if @claim_attach.doc.attached? && current_user.userable_type == 'CoopUser' && @process_claim.file_claim? %>
-                <% else %>
-                <%= link_to '<i class="bi bi-upload"></i>'.html_safe, new_claim_attachment_path(p: @process_claim.id, d: doc.id), class: "btn btn-primary", data: { turbo_frame: "remote_modal" } if current_user.userable_type == 'CoopUser' && @process_claim.file_claim? %>
-                <% end %></td>
+                  <% unless @claim_attach.nil? %>
+                    <%= link_to '<i class="bi bi-eye"></i>'.html_safe, rails_blob_url(@claim_attach.doc), target: :_blank, class: 'btn btn-outline-primary btn-sm' if @claim_attach.doc.attached?  %>
+                    <%= link_to '<i class="bi bi-trash-fill"></i>'.html_safe, @claim_attach, class: "btn btn-danger btn-sm", method: :delete, data: { "turbo-method": :delete, turbo_confirm: "Are you sure?" } if @claim_attach.doc.attached? && current_user.userable_type == 'CoopUser' && @process_claim.file_claim? %>
+                  <% else %>
+                    <%= link_to '<i class="bi bi-upload"></i>'.html_safe, new_claim_attachment_path(p: @process_claim.id, d: doc.id), class: "btn btn-primary", data: { turbo_frame: "remote_modal" } if current_user.userable_type == 'CoopUser' && @process_claim.file_claim? %>
+                  <% end %>
+                </td>
               </tr>
               <% end %>
             </tbody>
