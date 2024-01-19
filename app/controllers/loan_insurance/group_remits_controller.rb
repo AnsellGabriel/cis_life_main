@@ -46,19 +46,20 @@ class LoanInsurance::GroupRemitsController < ApplicationController
     @batch = @group_remit.batches.build(premium: 0)
     @coop_members = @cooperative.coop_members
 
-    load_batchesx
+    load_batches
     paginate_batches
 
     @batch_with_health_dec = @group_remit.batches_without_health_dec
   end
 
   def new
-    @group_remit = @agreement.group_remits.new(type: "LoanInsurance::GroupRemit", name: "LPPI-#{@agreement.cooperative.acronym}-#{Date.today.day}#{Date.today.strftime("%B").upcase}#{Date.today.year}")
+    @group_remit = @agreement.group_remits.new(type: "LoanInsurance::GroupRemit", name: "#{Date.today.day}#{Date.today.strftime("%B").upcase}#{Date.today.year}")
   end
 
   def create
     @group_remit = @agreement.group_remits.new(group_remit_params)
-
+    @group_remit.type = "LoanInsurance::GroupRemit"
+    
     begin
       if @group_remit.save!
         redirect_to loan_insurance_group_remits_path, notice: "New batch created"
