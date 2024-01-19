@@ -9,6 +9,9 @@ class CooperativesController < ApplicationController
     else
       @cooperatives = Cooperative.all
     end
+
+    # use pagy
+    @pagy, @cooperatives = pagy(@cooperatives, items: 10, params: {active_tab: "cooperatives"})
   end
 
   # GET /cooperatives/1 or /cooperatives/1.json
