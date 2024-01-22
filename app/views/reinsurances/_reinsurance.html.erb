@@ -34,7 +34,7 @@
     <tbody>
       <% reinsurance.get_batches.each do |ri| %>
         <tr>
-          <td><%= ri.coop_member %></td>
+          <td><%= ri.coop_member %> (<%= ri %>)</td>
           <td><%= ri.coop_member.cooperative %></td>
           <td><%= to_currency(ri.loan_amount) %></td>
           <td>
