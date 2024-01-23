@@ -304,6 +304,7 @@ only: %i[ show edit update destroy approve_batch deny_batch pending_batch recons
         when "regular_new" then @batches_o.where(age: 18..65, status: 0)
         when "regular_ren" then @batches_o.where(age: 18..65, status: 1..2)
         when "overage" then @batches_o.where(age: 66..)
+        when "dependent" then @batches_o.joins(:batch_dependents).distinct
         when "reconsider" then @batches_o.where(status: :for_reconsideration)
           # when "health_decs" then @batches_o.joins(:batch_health_decs)
         when "health_decs" then @batches_o.joins(:batch_health_decs).where(batches: { valid_health_dec: false }).distinct
