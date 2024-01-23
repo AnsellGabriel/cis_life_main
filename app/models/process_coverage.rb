@@ -1,9 +1,16 @@
 class ProcessCoverage < ApplicationRecord
   attr_accessor :premium, :loan_amount
+
   belongs_to :group_remit
+
   belongs_to :agent, optional: true
+
   belongs_to :processor, class_name: "Employee"
   belongs_to :approver, class_name: "Employee"
+
+  belongs_to :who_processed, class_name: "Employee"
+  belongs_to :who_approved, class_name: "Employee"
+  
   has_many :process_remarks
 
   # audited
@@ -196,6 +203,10 @@ class ProcessCoverage < ApplicationRecord
 
   def self.for_vp_approvals(user)
     where(status: :for_vp_approval)
+  end
+
+  def check_approver
+    self.process_date == nil && self.evaluate_date != nil
   end
 
   # def set_batches_for_review
