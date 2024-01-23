@@ -110,6 +110,6 @@ class GroupRemitDecorator < Draper::Decorator
    end
 
   def complete_health_decs?
-    object.batches.where(status: :recent).where.missing(:batch_health_decs).empty?
+    object.batches.recent.where.missing(:batch_health_decs).where.not(loan_amount: 0..agreement.nel).empty?
    end
 end

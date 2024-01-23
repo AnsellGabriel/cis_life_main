@@ -53,13 +53,13 @@ class LoanInsurance::GroupRemitsController < ApplicationController
   end
 
   def new
-    @group_remit = @agreement.group_remits.new(type: "LoanInsurance::GroupRemit")
+    @group_remit = @agreement.group_remits.new(type: "LoanInsurance::GroupRemit", name: "#{Date.today.day}#{Date.today.strftime("%B").upcase}#{Date.today.year}")
   end
 
   def create
-    @group_remit = @agreement.group_remits.new(type: "LoanInsurance::GroupRemit")
-    @group_remit.name = "#{@agreement.cooperative.acronym}-LPPI-#{params[:loan_insurance_group_remit][:name]}"
-
+    @group_remit = @agreement.group_remits.new(group_remit_params)
+    @group_remit.type = "LoanInsurance::GroupRemit"
+    
     begin
       if @group_remit.save!
         redirect_to loan_insurance_group_remits_path, notice: "New batch created"
@@ -78,6 +78,11 @@ class LoanInsurance::GroupRemitsController < ApplicationController
   end
 
   private
+  # create a secure params
+  def group_remit_params
+    params.require(:loan_insurance_group_remit).permit(:name, :type)
+  end
+
   def set_agreement
     @agreement = @cooperative.agreements.lppi.decorate
   end

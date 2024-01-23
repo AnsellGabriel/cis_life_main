@@ -17,7 +17,9 @@
   <%= link_to coop_agreement_path(@agreement), class: small_btn('outline-secondary'), title: 'Back' do %>
     <i class="bi bi-arrow-left"></i>
   <% end %>
-  <%= content_tag :span, @group_remit.status.titleize, class: @group_remit.status_badge %>
+  <% unless @group_remit.is_batch_remit? %>
+    <%= content_tag :span, @group_remit.status.titleize, class: @group_remit.status_badge %>
+  <% end %>
   <%= content_tag :h3, class: 'mb-0 text-primary' do %>
       <%= @group_remit %>    
   <% end %>
@@ -114,7 +116,7 @@
 </div>
 
 <div class="<%= flex_justify_align('between', 'base') %> mb-3 gap-3">
-  <div class="d-flex flex-column " style="height: 260px; width: 100%">
+  <div class="d-flex flex-column " style="width: 100%">
 
       <div class="card mb-2">
         <div class="card-body text-secondary">
@@ -204,29 +206,33 @@
       </div>
     </div>
   </div>
-  <div class="card" style="height: 330px; width: 100%">
-    <div class="card-body <%= flex_justify_align('around', '', true) %> ">
+  <div class="card" style="height: 130px; width: 100%">
+    <div class="card-body <%= flex_justify_align('', '', true) %> gap-3">
       <div class="<%= flex_justify_align('center') %>">
         <%= content_tag :h6, "#{@agreement.plan.name}", class: 'text-primary' %>
       </div>
-      <%= content_tag :button, "Benefits & Coverages", 
-        class: small_btn('outline-primary'), 
-        data: {bs_toggle: "modal",
-          bs_target: "#benefitsModal"
-        }
-      %>
-      <%= content_tag :button, "Insured Count", 
-        class: small_btn('outline-primary'), 
-        data: {bs_toggle: "modal",
-          bs_target: "#insuredType"
-        }
-      %>
+      <div class="">
+        <%= content_tag :button, "Benefits & Coverages", 
+          class: small_btn('outline-primary'), 
+          data: {bs_toggle: "modal",
+            bs_target: "#benefitsModal"
+          }
+        %>
+        <%= content_tag :button, "Insured Count", 
+          class: small_btn('outline-primary'), 
+          data: {bs_toggle: "modal",
+            bs_target: "#insuredType"
+          }
+        %>
+      </div>
     </div>
-  </div> 
+  </div>
 
-  <%= turbo_frame_tag "computation" do %>
-    <%= render "group_remits/computation", group_remit: @group_remit, agreement: @agreement %>
-  <% end %>  
+  <% unless @group_remit.is_batch_remit? %>
+    <%= turbo_frame_tag "computation" do %>
+      <%= render "group_remits/computation", group_remit: @group_remit, agreement: @agreement %>
+    <% end %>  
+  <% end %>
 </div>
 
   <% if ['GYRTBR','GYRTFR'].include?(plan_acronym) %>

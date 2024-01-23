@@ -30,16 +30,17 @@ class ApplicationController < ActionController::Base
   private
 
   def set_cooperative
-    if current_user && current_user.userable_type == "CoopUser"
-      session[:c_id] ||= current_user.userable.cooperative_id
-      @cooperative ||= Cooperative.find_by(id: session[:c_id])
-    elsif params[:c_id]
-      session[:c_id] = params[:c_id]
-      @cooperative = Cooperative.find_by(id: session[:c_id])
-    else
-      @cooperative = Cooperative.find_by(id: session[:c_id])
+    if current_user
+      if current_user.userable_type == "CoopUser"
+        session[:c_id] ||= current_user.userable.cooperative_id
+        @cooperative ||= Cooperative.find_by(id: session[:c_id])
+      elsif params[:c_id]
+        session[:c_id] = params[:c_id]
+        @cooperative = Cooperative.find_by(id: session[:c_id])
+      else
+        @cooperative = Cooperative.find_by(id: session[:c_id])
+      end
     end
-
   end
 
   def set_authority_level

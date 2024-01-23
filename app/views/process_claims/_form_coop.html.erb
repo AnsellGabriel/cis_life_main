@@ -32,7 +32,9 @@
               dateformat: "m-d-Y\\Z",
               wrapper_html: {class: flex_justify_align('start', 'center')},
               label_html: {style: "width: 170px; margin: 0"} %>
-      <%= f.association :claim_type, collection: ClaimType.order(:name) %>
+      <% agreement_benefit = AgreementBenefit.find(params[:ab]) %>
+      <% benefit_names = agreement_benefit.product_benefits.joins(:benefit).pluck('LOWER(benefits.name)') %>
+      <%= f.association :claim_type, collection: ClaimType.where(name: benefit_names).order(:name) %>
     </div>
   </div>
   <%# </div> %>

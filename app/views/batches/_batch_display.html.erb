@@ -9,19 +9,19 @@
             <span class="mb-0 text-secondary">First name</span>
           </div>
           <div class="col-sm-2 text-primary">
-            <%= "#{batch_member.member.first_name.capitalize}" %>
+            <%= "#{batch.first_name}" %>
           </div>
           <div class="col-sm-2 text-secondary">
             <span class="mb-0">Middle name</span>
           </div>
           <div class="col-sm-2 text-primary">
-            <%= "#{batch_member.member.middle_name.capitalize}" %>
+            <%= "#{batch.middle_name}" %>
           </div>
           <div class="col-sm-2 text-secondary">
             <span class="mb-0">Last name</span>
           </div>
           <div class="col-sm-2 text-primary">
-            <%= "#{batch_member.member.last_name.capitalize}, #{batch_member.member.suffix}" %>
+            <%= "#{batch.last_name}" %> 
           </div>
         </div>
         <hr>
@@ -30,18 +30,27 @@
             <span class="mb-0 text-secondary">Civil Status</span>
           </div>
           <div class="col-sm-3">
-            <%= batch_member.member.civil_status.capitalize %>
+            <%= batch.civil_status %>
           </div>
-          <% if @agreement.plan.dependable? %>
+          <div class="col-sm-3">
+            <span class="mb-0 text-secondary">Age</span>
+          </div>
+          <div class="col-sm-3">
+            <%= batch.age %>
+          </div>
+        </div>
+        <hr>
+        <% if @agreement.plan.dependable? %>
+          <div class="row">
             <div class="col-sm-3">
               <span class="mb-0 text-secondary">Rank</span>
             </div>
             <div class="col-sm-3">
               <%= batch_presenter.capitalized_insured_type %>
             </div>
-          <% end %>
-        </div>
-        <hr>
+          </div>
+          <hr>
+        <% end %>
         <div class="row">
           <div class="col-sm">
             <span class="mb-0 text-secondary">Effectivity date</span>
