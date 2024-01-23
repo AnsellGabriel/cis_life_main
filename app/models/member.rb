@@ -93,7 +93,7 @@ class Member < ApplicationRecord
             ri_batch.ri_effectivity = ri_start
           end
           if ri_batch.batch.expiry_date < ri.reinsurance.date_to
-            ri_batch.ri_expiry = ri_end
+            ri_batch.ri_expiry = ri_batch.batch.expiry_date
           else
             ri_batch.ri_expiry = ri_end
           end
