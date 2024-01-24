@@ -1,3 +1,10 @@
-<h1>Editing group remit</h1>
-
-<%= render "edit_form", group_remit: @group_remit %>
+<%= turbo_frame_tag "modal" do %>
+  <div class="modal-header">
+    <%= content_tag :h5, 'OR Number', class: "modal-title text-center", id: "staticBackdropLabel" %>
+    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+  </div>
+  
+  <div class="modal-body">
+    <%= render "form" %>
+  </div>
+<% end %>

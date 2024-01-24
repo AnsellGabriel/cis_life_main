@@ -22,8 +22,10 @@ class CooperativesController < ApplicationController
     @agreements = @cooperative.agreements
 
     coop_members = @cooperative.coop_members
-    f_members = Member.coop_member_details(coop_members)
-      .filter_by_name(params[:last_name_filter], params[:first_name_filter])
+    @q = Member.coop_member_details(coop_members).ransack(params[:q])
+    f_members = @q.result(distinct: true).includes(:coop_members)
+    # f_members = Member.coop_member_details(coop_members)
+      # .filter_by_name(params[:last_name_filter], params[:first_name_filter])
 
     @pagy, @filtered_members = pagy(f_members, items: 10, params: {active_tab: "members"})
   end

@@ -44,7 +44,9 @@
         <th scope="row" class="small"><%= remittance.or_number.present? ? remittance.or_number : "-" %></th>
         <td class="text-secondary small"><%= remittance.name %></td>
         <td class="text-secondary small"><%= remittance.coop_net_premium %></td>
-        <td class="small" style="color: <%= remittance.decorate.status_color %>" ><%= remittance.decorate.status_text %></td>
+        <td class="small" style="color: <%= remittance.decorate.status_color %>" >    
+          <%= content_tag :span, remittance.status.titleize, class: remittance.decorate.status_badge %>
+        </td>
         <td class="text-secondary small text-center">
           <%= link_to coop_agreement_group_remit_path(@batch_remit.agreement, remittance),
             title: 'View',

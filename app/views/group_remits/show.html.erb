@@ -108,6 +108,9 @@
   <% end %>
   <%= content_tag :h3, class: 'mb-0 text-primary' do %>
       <%= @group_remit %>    
+      <% if @group_remit.or_number.present? %>
+        <%= content_tag :span, "(OR# #{@group_remit.or_number})", class: "text-dark small" %>
+      <% end %>
   <% end %>
 
   <div class="<%= flex_justify_align('between') %> mt-2" style="height: 100%; width: 460px;">

@@ -715,7 +715,7 @@ ActiveRecord::Schema[7.0].define(version: 2024_01_24_040423) do
     t.string "type"
     t.integer "batch_remit_id"
     t.date "date_submitted"
-    t.string "or_number"
+    t.integer "or_number"
     t.index ["agreement_id"], name: "index_group_remits_on_agreement_id"
     t.index ["anniversary_id"], name: "index_group_remits_on_anniversary_id"
   end

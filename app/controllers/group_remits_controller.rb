@@ -125,7 +125,7 @@ class GroupRemitsController < InheritedResources::Base
   def update
     respond_to do |format|
       if @group_remit.update(group_remit_params)
-        format.html { redirect_to @group_remit, notice: "Group remit was successfully updated." }
+        format.html { redirect_to @group_remit, notice: "OR # updated." }
       else
         format.html { render :edit, status: :unprocessable_entity }
       end
@@ -153,7 +153,7 @@ class GroupRemitsController < InheritedResources::Base
   end
 
   def group_remit_params
-    params.require(:group_remit).permit(:name, :description, :agreement_id, :anniversary_id,
+    params.require(:group_remit).permit(:or_number, :name, :description, :agreement_id, :anniversary_id,
       process_coverage_attributes: [:group_remit_id, :effectivity, :expiry], payments_attributes: [:id, :receipt, :_destroy] )
   end
 

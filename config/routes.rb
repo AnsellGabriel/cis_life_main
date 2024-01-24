@@ -125,6 +125,7 @@ Rails.application.routes.draw do
 
   resources :coop_agreements do
     resources :group_remits do
+      
       resources :remittances, only: [:index]
     end
   end
