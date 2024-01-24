@@ -138,20 +138,33 @@ status: :unprocessable_entity
   def approve_all
     @process_coverage = ProcessCoverage.find(params[:process_coverage])
     @batches = @process_coverage.get_batches
+    approved_count = 0
+    for_approved_count = 0
 
     @batches.each do |batch|
       if batch.insurance_status == "for_review" || batch.insurance_status == "pending"
+        for_approved_count += 1
         # if (18..65).include?(batch.age)
         # if (batch.agreement_benefit.min_age..batch.agreement_benefit.max_age).include?(batch.age)
         if batch.get_rate_age_range
-          batch.update_attribute(:insurance_status, "approved") if batch.valid_health_dec
+          if batch.valid_health_dec
+            batch.update_attribute(:insurance_status, "approved") if batch.valid_health_dec
+            approved_count += 1
+          end
           # @process_coverage.increment!(:approved_count)
 
         end
       end
     end
 
-    redirect_to process_coverage_path(@process_coverage), notice: "Batches have been approved!"
+    # redirect_to process_coverage_path(@process_coverage), notice: "Batches have been approved!"
+    if approved_count == for_approved_count
+      redirect_to process_coverage_path(@process_coverage), notice: "All batches have been approved!"
+    elsif approved_count < for_approved_count && approved_count > 0
+      redirect_to process_coverage_path(@process_coverage), notice: "#{approved_count} batch(es) have been approved!"
+    else
+      redirect_to process_coverage_path(@process_coverage), alert: "No batches have been approved!"
+    end
 
   end
 
