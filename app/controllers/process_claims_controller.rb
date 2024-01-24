@@ -41,7 +41,8 @@ class ProcessClaimsController < ApplicationController
   def show_coop
     @agreement_benefit = AgreementBenefit.where(agreement: @process_claim.agreement)
     @claim_type_document = ClaimTypeDocument.where(claim_type: @process_claim.claim_type)
-
+    @claim_type_document_ids = @process_claim.claim_attachments.pluck(:claim_type_document_id)
+    @required_documents = @claim_type_document.where.not(id: claim_type_document_ids)
   end
   # GET /process_claims/new
   def new

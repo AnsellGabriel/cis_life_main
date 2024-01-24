@@ -1,4 +1,9 @@
 <%#= turbo_frame_tag "modal-xl" do %>
+  <% unless @for_modal.present? %>
+    <%= link_to coop_members_path, data: { turbo: false }, class: 'btn btn-secondary btn-lg mb-1', title: "Back" do %>
+      <i class="bi bi-arrow-bar-left"></i>    
+    <% end %>
+  <% end %>
   <div class="card">
     <div class="card-header">
       <% if @for_modal.present? %>
@@ -104,9 +109,6 @@
           </table>
           <div class="card-footer">
         <% end %>
-          <% unless @for_modal.present? %>
-            <%= link_to "Back", :back, data: { turbo: false }, class: 'btn btn-secondary' %>
-          <% end %>
         </div>
       </div>
     </div>

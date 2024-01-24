@@ -4,6 +4,17 @@ class BatchPresenter
     @agreement = agreement
   end
 
+  def valid_dependents
+    case @batch.civil_status.downcase
+    when "married"
+      ["Spouse", "Child"]
+    when "single"
+      ["Parent", "Sibling"]
+    else
+      ["Parent", "Child", "Sibling"]
+    end
+  end
+
   def capitalized_insured_type
     # @batch.agreement_benefit
     #     .insured_type

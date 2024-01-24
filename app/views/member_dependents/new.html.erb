@@ -1,4 +1,5 @@
 <% member_presenter = MemberPresenter.new(@member)%>
+<% batch_presenter = BatchPresenter.new(@batch)%>
 
 <%= turbo_frame_tag "reg_form_modal" do %>
   <div class="modal-header">
@@ -9,7 +10,7 @@
   <div class="modal-body">
     <div class="<%= flex_justify_align('','',true) %> mb-2 small text-muted">
       <%= content_tag :span, "Civil Status: #{@member.civil_status}" %>
-      <%= content_tag :span, "Allowed dependents: #{member_presenter.valid_dependents.join(', ')}" %>
+      <%= content_tag :span, "Allowed dependents: #{batch_presenter.valid_dependents.join(', ')}" %>
     </div>
     <%= render "form", member_dependent: @member_dependent %>
   </div>

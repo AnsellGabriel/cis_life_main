@@ -4,7 +4,7 @@
 
   <div class="form-inputs <%= flex_justify_align('center', 'center') %> gap-2">
     <div class="d-flex gap-3 <%= flex_justify_align('center', 'center') %>">
-        <%= f.input :name, label: false, placeholder: 'Batch Name', wrapper_html: {style: 'margin-bottom: 0!important'} %>
+        <%= f.input :name, label: false, placeholder: 'Batch Name', wrapper_html: {style: 'margin-bottom: 0!important; min-width: 300px;'} %>
     </div>
     <%= f.button :submit, 'Confirm', class: "#{small_btn('primary')} mb-0", data: {turbo: false} %>
     <%= link_to 'Cancel', loan_insurance_group_remits_path, class: small_btn('danger') %>

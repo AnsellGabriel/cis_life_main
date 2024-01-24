@@ -86,14 +86,14 @@ class BatchesController < ApplicationController
     for_approved_count = 0
 
     @batches.each do |batch|
-            
+
       if batch.insurance_status == "for_review" || batch.insurance_status == "pending"
         for_approved_count += 1
         # if (18..65).include?(batch.age)
         if (batch.agreement_benefit.min_age..batch.agreement_benefit.max_age).include?(batch.age)
           if batch.valid_health_dec
             # batch.update_attribute(:insurance_status, "approved") if batch.valid_health_dec
-            batch.update_attribute(:insurance_status, "approved") 
+            batch.update_attribute(:insurance_status, "approved")
             @process_coverage.increment!(:approved_count)
             approved_count += 1
           end
@@ -301,5 +301,5 @@ class BatchesController < ApplicationController
     agreement.coop_members.delete(coop_member) if @batch.status == "recent"
     @batch.batch_group_remits.destroy_all
   end
-  
+
 end

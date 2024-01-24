@@ -17,7 +17,9 @@
     </div>
   <% end %>
 </div>
-
+<div class="">
+  <%== pagy_bootstrap_nav(@pagy) %>
+</div>
 <table class ="table table-striped">
   <table class="table table-striped table-bordered table-hover">
     <thead>
@@ -36,7 +38,7 @@
           <th scope="row"><%= cooperative.id %></th>
           <td><strong><%= cooperative.name %></strong> <small class="text-primary"><%= cooperative.acronym %></small> <br>
           <small> <%= cooperative.get_address %> </small> <br>
-          <small><%= cooperative.contact_details %> | <%= cooperative.email %></small></td>
+          <small><%= cooperative.contact_number %> | <%= cooperative.email %></small></td>
       
             <td>
               <%= link_to 'View', cooperative_path(cooperative, c_id: cooperative.id), class: 'btn btn-secondary btn-sm' %>
@@ -53,3 +55,4 @@
     </tbody>
   </table>
 </div>
+
