@@ -108,7 +108,7 @@ inline_format: true}
       move_down 10
   
       # font_size(10) { text "<b>#{@pro_cov.processor.signed_fullname}</b>", inline_format: true}
-      font_size(10) { text "<b>#{@pro_cov.who_processed.signed_fullname}</b>", inline_format: true}
+      font_size(10) { text "<b>#{@pro_cov.who_processed.signed_fullname}</b> (#{@view.to_shortdate(@pro_cov.process_date)})", inline_format: true}
       
       move_down 5
   
@@ -123,7 +123,7 @@ inline_format: true}
     move_down 10
 
     # font_size(10) { text "<b>#{@pro_cov.processor.emp_approver.approver.signed_fullname}</b>", inline_format: true}
-    font_size(10) { text "<b>#{@pro_cov.who_approved.signed_fullname}</b>", inline_format: true}
+    font_size(10) { text "<b>#{@pro_cov.who_approved.signed_fullname}</b> (#{@view.to_shortdate(@pro_cov.evaluate_date)})", inline_format: true}
 
     move_down 5
     
