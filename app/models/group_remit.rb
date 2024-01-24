@@ -7,6 +7,7 @@ class GroupRemit < ApplicationRecord
 
   scope :batch_remits, -> { where(:type => "BatchRemit")}
   scope :loan_remits, -> { where(:type => "LoanInsurance::GroupRemit")}
+  scope :remittances, -> { where(:type => "Remittance")}
 
   belongs_to :agreement
   belongs_to :anniversary, optional: true

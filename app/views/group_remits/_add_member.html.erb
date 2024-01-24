@@ -1,7 +1,7 @@
 <div>
-    <%= link_to 'Add Member', new_group_remit_batch_path(@group_remit), data: {turbo_frame: "batch_form"}, class: small_btn('outline-primary') %>
+    <%= link_to 'Add Member', new_group_remit_batch_path(@group_remit), data: {turbo_frame: "batch_form"}, class: small_btn('success') %>
     <%= content_tag :button, "Batch Import", 
-        class: small_btn('outline-primary'),
+        class: small_btn('success'),
         data: {bs_toggle: "modal",
           bs_target: "#batchEnrollment"
         }%>  

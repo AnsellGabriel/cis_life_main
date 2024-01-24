@@ -70,15 +70,26 @@ class GroupRemitsController < InheritedResources::Base
 
   def new
     @agreement = Agreement.find_by(id: params[:agreement_id])
-    @group_remit = @agreement.group_remits.build(
-      name: FFaker::Company.name,
-      description: FFaker::Lorem.paragraph,
-      agreement_id: 1,
-      anniversary_id: 1)
+    # @group_remit = @agreement.group_remits.build(
+    #   name: FFaker::Company.name,
+    #   description: FFaker::Lorem.paragraph,
+    #   agreement_id: 1,
+    #   anniversary_id: 1)
+    @group_remit = @agreement.group_remits.build
   end
 
   def create
     @agreement = Agreement.find_by(id: params[:agreement_id])
+
+    if params[:anniversary_id].present?
+      pending_remittance = @agreement.group_remits.pending.remittances.where(anniversary_id: params[:anniversary_id]).last
+    else
+      pending_remittance = @agreement.group_remits.pending.remittances.last
+    end
+
+    if pending_remittance.present?
+      return redirect_to coop_agreement_group_remit_path(@agreement, pending_remittance), alert: "Please complete the pending remittance first."
+    end
 
     @group_remit = @agreement.group_remits.build(type: "Remittance")
     anniversary_date = set_anniversary(@agreement.anniversary_type, params[:anniversary_id])
