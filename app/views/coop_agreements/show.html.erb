@@ -5,21 +5,50 @@
   <% if @agreement.anniversary_type.downcase == '12 months' or @agreement.anniversary_type.nil? %>
     <% current_batch_remit = @agreement.group_remits.find_by(type: 'BatchRemit', effectivity_date: Date.today.beginning_of_month)%>
 
-      <%= button_to "Enroll Members", group_remits_path, 
-        method: :post, 
-        params: { 
-          agreement_id: @agreement.id, 
-          anniversary_id: nil,
-          anniv_type: 'none',
-          type: 'BatchRemit'
-        }, 
-        class: small_btn('outline-primary'), 
-        data: { turbo: false } 
-      %>
+      <% if current_batch_remit.present? %>
+        <%= button_to "Enroll Members", group_remits_path, 
+          method: :post, 
+          params: { 
+            agreement_id: @agreement.id, 
+            anniversary_id: nil,
+            anniv_type: 'none',
+            type: 'Remittance',
+            batch_remit_id: current_batch_remit.id
+          }, 
+          class: small_btn('outline-primary'), 
+          data: { turbo: false } 
+        %>
+      <% else %>
+        <%= button_to "Enroll Members", group_remits_path, 
+          method: :post, 
+          params: { 
+            agreement_id: @agreement.id, 
+            anniversary_id: nil,
+            anniv_type: 'none',
+            type: 'BatchRemit'
+          }, 
+          class: small_btn('outline-primary'), 
+          data: { turbo: false } 
+        %>
+      <% end %>
 
   <% elsif @agreement.anniversary_type.downcase == 'single' %>
     <% current_batch_remit = @agreement.group_remits.find_by(type: 'BatchRemit')%>
 
+    <% if current_batch_remit.present? %>
+      <%= button_to "Enroll Members", group_remits_path, 
+        method: :post, 
+        params: { 
+          agreement_id: @agreement.id, 
+          anniversary_id: @agreement.anniversaries[0].id,
+          anniv_type: 'single',
+          type: 'Remittance',
+          batch_remit_id: current_batch_remit.id
+        }, 
+        class: small_btn('outline-primary'), 
+        data: { turbo: false } 
+      %>
+    <% else %>
       <%= button_to "Enroll Members", group_remits_path, 
         method: :post, 
         params: { 
@@ -31,6 +60,7 @@
         class: small_btn('outline-primary'), 
         data: { turbo: false } 
       %>
+    <% end %>
   <% end %>
 </div>
 

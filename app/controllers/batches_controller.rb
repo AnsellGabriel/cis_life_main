@@ -144,8 +144,7 @@ class BatchesController < ApplicationController
     Batch.process_batch(
       @batch,
       @group_remit,
-      batch_params[:rank],
-      @group_remit.terms
+      batch_params[:rank]
     )
 
     begin
@@ -155,9 +154,9 @@ class BatchesController < ApplicationController
         # return redirect_to group_remit_path(@group_remit), alert: "Member age must be between #{@batch.agreement_benefit.min_age.to_i} and #{@batch.agreement_benefit.max_age.to_i} years old."
         @batch.insurance_status = :denied
         if member.age(@group_remit.effectivity_date) > @batch.agreement_benefit.max_age
-          @batch.batch_remarks.build(remark: "Member age is over the maximum age limit of the plan.", status: :denied, user_type: "CoopUser", user_id: current_user.userable.id)
+          @batch.batch_remarks.build(remark: "Member age is over the maximum age limit of the plan.", status: :denied, user_type: current_user.userable_type, user_id: current_user.userable.id)
         else
-          @batch.batch_remarks.build(remark: "Member age is below the minimum age limit of the plan.", status: :denied, user_type: "CoopUser", user_id: current_user.userable.id)
+          @batch.batch_remarks.build(remark: "Member age is below the minimum age limit of the plan.", status: :denied, user_type: current_user.userable_type, user_id: current_user.userable.id)
         end
       end
 
@@ -189,14 +188,15 @@ class BatchesController < ApplicationController
   end
 
   def edit
-    @coop_members = @cooperative.coop_member_details
+    # @coop_members = @cooperative.coop_member_details
+
   end
 
   def update
     respond_to do |format|
       if @batch.update(batch_params)
         format.html {
-          redirect_to group_remit_path(@group_remit), notice: "Batch updated"
+          redirect_to coop_agreement_group_remit_path(@agreement, @group_remit), notice: "Premium updated"
         }
       else
         format.html { render :edit, status: :unprocessable_entity }

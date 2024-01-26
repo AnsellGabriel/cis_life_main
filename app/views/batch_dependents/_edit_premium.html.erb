@@ -1,0 +1,10 @@
+
+<%= simple_form_for(@batch_dependent, url: group_remit_batch_dependent_path(@group_remit, @batch, @batch_dependent)) do |f| %>
+  <%= f.error_notification %>
+  <%= f.error_notification message: f.object.errors[:base].to_sentence if f.object.errors[:base].present? %>
+
+  <div class="form-inputs d-flex align-items-center gap-1">
+    <%= f.input :premium, label: false, placeholder: "", wrapper: false %>
+    <%= f.button :submit, 'Confirm', class: 'btn btn btn-success', data: {turbo: false} %>
+  </div>
+<% end %>

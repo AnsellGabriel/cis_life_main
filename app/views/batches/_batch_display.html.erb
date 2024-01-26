@@ -1,6 +1,12 @@
 <% batch_presenter = BatchPresenter.new(batch) %>
 
-<div class="row <%= flex_justify_align('center') %> sm-secondary-text" >
+<div class="row <%= flex_justify_align('center') %> sm-secondary-text" >  
+  <div class="col-md-10 mb-1" style="margin: auto;">
+    <%= link_to coop_agreement_group_remit_path(@agreement, @group_remit), class: small_btn("secondary") do %>
+      <i class="bi bi-arrow-bar-left"></i>
+    <% end %>
+  </div>
+
   <div class="col-md-10" style="margin: auto;">
     <div class="card mb-3">
       <div class="card-body">
@@ -135,20 +141,20 @@
         <hr>
         <% if @beneficiaries.present? %>
           <div class="row">
-            <div class="col-sm-1"></div>
+            <div class="col-sm-1 text-center"></div>
             <div class="col-sm-6">
               <%= content_tag :span, 'Name', 
                 class: 'text-center', 
                 style: 'font-size: .8rem' 
               %>  
             </div>
-            <div class="col-sm-2">
+            <div class="col-sm-2 text-center">
               <%= content_tag :span, 'Age', 
                 class: 'text-center', 
                 style: 'font-size: .8rem' 
               %>  
             </div>
-            <div class="col-sm-3">
+            <div class="col-sm-3 text-center">
               <%= content_tag :span, 'Relationship', 
                 class: 'text-center', 
                 style: 'font-size: .8rem' 
@@ -174,18 +180,18 @@
                   <% end %>
                 </div>
               <div class="col-sm-6 text-secondary">
-                <%= content_tag :span, "#{b.member_dependent.last_name.capitalize}, #{b.member_dependent.first_name.capitalize} #{b.member_dependent.middle_name.chr}.", 
+                <%= content_tag :span, "#{b.member_dependent.last_name.capitalize}, #{b.member_dependent.first_name.capitalize} #{b.member_dependent.middle_name.chr}", 
                   class: "mb-0 text-center", 
                   style: "font-size: .8rem" 
                 %>
               </div>
-              <div class="col-sm-2 text-secondary">
+              <div class="col-sm-2 text-secondary text-center">
                 <%= content_tag :span, "#{b.member_dependent.age}", 
                   class: "mb-0 text-center", 
                   style: "font-size: .8rem" 
                 %>
               </div>
-              <div class="col-sm-3 text-secondary">
+              <div class="col-sm-3 text-secondary text-center">
                 <%= content_tag :span, "#{b.member_dependent.relationship.capitalize}", 
                   class: "mb-0 text-center", 
                   style: "font-size: .8rem" 
@@ -224,31 +230,31 @@
           <hr>
           <% if @dependents.present? %>
             <div class="row">
-              <div class="col-sm-4">
+              <div class="col-sm-4 text-center">
                 <%= content_tag :span, 'Name', 
                   class: 'text-center', 
                   style: 'font-size: .8rem' 
                 %>
               </div>
-              <div class="col-sm-1">
+              <div class="col-sm-1 text-center">
                 <%= content_tag :span, 'Age', 
                   class: 'text-center', 
                   style: 'font-size: .8rem' 
                 %>
               </div>
-              <div class="col-sm-2">
+              <div class="col-sm-2 text-center">
                 <%= content_tag :span, 'Relationship', 
                   class: 'text-center', 
                   style: 'font-size: .8rem' 
                 %>
               </div>
-              <div class="col-sm-2">
+              <div class="col-sm-2 text-center">
                 <%= content_tag :span, 'Premium', 
                   class: 'text-center', 
                   style: 'font-size: .8rem' 
                 %>
               </div>
-              <div class="col-sm-3">
+              <div class="col-sm-3 text-center">
                 <%= content_tag :span, 'Actions', 
                   class: 'text-center', 
                   style: 'font-size: .8rem' 
@@ -260,33 +266,38 @@
           <% @dependents.each do |d| %>
             <% d_presenter = DependentPresenter.new(d) %>
             <div class="row mb-1">
-              <div class="d-flex align-items-center">
+              <div class="d-flex align-items-center text-center">
                 <div class="col-sm-4 text-secondary <%= flex_justify_align('start', 'baseline') %> gap-1">
                   <%= content_tag :span, "#{d.insurance_status.titleize}", class: d_presenter.status_badge %>
-                  <%= content_tag :span, "#{d.member_dependent.last_name.capitalize}, #{d.member_dependent.first_name.capitalize} #{d.member_dependent.middle_name.chr}.", 
+                  <%= content_tag :span, "#{d.member_dependent.last_name.capitalize}, #{d.member_dependent.first_name.capitalize} #{d.member_dependent.middle_name.chr}", 
                     class: "mb-0", 
                     style: "font-size: .8rem" 
                   %>
                 </div>
-                <div class="col-sm-1 text-secondary">
+                <div class="col-sm-1 text-secondary text-center">
                   <%= content_tag :span, "#{d.member_dependent.age}", 
                     class: "mb-0 text-center", 
                     style: "font-size: .8rem" 
                   %>
                 </div>
-                <div class="col-sm-2 text-secondary">
+                <div class="col-sm-2 text-secondary text-center">
                   <%= content_tag :span, "#{d.member_dependent.relationship.capitalize}", 
                     class: "mb-0 text-center", 
                     style: "font-size: .8rem" 
                   %>
                 </div>
-                <div class="col-sm-2 text-secondary">
-                  <%= content_tag :span, "#{peso_currency(d.premium)}", 
+                <div class="col-sm-2 text-secondary text-center <%= flex_justify_align('center','center') %> gap-1">
+                  <%= content_tag :span, "#{to_curr(d.premium)}", 
                     class: "mb-0 text-center", 
                     style: "font-size: .8rem" 
                   %>
+                  <% if @group_remit.editable_by_mis?(current_user) %>
+                    <%= link_to edit_group_remit_batch_dependent_path(@group_remit, batch, d), class: "", title: "Edit", data: {turbo_frame: "modal"} do %>
+                      <i class="bi bi-pencil-square"></i>
+                    <% end %>
+                  <% end %>
                 </div>
-                <div class="col-sm-3 <%= flex_justify_align('', 'center') %> gap-1">
+                <div class="col-sm-3 <%= flex_justify_align('center', 'center') %> gap-1">
                   <%= render 'dependent_buttons', group_remit: @group_remit, batch: @batch, dependent: d %>
                 </div>
               </div>

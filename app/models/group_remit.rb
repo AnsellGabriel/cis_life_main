@@ -369,6 +369,10 @@ class GroupRemit < ApplicationRecord
     approved_payment.entries.posted.last
   end
 
+  def editable_by_mis?(current_user)
+    (current_user.userable_type == "Employee" && current_user.userable.department_id == 15) && !self.instance_of?(BatchRemit) && self.pending?
+  end
+
   private
 
   def delete_associated_batches

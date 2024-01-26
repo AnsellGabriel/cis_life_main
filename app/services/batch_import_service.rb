@@ -9,13 +9,11 @@ class BatchImportService
     @gyrt_plans = ["GYRT", "GYRTF"]
     @gyrt_ranking_plans = ["GYRTBR", "GYRTFR"]
     @gyrt_family_plans = ["GYRTF", "GYRTFR"]
-    @special_term_insurance = ["PMFC"]
 
     @principal_headers = ["First Name", "Middle Name", "Last Name", "Birthdate"]
     @dependent_headers = ["Member First Name", "Member Middle Name", "Member Last Name", "Member Birthdate", "Dependent First Name", "Dependent Middle Name", "Dependent Last Name", "Relationship",
 "Beneficiary?"]
 
-    # @principal_headers << "Terms" if @special_term_insurance.include?(@agreement.plan.acronym)
     @principal_headers << "Rank" if @gyrt_ranking_plans.include?(@agreement.plan.acronym)
     @dependent_headers << "Dependent?" if @agreement.plan.dependable?
 
@@ -130,7 +128,8 @@ class BatchImportService
         birth_date: row["Dependent Birthdate"],
         relationship: row["Relationship"].to_s.upcase.strip,
         beneficiary: row["Beneficiary?"],
-        dependent: row["Dependent?"]
+        dependent: row["Dependent?"],
+        premium: mis_user? && row["Premium"].present? ? row["Premium"].to_f : nil
       }
 
       unless member.persisted?
@@ -196,8 +195,7 @@ true)
           next
         end
 
-        term_insurance = @agreement.plan.acronym == "PMFC" ? true : false
-        batch_dependent.set_premium_and_service_fees(dependent_agreement_benefits, @group_remit, term_insurance)
+        batch_dependent.set_premium_and_service_fees(dependent_agreement_benefits, @group_remit, mis_user? ?dependent_hash[:premium] : nil)
 
         if batch_dependent.save!
           increment_dependents_counter
@@ -208,9 +206,9 @@ true)
           batch_dependent.insurance_status = :denied
 
           if dependent.age > batch_dependent.agreement_benefit.max_age
-            batch_dependent.batch_remarks.build(remark: "Dependent age is over the maximum age limit of the plan.", status: :denied, user_type: "CoopUser", user_id: @current_user.userable.id)
+            batch_dependent.batch_remarks.build(remark: "Dependent age is over the maximum age limit of the plan.", status: :denied, user_type: @current_user.userable_type, user_id: @current_user.userable.id)
           else
-            batch_dependent.batch_remarks.build(remark: "Dependent age is below the minimum age limit of the plan.", status: :denied, user_type: "CoopUser", user_id: @current_user.userable.id)
+            batch_dependent.batch_remarks.build(remark: "Dependent age is below the minimum age limit of the plan.", status: :denied, user_type: @current_user.userable_type, user_id: @current_user.userable.id)
           end
 
           batch_dependent.save!
@@ -304,7 +302,8 @@ true)
       suffix: row["Suffix"].to_s.squish.upcase,
       birth_date: row["Birthdate"],
       rank: row["Rank"].to_s.present? ? row["Rank"].to_s.squish.upcase : nil,
-      terms: row["Terms"].to_i.present? ? row["Terms"].to_i : nil
+      terms: row["Terms"].to_i.present? ? row["Terms"].to_i : nil,
+      premium: row["Premium"].to_f.present? && mis_user? ? row["Premium"].to_f : nil,
     }
   end
 
@@ -346,7 +345,7 @@ true)
       new_batch,
       @group_remit,
       b_rank,
-      @group_remit.terms
+      mis_user? ? batch_hash[:premium] : nil
     )
 
     if member.age(@group_remit.effectivity_date) < new_batch.agreement_benefit.min_age or member.age(@group_remit.effectivity_date) > new_batch.agreement_benefit.max_age
@@ -379,5 +378,9 @@ true)
     end
 
     nil
+  end
+
+  def mis_user?
+    @current_user.userable_type == "Employee" && @current_user.userable.department_id == 15
   end
 end

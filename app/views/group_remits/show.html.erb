@@ -225,7 +225,7 @@
   
   <div class="d-flex gap-1">
     <%= form_with url: group_remit_path(@group_remit), method: :get do %>
-      <div class="form-group d-flex justify-content-end gap-3 mb-3">
+      <div class="form-group d-flex justify-content-end gap-1 mb-1">
         <%= text_field_tag 'batch_filter', 
           nil, 
           placeholder: 'Member\'s name', 
@@ -235,14 +235,6 @@
         <%= submit_tag 'Search', class: small_btn('warning') %>
       </div>
     <% end %>
-
-    <div class="">
-      <%= link_to "View All", group_remit_path(@group_remit), 
-        class: "#{small_btn('outline-warning')} mb-3 d-flex align-items-center", 
-        style: "height: 38px;",
-        data: { turbo: false } 
-      %>
-    </div>
   </div>
   
     

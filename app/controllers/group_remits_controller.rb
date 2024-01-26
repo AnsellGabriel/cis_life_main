@@ -111,6 +111,10 @@ class GroupRemitsController < InheritedResources::Base
           @group_remit.update!(batch_remit_id: params[:batch_remit_id])
         end
 
+        if current_user.is_mis?
+          @group_remit.update!(mis_entry: true)
+        end
+
         format.html { redirect_to coop_agreement_group_remit_path(@agreement, @group_remit), notice: "Group remit was successfully created." }
       else
         format.html { render :new, status: :unprocessable_entity }
