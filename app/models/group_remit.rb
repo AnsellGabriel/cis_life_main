@@ -7,6 +7,7 @@ class GroupRemit < ApplicationRecord
 
   scope :batch_remits, -> { where(:type => "BatchRemit")}
   scope :loan_remits, -> { where(:type => "LoanInsurance::GroupRemit")}
+  scope :remittances, -> { where(:type => "Remittance")}
 
   belongs_to :agreement
   belongs_to :anniversary, optional: true
@@ -366,6 +367,10 @@ class GroupRemit < ApplicationRecord
 
   def posted_or
     approved_payment.entries.posted.last
+  end
+
+  def editable_by_mis?(current_user)
+    (current_user.userable_type == "Employee" && current_user.userable.department_id == 15) && !self.instance_of?(BatchRemit) && self.pending?
   end
 
   private

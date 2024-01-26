@@ -53,7 +53,7 @@ class BatchPresenter
   end
 
   def life_benefit
-    life_benefit = @batch.agreement_benefit.product_benefits.select {|pb| pb.benefit.acronym == "LIFE" || pb.benefit.acronym == "LI" }
+    life_benefit = @batch.agreement_benefit.product_benefits.select {|pb| pb.benefit.acronym.upcase == "LIFE" || pb.benefit.acronym.upcase == "LI" }
   end
 
 

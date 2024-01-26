@@ -50,7 +50,7 @@
     
     
   <div class="col-md-6">
-    <% if @process_claim.claim_type == ClaimType.find_by(name: 'Hospital Confinement Claim') %>
+    <% if @process_claim.claim_type && @process_claim.claim_type == ClaimType.find_by(name: 'Hospital Confinement Claim') %>
       <div class="card">
         <%= content_tag :h5, 'Confinement', class: "card-header" %>
         <div class="card-body">
@@ -71,7 +71,6 @@
         </div>
       </div>
     <% end %>
-    <% console %>
     <% if @process_claim.file_claim? %>
       <div class="card">
       <div class="card-body">

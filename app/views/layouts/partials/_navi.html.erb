@@ -9,7 +9,7 @@
           <%= image_tag 'cis_logo.png', width: 150, class: 'mb-2 mb-lg-0 me-2' %>
           <div class="" style="max-width: 500px;">
             <% if current_user %>
-              <%= "#{truncate(nav_header(current_user), length: 65)} " %>
+              <%= "#{truncate(nav_header(current_user)&.upcase, length: 65)} " %>
             <% end %>
           </div>
         </a>
@@ -61,6 +61,10 @@
                 <% end %>
                 <%= link_to "Cashier Entries", treasury_cashier_entries_path	, class: "nav-link" %>
                 <%= link_to "Remittances", payments_path	, class: "nav-link" %>
+            <% when 15 %>
+              <%= render 'layouts/partials/nav_dropdown', title: 'Data Entries' do %>
+                <%= link_to "Cooperative", cooperatives_path, class: "dropdown-item" %>
+              <% end %>
             <% else %>
               <%= render 'layouts/partials/nav_dropdown', title: 'Claims' do %>
                 <%= link_to "Submitted", index_show_process_claims_path(p: 1), class: "dropdown-item" %>

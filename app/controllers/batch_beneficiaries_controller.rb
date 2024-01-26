@@ -1,6 +1,6 @@
 class BatchBeneficiariesController < InheritedResources::Base
   before_action :authenticate_user!
-  before_action :check_userable_type
+  # before_action :check_userable_type
   before_action :set_group_remit_batch, only: %i[new create]
   before_action :set_beneficiary, only: %i[show edit update destroy]
 

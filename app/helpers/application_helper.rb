@@ -209,7 +209,7 @@ module ApplicationHelper
   end
 
   def mis_user?(current_user)
-    current_user.userable.department_id == 15
+    current_user.userable_type == "Employee" && current_user.userable.department_id == 15
   end
 
   def nav_header(current_user)

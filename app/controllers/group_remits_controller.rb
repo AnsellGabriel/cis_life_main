@@ -70,15 +70,26 @@ class GroupRemitsController < InheritedResources::Base
 
   def new
     @agreement = Agreement.find_by(id: params[:agreement_id])
-    @group_remit = @agreement.group_remits.build(
-      name: FFaker::Company.name,
-      description: FFaker::Lorem.paragraph,
-      agreement_id: 1,
-      anniversary_id: 1)
+    # @group_remit = @agreement.group_remits.build(
+    #   name: FFaker::Company.name,
+    #   description: FFaker::Lorem.paragraph,
+    #   agreement_id: 1,
+    #   anniversary_id: 1)
+    @group_remit = @agreement.group_remits.build
   end
 
   def create
     @agreement = Agreement.find_by(id: params[:agreement_id])
+
+    if params[:anniversary_id].present?
+      pending_remittance = @agreement.group_remits.pending.remittances.where(anniversary_id: params[:anniversary_id]).last
+    else
+      pending_remittance = @agreement.group_remits.pending.remittances.last
+    end
+
+    if pending_remittance.present?
+      return redirect_to coop_agreement_group_remit_path(@agreement, pending_remittance), alert: "Please complete the pending remittance first."
+    end
 
     @group_remit = @agreement.group_remits.build(type: "Remittance")
     anniversary_date = set_anniversary(@agreement.anniversary_type, params[:anniversary_id])
@@ -100,6 +111,10 @@ class GroupRemitsController < InheritedResources::Base
           @group_remit.update!(batch_remit_id: params[:batch_remit_id])
         end
 
+        if current_user.is_mis?
+          @group_remit.update!(mis_entry: true)
+        end
+
         format.html { redirect_to coop_agreement_group_remit_path(@agreement, @group_remit), notice: "Group remit was successfully created." }
       else
         format.html { render :new, status: :unprocessable_entity }
@@ -114,7 +129,7 @@ class GroupRemitsController < InheritedResources::Base
   def update
     respond_to do |format|
       if @group_remit.update(group_remit_params)
-        format.html { redirect_to @group_remit, notice: "Group remit was successfully updated." }
+        format.html { redirect_to @group_remit, notice: "OR # updated." }
       else
         format.html { render :edit, status: :unprocessable_entity }
       end
@@ -142,7 +157,7 @@ class GroupRemitsController < InheritedResources::Base
   end
 
   def group_remit_params
-    params.require(:group_remit).permit(:name, :description, :agreement_id, :anniversary_id,
+    params.require(:group_remit).permit(:or_number, :name, :description, :agreement_id, :anniversary_id,
       process_coverage_attributes: [:group_remit_id, :effectivity, :expiry], payments_attributes: [:id, :receipt, :_destroy] )
   end
 

@@ -1,6 +1,6 @@
 class BatchDependentsController < InheritedResources::Base
   before_action :authenticate_user!
-  before_action :check_userable_type
+  # before_action :check_userable_type
   before_action :set_group_remit_batch, only: %i[new create]
   before_action :set_dependent, only: %i[show edit update destroy health_dec]
 
@@ -49,6 +49,21 @@ class BatchDependentsController < InheritedResources::Base
     end
   end
 
+  def edit
+  end
+
+  def update
+    respond_to do |format|
+      if @batch_dependent.update(batch_dependent_params)
+        format.html {
+          redirect_to group_remit_batch_path(@group_remit, @batch), notice: "Premium updated"
+        }
+      else
+        format.html { render :edit, status: :unprocessable_entity }
+      end
+    end
+  end
+
   def destroy
     if @batch_dependent.destroy!
       redirect_to group_remit_batch_path(@group_remit, @batch), alert: "Dependent removed"
@@ -77,7 +92,7 @@ class BatchDependentsController < InheritedResources::Base
 
   private
   def batch_dependent_params
-    params.require(:batch_dependent).permit(:member_dependent_id)
+    params.require(:batch_dependent).permit(:member_dependent_id, :premium)
   end
 
   def set_group_remit_batch

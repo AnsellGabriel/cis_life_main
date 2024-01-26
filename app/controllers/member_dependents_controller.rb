@@ -1,6 +1,6 @@
 class MemberDependentsController < InheritedResources::Base
   before_action :authenticate_user!
-  before_action :check_userable_type
+  # before_action :check_userable_type
   before_action :set_member
   before_action :set_member_dependent, only: [:show, :edit, :update, :destroy]
 

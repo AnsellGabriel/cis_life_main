@@ -1,0 +1,61 @@
+<div class="d-flex gap-1 mb-3">
+  <%= link_to :back, class: small_btn('secondary'), title: 'Back' do %>
+    <i class="bi bi-arrow-bar-left"></i>  
+  <% end %>
+  <%= link_to "#{@batch_remit.name}", coop_agreement_group_remit_path(@batch_remit.agreement, @batch_remit), class: small_btn('secondary') %>
+
+  <%= button_to "Enroll Members", group_remits_path, 
+    method: :post, 
+    params: { 
+      agreement_id: @batch_remit.agreement.id, 
+      anniversary_id: @batch_remit.anniversary&.id, 
+      anniv_type: @batch_remit.agreement.anniversary_type,
+      type: 'Remittance',
+      batch_remit_id: @batch_remit.id
+    }, 
+    class: small_btn('success'), 
+    data: { turbo: false } %>
+</div>
+<%= content_tag :h3, "#{@batch_remit.name} REMITTANCES", class: 'mb-0 text-primary mb-1' %>
+
+<div class="mb-1 <%= flex_justify_align('between') %>">
+  <%== pagy_bootstrap_nav(@pagy) %>
+  <!-- New Ransack Form -->
+  <%= search_form_for @q, url: coop_agreement_group_remit_remittances_path(@batch_remit.agreement, @batch_remit), method: :get do |f| %>
+    <div class="form-group d-flex gap-1">
+      <%= f.search_field :name_or_or_number_cont, placeholder: "Search remittance or OR #", class: "form-control" %>
+      <%= f.submit "Search", class: small_btn('warning text-dark') %>
+    </div>
+  <% end %>
+</div>
+<table class="table table-striped table-sm">
+  <thead>
+    <tr>
+      <th scope="col">OR #</th>
+      <th scope="col">Name</th>
+      <th scope="col">Net Premium</th>
+      <th scope="col">Status</th>
+      <th scope="col" class="text-center">Action</th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @remittances.each do |remittance| %>
+      <tr>
+        <th scope="row" class="small"><%= remittance.or_number.present? ? remittance.or_number : "-" %></th>
+        <td class="text-secondary small"><%= remittance.name %></td>
+        <td class="text-secondary small"><%= remittance.coop_net_premium %></td>
+        <td class="small" style="color: <%= remittance.decorate.status_color %>" >    
+          <%= content_tag :span, remittance.status.titleize, class: remittance.decorate.status_badge %>
+        </td>
+        <td class="text-secondary small text-center">
+          <%= link_to coop_agreement_group_remit_path(@batch_remit.agreement, remittance),
+            title: 'View',
+            class: small_btn('outline-primary') do
+          %>
+            <i class="bi bi-eye-fill"></i>
+          <% end %>
+        </td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>

@@ -14,40 +14,52 @@
 <%= render "member_count_modal" %>
 
 <div class="<%= flex_justify_align('', 'center') %> gap-1 mb-3">
-  <%= link_to coop_agreement_path(@agreement), class: small_btn('outline-secondary'), title: 'Back' do %>
-    <i class="bi bi-arrow-left"></i>
-  <% end %>
-  <% unless @group_remit.is_batch_remit? %>
-    <%= content_tag :span, @group_remit.status.titleize, class: @group_remit.status_badge %>
-  <% end %>
-  <%= content_tag :h3, class: 'mb-0 text-primary' do %>
-      <%= @group_remit %>    
+
+  <% if @group_remit.is_batch_remit? %>
+    <%= link_to coop_agreement_path(@agreement), class: small_btn('secondary'), title: 'Back' do %>
+      <i class="bi bi-arrow-bar-left"></i>  
+    <% end %>
+  <% else %>
+    <div class="d-flex gap-1">
+      <%= link_to :back, class: small_btn('secondary'), title: 'Back' do %>
+        <i class="bi bi-arrow-bar-left"></i>  
+      <% end %>
+      <%= link_to "#{BatchRemit.find(@group_remit.batch_remit_id).name}", coop_agreement_group_remit_path(@agreement, @group_remit.batch_remit_id), class: small_btn('secondary') %>
+    </div>
   <% end %>
 
   <div class="mb-0 gap-1 <%= flex_justify_align('', 'center') %>">
+    <% if @group_remit.is_batch_remit? %>
+      <%= link_to "Remittances", coop_agreement_group_remit_remittances_path(@agreement, @group_remit), class: small_btn('primary') %>
+    <% end %>
+
     <% if @group_remit.is_pending_or_renewal? && @group_remit.is_remittance? %>
       
       <div class="d-flex gap-1">
         <%= button_to 'Submit', submit_group_remit_path(@group_remit), 
           method: :get,
-          class: small_btn('outline-primary'), 
+          class: small_btn('outline-success'), 
           data: {turbo_confirm: 'Submit group remit?' } 
         %>
 
         <% unless @group_remit.is_for_renewal? %>
-          <%= button_to "Delete remittance", group_remit_path(@group_remit), 
+          <%= button_to group_remit_path(@group_remit), 
             method: :delete,
             data: { turbo_confirm: "Delete #{@group_remit}?"},
-            class: small_btn('outline-danger') 
+            class: small_btn('outline-danger') do
           %>
+            <i class="bi bi-trash-fill"></i>
+          <% end %>
         <% end %>
 
         <% if @group_remit.is_batch_remit? && @group_remit.is_pending_or_renewal? %>
-          <%= button_to "Delete remittance", group_remit_path(@group_remit), 
+          <%= button_to group_remit_path(@group_remit), 
             method: :delete,
             data: { turbo_confirm: 'Delete group remit?'},
-            class: small_btn('outline-danger') 
+            class: small_btn('outline-danger') do
           %>
+            <i class="bi bi-trash-fill"></i>
+          <% end %>
         <% end %>
         
         <%  if @group_remit.denied_members.present? %>
@@ -68,56 +80,66 @@
         class: small_btn('outline-warning'), 
         data: {turbo_confirm: 'Renew group remit?' } 
       %>
-    <% elsif !@group_remit.is_for_renewal? && @group_remit.is_batch_remit? && @group_remit.is_none_anniversary? && @group_remit.effectivity_date == Date.today.beginning_of_month %>
-      <%= button_to "Add Members", group_remits_path, 
-        method: :post, 
-        params: { 
-          agreement_id: @agreement.id,
-          anniversary_id: nil,
-          anniv_type: 'none',
-          type: 'Remittance',
-          batch_remit_id: @group_remit.id,
-          group_remit: {
-            terms: @group_remit.terms
-          }
-        }, 
-        class: small_btn('outline-primary'), 
-        data: { turbo: false } 
-      %>
-    <% elsif !@group_remit.is_for_renewal? && @group_remit.is_batch_remit? && @group_remit.is_single_anniversary? %>
-      <%= button_to "Add Members", group_remits_path, 
-        method: :post, 
-        params: { 
-          agreement_id: @agreement.id, 
-          anniversary_id: @agreement.anniversaries[0].id,
-          batch_remit_id: @group_remit.id,
-          anniv_type: 'single',
-          type: 'Remittance'
-        }, 
-        class: small_btn('outline-primary'), 
-        data: { turbo: false } 
-      %>
-      <% elsif !@group_remit.is_for_renewal? && @group_remit.is_batch_remit? && @group_remit.is_multiple_anniversary? %>
-      <%= button_to "Add Members", group_remits_path, 
-        method: :post, 
-        params: { 
-          agreement_id: @agreement.id, 
-          anniversary_id: @group_remit.anniversary_id,
-          batch_remit_id: @group_remit.id,
-          anniv_type: 'multiple',
-          type: 'Remittance'
-        }, 
-        class: small_btn('outline-primary'), 
-        data: { turbo: false } 
-      %>
     <% end %>
 
   </div>
+
+  <% if @group_remit.is_batch_remit? %>
+    <div class="">
+      <%= content_tag :button, "Benefits & Coverages", 
+        class: small_btn('outline-primary'), 
+        data: {bs_toggle: "modal",
+          bs_target: "#benefitsModal"
+        }
+      %>
+      <%= content_tag :button, "Insured Count", 
+        class: small_btn('outline-primary'), 
+        data: {bs_toggle: "modal",
+          bs_target: "#insuredType"
+        }
+      %>
+    </div>
+  <% end %>
 </div>
 
-<div class="<%= flex_justify_align('between', 'base') %> mb-3 gap-3">
-  <div class="d-flex flex-column " style="width: 100%">
+<div class="<%=  flex_justify_align('', 'center') %> gap-3">
+  <% unless @group_remit.is_batch_remit? %>
+    <%= content_tag :span, @group_remit.status.titleize, class: @group_remit.status_badge %>
+  <% end %>
+  <%= content_tag :h3, class: 'mb-0 text-primary' do %>
+      <%= @group_remit %>    
+      <% if @group_remit.or_number.present? %>
+        <%= content_tag :span, "(OR# #{@group_remit.or_number})", class: "text-dark small" %>
+      <% end %>
+  <% end %>
 
+  <div class="<%= flex_justify_align('between') %> mt-2" style="height: 100%; width: 460px;">
+    <div style="width: 100%">
+
+      <% if @group_remit.is_for_payment? || @group_remit.is_for_reupload? %>
+        <%= render 'payment', group_remit: @group_remit %>
+      <% end %>
+
+      <% if @group_remit.is_pending_or_renewal? && @group_remit.is_remittance? %>
+          <%= turbo_frame_tag "batch_import_form" do %>
+            <%= turbo_frame_tag "batch_form" do %>   
+                <div class="d-flex gap-3 mb-2">
+                  <%= render 'group_remits/add_member' %>
+                </div>
+            <% end %>
+          <% end %>
+      <% end%>
+
+    </div>
+  </div>
+</div>
+
+<div class="<%= flex_justify_align('', 'base') %> gap-3">
+
+
+  <div class="d-flex flex-column">
+      
+      <!--
       <div class="card mb-2">
         <div class="card-body text-secondary">
           <div class="<%= flex_justify_align('center') %>">
@@ -159,80 +181,13 @@
           <% end %>
         </div>
       </div>
+    -->
 
-    <div class="<%= flex_justify_align('between') %> " style="height: 100%; width: 460px;">
-      <div style="width: 100%">
-
-        <% if @group_remit.is_for_payment? || @group_remit.is_for_reupload? %>
-          <%= render 'payment', group_remit: @group_remit %>
-        <% end %>
-
-        <% if @group_remit.is_pending_or_renewal? && @group_remit.is_remittance? %>
-            <%= turbo_frame_tag "batch_import_form" do %>
-              <%= turbo_frame_tag "batch_form" do %>   
-                  <div class="d-flex gap-3 mb-2">
-                    <%= render 'group_remits/add_member' %>
-                  </div>
-                  
-                <% if @batch_without_beneficiaries_count > 0 %>
-                  <%= content_tag :span, "Filter this batch by:", 
-                    class: 'mb-1',  
-                    style: "font-size: .7rem; color: red !important; font-weight: 700;"   
-                  %>
-                <% end %>
-
-                <% if @batch_without_beneficiaries_count > 0 %>
-                  <div class="mb-1">
-                    <%= link_to "#{@batch_without_beneficiaries_count} member(s) without beneficiary!", group_remit_path(@group_remit, batch_beneficiary_filter: true), 
-                      method: :get, 
-                      class: "#{badge('danger')} hovered-link", 
-                      data: { turbo: false } 
-                    %>
-                  </div>
-                <% end %>
-
-                <% if @batch_without_batch_health_dec_count > 0 %>
-                  <%= link_to "#{@batch_without_batch_health_dec_count} member(s) without batch health declaration!", group_remit_path(@group_remit, batch_health_dec_filter: true), 
-                    method: :get, 
-                    class: "#{badge('danger')} hovered-link", 
-                    data: { turbo: false } 
-                  %>
-                <% end %>
-
-              <% end %>
-            <% end %>
-        <% end%>
-
-      </div>
-    </div>
+    
   </div>
-  <div class="card" style="height: 130px; width: 100%">
-    <div class="card-body <%= flex_justify_align('', '', true) %> gap-3">
-      <div class="<%= flex_justify_align('center') %>">
-        <%= content_tag :h6, "#{@agreement.plan.name}", class: 'text-primary' %>
-      </div>
-      <div class="">
-        <%= content_tag :button, "Benefits & Coverages", 
-          class: small_btn('outline-primary'), 
-          data: {bs_toggle: "modal",
-            bs_target: "#benefitsModal"
-          }
-        %>
-        <%= content_tag :button, "Insured Count", 
-          class: small_btn('outline-primary'), 
-          data: {bs_toggle: "modal",
-            bs_target: "#insuredType"
-          }
-        %>
-      </div>
-    </div>
-  </div>
+  
 
-  <% unless @group_remit.is_batch_remit? %>
-    <%= turbo_frame_tag "computation" do %>
-      <%= render "group_remits/computation", group_remit: @group_remit, agreement: @agreement %>
-    <% end %>  
-  <% end %>
+  
 </div>
 
   <% if ['GYRTBR','GYRTFR'].include?(plan_acronym) %>
@@ -242,11 +197,6 @@
         <% @group_remit.agreement.agreement_benefits.where.not(insured_type: 2..5).each do |a_benefit| %>
           <%= link_to group_remit_path(@group_remit, rank_filter: a_benefit), class: "btn btn-sm btn-primary position-relative" do %>
             <%= a_benefit.name %>
-            <% unless @group_remit.batches.where(agreement_benefit: a_benefit).size <= 0 %>
-              <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-warning text-dark">
-                <%= @group_remit.batches.where(agreement_benefit: a_benefit).size < 100 ? @group_remit.batches.where(agreement_benefit: a_benefit).size : '99+'%>
-              </span>
-            <% end %>
           <% end %>
         <% end %>
 
@@ -275,7 +225,7 @@
   
   <div class="d-flex gap-1">
     <%= form_with url: group_remit_path(@group_remit), method: :get do %>
-      <div class="form-group d-flex justify-content-end gap-3 mb-3">
+      <div class="form-group d-flex justify-content-end gap-1 mb-1">
         <%= text_field_tag 'batch_filter', 
           nil, 
           placeholder: 'Member\'s name', 
@@ -285,14 +235,6 @@
         <%= submit_tag 'Search', class: small_btn('warning') %>
       </div>
     <% end %>
-
-    <div class="">
-      <%= link_to "View All", group_remit_path(@group_remit), 
-        class: "#{small_btn('outline-warning')} mb-3 d-flex align-items-center", 
-        style: "height: 38px;",
-        data: { turbo: false } 
-      %>
-    </div>
   </div>
   
     
@@ -322,6 +264,14 @@
 
       <% if @group_remit.batches.exists? %>
         <%= render @batches.includes([coop_member: :member], :batch_beneficiaries), group_remit: @group_remit, agreement: @agreement %>
+      <% elsif @group_remit.is_batch_remit? %>
+        <tr>
+          <td colspan="6" class="text-center">No enrolled members.</td>
+        </tr>
+      <% else %>
+        <tr>
+          <td colspan="6" class="text-center">No members added</td>
+        </tr>
       <% end %>
 
     </tbody>
@@ -329,5 +279,13 @@
 
 </div>
 
-<%== pagy_bootstrap_nav(@pagy) %>
+<div class="<%= flex_justify_align('between') %>">
+  <%== pagy_bootstrap_nav(@pagy) %>
+  <% unless @group_remit.is_batch_remit? %>
+    <%= turbo_frame_tag "computation" do %>
+      <%= render "group_remits/computation", group_remit: @group_remit, agreement: @agreement %>
+    <% end %>  
+  <% end %>
+</div>
+
 <% end %>

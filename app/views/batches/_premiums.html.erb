@@ -1,14 +1,4 @@
-<% if plan_acronym == 'PMFC' %>
-		<%= content_tag :span, 
-				"Residency: #{months_to_years_months(batch.residency)}", 
-				class: "text-secondary sm-green-text"
-		%>
-		<%= content_tag :span, 
-				"Terms: #{batch.duration} months", 
-				class: "text-secondary sm-green-text"
-		%>
-<% end %>
-<div class="">
+<div class="<%= flex_justify_align('','center') %> gap-1">
 	<%= content_tag :span, 
 			"Principal: ", 
 			class: "text-secondary sm-green-text"
@@ -17,6 +7,11 @@
 			"#{number_to_currency(batch.premium, unit: "₱", precision: 2)}", 
 			class: "text-primary sm-green-text"
 	%>
+	<% if @group_remit.editable_by_mis?(current_user) %>
+		<%= link_to edit_group_remit_batch_path(@group_remit, batch), class: "", title: "Edit", data: {turbo_frame: "modal"} do %>
+			<i class="bi bi-pencil-square"></i>
+		<% end %>
+	<% end %>
 </div>
 
 <% if dependents.exists? %>
