@@ -132,9 +132,8 @@ only: %i[ show edit update destroy approve_batch deny_batch pending_batch recons
       @process_coverage.group_remit.total_loan_amount
     else
       ProductBenefit.joins(agreement_benefit: :batches).where("batches.id IN (?)", @batches_x.pluck(:id)).where("product_benefits.benefit_id = ?", 1).sum(:coverage_amount)
-                      end
-
-
+    end
+    
     pdf = PsheetPdf.new(@process_coverage, @total_life_cov, view_context)
     send_data(pdf.render,
       filename: "#{@process_coverage.group_remit.name}.pdf",
@@ -304,6 +303,7 @@ only: %i[ show edit update destroy approve_batch deny_batch pending_batch recons
         when "regular_new" then @batches_o.where(age: 18..65, status: 0)
         when "regular_ren" then @batches_o.where(age: 18..65, status: 1..2)
         when "overage" then @batches_o.where(age: 66..)
+        when "dependent" then @batches_o.joins(:batch_dependents).distinct
         when "reconsider" then @batches_o.where(status: :for_reconsideration)
           # when "health_decs" then @batches_o.joins(:batch_health_decs)
         when "health_decs" then @batches_o.joins(:batch_health_decs).where(batches: { valid_health_dec: false }).distinct
@@ -462,11 +462,11 @@ only: %i[ show edit update destroy approve_batch deny_batch pending_batch recons
           if @process_coverage.count_batches_denied(klass_name) > 0
             # if @process_coverage.group_remit.batches.where(batches: { insurance_status: :denied }).count > 0
             # @process_coverage.update_attribute(:status, "for_head_approval")
-            @process_coverage.update(status: :for_head_approval, process_date: Date.today)
+            @process_coverage.update(status: :for_head_approval, process_date: Date.today, who_processed: current_user.userable_id)
             format.html { redirect_to process_coverage_path(@process_coverage), notice: "Process Coverage for Head Approval!" }
           else
             # @process_coverage.update_attribute(:status, "approved")
-            @process_coverage.update(status: :approved, process_date: Date.today, evaluate_date: Date.today)
+            @process_coverage.update(status: :approved, process_date: Date.today, evaluate_date: Date.today, who_approved: current_user.userable_id)
             # @process_coverage.group_remit.set_total_premiums_and_fees
             format.html { redirect_to process_coverage_path(@process_coverage), notice: "Process Coverage Approved!" }
           end
@@ -477,7 +477,7 @@ only: %i[ show edit update destroy approve_batch deny_batch pending_batch recons
       elsif current_user.rank == "head"
         if @max_amount >= @total_gross_prem
           # @process_coverage.update_attribute(:status, "approved")
-          @process_coverage.update(status: :approved, evaluate_date: Date.today)
+          @process_coverage.update(status: :approved, evaluate_date: Date.today, who_approved: current_user.userable_id)
           # @process_coverage.group_remit.set_total_premiums_and_fees
           format.html { redirect_to process_coverage_path(@process_coverage), notice: "Process Coverage Approved!" }
         else
@@ -486,7 +486,7 @@ only: %i[ show edit update destroy approve_batch deny_batch pending_batch recons
         end
       elsif current_user.rank == "senior_officer"
         # @process_coverage.update_attribute(:status, "approved")
-        @process_coverage.update(status: :approved, evaluate_date: Date.today)
+        @process_coverage.update(status: :approved, evaluate_date: Date.today, who_approved: current_user.userable_id)
         # @process_coverage.group_remit.set_total_premiums_and_fees
         format.html { redirect_to process_coverage_path(@process_coverage), notice: "Process Coverage Approved!" }
       end

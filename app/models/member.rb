@@ -86,13 +86,20 @@ class Member < ApplicationRecord
           # ri.batches << batch
           ri_batch = ReinsuranceBatch.find_or_initialize_by(reinsurance_member: ri, batch: batch)
           ri_batch.ri_date = ri_date
+                    
           if ri.reinsurance.date_from < ri_batch.batch.effectivity_date
             ri_batch.ri_effectivity = ri_batch.batch.effectivity_date.beginning_of_month
           else
             ri_batch.ri_effectivity = ri_start
           end
-          ri_batch.ri_expiry = ri_end
-          ri_batch.ri_terms = ((ri_batch.ri_expiry - ri_batch.ri_effectivity) / 30).to_i
+          if ri_batch.batch.expiry_date < ri.reinsurance.date_to
+            ri_batch.ri_expiry = ri_batch.batch.expiry_date
+          else
+            ri_batch.ri_expiry = ri_end
+          end
+                    
+          # ri_batch.ri_terms = ((ri_batch.ri_expiry - ri_batch.ri_effectivity) / 30).to_i
+          ri_batch.ri_terms = ((ri_batch.ri_expiry - ri_batch.ri_effectivity) / 30).round
           ri_batch.save!
 
         end

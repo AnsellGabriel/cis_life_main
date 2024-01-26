@@ -101,28 +101,34 @@ inline_format: true}
 
   def signatories
     move_down 30
+    unless @pro_cov.check_approver == true
 
-    font_size(10) { text "Processed by:", inline_format: true}
-
-    move_down 10
-
-    font_size(10) { text "<b>#{@pro_cov.processor.signed_fullname}</b>", inline_format: true}
-    
-    move_down 5
-
-    font_size(8) { text "<i>#{@pro_cov.processor.designation}</i>", inline_format: true }
-
-    move_down 30
-
+      font_size(10) { text "Processed by:", inline_format: true}
+  
+      move_down 10
+  
+      # font_size(10) { text "<b>#{@pro_cov.processor.signed_fullname}</b>", inline_format: true}
+      font_size(10) { text "<b>#{@pro_cov.who_processed.signed_fullname}</b> (#{@view.to_shortdate(@pro_cov.process_date)})", inline_format: true}
+      
+      move_down 5
+  
+      # font_size(8) { text "<i>#{@pro_cov.processor.designation}</i>", inline_format: true }
+      font_size(8) { text "<i>#{@pro_cov.who_processed.designation}</i>", inline_format: true }
+  
+      move_down 30
+      
+    end
     font_size(10) { text "Approved by:", inline_format: true}
 
     move_down 10
 
-    font_size(10) { text "<b>#{@pro_cov.processor.emp_approver.approver.signed_fullname}</b>", inline_format: true}
+    # font_size(10) { text "<b>#{@pro_cov.processor.emp_approver.approver.signed_fullname}</b>", inline_format: true}
+    font_size(10) { text "<b>#{@pro_cov.who_approved.signed_fullname}</b> (#{@view.to_shortdate(@pro_cov.evaluate_date)})", inline_format: true}
 
     move_down 5
     
-    font_size(8) { text "<i>#{@pro_cov.processor.emp_approver.approver.designation}</i>", inline_format: true }
+    # font_size(8) { text "<i>#{@pro_cov.processor.emp_approver.approver.designation}</i>", inline_format: true }
+    font_size(8) { text "<i>#{@pro_cov.who_approved.designation}</i>", inline_format: true }
   end
 
 end

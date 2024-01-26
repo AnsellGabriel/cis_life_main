@@ -1,5 +1,5 @@
-<h1>Medical Director Homepage</h1>
-<p>Find me in app/views/med_directors/home.html.erb</p>
+<%= content_tag :h4, "Dr. #{current_user.userable.signed_fullname}", class: "text-primary mb-3" %>
+<!--p>Find me in app/views/med_directors/home.html.erb</!p-->
 <table class ="table table-striped">
   <table class="table table-striped table-bordered table-hover">
     <thead>
@@ -9,19 +9,21 @@
       </tr>
     </thead>
     <tbody>
-      <% @batches.each do |batch| %>
-        <tr>
-          <td>
-            <!-- temp change process_coverage.group_remit to process_coverage.group_remit.id -->
-            <strong> <%= batch.coop_member.set_full_name %> </strong> <%= content_tag :small, "#{batch.get_group_remit.agreement.cooperative.acronym}", class: "text-primary" %> <br>
-            <small><%= batch.get_group_remit.agreement.cooperative %> <br>
-            <%= content_tag :small, batch.get_group_remit.agreement.plan, class: "fw-lighter" %>
-          </td>
-          <td>
-            <%= link_to "View", health_dec_group_remit_batch_path(batch.get_group_remit, batch, for_und: true, md: true, batch_type: batch.class.name), class: "btn btn-sm btn-warning mb-1", data: { turbo_frame: "reg_form_modal_xl" } %>
-          <%#= link_to 'View', all_health_decs_group_remit_batches_path(group_remit), class: 'btn btn-secondary btn-sm' %>
-          </td>
-        </tr>
+      <% if @batches.count >= 0 %>
+        <% @batches.each do |batch| %>
+          <tr>
+            <td>
+              <!-- temp change process_coverage.group_remit to process_coverage.group_remit.id -->
+              <strong> <%= batch.coop_member.set_full_name %> </strong> <%= content_tag :small, "#{batch.get_group_remit.agreement.cooperative.acronym}", class: "text-primary" %> <br>
+              <small><%= batch.get_group_remit.agreement.cooperative %> <br>
+              <%= content_tag :small, batch.get_group_remit.agreement.plan, class: "fw-lighter" %>
+            </td>
+            <td>
+              <%= link_to "View", health_dec_group_remit_batch_path(batch.get_group_remit, batch, for_und: true, md: true, batch_type: batch.class.name), class: "btn btn-sm btn-warning mb-1", data: { turbo_frame: "reg_form_modal_xl" } %>
+            <%#= link_to 'View', all_health_decs_group_remit_batches_path(group_remit), class: 'btn btn-secondary btn-sm' %>
+            </td>
+          </tr>
+        <% end %>
       <% end %>
     </tbody>
   </table>

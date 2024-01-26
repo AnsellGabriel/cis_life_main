@@ -26,17 +26,17 @@
             <%= pc.agent %> <br>
             <%= content_tag :small, pc.group_remit.agreement.plan, class: "fw-lighter" %>
           </td>
-          <td><%= pc.effectivity.nil? ? "-" : month_day_year(pc.effectivity) %></td>
-          <td><%= pc.expiry.nil? ? "-" : month_day_year(pc.expiry) %></td>
+          <td width="120px"><%= pc.effectivity.nil? ? "-" : month_day_year(pc.effectivity) %></td>
+          <td width="120px"><%= pc.expiry.nil? ? "-" : month_day_year(pc.expiry) %></td>
           <%# <td></td> %>
           <% sum_prem = pc.group_remit.batches.sum(:premium) %>
-          <td class="text-end"><%= pluralize(pc.group_remit.batches.count, "Members") %> <br>
+          <td class="text-end" width="180px"><%= pluralize(pc.group_remit.batches.count, "Members") %> <br>
             <small>Premium <%= to_curr(sum_prem) %></small> <br>
             <small>Net <%= to_curr(sum_prem - pc.group_remit.batches.sum(:coop_sf_amount)) %></small>
           </td>
           <td>
-            <%= pc.get_or_number %> <br>
-            <%= month_day_year(pc.get_or_date) %>
+            <%= content_tag :strong, pc.get_or_number %> <br>
+            <%= content_tag :small, month_day_year(pc.get_or_date) %>
           </td>
           <td>
             <%#= pc.group_remit.agreement.emp_agreements.empty? ? "-" : pc.group_remit.agreement.emp_agreements.find_by(active: true).employee %>
@@ -64,7 +64,7 @@
       <% end %>
     <% else %>
       <tr>
-        <td colspan=7><%= content_tag :p, "NO RECORD(S).", class: "lead fw-bold text-center" %></td>
+        <td colspan=8><%= content_tag :p, "NO RECORD(S).", class: "lead fw-bold text-center" %></td>
       </tr>
     <% end %>
   </tbody>
