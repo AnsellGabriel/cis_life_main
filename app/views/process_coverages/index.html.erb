@@ -92,7 +92,7 @@
   <% elsif current_user.analyst? %>
     <%= content_tag :h1, "List of Process Coverages" %>
     <div class="row mb-3 mt-3">
-      <div class="col-md-8">
+      <div class="col-md-6">
         <div class="accordion" id="accordionExample1">
           <div class="accordion-item">
             <h2 class="accordion-header" id="heading1">
@@ -121,6 +121,7 @@
               </div>
             </div>
           </div>
+
           <div class="accordion-item">
             <h2 class="accordion-header" id="heading2">
               <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse2" aria-expanded="false" aria-controls="collapse2">
@@ -148,6 +149,7 @@
               </div>
             </div>
           </div>
+
           <div class="accordion-item">
             <h2 class="accordion-header" id="heading3">
               <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse3" aria-expanded="false" aria-controls="collapse3">
@@ -161,6 +163,19 @@
             </div>
           </div>
         </div>
+      </div>
+      <div class="col-md-6">
+        <%= form_with url: process_coverages_path, builder: SimpleForm::FormBuilder, method: :get do |f| %>
+          <div class="row">
+            <div class="d-flex gap-3 text-center">
+              <%= f.input :search, placeholder: 'Search...', label: false, style: "width: auto" %>
+              <%= f.submit 'Search', class: "btn btn-success"%>
+              <%= link_to "View All", process_coverages_path, class: "btn btn-secondary" %>
+            </div>
+          </div>
+          <%#= text_field_tag 'search', nil, placeholder: 'Search...', class: "form-control", style: "width: auto", required: true %>
+          <%#= submit_tag 'Search', class: "btn btn-success" %>
+        <% end %>
       </div>
       
     </div>
