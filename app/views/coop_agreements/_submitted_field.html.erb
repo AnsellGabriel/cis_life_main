@@ -9,12 +9,12 @@
 <% unless @agreement.plan.acronym == 'PMFC' %>
 	<%= render 'agreement_field', 
 		name: 'Effectivity Date', 
-		value: month_day_year(group_remit.effectivity_date), 
+		value: to_shortdate(group_remit.effectivity_date), 
 		margin: ''
 	%>
 	<%= render 'agreement_field', 
 		name: 'Expiry Date', 
-		value: month_day_year(group_remit.expiry_date), 
+		value: to_shortdate(group_remit.expiry_date), 
 		margin: 'mb-2'
 	%>
 <% end %>
