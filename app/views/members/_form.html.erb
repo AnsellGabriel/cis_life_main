@@ -2,14 +2,19 @@
 <%= simple_form_for(member) do |f| %>
   <div class="form-inputs mb-3">
     <div class="row ps-3 pe-3">
-      <div class="col-12">
+      <div class="col-10">
           <%= f.simple_fields_for coop_member do |member| %>
             <div class="form-group d-flex align-items-end coop-member-form">
-              <%= member.hidden_field :membership_date, value: Date.today%>
               <%= member.hidden_field :cooperative_id, value: @cooperative.id %>
-
               <div class="col-md-6">
                 <%= member.input :coop_branch_id, collection: @cooperative.coop_branches.map {|branch| [branch.name, branch.id]}, style: "width: auto" , error: '*Required', class: "form-select mb-3", label_html: {class: 'text-secondary sm-secondary-text'}  %>
+              </div>
+              <div class="col-md-4">
+                <%= member.input :membership_date, as: :string, error: '*Required', input_html: {data: {
+                  controller: "flatpickr",
+                  flatpickr_max_date: Time.zone.now,
+                  flatpickr_next_arrow: "Next",
+                  flatpickr_prev_arrow: "Prev"}}, label_html: {class: 'text-secondary sm-secondary-text'} %>              
               </div>
             </div>
           <% end %>

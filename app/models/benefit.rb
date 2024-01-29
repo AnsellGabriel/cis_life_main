@@ -8,7 +8,8 @@ class Benefit < ApplicationRecord
   enum benefit_type: {
     life: 0,
     add: 1,
-    burial: 2
+    burial: 2,
+    
   }
 
   def to_s

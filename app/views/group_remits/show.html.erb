@@ -21,10 +21,9 @@
     <% end %>
   <% else %>
     <div class="d-flex gap-1">
-      <%= link_to :back, class: small_btn('secondary'), title: 'Back' do %>
+      <%= link_to coop_agreement_group_remit_path(@agreement, @group_remit.batch_remit_id), class: small_btn('secondary'), title: 'Back' do %>
         <i class="bi bi-arrow-bar-left"></i>  
       <% end %>
-      <%= link_to "#{BatchRemit.find(@group_remit.batch_remit_id).name}", coop_agreement_group_remit_path(@agreement, @group_remit.batch_remit_id), class: small_btn('secondary') %>
     </div>
   <% end %>
 

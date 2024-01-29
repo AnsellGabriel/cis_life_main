@@ -8,9 +8,9 @@ class ProcessCoverage < ApplicationRecord
   belongs_to :processor, class_name: "Employee"
   belongs_to :approver, class_name: "Employee"
 
-  belongs_to :who_processed, class_name: "Employee"
-  belongs_to :who_approved, class_name: "Employee"
-  
+  belongs_to :who_processed, class_name: "Employee", optional: true
+  belongs_to :who_approved, class_name: "Employee", optional: true
+
   has_many :process_remarks
 
   # audited

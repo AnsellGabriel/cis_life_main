@@ -1,5 +1,8 @@
 <div class="mb-3">
-	<%= link_to 'Back', :back, class: small_btn('secondary') %>
+	<%= link_to :back, class: small_btn('secondary') do %>
+		<i class="bi bi-arrow-bar-left"></i>
+	<% end %>
+
 	<%= link_to 'Clear All', destroy_all_denied_enrollees_path, class: small_btn('danger'), data: {turbo_confirm: 'Delete all denied enrollees?', turbo_method: :delete}  %>
 </div>
 <div class="<%= flex_justify_align('', 'center') %> gap-1 mb-3">
