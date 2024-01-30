@@ -22,11 +22,9 @@ class GroupRemitsController < InheritedResources::Base
 
   def submit
     if @group_remit.batches.empty?
-      respond_to do |format|
-        format.html { redirect_to coop_agreement_group_remit_path(@group_remit.agreement, @group_remit), alert: "Unable to submit empty remittance!" }
-      end
-
-      return
+      return redirect_to coop_agreement_group_remit_path(@group_remit.agreement, @group_remit), alert: "Unable to submit empty remittance!"
+    elsif @group_remit.mis_entry? && @group_remit.or_number.blank?
+      return redirect_to coop_agreement_group_remit_path(@group_remit.agreement, @group_remit), alert: "Please enter the official receipt number!"
     end
 
     # if @group_remit.batches_all_renewal?

@@ -2,18 +2,6 @@
   <%= link_to coop_agreement_group_remit_path(@batch_remit.agreement, @batch_remit), class: small_btn('secondary'), title: 'Back' do %>
     <i class="bi bi-arrow-bar-left"></i>  
   <% end %>
-
-  <%= button_to "Enroll Members", group_remits_path, 
-    method: :post, 
-    params: { 
-      agreement_id: @batch_remit.agreement.id, 
-      anniversary_id: @batch_remit.anniversary&.id, 
-      anniv_type: @batch_remit.agreement.anniversary_type,
-      type: 'Remittance',
-      batch_remit_id: @batch_remit.id
-    }, 
-    class: small_btn('success'), 
-    data: { turbo: false } %>
 </div>
 <%= content_tag :h3, "#{@batch_remit.name} REMITTANCES", class: 'mb-0 text-primary mb-1' %>
 
@@ -42,21 +30,29 @@
     </tr>
   </thead>
   <tbody>
-    <% @remittances.each do |remittance| %>
+    <% if @remittances.exists? %>
+      <% @remittances.each do |remittance| %>
+        <tr>
+          <th scope="row" class="small"><%= remittance.or_number.present? ? remittance.or_number : "-" %></th>
+          <td class="text-secondary small"><%= remittance.name %></td>
+          <td class="text-secondary small"><%= remittance.coop_net_premium %></td>
+          <td class="small" style="color: <%= remittance.decorate.status_color %>" >    
+            <%= content_tag :span, remittance.status.titleize, class: remittance.decorate.status_badge %>
+          </td>
+          <td class="text-secondary small text-center">
+            <%= link_to coop_agreement_group_remit_path(@batch_remit.agreement, remittance),
+              title: 'View',
+              class: small_btn('outline-primary') do
+            %>
+              <i class="bi bi-eye-fill"></i>
+            <% end %>
+          </td>
+        </tr>
+      <% end %>
+    <% else %>
       <tr>
-        <th scope="row" class="small"><%= remittance.or_number.present? ? remittance.or_number : "-" %></th>
-        <td class="text-secondary small"><%= remittance.name %></td>
-        <td class="text-secondary small"><%= remittance.coop_net_premium %></td>
-        <td class="small" style="color: <%= remittance.decorate.status_color %>" >    
-          <%= content_tag :span, remittance.status.titleize, class: remittance.decorate.status_badge %>
-        </td>
-        <td class="text-secondary small text-center">
-          <%= link_to coop_agreement_group_remit_path(@batch_remit.agreement, remittance),
-            title: 'View',
-            class: small_btn('outline-primary') do
-          %>
-            <i class="bi bi-eye-fill"></i>
-          <% end %>
+        <td colspan="5" class="text-center">
+          <span class="text-secondary">No remittances found.</span>
         </td>
       </tr>
     <% end %>

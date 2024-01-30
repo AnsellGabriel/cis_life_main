@@ -56,8 +56,8 @@ only: %i[ show edit update destroy approve_batch deny_batch pending_batch recons
         date_from = Date.strptime(params[:date_from], "%Y-%m-%d")
         # date_to = Date.strptime(params[:date_to], "%m-%d-%Y")
         date_to = Date.strptime(params[:date_to], "%Y-%m-%d")
-        
-        
+
+
         @process_coverages = @process_coverages_x.where(processor_id: params[:emp_id], status: params[:process_type], created_at: date_from..date_to)
       end
 
@@ -133,7 +133,7 @@ only: %i[ show edit update destroy approve_batch deny_batch pending_batch recons
     else
       ProductBenefit.joins(agreement_benefit: :batches).where("batches.id IN (?)", @batches_x.pluck(:id)).where("product_benefits.benefit_id = ?", 1).sum(:coverage_amount)
     end
-    
+
     pdf = PsheetPdf.new(@process_coverage, @total_life_cov, view_context)
     send_data(pdf.render,
       filename: "#{@process_coverage.group_remit.name}.pdf",
@@ -442,7 +442,7 @@ only: %i[ show edit update destroy approve_batch deny_batch pending_batch recons
   end
 
   def approve
-        
+
     @max_amount = params[:max_amount].to_i
     @total_life_cov = params[:total_life_cov].to_i
     # @total_net_prem = params[:total_net_prem].to_i
@@ -456,7 +456,7 @@ only: %i[ show edit update destroy approve_batch deny_batch pending_batch recons
 
     respond_to do |format|
       if current_user.rank == "analyst"
-                
+
         if @max_amount >= @total_gross_prem
 
           if @process_coverage.count_batches_denied(klass_name) > 0
@@ -486,13 +486,15 @@ only: %i[ show edit update destroy approve_batch deny_batch pending_batch recons
         end
       elsif current_user.rank == "senior_officer"
         # @process_coverage.update_attribute(:status, "approved")
-        @process_coverage.update(status: :approved, evaluate_date: Date.today, who_approved: current_user.userable_id)
+        # @process_coverage.update(status: :approved, evaluate_date: Date.today, who_approved: current_user.userable_id)
+        @process_coverage.update(status: :approved, evaluate_date: Date.today, who_approved_id: current_user.userable_id)
         # @process_coverage.group_remit.set_total_premiums_and_fees
         format.html { redirect_to process_coverage_path(@process_coverage), notice: "Process Coverage Approved!" }
       end
     end
 
     @process_coverage.group_remit.set_total_premiums_and_fees
+
     # if @process_coverage.update_attribute(:status, "approved")
     #   @process_coverage.group_remit.set_total_premiums_and_fees
     #   format.html { redirect_to process_coverage_path(@process_coverage), notice: "Process Coverage Approved!" }

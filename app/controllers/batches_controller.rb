@@ -203,8 +203,11 @@ class BatchesController < ApplicationController
   end
 
   def update
+    @batch.manual_premium_and_fees(batch_params[:premium], @group_remit)
+
     respond_to do |format|
-      if @batch.update(batch_params)
+      if @batch.save!
+
         format.html {
           redirect_to coop_agreement_group_remit_path(@agreement, @group_remit), notice: "Premium updated"
         }

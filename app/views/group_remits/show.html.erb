@@ -21,7 +21,7 @@
     <% end %>
   <% else %>
     <div class="d-flex gap-1">
-      <%= link_to coop_agreement_group_remit_path(@agreement, @group_remit.batch_remit_id), class: small_btn('secondary'), title: 'Back' do %>
+      <%= link_to coop_agreement_group_remit_remittances_path(@agreement, @group_remit.batch_remit_id), class: small_btn('secondary'), title: 'Back' do %>
         <i class="bi bi-arrow-bar-left"></i>  
       <% end %>
     </div>
@@ -29,6 +29,18 @@
 
   <div class="mb-0 gap-1 <%= flex_justify_align('', 'center') %>">
     <% if @group_remit.is_batch_remit? %>
+      <%= button_to "Enroll Members", group_remits_path, 
+        method: :post, 
+        params: { 
+          agreement_id: @group_remit.agreement.id, 
+          anniversary_id: @group_remit.anniversary&.id, 
+          anniv_type: @group_remit.agreement.anniversary_type,
+          type: 'Remittance',
+          batch_remit_id: @group_remit.id
+        }, 
+        class: small_btn('success'), 
+        data: { turbo: false } 
+      %>
       <%= link_to "Remittances", coop_agreement_group_remit_remittances_path(@agreement, @group_remit), class: small_btn('primary') %>
     <% end %>
 
@@ -133,62 +145,6 @@
   </div>
 </div>
 
-<div class="<%= flex_justify_align('', 'base') %> gap-3">
-
-
-  <div class="d-flex flex-column">
-      
-      <!--
-      <div class="card mb-2">
-        <div class="card-body text-secondary">
-          <div class="<%= flex_justify_align('center') %>">
-            <%= content_tag :h6, "Effectivity Date ", class: 'sm-secondary-text text-primary', style: "width: 150px" %>
-            <%= content_tag :h6, ": #{@group_remit.effectivity_date.present? ? month_day_year(@group_remit.effectivity_date) : 'Tentative'}", class: 'sm-secondary-text', style: "width: 150px" %>
-          </div>
-          <div class="<%= flex_justify_align('center') %>">
-            <%= content_tag :h6, "Expiry Date", class: 'sm-secondary-text text-primary', style: "width: 150px" %>
-            <%= content_tag :h6, ": #{month_day_year(@group_remit.expiry_date)}", class: 'sm-secondary-text', style: "width: 150px" %>
-          </div>
-
-          <% if @group_remit.instance_of?(Remittance)%>
-            <div class="<%= flex_justify_align('center') %>">
-              <%= content_tag :h6, "Submitted Date ", class: 'sm-secondary-text text-primary', style: "width: 150px" %>
-              <%= content_tag :h6, ": #{@group_remit.date_submitted.present? ? month_day_year(@group_remit.date_submitted) : 'Pending'}", class: 'sm-secondary-text', style: "width: 150px" %>
-            </div>
-          <% end %>
-          
-          <div class="<%= flex_justify_align('center') %>">
-            <%= content_tag :h6, "Terms", class: 'sm-secondary-text text-primary', style: "width: 150px" %>
-            <%= content_tag :h6, ": #{@group_remit.terms} months", class: 'sm-secondary-text', style: "width: 150px"%>
-          </div>
-
-          <% if @group_remit.paid? or @group_remit.expired? %>
-            <% if @group_remit.instance_of?(BatchRemit) %>
-              <% @group_remit.paid_remittances.each do |remittance| %>
-                <div class="<%= flex_justify_align('center') %>">
-
-                  <%= content_tag :h6, "#{extract_from_substring(remittance.name, 'REMITTANCE')} OR #", class: 'sm-secondary-text text-primary', style: "width: 150px" %>
-                  <%= content_tag :h6, ": #{remittance.posted_or.or_no}", class: 'sm-secondary-text', style: "width: 150px"%>
-                </div>
-              <% end %>
-            <% else %>
-              <div class="<%= flex_justify_align('center') %>">
-                <%= content_tag :h6, "OR #", class: 'sm-secondary-text text-primary', style: "width: 150px" %>
-                <%= content_tag :h6, ": #{@group_remit.posted_or.or_no}", class: 'sm-secondary-text', style: "width: 150px"%>
-              </div>
-            <% end %>
-          <% end %>
-        </div>
-      </div>
-    -->
-
-    
-  </div>
-  
-
-  
-</div>
-
   <% if ['GYRTBR','GYRTFR'].include?(plan_acronym) %>
     <div class="<%= flex_justify_align('between', 'center') %> gap-1">
       <div class="d-flex gap-2">
@@ -245,9 +201,10 @@
     <thead>
       <tr class="table-dark">
 
-        <th class="text-center" scope="col">ID</th>
         <th class="text-center" scope="col">Members</th>
-        <th class="text-center" scope="col">Premium</th>
+        <% unless @group_remit.is_batch_remit? %>
+          <th class="text-center" scope="col">Premium</th>
+        <% end %>
         <th class="text-center" scope="col">Beneficiaries</th>
 
         <% if @agreement.plan.dependable? %>
@@ -279,7 +236,11 @@
 </div>
 
 <div class="<%= flex_justify_align('between') %>">
-  <%== pagy_bootstrap_nav(@pagy) %>
+  <div class="">
+    <% if @batches.size > 10 %>
+      <%== pagy_bootstrap_nav(@pagy) %>
+    <% end %>
+  </div>
   <% unless @group_remit.is_batch_remit? %>
     <%= turbo_frame_tag "computation" do %>
       <%= render "group_remits/computation", group_remit: @group_remit, agreement: @agreement %>

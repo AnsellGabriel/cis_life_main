@@ -151,8 +151,14 @@ class GroupRemit < ApplicationRecord
     unless self.type == "BatchRemit"
 
       if self.process_coverage.status == "approved"
-        self.status = :for_payment
-        Notification.create(notifiable: self.agreement.cooperative, message: "#{self.name} is approved and now for payment.")
+        if self.mis_entry?
+          self.status = :paid
+          self.update_batch_remit
+          self.update_batch_coverages
+        else
+          self.status = :for_payment
+          Notification.create(notifiable: self.agreement.cooperative, message: "#{self.name} is approved and now for payment.")
+        end
       else
         self.status.nil? ? "under_review" : self.status
       end
@@ -263,7 +269,11 @@ class GroupRemit < ApplicationRecord
   end
 
   def commisionable_premium
-    initial_gross_premium - (denied_principal_premiums + denied_dependent_premiums)
+    if self.mis_entry?
+      initial_gross_premium
+    else
+      initial_gross_premium - (denied_principal_premiums + denied_dependent_premiums)
+    end
   end
 
   def total_coop_commissions
@@ -365,9 +375,9 @@ class GroupRemit < ApplicationRecord
     payments.approved.last
   end
 
-  def posted_or
-    approved_payment.entries.posted.last
-  end
+  # def posted_or
+  #   approved_payment.entries.posted.last
+  # end
 
   def editable_by_mis?(current_user)
     (current_user.userable_type == "Employee" && current_user.userable.department_id == 15) && !self.instance_of?(BatchRemit) && self.pending?

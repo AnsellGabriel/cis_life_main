@@ -717,6 +717,7 @@ ActiveRecord::Schema[7.0].define(version: 2024_01_26_031540) do
     t.date "date_submitted"
     t.integer "or_number"
     t.boolean "mis_entry"
+    t.decimal "refund_amount", precision: 15, scale: 2
     t.index ["agreement_id"], name: "index_group_remits_on_agreement_id"
     t.index ["anniversary_id"], name: "index_group_remits_on_anniversary_id"
   end

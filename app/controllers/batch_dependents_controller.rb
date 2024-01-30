@@ -12,6 +12,10 @@ class BatchDependentsController < InheritedResources::Base
     @batch_dependent = @batch.batch_dependents.new
     @member = @batch.member_details
     @dependents = @member.unselected_dependents(@batch.dependent_ids)
+
+    if params[:error]
+      @batch_dependent.errors.add(:base, 'Dependent already exist')
+    end
   end
 
   def show_all
@@ -53,8 +57,10 @@ class BatchDependentsController < InheritedResources::Base
   end
 
   def update
+    @batch_dependent.manual_premium_and_fees(batch_dependent_params[:premium], @group_remit)
+
     respond_to do |format|
-      if @batch_dependent.update(batch_dependent_params)
+      if @batch_dependent.save!
         format.html {
           redirect_to group_remit_batch_path(@group_remit, @batch), notice: "Premium updated"
         }

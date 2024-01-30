@@ -13,6 +13,10 @@ class BatchBeneficiariesController < InheritedResources::Base
     @member = @batch.member_details
     @beneficiaries = @member.unselected_dependents(@batch.beneficiary_ids)
     @claims = params[:claims]
+
+    if params[:error]
+      @batch_beneficiary.errors.add(:base, 'Beneficiary already exist')
+    end
   end
 
   def create

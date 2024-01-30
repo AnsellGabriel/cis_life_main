@@ -180,7 +180,7 @@
                   <% end %>
                 </div>
               <div class="col-sm-6 text-secondary">
-                <%= content_tag :span, "#{b.member_dependent.last_name.capitalize}, #{b.member_dependent.first_name.capitalize} #{b.member_dependent.middle_name.chr}", 
+                <%= content_tag :span, "#{b.full_name.upcase}", 
                   class: "mb-0 text-center", 
                   style: "font-size: .8rem" 
                 %>
@@ -254,12 +254,14 @@
                   style: 'font-size: .8rem' 
                 %>
               </div>
-              <div class="col-sm-3 text-center">
-                <%= content_tag :span, 'Actions', 
-                  class: 'text-center', 
-                  style: 'font-size: .8rem' 
-                %>
-              </div>
+              <% unless @group_remit.instance_of?(BatchRemit) %>
+                <div class="col-sm-3 text-center">
+                  <%= content_tag :span, 'Actions', 
+                    class: 'text-center', 
+                    style: 'font-size: .8rem' 
+                  %>
+                </div>
+              <% end %>
             </div>
             <hr>
           <% end %>
@@ -269,7 +271,7 @@
               <div class="d-flex align-items-center text-center">
                 <div class="col-sm-4 text-secondary <%= flex_justify_align('start', 'baseline') %> gap-1">
                   <%= content_tag :span, "#{d.insurance_status.titleize}", class: d_presenter.status_badge %>
-                  <%= content_tag :span, "#{d.member_dependent.last_name.capitalize}, #{d.member_dependent.first_name.capitalize} #{d.member_dependent.middle_name.chr}", 
+                  <%= content_tag :span, "#{d.full_name.upcase}", 
                     class: "mb-0", 
                     style: "font-size: .8rem" 
                   %>

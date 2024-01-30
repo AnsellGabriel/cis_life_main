@@ -44,7 +44,7 @@
             <% if batch_remit.remaining_days <= 90 && batch_remit.remaining_days > 0 %>
               <div class="mt-3">
                 <span class="<%= badge("#{batch_remit.countdown_color}") %>">
-                    Expiry : <%= batch_remit.remaining_days %> days
+                    <%= "Expiring in  #{batch_remit.remaining_days} day#{batch_remit.remaining_days == 1 ? '' : 's'}" %>
                 </span>
               </div>
             <% end %>

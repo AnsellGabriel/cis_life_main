@@ -33,20 +33,30 @@ class MemberDependentsController < InheritedResources::Base
   end
 
   def create_beneficiary
-    @member_dependent = @member.member_dependents.build(member_dependent_params)
+    @member_dependent = @member.member_dependents.find_or_initialize_by(
+      first_name: member_dependent_params[:first_name],
+      last_name: member_dependent_params[:last_name],
+      birth_date: member_dependent_params[:birth_date]
+    )
 
     respond_to do |format|
-      if @member_dependent.save
-        if member_dependent_params[:claims]
-          format.html { redirect_to new_group_remit_batch_beneficiary_path(@group_remit, @batch, claims: true), notice: "Member dependent was successfully created." }
-        else
-          format.html { redirect_to new_group_remit_batch_beneficiary_path(@group_remit, @batch), notice: "Member dependent was successfully created." }
-        end
+      if @member_dependent.persisted?
+        format.html { redirect_to new_group_remit_batch_beneficiary_path(@group_remit, @batch, error: true), notice: "Dependent already exists" }
       else
-        if member_dependent_params[:claims]
-          format.html { render :new_beneficiary_claims, status: :unprocessable_entity }
+        @member_dependent = @member.member_dependents.build(member_dependent_params)
+
+        if @member_dependent.save
+          if member_dependent_params[:claims]
+            format.html { redirect_to new_group_remit_batch_beneficiary_path(@group_remit, @batch, claims: true), notice: "Member dependent was successfully created." }
+          else
+            format.html { redirect_to new_group_remit_batch_beneficiary_path(@group_remit, @batch), notice: "Member dependent was successfully created." }
+          end
         else
-          format.html { render :new_beneficiary, status: :unprocessable_entity }
+          if member_dependent_params[:claims]
+            format.html { render :new_beneficiary_claims, status: :unprocessable_entity }
+          else
+            format.html { render :new_beneficiary, status: :unprocessable_entity }
+          end
         end
       end
 
@@ -54,13 +64,23 @@ class MemberDependentsController < InheritedResources::Base
   end
 
   def create
-    @member_dependent = @member.member_dependents.build(member_dependent_params)
+    @member_dependent = @member.member_dependents.find_or_initialize_by(
+      first_name: member_dependent_params[:first_name],
+      last_name: member_dependent_params[:last_name],
+      birth_date: member_dependent_params[:birth_date]
+    )
 
     respond_to do |format|
-      if @member_dependent.save
-        format.html { redirect_to new_group_remit_batch_dependent_path(@group_remit, @batch), notice: "Member dependent was successfully created." }
+      if @member_dependent.persisted?
+        format.html { redirect_to new_group_remit_batch_dependent_path(@group_remit, @batch, error: true), notice: "Dependent already exists" }
       else
-        format.html { render :new, status: :unprocessable_entity }
+        @member_dependent = @member.member_dependents.build(member_dependent_params)
+
+        if @member_dependent.save
+          format.html { redirect_to new_group_remit_batch_dependent_path(@group_remit, @batch), notice: "Dependent was successfully created" }
+        else
+          format.html { render :new, status: :unprocessable_entity }
+        end
       end
     end
   end

@@ -18,14 +18,3 @@
 		margin: 'mb-2'
 	%>
 <% end %>
-
-<%= render 'agreement_field', 
-	name: 'Net Premium', 
-	value: peso_currency(group_remit.coop_net_premium), 
-	margin: ''
-%>
-<%= render 'agreement_field', 
-	name: 'Cooperative Service Fee', 
-	value: peso_currency(group_remit.total_coop_commissions), 
-	margin: ''
-%>
