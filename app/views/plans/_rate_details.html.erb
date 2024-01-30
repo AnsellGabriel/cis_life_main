@@ -1,0 +1,26 @@
+
+<% if plan.id == 2 %> <!-- LPPI -->
+  <h3>Rates</h3>
+  <div class="rates">
+    <div class="row">
+      <%= f.fields_for :loan_rates do |lr| %>
+        <%= render 'agreements/loan_rate_fields', f: lr %>
+      <% end %>
+    </div>
+  </div>
+  <%= link_to_add_association "Add Rate", f, :loan_rates, data: {association_insertion_node: '.loan_rates', association_insertion_method: :append}, class: "btn btn-primary" %>
+
+<% else %>
+  <h3>Agreement Benefits</h3>
+  <div class="agreement_benefits">
+    <div class="row">
+      <%= f.fields_for :agreement_benefits do |ab| %>
+        <%# <div class="col-md-6"> %>
+          <%= render 'agreements/agreement_benefit_fields', f: ab %>
+        <%# </div> %>
+      <% end %>
+    </div>
+  </div>
+  <%= link_to_add_association "Add benefit", f, :agreement_benefits, data: {association_insertion_node: '.agreement_benefits', association_insertion_method: :append}, class: "btn btn-primary" %>
+<% end %>
+

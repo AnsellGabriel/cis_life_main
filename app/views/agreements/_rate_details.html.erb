@@ -1,0 +1,10 @@
+<div class="agreement_benefits">
+  <div class="row">
+    <%= f.fields_for :agreement_benefits do |ab| %>
+      <%# <div class="col-md-6"> %>
+        <%= render 'agreement_benefit_fields', f: ab %>
+      <%# </div> %>
+    <% end %>
+  </div>
+</div>
+<%= link_to_add_association "Add benefit", f, :agreement_benefits, data: {association_insertion_node: '.agreement_benefits', association_insertion_method: :append}, class: "btn btn-primary" %>

@@ -35,10 +35,11 @@
               <% moa.loan_rates.each do |rate| %>
                 <tr>
                   <td>
-                    <%= content_tag :p, "#{rate.min_age} years old - #{rate.max_age} years old" %>
+                    <%= content_tag :span, "#{rate.min_age} years old - #{rate.max_age} years old" %> <br>
+                    <small><%= to_currency(rate.min_amount) %> to <%= to_currency(rate.max_amount) %></small>
                   </td>
                   <td>
-                    <%= content_tag :p, to_currency(rate.annual_rate / 12.to_d) %>
+                    <%= content_tag :p, "#{to_currency(rate.annual_rate / 12.to_d)} / 1000" %>
                   </td>
                 </tr>
               <% end %>
