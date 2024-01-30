@@ -40,6 +40,7 @@ Rails.application.routes.draw do
 
   resources :plans do
     get :selected, on: :member
+    get :show_rates, on: :member
   end
 
 

@@ -462,11 +462,11 @@ only: %i[ show edit update destroy approve_batch deny_batch pending_batch recons
           if @process_coverage.count_batches_denied(klass_name) > 0
             # if @process_coverage.group_remit.batches.where(batches: { insurance_status: :denied }).count > 0
             # @process_coverage.update_attribute(:status, "for_head_approval")
-            @process_coverage.update(status: :for_head_approval, process_date: Date.today, who_processed: current_user.userable_id)
+            @process_coverage.update(status: :for_head_approval, process_date: Date.today, who_processed: current_user.userable)
             format.html { redirect_to process_coverage_path(@process_coverage), notice: "Process Coverage for Head Approval!" }
           else
             # @process_coverage.update_attribute(:status, "approved")
-            @process_coverage.update(status: :approved, process_date: Date.today, evaluate_date: Date.today, who_approved: current_user.userable_id)
+            @process_coverage.update(status: :approved, process_date: Date.today, evaluate_date: Date.today, who_approved: current_user.userable)
             # @process_coverage.group_remit.set_total_premiums_and_fees
             format.html { redirect_to process_coverage_path(@process_coverage), notice: "Process Coverage Approved!" }
           end
@@ -477,7 +477,7 @@ only: %i[ show edit update destroy approve_batch deny_batch pending_batch recons
       elsif current_user.rank == "head"
         if @max_amount >= @total_gross_prem
           # @process_coverage.update_attribute(:status, "approved")
-          @process_coverage.update(status: :approved, evaluate_date: Date.today, who_approved: current_user.userable_id)
+          @process_coverage.update(status: :approved, evaluate_date: Date.today, who_approved: current_user.userable)
           # @process_coverage.group_remit.set_total_premiums_and_fees
           format.html { redirect_to process_coverage_path(@process_coverage), notice: "Process Coverage Approved!" }
         else
@@ -486,7 +486,7 @@ only: %i[ show edit update destroy approve_batch deny_batch pending_batch recons
         end
       elsif current_user.rank == "senior_officer"
         # @process_coverage.update_attribute(:status, "approved")
-        @process_coverage.update(status: :approved, evaluate_date: Date.today, who_approved: current_user.userable_id)
+        @process_coverage.update(status: :approved, evaluate_date: Date.today, who_approved: current_user.userable)
         # @process_coverage.group_remit.set_total_premiums_and_fees
         format.html { redirect_to process_coverage_path(@process_coverage), notice: "Process Coverage Approved!" }
       end
@@ -546,14 +546,15 @@ only: %i[ show edit update destroy approve_batch deny_batch pending_batch recons
       LoanInsurance::Batch.find(params[:batch])
     else
       Batch.find(params[:batch])
-             end
+    end
 
     respond_to do |format|
       if (@batch.class.name == "Batch") && (@batch.batch_dependents.for_review.count > 0 || @batch.batch_dependents.pending.count > 0)
         format.html { redirect_to process_coverage_path(@process_coverage), alert: "Please check pending and/or for review dependent(s) for that coverage." }
       else
         if @batch.update_attribute(:insurance_status, 0)
-          @process_coverage.increment!(:approved_count)
+          # @process_coverage.increment!(:approved_count)          
+          @process_coverage.update(approved_count: @process_coverage.count_batches_approved(params[:batch_type]), denied_count: @process_coverage.count_batches_denied(params[:batch_type]))
           format.html { redirect_to process_coverage_path(@process_coverage), notice: "Batch Approved!" }
         end
       end
@@ -607,7 +608,7 @@ only: %i[ show edit update destroy approve_batch deny_batch pending_batch recons
     else
       respond_to do |format|
         if @batch.update_attribute(:insurance_status, 1)
-          @process_coverage.increment!(:denied_count)
+          @process_coverage.update(approved_count: @process_coverage.count_batches_approved(params[:batch_type]), denied_count: @process_coverage.count_batches_denied(params[:batch_type]))
           format.html { redirect_to process_coverage_path(@process_coverage), alert: "Batch Denied!" }
         end
       end

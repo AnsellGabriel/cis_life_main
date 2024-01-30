@@ -8,8 +8,8 @@ class ProcessCoverage < ApplicationRecord
   belongs_to :processor, class_name: "Employee"
   belongs_to :approver, class_name: "Employee"
 
-  belongs_to :who_processed, class_name: "Employee"
-  belongs_to :who_approved, class_name: "Employee"
+  belongs_to :who_processed, class_name: "Employee", optional: true
+  belongs_to :who_approved, class_name: "Employee", optional: true
   
   has_many :process_remarks
 
@@ -128,6 +128,15 @@ class ProcessCoverage < ApplicationRecord
       self.group_remit.batches.where(loan_insurance_batches: { insurance_status: :denied} ).count
     else
       self.group_remit.batches.where(batches: { insurance_status: :denied} ).count
+    end
+  end
+
+  def count_batches_approved(klass)
+    case klass
+    when "LoanInsurance::Batch"
+      self.group_remit.batches.where(loan_insurance_batches: { insurance_status: :approved} ).count
+    else
+      self.group_remit.batches.where(batches: { insurance_status: :approved} ).count
     end
   end
 
