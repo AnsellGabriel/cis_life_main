@@ -142,34 +142,6 @@ class GroupRemit < ApplicationRecord
 
   end
 
-  def set_total_premiums_and_fees
-    self.gross_premium = commisionable_premium
-    self.coop_commission = total_coop_commissions
-    self.agent_commission = total_agent_commissions
-    self.net_premium = net_premium
-
-    unless self.type == "BatchRemit"
-
-      if self.process_coverage.status == "approved"
-        if self.mis_entry?
-          self.status = :paid
-          self.update_batch_remit
-          self.update_batch_coverages
-        else
-          self.status = :for_payment
-          Notification.create(notifiable: self.agreement.cooperative, message: "#{self.name} is approved and now for payment.")
-        end
-      else
-        self.status.nil? ? "under_review" : self.status
-      end
-      # self.status = :for_payment
-      # Notification.create(notifiable: self.agreement.cooperative, message: "#{self.name} is approved and now for payment.")
-    end
-
-    self.save!
-    # self.effectivity_date = Date.today
-  end
-
   def set_for_payment_status
     set_total_premiums_and_fees
 
@@ -212,6 +184,41 @@ class GroupRemit < ApplicationRecord
 
   def get_agent_sf
     agreement.agent_sf
+  end
+
+  def set_total_premiums_and_fees
+    self.gross_premium = commisionable_premium
+    self.coop_commission = total_coop_commissions
+    self.agent_commission = total_agent_commissions
+    self.net_premium = net_premium
+
+    unless self.type == "BatchRemit"
+
+      if self.process_coverage.status == "approved"
+        if self.mis_entry?
+          self.status = :paid
+          self.update_batch_remit
+          self.update_batch_coverages
+
+          net_prem = initial_gross_premium - (denied_principal_premiums + denied_dependent_premiums)
+
+          if self.gross_premium > net_prem
+            self.refund_amount = (self.gross_premium - net_prem) - (net_prem * (agreement.coop_sf / 100))
+          end
+
+        else
+          self.status = :for_payment
+          Notification.create(notifiable: self.agreement.cooperative, message: "#{self.name} is approved and now for payment.")
+        end
+      else
+        self.status.nil? ? "under_review" : self.status
+      end
+      # self.status = :for_payment
+      # Notification.create(notifiable: self.agreement.cooperative, message: "#{self.name} is approved and now for payment.")
+    end
+
+    self.save!
+    # self.effectivity_date = Date.today
   end
 
   def total_dependent_premiums
@@ -264,10 +271,6 @@ class GroupRemit < ApplicationRecord
     total_principal_premium + total_dependent_premiums
   end
 
-  def coop_commissions
-    batches.approved.sum(:coop_sf_amount)
-  end
-
   def commisionable_premium
     if self.mis_entry?
       initial_gross_premium
@@ -276,12 +279,28 @@ class GroupRemit < ApplicationRecord
     end
   end
 
+  def coop_commissions
+    batches.approved.sum(:coop_sf_amount)
+  end
+
   def total_coop_commissions
+    if agreement.coop_sf
+        coop_commissions + dependent_coop_commissions
+    else
+      0
+    end
+  end
+
+  def front_end_coop_commission
     if agreement.coop_sf
       commisionable_premium * (agreement.coop_sf / 100)
     else
       0
     end
+  end
+
+  def front_end_coop_net_premium
+    commisionable_premium - front_end_coop_commission
   end
 
   def total_agent_commissions

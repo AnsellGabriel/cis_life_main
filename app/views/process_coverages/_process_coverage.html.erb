@@ -16,6 +16,9 @@
       </div>
       <div class="col-6">
         <%= render "process_remarks", process_remarks: @filtered_remarks, process_coverage: process_coverage %>
+        <div class="">
+          
+        </div>
       </div>
     </div>
     <% unless @insured_types.any?{ |element| (2..9).include?(element) } %>
