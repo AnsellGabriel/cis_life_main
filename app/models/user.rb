@@ -27,6 +27,7 @@ class User < ApplicationRecord
   attribute :approved, :boolean, default: false
 
   def to_s
+    userable.to_s
   end
 
   def user_id

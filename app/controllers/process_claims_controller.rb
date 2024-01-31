@@ -234,8 +234,17 @@ class ProcessClaimsController < ApplicationController
 
           format.html { redirect_to show_coop_process_claim_path(@process_claim), notice: "#{@process_claim.claim_route.to_s.humanize.titleize} by #{current_user}"  }
         else
-          @process_claim.update_attribute(:claim_route, @claim_track.route_id)
-          format.html { redirect_to show_coop_process_claim_path(@process_claim), notice: "#{@process_claim.claim_route.to_s.humanize.titleize} by #{current_user}"  }
+          @required_docs = @process_claim.claim_type.claim_type_documents.where(required: true)
+          @uploaded_docs = @process_claim.claim_attachments
+
+          missing_docs = @required_docs.pluck(:id) - @uploaded_docs.pluck(:claim_type_document_id)
+
+          if missing_docs.empty?
+            @process_claim.update_attribute(:claim_route, @claim_track.route_id)
+            format.html { redirect_to show_coop_process_claim_path(@process_claim), notice: "#{@process_claim.claim_route.to_s.humanize.titleize} by #{current_user}"  }
+          else
+            format.html { redirect_to show_coop_process_claim_path(@process_claim), alert: "Please upload the required documents" }
+          end
         end
 
         format.json { render :show, status: :ok, location: @process_claim }
