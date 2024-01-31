@@ -4,7 +4,7 @@ class Accounting::ChecksController < ApplicationController
   before_action :set_payables, only: %i[ new edit create update]
 
   def requests
-    @claim_requests = ClaimRequestForPayment.all
+    @claim_requests = CheckVoucherRequest.all
     @pagy, @claim_requests = pagy(@claim_requests, items: 10)
   end
 
@@ -23,7 +23,7 @@ class Accounting::ChecksController < ApplicationController
   def show
     @business_checks = @check.business_checks.where.not(id: nil).order(created_at: :desc)
     @ledgers = @check.general_ledgers
-    @claim = @check.claim_request_for_payment.process_claim if @check.claim_request_for_payment.present?
+    @claim = @check.check_voucher_request.process_claim if @check.check_voucher_request.present?
   end
 
   # GET /accounting/checks/new
@@ -56,7 +56,7 @@ class Accounting::ChecksController < ApplicationController
       if params[:rid].present?
         claim_request = ClaimRequestForPayment.find(params[:rid])
         claim_request.voucher_generated!
-        @check.update(claim_request_for_payment: claim_request)
+        @check.update(check_voucher_request: claim_request)
       end
 
       redirect_to @check, notice: "Check voucher created."
@@ -83,7 +83,7 @@ class Accounting::ChecksController < ApplicationController
   def cancel
     @check.transaction do
       @check.cancelled!
-      @check.claim_request_for_payment.pending! if @check.claim_request_for_payment.present?
+      @check.check_voucher_request.pending! if @check.check_voucher_request.present?
     end
 
     redirect_to @check, alert: "Voucher cancelled."

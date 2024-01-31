@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2024_01_26_031540) do
+ActiveRecord::Schema[7.0].define(version: 2024_01_30_074313) do
   create_table "accounting_vouchers", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.date "date_voucher"
     t.integer "voucher"
@@ -23,9 +23,9 @@ ActiveRecord::Schema[7.0].define(version: 2024_01_26_031540) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.integer "status", default: 0
-    t.bigint "claim_request_for_payment_id"
+    t.bigint "check_voucher_request_id"
     t.boolean "claimable", default: false
-    t.index ["claim_request_for_payment_id"], name: "index_accounting_vouchers_on_claim_request_for_payment_id"
+    t.index ["check_voucher_request_id"], name: "index_accounting_vouchers_on_check_voucher_request_id"
     t.index ["payable_type", "payable_id"], name: "index_accounting_vouchers_on_payable"
     t.index ["treasury_account_id"], name: "index_accounting_vouchers_on_treasury_account_id"
   end
@@ -338,6 +338,18 @@ ActiveRecord::Schema[7.0].define(version: 2024_01_26_031540) do
     t.datetime "updated_at", null: false
   end
 
+  create_table "check_voucher_requests", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+    t.string "requestable_type", null: false
+    t.bigint "requestable_id", null: false
+    t.decimal "amount", precision: 10
+    t.integer "status"
+    t.string "analyst"
+    t.string "description"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["requestable_type", "requestable_id"], name: "index_check_voucher_requests_on_requestable"
+  end
+
   create_table "claim_attachments", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.bigint "process_claim_id", null: false
     t.bigint "claim_type_document_id", null: false
@@ -422,6 +434,7 @@ ActiveRecord::Schema[7.0].define(version: 2024_01_26_031540) do
     t.string "analyst"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.string "description"
     t.index ["process_claim_id"], name: "index_claim_request_for_payments_on_process_claim_id"
   end
 
@@ -699,7 +712,6 @@ ActiveRecord::Schema[7.0].define(version: 2024_01_26_031540) do
 
   create_table "group_remits", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.string "name"
-    t.text "description"
     t.bigint "agreement_id", null: false
     t.integer "anniversary_id"
     t.datetime "created_at", null: false
@@ -1202,7 +1214,7 @@ ActiveRecord::Schema[7.0].define(version: 2024_01_26_031540) do
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
   end
 
-  add_foreign_key "accounting_vouchers", "claim_request_for_payments"
+  add_foreign_key "accounting_vouchers", "check_voucher_requests"
   add_foreign_key "accounting_vouchers", "treasury_accounts"
   add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
   add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"

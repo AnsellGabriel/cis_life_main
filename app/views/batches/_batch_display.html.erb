@@ -96,12 +96,7 @@
           <div class="col-sm-3 ">
             <%= to_curr(batch.premium) %>
           </div>
-          <div class="col-sm-3 text-secondary">
-            <span class="mb-0">Coop Commission</span>
-          </div>
-          <div class="col-sm-3 ">
-            <%= to_curr(batch.coop_sf_amount) %>
-          </div>
+          
         </div>
       </div>
     </div>
@@ -299,7 +294,7 @@
                     <% end %>
                   <% end %>
                 </div>
-                <div class="col-sm-3 <%= flex_justify_align('center', 'center') %> gap-1">
+                <div class="col-sm-3 <%= flex_justify_align('end', 'center') %> gap-1">
                   <%= render 'dependent_buttons', group_remit: @group_remit, batch: @batch, dependent: d %>
                 </div>
               </div>

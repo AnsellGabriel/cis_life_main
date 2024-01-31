@@ -84,12 +84,12 @@
         <% end %>
         <div class="text-secondary d-flex justify-content-between">
           <%= content_tag :span, "Less #{agreement.coop_sf}% coop service fee", style: "font-size: .8rem" %>
-          <%= content_tag :span, "(#{to_curr((group_remit.denied_principal_premiums + group_remit.denied_dependent_premiums)/ agreement.coop_sf) })", style: "font-size: .8rem; color: var(--bs-green)"%>
+          <%= content_tag :span, "(#{to_curr((group_remit.gross_premium - group_remit.approved_premiums) * (agreement.coop_sf / 100))})", style: "font-size: .8rem; color: var(--bs-green)"%>
         </div>  
         <hr>
         <div class="text-secondary d-flex justify-content-between">
           <%= content_tag :span, "Refund amount", style: "font-size: .8rem" %>
-          <%= content_tag :span, "#{to_curr((group_remit.denied_principal_premiums + group_remit.denied_dependent_premiums) - (group_remit.denied_principal_premiums + group_remit.denied_dependent_premiums)/ agreement.coop_sf)}", style: "font-size: .8rem; color: var(--bs-green)"%>
+          <%= content_tag :span, "#{to_curr((group_remit.gross_premium - group_remit.approved_premiums) - ((group_remit.gross_premium - group_remit.approved_premiums) * (agreement.coop_sf / 100)))}", style: "font-size: .8rem; color: var(--bs-green)"%>
         </div>  
       <% end %>
 

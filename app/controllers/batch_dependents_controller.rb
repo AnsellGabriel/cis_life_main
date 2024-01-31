@@ -45,11 +45,29 @@ class BatchDependentsController < InheritedResources::Base
     end
     # model/concerns/calculate.rb
     @batch_dependent.set_premium_and_service_fees(dependent_agreement_benefits, group_remit)
+    dependent = @batch_dependent.member_dependent
+
+    if dependent.age < @batch_dependent.agreement_benefit.min_age or dependent.age > @batch_dependent.agreement_benefit.max_age
+
+      # return redirect_to group_remit_path(@group_remit), alert: "Member age must be between #{@batch.agreement_benefit.min_age.to_i} and #{@batch.agreement_benefit.max_age.to_i} years old."
+      @batch_dependent.insurance_status = :denied
+      if dependent.age > @batch_dependent.agreement_benefit.max_age
+        @batch_dependent.batch_remarks.build(remark: "Member age is over the maximum age limit of the plan.", status: :denied, user_type: current_user.userable_type, user_id: current_user.userable.id)
+      else
+        @batch_dependent.batch_remarks.build(remark: "Member age is below the minimum age limit of the plan.", status: :denied, user_type: current_user.userable_type, user_id: current_user.userable.id)
+      end
+    end
 
     if @batch_dependent.save
-      redirect_to group_remit_batch_path(@group_remit, @batch), notice: "Dependent successfully added"
+      redirect_to group_remit_batch_path(@group_remit, @batch)
     else
       redirect_to group_remit_batch_path(@group_remit, @batch), alert: @batch_dependent.errors.full_messages.join(", ")
+    end
+
+    if @batch_dependent.denied?
+      flash[:alert] = "Dependent denied. Please check the remarks"
+    else
+      flash[:notice] = "Dependent successfully added"
     end
   end
 

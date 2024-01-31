@@ -9,7 +9,7 @@ class Benefit < ApplicationRecord
     life: 0,
     add: 1,
     burial: 2,
-    
+    amr: 3
   }
 
   def to_s

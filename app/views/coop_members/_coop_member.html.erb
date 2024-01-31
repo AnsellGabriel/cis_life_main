@@ -8,7 +8,9 @@
       <% end %>
       <div class="row ps-3 pe-3 ">
         <span class="col-2 text-secondary">Branch</span>
-        <span class="col-10"><%= coop_member.coop_branch %></span>
+        <span class="col-4"><%= coop_member.coop_branch %></span>
+        <span class="col-2 text-secondary">Membership date</span>
+        <span class="col-4"><%= to_shortdate(coop_member.membership_date) %></span>
       </div>
       <div class="row">
         <h6 class="text-primary mt-3 mb-0"><i class="bi bi-person"></i> Personal</h6>

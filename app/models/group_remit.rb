@@ -200,10 +200,10 @@ class GroupRemit < ApplicationRecord
           self.update_batch_remit
           self.update_batch_coverages
 
-          net_prem = initial_gross_premium - (denied_principal_premiums + denied_dependent_premiums)
+          # net_prem = initial_gross_premium - (denied_principal_premiums + denied_dependent_premiums)
 
-          if self.gross_premium > net_prem
-            self.refund_amount = (self.gross_premium - net_prem) - (net_prem * (agreement.coop_sf / 100))
+          if self.gross_premium > approved_premiums
+            self.refund_amount = (self.gross_premium - approved_premiums) - ((self.gross_premium - approved_premiums) * (agreement.coop_sf / 100))
           end
 
         else
@@ -271,11 +271,19 @@ class GroupRemit < ApplicationRecord
     total_principal_premium + total_dependent_premiums
   end
 
+  def approved_premiums
+    initial_gross_premium - denied_premiums
+  end
+
+  def denied_premiums
+    denied_principal_premiums + denied_dependent_premiums
+  end
+
   def commisionable_premium
     if self.mis_entry?
       initial_gross_premium
     else
-      initial_gross_premium - (denied_principal_premiums + denied_dependent_premiums)
+      approved_premiums
     end
   end
 

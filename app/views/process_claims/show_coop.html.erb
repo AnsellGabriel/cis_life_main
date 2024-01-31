@@ -119,7 +119,7 @@
         <%= render 'claim_benefits/show_benefit' %>
       </div>
     </div>
-    <% if @process_claim.claim_request_for_payment&.check_vouchers.present? %>
+    <% if @process_claim.check_voucher_request&.check_vouchers.present? %>
       <div class="card">
         <div class="card-body">
           <h4 class="text-primary">Claimable Checks</h4>
@@ -131,7 +131,7 @@
               </tr>
             </thead>
             <tbody>
-              <% @process_claim.claim_request_for_payment.check_vouchers.posted.last.business_checks.each do |check| %>
+              <% @process_claim.check_voucher_request.check_vouchers.posted.last.business_checks.each do |check| %>
                 <tr>
                   <td class='text-center' >
                     <%= check.check_number %>
