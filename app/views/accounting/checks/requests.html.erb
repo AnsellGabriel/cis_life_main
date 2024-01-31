@@ -22,7 +22,7 @@
         <% @claim_requests.each do |request| %>
           <tr>
             <td class="text-center" ><%= request.id %></td>
-            <td class="w-10"><%= request.process_claim.cooperative %></td>
+            <td class="w-10"><%= request.requestable.cooperative %></td>
             <td><%= request.description %></td>
             <td><%= to_curr request.analyst %></td>
             <td class="text-end"><%= to_curr request.amount %></td>
