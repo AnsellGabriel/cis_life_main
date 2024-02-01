@@ -24,6 +24,8 @@ class GroupRemit < ApplicationRecord
   has_one :progress_tracker, as: :trackable, dependent: :destroy
   accepts_nested_attributes_for :payments
 
+  delegate :cooperative, to: :agreement
+
   enum status: {
     pending: 0,
     under_review: 1,
@@ -35,6 +37,12 @@ class GroupRemit < ApplicationRecord
     with_pending_members: 7,
     with_substandard_members: 8,
     reupload_payment: 9
+  }
+
+  enum refund_status: {
+    not_refunded: 0,
+    ready_for_refund: 1,
+    refunded: 2
   }
 
   def to_s

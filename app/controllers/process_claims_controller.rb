@@ -2,22 +2,22 @@ class ProcessClaimsController < ApplicationController
   before_action :set_process_claim, only: %i[ show edit update destroy show_coop claim_route claims_file claim_process update_status ]
   # GET /process_claims
 
-  def claimable
-    voucher = Accounting::Check.find(params[:v])
-    claim = voucher.check_voucher_request.process_claim
-    total_business_checks = voucher.business_checks.sum(:amount)
+  # def claimable
+  #   voucher = Accounting::Check.find(params[:v])
+  #   claim = voucher.check_voucher_request.requestable
+  #   total_business_checks = voucher.business_checks.sum(:amount)
 
-    if voucher.amount != total_business_checks
-      return redirect_to accounting_check_path(voucher), alert: "Claim cannot proceed. Total amount of business checks is not equal to the voucher amount."
-    end
+  #   if voucher.amount != total_business_checks
+  #     return redirect_to accounting_check_path(voucher), alert: "Claim cannot proceed. Total amount of business checks is not equal to the voucher amount."
+  #   end
 
-    ActiveRecord::Base.transaction do
-      claim.update!(claim_route: 12, payment: 1)
-      voucher.update!(claimable: true)
-    end
+  #   ActiveRecord::Base.transaction do
+  #     claim.update!(claim_route: 12, payment: 1)
+  #     voucher.update!(claimable: true)
+  #   end
 
-    redirect_to accounting_check_path(voucher), notice: "Checks ready for claim"
-  end
+  #   redirect_to accounting_check_path(voucher), notice: "Checks ready for claim"
+  # end
 
   def index
     @process_claims = ProcessClaim.where(claim_route: :submitted)
@@ -224,15 +224,20 @@ class ProcessClaimsController < ApplicationController
             #   description: "Claim Request for Payment",
             #   analyst: current_user.userable.signed_fullname
             # )
-            request = @process_claim.create_check_voucher_request(
-              amount: @process_claim.get_benefit_claim_total,
-              status: :pending,
-              description: "Claim Request for Payment",
-              analyst: current_user.userable.signed_fullname
-            )
-          end
+            # request = @process_claim.create_check_voucher_request(
+            #   amount: @process_claim.get_benefit_claim_total,
+            #   status: :pending,
+            #   description: "Claim Request for Payment",
+            #   analyst: current_user.userable.signed_fullname
+            # )
+            request = CheckVoucherRequestService.new(@process_claim, @process_claim.get_benefit_claim_total, current_user)
 
-          format.html { redirect_to show_coop_process_claim_path(@process_claim), notice: "#{@process_claim.claim_route.to_s.humanize.titleize} by #{current_user}"  }
+            if request.create_request
+              format.html { redirect_to show_coop_process_claim_path(@process_claim), notice: "#{@process_claim.claim_route.to_s.humanize.titleize} by #{current_user}"  }
+            else
+              format.html { redirect_to show_coop_process_claim_path(@process_claim), alert: "Something went wrong" }
+            end
+          end
         else
           @required_docs = @process_claim.claim_type.claim_type_documents.where(required: true)
           @uploaded_docs = @process_claim.claim_attachments

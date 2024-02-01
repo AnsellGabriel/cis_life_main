@@ -88,7 +88,10 @@
         </div>  
         <hr>
         <div class="text-secondary d-flex justify-content-between">
-          <%= content_tag :span, "Refund amount", style: "font-size: .8rem" %>
+          <div class="">
+            <%= content_tag :span, "#{group_remit.refund_text}", class: "badge #{group_remit.refund_badge}" %>
+            <%= content_tag :span, "Refund amount", style: "font-size: .8rem" %>
+          </div>
           <%= content_tag :span, "#{to_curr((group_remit.gross_premium - group_remit.approved_premiums) - ((group_remit.gross_premium - group_remit.approved_premiums) * (agreement.coop_sf / 100)))}", style: "font-size: .8rem; color: var(--bs-green)"%>
         </div>  
       <% end %>

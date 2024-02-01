@@ -1,11 +1,33 @@
 class Accounting::ChecksController < ApplicationController
   before_action :authenticate_user!
-  before_action :set_check, only: %i[ show edit update destroy cancel]
+  before_action :set_check, only: %i[ show edit update destroy cancel check claimable]
   before_action :set_payables, only: %i[ new edit create update]
 
   def requests
-    @claim_requests = CheckVoucherRequest.all
+    @claim_requests = Accounting::CheckVoucherRequest.all
     @pagy, @claim_requests = pagy(@claim_requests, items: 10)
+  end
+
+  def claimable
+    total_business_checks = @check.business_checks.sum(:amount)
+
+    if @check.amount != total_business_checks
+      return redirect_to accounting_check_path(@check), alert: "Total amount of business checks is not equal to the voucher amount"
+    end
+
+    claim = @check.check_voucher_request.requestable
+
+    ActiveRecord::Base.transaction do
+      @check.update!(claimable: true)
+
+      if claim.is_a?(ProcessClaim)
+        claim.update!(claim_route: 12, payment: 1)
+      elsif claim.is_a?(ProcessCoverage)
+        claim.group_remit.ready_for_refund!
+      end
+    end
+
+    redirect_to accounting_check_path(@check), notice: "Checks ready for claim"
   end
 
   # GET /accounting/checks
@@ -23,7 +45,7 @@ class Accounting::ChecksController < ApplicationController
   def show
     @business_checks = @check.business_checks.where.not(id: nil).order(created_at: :desc)
     @ledgers = @check.general_ledgers
-    @claim = @check.check_voucher_request.process_claim if @check.check_voucher_request.present?
+    @claim = @check.check_voucher_request.requestable if @check.check_voucher_request.present?
   end
 
   # GET /accounting/checks/new
@@ -32,9 +54,9 @@ class Accounting::ChecksController < ApplicationController
     initiate_voucher = last_voucher ? last_voucher + 1 : 1
 
     if params[:rid].present?
-      claim_request = ClaimRequestForPayment.find(params[:rid])
+      claim_request = Accounting::CheckVoucherRequest.find(params[:rid])
       amount = claim_request.amount
-      coop = claim_request.process_claim.cooperative
+      coop = claim_request.requestable.cooperative
 
       @check = Accounting::Check.new(voucher: initiate_voucher, payable: coop, amount: amount, date_voucher: Date.today)
     else
@@ -54,7 +76,7 @@ class Accounting::ChecksController < ApplicationController
 
     if @check.save
       if params[:rid].present?
-        claim_request = ClaimRequestForPayment.find(params[:rid])
+        claim_request = Accounting::CheckVoucherRequest.find(params[:rid])
         claim_request.voucher_generated!
         @check.update(check_voucher_request: claim_request)
       end

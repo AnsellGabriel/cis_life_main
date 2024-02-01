@@ -12,6 +12,10 @@ class ProcessCoverage < ApplicationRecord
   belongs_to :who_approved, class_name: "Employee", optional: true
 
   has_many :process_remarks
+  has_one :check_voucher_request, as: :requestable, dependent: :destroy, class_name: "Accounting::CheckVoucherRequest"
+
+  delegate :cooperative, to: :group_remit
+
 
   # audited
   # has_associated_audits

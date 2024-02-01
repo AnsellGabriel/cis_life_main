@@ -2,7 +2,7 @@ class ProcessCoveragesController < ApplicationController
   before_action :authenticate_user!
   before_action :check_emp_department
   before_action :set_process_coverage,
-only: %i[ show edit update destroy approve_batch deny_batch pending_batch reconsider_batch pdf set_premium_batch update_batch_prem transfer_to_md update_batch_cov adjust_lppi_cov ]
+only: %i[ show edit update destroy approve_batch deny_batch pending_batch reconsider_batch pdf set_premium_batch update_batch_prem transfer_to_md update_batch_cov adjust_lppi_cov refund ]
 
   # GET /process_coverages
   def index
@@ -499,6 +499,16 @@ only: %i[ show edit update destroy approve_batch deny_batch pending_batch recons
     #   @process_coverage.group_remit.set_total_premiums_and_fees
     #   format.html { redirect_to process_coverage_path(@process_coverage), notice: "Process Coverage Approved!" }
     # end
+  end
+
+  def refund
+    request = CheckVoucherRequestService.new(@process_coverage, @process_coverage.group_remit.refund_amount, current_user)
+    
+    if request.create_request
+      redirect_to process_coverage_path(@process_coverage), notice: "Refund request sent!"
+    else
+      redirect_to process_coverage_path(@process_coverage), alert: "Error sending refund request!"
+    end
   end
 
   def deny
