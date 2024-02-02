@@ -5,7 +5,7 @@
       <tr>
         <th>Benefit</th>
         <th class="text-end">Coverage</th>
-        <th class="text-end">Premium</th>
+        <!--th class="text-end">Premium</th-->
         <th><div class="text-center">
   <%= link_to new_product_benefit_path(v: ab), class: 'btn btn-sm btn-primary', data: { turbo_frame: "remote_modal" } do %>
     <i class="bi bi-plus-square"></i> Add Benefit
@@ -19,7 +19,7 @@
           <td><small><%= product_benefit.benefit %> <span class="badge rounded-pill text-bg-primary"><%= "Main" if product_benefit.main %></span></small></td>
           
             <td class="text-end"><%= to_curr(product_benefit.coverage_amount) %></td>
-            <td class="text-end"><%= to_curr(product_benefit.premium) %></td>
+            <!--td class="text-end"><%= to_curr(product_benefit.premium) %></td-->
 
           <td class="text-center">
             <%#= link_to 'View', product_benefit, class: 'btn btn-secondary btn-sm' %>
@@ -31,7 +31,6 @@
       <% end %>
       <tr class="table-secondary">
         <td><small>Total Premium</small></td>
-        <td></td>
         <td class="text-primary text-end"><%= to_curr(ab.product_benefits.sum(:premium)) %></td>
         <td></td>
       </tr>

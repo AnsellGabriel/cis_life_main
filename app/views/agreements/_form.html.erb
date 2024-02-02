@@ -1,10 +1,10 @@
 <%= simple_form_for(@agreement) do |f| %>
   <%= f.error_notification %>
   <%= f.error_notification message: f.object.errors[:base].to_sentence if f.object.errors[:base].present? %>
-  <div class="form-inputs">
+  <div class="form-inputs" data-controller="plan-agree">
     <%= f.association :cooperative, input_html: { data: { controller: "ts--select" } }  %>
     <div class="row">
-      <%= f.association :plan, wrapper_html: { class: "col-md-4" }  %>
+      <%= f.association :plan, wrapper_html: { class: "col-md-4" }, input_html: { id: "plan_id", data: { action: "change->plan-agree#toggleTargets", plan_agree_target: "planSelect" } } %>
       <%= f.association :agent, wrapper_html: {class: "col-md-4" }  %>
       <%= f.input :moa_no, label: "MOA", wrapper_html: {class: "col-md-4" } %>
     </div>
@@ -44,17 +44,32 @@
     </div>
     <%#= f.association :proposal, input_html: { data: { controller: "ts--select" } }  %>
     <hr>
-    <h4 class="text-primary">Agreement Benefits</h4>
-    <div class="agreement_benefits">
-      <div class="row">
-        <%= f.fields_for :agreement_benefits do |ab| %>
-          <%# <div class="col-md-6"> %>
-            <%= render 'agreement_benefit_fields', f: ab %>
-          <%# </div> %>
-        <% end %>
+    <div data-plan-agree-target="gyrt" hidden>
+      <h3>Agreement Benefits</h3>
+      <div class="agreement_benefits">
+        <div class="row">
+          <%= f.fields_for :agreement_benefits do |ab| %>
+            <%# <div class="col-md-6"> %>
+              <%= render 'agreement_benefit_fields', f: ab %>
+            <%# </div> %>
+          <% end %>
+        </div>
       </div>
+      <%= link_to_add_association "Add benefit", f, :agreement_benefits, data: {association_insertion_node: '.agreement_benefits', association_insertion_method: :append}, class: "btn btn-primary" %>
     </div>
-    <%= link_to_add_association "Add benefit", f, :agreement_benefits, data: {association_insertion_node: '.agreement_benefits', association_insertion_method: :append}, class: "btn btn-primary" %>
+    
+    <div data-plan-agree-target="lppi" hidden>
+     <h3>Rates</h3>
+      <div class="loan_rates">
+        <div class="row">
+          <%= f.fields_for :loan_rates do |lr| %>
+            <%= render 'agreements/loan_rate_fields', f: lr %>
+          <% end %>
+        </div>
+      </div>
+      <%= link_to_add_association "Add Rate", f, :loan_rates, data: {association_insertion_node: '.loan_rates', association_insertion_method: :append}, class: "btn btn-primary" %>
+    </div>
+    
   </div>
   <br>
   <div class="form-actions text-end">

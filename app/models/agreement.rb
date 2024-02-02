@@ -1,6 +1,5 @@
 class Agreement < ApplicationRecord
-  validates_presence_of :cooperative_id, :plan_id, :agent_id, :moa_no, :contestability, :nel, :nml, :entry_age_from, :entry_age_to, :exit_age, :coop_sf, :agent_sf,
-:minimum_participation
+  validates_presence_of :cooperative_id, :plan_id, :agent_id, :moa_no, :contestability, :nel, :nml, :entry_age_from, :entry_age_to, :exit_age, :coop_sf, :agent_sf, :minimum_participation
 
   scope :with_moa_like, -> (filter) { where("moa_no LIKE ?", "%#{filter}%") }
   scope :lppi, -> { find {|a| a.plan.acronym == "LPPI"} }
@@ -22,6 +21,7 @@ class Agreement < ApplicationRecord
   has_many :coop_members, through: :agreements_coop_members
   has_many :loan_rates, class_name: "LoanInsurance::Rate"
   accepts_nested_attributes_for :agreement_benefits, reject_if: :all_blank, allow_destroy: true
+  accepts_nested_attributes_for :loan_rates, reject_if: :all_blank, allow_destroy: true
 
   delegate :acronym, to: :plan, prefix: true
   def to_s

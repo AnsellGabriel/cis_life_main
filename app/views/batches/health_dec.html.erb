@@ -76,7 +76,7 @@
               <%= content_tag :p, rem.remark, class: "small mb-0 fst-italic" %>
               <%= content_tag :hr %>
             <% end %>
-            <%== pagy_bootstrap_nav(@pagy) %>
+            <%== pagy_bootstrap_nav(@pagy) if @pagy.count > 2 %>
             <%#= content_tag :h4, @batch.batch_remarks.where(status: 2).first.remark %>
           </div>
           <% if @md.present? %>

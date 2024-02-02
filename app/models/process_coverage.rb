@@ -10,7 +10,6 @@ class ProcessCoverage < ApplicationRecord
 
   belongs_to :who_processed, class_name: "Employee", optional: true
   belongs_to :who_approved, class_name: "Employee", optional: true
-
   has_many :process_remarks
   has_one :check_voucher_request, as: :requestable, dependent: :destroy, class_name: "Accounting::CheckVoucherRequest"
 
@@ -132,6 +131,15 @@ class ProcessCoverage < ApplicationRecord
       self.group_remit.batches.where(loan_insurance_batches: { insurance_status: :denied} ).count
     else
       self.group_remit.batches.where(batches: { insurance_status: :denied} ).count
+    end
+  end
+
+  def count_batches_approved(klass)
+    case klass
+    when "LoanInsurance::Batch"
+      self.group_remit.batches.where(loan_insurance_batches: { insurance_status: :approved} ).count
+    else
+      self.group_remit.batches.where(batches: { insurance_status: :approved} ).count
     end
   end
 

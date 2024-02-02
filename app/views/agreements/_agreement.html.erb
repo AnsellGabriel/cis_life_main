@@ -34,10 +34,12 @@
             <% end %>
           </dl>
         </div>
-        <div class="col-md-6">
-        <strong class="text-primary mb-3">Anniversary</strong>
-        <%= render 'anniversaries/show_anniversary', a: agreement %>
-        </div>
+        <% unless agreement.plan_id == 2 %>
+          <div class="col-md-6">
+            <strong class="text-primary mb-3">Anniversary</strong>
+            <%= render 'anniversaries/show_anniversary', a: agreement %>
+          </div>
+        <% end %>
       </div>
     </div>
     <div class="card-footer">
@@ -46,34 +48,60 @@
     </div>
   </div>
 </div>
-<div class="row">
-  <% @agreement_benefits.each do |ab| %>
-    <div class="col-md-6 mb-3">
-      <div class="card">
-        <h5 class="card-header"><%= ab.name %>  <small class="text-muted"><%= ab.insured_type %></small></h5>
-        <div class="card-body">
-          <div class="text-center">
-            <table class="table">
-              <thead>
-                <tr>
-                  <th scope="col">Min Age</th>
-                  <th scope="col">Max Age</th>
-                  <th scope="col">Exit Age</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr>
-                  <td><%= ab.min_age %></td>
-                  <td><%= ab.max_age %></td>
-                  <td><%= ab.exit_age %></td>
-                </tr>
-              </tbody>
-            </table>
+
+<% if @agreement.plan_id == 2 %>
+  <div class="row">
+    <% @agreement.loan_rates.each do |rate| %>
+      <div class="col-md-6 mb-3">
+        <div class="card">
+          <div class="card-header">
+            <h5><%= rate.min_age %> to <%= rate.max_age %> years old</h5>
+            <small class="text-muted">Loan Amount: <%= to_currency(rate.min_amount) %> to <%= to_currency(rate.max_amount) %></small>
           </div>
-          <%# SHOW PRODUCT BENEFIT %>
-          <%= render 'product_benefits/show_product_benefit', ab: ab %>
+          <div class="card-body">
+            <small>Annual Rate: <%= to_currency(rate.annual_rate) %></small> <br>
+            <small>Monthly Rate: <%= to_currency(rate.monthly_rate) %> / 1,000</small> 
+          </div>
         </div>
       </div>
-    </div>
-  <% end %>
-</div>
+    <% end %>
+    
+  </div>
+
+<% else %>
+  <div class="row">
+    <% @agreement_benefits.each do |ab| %>
+      <div class="col-md-6 mb-3">
+        <div class="card">
+          <h5 class="card-header"><%= ab.name %>  <small class="text-muted"><%= ab.insured_type %></small></h5>
+          <div class="card-body">
+            <div class="text-center">
+              <table class="table">
+                <thead>
+                  <tr>
+                    <th scope="col">Min Age</th>
+                    <th scope="col">Max Age</th>
+                    <th scope="col">Exit Age</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td><%= ab.min_age %></td>
+                    <td><%= ab.max_age %></td>
+                    <td><%= ab.exit_age %></td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            <%# SHOW PRODUCT BENEFIT %>
+            
+            <%= render 'product_benefits/show_product_benefit', ab: ab %>
+          </div>
+        </div>
+      </div>
+    <% end %>
+  </div>
+  
+<% end %>
+
+<%#= console %>
