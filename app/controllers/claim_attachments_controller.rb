@@ -23,7 +23,7 @@ class ClaimAttachmentsController < ApplicationController
     respond_to do |format|
       # raise 'errors'
       if @claim_attachment.save
-        format.html { redirect_to show_coop_process_claim_path(@process_claim.id) , notice: "Benefit claim was successfully created." }
+        format.html { redirect_to show_coop_process_claim_path(@process_claim.id) , notice: "Document uploaded" }
         format.json { render :show, status: :created, location: @claim_benefit }
       else
         format.html { render :new, status: :unprocessable_entity }
@@ -40,7 +40,7 @@ class ClaimAttachmentsController < ApplicationController
     @claim_attachment.destroy
 
     respond_to do |format|
-      format.html { redirect_to show_coop_process_claim_path(@process_claim), notice: "Claim benefit was successfully destroyed." }
+      format.html { redirect_to show_coop_process_claim_path(@process_claim), notice: "Document removed" }
       format.json { head :no_content }
     end
   end

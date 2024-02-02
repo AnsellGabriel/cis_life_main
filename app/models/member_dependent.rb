@@ -28,7 +28,7 @@ class MemberDependent < ApplicationRecord
   end
 
   def full_name
-    "#{last_name.capitalize}, #{first_name.capitalize} #{middle_name.chr}."
+    "#{last_name.capitalize}, #{first_name.capitalize} #{middle_name.chr}"
   end
 
   private

@@ -1,7 +1,7 @@
 <% plan_acronym = @agreement.plan.acronym %>
 
 <div class="mb-3 d-flex text-primary gap-3">
-  <%= content_tag :h4, @agreement.plan.name %>
+  <%= content_tag :h4, @agreement.plan.acronym.include?("GYRT") ? "GROUP YEARLY RENEWABLE TERM" : @agreement.plan.name %>
   <% if @agreement.anniversary_type.downcase == '12 months' or @agreement.anniversary_type.nil? %>
     <% current_batch_remit = @agreement.group_remits.find_by(type: 'BatchRemit', effectivity_date: Date.today.beginning_of_month)%>
 
@@ -70,4 +70,5 @@
 <div class="<%= flex_justify_align('', 'center') %>">
   <%= render 'coop_agreements/agreement', agreement: @agreement %>
 </div>
+  
   

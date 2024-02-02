@@ -24,6 +24,8 @@ class GroupRemit < ApplicationRecord
   has_one :progress_tracker, as: :trackable, dependent: :destroy
   accepts_nested_attributes_for :payments
 
+  delegate :cooperative, to: :agreement
+
   enum status: {
     pending: 0,
     under_review: 1,
@@ -35,6 +37,12 @@ class GroupRemit < ApplicationRecord
     with_pending_members: 7,
     with_substandard_members: 8,
     reupload_payment: 9
+  }
+
+  enum refund_status: {
+    not_refunded: 0,
+    ready_for_refund: 1,
+    refunded: 2
   }
 
   def to_s
@@ -142,28 +150,6 @@ class GroupRemit < ApplicationRecord
 
   end
 
-  def set_total_premiums_and_fees
-    self.gross_premium = commisionable_premium
-    self.coop_commission = total_coop_commissions
-    self.agent_commission = total_agent_commissions
-    self.net_premium = net_premium
-
-    unless self.type == "BatchRemit"
-
-      if self.process_coverage.status == "approved"
-        self.status = :for_payment
-        Notification.create(notifiable: self.agreement.cooperative, message: "#{self.name} is approved and now for payment.")
-      else
-        self.status.nil? ? "under_review" : self.status
-      end
-      # self.status = :for_payment
-      # Notification.create(notifiable: self.agreement.cooperative, message: "#{self.name} is approved and now for payment.")
-    end
-
-    self.save!
-    # self.effectivity_date = Date.today
-  end
-
   def set_for_payment_status
     set_total_premiums_and_fees
 
@@ -206,6 +192,41 @@ class GroupRemit < ApplicationRecord
 
   def get_agent_sf
     agreement.agent_sf
+  end
+
+  def set_total_premiums_and_fees
+    self.gross_premium = commisionable_premium
+    self.coop_commission = total_coop_commissions
+    self.agent_commission = total_agent_commissions
+    self.net_premium = net_premium
+
+    unless self.type == "BatchRemit"
+
+      if self.process_coverage.status == "approved"
+        if self.mis_entry?
+          self.status = :paid
+          self.update_batch_remit
+          self.update_batch_coverages
+
+          # net_prem = initial_gross_premium - (denied_principal_premiums + denied_dependent_premiums)
+
+          if self.gross_premium > approved_premiums
+            self.refund_amount = (self.gross_premium - approved_premiums) - ((self.gross_premium - approved_premiums) * (agreement.coop_sf / 100))
+          end
+
+        else
+          self.status = :for_payment
+          Notification.create(notifiable: self.agreement.cooperative, message: "#{self.name} is approved and now for payment.")
+        end
+      else
+        self.status.nil? ? "under_review" : self.status
+      end
+      # self.status = :for_payment
+      # Notification.create(notifiable: self.agreement.cooperative, message: "#{self.name} is approved and now for payment.")
+    end
+
+    self.save!
+    # self.effectivity_date = Date.today
   end
 
   def total_dependent_premiums
@@ -258,20 +279,44 @@ class GroupRemit < ApplicationRecord
     total_principal_premium + total_dependent_premiums
   end
 
+  def approved_premiums
+    initial_gross_premium - denied_premiums
+  end
+
+  def denied_premiums
+    denied_principal_premiums + denied_dependent_premiums
+  end
+
+  def commisionable_premium
+    if self.mis_entry?
+      initial_gross_premium
+    else
+      approved_premiums
+    end
+  end
+
   def coop_commissions
     batches.approved.sum(:coop_sf_amount)
   end
 
-  def commisionable_premium
-    initial_gross_premium - (denied_principal_premiums + denied_dependent_premiums)
+  def total_coop_commissions
+    if agreement.coop_sf
+        coop_commissions + dependent_coop_commissions
+    else
+      0
+    end
   end
 
-  def total_coop_commissions
+  def front_end_coop_commission
     if agreement.coop_sf
       commisionable_premium * (agreement.coop_sf / 100)
     else
       0
     end
+  end
+
+  def front_end_coop_net_premium
+    commisionable_premium - front_end_coop_commission
   end
 
   def total_agent_commissions
@@ -365,9 +410,9 @@ class GroupRemit < ApplicationRecord
     payments.approved.last
   end
 
-  def posted_or
-    approved_payment.entries.posted.last
-  end
+  # def posted_or
+  #   approved_payment.entries.posted.last
+  # end
 
   def editable_by_mis?(current_user)
     (current_user.userable_type == "Employee" && current_user.userable.department_id == 15) && !self.instance_of?(BatchRemit) && self.pending?

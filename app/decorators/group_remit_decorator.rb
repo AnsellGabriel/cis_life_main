@@ -70,6 +70,15 @@ class GroupRemitDecorator < Draper::Decorator
     end
   end
 
+  def refund_badge
+    if object.not_refunded?
+      "badge bg-danger"
+    elsif object.refunded?
+      "badge bg-success"
+    else
+      "badge bg-warning text-dark"
+    end
+  end
 
 
   def link_to_show
@@ -91,6 +100,10 @@ class GroupRemitDecorator < Draper::Decorator
 
   def status_text
     object.status.titleize
+  end
+
+  def refund_text
+    object.refund_status.titleize
   end
 
   def status_mappings

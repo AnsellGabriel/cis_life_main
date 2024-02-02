@@ -2,7 +2,7 @@ module Calculate
   extend ActiveSupport::Concern
 
   included do
-    def set_premium_and_service_fees(insured_type, group_remit, premium)
+    def set_premium_and_service_fees(insured_type, group_remit, premium = nil)
       # agreement_benefit = group_remit.agreement.agreement_benefits.find_by(insured_type: insured_type)
       agreement_benefit = group_remit.agreement.agreement_benefits.find_by(id: insured_type)
 
@@ -22,6 +22,12 @@ module Calculate
 
     def calculate_premium_and_fees(premium, group_remit)
       self.premium = calculate_premium(premium, group_remit.terms)
+      self.coop_sf_amount = calculate_service_fee(group_remit.get_coop_sf, self.premium)
+      self.agent_sf_amount = calculate_service_fee(group_remit.get_agent_sf, self.premium)
+    end
+
+    def manual_premium_and_fees(premium, group_remit)
+      self.premium = premium.to_f
       self.coop_sf_amount = calculate_service_fee(group_remit.get_coop_sf, self.premium)
       self.agent_sf_amount = calculate_service_fee(group_remit.get_agent_sf, self.premium)
     end

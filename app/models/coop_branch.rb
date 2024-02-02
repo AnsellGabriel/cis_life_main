@@ -1,6 +1,8 @@
 class CoopBranch < ApplicationRecord
   before_save :to_upcase
 
+  validates_presence_of :name
+
   has_many :coop_users
   has_many :coop_members
   belongs_to :cooperative

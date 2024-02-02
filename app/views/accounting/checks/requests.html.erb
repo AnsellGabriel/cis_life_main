@@ -8,6 +8,7 @@
       <tr>
         <th class="text-center" scope="col"></th>
         <th class="text-center" scope="col">Payee</th>
+        <th class="text-center" scope="col">Description</th>
         <th class="text-center" scope="col">Requested by</th>
         <th class="text-center" scope="col">Amount</th>
         <th class="text-center" scope="col">Status</th>
@@ -20,8 +21,9 @@
 
         <% @claim_requests.each do |request| %>
           <tr>
-            <td class="text-center"><%= request.id %></td>
-            <td><%= request.process_claim.cooperative %></td>
+            <td class="text-center" ><%= request.id %></td>
+            <td class="w-10"><%= request.requestable.cooperative %></td>
+            <td><%= request.description %></td>
             <td><%= to_curr request.analyst %></td>
             <td class="text-end"><%= to_curr request.amount %></td>
             <td class="text-center">

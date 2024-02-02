@@ -9,8 +9,9 @@ dump.rdb
 .byebug_history
 /config/master.key
 /db/uploads/*
-db/sql_files/*
-db/seeds.rb
+/db/seeds/*
+/db/sql_files/*
+/db/seeds.rb
 /public/uploads/*
 log/development.log
 /config/database.yml
