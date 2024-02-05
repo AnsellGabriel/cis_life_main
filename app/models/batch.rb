@@ -56,7 +56,8 @@ class Batch < ApplicationRecord
   # alias_attribute :batches, :reserve_batches
 
   def full_name
-    "#{self.last_name}, #{self.first_name} #{self.middle_name}"
+    # "#{self.last_name}, #{self.first_name} #{self.middle_name}"
+    "#{self.coop_member.member.last_name}, #{self.coop_member.member.first_name} #{self.coop_member.member.middle_name}"
   end
 
   def update_valid_health_dec

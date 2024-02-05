@@ -870,6 +870,8 @@ ActiveRecord::Schema[7.0].define(version: 2024_02_05_073703) do
     t.bigint "agreement_id", null: false
     t.decimal "min_amount", precision: 15, scale: 2
     t.decimal "max_amount", precision: 15, scale: 2
+    t.decimal "coop_sf", precision: 10, scale: 2
+    t.decimal "agent_sf", precision: 10, scale: 2
     t.index ["agreement_id"], name: "index_loan_insurance_rates_on_agreement_id"
   end
 
