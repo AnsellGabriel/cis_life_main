@@ -1,4 +1,6 @@
 class LppiImportService
+  include ActionView::Helpers::NumberHelper
+
   def initialize(spreadsheet, group_remit, cooperative)
     @spreadsheet = spreadsheet
     @group_remit = group_remit
@@ -36,7 +38,16 @@ class LppiImportService
         next
       end
 
-      create_batch(member, batch_hash)
+      coop_member = @cooperative.coop_members.find_by(member_id: member.id)
+      duplicate_member = find_duplicate_member(coop_member.id)
+
+      if duplicate_member
+        # add_duplicate_member(member)
+        create_denied_member(member, "Member already exist in the batch.")
+      else
+        create_batch(member, batch_hash)
+      end
+
       progress_counter += 1
       update_progress(total_members, progress_counter)
     end
@@ -151,12 +162,19 @@ class LppiImportService
     if loan_type.nil?
       create_denied_member(member, "Loan type #{batch_hash[:loan_type]} not found.")
       increment_denied_members_counter
-    elsif result == :no_loan_rate
-      create_denied_member(member, "Acceptable age for this plan: #{@agreement.entry_age_from}-#{@agreement.exit_age}. Member's age: #{new_batch.age}")
+    elsif result == :no_rate_for_age
+      create_denied_member(member, "Acceptable age for this plan: #{@agreement.entry_age_from.to_i}-#{@agreement.exit_age.to_i}. Member's age: #{new_batch.age}")
+      increment_denied_members_counter
+    elsif result == :no_rate_for_amount
+      create_denied_member(member, "No rate available for member's age #{new_batch.age} and loan amount #{number_to_currency(batch_hash[:loan_amount], unit: "")}")
       increment_denied_members_counter
     else
       new_batch.save!
       increment_added_members_counter
     end
+  end
+
+  def find_duplicate_member(id)
+    @group_remit.batches.find_by(coop_member_id: id)
   end
 end

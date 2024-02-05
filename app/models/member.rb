@@ -62,7 +62,7 @@ class Member < ApplicationRecord
   end
 
   def full_name
-    "#{last_name.capitalize} #{suffix}, #{first_name.capitalize} #{middle_name.capitalize.chr}."
+    "#{last_name.capitalize}, #{first_name.capitalize} #{middle_name.capitalize}"
   end
 
   def self.get_ri(date_from, date_to)
@@ -86,7 +86,7 @@ class Member < ApplicationRecord
           # ri.batches << batch
           ri_batch = ReinsuranceBatch.find_or_initialize_by(reinsurance_member: ri, batch: batch)
           ri_batch.ri_date = ri_date
-                    
+
           if ri.reinsurance.date_from < ri_batch.batch.effectivity_date
             ri_batch.ri_effectivity = ri_batch.batch.effectivity_date.beginning_of_month
           else
@@ -97,7 +97,7 @@ class Member < ApplicationRecord
           else
             ri_batch.ri_expiry = ri_end
           end
-                    
+
           # ri_batch.ri_terms = ((ri_batch.ri_expiry - ri_batch.ri_effectivity) / 30).to_i
           ri_batch.ri_terms = ((ri_batch.ri_expiry - ri_batch.ri_effectivity) / 30).round
           ri_batch.save!
