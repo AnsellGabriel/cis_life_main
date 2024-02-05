@@ -15,6 +15,10 @@
           <%= f.input :min_amount, wrapper_html: { class: "col-md-6" } %>
           <%= f.input :max_amount, wrapper_html: { class: "col-md-6" } %>
         </div>
+        <div class="row">
+          <%= f.input :coop_sf, wrapper_html: { class: "col-md-6" } %>
+          <%= f.input :agent_sf, wrapper_html: { class: "col-md-6" } %>
+        </div>
       </div>
       <div class="card-footer">
         <%= link_to_remove_association "Delete", f, class: "btn btn-sm btn-danger" %>
