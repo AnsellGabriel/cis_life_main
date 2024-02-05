@@ -3,8 +3,7 @@ class MemberImportService
     @spreadsheet = spreadsheet
     @cooperative = cooperative
     @current_user = current_user
-    @required_headers = ["Birth Place", "First Name", "Middle Name", "Last Name", "Suffix", "Birthdate", "Gender", "Address", "SSS #", "TIN #", "Mobile #", "Email", "Civil Status", "Height (cm)",
-"Weight (kg)", "Occupation", "Employer", "Work Address", "Spouse", "Work Phone #"]
+    @required_headers = ["First Name", "Middle Name", "Last Name", "Birthdate"]
     @progress = @current_user.create_progress_tracker(progress: 0.0)
   end
 
@@ -34,8 +33,8 @@ class MemberImportService
         first_name: row["First Name"] == nil ? nil : row["First Name"].strip,
         middle_name: row["Middle Name"] == nil ? nil : row["Middle Name"].strip,
         birth_date: row["Birthdate"],
-        gender: row["Gender"],
-        civil_status: row["Civil Status"]
+        # gender: row["Gender"],
+        # civil_status: row["Civil Status"]
         # suffix: row["Suffix"] == nil ? nil : row["Suffix"].strip,
         # birth_place: row["Birth Place"],
         # address: row["Address"],
