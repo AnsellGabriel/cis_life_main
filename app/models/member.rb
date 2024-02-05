@@ -19,7 +19,7 @@ class Member < ApplicationRecord
   belongs_to :geo_municipality, optional: true
   belongs_to :geo_barangay, optional: true
 
-  validates_presence_of :last_name, :first_name, :middle_name, :birth_date, :civil_status, :gender
+  validates_presence_of :last_name, :first_name, :birth_date, :civil_status, :gender
   # validates :email, format: { with: URI::MailTo::EMAIL_REGEXP }
   # belongs_to :coop_branch
 

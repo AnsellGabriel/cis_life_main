@@ -1,7 +1,7 @@
 <% batch_presenter = BatchPresenter.new(batch)%>
 
 <div class="">
-	<%= content_tag :span, "#{member.full_name}", class: 'text-primary' %>
+	<%= content_tag :span, "#{batch.full_name}", class: 'text-primary' %>
 	<div class="small">
 		<%= content_tag :span, batch.age, class: 'text-secondary' %>
 	  <%#= content_tag :span, "(#{to_shortdate(batch.birthdate)})", class: 'text-secondary' %>

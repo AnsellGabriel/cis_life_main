@@ -311,7 +311,7 @@ true)
     @cooperative.members.find_or_initialize_by(
       first_name: batch_hash[:first_name],
       last_name: batch_hash[:last_name],
-      middle_name: batch_hash[:middle_name],
+      # middle_name: batch_hash[:middle_name],
       birth_date: batch_hash[:birth_date]
     )
   end

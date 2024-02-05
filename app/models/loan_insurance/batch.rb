@@ -27,7 +27,7 @@ class LoanInsurance::Batch < Batch
     return :no_dates if effectivity_date.nil? || expiry_date.nil?
 
     agreement = group_remit.agreement
-    set_terms_and_age
+    set_terms_and_details
     loan_rate = find_loan_rate(agreement)
     previous_coverage = agreement.agreements_coop_members.find_by(coop_member_id: coop_member.id)
 
@@ -164,10 +164,15 @@ class LoanInsurance::Batch < Batch
     true
   end
 
-  def set_terms_and_age
+  def set_terms_and_details
     self.terms = compute_terms(expiry_date, effectivity_date)
     self.insurance_status = :for_review
     self.age = coop_member.age(effectivity_date)
+    self.first_name = coop_member.member.first_name
+    self.middle_name = coop_member.member&.middle_name
+    self.last_name = coop_member.member.last_name
+    self.birthdate = coop_member.member.birth_date
+    self.civil_status = coop_member.member.civil_status
   end
 
   def find_loan_rate(agreement)

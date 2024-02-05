@@ -35,7 +35,7 @@ class Batch < ApplicationRecord
 
   belongs_to :coop_member
   belongs_to :member, optional: true
-  belongs_to :agreement_benefit, optional: true
+  belongs_to :agreement_benefit, optional: true, counter_cache: true
 
   has_many :batch_group_remits
   has_many :group_remits, through: :batch_group_remits
@@ -116,7 +116,7 @@ class Batch < ApplicationRecord
     batch.expiry_date = group_remit.expiry_date
     batch.effectivity_date = ["single", "multiple"].include?(agreement.anniversary_type.downcase) ? Date.today : group_remit.effectivity_date
     batch.first_name = coop_member.member.first_name
-    batch.middle_name = coop_member.member.middle_name
+    batch.middle_name = coop_member.member&.middle_name
     batch.last_name = coop_member.member.last_name
     batch.birthdate = coop_member.member.birth_date
     batch.civil_status = coop_member.member.civil_status

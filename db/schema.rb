@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2024_02_05_032754) do
+ActiveRecord::Schema[7.0].define(version: 2024_02_05_073703) do
   create_table "accounting_vouchers", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.date "date_voucher"
     t.integer "voucher"
@@ -170,10 +170,11 @@ ActiveRecord::Schema[7.0].define(version: 2024_02_05_032754) do
     t.datetime "updated_at", null: false
     t.decimal "exit_age", precision: 10, scale: 3
     t.boolean "with_dependent", default: false
+    t.integer "batches_count"
     t.index ["agreement_id"], name: "index_agreement_benefits_on_agreement_id"
   end
 
-  create_table "agreement_proposals", charset: "utf8mb4", force: :cascade do |t|
+  create_table "agreement_proposals", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.bigint "agreement_id"
     t.bigint "group_proposal_id"
     t.datetime "created_at", null: false
@@ -182,7 +183,7 @@ ActiveRecord::Schema[7.0].define(version: 2024_02_05_032754) do
     t.index ["group_proposal_id"], name: "index_agreement_proposals_on_group_proposal_id"
   end
 
-  create_table "agreements", charset: "utf8mb4", force: :cascade do |t|
+  create_table "agreements", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.bigint "plan_id"
     t.bigint "cooperative_id"
     t.bigint "agent_id"
@@ -765,7 +766,7 @@ ActiveRecord::Schema[7.0].define(version: 2024_02_05_032754) do
     t.datetime "updated_at", null: false
   end
 
-  create_table "koopamilya_abs", charset: "utf8mb4", force: :cascade do |t|
+  create_table "koopamilya_abs", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.string "name"
     t.integer "min_age"
     t.integer "max_age"
@@ -776,7 +777,7 @@ ActiveRecord::Schema[7.0].define(version: 2024_02_05_032754) do
     t.integer "groupings"
   end
 
-  create_table "koopamilya_pbs", charset: "utf8mb4", force: :cascade do |t|
+  create_table "koopamilya_pbs", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.bigint "koopamilya_ab_id"
     t.decimal "coverage_amount", precision: 15, scale: 2
     t.bigint "benefit_id"
@@ -786,7 +787,7 @@ ActiveRecord::Schema[7.0].define(version: 2024_02_05_032754) do
     t.index ["koopamilya_ab_id"], name: "index_koopamilya_pbs_on_koopamilya_ab_id"
   end
 
-  create_table "loan_insurance_batches", charset: "utf8mb4", force: :cascade do |t|
+  create_table "loan_insurance_batches", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.bigint "coop_member_id", null: false
     t.bigint "group_remit_id", null: false
     t.integer "age"
@@ -815,6 +816,11 @@ ActiveRecord::Schema[7.0].define(version: 2024_02_05_032754) do
     t.decimal "excess", precision: 10, scale: 2, default: "0.0"
     t.boolean "substandard", default: false
     t.boolean "for_md", default: false
+    t.string "first_name"
+    t.string "middle_name"
+    t.string "last_name"
+    t.date "birthdate"
+    t.string "civil_status"
     t.index ["coop_member_id"], name: "index_loan_insurance_batches_on_coop_member_id"
     t.index ["group_remit_id"], name: "index_loan_insurance_batches_on_group_remit_id"
     t.index ["loan_insurance_loan_id"], name: "index_loan_insurance_batches_on_loan_insurance_loan_id"
