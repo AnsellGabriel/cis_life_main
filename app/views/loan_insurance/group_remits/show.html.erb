@@ -139,7 +139,11 @@
         <th class="text-center" scope="col">Expiry Date</th>
         <th class="text-center" scope="col">Terms</th>
         <th class="text-center" scope="col">Premium</th>
-        <th class="text-center" scope="col">Unused Premium</th>
+        
+        <% if @group_remit.agreement.unusable == true %>
+          <th class="text-center" scope="col">Unused Premium</th>
+        <% end %>
+        
         <th class="text-center" scope="col">Premium Due</th>
         <th class="text-center" scope="col">Actions</th>
       </tr>

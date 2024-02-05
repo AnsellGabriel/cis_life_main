@@ -136,7 +136,7 @@ only: %i[ show edit update destroy approve_batch deny_batch pending_batch recons
 
     pdf = PsheetPdf.new(@process_coverage, @total_life_cov, view_context)
     send_data(pdf.render,
-      filename: "#{@process_coverage.group_remit.name}.pdf",
+      filename: "#{@process_coverage.group_remit.agreement.plan.acronym}-#{@process_coverage.group_remit.name}.pdf",
       type: "application/pdf",
       disposition: "inline")
   end

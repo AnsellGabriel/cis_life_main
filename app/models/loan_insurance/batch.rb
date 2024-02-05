@@ -56,7 +56,7 @@ class LoanInsurance::Batch < Batch
     if self.rate.nil?
       loan_rate
     else
-      calculate_values(agreement)
+      calculate_values(agreement, loan_rate)
       true
     end
   end
@@ -130,8 +130,9 @@ class LoanInsurance::Batch < Batch
     nil
   end
 
-  def calculate_values(agreement)
-    self.premium = (loan_amount / 1000 ) * (rate.monthly_rate * terms)
+  def calculate_values(agreement, loan_rate)
+    # self.premium = (loan_amount / 1000 ) * (rate.monthly_rate * terms)
+    self.premium = (loan_amount / 1000 ) * ((rate.annual_rate / 12) * terms)
 
     if unused_loan_id
       previous_batch = LoanInsurance::Batch.find(unused_loan_id)
@@ -150,8 +151,10 @@ class LoanInsurance::Batch < Batch
       self.premium_due = 0
     end
 
-    self.agent_sf_amount = calculate_service_fee(agreement.agent_sf, premium_due)
-    self.coop_sf_amount = calculate_service_fee(agreement.coop_sf, premium_due)
+    # self.agent_sf_amount = calculate_service_fee(agreement.agent_sf, premium_due)
+    # self.coop_sf_amount = calculate_service_fee(agreement.coop_sf, premium_due)
+    self.agent_sf_amount = calculate_service_fee(loan_rate.agent_sf, premium_due)
+    self.coop_sf_amount = calculate_service_fee(loan_rate.coop_sf, premium_due)
   end
 
   def previous_loan
