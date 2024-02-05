@@ -108,7 +108,7 @@ class BatchRemarksController < ApplicationController
                         
             # format.html { redirect_to deny_batch_process_coverage_path(id: @process_coverage, batch: @batch)}
             @batch.update(insurance_status: :denied)
-            @pc.update(approved_count: @pc.count_batches_approved(@batch.class.name), denied_count: @pc.count_batches_denied(@batch.class.name))
+            @pc.update(approved_count: @pc.count_batches("approved"), denied_count: @pc.count_batches("denied"))
             if params[:batch_type] == "BatchDependent"
               format.html { redirect_to dependent_remarks_path(
                 batch_dependent_id: @batch.id,

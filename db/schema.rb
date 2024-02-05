@@ -173,7 +173,16 @@ ActiveRecord::Schema[7.0].define(version: 2024_02_01_081042) do
     t.index ["agreement_id"], name: "index_agreement_benefits_on_agreement_id"
   end
 
-  create_table "agreements", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+  create_table "agreement_proposals", charset: "utf8mb4", force: :cascade do |t|
+    t.bigint "agreement_id"
+    t.bigint "group_proposal_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["agreement_id"], name: "index_agreement_proposals_on_agreement_id"
+    t.index ["group_proposal_id"], name: "index_agreement_proposals_on_group_proposal_id"
+  end
+
+  create_table "agreements", charset: "utf8mb4", force: :cascade do |t|
     t.bigint "plan_id"
     t.bigint "cooperative_id"
     t.bigint "agent_id"
@@ -760,7 +769,28 @@ ActiveRecord::Schema[7.0].define(version: 2024_02_01_081042) do
     t.datetime "updated_at", null: false
   end
 
-  create_table "loan_insurance_batches", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+  create_table "koopamilya_abs", charset: "utf8mb4", force: :cascade do |t|
+    t.string "name"
+    t.integer "min_age"
+    t.integer "max_age"
+    t.integer "insured_type"
+    t.integer "exit_age"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.integer "groupings"
+  end
+
+  create_table "koopamilya_pbs", charset: "utf8mb4", force: :cascade do |t|
+    t.bigint "koopamilya_ab_id"
+    t.decimal "coverage_amount", precision: 15, scale: 2
+    t.bigint "benefit_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["benefit_id"], name: "index_koopamilya_pbs_on_benefit_id"
+    t.index ["koopamilya_ab_id"], name: "index_koopamilya_pbs_on_koopamilya_ab_id"
+  end
+
+  create_table "loan_insurance_batches", charset: "utf8mb4", force: :cascade do |t|
     t.bigint "coop_member_id", null: false
     t.bigint "group_remit_id", null: false
     t.integer "age"
