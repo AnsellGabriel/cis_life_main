@@ -53,8 +53,8 @@ class LoanInsurance::Batch < Batch
       self.valid_health_dec = true
     end
 
-    if loan_rate.nil?
-      :no_loan_rate
+    if self.rate.nil?
+      loan_rate
     else
       calculate_values(agreement)
       true
@@ -171,8 +171,19 @@ class LoanInsurance::Batch < Batch
   end
 
   def find_loan_rate(agreement)
-    # self.rate = agreement.loan_rates.where("min_age <= ? AND max_age >= ?", age, age).first
-    self.rate = agreement.loan_rates.where("min_age <= ? AND max_age >= ?", age, age).where("? BETWEEN min_amount AND max_amount", loan_amount).first
+    # self.rate = agreement.loan_rates.where("min_age <= ? AND max_age >= ?", age, age).where("? BETWEEN min_amount AND max_amount", loan_amount).first
+
+    age_loan_rate = agreement.loan_rates.where("min_age <= ? AND max_age >= ?", age, age)
+
+    if age_loan_rate
+      self.rate = age_loan_rate.where("? BETWEEN min_amount AND max_amount", loan_amount).first
+
+      if self.rate.nil?
+        :no_rate_for_amount
+      end
+    else
+      :no_rate_for_age
+    end
   end
 
 
