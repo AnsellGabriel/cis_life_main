@@ -21,7 +21,12 @@ module Calculate
     # end
 
     def calculate_premium_and_fees(premium, group_remit)
-      self.premium = calculate_premium(premium, group_remit.terms)
+      if group_remit.terms <= group_remit.agreement.minimum_term
+        self.premium = group_remit.agreement.minimum_premium
+      else
+        self.premium = calculate_premium(premium, group_remit.terms)
+      end
+
       self.coop_sf_amount = calculate_service_fee(group_remit.get_coop_sf, self.premium)
       self.agent_sf_amount = calculate_service_fee(group_remit.get_agent_sf, self.premium)
     end
