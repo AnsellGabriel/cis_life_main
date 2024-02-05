@@ -7,7 +7,7 @@ class LppiImportService
     @cooperative = cooperative
     @agreement = @group_remit.agreement
 
-    @headers = ["FIRST_NAME", "MIDDLE_NAME", "LAST_NAME", "BIRTHDATE", "EFFECTIVITY_DATE", "EXPIRY_DATE", "RELEASE_DATE", "MATURITY_DATE", "LOAN_AMOUNT", "LOAN_TYPE"]
+    @headers = ["FIRST_NAME", "LAST_NAME", "BIRTHDATE", "EFFECTIVITY_DATE", "EXPIRY_DATE", "RELEASE_DATE", "MATURITY_DATE", "LOAN_AMOUNT", "LOAN_TYPE"]
 
     @progress_tracker = @group_remit.create_progress_tracker(progress: 0.0)
   end

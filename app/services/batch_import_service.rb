@@ -10,8 +10,8 @@ class BatchImportService
     @gyrt_ranking_plans = ["GYRTBR", "GYRTFR"]
     @gyrt_family_plans = ["GYRTF", "GYRTFR"]
 
-    @principal_headers = ["First Name", "Middle Name", "Last Name", "Birthdate"]
-    @dependent_headers = ["Member First Name", "Member Middle Name", "Member Last Name", "Member Birthdate", "Dependent First Name", "Dependent Middle Name", "Dependent Last Name", "Relationship",
+    @principal_headers = ["First Name", "Last Name", "Birthdate"]
+    @dependent_headers = ["Member First Name", "Member Last Name", "Member Birthdate", "Dependent First Name", "Dependent Last Name", "Relationship",
 "Beneficiary?"]
 
     @principal_headers << "Rank" if @gyrt_ranking_plans.include?(@agreement.plan.acronym)
