@@ -1,24 +1,36 @@
+<div class="mb-3 <%= flex_justify_align('', 'center') %> gap-1">
+  <%= link_to cooperatives_path, class: "btn btn-secondary btn-sm", title: "Back" do %>
+    <i class="bi bi-arrow-bar-left"></i>
+  <% end %>
+  <%= link_to edit_cooperative_path(cooperative), class: "btn btn-outline-primary btn-sm #{flex_justify_align('', 'center')} gap-1", title: "Edit" do %>
+    <span>Edit</span>
+    <i class="bi bi-pencil-square"></i>
+  <% end %>
+</div>
+
 <div id="<%= dom_id cooperative %>">
   <div class="card mb-3">
     <div class="card-body">
       <h4 class="text-primary">
         <%= cooperative.name %>
       </h4>
-      <p>
-        <strong>Address:</strong>
-        <%= cooperative.get_address %>
-      </p>
-      <strong>Contact details:</strong>
-      <%= cooperative.contact_details %> | <%= cooperative.email %>
-    </p>
-    <p>
-      <strong> TIN: </strong> <%= cooperative.tin_number %> | <strong> Registration no.: </strong> <%= cooperative.registration_number %>
-    </p>
-  </div>
-  <div class="card-footer">
-    <%= link_to "Edit", edit_cooperative_path(cooperative), class: "btn btn-secondary btn-sm" %>
-    <%= link_to "Back", cooperatives_path, class: "btn btn-secondary btn-sm" %>
-    <%#= link_to "Delete", cooperative, class: "btn btn-danger btn-sm", method: :delete, data: { "turbo-method": :delete, turbo_confirm: "Are you sure?" } %>
+      <div class="d-flex">
+        <div class="" style="width: 150px;"><strong>Address</strong></div>
+        <div class="">: <%= cooperative.get_address %></div>
+      </div>
+      <div class="d-flex">
+        <div class="" style="width: 150px;"><strong>Email</strong></div>
+        <div class="">: <%= cooperative.email %></div>
+      </div>
+      <div class="d-flex">
+        <div class="" style="width: 150px;"><strong>Contact number</strong></div>
+        <div class="">: <%= cooperative.contact_number %></div>
+      </div>
+      <div class="d-flex">
+        <div class="" style="width: 150px;"><strong> Registration no.</strong></div>
+        <div class="">: <%= cooperative.registration_number %></div>
+      </div>
+    </div>
   </div>
 </div>
 <div class="card mb-3">

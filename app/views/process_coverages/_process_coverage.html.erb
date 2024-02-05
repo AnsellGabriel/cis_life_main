@@ -16,6 +16,49 @@
       </div>
       <div class="col-6">
         <%= render "process_remarks", process_remarks: @filtered_remarks, process_coverage: process_coverage %>
+        <% group_remit = process_coverage.group_remit %>
+        <% if group_remit.refund_amount %>
+          <div class="card">
+            <div class="card-header">
+              <span class="<%= @group_remit.decorate.refund_badge %>" style="width: auto;">
+                <%= @group_remit.decorate.refund_text %>
+              </span>
+            </div>
+            <div class="card-body">
+              <div class="text-secondary d-flex justify-content-between">
+                <%= content_tag :span, "Adjustments:", style: "font-size: .6rem" %>
+              </div>  
+              <% if group_remit.denied_principal_premiums > 0 %>
+                <div class="text-secondary d-flex justify-content-between">
+                  <%= content_tag :span, "#{group_remit.pending? || group_remit.under_review? || group_remit.for_renewal?  ? 'For approval' : 'Denied'} Principal Premiums", style: "font-size: .8rem" %>
+                  <%= content_tag :span, "#{to_curr(group_remit.denied_principal_premiums)}", style: "font-size: .8rem; color: var(--bs-red)"%>
+                </div>   
+              <% end %>    
+              <% if group_remit.agreement.plan.dependable? %>
+                <% if group_remit.denied_dependent_premiums > 0 %>
+                  <div class="text-secondary d-flex justify-content-between">
+                    <%= content_tag :span, "#{group_remit.pending? || group_remit.under_review? || group_remit.for_renewal?  ? 'For approval' : 'Denied'} Dependent Premiums", style: "font-size: .8rem" %>
+                    <%= content_tag :span, "#{to_curr(group_remit.denied_dependent_premiums)}", style: "font-size: .8rem; color: var(--bs-red)"%>
+                  </div>   
+                <% end %>
+              <% end %>
+              <div class="text-secondary d-flex justify-content-between">
+                <%= content_tag :span, "Less #{group_remit.agreement.coop_sf}% coop service fee", style: "font-size: .8rem" %>
+                <%= content_tag :span, "(#{to_curr((group_remit.gross_premium - group_remit.approved_premiums) * (group_remit.agreement.coop_sf / 100))})", style: "font-size: .8rem; color: var(--bs-red)"%>
+              </div>  
+              <hr>
+              <div class="text-secondary d-flex justify-content-between">
+                <%= content_tag :span, "Refund amount", style: "font-size: .8rem" %>
+                <%= content_tag :span, "#{to_curr((group_remit.gross_premium - group_remit.approved_premiums) - ((group_remit.gross_premium - group_remit.approved_premiums) * (group_remit.agreement.coop_sf / 100)))}", style: "font-size: .8rem; color: var(--bs-red)"%>
+              </div>  
+              <% unless process_coverage.check_voucher_request %>
+                <div class="mt-3 text-center">
+                  <%= link_to "Issue Refund", refund_process_coverage_path(process_coverage), class: small_btn("warning"), data: {turbo_confirm: "Refund request amount: #{to_curr(group_remit.refund_amount)}", turbo_method: :get} %>
+                </div>
+              <% end %>
+            </div>
+          </div>
+        <% end %>
       </div>
     </div>
     <% unless @insured_types.any?{ |element| (2..9).include?(element) } %>

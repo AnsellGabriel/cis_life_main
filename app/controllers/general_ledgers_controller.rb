@@ -15,7 +15,7 @@ class GeneralLedgersController < ApplicationController
     if @entry.update(status: :posted)
       # params[:e_t] = entry type
       if params[:e_t] == 'ce' && @entry.remittance?
-        pay_service = PaymentService.new(@entry.entriable, current_user)
+        pay_service = PaymentService.new(@entry.entriable, current_user, @entry)
         result = pay_service.post_payment
       else
         result = 'Voucher posted.'

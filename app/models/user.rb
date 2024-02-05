@@ -27,7 +27,7 @@ class User < ApplicationRecord
   attribute :approved, :boolean, default: false
 
   def to_s
-    "#{userable.last_name}, #{userable.first_name}"
+    userable.to_s
   end
 
   def user_id
@@ -45,6 +45,10 @@ class User < ApplicationRecord
 
   def is_treasurer?
     userable.department_id == 26
+  end
+
+  def is_mis?
+    userable_type == "Employee" && userable.department_id == 15
   end
 
   private

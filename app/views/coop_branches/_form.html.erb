@@ -1,13 +1,11 @@
 <%#= simple_form_for(@coop_branch, url: url, method: meth) do |f| %>
 <%= simple_form_for(@coop_branch) do |f| %>
-  <%= f.error_notification %>
-  <%= f.error_notification message: f.object.errors[:base].to_sentence if f.object.errors[:base].present? %>
 
   <div class="form-inputs mb-3">
     <% unless @cooperative.present? %>
       <%= f.association :cooperative %>
     <% end %>
-    <%= f.input :name %>
+    <%= f.input :name, error: "*Required" %>
     <div class="row" data-controller="geography">
       <%= f.association :geo_region, 
         label: "Region", 

@@ -1,6 +1,4 @@
-<%= simple_form_for(@process_claim, url: url, method: meth) do |f| %>
-  <%= f.error_notification %>
-  <%= f.error_notification message: f.object.errors[:base].to_sentence if f.object.errors[:base].present? %>
+<%= simple_form_for(@process_claim, url: url) do |f| %>
   <%# <div class="row"> %>
   <%# <div class="col-md-6"> %>
   <div class="card mb-3">
@@ -22,19 +20,20 @@
         <dt class="col-sm-4">Email:</dt>
         <dd class="col-sm-8"><%= @process_claim.claimable.member.email %> </dd>
       </dl>
-      <%= f.input :date_incident, as: :string, input_html: {data: {
-              controller: "flatpickr",
-              flatpickr_max_date: Time.zone.now,
-              flatpickr_next_arrow: "Next",
-              flatpickr_prev_arrow: "Prev"},
-              class: 'text-center'},
-              label: "Incident Date : ",
-              dateformat: "m-d-Y\\Z",
-              wrapper_html: {class: flex_justify_align('start', 'center')},
-              label_html: {style: "width: 170px; margin: 0"} %>
-      <% agreement_benefit = AgreementBenefit.find(params[:ab]) %>
-      <% benefit_names = agreement_benefit.product_benefits.joins(:benefit).pluck('LOWER(benefits.name)') %>
-      <%= f.association :claim_type, collection: ClaimType.where(name: benefit_names).order(:name) %>
+      <div class="row">
+        <%= f.input :date_incident, as: :string, input_html: {data: {
+                controller: "flatpickr",
+                flatpickr_max_date: Time.zone.now,
+                flatpickr_next_arrow: "Next",
+                flatpickr_prev_arrow: "Prev"},
+                class: 'text-center'},
+                label: "Incident Date",
+                dateformat: "m-d-Y\\Z",
+                wrapper_html: {class: "#{flex_justify_align('start', '', true)} col-6"},
+                label_html: {style: ""}, error: "*Required" %>
+        <% benefit_names = @process_claim.agreement_benefit.product_benefits.joins(:benefit).pluck('LOWER(benefits.name)') %>
+        <%= f.association :claim_type, collection: ClaimType.where(name: benefit_names).order(:name), error: "*Required", wrapper_html: {class: "col-6"} %>
+      </div>
     </div>
   </div>
   <%# </div> %>

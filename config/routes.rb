@@ -127,7 +127,10 @@ Rails.application.routes.draw do
   end
 
   resources :coop_agreements do
-    resources :group_remits
+    resources :group_remits do
+
+      resources :remittances, only: [:index]
+    end
   end
 
   resources :group_remits do
@@ -211,6 +214,7 @@ Rails.application.routes.draw do
     resources :journals
 
     resources :checks do
+      get :claimable, on: :member
       get :cancel, on: :member
       resources :business_checks, as: 'business', except: [:index]
       get :requests, on: :collection
@@ -276,7 +280,7 @@ Rails.application.routes.draw do
     get :update_status, on: :member
     get :new_ca, to: "process_claims#new_ca", on: :collection
     post :create_ca, to: "process_claims#create_ca", on: :collection
-    get :claimable, on: :collection
+    # get :claimable, on: :collection
   end
   resources :underwriting_routes
   resources :batch_remarks do
@@ -289,6 +293,7 @@ Rails.application.routes.draw do
   end
 
   resources :process_coverages do
+    get :refund, on: :member
     get :approve_batch, on: :member
     get :approve_dependent, on: :member
     get :deny_batch, on: :member

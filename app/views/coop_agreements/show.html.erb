@@ -1,85 +1,74 @@
 <% plan_acronym = @agreement.plan.acronym %>
 
-<div class="mb-3 d-flex text-primary">
-  <%= content_tag :h4, @agreement.plan.name %>
+<div class="mb-3 d-flex text-primary gap-3">
+  <%= content_tag :h4, @agreement.plan.acronym.include?("GYRT") ? "GROUP YEARLY RENEWABLE TERM" : @agreement.plan.name %>
+  <% if @agreement.anniversary_type.downcase == '12 months' or @agreement.anniversary_type.nil? %>
+    <% current_batch_remit = @agreement.group_remits.find_by(type: 'BatchRemit', effectivity_date: Date.today.beginning_of_month)%>
+
+      <% if current_batch_remit.present? %>
+        <%= button_to "Enroll Members", group_remits_path, 
+          method: :post, 
+          params: { 
+            agreement_id: @agreement.id, 
+            anniversary_id: nil,
+            anniv_type: 'none',
+            type: 'Remittance',
+            batch_remit_id: current_batch_remit.id
+          }, 
+          class: small_btn('outline-primary'), 
+          data: { turbo: false } 
+        %>
+      <% else %>
+        <%= button_to "Enroll Members", group_remits_path, 
+          method: :post, 
+          params: { 
+            agreement_id: @agreement.id, 
+            anniversary_id: nil,
+            anniv_type: 'none',
+            type: 'BatchRemit'
+          }, 
+          class: small_btn('outline-primary'), 
+          data: { turbo: false } 
+        %>
+      <% end %>
+
+  <% elsif @agreement.anniversary_type.downcase == 'single' %>
+    <% current_batch_remit = @agreement.group_remits.find_by(type: 'BatchRemit')%>
+
+    <% if current_batch_remit.present? %>
+      <%= button_to "Enroll Members", group_remits_path, 
+        method: :post, 
+        params: { 
+          agreement_id: @agreement.id, 
+          anniversary_id: @agreement.anniversaries[0].id,
+          anniv_type: 'single',
+          type: 'Remittance',
+          batch_remit_id: current_batch_remit.id
+        }, 
+        class: small_btn('outline-primary'), 
+        data: { turbo: false } 
+      %>
+    <% else %>
+      <%= button_to "Enroll Members", group_remits_path, 
+        method: :post, 
+        params: { 
+          agreement_id: @agreement.id, 
+          anniversary_id: @agreement.anniversaries[0].id,
+          anniv_type: 'single',
+          type: 'BatchRemit'
+        }, 
+        class: small_btn('outline-primary'), 
+        data: { turbo: false } 
+      %>
+    <% end %>
+  <% end %>
 </div>
 
-  <div class="d-flex gap-3" data-controller="toggler parent">
-    <div class="col-6">
-      <div class="card">
-        <div class="card-body">
-          <div class="<%= flex_justify_align('between', 'center') %>">
-            <div class="gap-1">
-              <div class="small text-muted <%= flex_justify_align('', '', true) %>">
 
-                <% if @agreement.anniversary_type.downcase == 'single' %>
-                  <%= content_tag :span, "Anniversary Date: #{@agreement.anniversaries[0].anniversary_date.strftime('%B %d')}" %>
-                <% end %>
 
-                <%= content_tag :span, "Required Minimum Participants: #{@agreement.minimum_participation}" %>
-                <%= content_tag :span, "Current Approved Participants: #{@agreement.group_remits.where(type: 'BatchRemit', status: :paid).joins(:batches).size}" %>
-              </div>
-            </div>
 
-            <% if @agreement.anniversary_type.downcase == '12 months' or @agreement.anniversary_type.nil? %>
-              <% current_batch_remit = @agreement.group_remits.find_by(type: 'BatchRemit', effectivity_date: Date.today.beginning_of_month)%>
-
-              <% unless current_batch_remit.present? %>
-                <%= button_to "New Batch", group_remits_path, 
-                  method: :post, 
-                  params: { 
-                    agreement_id: @agreement.id, 
-                    anniversary_id: nil,
-                    anniv_type: 'none',
-                    type: 'BatchRemit'
-                  }, 
-                  class: small_btn('outline-primary'), 
-                  data: { turbo: false } 
-                %>
-              <% end %>
-
-            <% elsif @agreement.anniversary_type.downcase == 'single' %>
-              <% current_batch_remit = @agreement.group_remits.find_by(type: 'BatchRemit')%>
-
-              <% unless current_batch_remit.present? %>
-                <%= button_to "New Batch", group_remits_path, 
-                  method: :post, 
-                  params: { 
-                    agreement_id: @agreement.id, 
-                    anniversary_id: @agreement.anniversaries[0].id,
-                    anniv_type: 'single',
-                    type: 'BatchRemit'
-                  }, 
-                  class: small_btn('outline-primary'), 
-                  data: { turbo: false } 
-                %>
-              <% end %>
-            <% end %>
-
-          </div>
-          <hr>
-          <div class="<%= flex_justify_align('center', 'center') %>">
-            <%= render 'coop_agreements/agreement', agreement: @agreement %>
-          </div>
-        </div>
-        <div class="card-footer <%= flex_justify_align('between') %>">
-          <small class="text-muted">Agent: <%= @agreement.agent.full_name %></small>
-        </div>
-      </div>
-    </div>
-
-      <div class="col">
-        <div class="card">
-          <div class="card-body">
-            <div class="<%= flex_justify_align('between', 'center') %>">
-              <div class="d-flex gap-1">
-                  <h6 class="card-title mb-0 text-primary">Remittances</h6>
-              </div>
-            </div>
-            <hr>
-            <%= render 'history', plan_acronym: plan_acronym %>
-          </div>
-        </div>
-      </div>
-  </div>
+<div class="<%= flex_justify_align('', 'center') %>">
+  <%= render 'coop_agreements/agreement', agreement: @agreement %>
+</div>
+  
   

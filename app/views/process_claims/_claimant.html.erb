@@ -1,6 +1,9 @@
- <%= f.input :claimant_name, label: "Name" %>
+ <%= f.input :claimant_name, label: "Name", error: "*Required" %>
 <label>Relationship</label>
-<%= f.select :relationship, options_for_select(ProcessClaim.claimant_relations.keys.map { |key| [key.humanize, key] }), { prompt: '' }, { class: 'form-control' } %>
+<div class="mb-3">  
+  <%= f.select :relationship, options_for_select(ProcessClaim.claimant_relations.keys.map { |key| [key.humanize, key] }), { prompt: '' }, { class: "form-control #{@rel_css}"  } %>
+  <%= f.error :relationship, class: 'invalid-feedback', error: "*Required" %>
+</div>
 <%#= f.input :relationship, label: "Relationship with the Insured" %>
-<%= f.input :claimant_contact_no, label: "Contact Number" %>
-<%= f.input :claimant_email, label: "Email" %>
+<%= f.input :claimant_contact_no, label: "Contact Number", error: "*Required" %>
+<%= f.input :claimant_email, label: "Email", error: "*Required" %>

@@ -50,7 +50,7 @@
     
     
   <div class="col-md-6">
-    <% if @process_claim.claim_type == ClaimType.find_by(name: 'Hospital Confinement Claim') %>
+    <% if @process_claim.claim_type && @process_claim.claim_type == ClaimType.find_by(name: 'Hospital Confinement Claim') %>
       <div class="card">
         <%= content_tag :h5, 'Confinement', class: "card-header" %>
         <div class="card-body">
@@ -71,7 +71,6 @@
         </div>
       </div>
     <% end %>
-    <% console %>
     <% if @process_claim.file_claim? %>
       <div class="card">
       <div class="card-body">
@@ -120,7 +119,7 @@
         <%= render 'claim_benefits/show_benefit' %>
       </div>
     </div>
-    <% if @process_claim.claim_request_for_payment&.check_vouchers.present? %>
+    <% if @process_claim.check_voucher_request&.check_vouchers.present? %>
       <div class="card">
         <div class="card-body">
           <h4 class="text-primary">Claimable Checks</h4>
@@ -132,7 +131,7 @@
               </tr>
             </thead>
             <tbody>
-              <% @process_claim.claim_request_for_payment.check_vouchers.posted.last.business_checks.each do |check| %>
+              <% @process_claim.check_voucher_request.check_vouchers.posted.last.business_checks.each do |check| %>
                 <tr>
                   <td class='text-center' >
                     <%= check.check_number %>

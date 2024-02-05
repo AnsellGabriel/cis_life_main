@@ -64,7 +64,6 @@ class Batch < ApplicationRecord
     self.save!
   end
 
-
   def member_details
     coop_member.member
   end
@@ -82,6 +81,10 @@ class Batch < ApplicationRecord
 
   def dependents_premium
     batch_dependents.sum(:premium)
+  end
+
+  def dependents_manual_premium
+    batch_dependents.sum(:manual_premium)
   end
 
   def get_group_remit
@@ -106,7 +109,7 @@ class Batch < ApplicationRecord
   end
 
 
-  def self.process_batch(batch, group_remit, rank = nil, duration = nil)
+  def self.process_batch(batch, group_remit, rank = nil, premium = nil)
     agreement = group_remit.agreement
     coop_member = batch.coop_member
     previous_coverage = agreement.agreements_coop_members.find_by(coop_member_id: coop_member.id)
@@ -118,8 +121,7 @@ class Batch < ApplicationRecord
     batch.birthdate = coop_member.member.birth_date
     batch.civil_status = coop_member.member.civil_status
     batch.age = batch.member_details.age(batch.effectivity_date)
-
-    check_plan(agreement, batch, rank, duration, group_remit)
+    check_plan(agreement, batch, rank, group_remit, premium)
 
     if previous_coverage.present?
       month_difference = expiry_and_today_month_diff(previous_coverage.expiry)
@@ -143,23 +145,22 @@ class Batch < ApplicationRecord
   end
 
 
-  def self.check_plan(agreement, batch, rank, duration, group_remit)
+  def self.check_plan(agreement, batch, rank, group_remit, premium)
     acronym = agreement.plan.acronym
 
     case acronym
     when "GYRT", "GYRTF"
-      batch.set_premium_and_service_fees(:principal, group_remit) # model/concerns/calculate.rb
-      batch.valid_health_dec = true
+      batch.set_premium_and_service_fees(:principal, group_remit, premium) # model/concerns/calculate.rb
     when "GYRTBR", "GYRTFR"
-      determine_premium(rank, batch, group_remit) # Determine premium based on rank and batch
-      batch.valid_health_dec = true
+      batch.set_premium_and_service_fees(rank, group_remit, premium) # Determine premium based on rank and batch
     end
 
+    batch.valid_health_dec = true
   end
 
-  def self.determine_premium(rank, batch, group_remit)
-    batch.set_premium_and_service_fees(rank, group_remit)
-  end
+  # def self.determine_premium(rank, batch, group_remit)
+  #   batch.set_premium_and_service_fees(rank, group_remit, premium)
+  # end
 
   def self.expiry_and_today_month_diff(expiry_date)
     today = Date.today
