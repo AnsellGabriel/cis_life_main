@@ -30,7 +30,6 @@ class LoanInsurance::Batch < Batch
     set_terms_and_age
     loan_rate = find_loan_rate(agreement)
     previous_coverage = agreement.agreements_coop_members.find_by(coop_member_id: coop_member.id)
-
     if previous_coverage.present?
       month_difference = expiry_and_today_month_diff(previous_coverage.expiry)
 
@@ -183,6 +182,8 @@ class LoanInsurance::Batch < Batch
 
       if self.rate.nil?
         :no_rate_for_amount
+      else
+        self.rate
       end
     else
       :no_rate_for_age
