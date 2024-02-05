@@ -11,7 +11,7 @@
             <%= link_to "18-65 Renewal", process_coverage_path(process_coverage, search: "regular_ren"), class: "btn btn-sm btn-outline-primary mb-1" %>
             <%= link_to "Overage", process_coverage_path(process_coverage, search: "overage"), class: "btn btn-sm btn-outline-warning mb-1"  %>
             <%= link_to "w/ Health Dec", process_coverage_path(process_coverage, search: "health_decs"), class: "btn btn-sm btn-outline-secondary mb-1"  %>
-            <%= link_to "For Reconsider", process_coverage_path(process_coverage, search: "reconsider"), class: "btn btn-sm btn-outline-info mb-1"  %>
+            <%= link_to "For Reconsideration", process_coverage_path(process_coverage, search: "reconsider"), class: "btn btn-sm btn-outline-info mb-1"  %>
             <%= link_to "Substandard", process_coverage_path(process_coverage, search: "substandard"), class: "btn btn-sm btn-outline-danger mb-1"  %>
             <%= link_to "View All", process_coverage_path(process_coverage), class: "btn btn-sm btn-outline-success mb-1"  %>
             <hr>
@@ -44,7 +44,7 @@
           <% if process_coverage.group_remit.batches.where(insurance_status: [:pending, :for_review]).count > 0 %>
             <div class="text-end">
               <%#= link_to "Approve All", approve_all_group_remit_batches_path(@group_remit,group_remit: process_coverage.group_remit, process_coverage: process_coverage), class: "btn btn-success", onclick: "return confirm('Are you sure?')", method: :get %>
-              <%= link_to "Approve All", approve_all_loan_insurance_batches_path(@group_remit,group_remit: process_coverage.group_remit, process_coverage: process_coverage), class: "btn btn-success", onclick: "return confirm('Are you sure?')", method: :get %>
+              <%= link_to "Approve All Eligible", approve_all_loan_insurance_batches_path(@group_remit,group_remit: process_coverage.group_remit, process_coverage: process_coverage), class: "btn btn-success", onclick: "return confirm('Are you sure?')", method: :get %>
               <%= submit_tag 'Approve Selected', name: 'approve', onclick: "return confirm('Are you sure?')", class: "btn btn-primary" %>
               <%= button_tag 'Deny Selected', name: 'deny', type: "submit", onclick: "return confirm('Are you sure?')", class: "btn btn-danger" %>
             </div>
@@ -69,7 +69,7 @@
       <tbody>
         <% unless @filtered_batches.count == 0 %>
           <% @filtered_batches.each do |batch| %>
-            <tr>
+            <tr class="<%= check_md_reco(batch) %>">
               <% mem_bday = batch.coop_member.member.birth_date %>
               <td>
                 <% unless batch.insurance_status == "approved" || batch.insurance_status == "denied" %>
