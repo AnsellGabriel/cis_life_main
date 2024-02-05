@@ -2,6 +2,8 @@
 require "sidekiq/web"
 
 Rails.application.routes.draw do
+  resources :koopamilya_pbs
+  resources :koopamilya_abs
   resources :reinsurance_members
   resources :reinsurer_ri_batches
   resources :reinsurers

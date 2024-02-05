@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2024_01_23_053655) do
+ActiveRecord::Schema[7.0].define(version: 2024_02_01_025421) do
   create_table "accounting_check_vouchers", charset: "utf8mb4", force: :cascade do |t|
     t.date "date_voucher"
     t.string "voucher"
@@ -186,6 +186,15 @@ ActiveRecord::Schema[7.0].define(version: 2024_01_23_053655) do
     t.index ["agreement_id"], name: "index_agreement_benefits_on_agreement_id"
     t.index ["option_id"], name: "index_agreement_benefits_on_option_id"
     t.index ["plan_id"], name: "index_agreement_benefits_on_plan_id"
+  end
+
+  create_table "agreement_proposals", charset: "utf8mb4", force: :cascade do |t|
+    t.bigint "agreement_id"
+    t.bigint "group_proposal_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["agreement_id"], name: "index_agreement_proposals_on_agreement_id"
+    t.index ["group_proposal_id"], name: "index_agreement_proposals_on_group_proposal_id"
   end
 
   create_table "agreements", charset: "utf8mb4", force: :cascade do |t|
@@ -765,6 +774,27 @@ ActiveRecord::Schema[7.0].define(version: 2024_01_23_053655) do
     t.integer "question_sort"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+  end
+
+  create_table "koopamilya_abs", charset: "utf8mb4", force: :cascade do |t|
+    t.string "name"
+    t.integer "min_age"
+    t.integer "max_age"
+    t.integer "insured_type"
+    t.integer "exit_age"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.integer "groupings"
+  end
+
+  create_table "koopamilya_pbs", charset: "utf8mb4", force: :cascade do |t|
+    t.bigint "koopamilya_ab_id"
+    t.decimal "coverage_amount", precision: 15, scale: 2
+    t.bigint "benefit_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["benefit_id"], name: "index_koopamilya_pbs_on_benefit_id"
+    t.index ["koopamilya_ab_id"], name: "index_koopamilya_pbs_on_koopamilya_ab_id"
   end
 
   create_table "loan_insurance_batches", charset: "utf8mb4", force: :cascade do |t|
