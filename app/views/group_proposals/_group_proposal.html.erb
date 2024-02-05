@@ -26,12 +26,14 @@
             <%= group_proposal.plan_unit.name %>
           </p>
 
+          <%= link_to "View Agreement", group_proposal.agreement, class: "btn btn-sm btn-primary " %>
         </div>
       </div>
 
+
     </div>
   </div>
-  <div class="row">
+  <!-- div class="row">
     <div class="col-6">
 
       <div class="card border-info" style="max-width: 45rem;">
@@ -59,6 +61,14 @@
       </div>
 
     </div>
-  </div>
+  </div-->
+  <% if group_proposal.plan_id == 5 %>
+    <%= render "group_proposals/bliss_features", gp: group_proposal %>
+  <% elsif group_proposal.plan_id == 6 %>
+    <%= render "group_proposals/bliss_features", gp: group_proposal %>
+  <% elsif group_proposal.plan_id == 7 %>
+    <%= render "group_proposals/koopamilya_features", gp: group_proposal %>
+  <% end %>
+  
 
 </div>

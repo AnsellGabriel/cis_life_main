@@ -1,0 +1,46 @@
+<%= content_tag :h1, "List of Koopamilya Abs" %>
+
+
+<div class="text-end mb-3">
+  <%= link_to new_koopamilya_ab_path, class: 'btn btn-primary' do %>
+    New Koopamilya Ab
+  <% end %>
+</div>
+
+
+  <table class="table table-striped table-bordered table-hover">
+    <thead>
+      <tr>
+      <th>#</th>
+            <th>Name</th>
+            <th>Min Age</th>
+            <th>Max Age</th>
+            <th>Insured Type</th>
+            <th>Exit Age</th>
+            <th>Groupings</th>
+            <th></th>
+        </tr>
+    </thead>
+
+    <tbody>
+      <% @koopamilya_abs.each do |koopamilya_ab| %>
+        <tr>
+
+        <th scope="row"><%= koopamilya_ab.id %></th>
+        <td><%= koopamilya_ab.name %></td>
+        <td><%= koopamilya_ab.min_age %></td>
+        <td><%= koopamilya_ab.max_age %></td>
+        <td><%= koopamilya_ab.insured_type %></td>
+        <td><%= koopamilya_ab.exit_age %></td>
+        <td><%= koopamilya_ab.groupings %></td>
+    
+          <td>
+            <%= link_to 'View', koopamilya_ab, class: 'btn btn-secondary btn-sm' %>
+            <%= link_to 'Edit', edit_koopamilya_ab_path(koopamilya_ab), class: 'btn btn-secondary btn-sm' %>
+            <%= link_to "Delete", koopamilya_ab, class: "btn btn-danger btn-sm", method: :delete, data: { "turbo-method": :delete, turbo_confirm: "Are you sure?" } %>
+          </td>
+
+        </tr>
+      <% end %>
+    </tbody>
+  </table>

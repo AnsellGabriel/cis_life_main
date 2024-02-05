@@ -71,7 +71,13 @@ module ProcessCoveragesHelper
     case val
       when true then content_tag :span, "substandard", class: "badge bg-primary"
     end
-
   end
+
+  def check_md_reco(batch)
+    if batch.batch_remarks.where(status: :md_reco).count > 0
+      "table-warning"
+    end
+  end
+  
 
 end

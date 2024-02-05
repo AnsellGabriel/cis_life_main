@@ -1,0 +1,19 @@
+
+<%= simple_form_for(@koopamilya_ab) do |f| %>
+  <%= f.error_notification %>
+  <%= f.error_notification message: f.object.errors[:base].to_sentence if f.object.errors[:base].present? %>
+
+  <div class="form-inputs mb-3">
+    <%= f.input :name %>
+    <%= f.input :min_age %>
+    <%= f.input :max_age %>
+    <%= f.input :insured_type, collection: KoopamilyaAb::INSURED_TYPE %>
+    <%= f.input :exit_age %>
+    <%= f.input :groupings, collection: KoopamilyaAb::GROUPINGS %>
+  </div>
+
+  <div class="form-actions text-end">
+    <%= link_to "Back", koopamilya_abs_path, class: 'btn btn-secondary' %>
+    <%= f.button :submit, class: 'btn-success' %>
+  </div>
+<% end %>

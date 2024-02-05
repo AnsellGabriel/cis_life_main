@@ -103,7 +103,7 @@ class PagesController < ApplicationController
         ]
       }
     ]
-
+  
     
   end
 
