@@ -238,10 +238,17 @@ class GroupRemit < ApplicationRecord
   end
 
   def dependent_coop_commissions
+# <<<<<<< UndLppi
+#     if agreement.plan.acronym.include?("GYRT")
+#       batches.approved.includes(:batch_dependents).sum {|batch| batch.batch_dependents.approved.sum(&:coop_sf_amount) }
+#     else
+#       0
+# =======
     if self.instance_of?(LoanInsurance::GroupRemit)
       0
     else
       batches.approved.includes(:batch_dependents).sum {|batch| batch.batch_dependents.approved.sum(&:coop_sf_amount) }
+# >>>>>>> main
     end
   end
 
@@ -413,6 +420,32 @@ class GroupRemit < ApplicationRecord
   def approved_payment
     payments.approved.last
   end
+
+  def sum_approved_batches_premium
+    batches.where(insurance_status: :approved).sum(:premium)
+  end
+  
+  def sum_approved_batches_unused
+    batches.where(insurance_status: :approved).sum(:unused)
+  end
+  
+  def sum_approved_batches_sf
+    batches.where(insurance_status: :approved).sum(:coop_sf_amount) + batches.where(insurance_status: :approved).sum(:agent_sf_amount)
+  end
+
+  def count_approved_batches
+    batches.where(insurance_status: :approved).count
+  end
+
+  def sum_approved_batches_net_prem
+    case agreement.plan.acronym
+    when "LPPI"
+      sum_approved_batches_premium - (sum_approved_batches_unused + sum_approved_batches_sf)
+    else
+      sum_approved_batches_premium - sum_approved_batches_sf
+    end
+  end
+  
 
   # def posted_or
   #   approved_payment.entries.posted.last

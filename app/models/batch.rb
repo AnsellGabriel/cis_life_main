@@ -154,6 +154,8 @@ class Batch < ApplicationRecord
       batch.set_premium_and_service_fees(:principal, group_remit, premium) # model/concerns/calculate.rb
     when "GYRTBR", "GYRTFR"
       batch.set_premium_and_service_fees(rank, group_remit, premium) # Determine premium based on rank and batch
+    when "GBLISS"
+      batch.set_premium_and_service_fees(:principal, group_remit, premium) # GBLISS Plan
     end
 
     batch.valid_health_dec = true
