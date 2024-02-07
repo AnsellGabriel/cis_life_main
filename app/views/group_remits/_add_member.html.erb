@@ -3,11 +3,23 @@
       <%= link_to "#{@group_remit.or_number.present? ? "Edit" : "Add"} OR", edit_coop_agreement_group_remit_path(@agreement, @group_remit), class: small_btn("outline-success"), data: {turbo_frame: "modal"} %>
     <% end %>
 
-    <%= link_to "Add Member", new_group_remit_batch_path(@group_remit), data: {turbo_frame: "batch_form"}, class: small_btn('success') %>
-    
-    <%= content_tag :button, "Batch Import", 
-      class: small_btn('success'),
-      data: {bs_toggle: "modal",
-        bs_target: "#batchEnrollment"}
-    %>  
+    <% if current_user.is_mis? %>
+      <% if @group_remit.or_number.present? %>
+        <%= link_to "Add Member", new_group_remit_batch_path(@group_remit), data: {turbo_frame: "batch_form"}, class: small_btn('success') %>
+        
+        <%= content_tag :button, "Batch Import", 
+          class: small_btn('success'),
+          data: {bs_toggle: "modal",
+            bs_target: "#batchEnrollment"}
+        %>  
+      <% end%>
+    <% else %>
+      <%= link_to "Add Member", new_group_remit_batch_path(@group_remit), data: {turbo_frame: "batch_form"}, class: small_btn('success') %>
+        
+      <%= content_tag :button, "Batch Import", 
+        class: small_btn('success'),
+        data: {bs_toggle: "modal",
+          bs_target: "#batchEnrollment"}
+      %>  
+    <% end %>
 </div>

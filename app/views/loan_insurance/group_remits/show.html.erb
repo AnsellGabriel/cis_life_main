@@ -10,10 +10,17 @@
         <%= content_tag :span, @group_remit.status_text, class: @group_remit.status_badge %>
         <%= content_tag :h3, class: 'mb-0 text-primary' do %>
             <%= @group_remit %>    
+            <% if @group_remit.or_number.present? %>
+              <%= content_tag :span, "(OR# #{@group_remit.or_number})", class: "text-dark small" %>
+            <% end %>
         <% end %>
         <div class="mb-0 gap-1 <%= flex_justify_align('', 'center') %>">
 
           <% if @group_remit.is_pending_or_renewal? %>
+            <% if mis_user?(current_user) %>
+              <%= link_to "#{@group_remit.or_number.present? ? "Edit" : "Add"} OR", edit_or_loan_insurance_group_remit_path, class: small_btn("outline-success"), data: {turbo_frame: 'modal'} %>
+            <% end %>
+
             <div class="d-flex gap-1">
               <%= content_tag :button, "Batch Import", 
               class: "btn btn-sm btn-outline-primary",
@@ -168,5 +175,5 @@
 <% end %>
 
 <%= turbo_frame_tag "computation" do %>
-  <%= render "group_remits/computation", group_remit: @group_remit, agreement: @agreement %>
+  <%= render "computation", group_remit: @group_remit, agreement: @agreement %>
 <% end %>  

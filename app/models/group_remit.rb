@@ -238,7 +238,11 @@ class GroupRemit < ApplicationRecord
   end
 
   def dependent_coop_commissions
-    batches.approved.includes(:batch_dependents).sum {|batch| batch.batch_dependents.approved.sum(&:coop_sf_amount) }
+    if self.instance_of?(LoanInsurance::GroupRemit)
+      0
+    else
+      batches.approved.includes(:batch_dependents).sum {|batch| batch.batch_dependents.approved.sum(&:coop_sf_amount) }
+    end
   end
 
   def dependent_agent_commissions
