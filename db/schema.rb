@@ -10,9 +10,8 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-
 ActiveRecord::Schema[7.0].define(version: 2024_02_05_032754) do
-  create_table "accounting_vouchers", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+  create_table "accounting_check_vouchers", charset: "utf8mb4", force: :cascade do |t|
     t.date "date_voucher"
     t.string "voucher"
     t.string "payable_type", null: false
@@ -502,6 +501,10 @@ ActiveRecord::Schema[7.0].define(version: 2024_02_05_032754) do
 
   create_table "coop_branches", charset: "utf8mb4", force: :cascade do |t|
     t.string "name"
+    t.string "region"
+    t.string "province"
+    t.string "municipality"
+    t.string "barangay"
     t.string "contact_details"
     t.bigint "cooperative_id", null: false
     t.datetime "created_at", null: false
@@ -560,10 +563,12 @@ ActiveRecord::Schema[7.0].define(version: 2024_02_05_032754) do
 
   create_table "cooperatives", charset: "utf8mb4", force: :cascade do |t|
     t.string "name"
+    t.string "contact_details"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.text "description"
     t.string "registration_number"
+    t.integer "tin_number"
     t.string "cooperative_type"
     t.string "acronym"
     t.string "street"
@@ -1135,7 +1140,20 @@ ActiveRecord::Schema[7.0].define(version: 2024_02_05_032754) do
     t.index ["trackable_type", "trackable_id"], name: "index_progress_trackers_on_trackable"
   end
 
-  create_table "reinsurance_batches", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+  create_table "proposals", charset: "utf8mb4", force: :cascade do |t|
+    t.bigint "cooperative_id", null: false
+    t.integer "ave_age"
+    t.decimal "total_premium", precision: 10, scale: 2
+    t.decimal "coop_sf", precision: 10, scale: 2
+    t.decimal "agent_sf", precision: 10, scale: 2
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.integer "minimum_participation"
+    t.string "proposal_no"
+    t.index ["cooperative_id"], name: "index_proposals_on_cooperative_id"
+  end
+
+  create_table "reinsurance_batches", charset: "utf8mb4", force: :cascade do |t|
     t.bigint "batch_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
@@ -1148,7 +1166,7 @@ ActiveRecord::Schema[7.0].define(version: 2024_02_05_032754) do
     t.index ["reinsurance_member_id"], name: "index_reinsurance_batches_on_reinsurance_member_id"
   end
 
-  create_table "reinsurance_members", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+  create_table "reinsurance_members", charset: "utf8mb4", force: :cascade do |t|
     t.bigint "reinsurance_id"
     t.bigint "member_id"
     t.decimal "total_loan_amount", precision: 20, scale: 2
@@ -1167,7 +1185,7 @@ ActiveRecord::Schema[7.0].define(version: 2024_02_05_032754) do
     t.datetime "updated_at", null: false
   end
 
-  create_table "reinsurer_ri_batches", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+  create_table "reinsurer_ri_batches", charset: "utf8mb4", force: :cascade do |t|
     t.bigint "reinsurance_batch_id"
     t.bigint "reinsurer_id"
     t.datetime "created_at", null: false
@@ -1176,7 +1194,7 @@ ActiveRecord::Schema[7.0].define(version: 2024_02_05_032754) do
     t.index ["reinsurer_id"], name: "index_reinsurer_ri_batches_on_reinsurer_id"
   end
 
-  create_table "reinsurers", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+  create_table "reinsurers", charset: "utf8mb4", force: :cascade do |t|
     t.string "name"
     t.string "short_name"
     t.string "address"
@@ -1185,7 +1203,7 @@ ActiveRecord::Schema[7.0].define(version: 2024_02_05_032754) do
     t.datetime "updated_at", null: false
   end
 
-  create_table "remarks", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+  create_table "remarks", charset: "utf8mb4", force: :cascade do |t|
     t.text "remark"
     t.string "remarkable_type", null: false
     t.bigint "remarkable_id", null: false
