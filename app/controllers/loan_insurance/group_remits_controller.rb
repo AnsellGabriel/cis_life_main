@@ -6,15 +6,15 @@ class LoanInsurance::GroupRemitsController < ApplicationController
 
   def index
     @group_remits = @agreement.group_remits.loan_remits.order(created_at: :desc)
+    @group_remit_size = @group_remits.size
+    @pagy, @group_remits = pagy(@group_remits, items: 10)
   end
 
   def submit
     if @group_remit.batches.empty?
-      respond_to do |format|
-        format.html { redirect_to loan_insurance_group_remit_path(@group_remit), alert: "Unable to submit empty group remit!" }
-      end
-
-      return
+      return redirect_to loan_insurance_group_remit_path(@group_remit), alert: "Unable to submit empty group remit!"
+    elsif @group_remit.mis_entry? && @group_remit.or_number.blank?
+      return redirect_to loan_insurance_group_remit_path(@group_remit), alert: "Please enter the official receipt number!"
     end
 
     @group_remit.set_under_review_status
@@ -59,7 +59,11 @@ class LoanInsurance::GroupRemitsController < ApplicationController
   def create
     @group_remit = @agreement.group_remits.new(group_remit_params)
     @group_remit.type = "LoanInsurance::GroupRemit"
-    
+
+    if current_user.is_mis?
+      @group_remit.update!(mis_entry: true)
+    end
+
     begin
       if @group_remit.save!
         redirect_to loan_insurance_group_remits_path, notice: "New batch created"
@@ -68,6 +72,20 @@ class LoanInsurance::GroupRemitsController < ApplicationController
       end
     rescue ActiveRecord::RecordInvalid => e
       redirect_to loan_insurance_group_remits_path, alert: e.message.gsub(/^Validation failed: /, "")
+    end
+  end
+
+  def edit_or
+    @group_remit = LoanInsurance::GroupRemit.find(params[:id])
+  end
+
+  def update
+    @group_remit = LoanInsurance::GroupRemit.find(params[:id])
+
+    if @group_remit.update(group_remit_params)
+      redirect_to loan_insurance_group_remit_path(@group_remit), notice: "Official Receipt updated"
+    else
+      render :edit_or
     end
   end
 
@@ -80,7 +98,7 @@ class LoanInsurance::GroupRemitsController < ApplicationController
   private
   # create a secure params
   def group_remit_params
-    params.require(:loan_insurance_group_remit).permit(:name, :type)
+    params.require(:loan_insurance_group_remit).permit(:name, :type, :or_number)
   end
 
   def set_agreement

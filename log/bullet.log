@@ -8375,3 +8375,345 @@ Call stack
   /Users/macbookair/workspace/cis_life_main/app/views/group_remits/show.html.erb:295:in `block in _app_views_group_remits_show_html_erb__668080074167973019_337540'
   /Users/macbookair/workspace/cis_life_main/app/views/group_remits/show.html.erb:273:in `_app_views_group_remits_show_html_erb__668080074167973019_337540'
 
+2024-02-05 13:15:54[WARN] user: 1cisp-it-rong
+GET /coop_agreements/2/group_remits/8?page=1
+Need Counter Cache with Active Record size
+  AgreementBenefit => [:batches]
+
+2024-02-05 13:15:54[WARN] user: 1cisp-it-rong
+GET /coop_agreements/2/group_remits/8?page=1
+Need Counter Cache with Active Record size
+  AgreementBenefit => [:batch_dependents]
+
+2024-02-05 13:15:54[WARN] user: 1cisp-it-rong
+GET /coop_agreements/2/group_remits/8?page=1
+AVOID eager loading detected
+  Remittance => [:batches, :batch_group_remits]
+  Remove from your query: .includes([:batches, :batch_group_remits])
+Call stack
+  /Users/1cisp-it-rong/workspace/cis_life_main/app/models/group_remit.rb:312:in `front_end_coop_commission'
+  /Users/1cisp-it-rong/workspace/cis_life_main/app/models/group_remit.rb:319:in `front_end_coop_net_premium'
+  /Users/1cisp-it-rong/workspace/cis_life_main/app/views/group_remits/_computation.html.erb:63:in `_app_views_group_remits__computation_html_erb__2713554171616972841_165200'
+  /Users/1cisp-it-rong/workspace/cis_life_main/app/views/group_remits/show.html.erb:246:in `block (2 levels) in _app_views_group_remits_show_html_erb__3929609860067801521_162800'
+  /Users/1cisp-it-rong/workspace/cis_life_main/app/views/group_remits/show.html.erb:245:in `block in _app_views_group_remits_show_html_erb__3929609860067801521_162800'
+  /Users/1cisp-it-rong/workspace/cis_life_main/app/views/group_remits/show.html.erb:199:in `_app_views_group_remits_show_html_erb__3929609860067801521_162800'
+
+2024-02-05 13:15:54[WARN] user: 1cisp-it-rong
+GET /coop_agreements/2/group_remits/8?page=1
+AVOID eager loading detected
+  Batch => [:batch_health_decs]
+  Remove from your query: .includes([:batch_health_decs])
+Call stack
+  /Users/1cisp-it-rong/workspace/cis_life_main/app/models/group_remit.rb:271:in `denied_dependent_premiums'
+  /Users/1cisp-it-rong/workspace/cis_life_main/app/models/group_remit.rb:287:in `denied_premiums'
+  /Users/1cisp-it-rong/workspace/cis_life_main/app/models/group_remit.rb:283:in `approved_premiums'
+  /Users/1cisp-it-rong/workspace/cis_life_main/app/models/group_remit.rb:294:in `commisionable_premium'
+  /Users/1cisp-it-rong/workspace/cis_life_main/app/models/group_remit.rb:312:in `front_end_coop_commission'
+  /Users/1cisp-it-rong/workspace/cis_life_main/app/models/group_remit.rb:319:in `front_end_coop_net_premium'
+  /Users/1cisp-it-rong/workspace/cis_life_main/app/views/group_remits/_computation.html.erb:63:in `_app_views_group_remits__computation_html_erb__2713554171616972841_165200'
+  /Users/1cisp-it-rong/workspace/cis_life_main/app/views/group_remits/show.html.erb:246:in `block (2 levels) in _app_views_group_remits_show_html_erb__3929609860067801521_162800'
+  /Users/1cisp-it-rong/workspace/cis_life_main/app/views/group_remits/show.html.erb:245:in `block in _app_views_group_remits_show_html_erb__3929609860067801521_162800'
+  /Users/1cisp-it-rong/workspace/cis_life_main/app/views/group_remits/show.html.erb:199:in `_app_views_group_remits_show_html_erb__3929609860067801521_162800'
+
+2024-02-05 13:15:54[WARN] user: 1cisp-it-rong
+GET /coop_agreements/2/group_remits/8?page=1
+AVOID eager loading detected
+  Batch => [:batch_dependents]
+  Remove from your query: .includes([:batch_dependents])
+Call stack
+  /Users/1cisp-it-rong/workspace/cis_life_main/app/models/group_remit.rb:271:in `denied_dependent_premiums'
+  /Users/1cisp-it-rong/workspace/cis_life_main/app/models/group_remit.rb:287:in `denied_premiums'
+  /Users/1cisp-it-rong/workspace/cis_life_main/app/models/group_remit.rb:283:in `approved_premiums'
+  /Users/1cisp-it-rong/workspace/cis_life_main/app/models/group_remit.rb:294:in `commisionable_premium'
+  /Users/1cisp-it-rong/workspace/cis_life_main/app/models/group_remit.rb:312:in `front_end_coop_commission'
+  /Users/1cisp-it-rong/workspace/cis_life_main/app/models/group_remit.rb:319:in `front_end_coop_net_premium'
+  /Users/1cisp-it-rong/workspace/cis_life_main/app/views/group_remits/_computation.html.erb:63:in `_app_views_group_remits__computation_html_erb__2713554171616972841_165200'
+  /Users/1cisp-it-rong/workspace/cis_life_main/app/views/group_remits/show.html.erb:246:in `block (2 levels) in _app_views_group_remits_show_html_erb__3929609860067801521_162800'
+  /Users/1cisp-it-rong/workspace/cis_life_main/app/views/group_remits/show.html.erb:245:in `block in _app_views_group_remits_show_html_erb__3929609860067801521_162800'
+  /Users/1cisp-it-rong/workspace/cis_life_main/app/views/group_remits/show.html.erb:199:in `_app_views_group_remits_show_html_erb__3929609860067801521_162800'
+
+2024-02-05 13:16:36[WARN] user: 1cisp-it-rong
+GET /coop_agreements/2/group_remits/8?page=3
+Need Counter Cache with Active Record size
+  AgreementBenefit => [:batches]
+
+2024-02-05 13:16:36[WARN] user: 1cisp-it-rong
+GET /coop_agreements/2/group_remits/8?page=3
+Need Counter Cache with Active Record size
+  AgreementBenefit => [:batch_dependents]
+
+2024-02-05 13:16:36[WARN] user: 1cisp-it-rong
+GET /coop_agreements/2/group_remits/8?page=3
+AVOID eager loading detected
+  Remittance => [:batches, :batch_group_remits]
+  Remove from your query: .includes([:batches, :batch_group_remits])
+Call stack
+  /Users/1cisp-it-rong/workspace/cis_life_main/app/models/group_remit.rb:312:in `front_end_coop_commission'
+  /Users/1cisp-it-rong/workspace/cis_life_main/app/models/group_remit.rb:319:in `front_end_coop_net_premium'
+  /Users/1cisp-it-rong/workspace/cis_life_main/app/views/group_remits/_computation.html.erb:63:in `_app_views_group_remits__computation_html_erb__2713554171616972841_165200'
+  /Users/1cisp-it-rong/workspace/cis_life_main/app/views/group_remits/show.html.erb:246:in `block (2 levels) in _app_views_group_remits_show_html_erb__3929609860067801521_162800'
+  /Users/1cisp-it-rong/workspace/cis_life_main/app/views/group_remits/show.html.erb:245:in `block in _app_views_group_remits_show_html_erb__3929609860067801521_162800'
+  /Users/1cisp-it-rong/workspace/cis_life_main/app/views/group_remits/show.html.erb:199:in `_app_views_group_remits_show_html_erb__3929609860067801521_162800'
+
+2024-02-05 13:16:36[WARN] user: 1cisp-it-rong
+GET /coop_agreements/2/group_remits/8?page=3
+AVOID eager loading detected
+  Batch => [:batch_health_decs]
+  Remove from your query: .includes([:batch_health_decs])
+Call stack
+  /Users/1cisp-it-rong/workspace/cis_life_main/app/models/group_remit.rb:271:in `denied_dependent_premiums'
+  /Users/1cisp-it-rong/workspace/cis_life_main/app/models/group_remit.rb:287:in `denied_premiums'
+  /Users/1cisp-it-rong/workspace/cis_life_main/app/models/group_remit.rb:283:in `approved_premiums'
+  /Users/1cisp-it-rong/workspace/cis_life_main/app/models/group_remit.rb:294:in `commisionable_premium'
+  /Users/1cisp-it-rong/workspace/cis_life_main/app/models/group_remit.rb:312:in `front_end_coop_commission'
+  /Users/1cisp-it-rong/workspace/cis_life_main/app/models/group_remit.rb:319:in `front_end_coop_net_premium'
+  /Users/1cisp-it-rong/workspace/cis_life_main/app/views/group_remits/_computation.html.erb:63:in `_app_views_group_remits__computation_html_erb__2713554171616972841_165200'
+  /Users/1cisp-it-rong/workspace/cis_life_main/app/views/group_remits/show.html.erb:246:in `block (2 levels) in _app_views_group_remits_show_html_erb__3929609860067801521_162800'
+  /Users/1cisp-it-rong/workspace/cis_life_main/app/views/group_remits/show.html.erb:245:in `block in _app_views_group_remits_show_html_erb__3929609860067801521_162800'
+  /Users/1cisp-it-rong/workspace/cis_life_main/app/views/group_remits/show.html.erb:199:in `_app_views_group_remits_show_html_erb__3929609860067801521_162800'
+
+2024-02-05 13:16:36[WARN] user: 1cisp-it-rong
+GET /coop_agreements/2/group_remits/8?page=3
+AVOID eager loading detected
+  Batch => [:batch_dependents]
+  Remove from your query: .includes([:batch_dependents])
+Call stack
+  /Users/1cisp-it-rong/workspace/cis_life_main/app/models/group_remit.rb:271:in `denied_dependent_premiums'
+  /Users/1cisp-it-rong/workspace/cis_life_main/app/models/group_remit.rb:287:in `denied_premiums'
+  /Users/1cisp-it-rong/workspace/cis_life_main/app/models/group_remit.rb:283:in `approved_premiums'
+  /Users/1cisp-it-rong/workspace/cis_life_main/app/models/group_remit.rb:294:in `commisionable_premium'
+  /Users/1cisp-it-rong/workspace/cis_life_main/app/models/group_remit.rb:312:in `front_end_coop_commission'
+  /Users/1cisp-it-rong/workspace/cis_life_main/app/models/group_remit.rb:319:in `front_end_coop_net_premium'
+  /Users/1cisp-it-rong/workspace/cis_life_main/app/views/group_remits/_computation.html.erb:63:in `_app_views_group_remits__computation_html_erb__2713554171616972841_165200'
+  /Users/1cisp-it-rong/workspace/cis_life_main/app/views/group_remits/show.html.erb:246:in `block (2 levels) in _app_views_group_remits_show_html_erb__3929609860067801521_162800'
+  /Users/1cisp-it-rong/workspace/cis_life_main/app/views/group_remits/show.html.erb:245:in `block in _app_views_group_remits_show_html_erb__3929609860067801521_162800'
+  /Users/1cisp-it-rong/workspace/cis_life_main/app/views/group_remits/show.html.erb:199:in `_app_views_group_remits_show_html_erb__3929609860067801521_162800'
+
+2024-02-05 13:20:51[WARN] user: 1cisp-it-rong
+GET /coop_agreements/2/group_remits/8?page=1
+Need Counter Cache with Active Record size
+  AgreementBenefit => [:batches]
+
+2024-02-05 13:20:51[WARN] user: 1cisp-it-rong
+GET /coop_agreements/2/group_remits/8?page=1
+Need Counter Cache with Active Record size
+  AgreementBenefit => [:batch_dependents]
+
+2024-02-05 13:20:51[WARN] user: 1cisp-it-rong
+GET /coop_agreements/2/group_remits/8?page=1
+AVOID eager loading detected
+  Remittance => [:batches, :batch_group_remits]
+  Remove from your query: .includes([:batches, :batch_group_remits])
+Call stack
+  /Users/1cisp-it-rong/workspace/cis_life_main/app/models/group_remit.rb:312:in `front_end_coop_commission'
+  /Users/1cisp-it-rong/workspace/cis_life_main/app/models/group_remit.rb:319:in `front_end_coop_net_premium'
+  /Users/1cisp-it-rong/workspace/cis_life_main/app/views/group_remits/_computation.html.erb:63:in `_app_views_group_remits__computation_html_erb__2713554171616972841_165200'
+  /Users/1cisp-it-rong/workspace/cis_life_main/app/views/group_remits/show.html.erb:246:in `block (2 levels) in _app_views_group_remits_show_html_erb__3929609860067801521_162800'
+  /Users/1cisp-it-rong/workspace/cis_life_main/app/views/group_remits/show.html.erb:245:in `block in _app_views_group_remits_show_html_erb__3929609860067801521_162800'
+  /Users/1cisp-it-rong/workspace/cis_life_main/app/views/group_remits/show.html.erb:199:in `_app_views_group_remits_show_html_erb__3929609860067801521_162800'
+
+2024-02-05 13:20:51[WARN] user: 1cisp-it-rong
+GET /coop_agreements/2/group_remits/8?page=1
+AVOID eager loading detected
+  Batch => [:batch_health_decs]
+  Remove from your query: .includes([:batch_health_decs])
+Call stack
+  /Users/1cisp-it-rong/workspace/cis_life_main/app/models/group_remit.rb:271:in `denied_dependent_premiums'
+  /Users/1cisp-it-rong/workspace/cis_life_main/app/models/group_remit.rb:287:in `denied_premiums'
+  /Users/1cisp-it-rong/workspace/cis_life_main/app/models/group_remit.rb:283:in `approved_premiums'
+  /Users/1cisp-it-rong/workspace/cis_life_main/app/models/group_remit.rb:294:in `commisionable_premium'
+  /Users/1cisp-it-rong/workspace/cis_life_main/app/models/group_remit.rb:312:in `front_end_coop_commission'
+  /Users/1cisp-it-rong/workspace/cis_life_main/app/models/group_remit.rb:319:in `front_end_coop_net_premium'
+  /Users/1cisp-it-rong/workspace/cis_life_main/app/views/group_remits/_computation.html.erb:63:in `_app_views_group_remits__computation_html_erb__2713554171616972841_165200'
+  /Users/1cisp-it-rong/workspace/cis_life_main/app/views/group_remits/show.html.erb:246:in `block (2 levels) in _app_views_group_remits_show_html_erb__3929609860067801521_162800'
+  /Users/1cisp-it-rong/workspace/cis_life_main/app/views/group_remits/show.html.erb:245:in `block in _app_views_group_remits_show_html_erb__3929609860067801521_162800'
+  /Users/1cisp-it-rong/workspace/cis_life_main/app/views/group_remits/show.html.erb:199:in `_app_views_group_remits_show_html_erb__3929609860067801521_162800'
+
+2024-02-05 13:20:51[WARN] user: 1cisp-it-rong
+GET /coop_agreements/2/group_remits/8?page=1
+AVOID eager loading detected
+  Batch => [:batch_dependents]
+  Remove from your query: .includes([:batch_dependents])
+Call stack
+  /Users/1cisp-it-rong/workspace/cis_life_main/app/models/group_remit.rb:271:in `denied_dependent_premiums'
+  /Users/1cisp-it-rong/workspace/cis_life_main/app/models/group_remit.rb:287:in `denied_premiums'
+  /Users/1cisp-it-rong/workspace/cis_life_main/app/models/group_remit.rb:283:in `approved_premiums'
+  /Users/1cisp-it-rong/workspace/cis_life_main/app/models/group_remit.rb:294:in `commisionable_premium'
+  /Users/1cisp-it-rong/workspace/cis_life_main/app/models/group_remit.rb:312:in `front_end_coop_commission'
+  /Users/1cisp-it-rong/workspace/cis_life_main/app/models/group_remit.rb:319:in `front_end_coop_net_premium'
+  /Users/1cisp-it-rong/workspace/cis_life_main/app/views/group_remits/_computation.html.erb:63:in `_app_views_group_remits__computation_html_erb__2713554171616972841_165200'
+  /Users/1cisp-it-rong/workspace/cis_life_main/app/views/group_remits/show.html.erb:246:in `block (2 levels) in _app_views_group_remits_show_html_erb__3929609860067801521_162800'
+  /Users/1cisp-it-rong/workspace/cis_life_main/app/views/group_remits/show.html.erb:245:in `block in _app_views_group_remits_show_html_erb__3929609860067801521_162800'
+  /Users/1cisp-it-rong/workspace/cis_life_main/app/views/group_remits/show.html.erb:199:in `_app_views_group_remits_show_html_erb__3929609860067801521_162800'
+
+2024-02-05 13:21:13[WARN] user: 1cisp-it-rong
+GET /coop_agreements/2/group_remits/8?page=2
+Need Counter Cache with Active Record size
+  AgreementBenefit => [:batches]
+
+2024-02-05 13:21:13[WARN] user: 1cisp-it-rong
+GET /coop_agreements/2/group_remits/8?page=2
+Need Counter Cache with Active Record size
+  AgreementBenefit => [:batch_dependents]
+
+2024-02-05 13:21:13[WARN] user: 1cisp-it-rong
+GET /coop_agreements/2/group_remits/8?page=2
+AVOID eager loading detected
+  Remittance => [:batches, :batch_group_remits]
+  Remove from your query: .includes([:batches, :batch_group_remits])
+Call stack
+  /Users/1cisp-it-rong/workspace/cis_life_main/app/models/group_remit.rb:312:in `front_end_coop_commission'
+  /Users/1cisp-it-rong/workspace/cis_life_main/app/models/group_remit.rb:319:in `front_end_coop_net_premium'
+  /Users/1cisp-it-rong/workspace/cis_life_main/app/views/group_remits/_computation.html.erb:63:in `_app_views_group_remits__computation_html_erb__2713554171616972841_165200'
+  /Users/1cisp-it-rong/workspace/cis_life_main/app/views/group_remits/show.html.erb:246:in `block (2 levels) in _app_views_group_remits_show_html_erb__3929609860067801521_162800'
+  /Users/1cisp-it-rong/workspace/cis_life_main/app/views/group_remits/show.html.erb:245:in `block in _app_views_group_remits_show_html_erb__3929609860067801521_162800'
+  /Users/1cisp-it-rong/workspace/cis_life_main/app/views/group_remits/show.html.erb:199:in `_app_views_group_remits_show_html_erb__3929609860067801521_162800'
+
+2024-02-05 13:21:13[WARN] user: 1cisp-it-rong
+GET /coop_agreements/2/group_remits/8?page=2
+AVOID eager loading detected
+  Batch => [:batch_health_decs]
+  Remove from your query: .includes([:batch_health_decs])
+Call stack
+  /Users/1cisp-it-rong/workspace/cis_life_main/app/models/group_remit.rb:271:in `denied_dependent_premiums'
+  /Users/1cisp-it-rong/workspace/cis_life_main/app/models/group_remit.rb:287:in `denied_premiums'
+  /Users/1cisp-it-rong/workspace/cis_life_main/app/models/group_remit.rb:283:in `approved_premiums'
+  /Users/1cisp-it-rong/workspace/cis_life_main/app/models/group_remit.rb:294:in `commisionable_premium'
+  /Users/1cisp-it-rong/workspace/cis_life_main/app/models/group_remit.rb:312:in `front_end_coop_commission'
+  /Users/1cisp-it-rong/workspace/cis_life_main/app/models/group_remit.rb:319:in `front_end_coop_net_premium'
+  /Users/1cisp-it-rong/workspace/cis_life_main/app/views/group_remits/_computation.html.erb:63:in `_app_views_group_remits__computation_html_erb__2713554171616972841_165200'
+  /Users/1cisp-it-rong/workspace/cis_life_main/app/views/group_remits/show.html.erb:246:in `block (2 levels) in _app_views_group_remits_show_html_erb__3929609860067801521_162800'
+  /Users/1cisp-it-rong/workspace/cis_life_main/app/views/group_remits/show.html.erb:245:in `block in _app_views_group_remits_show_html_erb__3929609860067801521_162800'
+  /Users/1cisp-it-rong/workspace/cis_life_main/app/views/group_remits/show.html.erb:199:in `_app_views_group_remits_show_html_erb__3929609860067801521_162800'
+
+2024-02-05 13:21:13[WARN] user: 1cisp-it-rong
+GET /coop_agreements/2/group_remits/8?page=2
+AVOID eager loading detected
+  Batch => [:batch_dependents]
+  Remove from your query: .includes([:batch_dependents])
+Call stack
+  /Users/1cisp-it-rong/workspace/cis_life_main/app/models/group_remit.rb:271:in `denied_dependent_premiums'
+  /Users/1cisp-it-rong/workspace/cis_life_main/app/models/group_remit.rb:287:in `denied_premiums'
+  /Users/1cisp-it-rong/workspace/cis_life_main/app/models/group_remit.rb:283:in `approved_premiums'
+  /Users/1cisp-it-rong/workspace/cis_life_main/app/models/group_remit.rb:294:in `commisionable_premium'
+  /Users/1cisp-it-rong/workspace/cis_life_main/app/models/group_remit.rb:312:in `front_end_coop_commission'
+  /Users/1cisp-it-rong/workspace/cis_life_main/app/models/group_remit.rb:319:in `front_end_coop_net_premium'
+  /Users/1cisp-it-rong/workspace/cis_life_main/app/views/group_remits/_computation.html.erb:63:in `_app_views_group_remits__computation_html_erb__2713554171616972841_165200'
+  /Users/1cisp-it-rong/workspace/cis_life_main/app/views/group_remits/show.html.erb:246:in `block (2 levels) in _app_views_group_remits_show_html_erb__3929609860067801521_162800'
+  /Users/1cisp-it-rong/workspace/cis_life_main/app/views/group_remits/show.html.erb:245:in `block in _app_views_group_remits_show_html_erb__3929609860067801521_162800'
+  /Users/1cisp-it-rong/workspace/cis_life_main/app/views/group_remits/show.html.erb:199:in `_app_views_group_remits_show_html_erb__3929609860067801521_162800'
+
+2024-02-05 13:55:53[WARN] user: 1cisp-it-rong
+GET /coop_agreements/2/group_remits/8?page=2
+Need Counter Cache with Active Record size
+  AgreementBenefit => [:batches]
+
+2024-02-05 13:55:53[WARN] user: 1cisp-it-rong
+GET /coop_agreements/2/group_remits/8?page=2
+Need Counter Cache with Active Record size
+  AgreementBenefit => [:batch_dependents]
+
+2024-02-05 13:55:53[WARN] user: 1cisp-it-rong
+GET /coop_agreements/2/group_remits/8?page=2
+AVOID eager loading detected
+  Remittance => [:batches, :batch_group_remits]
+  Remove from your query: .includes([:batches, :batch_group_remits])
+Call stack
+  /Users/1cisp-it-rong/workspace/cis_life_main/app/models/group_remit.rb:312:in `front_end_coop_commission'
+  /Users/1cisp-it-rong/workspace/cis_life_main/app/models/group_remit.rb:319:in `front_end_coop_net_premium'
+  /Users/1cisp-it-rong/workspace/cis_life_main/app/views/group_remits/_computation.html.erb:63:in `_app_views_group_remits__computation_html_erb__2713554171616972841_165200'
+  /Users/1cisp-it-rong/workspace/cis_life_main/app/views/group_remits/show.html.erb:246:in `block (2 levels) in _app_views_group_remits_show_html_erb__3929609860067801521_162800'
+  /Users/1cisp-it-rong/workspace/cis_life_main/app/views/group_remits/show.html.erb:245:in `block in _app_views_group_remits_show_html_erb__3929609860067801521_162800'
+  /Users/1cisp-it-rong/workspace/cis_life_main/app/views/group_remits/show.html.erb:199:in `_app_views_group_remits_show_html_erb__3929609860067801521_162800'
+
+2024-02-05 13:55:53[WARN] user: 1cisp-it-rong
+GET /coop_agreements/2/group_remits/8?page=2
+AVOID eager loading detected
+  Batch => [:batch_health_decs]
+  Remove from your query: .includes([:batch_health_decs])
+Call stack
+  /Users/1cisp-it-rong/workspace/cis_life_main/app/models/group_remit.rb:271:in `denied_dependent_premiums'
+  /Users/1cisp-it-rong/workspace/cis_life_main/app/models/group_remit.rb:287:in `denied_premiums'
+  /Users/1cisp-it-rong/workspace/cis_life_main/app/models/group_remit.rb:283:in `approved_premiums'
+  /Users/1cisp-it-rong/workspace/cis_life_main/app/models/group_remit.rb:294:in `commisionable_premium'
+  /Users/1cisp-it-rong/workspace/cis_life_main/app/models/group_remit.rb:312:in `front_end_coop_commission'
+  /Users/1cisp-it-rong/workspace/cis_life_main/app/models/group_remit.rb:319:in `front_end_coop_net_premium'
+  /Users/1cisp-it-rong/workspace/cis_life_main/app/views/group_remits/_computation.html.erb:63:in `_app_views_group_remits__computation_html_erb__2713554171616972841_165200'
+  /Users/1cisp-it-rong/workspace/cis_life_main/app/views/group_remits/show.html.erb:246:in `block (2 levels) in _app_views_group_remits_show_html_erb__3929609860067801521_162800'
+  /Users/1cisp-it-rong/workspace/cis_life_main/app/views/group_remits/show.html.erb:245:in `block in _app_views_group_remits_show_html_erb__3929609860067801521_162800'
+  /Users/1cisp-it-rong/workspace/cis_life_main/app/views/group_remits/show.html.erb:199:in `_app_views_group_remits_show_html_erb__3929609860067801521_162800'
+
+2024-02-05 13:55:53[WARN] user: 1cisp-it-rong
+GET /coop_agreements/2/group_remits/8?page=2
+AVOID eager loading detected
+  Batch => [:batch_dependents]
+  Remove from your query: .includes([:batch_dependents])
+Call stack
+  /Users/1cisp-it-rong/workspace/cis_life_main/app/models/group_remit.rb:271:in `denied_dependent_premiums'
+  /Users/1cisp-it-rong/workspace/cis_life_main/app/models/group_remit.rb:287:in `denied_premiums'
+  /Users/1cisp-it-rong/workspace/cis_life_main/app/models/group_remit.rb:283:in `approved_premiums'
+  /Users/1cisp-it-rong/workspace/cis_life_main/app/models/group_remit.rb:294:in `commisionable_premium'
+  /Users/1cisp-it-rong/workspace/cis_life_main/app/models/group_remit.rb:312:in `front_end_coop_commission'
+  /Users/1cisp-it-rong/workspace/cis_life_main/app/models/group_remit.rb:319:in `front_end_coop_net_premium'
+  /Users/1cisp-it-rong/workspace/cis_life_main/app/views/group_remits/_computation.html.erb:63:in `_app_views_group_remits__computation_html_erb__2713554171616972841_165200'
+  /Users/1cisp-it-rong/workspace/cis_life_main/app/views/group_remits/show.html.erb:246:in `block (2 levels) in _app_views_group_remits_show_html_erb__3929609860067801521_162800'
+  /Users/1cisp-it-rong/workspace/cis_life_main/app/views/group_remits/show.html.erb:245:in `block in _app_views_group_remits_show_html_erb__3929609860067801521_162800'
+  /Users/1cisp-it-rong/workspace/cis_life_main/app/views/group_remits/show.html.erb:199:in `_app_views_group_remits_show_html_erb__3929609860067801521_162800'
+
+2024-02-05 14:25:45[WARN] user: 1cisp-it-rong
+GET /coop_agreements/2/group_remits/8?page=2
+Need Counter Cache with Active Record size
+  AgreementBenefit => [:batches]
+
+2024-02-05 14:25:45[WARN] user: 1cisp-it-rong
+GET /coop_agreements/2/group_remits/8?page=2
+Need Counter Cache with Active Record size
+  AgreementBenefit => [:batch_dependents]
+
+2024-02-05 14:25:45[WARN] user: 1cisp-it-rong
+GET /coop_agreements/2/group_remits/8?page=2
+AVOID eager loading detected
+  Remittance => [:batches, :batch_group_remits]
+  Remove from your query: .includes([:batches, :batch_group_remits])
+Call stack
+  /Users/1cisp-it-rong/workspace/cis_life_main/app/models/group_remit.rb:312:in `front_end_coop_commission'
+  /Users/1cisp-it-rong/workspace/cis_life_main/app/models/group_remit.rb:319:in `front_end_coop_net_premium'
+  /Users/1cisp-it-rong/workspace/cis_life_main/app/views/group_remits/_computation.html.erb:63:in `_app_views_group_remits__computation_html_erb__2713554171616972841_165200'
+  /Users/1cisp-it-rong/workspace/cis_life_main/app/views/group_remits/show.html.erb:246:in `block (2 levels) in _app_views_group_remits_show_html_erb__3929609860067801521_162800'
+  /Users/1cisp-it-rong/workspace/cis_life_main/app/views/group_remits/show.html.erb:245:in `block in _app_views_group_remits_show_html_erb__3929609860067801521_162800'
+  /Users/1cisp-it-rong/workspace/cis_life_main/app/views/group_remits/show.html.erb:199:in `_app_views_group_remits_show_html_erb__3929609860067801521_162800'
+
+2024-02-05 14:25:45[WARN] user: 1cisp-it-rong
+GET /coop_agreements/2/group_remits/8?page=2
+AVOID eager loading detected
+  Batch => [:batch_health_decs]
+  Remove from your query: .includes([:batch_health_decs])
+Call stack
+  /Users/1cisp-it-rong/workspace/cis_life_main/app/models/group_remit.rb:271:in `denied_dependent_premiums'
+  /Users/1cisp-it-rong/workspace/cis_life_main/app/models/group_remit.rb:287:in `denied_premiums'
+  /Users/1cisp-it-rong/workspace/cis_life_main/app/models/group_remit.rb:283:in `approved_premiums'
+  /Users/1cisp-it-rong/workspace/cis_life_main/app/models/group_remit.rb:294:in `commisionable_premium'
+  /Users/1cisp-it-rong/workspace/cis_life_main/app/models/group_remit.rb:312:in `front_end_coop_commission'
+  /Users/1cisp-it-rong/workspace/cis_life_main/app/models/group_remit.rb:319:in `front_end_coop_net_premium'
+  /Users/1cisp-it-rong/workspace/cis_life_main/app/views/group_remits/_computation.html.erb:63:in `_app_views_group_remits__computation_html_erb__2713554171616972841_165200'
+  /Users/1cisp-it-rong/workspace/cis_life_main/app/views/group_remits/show.html.erb:246:in `block (2 levels) in _app_views_group_remits_show_html_erb__3929609860067801521_162800'
+  /Users/1cisp-it-rong/workspace/cis_life_main/app/views/group_remits/show.html.erb:245:in `block in _app_views_group_remits_show_html_erb__3929609860067801521_162800'
+  /Users/1cisp-it-rong/workspace/cis_life_main/app/views/group_remits/show.html.erb:199:in `_app_views_group_remits_show_html_erb__3929609860067801521_162800'
+
+2024-02-05 14:25:45[WARN] user: 1cisp-it-rong
+GET /coop_agreements/2/group_remits/8?page=2
+AVOID eager loading detected
+  Batch => [:batch_dependents]
+  Remove from your query: .includes([:batch_dependents])
+Call stack
+  /Users/1cisp-it-rong/workspace/cis_life_main/app/models/group_remit.rb:271:in `denied_dependent_premiums'
+  /Users/1cisp-it-rong/workspace/cis_life_main/app/models/group_remit.rb:287:in `denied_premiums'
+  /Users/1cisp-it-rong/workspace/cis_life_main/app/models/group_remit.rb:283:in `approved_premiums'
+  /Users/1cisp-it-rong/workspace/cis_life_main/app/models/group_remit.rb:294:in `commisionable_premium'
+  /Users/1cisp-it-rong/workspace/cis_life_main/app/models/group_remit.rb:312:in `front_end_coop_commission'
+  /Users/1cisp-it-rong/workspace/cis_life_main/app/models/group_remit.rb:319:in `front_end_coop_net_premium'
+  /Users/1cisp-it-rong/workspace/cis_life_main/app/views/group_remits/_computation.html.erb:63:in `_app_views_group_remits__computation_html_erb__2713554171616972841_165200'
+  /Users/1cisp-it-rong/workspace/cis_life_main/app/views/group_remits/show.html.erb:246:in `block (2 levels) in _app_views_group_remits_show_html_erb__3929609860067801521_162800'
+  /Users/1cisp-it-rong/workspace/cis_life_main/app/views/group_remits/show.html.erb:245:in `block in _app_views_group_remits_show_html_erb__3929609860067801521_162800'
+  /Users/1cisp-it-rong/workspace/cis_life_main/app/views/group_remits/show.html.erb:199:in `_app_views_group_remits_show_html_erb__3929609860067801521_162800'
+

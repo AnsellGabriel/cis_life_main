@@ -19,7 +19,7 @@ class Member < ApplicationRecord
   belongs_to :geo_municipality, optional: true
   belongs_to :geo_barangay, optional: true
 
-  validates_presence_of :last_name, :first_name, :middle_name, :birth_date, :civil_status, :gender
+  validates_presence_of :last_name, :first_name, :birth_date
   # validates :email, format: { with: URI::MailTo::EMAIL_REGEXP }
   # belongs_to :coop_branch
 
@@ -162,12 +162,12 @@ class Member < ApplicationRecord
   end
 
   def uppercase_fields
-    self.last_name = self.last_name == nil ? "" : self.last_name.strip.upcase
-    self.first_name = self.first_name == nil ? "" : self.first_name.strip.upcase
-    self.middle_name = self.middle_name == nil ? "" : self.middle_name.strip.upcase
-    self.suffix = self.suffix == nil ? "" : self.suffix.strip.upcase
-    self.civil_status = self.civil_status.strip.upcase
-    self.gender = self.gender.strip.upcase
+    self.last_name = self.last_name ? self.last_name.strip.upcase : ''
+    self.first_name = self.first_name ? self.first_name.strip.upcase : ''
+    self.middle_name = self.middle_name ? self.middle_name.strip.upcase : ''
+    self.suffix = self.suffix ? self.suffix.strip.upcase : ''
+    self.civil_status = self.civil_status ? self.civil_status.strip.upcase : ''
+    self.gender = self.gender ? self.gender.strip.upcase : ''
   end
 
   def self.coop_member_details(coop_members)

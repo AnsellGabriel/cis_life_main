@@ -238,10 +238,17 @@ class GroupRemit < ApplicationRecord
   end
 
   def dependent_coop_commissions
-    if agreement.plan.acronym.include?("GYRT")
-      batches.approved.includes(:batch_dependents).sum {|batch| batch.batch_dependents.approved.sum(&:coop_sf_amount) }
-    else
+# <<<<<<< UndLppi
+#     if agreement.plan.acronym.include?("GYRT")
+#       batches.approved.includes(:batch_dependents).sum {|batch| batch.batch_dependents.approved.sum(&:coop_sf_amount) }
+#     else
+#       0
+# =======
+    if self.instance_of?(LoanInsurance::GroupRemit)
       0
+    else
+      batches.approved.includes(:batch_dependents).sum {|batch| batch.batch_dependents.approved.sum(&:coop_sf_amount) }
+# >>>>>>> main
     end
   end
 
