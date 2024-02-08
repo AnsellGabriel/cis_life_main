@@ -3,7 +3,7 @@
       <div class="d-flex gap-3">
         <div style="width: 100%">
           <div class="text-secondary d-flex justify-content-between">
-            <%= content_tag :span, "Gross Premium", style: "font-size: .8rem" %>
+            <%= content_tag :span, "Gross premium", style: "font-size: .8rem" %>
             <%= content_tag :span, "#{to_curr(group_remit.total_gross_premium)}", style: "color: var(--bs-blue); font-size: .8rem"%>
           </div>
           <hr>
@@ -22,11 +22,11 @@
             </div>      
           <% end %>
           <div class="text-secondary d-flex justify-content-between">
-            <%= content_tag :span, "Unused Premium", style: "font-size: .8rem" %>
+            <%= content_tag :span, "Unused premium", style: "font-size: .8rem" %>
             <%= content_tag :span, "(#{to_curr(group_remit.total_unused_premium)})", style: "font-size: .8rem; color: var(--bs-green)"%>
           </div>
           <div class="text-secondary d-flex justify-content-between">
-            <%= content_tag :span, "Denied Principal Premium", style: "font-size: .8rem" %>
+            <%= content_tag :span, "#{group_remit.pending? ? "For review" : "Denied"} premium", style: "font-size: .8rem" %>
             <%= content_tag :span, "(#{to_curr(group_remit.denied_principal_premiums)})", style: "font-size: .8rem; color: var(--bs-red)"%>
           </div>       
         </div>

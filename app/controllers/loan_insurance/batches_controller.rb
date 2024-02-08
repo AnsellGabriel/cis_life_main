@@ -107,7 +107,8 @@ status: :unprocessable_entity
 
     @unused_Loan.update!(status: :recent)
     batch.update!(unused_loan_id: nil)
-    batch.calculate_values(batch.group_remit.agreement)
+    loan_rate = LoanInsurance::Rate.find(batch.loan_insurance_rate_id)
+    batch.calculate_values(batch.group_remit.agreement, loan_rate)
 
     if batch.save!
       redirect_to loan_insurance_group_remit_path(batch.group_remit), alert: "Unused loan removed"
