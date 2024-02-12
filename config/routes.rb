@@ -200,6 +200,7 @@ Rails.application.routes.draw do
 
     resources :group_remits do
       get :submit, on: :member
+      get :edit_or, on: :member
     end
 
     resources :history, only: [:index]

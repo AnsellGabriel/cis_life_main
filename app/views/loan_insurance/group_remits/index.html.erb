@@ -19,17 +19,22 @@
   </div>
 </div>
 
-<table class="table table-hover">
+<% if @group_remit_size > 10 %>
+  <div class="mb-1">
+      <%== pagy_bootstrap_nav(@pagy) %>
+  </div>
+<% end %>
+
+<table class="table table-hover table-sm ">
     <thead>
       <tr class="table-dark">
-
-        <th class="col-1" scope="col">ID</th>
-        <th class="col-3" scope="col">Name</th>
-        <th class="col-1 text-center" scope="col">Premiums</th>
-        <th class="col-2 text-center" scope="col">Unused Premiums</th>
-        <th class="col-2 text-center" scope="col">Premium Dues</th>
-        <th class="col-1 text-center" scope="col">Status</th>
-        <th class="col-2" scope="col">Actions</th>
+        <th class="col-1 text-center" scope="col">ID</th>
+        <th class="col-2 text-center" scope="col">Name</th>
+        <th class="col-2 text-end" scope="col">Premiums</th>
+        <th class="col-2 text-end" scope="col">Unused Premiums</th>
+        <th class="col-2 text-end" scope="col">Premium Dues</th>
+        <th class="col-1 text-end" scope="col">Status</th>
+        <th class="col-1 text-center" scope="col">Actions</th>
 
       </tr>
     </thead>

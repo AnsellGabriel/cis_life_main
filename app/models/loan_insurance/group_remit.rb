@@ -19,8 +19,36 @@ batch_status: "terminated")
     end
   end
 
+  def set_total_premiums_and_fees
+    self.gross_premium = approved_premium_due
+    self.coop_commission = approved_coop_commissions
+    self.agent_commission = approved_agent_commissions
+    self.net_premium = approved_premium_due - approved_coop_commissions - approved_agent_commissions
+    self.save!
+  end
+
+  def approved_agent_commissions
+    batches.approved.sum(:agent_sf_amount)
+  end
+
+  def approved_coop_commissions
+    batches.approved.sum(:coop_sf_amount)
+  end
+
+  def approved_premium_due
+    batches.approved.sum(:premium_due)
+  end
+
+  def coop_net_premium
+    approved_premium_due - approved_coop_commissions
+  end
+
   def total_unused_premium
     batches.sum(:unused)
+  end
+
+  def total_gross_premium
+    batches.sum(:premium)
   end
 
   def total_loan_amount
