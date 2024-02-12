@@ -2,7 +2,7 @@ class ProcessCoveragesController < ApplicationController
   before_action :authenticate_user!
   before_action :check_emp_department
   before_action :set_process_coverage,
-only: %i[ show edit update destroy approve_batch deny_batch pending_batch reconsider_batch pdf set_premium_batch update_batch_prem transfer_to_md update_batch_cov adjust_lppi_cov refund ]
+only: %i[ show edit update destroy approve_batch deny_batch pending_batch reconsider_batch pdf set_premium_batch update_batch_prem transfer_to_md update_batch_cov adjust_lppi_cov refund psheet ]
 
   # GET /process_coverages
   def index
@@ -673,6 +673,28 @@ only: %i[ show edit update destroy approve_batch deny_batch pending_batch recons
     else
       render :new, status: :unprocessable_entity
     end
+  end
+
+  def psheet
+    @batches_x = @process_coverage.group_remit.batches
+    @total_life_cov = case @process_coverage.get_plan_acronym
+    when "LPPI"
+      @process_coverage.group_remit.total_loan_amount
+    else
+      ProductBenefit.joins(agreement_benefit: :batches).where("batches.id IN (?)", @batches_x.pluck(:id)).where(batches: { insurance_status: :approved }).where("product_benefits.benefit_id = ?", 1).sum(:coverage_amount)
+    end
+    respond_to do |format|
+      format.html
+      format.pdf do
+        render pdf: "PSHEET ##{@process_coverage.id}", 
+        template: "process_coverages/psheet", 
+        formats: [:html],
+        page_size: "A4",
+        layouts: "pdf"
+        # viewport_size: '1280x1024'
+      end
+    end
+
   end
 
   # PATCH/PUT /process_coverages/1
