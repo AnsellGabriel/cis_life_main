@@ -1,0 +1,46 @@
+<%= content_tag :h1, "List of Sip Pbs" %>
+
+
+<div class="text-end mb-3">
+  <%= link_to new_sip_pb_path, class: 'btn btn-primary' do %>
+    New Sip Pb
+  <% end %>
+</div>
+
+
+  <table class="table table-striped table-bordered table-hover">
+    <thead>
+      <tr>
+      <th>#</th>
+            <th>Sip Ab</th>
+            <th>Benefit</th>
+            <th>Coverage Amount</th>
+            <th>Premium</th>
+            <th>Description</th>
+            <th>Plan Unit</th>
+            <th></th>
+        </tr>
+    </thead>
+
+    <tbody>
+      <% @sip_pbs.each do |sip_pb| %>
+        <tr>
+
+        <th scope="row"><%= sip_pb.id %></th>
+        <td><%= sip_pb.sip_ab.name %></td>
+        <td><%= sip_pb.benefit %></td>
+        <td><%= sip_pb.coverage_amount %></td>
+        <td><%= sip_pb.premium %></td>
+        <td><%= sip_pb.description %></td>
+        <td><%= sip_pb.plan_unit %></td>
+    
+          <td>
+            <%= link_to 'View', sip_pb, class: 'btn btn-secondary btn-sm' %>
+            <%= link_to 'Edit', edit_sip_pb_path(sip_pb), class: 'btn btn-secondary btn-sm' %>
+            <%= link_to "Delete", sip_pb, class: "btn btn-danger btn-sm", method: :delete, data: { "turbo-method": :delete, turbo_confirm: "Are you sure?" } %>
+          </td>
+
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
