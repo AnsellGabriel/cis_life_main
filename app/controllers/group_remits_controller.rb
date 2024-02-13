@@ -23,7 +23,7 @@ class GroupRemitsController < InheritedResources::Base
   def submit
     if @group_remit.batches.empty?
       return redirect_to coop_agreement_group_remit_path(@group_remit.agreement, @group_remit), alert: "Unable to submit empty remittance!"
-    elsif @group_remit.mis_entry? && @group_remit.or_number.blank?
+    elsif @group_remit.mis_entry? && @group_remit.official_receipt.blank?
       return redirect_to coop_agreement_group_remit_path(@group_remit.agreement, @group_remit), alert: "Please enter the official receipt number!"
     end
 
@@ -159,7 +159,7 @@ class GroupRemitsController < InheritedResources::Base
   end
 
   def group_remit_params
-    params.require(:group_remit).permit(:or_number, :name, :description, :agreement_id, :anniversary_id,
+    params.require(:group_remit).permit(:official_receipt, :name, :description, :agreement_id, :anniversary_id,
       process_coverage_attributes: [:group_remit_id, :effectivity, :expiry], payments_attributes: [:id, :receipt, :_destroy] )
   end
 

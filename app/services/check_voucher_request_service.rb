@@ -20,7 +20,7 @@ class CheckVoucherRequestService
 
   def description
     if @requestable.is_a?(ProcessCoverage)
-      "Refund for #{@requestable.group_remit.agreement.plan.acronym} with OR # #{@requestable.group_remit.or_number}"
+      "Refund for #{@requestable.group_remit.agreement.plan.acronym} with OR # #{@requestable.group_remit.official_receipt}"
     elsif @requestable.is_a?(ProcessClaim)
       "Claim payment: #{@requestable.cooperative}"
     end

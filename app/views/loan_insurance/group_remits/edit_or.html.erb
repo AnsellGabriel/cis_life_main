@@ -8,7 +8,7 @@
     <%= simple_form_for(@group_remit, url: loan_insurance_group_remit_path) do |f| %>
       <div class="form-inputs <%= flex_justify_align('center', 'center') %> gap-2">
         <div class="d-flex gap-3 <%= flex_justify_align('center', 'center') %>">
-            <%= f.input :or_number, label: false, placeholder: 'Official Receipt #', wrapper_html: {style: 'margin-bottom: 0!important; min-width: 300px;'} %>
+            <%= f.input :official_receipt, label: false, placeholder: 'Official Receipt #', wrapper_html: {style: 'margin-bottom: 0!important; min-width: 300px;'} %>
         </div>
         <%= f.button :submit, 'Confirm', class: "#{small_btn('success')} mb-0", data: {turbo: false} %>
       </div>
