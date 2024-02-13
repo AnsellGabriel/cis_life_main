@@ -133,7 +133,6 @@
     </div>
   </div>  
 </div>
-
 <div class="table-responsive">
   <%= turbo_frame_tag "batches" do %>
   <table class="table table-hover">
@@ -142,8 +141,6 @@
         <th class="text-center" scope="col">ID</th>
         <th class="text-center" scope="col">Members</th>
         <th class="text-center" scope="col">Loan Amount</th>
-        <th class="text-center" scope="col">Effectivity Date</th>
-        <th class="text-center" scope="col">Expiry Date</th>
         <th class="text-center" scope="col">Terms</th>
         <th class="text-center" scope="col">Premium</th>
         
@@ -162,7 +159,7 @@
         <%= render @batches, group_remit: @group_remit, agreement: @agreement %>
       <% else %>
         <tr>
-          <td colspan="8" class="text-center">
+          <td colspan="10" class="text-center">
             No record found.
           </td>
         </tr>

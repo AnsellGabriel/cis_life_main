@@ -5,7 +5,8 @@ class LoanInsurance::GroupRemitsController < ApplicationController
   before_action :set_group_remit, only: %i[submit show destroy]
 
   def index
-    @group_remits = @agreement.group_remits.loan_remits.order(created_at: :desc)
+    @q = @agreement.group_remits.loan_remits.order(created_at: :desc).ransack(params[:q])
+    @group_remits = @q.result(distinct: true)
     @group_remit_size = @group_remits.size
     @pagy, @group_remits = pagy(@group_remits, items: 10)
   end
