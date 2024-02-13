@@ -10,11 +10,7 @@ class KoopamilyaAb < ApplicationRecord
     dependent_spouse: 2,
     dependent_parent: 3,
     dependent_children: 4,
-    dependent_sibling: 5,
-    ranking_bod: 6,
-    ranking_senior_officer: 7,
-    ranking_junior_officer: 8,
-    ranking_rank_and_file: 9
+    dependent_sibling: 5
   }
 
   enum groupings: {

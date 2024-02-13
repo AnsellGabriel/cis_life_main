@@ -145,7 +145,7 @@
   </div>
 </div>
 
-  <% if ['GYRTBR','GYRTFR'].include?(plan_acronym) %>
+  <% if ['GYRTBR','GYRTFR','KOOPamilya'].include?(plan_acronym) %>
     <div class="<%= flex_justify_align('between', 'center') %> gap-1">
       <div class="d-flex gap-2">
 
@@ -202,6 +202,11 @@
       <tr class="table-dark">
 
         <th class="text-center" scope="col">Members</th>
+
+        <% if ["SIP", "GBLISS", "KOOPamilya"].include?(@group_remit.agreement.plan.acronym) %>
+          <th class="text-center" scope="col">Benefits</th>
+        <% end %>
+        
         <% unless @group_remit.is_batch_remit? %>
           <th class="text-center" scope="col">Premium</th>
         <% end %>

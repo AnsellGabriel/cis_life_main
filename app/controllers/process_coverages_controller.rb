@@ -690,8 +690,8 @@ only: %i[ show edit update destroy approve_batch deny_batch pending_batch recons
         template: "process_coverages/psheet", 
         formats: [:html],
         page_size: "A4",
-        layouts: "pdf"
-        # viewport_size: '1280x1024'
+        layouts: "pdf",
+        viewport_size: '1280x1024'
       end
     end
 
