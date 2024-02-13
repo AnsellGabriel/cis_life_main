@@ -4,7 +4,7 @@ class AnniversariesController < InheritedResources::Base
   before_action :set_anniversary, only: %i[ show edit update destroy ]
 
   def index
-
+    @anniversaries = Anniversary.all
   end
 
   def show

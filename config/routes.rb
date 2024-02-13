@@ -2,6 +2,8 @@
 require "sidekiq/web"
 
 Rails.application.routes.draw do
+  resources :sip_pbs
+  resources :sip_abs
   resources :koopamilya_pbs
   resources :koopamilya_abs
   resources :reinsurance_members
@@ -309,6 +311,7 @@ Rails.application.routes.draw do
     get :reassess
     get :reprocess
     get :modal_remarks, on: :member
+    get :psheet, on: :member
     get :cov_list, on: :collection
     patch :update_batch_selected, on: :collection
     get :transfer_to_md, on: :member

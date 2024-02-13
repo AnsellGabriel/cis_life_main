@@ -5,6 +5,10 @@ module ApplicationHelper
     number_to_currency(amount, locale: :ph)
   end
 
+  def psheet_currency(amount)
+    number_with_delimiter(amount, precision: 2)
+  end
+
   def to_curr(amount)
     number_to_currency(amount, unit: "")
   end

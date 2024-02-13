@@ -144,3 +144,8 @@ gem "chartkick"
 
 # gem for sending emails
 gem 'postmark-rails'
+
+# gem for pdf generation
+gem 'wicked_pdf'
+gem 'wkhtmltopdf-binary'
+

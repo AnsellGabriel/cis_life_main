@@ -49,9 +49,18 @@ class GroupProposal < ApplicationRecord
           )
         end
       end
-      
+    
+    #SIP
+    elsif self.plan_id == 6
+      abs = SipAb.all
+      abs.each do |ab|
+        agreement_benefits = agreement.agreement_benefits.build(
+          coverage_amount: 
+        )
+      end
+
     else
-      #SIP & GBLISS
+      #GBLISS
       agreement_benefits = agreement.agreement_benefits.build(
         name: "Principal",
         plan: self.plan,

@@ -1,0 +1,9 @@
+
+<%= render @sip_ab %>
+
+<div>
+  <%= link_to "Edit", edit_sip_ab_path(@sip_ab), class: 'btn btn-primary' %> |
+  <%= link_to "Back", sip_abs_path, class: 'btn btn-primary' %>
+
+  <%= button_to "Delete", @sip_ab, method: :delete, class: 'btn btn-danger' %>
+</div>
