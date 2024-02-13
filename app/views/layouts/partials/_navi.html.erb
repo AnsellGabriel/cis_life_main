@@ -32,7 +32,8 @@
                 <% when 'LPPI' %>
                   <%= link_to "LPPI", loan_insurance_group_remits_path, class: "dropdown-item" %>
                 <% else %>
-                  <%= link_to "GYRT", coop_agreement_path(a), class: "dropdown-item" %>
+                  <%#= link_to "GYRT", coop_agreement_path(a), class: "dropdown-item" %>
+                  <%= link_to a.plan.acronym, coop_agreement_path(a), class: "dropdown-item" %>
                 <% end %>
               <% end %>
             <% end %>
