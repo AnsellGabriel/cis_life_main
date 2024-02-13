@@ -1,8 +1,14 @@
 <div class="mb-3">
 	<% if @group_remit.class.name == 'LoanInsurance::GroupRemit' %>
-		<%= link_to 'Back', loan_insurance_group_remit_path(@group_remit), class: small_btn('secondary') %>
+		<%= link_to loan_insurance_group_remit_path(@group_remit), class: small_btn('outline-secondary') do %>
+			<i class="bi bi-arrow-left-square"></i>
+			<span>Back</span>
+		<% end %>
 	<% else %>
-		<%= link_to 'Back', group_remit_path(@group_remit), class: small_btn('secondary') %>
+		<%= link_to group_remit_path(@group_remit), class: small_btn('outline-secondary') do %>
+			<i class="bi bi-arrow-left-square"></i>
+			<span>Back</span>
+		<% end %>
 	<% end %>
 	<%= link_to 'Clear All', group_remit_destroy_all_path(@group_remit), class: small_btn('danger'), data: {turbo_confirm: 'Delete all denied enrollees?', turbo_method: :delete}  %>
 </div>

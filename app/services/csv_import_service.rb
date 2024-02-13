@@ -20,7 +20,7 @@ class CsvImportService
     import_service = case @type
                       when :member then MemberImportService.new(spreadsheet, @cooperative, @current_user)
                       when :batch then BatchImportService.new(spreadsheet, @group_remit, @cooperative, @current_user)
-                      when :lppi then LppiImportService.new(spreadsheet, @group_remit, @cooperative)
+                      when :lppi then LppiImportService.new(spreadsheet, @group_remit, @cooperative, @current_user)
                      end
 
     import_result = import_service.import

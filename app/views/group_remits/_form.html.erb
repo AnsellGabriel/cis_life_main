@@ -4,7 +4,7 @@
   <%= f.error_notification message: f.object.errors[:base].to_sentence if f.object.errors[:base].present? %>
 
   <div class="form-inputs d-flex align-items-center gap-1">
-    <%= f.input :or_number, label: false, placeholder: "Official Receipt #", wrapper: false %>
+    <%= f.input :official_receipt, label: false, placeholder: "Official Receipt #", wrapper: false %>
     <%= f.button :submit, 'Confirm', class: 'btn btn btn-success', data: {turbo: false} %>
   </div>
 <% end %>

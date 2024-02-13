@@ -56,6 +56,14 @@
 		<% end %>
 
 		<% unless batch.renewal? || batch.terminated? %>
+			<%= link_to edit_loan_insurance_batch_path(batch, group_remit_id: group_remit.id),
+				data: {turbo_frame: "modal"}, 
+				class: small_btn('outline-primary'), 
+				title: 'Edit' do
+			%>
+				<i class="bi bi-pencil-square"></i>
+			<% end %>
+
 			<%= button_to loan_insurance_batch_path(batch), 
 				method: :delete,
 				title: 'Delete',

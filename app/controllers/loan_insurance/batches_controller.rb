@@ -1,13 +1,14 @@
 class LoanInsurance::BatchesController < ApplicationController
   before_action :set_batch, only: %i[ show edit update destroy ]
-  before_action :set_group_remit, only: %i[ new import]
+  before_action :set_group_remit, only: %i[ new import edit]
 
   def import
     import_service = CsvImportService.new(
       :lppi,
       params[:file],
       @cooperative,
-      @group_remit
+      @group_remit,
+      current_user
     )
 
     import_result = import_service.import
@@ -74,15 +75,20 @@ class LoanInsurance::BatchesController < ApplicationController
     # params[:loan_insurance_batch][:unused_loan_id] = params[:loan_insurance_batch][:unused_loan_id].to_i if params[:loan_insurance_batch][:unused_loan_id].present?
     params[:loan_insurance_batch][:loan_amount] = params[:loan_insurance_batch][:loan_amount].gsub(",", "").to_d
     @batch = LoanInsurance::Batch.new(batch_params)
+    @batch.loan_amount = nil if @batch.loan_amount <= 0
     result = @batch.process_batch
 
     respond_to do |format|
       if @batch.save
         format.html { redirect_to loan_insurance_group_remit_path(params[:loan_insurance_batch][:group_remit_id]), notice: "Member added" }
-      elsif result == :no_loan_rate
+      elsif result == :no_rate_for_age
         format.html {
           redirect_to loan_insurance_group_remit_path(params[:loan_insurance_batch][:group_remit_id]),
-          alert: "Acceptable age for this plan: #{agreement.entry_age_from.to_i}-#{agreement.exit_age.to_i}. Member's age: #{@batch.age}" }
+          alert: "No available rate for member's age: #{@batch.age}" }
+      elsif result == :no_rate_for_amount
+        format.html {
+          redirect_to loan_insurance_group_remit_path(params[:loan_insurance_batch][:group_remit_id]),
+          alert: "No available rate for loan amount: #{ActionController::Base.helpers.number_to_currency(@batch.loan_amount, unit: "")}" }
       else
         format.turbo_stream do
           render turbo_stream: turbo_stream.replace("new_loan_insurance_batch", partial: "loan_insurance/batches/form", locals: {batch: @batch, coop_members: @coop_members, group_remit_id: @group_remit_id}),
@@ -94,11 +100,59 @@ status: :unprocessable_entity
 
   # PATCH/PUT /loan_insurance/batches/1
   def update
-    if @batch.update(batch_params)
-      redirect_to @batch, notice: "Batch was successfully updated."
-    else
+    @group_remit = @batch.group_remit
+
+    begin
+      @batch.transaction do
+
+        @batch.update!(batch_params)
+        @batch.rate = nil
+        result = @batch.process_batch
+
+        if result == :no_rate_for_amount
+          raise ActiveRecord::RangeError
+        end
+
+        @batch.save!
+
+        redirect_to loan_insurance_group_remit_path(batch_params[:group_remit_id]), notice: "Loan details updated"
+      end
+    rescue ActiveRecord::RangeError => e
+      @batch.errors.add(:loan_amount, "doesn't have a rate available")
       render :edit, status: :unprocessable_entity
     end
+
+    # @batch.transaction do
+    #   if @batch.update(batch_params)
+    #     result = @batch.process_batch
+    #   else
+
+
+    #   # if result
+    #   #   redirect_to loan_insurance_group_remit_path(batch_params[:group_remit_id]), notice: "Loan details was successfully updated"
+    #   # else
+    #   #   case result
+    #   #   when :no_rate_for_amount
+    #   #     redirect_to loan_insurance_group_remit_path(@batch.group_remit), alert: "No rate for the loan amount"
+    #   #   when :no_rate_for_age
+    #   #     redirect_to loan_insurance_group_remit_path(@batch.group_remit), alert: "No rate for the member's age"
+    #   #   when :no_loan_rate
+    #   #     redirect_to loan_insurance_group_remit_path(@batch.group_remit), alert: "No loan rate found"
+    #   #   when :no_dates
+    #   #     redirect_to loan_insurance_group_remit_path(@batch.group_remit), alert: "No effectivity date or expiry date"
+    #   #   else
+    #   #     redirect_to loan_insurance_group_remit_path(@batch.group_remit), alert: "Something went wrong. Please try again"
+    #   #   end
+
+    #   #   raise ActiveRecord::Rollback
+    #   # end
+    # end
+
+    # if @batch.update(batch_params)
+    #   redirect_to loan_insurance_group_remit_path(batch_params[:group_remit_id]), notice: "Batch was successfully updated."
+    # else
+    #   render :edit, status: :unprocessable_entity
+    # end
   end
 
   def remove_unused
@@ -107,7 +161,8 @@ status: :unprocessable_entity
 
     @unused_Loan.update!(status: :recent)
     batch.update!(unused_loan_id: nil)
-    batch.calculate_values(batch.group_remit.agreement)
+    loan_rate = LoanInsurance::Rate.find(batch.loan_insurance_rate_id)
+    batch.calculate_values(batch.group_remit.agreement, loan_rate)
 
     if batch.save!
       redirect_to loan_insurance_group_remit_path(batch.group_remit), alert: "Unused loan removed"

@@ -24,7 +24,7 @@ class PaymentService
         group_remit.update_batch_coverages
       end
 
-      group_remit.update(or_number: @entry.or_no)
+      group_remit.update(official_receipt: @entry.or_no)
     end
 
     "Payment posted."
