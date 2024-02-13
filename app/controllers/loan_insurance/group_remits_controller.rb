@@ -14,7 +14,7 @@ class LoanInsurance::GroupRemitsController < ApplicationController
   def submit
     if @group_remit.batches.empty?
       return redirect_to loan_insurance_group_remit_path(@group_remit), alert: "Unable to submit empty group remit!"
-    elsif @group_remit.mis_entry? && @group_remit.or_number.blank?
+    elsif @group_remit.mis_entry? && @group_remit.official_receipt.blank?
       return redirect_to loan_insurance_group_remit_path(@group_remit), alert: "Please enter the official receipt number!"
     end
 
@@ -99,7 +99,7 @@ class LoanInsurance::GroupRemitsController < ApplicationController
   private
   # create a secure params
   def group_remit_params
-    params.require(:loan_insurance_group_remit).permit(:name, :type, :or_number)
+    params.require(:loan_insurance_group_remit).permit(:name, :type, :official_receipt)
   end
 
   def set_agreement

@@ -424,11 +424,11 @@ class GroupRemit < ApplicationRecord
   def sum_approved_batches_premium
     batches.where(insurance_status: :approved).sum(:premium)
   end
-  
+
   def sum_approved_batches_unused
     batches.where(insurance_status: :approved).sum(:unused)
   end
-  
+
   def sum_approved_batches_sf
     batches.where(insurance_status: :approved).sum(:coop_sf_amount) + batches.where(insurance_status: :approved).sum(:agent_sf_amount)
   end
@@ -445,7 +445,7 @@ class GroupRemit < ApplicationRecord
       sum_approved_batches_premium - sum_approved_batches_sf
     end
   end
-  
+
 
   # def posted_or
   #   approved_payment.entries.posted.last
@@ -456,7 +456,7 @@ class GroupRemit < ApplicationRecord
   end
 
   def self.ransackable_attributes(auth_object = nil)
-    ["name", "or_number"]
+    ["name", "official_receipt"]
   end
 
   def self.ransackable_associations(auth_object = nil)

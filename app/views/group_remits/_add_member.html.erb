@@ -1,10 +1,10 @@
 <div>
     <% if mis_user?(current_user) %>
-      <%= link_to "#{@group_remit.or_number.present? ? "Edit" : "Add"} OR", edit_coop_agreement_group_remit_path(@agreement, @group_remit), class: small_btn("outline-success"), data: {turbo_frame: "modal"} %>
+      <%= link_to "#{@group_remit.official_receipt.present? ? "Edit" : "Add"} OR", edit_coop_agreement_group_remit_path(@agreement, @group_remit), class: small_btn("outline-success"), data: {turbo_frame: "modal"} %>
     <% end %>
 
     <% if current_user.is_mis? %>
-      <% if @group_remit.or_number.present? %>
+      <% if @group_remit.official_receipt.present? %>
         <%= link_to "Add Member", new_group_remit_batch_path(@group_remit), data: {turbo_frame: "batch_form"}, class: small_btn('success') %>
         
         <%= content_tag :button, "Batch Import", 
