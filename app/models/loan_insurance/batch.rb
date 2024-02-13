@@ -23,7 +23,7 @@ class LoanInsurance::Batch < Batch
   has_many :reserves, through: :reserve_batches, class_name: "Actuarial::Reserve"
 
 
-  def process_batch
+  def process_batch(encoded_premium = nil)
     return :no_dates if effectivity_date.nil? || expiry_date.nil?
 
     agreement = group_remit.agreement
@@ -55,7 +55,7 @@ class LoanInsurance::Batch < Batch
     if self.rate.nil?
       loan_rate
     else
-      calculate_values(agreement, loan_rate)
+      calculate_values(agreement, loan_rate, encoded_premium)
       true
     end
   end
@@ -129,9 +129,8 @@ class LoanInsurance::Batch < Batch
     nil
   end
 
-  def calculate_values(agreement, loan_rate)
-    # self.premium = (loan_amount / 1000 ) * (rate.monthly_rate * terms)
-    self.premium = (loan_amount / 1000 ) * ((rate.annual_rate / 12) * terms)
+  def calculate_values(agreement, loan_rate, encoded_premium = nil)
+    self.premium = encoded_premium ? encoded_premium : (loan_amount / 1000 ) * ((rate.annual_rate / 12) * terms) # use encoded premium by MIS if present
 
     if unused_loan_id
       previous_batch = LoanInsurance::Batch.find(unused_loan_id)

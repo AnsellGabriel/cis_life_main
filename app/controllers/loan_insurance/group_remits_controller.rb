@@ -62,7 +62,7 @@ class LoanInsurance::GroupRemitsController < ApplicationController
     @group_remit.type = "LoanInsurance::GroupRemit"
 
     if current_user.is_mis?
-      @group_remit.update!(mis_entry: true)
+      @group_remit.mis_entry = true
     end
 
     begin
