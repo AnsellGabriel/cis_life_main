@@ -52,8 +52,6 @@ class LoanInsurance::Batch < Batch
       self.valid_health_dec = true
     end
 
-    binding.pry
-    
     if self.rate.nil?
       loan_rate
     else

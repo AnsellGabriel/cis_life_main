@@ -1,5 +1,5 @@
 <tr>
-  <td class="text-center"><%= group_remit.id %></td>
+  <td class="text-center"><%= group_remit.official_receipt.present? ? group_remit.official_receipt : '-' %></td>
   <td><%= group_remit.name %></td>
   <td class="text-end"><%= to_curr(group_remit.total_gross_premium) %></td>
   <td class="text-end"><%= to_curr(group_remit.total_unused_premium) %></td>
