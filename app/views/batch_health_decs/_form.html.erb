@@ -28,8 +28,10 @@
               <% if q.health_dec_subquestions.present? %>
                 <div class="d-none" data-questionaire-target="container">
                 <% q.health_dec_subquestions.each do |sub| %>
-                    <p><%= sub.question %></p>
+                  <div class="mb-1">
+                    <p class="mb-0"><%= sub.question %></p>
                     <input type="text" class="form-control mb-1" name="question[<%= q.id %>][subquestion][<%= sub.id %>][value]" data-questionaire-target="input">
+                  </div>
                 <% end %>
                 </div>
               <% end %>

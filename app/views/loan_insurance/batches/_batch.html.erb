@@ -32,28 +32,6 @@
 			<div class="<%= flex_justify_align('','center',true) %> ps-6">
 				<div class="d-flex flex-column mb-1">
 					<%= content_tag :span, 
-              "#{month_day_year(batch.effectivity_date)}", class: "text-secondary sm-green-text"
-          %>
-				</div>
-			</div>
-		</div>
-	</td>
-	<td class="align-middle" >
-		<div class="<%= flex_justify_align('center') %>">
-			<div class="<%= flex_justify_align('','center',true) %> ps-6">
-				<div class="d-flex flex-column mb-1">
-					<%= content_tag :span, 
-              "#{month_day_year(batch.expiry_date)}", class: "text-secondary sm-green-text"
-          %>
-				</div>
-			</div>
-		</div>
-	</td>
-	<td class="align-middle" >
-		<div class="<%= flex_justify_align('center') %>">
-			<div class="<%= flex_justify_align('','center',true) %> ps-6">
-				<div class="d-flex flex-column mb-1">
-					<%= content_tag :span, 
               "#{batch.terms}", class: "text-secondary sm-green-text"
           %>
 				</div>
@@ -78,7 +56,7 @@
 				<div class="<%= flex_justify_align('','center',true) %> ps-6">
 					<div class="d-flex flex-column mb-1">
 						<%= content_tag :span, 
-								"Unused: #{to_curr(batch.unused)}", 
+								"(#{to_curr(batch.unused)})", 
 								class: "text-secondary sm-green-text"
 						%>
 					</div>
