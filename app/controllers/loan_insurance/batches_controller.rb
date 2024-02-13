@@ -7,7 +7,8 @@ class LoanInsurance::BatchesController < ApplicationController
       :lppi,
       params[:file],
       @cooperative,
-      @group_remit
+      @group_remit,
+      current_user
     )
 
     import_result = import_service.import
@@ -105,14 +106,19 @@ status: :unprocessable_entity
       @batch.transaction do
 
         @batch.update!(batch_params)
-        @batch.update!(rate: nil)
+        @batch.rate = nil
         result = @batch.process_batch
+
+        if result == :no_rate_for_amount
+          raise ActiveRecord::RangeError
+        end
+
         @batch.save!
 
         redirect_to loan_insurance_group_remit_path(batch_params[:group_remit_id]), notice: "Loan details updated"
       end
     rescue ActiveRecord::RangeError => e
-      @batch.errors.add(:loan_amount, "is out of range")
+      @batch.errors.add(:loan_amount, "doesn't have a rate available")
       render :edit, status: :unprocessable_entity
     end
 
