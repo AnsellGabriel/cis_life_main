@@ -455,12 +455,16 @@ class GroupRemit < ApplicationRecord
     (current_user.userable_type == "Employee" && current_user.userable.department_id == 15) && !self.instance_of?(BatchRemit) && self.pending?
   end
 
-  def self.ransackable_attributes(auth_object = nil)
-    ["name"]
-  end
+  # def self.ransackable_attributes(auth_object = nil)
+  #   ["name", "or_number"]
+  # end
 
-  def self.ransackable_associations(auth_object = nil)
-    []
+  # def self.ransackable_associations(auth_object = nil)
+  #   []
+  # end
+
+  def or_number
+    self.official_receipt
   end
 
   private
