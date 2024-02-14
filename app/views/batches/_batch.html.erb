@@ -15,9 +15,30 @@
 					agreement: agreement,
 					beneficiaries: batch.batch_beneficiaries
 				%>
+				<% if group_remit.agreement.plan.acronym == "KOOPamilya" %>
+					<%= content_tag :span, batch.agreement_benefit.name, class: "text-secondary sm-green-text" %>
+				<% end %>
 			</div>
 		</div>
 	</td>
+
+	<% if ["SIP", "GBLISS", "KOOPamilya"].include?(group_remit.agreement.plan.acronym) %>
+		<td class="align-middle" >
+			<div class="<%= flex_justify_align('center') %>">
+				<div class="<%= flex_justify_align('','center',true) %> ps-6">
+					<div class="d-flex flex-column mb-1">
+						<% batch.agreement_benefit.product_benefits.each do |pb| %>
+							<div class="<%= flex_justify_align('','center') %> gap-1">
+								<%= content_tag :span, pb.benefit.acronym, class: "text-secondary sm-green-text" %>
+								<%= content_tag :span, to_currency(pb.coverage_amount), class: "text-primary sm-green-text" %>
+							</div>
+						<% end %>
+					</div>
+				</div>
+			</div>
+		</td>
+	<% end %>
+	
 	<% unless group_remit.is_batch_remit? %>
 		<td class="align-middle" >
 			<div class="<%= flex_justify_align('center') %>">
@@ -59,6 +80,10 @@
 							<div class="<%= flex_justify_align('','center') %> gap-1">								
 								<%= content_tag :span, "#{d.full_name.upcase}", 
 									class: "text-secondary", 
+									style: "font-size: .7rem;" 
+								%>
+								<%= content_tag :span, "(#{d.member_dependent.relationship.upcase})", 
+									class: "text-primary", 
 									style: "font-size: .7rem;" 
 								%>
 							</div>

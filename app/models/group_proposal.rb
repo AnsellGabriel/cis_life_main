@@ -26,6 +26,7 @@ class GroupProposal < ApplicationRecord
       nml: 2000000,   # default value
       coop_sf: 10,   # change this value
       agent_sf: 10,   # change this value
+      anniversary_type: "Single"
     )
     # agreement.save!
     if self.plan_id == 7 #KOOPamilya
@@ -37,7 +38,8 @@ class GroupProposal < ApplicationRecord
           min_age: ab.min_age,
           max_age: ab.max_age,
           insured_type: ab.insured_type,
-          exit_age: ab.exit_age
+          exit_age: ab.exit_age,
+          with_dependent: ab.principal? ? true : false
         )
 
         prem = 480
@@ -45,7 +47,8 @@ class GroupProposal < ApplicationRecord
         # self.plan_unit.unit_benefits.each do |ub|
           pb = agreement_benefits.product_benefits.build(
             coverage_amount: ub.coverage_amount,
-            benefit: ub.benefit
+            benefit: ub.benefit,
+            premium: ab.principal? ? prem : 0
           )
         end
       end
@@ -54,9 +57,22 @@ class GroupProposal < ApplicationRecord
     elsif self.plan_id == 6
       abs = SipAb.all
       abs.each do |ab|
-        agreement_benefits = agreement.agreement_benefits.build(
-          coverage_amount: 
+        agreement_benefit = agreement.agreement_benefits.build(
+          name: ab.name,
+          min_age: ab.min_age,
+          max_age: ab.max_age,
+          insured_type: ab.insured_type,
+          exit_age: ab.exit_age,
+          with_dependent: ab.principal? ? true : false
         )
+        ab.sip_pbs.where(plan_unit_id: self.plan_unit_id).each do |pb|
+          prod_benefit = agreement_benefit.product_benefits.build(
+            coverage_amount: pb.coverage_amount,
+            premium: pb.premium,
+            benefit: pb.benefit
+          )
+
+        end
       end
 
     else
