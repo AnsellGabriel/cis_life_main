@@ -159,7 +159,7 @@ status: :unprocessable_entity
     batch = LoanInsurance::Batch.find(params[:id])
     @unused_Loan = LoanInsurance::Batch.find(batch.unused_loan_id)
 
-    @unused_Loan.update!(status: :recent)
+    @unused_Loan.update!(status: :recent, terminate_date: nil)
     batch.update!(unused_loan_id: nil)
     loan_rate = LoanInsurance::Rate.find(batch.loan_insurance_rate_id)
     batch.calculate_values(batch.group_remit.agreement, loan_rate)

@@ -1,10 +1,11 @@
 <div class="mb-3 <%= flex_justify_align('', 'center') %> gap-1">
-  <%= link_to cooperatives_path, class: "btn btn-secondary btn-sm", title: "Back" do %>
-    <i class="bi bi-arrow-bar-left"></i>
+  <%= link_to cooperatives_path, class: "btn btn-outline-secondary btn-sm", title: "Back" do %>
+    <i class="bi bi-arrow-left-square"></i>      
+    Back
   <% end %>
   <%= link_to edit_cooperative_path(cooperative), class: "btn btn-outline-primary btn-sm #{flex_justify_align('', 'center')} gap-1", title: "Edit" do %>
-    <span>Edit</span>
     <i class="bi bi-pencil-square"></i>
+    Edit
   <% end %>
 </div>
 

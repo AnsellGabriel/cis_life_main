@@ -4,6 +4,7 @@ class GroupRemit < ApplicationRecord
   before_destroy :delete_associated_batches
 
   validates_presence_of :name # , :effectivity_date, :expiry_date, :terms
+  validates_uniqueness_of :official_receipt, allow_blank: true
 
   scope :batch_remits, -> { where(:type => "BatchRemit")}
   scope :loan_remits, -> { where(:type => "LoanInsurance::GroupRemit")}

@@ -46,7 +46,8 @@ class BatchImportService
     missing_dependent_headers = check_missing_headers("DEPENDENT", @dependent_headers, dependent_headers)
     return missing_dependent_headers if missing_dependent_headers
 
-    available_member_list = @cooperative.unselected_coop_members(@agreement.group_remits.joins(:batches).pluck(:coop_member_id))
+    covered_members = @agreement.group_remits.joins(:batches)
+    available_member_list = @cooperative.unselected_coop_members(covered_members.pluck(:coop_member_id))
 
     total_members = principal_spreadsheet.drop(1).count + dependent_spreadsheet.drop(1).count
     progress_counter = 0
@@ -54,6 +55,7 @@ class BatchImportService
     principal_spreadsheet.drop(1).each do |row|
       batch_hash = extract_batch_data(row)
       member = find_or_initialize_member(batch_hash)
+      coop_member = @cooperative.coop_members.find_by(member_id: member.id)
 
       unless member.persisted?
         create_denied_member(member, "Unenrolled member.")
@@ -61,13 +63,12 @@ class BatchImportService
         update_progress(total_members, progress_counter)
         next
       end
-
-      coop_member = @cooperative.coop_members.find_by(member_id: member.id)
       # checks if member is already in another group remit/batch remit
       without_coverage_member = available_member_list.find_by(id: coop_member.id)
 
       if without_coverage_member.nil?
-        create_denied_member(member, "Member already exist in other batch or remittance")
+        previous_group_remit = @agreement.group_remits.joins(batches: :coop_member).where(coop_members: {id: coop_member.id}).order(effectivity_date: :desc).first
+        create_denied_member(member, "Member already exist in other batch or list: #{previous_group_remit.name}")
         progress_counter += 1
         update_progress(total_members, progress_counter)
         next
@@ -95,7 +96,7 @@ class BatchImportService
 
       if duplicate_member
         # add_duplicate_member(member)
-        create_denied_member(member, "Member already exist in the batch.")
+        create_denied_member(member, "Member already exist in the list.")
         progress_counter += 1
         update_progress(total_members, progress_counter)
         next

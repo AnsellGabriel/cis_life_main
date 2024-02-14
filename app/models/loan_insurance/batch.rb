@@ -73,6 +73,7 @@ class LoanInsurance::Batch < Batch
 
     if unused_loan_id
       previous_batch = LoanInsurance::Batch.find(unused_loan_id)
+      previous_batch.update(status: :terminated, terminate_date: self.effectivity_date)
       unused_term = compute_terms(previous_batch.expiry_date, effectivity_date)
       self.unused = (previous_batch.loan_amount / 1000 ) * (rate.monthly_rate * unused_term)
       self.premium_due = self.premium - unused
@@ -134,7 +135,7 @@ class LoanInsurance::Batch < Batch
 
     if unused_loan_id
       previous_batch = LoanInsurance::Batch.find(unused_loan_id)
-      previous_batch.update(status: :terminated)
+      previous_batch.update(status: :terminated, terminate_date: self.effectivity_date)
 
       unused_term = compute_terms(previous_batch.expiry_date, effectivity_date)
       self.unused = (previous_batch.loan_amount / 1000 ) * (rate.monthly_rate * unused_term)
