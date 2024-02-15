@@ -145,7 +145,7 @@ class GroupRemit < ApplicationRecord
       group_remit.name = "#{group_remit.effectivity_date.strftime('%B').upcase} BATCH"
     else
       # group_remit.name = "#{extract_from_substring(agreement.moa_no, ('GYRT' or 'LPPI'))} REMITTANCE #{agreement.group_remits.where(type: 'Remittance').size + 1}"
-      group_remit.name = "REMITTANCE #{agreement.group_remits.where(type: 'Remittance').size + 1}"
+      group_remit.name = "ENROLLMENT LIST #{agreement.group_remits.where(type: 'Remittance').size + 1}"
 
     end
 

@@ -7,7 +7,7 @@ module BatchesLoader
         {coop_member: :member, batch_dependents: :member_dependent, batch_beneficiaries: :member_dependent},
         :batch_health_decs,
         :agreement_benefit
-      ).order(created_at: :desc)
+      ).order(last_name: :asc)
 
       if params[:batch_filter].present?
         @f_batches = batches_eager_loaded.filter_by_member_name(params[:batch_filter].upcase).order(created_at: :desc)

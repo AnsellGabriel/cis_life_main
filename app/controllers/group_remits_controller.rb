@@ -22,7 +22,7 @@ class GroupRemitsController < InheritedResources::Base
 
   def submit
     if @group_remit.batches.empty?
-      return redirect_to coop_agreement_group_remit_path(@group_remit.agreement, @group_remit), alert: "Unable to submit empty remittance!"
+      return redirect_to coop_agreement_group_remit_path(@group_remit.agreement, @group_remit), alert: "Unable to submit an empty lisy!"
     elsif @group_remit.mis_entry? && @group_remit.official_receipt.blank?
       return redirect_to coop_agreement_group_remit_path(@group_remit.agreement, @group_remit), alert: "Please enter the official receipt number!"
     end
@@ -45,13 +45,13 @@ class GroupRemitsController < InheritedResources::Base
         @process_coverage.save!
 
         respond_to do |format|
-          format.html { redirect_to coop_agreement_group_remit_path(@group_remit.agreement, @group_remit), notice: "Remittance submitted" }
+          format.html { redirect_to coop_agreement_group_remit_path(@group_remit.agreement, @group_remit), notice: "Enrollment list submitted" }
         end
       end
     rescue StandardError => e
       # Handle the exception here
       respond_to do |format|
-        format.html { redirect_to coop_agreement_group_remit_path(@group_remit.agreement, @group_remit), alert: "Unable to submit the remittance. No assigned underwriting analyst. Please contact the administrator" }
+        format.html { redirect_to coop_agreement_group_remit_path(@group_remit.agreement, @group_remit), alert: "Unable to submit the list. No assigned underwriting analyst. Please contact the administrator" }
       end
     end
 
@@ -90,7 +90,7 @@ class GroupRemitsController < InheritedResources::Base
     end
 
     if pending_remittance.present?
-      return redirect_to coop_agreement_group_remit_path(@agreement, pending_remittance), alert: "Please complete the pending remittance first."
+      return redirect_to coop_agreement_group_remit_path(@agreement, pending_remittance), alert: "Please complete the pending list first."
     end
 
     @group_remit = @agreement.group_remits.build(type: "Remittance")

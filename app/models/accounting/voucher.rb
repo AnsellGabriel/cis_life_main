@@ -2,6 +2,7 @@ class Accounting::Voucher < ApplicationRecord
   validates_presence_of :date_voucher, :global_payable, :particulars, :voucher
 
   belongs_to :payable, polymorphic: true
+  
 
   def to_s
     voucher

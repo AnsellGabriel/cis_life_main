@@ -1,6 +1,7 @@
 <div class="d-flex gap-1 mb-3">
-  <%= link_to coop_agreement_group_remit_path(@batch_remit.agreement, @batch_remit), class: small_btn('secondary'), title: 'Back' do %>
-    <i class="bi bi-arrow-bar-left"></i>  
+  <%= link_to coop_agreement_group_remit_path(@batch_remit.agreement, @batch_remit), class: small_btn('outline-secondary'), title: 'Back' do %>
+    <i class="bi bi-arrow-left-square"></i>  
+    Back
   <% end %>
 </div>
 <%= content_tag :h3, "#{@batch_remit.name}", class: 'mb-0 text-primary mb-1' %>

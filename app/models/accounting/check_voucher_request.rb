@@ -1,5 +1,6 @@
 class Accounting::CheckVoucherRequest < ApplicationRecord
   belongs_to :requestable, polymorphic: true
+  
   has_many :check_vouchers, class_name: "Accounting::Check"
   self.table_name = "check_voucher_requests"
 
