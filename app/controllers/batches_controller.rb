@@ -151,14 +151,26 @@ class BatchesController < ApplicationController
       return redirect_to group_remit_path(@group_remit), alert: "Member not found"
     end
     
+    # if @agreement.plan.acronym == "SII"
+    #   Batch.process_batch(
+    #     @batch,
+    #     @group_remit,
+    #     batch_params[:rank],
+    #     0,
+    #     params[:batch][:savings_amount]
+    #   )
+    # else
     Batch.process_batch(
       @batch,
       @group_remit,
       batch_params[:rank]
     )
+    # end
 
     begin
-            
+
+      # unless @agreement.plan.acronym == "SII"
+      
       if member.age(@group_remit.effectivity_date) < @batch.agreement_benefit.min_age or member.age(@group_remit.effectivity_date) > @batch.agreement_benefit.max_age
 
         # return redirect_to group_remit_path(@group_remit), alert: "Member age must be between #{@batch.agreement_benefit.min_age.to_i} and #{@batch.agreement_benefit.max_age.to_i} years old."
@@ -169,6 +181,9 @@ class BatchesController < ApplicationController
           @batch.batch_remarks.build(remark: "Member age is below the minimum age limit of the plan.", status: :denied, user_type: current_user.userable_type, user_id: current_user.userable.id)
         end
       end
+
+      # end
+  
 
       # raise 'errors'
       respond_to do |format|

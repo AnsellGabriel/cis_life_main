@@ -110,7 +110,7 @@ class Batch < ApplicationRecord
   end
 
 
-  def self.process_batch(batch, group_remit, rank = nil, premium = nil)
+  def self.process_batch(batch, group_remit, rank = nil, premium = nil, savings_amount = nil)
     agreement = group_remit.agreement
     coop_member = batch.coop_member
     previous_coverage = agreement.agreements_coop_members.find_by(coop_member_id: coop_member.id)
@@ -122,7 +122,11 @@ class Batch < ApplicationRecord
     batch.birthdate = coop_member.member.birth_date
     batch.civil_status = coop_member.member.civil_status
     batch.age = batch.member_details.age(batch.effectivity_date)
+    # if agreement.plan.acronym == "SII"
+    #   check_plan(agreement, batch, rank, group_remit, premium, savings_amount)
+    # else
     check_plan(agreement, batch, rank, group_remit, premium)
+    # end
 
     if previous_coverage.present?
       month_difference = expiry_and_today_month_diff(previous_coverage.expiry)
@@ -158,6 +162,8 @@ class Batch < ApplicationRecord
       batch.set_premium_and_service_fees(:principal, group_remit, premium) # GBLISS Plan
     when "KOOPamilya"
       batch.set_premium_and_service_fees(rank, group_remit, premium)
+    # when "SII"
+    #   batch.set_premium_and_service_fees(:principal, group_remit, premium, savings_amount)
     end
 
     batch.valid_health_dec = true

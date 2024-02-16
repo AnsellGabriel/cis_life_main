@@ -43,7 +43,7 @@
       %>
       <%= link_to "Enrollment List", coop_agreement_group_remit_remittances_path(@agreement, @group_remit), class: small_btn('primary') %>
     <% end %>
-
+    
     <% if @group_remit.is_pending_or_renewal? && @group_remit.is_remittance? %>
       
       <div class="d-flex gap-1">
@@ -113,7 +113,7 @@
   <% end %>
 </div>
 
-<div class="<%=  flex_justify_align('', 'center') %> gap-3">
+<div class="<%=  flex_justify_align('', 'center') %> gap-2  ">
   <% unless @group_remit.is_batch_remit? %>
     <%= content_tag :span, @group_remit.status.titleize, class: @group_remit.status_badge %>
   <% end %>
@@ -123,6 +123,7 @@
         <%= content_tag :span, "(OR# #{@group_remit.or_number})", class: "text-dark small" %>
       <% end %>
   <% end %>
+  <%= content_tag :h3, "(#{plan_acronym})", class: 'mb-0 text-secondary' %>
 
   <div class="<%= flex_justify_align('between') %> mt-2" style="height: 100%; width: 460px;">
     <div style="width: 100%">

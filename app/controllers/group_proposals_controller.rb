@@ -1,4 +1,5 @@
 class GroupProposalsController < ApplicationController
+  before_action :check_agent
   before_action :set_group_proposal, only: %i[ show edit update destroy ]
 
   # GET /group_proposals
@@ -65,7 +66,7 @@ class GroupProposalsController < ApplicationController
         format.html { redirect_to new_group_proposal_path, alert: "Cooperative and Plan selected already exists." }
       else
 
-        @group_proposal.create_agreement(ctr.to_s.rjust(4, '0'))
+        @group_proposal.create_agreement(ctr.to_s.rjust(4, '0'), current_user)
   
         if @group_proposal.save
           format.html { redirect_to @group_proposal, notice: "Group proposal was successfully created" }
@@ -109,4 +110,5 @@ class GroupProposalsController < ApplicationController
   def group_proposal_params
     params.require(:group_proposal).permit(:cooperative_id, :plan_id, :plan_unit_id)
   end
+
 end

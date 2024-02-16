@@ -1,4 +1,4 @@
-<%= simple_form_for(@group_remit, url: loan_insurance_group_remits_path) do |f| %>
+<%= simple_form_for(@group_remit, url: loan_insurance_group_remits_path(p: @p)) do |f| %>
   <%= f.error_notification %>
   <%= f.error_notification message: f.object.errors[:base].to_sentence if f.object.errors[:base].present? %>
 
@@ -7,6 +7,11 @@
         <%= f.input :name, label: false, placeholder: 'Batch Name', wrapper_html: {style: 'margin-bottom: 0!important; min-width: 300px;'} %>
     </div>
     <%= f.button :submit, 'Confirm', class: "#{small_btn('primary')} mb-0", data: {turbo: false} %>
-    <%= link_to 'Cancel', loan_insurance_group_remits_path, class: small_btn('danger') %>
+    <% if @p %>
+      <%= link_to 'Cancel', sii_index_loan_insurance_group_remits_path, class: small_btn('danger') %>
+    <% else %>
+      <%= link_to 'Cancel', loan_insurance_group_remits_path, class: small_btn('danger') %>
+    <% end %>
+    
   </div>
 <% end %>
