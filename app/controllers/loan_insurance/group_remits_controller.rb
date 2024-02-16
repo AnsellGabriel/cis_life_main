@@ -5,7 +5,8 @@ class LoanInsurance::GroupRemitsController < ApplicationController
   before_action :set_group_remit, only: %i[submit show destroy]
 
   def index
-    @group_remits = @agreement.group_remits.loan_remits.order(created_at: :desc)
+    @q = @agreement.group_remits.loan_remits.order(created_at: :desc).ransack(params[:q])
+    @group_remits = @q.result(distinct: true)
     @group_remit_size = @group_remits.size
     @pagy, @group_remits = pagy(@group_remits, items: 10)
   end
@@ -19,7 +20,7 @@ class LoanInsurance::GroupRemitsController < ApplicationController
   def submit
     if @group_remit.batches.empty?
       return redirect_to loan_insurance_group_remit_path(@group_remit), alert: "Unable to submit empty group remit!"
-    elsif @group_remit.mis_entry? && @group_remit.or_number.blank?
+    elsif @group_remit.mis_entry? && @group_remit.official_receipt.blank?
       return redirect_to loan_insurance_group_remit_path(@group_remit), alert: "Please enter the official receipt number!"
     end
 
@@ -70,7 +71,7 @@ class LoanInsurance::GroupRemitsController < ApplicationController
     @group_remit.type = "LoanInsurance::GroupRemit"
 
     if current_user.is_mis?
-      @group_remit.update!(mis_entry: true)
+      @group_remit.mis_entry = true
     end
 
     begin
@@ -116,7 +117,7 @@ class LoanInsurance::GroupRemitsController < ApplicationController
   private
   # create a secure params
   def group_remit_params
-    params.require(:loan_insurance_group_remit).permit(:name, :type, :or_number)
+    params.require(:loan_insurance_group_remit).permit(:name, :type, :official_receipt)
   end
 
   def set_agreement

@@ -424,11 +424,11 @@ class GroupRemit < ApplicationRecord
   def sum_approved_batches_premium
     batches.where(insurance_status: :approved).sum(:premium)
   end
-  
+
   def sum_approved_batches_unused
     batches.where(insurance_status: :approved).sum(:unused)
   end
-  
+
   def sum_approved_batches_sf
     batches.where(insurance_status: :approved).sum(:coop_sf_amount) + batches.where(insurance_status: :approved).sum(:agent_sf_amount)
   end
@@ -445,7 +445,7 @@ class GroupRemit < ApplicationRecord
       sum_approved_batches_premium - sum_approved_batches_sf
     end
   end
-  
+
 
   # def posted_or
   #   approved_payment.entries.posted.last
@@ -453,6 +453,18 @@ class GroupRemit < ApplicationRecord
 
   def editable_by_mis?(current_user)
     (current_user.userable_type == "Employee" && current_user.userable.department_id == 15) && !self.instance_of?(BatchRemit) && self.pending?
+  end
+
+  def self.ransackable_attributes(auth_object = nil)
+    ["name", "official_receipt"]
+  end
+
+  def self.ransackable_associations(auth_object = nil)
+    []
+  end
+
+  def or_number
+    self.official_receipt
   end
 
   private

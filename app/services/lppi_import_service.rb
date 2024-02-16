@@ -1,11 +1,12 @@
 class LppiImportService
   include ActionView::Helpers::NumberHelper
 
-  def initialize(spreadsheet, group_remit, cooperative)
+  def initialize(spreadsheet, group_remit, cooperative, current_user)
     @spreadsheet = spreadsheet
     @group_remit = group_remit
     @cooperative = cooperative
     @agreement = @group_remit.agreement
+    @current_user = current_user
 
     @headers = ["FIRST_NAME", "LAST_NAME", "BIRTHDATE", "EFFECTIVITY_DATE", "EXPIRY_DATE", "RELEASE_DATE", "MATURITY_DATE", "LOAN_AMOUNT", "LOAN_TYPE"]
 
@@ -98,7 +99,8 @@ class LppiImportService
       release_date: row["RELEASE_DATE"],
       maturity_date: row["MATURITY_DATE"],
       loan_amount: row["LOAN_AMOUNT"],
-      loan_type: row["LOAN_TYPE"].to_s.squish.upcase
+      loan_type: row["LOAN_TYPE"].to_s.squish.upcase,
+      premium: mis_user? && row["PREMIUM"].present? ? row["PREMIUM"].to_f : nil
     }
   end
 
@@ -106,7 +108,7 @@ class LppiImportService
     @cooperative.members.find_or_initialize_by(
       first_name: batch_hash[:first_name],
       last_name: batch_hash[:last_name],
-      middle_name: batch_hash[:middle_name],
+      # middle_name: batch_hash[:middle_name],
       birth_date: batch_hash[:birth_date]
     )
   end
@@ -151,23 +153,22 @@ class LppiImportService
                   loan: loan_type
                 )
 
-    previous_loans = coop_member.active_loans(@group_remit, loan_type).order(created_at: :desc)
+    # previous_loans = coop_member.active_loans(@group_remit, loan_type).order(created_at: :desc)
 
-    if previous_loans.any?
-      new_batch.unused_loan_id = previous_loans.first.id
-    end
+    # if previous_loans.any?
+    #   new_batch.unused_loan_id = previous_loans.first.id
+    # end
 
-    result = new_batch.process_batch
+    result = new_batch.process_batch(batch_hash[:premium])
 
     if loan_type.nil?
       create_denied_member(member, "Loan type #{batch_hash[:loan_type]} not found.")
-      increment_denied_members_counter
     elsif result == :no_rate_for_age
-      create_denied_member(member, "Acceptable age for this plan: #{@agreement.entry_age_from.to_i}-#{@agreement.exit_age.to_i}. Member's age: #{new_batch.age}")
-      increment_denied_members_counter
+      create_denied_member(member, "No rate available for members with age: #{new_batch.age}")
     elsif result == :no_rate_for_amount
-      create_denied_member(member, "No rate available for member's age #{new_batch.age} and loan amount #{number_to_currency(batch_hash[:loan_amount], unit: "")}")
-      increment_denied_members_counter
+      create_denied_member(member, "No rate available for members age #{new_batch.age} and loan amount #{number_to_currency(batch_hash[:loan_amount], unit: "")}")
+    elsif result == :no_dates
+      create_denied_member(member, "Missing effectivity date or expiry date.")
     else
       new_batch.save!
       increment_added_members_counter
@@ -176,5 +177,9 @@ class LppiImportService
 
   def find_duplicate_member(id)
     @group_remit.batches.find_by(coop_member_id: id)
+  end
+
+  def mis_user?
+    @current_user.userable_type == "Employee" && @current_user.userable.department_id == 15
   end
 end

@@ -1,19 +1,21 @@
 <%= simple_form_for(batch, html: {data: {controller: "loan-form"}}) do |f| %>
   <div class="row <%= flex_justify_align('between','center') %> mb-3">
     <%= f.hidden_field :group_remit_id, value: group_remit_id, data: {loan_form_target: 'groupRemit'} %>
-    <%= f.association :coop_member, 
-        collection: coop_members, 
-        include_blank: "Search member",
-        wrapper_html: {class: '', style: 'margin-bottom: 0!important;'},
-        input_html: { 
-          id: "member_id", 
-          data: {  
-            target: 'memberSelect',
-            controller: "ts--select",
-            action: "change->loan-form#selectMember focus->loan-form#selectMember", }  
-          }, label: false,
-          error: '*Required'
-    %>
+    <% unless batch.persisted? %>
+      <%= f.association :coop_member, 
+          collection: coop_members, 
+          include_blank: "Search member",
+          wrapper_html: {class: '', style: 'margin-bottom: 0!important;'},
+          input_html: { 
+            id: "member_id", 
+            data: {  
+              target: 'memberSelect',
+              controller: "ts--select",
+              action: "change->loan-form#selectMember focus->loan-form#selectMember", }  
+            }, label: false,
+            error: '*Required'
+      %>
+    <% end %>
   </div>
   
   <div class="<%= flex_justify_align('start', 'start') %> gap-2" style="height: auto;">
@@ -24,7 +26,7 @@
           <%= f.label :loan, 'Loan type', class: 'ps-4', error: '*Required' %>
         </div>
         <div class="form-floating mb-3 col-md-6" data-controller="number-formatter">
-          <%= f.input :loan_amount, as: :text, label: false, placeholder: 'Loan amount', class: 'form-control', wrapper: false, input_html: {class: 'text-primary', data: {number_formatter_target: 'input'}} %>
+          <%= f.input :loan_amount, as: :text, label: false, placeholder: 'Loan amount', class: 'form-control', wrapper: false, input_html: {class: 'text-primary', data: {number_formatter_target: 'input'}}%>
           <%= f.label :loan_amount, 'Loan amount', class: 'ps-4' %>
         </div>
       </div>
@@ -66,7 +68,7 @@
     <%= turbo_frame_tag "member loans" %>
   </div>
   <div class="form-actions text-center">
-    <%= f.button :submit, 'Add', class: small_btn('primary') %> 
+    <%= f.button :submit, "#{batch.persisted? ? "Update" : "Add"}", class: small_btn('primary') %> 
   </div>
 <% end %>
 

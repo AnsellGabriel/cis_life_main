@@ -40,6 +40,5 @@ class AgreementDecorator < Draper::Decorator
     when "GYRT", "GYRTF", "GYRTBR", "GYRTFR" then coop_agreement_path(object)
     when "LPPI" then loan_insurance_group_remits_path
     end
-end
-
+  end
 end

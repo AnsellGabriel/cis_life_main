@@ -41,7 +41,7 @@
         class: small_btn('success'), 
         data: { turbo: false } 
       %>
-      <%= link_to "Remittances", coop_agreement_group_remit_remittances_path(@agreement, @group_remit), class: small_btn('primary') %>
+      <%= link_to "Enrollment List", coop_agreement_group_remit_remittances_path(@agreement, @group_remit), class: small_btn('primary') %>
     <% end %>
     
     <% if @group_remit.is_pending_or_renewal? && @group_remit.is_remittance? %>

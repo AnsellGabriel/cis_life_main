@@ -1,7 +1,7 @@
-<div class="card mb-0 <%= flex_justify_align('center', 'start') %>" style="height: 100%; width: 400px">
+<div class="card mb-0 <%= flex_justify_align('center', 'start') %>" style="width: 400px">
   <div class="card-header" style="width: 100%;">
     <div class="text-center">
-      <%= content_tag :span, 'Loan Details ', class: 'text-primary' %>
+      <%= content_tag :span, "Batch name: #{batch.group_remit.name}", class: 'text-primary' %>
     </div>
   </div>
   <div class="card-body <%= flex_justify_align('around') %>" style="width: 100%;">
