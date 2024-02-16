@@ -10,7 +10,9 @@
       <%#= f.association :agreement_benefit %>
       <div class="row">
         <%= f.input :coverage_amount, wrapper_html: { class: "col-md-8" } %>
-        <%= f.input :premium, wrapper_html: { class: "col-md-4" } %>
+        <% if @product_benefit.benefit_id == 1 %>
+          <%= f.input :premium, wrapper_html: { class: "col-md-4" } %>
+        <% end %>
         <%#= f.input :duration, placeholder: "In months, ex: 0,3,6,9", wrapper_html: { class: "col-md-4" } %>
         <%#= f.input :residency_floor, wrapper_html: { class: "col-md-4" } %>
         <%#= f.input :residency_ceiling, wrapper_html: { class: "col-md-4" } %>

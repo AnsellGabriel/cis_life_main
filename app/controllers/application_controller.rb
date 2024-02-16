@@ -61,6 +61,12 @@ class ApplicationController < ActionController::Base
     @retention_limit = LoanInsurance::Retention.find_by(active: true).amount
   end
 
+  def check_agent
+    unless current_user.userable_type == "Agent"
+      render file: "#{Rails.root}/public/404.html", status: :not_found
+    end
+  end
+
   # def set_retention_limit
   #   @retention_limit = Retention.find_by(active: true)
   # end

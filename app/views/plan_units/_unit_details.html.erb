@@ -1,6 +1,6 @@
 
 <div class="card col-6 border-info">
-  <% unless plan_unit.plan_id == 7 %> <!-- other plans -->
+  <% if plan_unit.plan_id == 5 || plan_unit.plan_id == 6 %> <!-- SIP & GBLISS -->
     <div class="card-body">
       <table class="table table-hover">
         <thead>
@@ -20,7 +20,8 @@
         Premium: <%= to_currency(plan_unit.total_prem) %>
       </h3>
     </div>
-  <% else %> <!-- KOOPAMILYA -->
+  
+  <% elsif plan_unit.plan_id == 7 %> <!-- KOOPAMILYA -->
     <div class="card-body">
       <h5 class="card-title">Term of Insurance</h5>
       <p class="card-text">
@@ -134,6 +135,34 @@
           </tbody>
         </table>
       </p>
+    </div>
+  <% elsif plan_unit.plan_id == 8 %> <!-- SII -->
+    <div class="card-body">
+      <h5 class="card-title fst-italic">SALIENT FEATURES:</h5>
+      <table class="table table-hover">
+        <tbody>
+          <tr>
+            <td>Insurable Age</td>
+            <td><b>18-65 years old</b></td>
+          </tr>
+          <tr>
+            <td>Minimum Participation</td>
+            <td><b>100 individual members</b></td>
+          </tr>
+          <tr>
+            <td>Maximum Coverage</td>
+            <td><b><%= to_currency(300000) %></b></td>
+          </tr>
+          <tr>
+            <td>Rate</td>
+            <td><b><%= to_currency(10) %> per annum</b></td>
+          </tr>
+        </tbody>
+      </table>
+      <div>
+        <span class="lead fst-italic">Benefit</span>
+      </div>
+      <span class="ms-2">- Basic Life Insurance Based on the Outstanding Balance of Capital Share and/or Savings of the member.</span>
     </div>
   <% end %>
 

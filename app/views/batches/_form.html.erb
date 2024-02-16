@@ -32,6 +32,11 @@
           <%= f.input :rank, collection: @agreement.agreement_benefits.where.not(insured_type: 2..5), input_html: {style: "width: auto !important; font-size: .8rem; height: 38px;", }, include_blank: @agreement.plan.acronym == "KOOPamilya" ? "Residency" : "Rank", wrapper_html: {style: 'margin-bottom: 0 !important; '}, label: false %>
         <% end %>
 
+        <%# if @agreement.plan.acronym == "SII" %>
+          <%#= f.input :savings_amount, placeholder: "Amount", wrapper_html: {style: 'margin-bottom: 0 !important; '}, label: false %>
+        <%# end %>
+        
+
         <%= f.button :submit, "Add", class: 'btn btn-sm btn-success', data: {turbo: false} %>
         <%= link_to "Cancel", :back, class: 'btn btn-sm btn-danger' %>
       </div>
