@@ -230,7 +230,7 @@ class ProcessClaimsController < ApplicationController
             #   description: "Claim Request for Payment",
             #   analyst: current_user.userable.signed_fullname
             # )
-            request = CheckVoucherRequestService.new(@process_claim, @process_claim.get_benefit_claim_total, current_user)
+            request = CheckVoucherRequestService.new(@process_claim, @process_claim.get_benefit_claim_total, :claims_payment, current_user)
 
             if request.create_request
               format.html { redirect_to show_coop_process_claim_path(@process_claim), notice: "#{@process_claim.claim_route.to_s.humanize.titleize} by #{current_user}"  }

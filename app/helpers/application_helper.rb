@@ -224,8 +224,9 @@ module ApplicationHelper
     elsif user_type == "Employee"
 
       case current_user.userable.department_id
-      when 15 then "Management Information System"
-      when 11 then "Accounting"
+      when 15 then "MANAGEMENT INFORMATION SYSTEM"
+      when 11 then "ACCOUNTING"
+      when 27 then "AUDIT"
       end
 
     end

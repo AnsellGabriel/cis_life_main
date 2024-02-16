@@ -4,7 +4,7 @@ class Accounting::ChecksController < ApplicationController
   before_action :set_payables, only: %i[ new edit create update]
 
   def requests
-    @claim_requests = Accounting::CheckVoucherRequest.all
+    @claim_requests = Accounting::CheckVoucherRequest.all.order(created_at: :desc)
     @pagy, @claim_requests = pagy(@claim_requests, items: 10)
   end
 
@@ -73,6 +73,7 @@ class Accounting::ChecksController < ApplicationController
   # POST /accounting/checks
   def create
     @check = Accounting::Check.new(modified_check_params)
+    @check.accountant_id = current_user.id
 
     if @check.save
       if params[:rid].present?

@@ -100,14 +100,14 @@
           </td>
           <td><%= coop_member.coop_branch.name.titleize %></td>
           <td>
-            <%= link_to coop_member_path(coop_member), class: small_btn('outline-primary'), data: {turbo_frame: 'modal-xl', bs_toggle: 'tooltip', bs_placement: 'top'}, title: 'Show' do %>
+            <%= link_to coop_member_path(coop_member), class: small_btn('outline-primary'), data: {turbo_frame: 'modal-xl'}, title: 'Show' do %>
               <i class="bi bi-eye-fill"></i>
             <% end %>
-            <%= link_to edit_member_path(member, cooperative_id: @cooperative.id), class: small_btn('outline-primary'), data: {turbo_frame: 'modal-lg', bs_toggle: 'tooltip', bs_placement: 'top'}, title: 'Edit' do%>
+            <%= link_to edit_member_path(member, cooperative_id: @cooperative.id), class: small_btn('outline-primary'), data: {turbo_frame: 'modal-lg'}, title: 'Edit' do%>
               <i class="bi bi-pencil"></i>
             <% end %>
             <% if coop_member.with_coverages? %>
-              <%= link_to show_insurance_coop_member_path(coop_member), class: small_btn('outline-primary'), title: 'Coverages', data: {bs_toggle: 'tooltip', bs_placement: 'top'} do %>
+              <%= link_to show_insurance_coop_member_path(coop_member), class: small_btn('outline-primary'), title: 'Coverages' do %>
                 <i class="bi bi-clock-history"></i>
               <% end %>
             <% end %>

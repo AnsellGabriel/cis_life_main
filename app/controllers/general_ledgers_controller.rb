@@ -17,7 +17,12 @@ class GeneralLedgersController < ApplicationController
       if params[:e_t] == 'ce' && @entry.remittance?
         pay_service = PaymentService.new(@entry.entriable, current_user, @entry)
         result = pay_service.post_payment
-      else
+      elsif params[:e_t] == 'cv'
+        @entry.update(status: :posted, post_date: Date.current)
+        claim_track = @entry.check_voucher_request.requestable.process_track.build
+        claim_track.route_id = 14
+        claim_track.user_id = current_user.id
+        claim_track.save
         result = 'Voucher posted.'
       end
 
@@ -61,7 +66,7 @@ class GeneralLedgersController < ApplicationController
     @ledger = @ledgers.find(params[:id])
 
     if @ledger.update(general_ledger_params)
-        redirect_to entry_path, notice: "Entry updated."
+      edirect_to entry_path, notice: "Entry updated."
     else
       render :edit, status: :unprocessable_entity
     end
@@ -77,19 +82,19 @@ class GeneralLedgersController < ApplicationController
 
   private
     # Use callbacks to share common setup or constraints between actions.
-    def set_entry_and_ledgers
-      case params[:e_t]
-      when 'ce' then klass = Treasury::CashierEntry
-      when 'cv' then klass = Accounting::Check
-      end
-
-      @entry = klass.find(params[:entry_id])
-      @ledgers = @entry.general_ledgers
+  def set_entry_and_ledgers
+    case params[:e_t]
+    when 'ce' then klass = Treasury::CashierEntry
+    when 'cv' then klass = Accounting::Check
     end
 
-    # Only allow a list of trusted parameters through.
-    def general_ledger_params
-      params.require(:general_ledger).permit(:description, :account_id, :amount, :ledger_type)
-    end
+    @entry = klass.find(params[:entry_id])
+    @ledgers = @entry.general_ledgers
+  end
+
+  # Only allow a list of trusted parameters through.
+  def general_ledger_params
+    params.require(:general_ledger).permit(:description, :account_id, :amount, :ledger_type)
+  end
 
 end
