@@ -7,6 +7,9 @@
     <%= f.input :name %>
     <%= f.input :description %>
     <%= f.association :cooperative %>
+    <div class="form-check form-switch">
+      <%= f.input :for_sii, as: :boolean, label: "For SII" %>
+    </div>
   </div>
 
   <div class="form-actions text-end">

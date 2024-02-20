@@ -86,6 +86,7 @@ class GroupProposal < ApplicationRecord
         coop_sf: 10, #change value
         agent_sf: 0 #change value
       )
+      agreement.cooperative.loans.build(name: "SII", description: "For SII Plan", for_sii: true)
 
     else
       #GBLISS

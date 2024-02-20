@@ -4,10 +4,10 @@ class LoanInsurance::Batch < Batch
 
 
   validate :agreement_benefit, unless: :skip_validation # skip agreement_benefit validation
-  validates_presence_of :date_release, :date_mature, :coop_member_id, :insurance_status, :loan_amount, :effectivity_date, :expiry_date
+  validates_presence_of :date_release, :date_mature, :coop_member_id, :insurance_status, :loan_amount, :effectivity_date, :expiry_date, unless: :sii_skip_validation
 
   belongs_to :group_remit, class_name: "LoanInsurance::GroupRemit", foreign_key: "group_remit_id"
-  belongs_to :loan, class_name: "LoanInsurance::Loan", foreign_key: "loan_insurance_loan_id"
+  belongs_to :loan, class_name: "LoanInsurance::Loan", foreign_key: "loan_insurance_loan_id", optional: true
   belongs_to :rate, class_name: "LoanInsurance::Rate", foreign_key: "loan_insurance_rate_id"
 
   # belongs_to :retention, class_name: 'LoanInsurance::Retention', foreign_key: 'loan_insurance_retention_id'
@@ -22,6 +22,56 @@ class LoanInsurance::Batch < Batch
   has_many :reserve_batches, class_name: "Actuarial::ReserveBatch", as: :batchable, dependent: :destroy
   has_many :reserves, through: :reserve_batches, class_name: "Actuarial::Reserve"
 
+  def sii_skip_validation
+    group_remit.agreement.plan.acronym == "SII"
+  end
+
+  def sii_process_batch
+    agreement = group_remit.agreement
+    sii_set_terms_and_details(agreement)
+    loan_rate = find_loan_rate(agreement)
+    previous_coverage = agreement.agreements_coop_members.find_by(coop_member_id: coop_member.id)
+    if previous_coverage.present?
+      month_difference = expiry_and_today_month_diff(previous_coverage.expiry)
+
+      if month_difference > 24
+        self.status = :reinstated
+      else
+        self.status = :reloan
+      end
+
+    else
+      if agreement.transferred_date.present? && (agreement.transferred_date >= coop_member.membership_date)
+        self.status = :transferred
+      else
+        self.status = :recent
+      end
+    end
+    if self.loan_amount <= agreement.nel
+      self.valid_health_dec = true
+    end
+
+    self.premium = (loan_amount / 1000 ) * ((loan_rate.annual_rate / 12) * terms)
+    self.unused = 0
+    self.premium_due = premium
+    self.agent_sf_amount = calculate_service_fee(loan_rate.agent_sf, premium_due)
+    self.coop_sf_amount = calculate_service_fee(loan_rate.coop_sf, premium_due)
+  end
+
+  def sii_set_terms_and_details(agreement)
+    anniv_date = agreement.anniversaries.first.anniversary_date
+    self.effectivity_date = Date.today
+    self.expiry_date = self.effectivity_date <= anniv_date ? anniv_date : anniv_date.next_year 
+    self.terms = compute_terms(expiry_date, effectivity_date)
+    self.insurance_status = :for_review
+    self.age = coop_member.age(effectivity_date)
+    self.first_name = coop_member.member.first_name
+    self.middle_name = coop_member.member&.middle_name
+    self.last_name = coop_member.member.last_name
+    self.birthdate = coop_member.member.birth_date
+    self.civil_status = coop_member.member.civil_status
+    self.loan = coop_member.cooperative.loans.find_by(for_sii: true)
+  end
 
   def process_batch(encoded_premium = nil)
     return :no_dates if effectivity_date.nil? || expiry_date.nil?
@@ -50,13 +100,6 @@ class LoanInsurance::Batch < Batch
     # requires no health declaration if loan amount is less than or equal to agreement's nel
     if self.loan_amount <= agreement.nel
       self.valid_health_dec = true
-    end
-
-    if self.rate.nil?
-      loan_rate
-    else
-      calculate_values(agreement, loan_rate, encoded_premium)
-      true
     end
   end
 
