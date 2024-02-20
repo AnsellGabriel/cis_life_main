@@ -49,7 +49,7 @@
   </div>
 </div>
 
-<% if @agreement.plan_id == 2 %>
+<% if @agreement.plan_id == 2 || @agreement.plan_id == 8 %> <!-- for LPPI & SII -->
   <div class="row">
     <% @agreement.loan_rates.each do |rate| %>
       <div class="col-md-6 mb-3">

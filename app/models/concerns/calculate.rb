@@ -2,8 +2,9 @@ module Calculate
   extend ActiveSupport::Concern
 
   included do
-    def set_premium_and_service_fees(insured_type, group_remit, premium = nil)
+    def set_premium_and_service_fees(insured_type, group_remit, premium = nil, savings_amount = nil)
       # agreement_benefit = group_remit.agreement.agreement_benefits.find_by(insured_type: insured_type)
+      # if savings_amount.nil?
       agreement_benefit = group_remit.agreement.agreement_benefits.find_by(id: insured_type)
 
       if agreement_benefit.nil?
@@ -12,6 +13,11 @@ module Calculate
 
       self.agreement_benefit_id = agreement_benefit.id
       calculate_premium_and_fees(premium.present? ? premium : total_premium, group_remit)
+      # else #SII
+        # self.agreement_benefit_id = 0
+        # rate = group_remit.agreement.loan_rates.first
+        # calculate_premium_and_fees_sii(group_remit, savings_amount, rate)
+      # end
     end
 
     # def set_premium_and_sf_for_reconsider(group_remit, premium)
@@ -19,6 +25,15 @@ module Calculate
     #   self.coop_sf_amount = calculate_service_fee(group_remit.get_coop_sf, self.premium)
     #   self.agent_sf_amount = calculate_service_fee(group_remit.get_agent_sf, self.premium)
     # end
+
+    def calculate_premium_and_fees_sii(group_remit, savings_amount, rate)
+      amount = savings_amount.to_d
+      monthly_rate = (rate.annual_rate / 12)
+      self.amount = amount
+      self.premium = (((amount / 1000) * monthly_rate) * group_remit.terms)
+      self.coop_sf_amount = calculate_service_fee(group_remit.get_coop_sf, self.premium)
+      self.agent_sf_amount = calculate_service_fee(group_remit.get_agent_sf, self.premium)
+    end
 
     def calculate_premium_and_fees(premium, group_remit)
       if group_remit.terms <= group_remit.agreement.minimum_term

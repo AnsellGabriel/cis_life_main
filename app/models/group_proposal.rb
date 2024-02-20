@@ -9,12 +9,12 @@ class GroupProposal < ApplicationRecord
   validates_presence_of :cooperative, :plan, :plan_unit
 
 
-  def create_agreement(ctr)
-        
+  def create_agreement(ctr, current_user)
+
     agreement = self.build_agreement(
       cooperative: self.cooperative,
       plan: self.plan,
-      agent_id: 1, # change value to actual agent_id
+      agent: current_user.userable, # change value to actual agent_id
       moa_no: "#{self.plan.acronym}-#{self.cooperative.acronym}-#{ctr}",
       entry_age_from: self.plan.entry_age_from,
       entry_age_to: self.plan.entry_age_to,
@@ -41,14 +41,13 @@ class GroupProposal < ApplicationRecord
           exit_age: ab.exit_age,
           with_dependent: ab.principal? ? true : false
         )
-
         prem = 480
         pbs = ab.koopamilya_pbs.each do |ub|
         # self.plan_unit.unit_benefits.each do |ub|
           pb = agreement_benefits.product_benefits.build(
             coverage_amount: ub.coverage_amount,
             benefit: ub.benefit,
-            premium: ab.principal? ? prem : 0
+            premium: ab.principal? && ub.benefit.id == 1 ? prem : 0
           )
         end
       end
@@ -75,6 +74,20 @@ class GroupProposal < ApplicationRecord
         end
       end
 
+    elsif self.plan_id == 8 #SII
+      annual_rate = 10 #per annum
+      loan_rate = agreement.loan_rates.build(
+        min_age: agreement.entry_age_from,
+        max_age: agreement.entry_age_to,
+        annual_rate: annual_rate,
+        monthly_rate: (annual_rate / 12),
+        min_amount: 1,
+        max_amount: 300000,
+        coop_sf: 10, #change value
+        agent_sf: 0 #change value
+      )
+      agreement.cooperative.loans.build(name: "SII", description: "For SII Plan", for_sii: true)
+
     else
       #GBLISS
       agreement_benefits = agreement.agreement_benefits.build(
@@ -87,12 +100,13 @@ class GroupProposal < ApplicationRecord
       )
       # agreement_benefits.save!
   
-      prem = self.plan_unit.total_prem / self.plan_unit.unit_benefits.count
+      # prem = self.plan_unit.total_prem / self.plan_unit.unit_benefits.count
+      prem = self.plan_unit.total_prem 
         self.plan_unit.unit_benefits.each do |ub|
           pb = agreement_benefits.product_benefits.build(
             coverage_amount: ub.coverage_amount,
             benefit: ub.benefit,
-            premium: prem
+            premium: ub.benefit_id == 1 ? prem : 0
           )
           # pb.save!
         end

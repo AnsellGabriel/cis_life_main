@@ -4,7 +4,7 @@ class LoanInsurance::BatchesController < ApplicationController
 
   def import
     import_service = CsvImportService.new(
-      :lppi,
+      @group_remit.agreement.plan.acronym == "SII" ? :sii : :lppi,
       params[:file],
       @cooperative,
       @group_remit,
@@ -15,9 +15,17 @@ class LoanInsurance::BatchesController < ApplicationController
 
     if import_result.is_a?(Hash)
       notice = "#{import_result[:added_members_counter]} members successfully added. #{import_result[:denied_members_counter]} members denied."
-      redirect_to loan_insurance_group_remit_path(@group_remit), notice: notice
+      if @group_remit.agreement.plan.acronym == "SII"
+        redirect_to loan_insurance_group_remit_path(@group_remit,p: "sii"), notice: notice
+      else
+        redirect_to loan_insurance_group_remit_path(@group_remit), notice: notice
+      end
     else
-      redirect_to loan_insurance_group_remit_path(@group_remit), notice: import_result
+      if @group_remit.agreement.plan.acronym == "SII"
+        redirect_to loan_insurance_group_remit_path(@group_remit, p: "sii"), notice: import_result
+      else
+        redirect_to loan_insurance_group_remit_path(@group_remit), notice: import_result
+      end
     end
   end
 
@@ -69,6 +77,7 @@ class LoanInsurance::BatchesController < ApplicationController
 
   # POST /loan_insurance/batches
   def create
+    # raise 'errors'
     @coop_members = @cooperative.coop_members
     @group_remit_id = params[:loan_insurance_batch][:group_remit_id]
     agreement = GroupRemit.find(@group_remit_id).agreement
@@ -76,23 +85,49 @@ class LoanInsurance::BatchesController < ApplicationController
     params[:loan_insurance_batch][:loan_amount] = params[:loan_insurance_batch][:loan_amount].gsub(",", "").to_d
     @batch = LoanInsurance::Batch.new(batch_params)
     @batch.loan_amount = nil if @batch.loan_amount <= 0
-    result = @batch.process_batch
+    if agreement.plan.acronym == "SII"
+      result = @batch.sii_process_batch
+    else
+      result = @batch.process_batch
+    end
 
     respond_to do |format|
       if @batch.save
-        format.html { redirect_to loan_insurance_group_remit_path(params[:loan_insurance_batch][:group_remit_id]), notice: "Member added" }
+        if agreement.plan.acronym == "SII"
+          format.html { redirect_to loan_insurance_group_remit_path(params[:loan_insurance_batch][:group_remit_id], p: "sii"), notice: "Member added" }
+        else
+          format.html { redirect_to loan_insurance_group_remit_path(params[:loan_insurance_batch][:group_remit_id]), notice: "Member added" }
+        end
       elsif result == :no_rate_for_age
-        format.html {
-          redirect_to loan_insurance_group_remit_path(params[:loan_insurance_batch][:group_remit_id]),
-          alert: "No available rate for member's age: #{@batch.age}" }
+        if agreement.plan.acronym == "SII"
+          format.html {
+            redirect_to loan_insurance_group_remit_path(params[:loan_insurance_batch][:group_remit_id], p: "sii"),
+            alert: "No available rate for member's age: #{@batch.age}" }
+        else
+          format.html {
+            redirect_to loan_insurance_group_remit_path(params[:loan_insurance_batch][:group_remit_id]),
+            alert: "No available rate for member's age: #{@batch.age}" }
+        end
       elsif result == :no_rate_for_amount
-        format.html {
-          redirect_to loan_insurance_group_remit_path(params[:loan_insurance_batch][:group_remit_id]),
-          alert: "No available rate for loan amount: #{ActionController::Base.helpers.number_to_currency(@batch.loan_amount, unit: "")}" }
+        if agreement.plan.acronym == "SII"
+          format.html {
+            redirect_to loan_insurance_group_remit_path(params[:loan_insurance_batch][:group_remit_id], p: "sii"),
+            alert: "No available rate for loan amount: #{ActionController::Base.helpers.number_to_currency(@batch.loan_amount, unit: "")}" }
+        else
+          format.html {
+            redirect_to loan_insurance_group_remit_path(params[:loan_insurance_batch][:group_remit_id]),
+            alert: "No available rate for loan amount: #{ActionController::Base.helpers.number_to_currency(@batch.loan_amount, unit: "")}" }
+        end
       else
         format.turbo_stream do
-          render turbo_stream: turbo_stream.replace("new_loan_insurance_batch", partial: "loan_insurance/batches/form", locals: {batch: @batch, coop_members: @coop_members, group_remit_id: @group_remit_id}),
-status: :unprocessable_entity
+          if agreement.plan.acronym == "SII"
+            render turbo_stream: turbo_stream.replace("new_loan_insurance_batch", partial: "loan_insurance/batches/sii_form", locals: {batch: @batch, coop_members: @coop_members, group_remit_id: @group_remit_id}),
+            status: :unprocessable_entity
+          else
+            render turbo_stream: turbo_stream.replace("new_loan_insurance_batch", partial: "loan_insurance/batches/form", locals: {batch: @batch, coop_members: @coop_members, group_remit_id: @group_remit_id}),
+            status: :unprocessable_entity
+
+          end
         end
       end
     end

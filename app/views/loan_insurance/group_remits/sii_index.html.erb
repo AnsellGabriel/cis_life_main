@@ -1,0 +1,50 @@
+<div class="mb-2">
+  <%= link_to 'Dashboard', coop_dashboard_path, class: "#{small_btn('secondary')}" %>
+</div>
+
+
+<div class="card mb-3">
+  <div class="card-body <%= flex_justify_align('between', 'center') %>">
+    <div class="">
+      <h6 class="card-title mb-1 text-primary <%= flex_justify_align('between', 'center') %>">
+        <%= @agreement.plan %>
+      </h6>
+      <div class="small text-muted <%= flex_justify_align('', '', true) %>">
+        <%= content_tag :span, "Required Minimum Participants: #{@agreement.minimum_participation}" %>
+        <%= content_tag :span, "Current Approved Participants: #{@agreement.active_batches_count}" %>
+      </div>
+    </div>
+    <%= turbo_frame_tag "new_batch" do %>
+      <%= link_to 'New Batch', new_loan_insurance_group_remit_path(p: "sii"), class: small_btn('primary'), data: { turbo_frame: "new_batch" } %>
+    <% end %>
+  </div>
+</div>
+
+<% if @group_remit_size > 10 %>
+  <div class="mb-1">
+      <%== pagy_bootstrap_nav(@pagy) %>
+  </div>
+<% end %>
+
+<table class="table table-hover table-sm ">
+    <thead>
+      <tr class="table-dark">
+        <th class="col-1 text-center" scope="col">ID</th>
+        <th class="col-2 text-center" scope="col">Name</th>
+        <th class="col-2 text-end" scope="col">Premiums</th>
+        <th class="col-2 text-end" scope="col">Unused Premiums</th>
+        <th class="col-2 text-end" scope="col">Premium Dues</th>
+        <th class="col-1 text-end" scope="col">Status</th>
+        <th class="col-1 text-center" scope="col">Actions</th>
+
+      </tr>
+    </thead>
+
+    <tbody id="batches_body">
+      <% if @group_remits.exists? %>
+        <%= render @group_remits %>
+      <% else %>
+        <td class="text-center" colspan="12">NO RECORD</td>
+      <% end %>
+    </tbody>
+  </table>

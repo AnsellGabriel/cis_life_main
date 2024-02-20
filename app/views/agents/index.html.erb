@@ -30,8 +30,10 @@
     
           <td>
             <%= link_to 'View', agent, class: 'btn btn-sm btn-secondary' %>
-            <%= link_to 'Edit', edit_agent_path(agent), class: 'btn btn-sm btn-secondary' %>
-            <%= link_to 'Delete', agent, method: :delete, data: { confirm: 'Are you sure?' }, class: 'btn btn-sm btn-secondary' %>
+            <% if agent == current_user.userable %>
+              <%= link_to 'Edit', edit_agent_path(agent), class: 'btn btn-sm btn-secondary' %>
+              <%= link_to 'Delete', agent, method: :delete, data: { confirm: 'Are you sure?' }, class: 'btn btn-sm btn-secondary' %>
+            <% end %>
           </td>
 
         </tr>

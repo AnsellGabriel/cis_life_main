@@ -30,7 +30,7 @@ class AgreementsController < ApplicationController
   # GET /agreements/new
   def new
     # @agreement = Agreement.new(contestability: 12, nel: 25000, nml: 5000000, entry_age_from: 18, entry_age_to: 65, exit_age: 65)
-    @agreement = Agreement.new
+    @agreement = Agreement.new()
     # @agreement.agreement_benefits.build
     # @agreement.loan_rates.build
     set_dummy_value
