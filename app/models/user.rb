@@ -51,6 +51,10 @@ class User < ApplicationRecord
     userable_type == "Employee" && userable.department_id == 15
   end
 
+  def is_auditor?
+    userable_type == "Employee" && userable.department_id == 27
+  end
+
   private
 
   def password_complexity

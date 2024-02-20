@@ -503,8 +503,8 @@ only: %i[ show edit update destroy approve_batch deny_batch pending_batch recons
   end
 
   def refund
-    request = CheckVoucherRequestService.new(@process_coverage, @process_coverage.group_remit.refund_amount, current_user)
-    
+    request = CheckVoucherRequestService.new(@process_coverage, @process_coverage.group_remit.refund_amount, :refund, current_user)
+
     if request.create_request
       redirect_to process_coverage_path(@process_coverage), notice: "Refund request sent!"
     else
@@ -566,7 +566,7 @@ only: %i[ show edit update destroy approve_batch deny_batch pending_batch recons
         format.html { redirect_to process_coverage_path(@process_coverage), alert: "Please check pending and/or for review dependent(s) for that coverage." }
       else
         if @batch.update_attribute(:insurance_status, 0)
-          # @process_coverage.increment!(:approved_count)          
+          # @process_coverage.increment!(:approved_count)
           # @process_coverage.update(approved_count: @process_coverage.count_batches_approved(params[:batch_type]), denied_count: @process_coverage.count_batches_denied(params[:batch_type]))
           @process_coverage.update(approved_count: @process_coverage.count_batches("approved"), denied_count: @process_coverage.count_batches("denied"))
           format.html { redirect_to process_coverage_path(@process_coverage), notice: "Batch Approved!" }
@@ -686,8 +686,8 @@ only: %i[ show edit update destroy approve_batch deny_batch pending_batch recons
     respond_to do |format|
       format.html
       format.pdf do
-        render pdf: "PSHEET ##{@process_coverage.id}", 
-        template: "process_coverages/psheet", 
+        render pdf: "PSHEET ##{@process_coverage.id}",
+        template: "process_coverages/psheet",
         formats: [:html],
         page_size: "A4",
         layouts: "pdf",

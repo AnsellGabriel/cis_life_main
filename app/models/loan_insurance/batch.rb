@@ -4,7 +4,7 @@ class LoanInsurance::Batch < Batch
 
 
   validate :agreement_benefit, unless: :skip_validation # skip agreement_benefit validation
-  validates_presence_of :date_release, :date_mature, :coop_member_id, :insurance_status, :loan_amount, :effectivity_date, :expiry_date, unless: :sii_skip_validation
+  validates_presence_of :coop_member_id, :insurance_status, :loan_amount, :effectivity_date, :expiry_date
 
   belongs_to :group_remit, class_name: "LoanInsurance::GroupRemit", foreign_key: "group_remit_id"
   belongs_to :loan, class_name: "LoanInsurance::Loan", foreign_key: "loan_insurance_loan_id", optional: true
@@ -116,6 +116,7 @@ class LoanInsurance::Batch < Batch
 
     if unused_loan_id
       previous_batch = LoanInsurance::Batch.find(unused_loan_id)
+      previous_batch.update(status: :terminated, terminate_date: self.effectivity_date)
       unused_term = compute_terms(previous_batch.expiry_date, effectivity_date)
       self.unused = (previous_batch.loan_amount / 1000 ) * (rate.monthly_rate * unused_term)
       self.premium_due = self.premium - unused
@@ -177,7 +178,7 @@ class LoanInsurance::Batch < Batch
 
     if unused_loan_id
       previous_batch = LoanInsurance::Batch.find(unused_loan_id)
-      previous_batch.update(status: :terminated)
+      previous_batch.update(status: :terminated, terminate_date: self.effectivity_date)
 
       unused_term = compute_terms(previous_batch.expiry_date, effectivity_date)
       self.unused = (previous_batch.loan_amount / 1000 ) * (rate.monthly_rate * unused_term)

@@ -4,6 +4,7 @@ class GroupRemit < ApplicationRecord
   before_destroy :delete_associated_batches
 
   validates_presence_of :name # , :effectivity_date, :expiry_date, :terms
+  validates_uniqueness_of :official_receipt, allow_blank: true
 
   scope :batch_remits, -> { where(:type => "BatchRemit")}
   scope :loan_remits, -> { where(:type => "LoanInsurance::GroupRemit")}
@@ -144,7 +145,7 @@ class GroupRemit < ApplicationRecord
       group_remit.name = "#{group_remit.effectivity_date.strftime('%B').upcase} BATCH"
     else
       # group_remit.name = "#{extract_from_substring(agreement.moa_no, ('GYRT' or 'LPPI'))} REMITTANCE #{agreement.group_remits.where(type: 'Remittance').size + 1}"
-      group_remit.name = "REMITTANCE #{agreement.group_remits.where(type: 'Remittance').size + 1}"
+      group_remit.name = "ENROLLMENT LIST #{agreement.group_remits.where(type: 'Remittance').size + 1}"
 
     end
 

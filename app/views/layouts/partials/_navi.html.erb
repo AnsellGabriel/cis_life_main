@@ -69,6 +69,10 @@
                 <% end %>
                 <%= link_to "Cashier Entries", treasury_cashier_entries_path	, class: "nav-link" %>
                 <%= link_to "Remittances", payments_path	, class: "nav-link" %>
+            <% when 27 %>
+              <%= render 'layouts/partials/nav_dropdown', title: 'For Audit' do %>
+                <%= link_to "Check Vouchers", audit_check_vouchers_path	, class: "dropdown-item" %>
+              <% end %>
             <% when 15 %>
               <%= render 'layouts/partials/nav_dropdown', title: 'Data Entries' do %>
                 <%= link_to "Cooperative", cooperatives_path, class: "dropdown-item" %>

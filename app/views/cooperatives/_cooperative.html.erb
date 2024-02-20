@@ -1,10 +1,11 @@
 <div class="mb-3 <%= flex_justify_align('', 'center') %> gap-1">
-  <%= link_to cooperatives_path, class: "btn btn-secondary btn-sm", title: "Back" do %>
-    <i class="bi bi-arrow-bar-left"></i>
+  <%= link_to cooperatives_path, class: "btn btn-outline-secondary btn-sm", title: "Back" do %>
+    <i class="bi bi-arrow-left-square"></i>      
+    Back
   <% end %>
   <%= link_to edit_cooperative_path(cooperative), class: "btn btn-outline-primary btn-sm #{flex_justify_align('', 'center')} gap-1", title: "Edit" do %>
-    <span>Edit</span>
     <i class="bi bi-pencil-square"></i>
+    Edit
   <% end %>
 </div>
 
@@ -36,23 +37,23 @@
 <div class="card mb-3">
   <ul class="nav nav-tabs">
     <li class="nav-item" role="presentation">
-      <button class="nav-link active" data-bs-toggle="tab" id="member-tab" type="button" data-bs-target="#member" role="tab" aria-controls="member" aria-current="page">Members</button>
+      <button class="nav-link <%= 'active' unless params[:active_tab] == 'branches' %>" data-bs-toggle="tab" id="member-tab" type="button" data-bs-target="#member" role="tab" aria-controls="member" aria-current="page">Members</button>
     </li>
     <li class="nav-item" role="presentation">
-      <button class="nav-link" data-bs-toggle="tab" id="home-tab" type="button" data-bs-target="#home" role="tab" aria-controls="home">Branches</button>
+      <button class="nav-link <%= 'active' if params[:active_tab] == 'branches' %>" data-bs-toggle="tab" id="home-tab" type="button" data-bs-target="#home" role="tab" aria-controls="home">Branches</button>
     </li>
     <li class="nav-item" role="presentation">
       <button class="nav-link" data-bs-toggle="tab" id="agreements-tab" type="button" data-bs-target="#agreements" role="tab" aria-controls="agreements" aria-current="page">Agreements</button>
     </li>
   </ul>
   <div class="tab-content container mt-3" id="myTabControl">
-    <div class="tab-pane fade show active" role="tabpanel" id="member" aria-labelledby="member-tab">
+    <div class="tab-pane fade <%= 'active show' unless params[:active_tab] == 'branches' %>" role="tabpanel" id="member" aria-labelledby="member-tab">
       <%= render 'coop_members/show_coop_members' %>
     </div>
-    <div class="tab-pane fade show" role="tabpanel" id="home" aria-labelledby="home-tab">
+    <div class="tab-pane fade <%= 'active show' if params[:active_tab] == 'branches' %>" role="tabpanel" id="home" aria-labelledby="home-tab">
       <%= render 'coop_branches/show_coop_branch', c: cooperative %>
     </div>
-    <div class="tab-pane fade show" role="tabpanel" id="agreements" aria-labelledby="agreements-tab">
+    <div class="tab-pane fade" role="tabpanel" id="agreements" aria-labelledby="agreements-tab">
       <%= render 'cooperatives/agreements', agreements: @agreements %>
     </div>
   </div>

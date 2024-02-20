@@ -3,6 +3,8 @@ class Accounting::Voucher < ApplicationRecord
 
   belongs_to :payable, polymorphic: true
 
+  enum audit: { for_audit: 0, approved: 1, pending: 2 }
+
   def to_s
     voucher
   end

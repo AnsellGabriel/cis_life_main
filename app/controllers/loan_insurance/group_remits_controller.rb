@@ -99,7 +99,7 @@ class LoanInsurance::GroupRemitsController < ApplicationController
     if @group_remit.update(group_remit_params)
       redirect_to loan_insurance_group_remit_path(@group_remit), notice: "Official Receipt updated"
     else
-      render :edit_or
+      render :edit_or, status: :unprocessable_entity
     end
   end
 

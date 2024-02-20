@@ -118,7 +118,7 @@ class Batch < ApplicationRecord
     batch.effectivity_date = ["single", "multiple"].include?(agreement.anniversary_type.downcase) ? Date.today : group_remit.effectivity_date
     batch.first_name = coop_member.member.first_name
     batch.middle_name = coop_member.member&.middle_name
-    batch.last_name = coop_member.member.last_name
+    batch.last_name = coop_member.member.last_name + " " + coop_member.member.suffix
     batch.birthdate = coop_member.member.birth_date
     batch.civil_status = coop_member.member.civil_status
     batch.age = batch.member_details.age(batch.effectivity_date)

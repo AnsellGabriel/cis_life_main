@@ -261,7 +261,13 @@ Rails.application.routes.draw do
     resources :billing_statements, as: 'bills', controller: "treasury/billing_statements"
   end
 
-
+  #* Audit Module Routes
+  namespace :audit do
+    get 'dashboard', to: 'dashboard#index'
+    resources :check_vouchers, only: [:index] do
+      get :approve, on: :member
+    end
+  end
 
   # * Underwriting Module Routes
   resources :user_levels

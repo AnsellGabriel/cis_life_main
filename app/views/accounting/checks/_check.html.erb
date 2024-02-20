@@ -2,10 +2,21 @@
   <div class="card" style="width: 60%;">
     <div class="card-header <%= flex_justify_align('between', '') %>">
       <div class="">
-        <p class="mb-0 text-muted"><small>Check Voucher</small></p>
+        <div class="<%= flex_justify_align('','center') %> gap-1">
+          <p class="text-muted"><small>Check Voucher</small></p>
+          <p class="badge bg-<%= check.decorate.status_color %>"><%= check.status.humanize %></p>
+        </div>
         <h3 class="text-primary"><%= "#{check.voucher}" %></h3>
         <p><small><strong>Voucher date:</strong> <span><%= month_day_year(check.date_voucher) %></span></small></p>
-        <p class="badge bg-<%= check.decorate.status_color %>"><%= check.status.humanize %></p>
+        <% if check.post_date? %>
+          <p><small><strong>Post date:</strong> <span><%= month_day_year(check.post_date) %></span></small></p>
+        <% end %>
+        <% if current_user.is_auditor? %>
+          <div class="<%= flex_justify_align('','center') %> gap-1">
+            <p><small><strong>Audit:</strong> <p class="<%= check.decorate.audit_badge %>"><%= check.decorate.audit_text.humanize %></p></small></p>
+            
+          </div>
+        <% end %>
       </div>
       <div class="">
         <% if check.pending? and current_user.is_accountant? %>

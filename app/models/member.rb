@@ -62,7 +62,7 @@ class Member < ApplicationRecord
   end
 
   def full_name
-    "#{last_name.capitalize}, #{first_name.capitalize} #{middle_name.capitalize}"
+    "#{last_name}, #{first_name} #{middle_name} #{suffix if suffix.present?}"
   end
 
   def self.get_ri(date_from, date_to)

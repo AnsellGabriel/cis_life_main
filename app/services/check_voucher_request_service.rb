@@ -1,15 +1,17 @@
 class CheckVoucherRequestService
-  def initialize(requestable, amount, current_user)
+  def initialize(requestable, amount, payment_type, current_user)
     @requestable = requestable
     @amount = amount
     @current_user = current_user
+    @payment_type = payment_type
   end
 
   def create_request
-    @requestable.create_check_voucher_request(
+    @requestable.create_check_voucher_request!(
       amount: @amount,
       status: :pending,
       description: description,
+      payment_type: @payment_type,
       analyst: @current_user.userable.signed_fullname
     )
 

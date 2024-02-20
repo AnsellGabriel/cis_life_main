@@ -16,13 +16,15 @@
 <div class="<%= flex_justify_align('', 'center') %> gap-1 mb-3">
 
   <% if @group_remit.is_batch_remit? %>
-    <%= link_to coop_agreement_path(@agreement), class: small_btn('secondary'), title: 'Back' do %>
-      <i class="bi bi-arrow-bar-left"></i>  
+    <%= link_to coop_agreement_path(@agreement), class: small_btn('outline-secondary'), title: 'Back' do %>
+      <i class="bi bi-arrow-left-square"></i>  
+      Back  
     <% end %>
   <% else %>
     <div class="d-flex gap-1">
-      <%= link_to coop_agreement_group_remit_remittances_path(@agreement, @group_remit.batch_remit_id), class: small_btn('secondary'), title: 'Back' do %>
-        <i class="bi bi-arrow-bar-left"></i>  
+      <%= link_to coop_agreement_group_remit_remittances_path(@agreement, @group_remit.batch_remit_id), class: small_btn('outline-secondary'), title: 'Back' do %>
+        <i class="bi bi-arrow-left-square"></i> 
+        Back
       <% end %>
     </div>
   <% end %>
@@ -202,14 +204,18 @@
     <thead>
       <tr class="table-dark">
 
-        <th class="text-center" scope="col">Members</th>
+        <th class="ps-5 <%= "text-center" unless @group_remit.is_batch_remit? %>" scope="col">Members</th>
 
-        <% if ["SIP", "GBLISS", "KOOPamilya"].include?(@group_remit.agreement.plan.acronym) %>
-          <th class="text-center" scope="col">Benefits</th>
-        <% end %>
-        
-        <% unless @group_remit.is_batch_remit? %>
-          <th class="text-center" scope="col">Premium</th>
+        <% if @group_remit.is_batch_remit? %>
+          <th class="" scope="col">Age</th>
+        <% else %>
+          <% if ["SIP", "GBLISS", "KOOPamilya"].include?(@group_remit.agreement.plan.acronym) %>
+            <th class="text-center" scope="col">Benefits</th>
+          <% end %>
+          
+          <% unless @group_remit.is_batch_remit? %>
+            <th class="text-center" scope="col">Premium</th>
+          <% end %>
         <% end %>
         <th class="text-center" scope="col">Beneficiaries</th>
 
