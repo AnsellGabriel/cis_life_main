@@ -4,7 +4,7 @@ class LoanInsurance::Batch < Batch
 
 
   validate :agreement_benefit, unless: :skip_validation # skip agreement_benefit validation
-  validates_presence_of :date_release, :date_mature, :coop_member_id, :insurance_status, :loan_amount, :effectivity_date, :expiry_date
+  validates_presence_of :coop_member_id, :insurance_status, :loan_amount, :effectivity_date, :expiry_date
 
   belongs_to :group_remit, class_name: "LoanInsurance::GroupRemit", foreign_key: "group_remit_id"
   belongs_to :loan, class_name: "LoanInsurance::Loan", foreign_key: "loan_insurance_loan_id"
