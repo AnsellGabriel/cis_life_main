@@ -13,7 +13,7 @@ class ApplicationDecorator < Draper::Decorator
   def status_color
     case object.status
     when "approved", "posted", "voucher_generated" then "success"
-    when "pending", "for_review" then "warning"
+    when "pending", "for_review", "for_approval" then "warning"
     when "rejected", "terminated", "cancelled" then "danger"
     end
   end

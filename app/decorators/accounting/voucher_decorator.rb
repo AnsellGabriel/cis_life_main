@@ -12,7 +12,7 @@ class Accounting::VoucherDecorator < ApplicationDecorator
 
   def audit_badge
     case object.audit
-      when "for_audit" then "badge bg-warning text-dark"
+      when "for_audit", "pending_audit" then "badge bg-warning text-dark"
       when "approved" then "badge bg-success"
       when "pending" then "badge bg-danger"
     end

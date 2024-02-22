@@ -3,4 +3,9 @@ class Remark < ApplicationRecord
 
   belongs_to :remarkable, polymorphic: true
   belongs_to :user
+
+  enum category: {
+    incorrect_voucher_details: 0,
+    incorrect_claim_details: 1
+  }
 end

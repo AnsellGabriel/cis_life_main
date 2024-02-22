@@ -18,10 +18,10 @@
     <% end %>
     
     <% if current_user.userable_type == 'CoopUser' %>
-        <%= link_to "Submit Claims", claim_route_process_claim_path(@process_claim, p: 1), class: "btn btn-success btn-sm" if @process_claim.file_claim? %>
+        <%= link_to "Submit Claims", claim_route_process_claim_path(@process_claim, p: 1), class: "btn btn-success btn-sm", data: {turbo_confirm: "Make sure all documents are uploaded. Submit claim?", turbo_method: :get} if @process_claim.file_claim? %>
     <% elsif current_user.is_auditor? %>
     <% elsif current_user.userable_type == 'Employee' %>
-        <%= link_to "Return to Coop", claim_route_process_claim_path(@process_claim, p: 0), class: "btn btn-warning btn-sm" if @process_claim.submitted? %>
+        <%= link_to "Return to Coop", claim_route_process_claim_path(@process_claim, p: 0), class: "btn btn-warning btn-sm", data: {turbo_confirm: "Return this claim to coop?", turbo_method: :get} if @process_claim.submitted? %>
         <%= link_to "Claims Filed", claim_route_process_claim_path(@process_claim, p: 2), class: "btn btn-primary btn-sm" if @process_claim.submitted? %>
         <%= link_to "Process Claims", claim_route_process_claim_path(@process_claim, p: 3), class: "btn btn-primary btn-sm" if @process_claim.claim_filed? %>
         <%= link_to '<i class="bi bi-repeat"></i> Return to Claims Filed'.html_safe, claim_route_process_claim_path(p: 2), class: "btn btn-primary btn-sm" unless @process_claim.claim_filed? || @process_claim.submitted? %>

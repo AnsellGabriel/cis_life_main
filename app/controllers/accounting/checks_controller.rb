@@ -30,6 +30,12 @@ class Accounting::ChecksController < ApplicationController
     redirect_to accounting_check_path(@check), notice: "Checks ready for claim"
   end
 
+  def for_approval_index
+    @checks = Accounting::Check.where(status: :for_approval).order(created_at: :desc)
+
+    @pagy, @checks = pagy(@checks, items: 10)
+  end
+
   # GET /accounting/checks
   def index
     if params[:check_number].present?
@@ -103,14 +109,14 @@ class Accounting::ChecksController < ApplicationController
     redirect_to accounting_checks_path, notice: "Check voucher deleted.", status: :see_other
   end
 
-  def cancel
-    @check.transaction do
-      @check.cancelled!
-      @check.check_voucher_request.pending! if @check.check_voucher_request.present?
-    end
+  # def cancel
+  #   @check.transaction do
+  #     @check.cancelled!
+  #     @check.check_voucher_request.pending! if @check.check_voucher_request.present?
+  #   end
 
-    redirect_to @check, alert: "Voucher cancelled."
-  end
+  #   redirect_to @check, alert: "Voucher cancelled."
+  # end
 
   private
   # Use callbacks to share common setup or constraints between actions.
