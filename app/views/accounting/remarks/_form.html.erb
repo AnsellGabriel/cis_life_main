@@ -1,0 +1,17 @@
+<%= simple_form_for(remark, url: accounting_check_remarks_path(@check, audit:true)) do |f| %>
+  <% if params[:audit] %>
+    <%= f.input :category, as: :select, collection: Remark.categories.keys.map { |c| [c.humanize, c] } %>
+  <% end %>
+
+  <div class="form-inputs mb-3">
+    <%= f.input :remark, error: '*Required' %>
+  </div>
+
+  <div class="form-actions text-center">
+    <% if params[:audit] %>
+      <%= f.button :submit, "Pending", class: "btn-warning", data: {turbo_confirm: "Add remark and set status as pending", turbo_method: :get} %>
+    <% else %>
+      <%= f.button :submit, "Cancel Voucher", class: "btn-danger", data: {turbo_confirm: "Add remark and cancel voucher", turbo_method: :get} %>
+    <% end %>
+  </div>
+<% end %>

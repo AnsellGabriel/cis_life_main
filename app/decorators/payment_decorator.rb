@@ -15,4 +15,12 @@ class PaymentDecorator < ApplicationDecorator
 
     (entries.empty? or entries.last&.cancelled?) and !object.rejected?
   end
+
+  def status_badge
+    case object.status
+       when "pending", "for_renewal", "under_review", "for_payment", "payment_verification", "reupload_payment", "for_review" then "badge bg-warning text-dark"
+       when "expired", "with_pending_members", "rejected" then "badge bg-danger"
+       when "paid", "approved" then "badge bg-success"
+    end
+   end
 end

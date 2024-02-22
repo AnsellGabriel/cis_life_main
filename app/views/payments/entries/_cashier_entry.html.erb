@@ -1,5 +1,5 @@
 <div class="d-flex gap-3">
-  <div class="card" style="width: 60%; margin-left: 35px;">
+  <div class="card" style="width: 60%;">
     <div class="card-header <%= flex_justify_align('between', '') %>">
       <div class="">
         <p class="mb-0 text-muted"><small>Receipt Number</small></p>
@@ -8,12 +8,17 @@
         <p class="badge bg-<%= entry.decorate.status_color %>"><%= entry.status.humanize %></p>
       </div>
       <div class="">
-        <% if entry.pending? %>
-          <%= link_to entry.decorate.edit_path, class: 'btn btn-outline-primary mt-1', data: {turbo_frame: 'modal'}, title: 'Edit receipt' do %> 
-            <i class="bi bi-pencil"></i><span> Edit</span>
-          <% end %>
-          <%= link_to entry.decorate.cancel_path, data: {turbo_confirm: 'Cancel receipt?', turbo_method: :get}, class: 'btn btn-outline-danger mt-1', title: 'Cancel receipt' do %>
-            <i class="bi bi-x-lg"></i><span> Cancel OR</span>
+        <% if current_user.head? and entry.for_approval? %>
+          <%= link_to "Post OR", post_entry_ledgers_path(entry, e_t: entry.entry_type), class: 'btn btn-sm btn-success mt-1', data: {turbo_confirm: "IMPORTANT: This process is not reversible. Post OR?", turbo_method: :get} %>
+        <% else %>
+          <% if entry.pending? %>
+            <%= link_to "Submit", for_approval_entry_ledgers_path(entry, e_t: entry.entry_type), class: 'btn btn-sm btn-success mt-1', data: {turbo_confirm: "Submit OR for approval?", turbo_method: :get} %>
+            <%= link_to entry.decorate.edit_path, class: 'btn btn-outline-primary btn-sm mt-1', data: {turbo_frame: 'modal'}, title: 'Edit receipt' do %> 
+              <i class="bi bi-pencil"></i><span> Edit</span>
+            <% end %>
+            <%= link_to entry.decorate.cancel_path, data: {turbo_confirm: 'Cancel receipt?', turbo_method: :get}, class: 'btn btn-outline-danger btn-sm mt-1', title: 'Cancel receipt' do %>
+              <i class="bi bi-x-lg"></i><span> Cancel OR</span>
+            <% end %>
           <% end %>
         <% end %>
       </div>

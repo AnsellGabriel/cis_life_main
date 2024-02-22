@@ -159,7 +159,7 @@ class GroupRemitsController < InheritedResources::Base
   end
 
   def group_remit_params
-    params.require(:group_remit).permit(:official_receipt, :name, :description, :agreement_id, :anniversary_id,
+    params.require(:group_remit).permit(:official_receipt, :name, :agreement_id, :anniversary_id,
       process_coverage_attributes: [:group_remit_id, :effectivity, :expiry], payments_attributes: [:id, :receipt, :_destroy] )
   end
 

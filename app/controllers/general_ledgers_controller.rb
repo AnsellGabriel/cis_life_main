@@ -1,16 +1,16 @@
 class GeneralLedgersController < ApplicationController
   include Treasuries::Path
 
-  before_action :set_entry_and_ledgers, only: %i[new create destroy edit update post autofill]
+  before_action :set_entry_and_ledgers, only: %i[new create destroy edit update post autofill for_approval]
 
   def post
-    if (@ledgers.total_debit != @ledgers.total_credit) || @ledgers.empty?
-      return redirect_to entry_path, alert: "Unable to post ledger, #{@ledgers.empty? ? 'no entry.' : 'credit and debit total not equal.'}"
-    end
+    # if (@ledgers.total_debit != @ledgers.total_credit) || @ledgers.empty?
+    #   return redirect_to entry_path, alert: "Unable to post ledger, #{@ledgers.empty? ? 'no entry.' : 'credit and debit total not equal.'}"
+    # end
 
-    if (@ledgers.total_debit != @entry.total_amount) || (@ledgers.total_credit != @entry.total_amount)
-      return redirect_to entry_path, alert: "Unable to post ledger, credit and debit total not equal to total amount"
-    end
+    # if (@ledgers.total_debit != @entry.total_amount) || (@ledgers.total_credit != @entry.total_amount)
+    #   return redirect_to entry_path, alert: "Unable to post ledger, credit and debit total not equal to total amount"
+    # end
 
     if @entry.update(status: :posted)
       # params[:e_t] = entry type
@@ -27,6 +27,20 @@ class GeneralLedgersController < ApplicationController
       end
 
       redirect_to entry_path, notice: result
+    end
+  end
+
+  def for_approval
+    if (@ledgers.total_debit != @ledgers.total_credit) || @ledgers.empty?
+      return redirect_to entry_path, alert: "Unable to submit voucher, #{@ledgers.empty? ? 'no entry.' : 'credit and debit total not equal.'}"
+    end
+
+    if (@ledgers.total_debit != @entry.total_amount) || (@ledgers.total_credit != @entry.total_amount)
+      return redirect_to entry_path, alert: "Unable to submit, credit and debit total not equal to total amount"
+    end
+
+    if @entry.update(status: :for_approval)
+      redirect_to entry_path, notice: "Voucher submitted for approval"
     end
   end
 

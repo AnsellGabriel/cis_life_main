@@ -57,11 +57,12 @@
           <% else %>
             <% case current_user.userable.department_id %>
             <% when 11 %>
-                <%= render 'layouts/partials/nav_dropdown', title: 'Vouchers' do %>
-                  <%= link_to "Requests", requests_accounting_checks_path, class: "dropdown-item" %>
-                  <%= link_to "Check Vouchers", accounting_checks_path, class: "dropdown-item" %>
-                  <%= link_to "Journal Vouchers", accounting_journals_path, class: "dropdown-item" %>
-                <% end %>
+              <% if current_user.head? %>
+                <%= link_to "For Approval", for_approval_index_accounting_checks_path, class: "nav-link" %>
+              <% end %>
+              <%= link_to "Requests", requests_accounting_checks_path, class: "nav-link" %>
+              <%= link_to "Check Vouchers", accounting_checks_path, class: "nav-link" %>
+              <%= link_to "Journal Vouchers", accounting_journals_path, class: "nav-link" %>
             <% when 26 %>
                 <%= render 'layouts/partials/nav_dropdown', title: 'Business Checks' do %>
                   <%= link_to "Index", treasury_checks_path	, class: "dropdown-item" %>

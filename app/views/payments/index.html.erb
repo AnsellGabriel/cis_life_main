@@ -6,12 +6,13 @@
 <table class="table table-bordered table-hover bg-white">
     <thead class="table-dark">
       <tr>
-        <th class="text-center" scope="col">Remittance</th>
+        <th class="text-center" scope="col">ID</th>
         <th class="text-center" scope="col">Date</th>
         <th class="text-center" scope="col">Payee</th>
         <th class="text-center" scope="col">Payment</th>
         <th class="text-center" scope="col">Net Premium</th>
         <th class="text-center" scope="col">Status</th>
+        <th class="text-center" scope="col"></th>
       </tr>
     </thead>
 
@@ -22,14 +23,17 @@
           <% group_remit = payment.payable %>
           <% payment = payment.decorate %>
           <tr>
-            <td>
-              <%= link_to group_remit.name, payment_path(payment), class: "text-primary" %>
-            </td>
+            <td class="text-center"><%=payment.id %></td>
             <td class="text-center"><%= month_day_year(payment.created_at) %></td>
             <td><%= group_remit.agreement.cooperative %></td>
             <td class="text-center"><%= group_remit.agreement.plan.acronym %></td>
             <td class="text-end"><%= to_curr(group_remit.coop_net_premium) %></td>
-            <td class="text-center text-<%= payment.status_color %>"><%= payment.status.titleize %></td>
+            <td class="text-center">
+              <span class="<%= payment.status_badge %>"><%= payment.status.titleize %></span>
+            </td>
+            <td class="text-center">
+              <%= link_to "show", payment_path(payment), class: small_btn("primary") %>
+            </td>
           </tr>
         <% end %>
 
