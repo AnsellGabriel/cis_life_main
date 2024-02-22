@@ -1,49 +1,59 @@
+<div class="mb-3 <%= flex_justify_align('', 'center') %> gap-1">
+  <%= link_to cooperatives_path, class: "btn btn-outline-secondary btn-sm", title: "Back" do %>
+    <i class="bi bi-arrow-left-square"></i>
+    Back
+  <% end %>
+  <%= link_to edit_cooperative_path(cooperative), class: "btn btn-outline-primary btn-sm #{flex_justify_align('', 'center')} gap-1", title: "Edit" do %>
+    <i class="bi bi-pencil-square"></i>
+    Edit
+  <% end %>
+</div>
 <div id="<%= dom_id cooperative %>">
   <div class="card mb-3">
     <div class="card-body">
       <h4 class="text-primary">
         <%= cooperative.name %>
       </h4>
-      <p>
-        <strong>Address:</strong>
-        <%= cooperative.get_address %>
-      </p>
-      <strong>Contact details:</strong>
-      <%= cooperative.contact_details %> | <%= cooperative.email %>
-    </p>
-    <p>
-      <strong> TIN: </strong> <%= cooperative.tin_number %> | <strong> Registration no.: </strong> <%= cooperative.registration_number %>
-    </p>
-  </div>
-  <div class="card-footer">
-    <%= link_to "Edit", edit_cooperative_path(cooperative), class: "btn btn-secondary btn-sm" %>
-    <%= link_to "Back", cooperatives_path, class: "btn btn-secondary btn-sm" %>
-    <%#= link_to "Delete", cooperative, class: "btn btn-danger btn-sm", method: :delete, data: { "turbo-method": :delete, turbo_confirm: "Are you sure?" } %>
+      <div class="d-flex">
+        <div class="" style="width: 150px;"><strong>Address</strong></div>
+        <div class="">: <%= cooperative.get_address %></div>
+      </div>
+      <div class="d-flex">
+        <div class="" style="width: 150px;"><strong>Email</strong></div>
+        <div class="">: <%= cooperative.email %></div>
+      </div>
+      <div class="d-flex">
+        <div class="" style="width: 150px;"><strong>Contact number</strong></div>
+        <div class="">: <%= cooperative.contact_number %></div>
+      </div>
+      <div class="d-flex">
+        <div class="" style="width: 150px;"><strong> Registration no.</strong></div>
+        <div class="">: <%= cooperative.registration_number %></div>
+      </div>
+    </div>
   </div>
 </div>
 <div class="card mb-3">
   <ul class="nav nav-tabs">
     <li class="nav-item" role="presentation">
-      <button class="nav-link active" data-bs-toggle="tab" id="member-tab" type="button" data-bs-target="#member" role="tab" aria-controls="member" aria-current="page">Members</button>
+      <button class="nav-link <%= 'active' unless params[:active_tab] == 'branches' %>" data-bs-toggle="tab" id="member-tab" type="button" data-bs-target="#member" role="tab" aria-controls="member" aria-current="page">Members</button>
     </li>
     <li class="nav-item" role="presentation">
-      <button class="nav-link" data-bs-toggle="tab" id="home-tab" type="button" data-bs-target="#home" role="tab" aria-controls="home">Branches</button>
+      <button class="nav-link <%= 'active' if params[:active_tab] == 'branches' %>" data-bs-toggle="tab" id="home-tab" type="button" data-bs-target="#home" role="tab" aria-controls="home">Branches</button>
     </li>
     <li class="nav-item" role="presentation">
       <button class="nav-link" data-bs-toggle="tab" id="agreements-tab" type="button" data-bs-target="#agreements" role="tab" aria-controls="agreements" aria-current="page">Agreements</button>
     </li>
   </ul>
   <div class="tab-content container mt-3" id="myTabControl">
-    <div class="tab-pane fade show active" role="tabpanel" id="member" aria-labelledby="member-tab">
-      
+    <div class="tab-pane fade <%= 'active show' unless params[:active_tab] == 'branches' %>" role="tabpanel" id="member" aria-labelledby="member-tab">
       <%= render 'coop_members/show_coop_members' %>
     </div>
-    <div class="tab-pane fade show" role="tabpanel" id="home" aria-labelledby="home-tab">
+    <div class="tab-pane fade <%= 'active show' if params[:active_tab] == 'branches' %>" role="tabpanel" id="home" aria-labelledby="home-tab">
       <%= render 'coop_branches/show_coop_branch', c: cooperative %>
     </div>
-    <div class="tab-pane fade show" role="tabpanel" id="agreements" aria-labelledby="agreements-tab">
+    <div class="tab-pane fade" role="tabpanel" id="agreements" aria-labelledby="agreements-tab">
       <%= render 'cooperatives/agreements', agreements: @agreements %>
     </div>
   </div>
 </div>
-

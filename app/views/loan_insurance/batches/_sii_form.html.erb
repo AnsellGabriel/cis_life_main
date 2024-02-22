@@ -1,0 +1,39 @@
+<%= simple_form_for(batch, html: {data: {controller: "loan-form"}}) do |f| %>
+  <div class="row <%= flex_justify_align('between','center') %> mb-3">
+    <%= f.hidden_field :group_remit_id, value: group_remit_id, data: {loan_form_target: 'groupRemit'} %>
+    <% unless batch.persisted? %>
+      <%= f.association :coop_member, 
+          collection: coop_members, 
+          include_blank: "Search member",
+          wrapper_html: {class: '', style: 'margin-bottom: 0!important;'},
+          input_html: { 
+            id: "member_id", 
+            data: {  
+              target: 'memberSelect',
+              controller: "ts--select",
+              action: "change->loan-form#selectMember focus->loan-form#selectMember", }  
+            }, label: false,
+            error: '*Required'
+      %>
+    <% end %>
+  </div>
+  
+  <div class="<%= flex_justify_align('start', 'start') %> gap-2" style="height: auto;">
+    <div class="form-inputs mb-3  "  >
+      <div class="row">
+        <div class="form-floating mb-3" data-controller="number-formatter">
+          <%= f.input :loan_amount, as: :text, label: false, placeholder: 'Savings amount', class: 'form-control', wrapper: false, input_html: {class: 'text-primary', data: {number_formatter_target: 'input'}}%>
+          <%= f.label :loan_amount, 'Savings Amount', class: 'ps-4' %>
+        </div>
+      </div>
+      
+    </div>
+  </div>
+  <div class="mb-3 ">
+    <%= turbo_frame_tag "member loans" %>
+  </div>
+  <div class="form-actions text-center">
+    <%= f.button :submit, "#{batch.persisted? ? "Update" : "Add"}", class: small_btn('primary') %> 
+  </div>
+<% end %>
+

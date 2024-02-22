@@ -1,0 +1,40 @@
+<%= content_tag :h1, "List of Koopamilya Pbs" %>
+
+
+<div class="text-end mb-3">
+  <%= link_to new_koopamilya_pb_path, class: 'btn btn-primary' do %>
+    New Koopamilya Pb
+  <% end %>
+</div>
+
+
+  <table class="table table-striped table-bordered table-hover">
+    <thead>
+      <tr>
+      <th>#</th>
+            <th>Koopamilya Ab</th>
+            <th>Coverage Amount</th>
+            <th>Benefit</th>
+            <th></th>
+        </tr>
+    </thead>
+
+    <tbody>
+      <% @koopamilya_pbs.each do |koopamilya_pb| %>
+        <tr>
+
+        <th scope="row"><%= koopamilya_pb.id %></th>
+        <td><%= koopamilya_pb.koopamilya_ab.name %> - <%= koopamilya_pb.koopamilya_ab.insured_type %></td>
+        <td><%= to_currency(koopamilya_pb.coverage_amount) %></td>
+        <td><%= koopamilya_pb.benefit %></td>
+    
+          <td>
+            <%= link_to 'View', koopamilya_pb, class: 'btn btn-secondary btn-sm' %>
+            <%= link_to 'Edit', edit_koopamilya_pb_path(koopamilya_pb), class: 'btn btn-secondary btn-sm' %>
+            <%= link_to "Delete", koopamilya_pb, class: "btn btn-danger btn-sm", method: :delete, data: { "turbo-method": :delete, turbo_confirm: "Are you sure?" } %>
+          </td>
+
+        </tr>
+      <% end %>
+    </tbody>
+  </table>

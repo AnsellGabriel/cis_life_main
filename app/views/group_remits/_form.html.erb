@@ -1,15 +1,7 @@
 
-<%= simple_form_for(@group_remit, url: agreement_group_remits_path) do |f| %>
-  <%= f.error_notification %>
-  <%= f.error_notification message: f.object.errors[:base].to_sentence if f.object.errors[:base].present? %>
-
-  <div class="form-inputs d-flex align-items-center gap-1">
-    <div class="d-flex gap-3 ">
-        <%= f.association :anniversary, collection: @agreement.anniversaries,           include_blank: 'Select Anniversary',
-          input_html: { 
-            style: "width: 250px !important; height: 31px !important; padding: 0 20px;"
-          }, wrapper_html: {style: 'margin-bottom: 0 !important;'}, label: false %>
+<%= simple_form_for(@group_remit) do |f| %>
+    <%= f.input :official_receipt, label: false, placeholder: "Official Receipt #" %>
+    <div class="text-center">
+      <%= f.button :submit, 'Confirm', class: 'btn btn btn-success' %>
     </div>
-    <%= f.button :submit, 'Confirm', class: 'btn btn-sm btn-outline-success', data: {turbo: false} %>
-  </div>
 <% end %>

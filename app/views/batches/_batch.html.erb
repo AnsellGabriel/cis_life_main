@@ -1,95 +1,147 @@
 <% presenter_batch = BatchPresenter.new(batch, agreement) %>
 
-<tr id="<%= dom_id(batch) %>">
-	<td class="text-center align-middle" ><%= batch.id %></td>
-	<td class="align-middle" >
-		<div class="d-flex" style="padding-left: 60px; padding-top: 30px; padding-bottom: 30px;">
-			<div class="d-flex flex-column gap-1">
-				<div class="">
-					<%= render 'batches/batch_status', 
-						batch: batch, 
-						agreement: agreement 
-					%>
-				</div>
-				<%= render 'batches/member_details', 
-					batch: batch, 
-					member: batch.member_details, 
-					agreement: agreement,
-					beneficiaries: batch.batch_beneficiaries
+<% if group_remit.is_batch_remit? %>
+	<tr>
+		<td class="ps-5"><%= batch.full_name %></td>
+		<td class="align-middle"><%= batch.age %></td>
+		<td>
+			<% batch.batch_beneficiaries.each do |b| %>
+				<%= content_tag :span, "#{b.full_name.upcase}", 
+					class: "text-secondary", 
+					style: "font-size: .7rem;" 
 				%>
-			</div>
-		</div>
-	</td>
-	<td class="align-middle" >
-		<div class="<%= flex_justify_align('center') %>">
-			<div class="<%= flex_justify_align('','center',true) %> ps-6">
-				<div class="d-flex flex-column mb-1">
-					<%= render 'batches/premiums', 
-						batch: batch,
-						dependents: batch.batch_dependents,
-						plan_acronym: agreement.plan_acronym
+			<% end %>
+		</td>
+		<% if group_remit.agreement.plan.dependable? %>
+			<td class="">
+				<% dependents = group_remit.is_batch_remit? ? batch.batch_dependents.approved : batch.batch_dependents %>
+				<% dependents.each do |d| %>
+					<% d_presenter = DependentPresenter.new(d)%>
+					<div class="<%= flex_justify_align('','center') %> gap-1">								
+						<%= content_tag :span, "#{d.full_name.upcase}", 
+							class: "text-secondary", 
+							style: "font-size: .7rem;" 
+						%>
+						<%= content_tag :span, "(#{d.member_dependent.relationship.upcase})", 
+							class: "text-primary", 
+							style: "font-size: .7rem;" 
+						%>
+					</div>
+				<% end %>
+			</td>
+		<% end %>
+
+		<td class="align-middle">
+			<%= render 'batches/action_buttons', 
+				group_remit: group_remit,
+				batch: batch,
+				life_benefit: presenter_batch.life_benefit,
+				agreement: agreement,
+				member: batch.member_details
+			%>
+		</td>
+	</tr>
+<% else %>
+	<tr id="<%= dom_id(batch) %>">
+		<td class="align-middle" >
+			<div class="<%= flex_justify_align('center') %>" style="padding-left: 60px; padding-top: 30px; padding-bottom: 30px;">
+				<div class="d-flex flex-column gap-1" style="width: 300px; ">
+					<div class="">
+						<%= render 'batches/batch_status', 
+							batch: batch, 
+							agreement: agreement 
+						%>
+					</div>
+					<%= render 'batches/member_details', 
+						batch: batch, 
+						agreement: agreement,
+						beneficiaries: batch.batch_beneficiaries
 					%>
+					<% if group_remit.agreement.plan.acronym == "KOOPamilya" %>
+						<%= content_tag :span, batch.agreement_benefit.name, class: "text-secondary sm-green-text" %>
+					<% end %>
 				</div>
 			</div>
-		</div>
-	</td>
-	<td class="align-middle">
-		<div class="<%= flex_justify_align('center') %>">
-			<div class="d-flex flex-column ps-6">
+		</td>
 
-				<% unless batch.batch_beneficiaries.exists? %>
-					<%= content_tag :span, "None", class: 'sm-red-text' %>
-				<% else %>
+		<% if ["SIP", "GBLISS", "KOOPamilya"].include?(group_remit.agreement.plan.acronym) %>
+			<td class="align-middle" >
+				<div class="<%= flex_justify_align('center') %>">
+					<div class="<%= flex_justify_align('','center',true) %> ps-6">
+						<div class="d-flex flex-column mb-1">
+							<% batch.agreement_benefit.product_benefits.each do |pb| %>
+								<div class="<%= flex_justify_align('','center') %> gap-1">
+									<%= content_tag :span, pb.benefit.acronym, class: "text-secondary sm-green-text" %>
+									<%= content_tag :span, to_currency(pb.coverage_amount), class: "text-primary sm-green-text" %>
+								</div>
+							<% end %>
+						</div>
+					</div>
+				</div>
+			</td>
+		<% end %>
+		
+		<td class="align-middle" >
+			<div class="<%= flex_justify_align('center') %>">
+				<div class="<%= flex_justify_align('','center',true) %> ps-6">
+					<div class="d-flex flex-column mb-1">
+						<%= render 'batches/premiums', 
+							batch: batch,
+							dependents: batch.batch_dependents,
+							plan_acronym: agreement.plan_acronym
+						%>
+					</div>
+				</div>
+			</div>
+		</td>
+		<td class="align-middle">
+			<div class="<%= flex_justify_align('center') %>">
+				<div class="d-flex flex-column ps-6">
 					<div class="d-flex flex-column mb-1">
 						<% batch.batch_beneficiaries.each do |b| %>
-							<%= content_tag :span, "#{b.full_name}", 
+							<%= content_tag :span, "#{b.full_name.upcase}", 
 								class: "text-secondary", 
 								style: "font-size: .7rem;" 
 							%>
 						<% end %>
 					</div>
-				<% end %>
-
+				</div>
 			</div>
-		</div>
-	</td>
+		</td>
 
-	<% if group_remit.agreement.plan.dependable? %>
-		<td class="align-middle">
-			<div class="<%= flex_justify_align('center') %>">
-				<div class="<%= flex_justify_align('','center',true) %> ps-6">
-
-					<% unless batch.batch_dependents.exists? %>
-						<%= content_tag :span, "None", class: 'sm-red-text' %>
-					<% else %>
+		<% if group_remit.agreement.plan.dependable? %>
+			<td class="align-middle">
+				<div class="<%= flex_justify_align('center') %>">
+					<div class="<%= flex_justify_align('','center',true) %> ps-6">
 						<div class="d-flex flex-column mb-1">
-							<% batch.batch_dependents.each do |d| %>
+							<% dependents = group_remit.is_batch_remit? ? batch.batch_dependents.approved : batch.batch_dependents %>
+							<% dependents.each do |d| %>
 								<% d_presenter = DependentPresenter.new(d)%>
-								<div class="<%= flex_justify_align('','center') %> gap-1">
-									<%= content_tag :span, "#{d.insurance_status.titleize}", 
-										class: d_presenter.status_badge 
-									%>									
-									<%= content_tag :span, "#{d.full_name}", 
+								<div class="<%= flex_justify_align('','center') %> gap-1">								
+									<%= content_tag :span, "#{d.full_name.upcase}", 
 										class: "text-secondary", 
+										style: "font-size: .7rem;" 
+									%>
+									<%= content_tag :span, "(#{d.member_dependent.relationship.upcase})", 
+										class: "text-primary", 
 										style: "font-size: .7rem;" 
 									%>
 								</div>
 							<% end %>
 						</div>
-					<% end %>
-
+					</div>
 				</div>
-			</div>
-		</td>
-	<% end %>
+			</td>
+		<% end %>
 
-	<td class="align-middle">
-		<%= render 'batches/action_buttons', 
-			group_remit: group_remit,
-			batch: batch,
-			life_benefit: presenter_batch.life_benefit,
-			agreement: agreement,
-			member: batch.member_details
-		%>
-	</td>
-</tr>
+		<td class="align-middle">
+			<%= render 'batches/action_buttons', 
+				group_remit: group_remit,
+				batch: batch,
+				life_benefit: presenter_batch.life_benefit,
+				agreement: agreement,
+				member: batch.member_details
+			%>
+		</td>
+	</tr>
+<% end %>

@@ -2,6 +2,10 @@
 require "sidekiq/web"
 
 Rails.application.routes.draw do
+  resources :sip_pbs
+  resources :sip_abs
+  resources :koopamilya_pbs
+  resources :koopamilya_abs
   resources :reinsurance_members
   resources :reinsurer_ri_batches
   resources :reinsurers
@@ -40,6 +44,7 @@ Rails.application.routes.draw do
 
   resources :plans do
     get :selected, on: :member
+    get :show_rates, on: :member
   end
 
 
@@ -124,7 +129,10 @@ Rails.application.routes.draw do
   end
 
   resources :coop_agreements do
-    resources :group_remits
+    resources :group_remits do
+
+      resources :remittances, only: [:index]
+    end
   end
 
   resources :group_remits do
@@ -192,6 +200,8 @@ Rails.application.routes.draw do
 
     resources :group_remits do
       get :submit, on: :member
+      get :edit_or, on: :member
+      get :sii_index, on: :collection
     end
 
     resources :history, only: [:index]
@@ -208,6 +218,7 @@ Rails.application.routes.draw do
     resources :journals
 
     resources :checks do
+      get :claimable, on: :member
       get :cancel, on: :member
       resources :business_checks, as: 'business', except: [:index]
       get :requests, on: :collection
@@ -250,7 +261,13 @@ Rails.application.routes.draw do
     resources :billing_statements, as: 'bills', controller: "treasury/billing_statements"
   end
 
-
+  #* Audit Module Routes
+  namespace :audit do
+    get 'dashboard', to: 'dashboard#index'
+    resources :check_vouchers, only: [:index] do
+      get :approve, on: :member
+    end
+  end
 
   # * Underwriting Module Routes
   resources :user_levels
@@ -273,7 +290,7 @@ Rails.application.routes.draw do
     get :update_status, on: :member
     get :new_ca, to: "process_claims#new_ca", on: :collection
     post :create_ca, to: "process_claims#create_ca", on: :collection
-    get :claimable, on: :collection
+    # get :claimable, on: :collection
   end
   resources :underwriting_routes
   resources :batch_remarks do
@@ -286,6 +303,7 @@ Rails.application.routes.draw do
   end
 
   resources :process_coverages do
+    get :refund, on: :member
     get :approve_batch, on: :member
     get :approve_dependent, on: :member
     get :deny_batch, on: :member
@@ -300,6 +318,7 @@ Rails.application.routes.draw do
     get :reassess
     get :reprocess
     get :modal_remarks, on: :member
+    get :psheet, on: :member
     get :cov_list, on: :collection
     patch :update_batch_selected, on: :collection
     get :transfer_to_md, on: :member

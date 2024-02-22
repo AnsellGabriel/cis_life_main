@@ -35,17 +35,18 @@
               <% moa.loan_rates.each do |rate| %>
                 <tr>
                   <td>
-                    <%= content_tag :p, "#{rate.min_age} years old - #{rate.max_age} years old" %>
+                    <%= content_tag :span, "#{rate.min_age} years old - #{rate.max_age} years old" %> <br>
+                    <small><%= to_currency(rate.min_amount) %> to <%= to_currency(rate.max_amount) %></small>
                   </td>
                   <td>
-                    <%= content_tag :p, to_currency(rate.annual_rate / 12.to_d) %>
+                    <%= content_tag :p, "#{to_currency(rate.annual_rate / 12.to_d)} / 1000" %>
                   </td>
                 </tr>
               <% end %>
             </tbody>
           </table>
         </div>
-      <% elsif ["GYRT","GYRTF","GYRTBR","GYRTFR"].include?(moa.plan.acronym) %>
+      <% elsif ["GYRT","GYRTF","GYRTBR","GYRTFR","SIP","KOOPamilya","GBLISS"].include?(moa.plan.acronym) %>
         <div class="details-header col-12 text-center border-top border-bottom py-2 mb-3">
           SCHEDULE OF BENEFITS
           <%= content_tag :p, class: "mb-0" do %>

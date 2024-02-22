@@ -1,4 +1,4 @@
-class ClaimRequestForPaymentDecorator < ApplicationDecorator
+class Accounting::VoucherDecorator < ApplicationDecorator
   delegate_all
 
   # Define presentation-specific methods here. Helpers are accessed through
@@ -10,4 +10,15 @@ class ClaimRequestForPaymentDecorator < ApplicationDecorator
   #     end
   #   end
 
+  def audit_badge
+    case object.audit
+      when "for_audit" then "badge bg-warning text-dark"
+      when "approved" then "badge bg-success"
+      when "pending" then "badge bg-danger"
+    end
+  end
+
+  def audit_text
+    object.audit.titleize
+  end
 end

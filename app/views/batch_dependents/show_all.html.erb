@@ -29,16 +29,17 @@
 
             <%= content_tag :h6, 'Dependent(s): ', class: "mb-0" %>
             <div class="row">
-              <div class="col-sm-3 text-dark">
-                <%= content_tag :span, "Name (relationship)", class: "lead" %>
+              <div class="col-sm-4 text-dark">
+                <%= content_tag :span, "Name (relationship) & Birthday (age)", class: "lead" %>
               </div>
-              <div class="col-sm-3 text-dark">
-                <%= content_tag :span, "Birthday (age)", class: "lead" %>
+              <div class="col-sm-4 text-dark">
+                <%#= content_tag :span, "Birthday (age)", class: "lead" %>
+                <%= content_tag :span, "Benefits", class: "lead" %>
               </div>
-              <div class="col-sm-3 text-dark">
+              <div class="col-sm-2 text-dark">
                 <%= content_tag :span, "Premium", class: "lead" %>
               </div>
-              <div class="col-sm-3 text-dark">
+              <div class="col-sm-2 text-dark">
                 <%= content_tag :span, "Actions", class: "lead" %>
               </div>
             </div>
@@ -46,37 +47,50 @@
             <% @dependents.each do |dependent| %>
               <% dep_presenter = DependentPresenter.new(dependent) %>
               <div class="row">
-                <div class="col-sm-3 text-secondary">
+                <div class="col-sm-4 text-secondary">
                   <%= "#{dependent.member_dependent.last_name}, #{dependent.member_dependent.first_name} #{dependent.member_dependent.middle_name} (#{dependent.member_dependent.relationship})" %>
                   <%= content_tag :span, "#{dependent.insurance_status.titleize}", class: dep_presenter.status_badge %>
-                </div>
-                <div class="col-sm-3 text-secondary">
-                  <% age = ((dependent.batch.group_remits.find_by(type: "Remittance").effectivity_date - dependent.member_dependent.birth_date) / 365).round %>
+                  <% age = ((dependent.batch.group_remits.find_by(type: "Remittance").effectivity_date - dependent.member_dependent.birth_date) / 365).round %> <br>
                   <%= "#{dependent.member_dependent.birth_date.strftime('%m/%d/%Y')} (#{age} yrs. old)" %>
                 </div>
-                <div class="col-sm-3 text-secondary">
+                <div class="col-sm-4 text-secondary">
+                  <% dependent.agreement_benefit.product_benefits.each do |ben| %>
+                    <div class="row">
+                      <div class="col-6">
+                        *<%= ben.benefit %>
+                      </div>
+                      <div class="col-6">
+                        <%= to_currency(ben.coverage_amount) %>
+                      </div>
+                    </div>
+                  <% end %>
+                </div>
+                <div class="col-sm-2 text-secondary">
                   <%= number_to_currency(dependent.premium, unit: "₱", precision: 2) %>
                 </div>
-                <div class="col-sm-3 text-secondary">
+                <div class="col-sm-2 text-secondary">
                   <% pro_cov = dependent.batch.group_remits.find_by(type: "Remittance").process_coverage %>
                   <% unless pro_cov.approved? || pro_cov.reprocess_approved? %>
+                    
                     <div class="<%= bd_buttons(current_user.rank, dependent.insurance_status, pro_cov.status) %>">
-                      <%= link_to approve_dependent_process_coverage_path(params[:process_coverage_id], dependent: dependent, group_remit_id: params[:group_remit_id]), 
-                        onclick: "return confirm('Are you sure?')", 
-                        method: :get, 
-                        title: "Approve", 
-                        class: "btn btn-sm btn-success mb-1" do %>
-                          <%= bootstrap_icon "check-lg" %>
+                      <% unless @batch.insurance_status == "denied" %>
+                        <%= link_to approve_dependent_process_coverage_path(params[:process_coverage_id], dependent: dependent, group_remit_id: params[:group_remit_id]), 
+                          onclick: "return confirm('Are you sure?')", 
+                          method: :get, 
+                          title: "Approve", 
+                          class: "btn btn-sm btn-success mb-1" do %>
+                            <%= bootstrap_icon "check-lg" %>
+                        <% end %>
+
+                          <%= link_to new_batch_remark_path(ref: dependent.id, batch_status: "Pending", batch_type: dependent.class.name, for_und: true, pro_cov: pro_cov.id), class: "btn btn-sm btn-secondary mb-1", data: { turbo_frame: "reg_form_modal_xl" }, title: "Pending" do %>
+                            <%= bootstrap_icon "arrow-clockwise" %>
+                          <% end %>
+
+                          <%= link_to new_batch_remark_path(ref: dependent.id, batch_status: "Deny", batch_type: dependent.class.name, for_und: true, pro_cov: pro_cov.id), class: "btn btn-sm btn-danger mb-1", data: { turbo_frame: "reg_form_modal_xl" }, title: "Deny" do %>
+                            <%= bootstrap_icon "x-lg" %>
+                          <% end %>
+
                       <% end %>
-
-                        <%= link_to new_batch_remark_path(ref: dependent.id, batch_status: "Pending", batch_type: dependent.class.name, for_und: true, pro_cov: pro_cov.id), class: "btn btn-sm btn-secondary mb-1", data: { turbo_frame: "reg_form_modal_xl" }, title: "Pending" do %>
-                          <%= bootstrap_icon "arrow-clockwise" %>
-                        <% end %>
-
-                        <%= link_to new_batch_remark_path(ref: dependent.id, batch_status: "Deny", batch_type: dependent.class.name, for_und: true, pro_cov: pro_cov.id), class: "btn btn-sm btn-danger mb-1", data: { turbo_frame: "reg_form_modal_xl" }, title: "Deny" do %>
-                          <%= bootstrap_icon "x-lg" %>
-                        <% end %>
-
                         <!--
                         <%= link_to new_dependent_remark_path(group_remit_id: params[:group_remit_id], process_coverage_id: pro_cov, batch_dependent_id: dependent.id, status: :pending), title: "Pending", class: "btn btn-sm btn-secondary mb-1", data: { turbo_frame: "modal-xl" } do %>
                           <%= bootstrap_icon "arrow-clockwise" %>
@@ -86,9 +100,8 @@
                           <%= bootstrap_icon "x-lg" %>
                         <% end %>
                         -->
-
-
                       <% end %>
+
                       <% if dependent.health_declaration.exists? %>
                         <%= link_to health_dec_group_remit_batch_dependent_path(@group_remit, @batch, dependent, for_und: true, process_coverage_id: pro_cov), 
                         class: small_btn('warning'), 
@@ -100,7 +113,9 @@
                       <% if dependent.remarks.exists? %>
                         <%= link_to 'Remarks', dependent_remarks_path(batch_dependent_id: dependent.id, group_remit_id: @group_remit.id, batch_id: @batch.id, process_coverage_id: pro_cov, for_und: true), class: small_btn('warning'), data: {turbo_frame: "reg_form_modal_xl"} %>
                       <% end %>
+
                     </div>
+                    
             
                 </div>
               </div>

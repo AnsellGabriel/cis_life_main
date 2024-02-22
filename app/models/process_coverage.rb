@@ -1,10 +1,20 @@
 class ProcessCoverage < ApplicationRecord
   attr_accessor :premium, :loan_amount
+
   belongs_to :group_remit
+
   belongs_to :agent, optional: true
+
   belongs_to :processor, class_name: "Employee"
   belongs_to :approver, class_name: "Employee"
+
+  belongs_to :who_processed, class_name: "Employee", optional: true
+  belongs_to :who_approved, class_name: "Employee", optional: true
   has_many :process_remarks
+  has_one :check_voucher_request, as: :requestable, dependent: :destroy, class_name: "Accounting::CheckVoucherRequest"
+
+  delegate :cooperative, to: :group_remit
+
 
   # audited
   # has_associated_audits
@@ -114,6 +124,15 @@ class ProcessCoverage < ApplicationRecord
     self.group_remit.batches.where(insurance_status: :approved).sum(:premium) - (self.group_remit.batches.where(insurance_status: :approved).sum(:coop_sf_amount) + self.group_remit.batches.where(insurance_status: :approved).sum(:agent_sf_amount))
   end
 
+  def count_batches(status)
+    case status
+    when "approved"
+      self.group_remit.batches.where(insurance_status: :approved).count
+    when "denied"
+      self.group_remit.batches.where(insurance_status: :denied).count
+    end
+  end
+
 
   def count_batches_denied(klass)
     case klass
@@ -121,6 +140,15 @@ class ProcessCoverage < ApplicationRecord
       self.group_remit.batches.where(loan_insurance_batches: { insurance_status: :denied} ).count
     else
       self.group_remit.batches.where(batches: { insurance_status: :denied} ).count
+    end
+  end
+
+  def count_batches_approved(klass)
+    case klass
+    when "LoanInsurance::Batch"
+      self.group_remit.batches.where(loan_insurance_batches: { insurance_status: :approved} ).count
+    else
+      self.group_remit.batches.where(batches: { insurance_status: :approved} ).count
     end
   end
 
@@ -148,15 +176,19 @@ class ProcessCoverage < ApplicationRecord
   def get_batches
     self.group_remit.batches
   end
-  
+
   def get_or_number
-    self.group_remit.payments.first.nil? ? "-" : self.group_remit.payments.first.entries.first.or_no
+    # self.group_remit.payments.first.nil? ? "-" : self.group_remit.payments.first.entries.first.or_no
+    approved_payments = self.group_remit.payments.approved
+    approved_payments.first.nil? ? "-" : approved_payments.first.entries.first.or_no
   end
-  
+
   def get_or_date
-    self.group_remit.payments.first.nil? ? "-" : self.group_remit.payments.first.entries.first.or_date
+    # self.group_remit.payments.first.nil? ? "-" : self.group_remit.payments.first.entries.first.or_date
+    approved_payments = self.group_remit.payments.approved
+    approved_payments.first.nil? ? "-" : approved_payments.first.entries.first.or_date
   end
-  
+
 
   def get_principal_prem
     prem = self.group_remit.batches.where(insurance_status: "approved").sum(:premium)
@@ -192,6 +224,10 @@ class ProcessCoverage < ApplicationRecord
 
   def self.for_vp_approvals(user)
     where(status: :for_vp_approval)
+  end
+
+  def check_approver
+    self.process_date == nil && self.evaluate_date != nil
   end
 
   # def set_batches_for_review

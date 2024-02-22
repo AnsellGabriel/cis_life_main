@@ -5,6 +5,10 @@ module ApplicationHelper
     number_to_currency(amount, locale: :ph)
   end
 
+  def psheet_currency(amount)
+    number_with_delimiter(amount, precision: 2)
+  end
+
   def to_curr(amount)
     number_to_currency(amount, unit: "")
   end
@@ -209,7 +213,11 @@ module ApplicationHelper
   end
 
   def mis_user?(current_user)
-    current_user.userable.department_id == 15
+    current_user.userable_type == "Employee" && current_user.userable.department_id == 15
+  end
+
+  def agent_user?(current_user)
+    current_user.userable_type == "Agent"
   end
 
   def nav_header(current_user)
@@ -220,8 +228,9 @@ module ApplicationHelper
     elsif user_type == "Employee"
 
       case current_user.userable.department_id
-      when 15 then "Management Information System"
-      when 11 then "Accounting"
+      when 15 then "MANAGEMENT INFORMATION SYSTEM"
+      when 11 then "ACCOUNTING"
+      when 27 then "AUDIT"
       end
 
     end

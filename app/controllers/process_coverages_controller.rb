@@ -2,7 +2,7 @@ class ProcessCoveragesController < ApplicationController
   before_action :authenticate_user!
   before_action :check_emp_department
   before_action :set_process_coverage,
-only: %i[ show edit update destroy approve_batch deny_batch pending_batch reconsider_batch pdf set_premium_batch update_batch_prem transfer_to_md update_batch_cov adjust_lppi_cov ]
+only: %i[ show edit update destroy approve_batch deny_batch pending_batch reconsider_batch pdf set_premium_batch update_batch_prem transfer_to_md update_batch_cov adjust_lppi_cov refund psheet ]
 
   # GET /process_coverages
   def index
@@ -56,8 +56,8 @@ only: %i[ show edit update destroy approve_batch deny_batch pending_batch recons
         date_from = Date.strptime(params[:date_from], "%Y-%m-%d")
         # date_to = Date.strptime(params[:date_to], "%m-%d-%Y")
         date_to = Date.strptime(params[:date_to], "%Y-%m-%d")
-        
-        
+
+
         @process_coverages = @process_coverages_x.where(processor_id: params[:emp_id], status: params[:process_type], created_at: date_from..date_to)
       end
 
@@ -131,13 +131,13 @@ only: %i[ show edit update destroy approve_batch deny_batch pending_batch recons
     when "LPPI"
       @process_coverage.group_remit.total_loan_amount
     else
-      ProductBenefit.joins(agreement_benefit: :batches).where("batches.id IN (?)", @batches_x.pluck(:id)).where("product_benefits.benefit_id = ?", 1).sum(:coverage_amount)
-                      end
-
+      ProductBenefit.joins(agreement_benefit: :batches).where("batches.id IN (?)", @batches_x.pluck(:id)).where(batches: { insurance_status: :approved }).where("product_benefits.benefit_id = ?", 1).sum(:coverage_amount)
+    end
 
     pdf = PsheetPdf.new(@process_coverage, @total_life_cov, view_context)
+    # pdf = SheetPdf.new(@process_coverage, @total_life_cov, view_context)
     send_data(pdf.render,
-      filename: "#{@process_coverage.group_remit.name}.pdf",
+      filename: "#{@process_coverage.group_remit.agreement.plan.acronym}-#{@process_coverage.group_remit.name}.pdf",
       type: "application/pdf",
       disposition: "inline")
   end
@@ -257,7 +257,7 @@ only: %i[ show edit update destroy approve_batch deny_batch pending_batch recons
   # GET /process_coverages/1
   def show
     @plan = @process_coverage.get_plan
-    if @plan.acronym == "LPPI"
+    if ["LPPI","SII"].include?(@plan.acronym)
       @batches_o = @process_coverage.group_remit.batches
       if params[:search].present?
         @batches = case params[:search]
@@ -284,7 +284,7 @@ only: %i[ show edit update destroy approve_batch deny_batch pending_batch recons
 
       @total_net_prem = @process_coverage.sum_batches_net_premium
 
-    elsif ["GYRT","GYRTF","GYRTBR","GYRTFR"].include?(@plan.acronym)
+    elsif ["GYRT","GYRTF","GYRTBR","GYRTFR","GBLISS","SIP","KOOPAMILYA"].include?(@plan.acronym)
 
       @insured_types = @process_coverage.group_remit.agreement.agreement_benefits.insured_types.symbolize_keys.values
       @insured_types2 = @process_coverage.group_remit.agreement.agreement_benefits
@@ -304,6 +304,7 @@ only: %i[ show edit update destroy approve_batch deny_batch pending_batch recons
         when "regular_new" then @batches_o.where(age: 18..65, status: 0)
         when "regular_ren" then @batches_o.where(age: 18..65, status: 1..2)
         when "overage" then @batches_o.where(age: 66..)
+        when "dependent" then @batches_o.joins(:batch_dependents).distinct
         when "reconsider" then @batches_o.where(status: :for_reconsideration)
           # when "health_decs" then @batches_o.joins(:batch_health_decs)
         when "health_decs" then @batches_o.joins(:batch_health_decs).where(batches: { valid_health_dec: false }).distinct
@@ -442,7 +443,7 @@ only: %i[ show edit update destroy approve_batch deny_batch pending_batch recons
   end
 
   def approve
-        
+
     @max_amount = params[:max_amount].to_i
     @total_life_cov = params[:total_life_cov].to_i
     # @total_net_prem = params[:total_net_prem].to_i
@@ -456,17 +457,18 @@ only: %i[ show edit update destroy approve_batch deny_batch pending_batch recons
 
     respond_to do |format|
       if current_user.rank == "analyst"
-                
+
         if @max_amount >= @total_gross_prem
 
-          if @process_coverage.count_batches_denied(klass_name) > 0
+          # if @process_coverage.count_batches_denied(klass_name) > 0
+          if @process_coverage.count_batches("denied") > 0
             # if @process_coverage.group_remit.batches.where(batches: { insurance_status: :denied }).count > 0
             # @process_coverage.update_attribute(:status, "for_head_approval")
-            @process_coverage.update(status: :for_head_approval, process_date: Date.today)
+            @process_coverage.update(status: :for_head_approval, process_date: Date.today, who_processed: current_user.userable)
             format.html { redirect_to process_coverage_path(@process_coverage), notice: "Process Coverage for Head Approval!" }
           else
             # @process_coverage.update_attribute(:status, "approved")
-            @process_coverage.update(status: :approved, process_date: Date.today, evaluate_date: Date.today)
+            @process_coverage.update(status: :approved, process_date: Date.today, evaluate_date: Date.today, who_approved: current_user.userable)
             # @process_coverage.group_remit.set_total_premiums_and_fees
             format.html { redirect_to process_coverage_path(@process_coverage), notice: "Process Coverage Approved!" }
           end
@@ -477,7 +479,7 @@ only: %i[ show edit update destroy approve_batch deny_batch pending_batch recons
       elsif current_user.rank == "head"
         if @max_amount >= @total_gross_prem
           # @process_coverage.update_attribute(:status, "approved")
-          @process_coverage.update(status: :approved, evaluate_date: Date.today)
+          @process_coverage.update(status: :approved, evaluate_date: Date.today, who_approved: current_user.userable)
           # @process_coverage.group_remit.set_total_premiums_and_fees
           format.html { redirect_to process_coverage_path(@process_coverage), notice: "Process Coverage Approved!" }
         else
@@ -486,17 +488,28 @@ only: %i[ show edit update destroy approve_batch deny_batch pending_batch recons
         end
       elsif current_user.rank == "senior_officer"
         # @process_coverage.update_attribute(:status, "approved")
-        @process_coverage.update(status: :approved, evaluate_date: Date.today)
+        @process_coverage.update(status: :approved, evaluate_date: Date.today, who_approved: current_user.userable)
         # @process_coverage.group_remit.set_total_premiums_and_fees
         format.html { redirect_to process_coverage_path(@process_coverage), notice: "Process Coverage Approved!" }
       end
     end
 
     @process_coverage.group_remit.set_total_premiums_and_fees
+
     # if @process_coverage.update_attribute(:status, "approved")
     #   @process_coverage.group_remit.set_total_premiums_and_fees
     #   format.html { redirect_to process_coverage_path(@process_coverage), notice: "Process Coverage Approved!" }
     # end
+  end
+
+  def refund
+    request = CheckVoucherRequestService.new(@process_coverage, @process_coverage.group_remit.refund_amount, :refund, current_user)
+
+    if request.create_request
+      redirect_to process_coverage_path(@process_coverage), notice: "Refund request sent!"
+    else
+      redirect_to process_coverage_path(@process_coverage), alert: "Error sending refund request!"
+    end
   end
 
   def deny
@@ -546,14 +559,16 @@ only: %i[ show edit update destroy approve_batch deny_batch pending_batch recons
       LoanInsurance::Batch.find(params[:batch])
     else
       Batch.find(params[:batch])
-             end
+    end
 
     respond_to do |format|
       if (@batch.class.name == "Batch") && (@batch.batch_dependents.for_review.count > 0 || @batch.batch_dependents.pending.count > 0)
         format.html { redirect_to process_coverage_path(@process_coverage), alert: "Please check pending and/or for review dependent(s) for that coverage." }
       else
         if @batch.update_attribute(:insurance_status, 0)
-          @process_coverage.increment!(:approved_count)
+          # @process_coverage.increment!(:approved_count)
+          # @process_coverage.update(approved_count: @process_coverage.count_batches_approved(params[:batch_type]), denied_count: @process_coverage.count_batches_denied(params[:batch_type]))
+          @process_coverage.update(approved_count: @process_coverage.count_batches("approved"), denied_count: @process_coverage.count_batches("denied"))
           format.html { redirect_to process_coverage_path(@process_coverage), notice: "Batch Approved!" }
         end
       end
@@ -607,7 +622,8 @@ only: %i[ show edit update destroy approve_batch deny_batch pending_batch recons
     else
       respond_to do |format|
         if @batch.update_attribute(:insurance_status, 1)
-          @process_coverage.increment!(:denied_count)
+          # @process_coverage.update(approved_count: @process_coverage.count_batches_approved(params[:batch_type]), denied_count: @process_coverage.count_batches_denied(params[:batch_type]))
+          @process_coverage.update(approved_count: @process_coverage.count_batches("approved"), denied_count: @process_coverage.("denied"))
           format.html { redirect_to process_coverage_path(@process_coverage), alert: "Batch Denied!" }
         end
       end
@@ -657,6 +673,28 @@ only: %i[ show edit update destroy approve_batch deny_batch pending_batch recons
     else
       render :new, status: :unprocessable_entity
     end
+  end
+
+  def psheet
+    @batches_x = @process_coverage.group_remit.batches
+    @total_life_cov = case @process_coverage.get_plan_acronym
+    when "LPPI"
+      @process_coverage.group_remit.total_loan_amount
+    else
+      ProductBenefit.joins(agreement_benefit: :batches).where("batches.id IN (?)", @batches_x.pluck(:id)).where(batches: { insurance_status: :approved }).where("product_benefits.benefit_id = ?", 1).sum(:coverage_amount)
+    end
+    respond_to do |format|
+      format.html
+      format.pdf do
+        render pdf: "PSHEET ##{@process_coverage.id}",
+        template: "process_coverages/psheet",
+        formats: [:html],
+        page_size: "A4",
+        layouts: "pdf",
+        viewport_size: '1280x1024'
+      end
+    end
+
   end
 
   # PATCH/PUT /process_coverages/1

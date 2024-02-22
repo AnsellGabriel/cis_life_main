@@ -40,11 +40,11 @@
                 batch_id: @batch.batch.id, 
                 process_coverage_id: @process_coverage, 
                 for_und: true), class: small_btn('secondary'), data: {turbo_frame: "reg_form_modal_xl"} %>
-      <%= f.button :submit, class: small_btn('success') %>
+      <%= f.button :submit, "Add Remarks", class: small_btn('success') %>
     <% else %>
       <%# <%= link_to "Remarks", batch_remarks_path, class: 'btn btn-secondary' %> 
       <%= link_to "Remarks", modal_remarks_process_coverage_path(@process_coverage, batch: @batch), class: 'btn btn-secondary', data: { turbo_frame: "reg_form_modal" } %>
-      <%= f.button :submit, class: 'btn-success' %>
+      <%= f.button :submit, "Add Remarks", class: 'btn-success' %>
     <% end %>
   </div>
 <% end %>

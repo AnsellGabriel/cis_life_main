@@ -1,9 +1,29 @@
+<% if current_user.is_accountant? %>
+  <div class="mb-1">
+    <%= link_to  requests_accounting_checks_path, class: small_btn("outline-secondary") do %>
+      <i class="bi bi-arrow-left-square"></i>
+      Back
+    <% end %>
+  </div>
+<% elsif current_user.is_auditor? %>
+  <div class="mb-1">
+    <%= link_to  audit_check_vouchers_path, class: small_btn("outline-secondary") do %>
+      <i class="bi bi-arrow-left-square"></i>
+      Back
+    <% end %>
+    <%= link_to "MOA", show_details_agreement_path(@check.check_voucher_request.requestable.agreement), class: small_btn('outline-primary'), title: "Voucher", target: "_blank" %>
+    <%= link_to "Claim details", claim_process_process_claim_path(@check.check_voucher_request.requestable), class: small_btn('outline-primary'), title: "Claim details", target: "_blank" %>
+    <% if @check.for_audit? %>
+      <%=  link_to "Approve", approve_audit_check_voucher_path(@check), class: small_btn('success'), data: {turbo_confirm: "Finish audit and approve voucher?", turbo_method: :get}  %>
+    <% end %>
+  </div>
+<% end %>
+
 <%= render @check %>
 
 <div class="card">
   <ul class="nav nav-tabs" id="myTab" role="tablist">
-
-    <% if current_user.is_accountant? %>
+    <% if current_user.is_accountant? || current_user.is_auditor? %>
       <li class="nav-item" role="presentation">
         <button class="nav-link active" id="ledger-tab" data-bs-toggle="tab" data-bs-target="#ledger" type="button" role="tab" aria-controls="ledger" aria-selected="true">Ledger</button>
       </li>
@@ -15,7 +35,7 @@
   </ul>
   <div class="tab-content" id="myTabContent">
 
-    <% if current_user.is_accountant? %>
+    <% if current_user.is_accountant? || current_user.is_auditor? %>
       <div class="tab-pane fade show active" id="ledger" role="tabpanel" aria-labelledby="ledger-tab">
         <%= render 'payments/entries/ledger', ledgers: @ledgers, entry: @check  %>
       </div>

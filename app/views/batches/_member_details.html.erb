@@ -1,13 +1,13 @@
 <% batch_presenter = BatchPresenter.new(batch)%>
 
 <div class="">
-	<%= content_tag :span, "#{member}", class: 'text-primary' %>
-	<% if batch.status == 'recent' && batch.batch_health_decs.blank? %>
-			<span class="text-danger" data-bs-toggle="tooltip" data-bs-placement="top" title="No health declaration" style="cursor: pointer;">!!!</span>
-	<% end %>
+	<%#= content_tag :span, "#{member.full_name}", class: 'text-primary' %>
+	<%= content_tag :span, "#{batch.coop_member.member.full_name}", class: 'text-primary' %>
+
 	<div class="small">
 		<%= content_tag :span, batch.age, class: 'text-secondary' %>
-	  <%= content_tag :span, "(#{to_shortdate(member.birth_date)})", class: 'text-secondary' %>
+	  <%#= content_tag :span, "(#{to_shortdate(batch.birthdate)})", class: 'text-secondary' %>
+	  <%= content_tag :span, "(#{to_shortdate(batch.coop_member.member.birth_date)})", class: 'text-secondary' %>
 	</div>
 </div>
 

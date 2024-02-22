@@ -9,20 +9,32 @@ class CooperativesController < ApplicationController
     else
       @cooperatives = Cooperative.all
     end
+
+    # use pagy
+    @pagy, @cooperatives = pagy(@cooperatives, items: 10, params: {active_tab: "cooperatives"})
   end
 
   # GET /cooperatives/1 or /cooperatives/1.json
   def show
     @member = Member.new
     @member.coop_members.build
-    @coop_branches = CoopBranch.where(cooperative: @cooperative)
+
     @agreements = @cooperative.agreements
-
     coop_members = @cooperative.coop_members
-    f_members = Member.coop_member_details(coop_members)
-      .filter_by_name(params[:last_name_filter], params[:first_name_filter])
 
-    @pagy, @filtered_members = pagy(f_members, items: 10, params: {active_tab: "members"})
+    @q = Member.coop_member_details(coop_members).ransack(params[:q])
+    @r = CoopBranch.where(cooperative: @cooperative).ransack(params[:q])
+
+    f_members = @q.result(distinct: true).includes(:coop_members)
+    @coop_branches = @r.result(distinct: true).includes(:cooperative)
+
+    @pagy_branches, @coop_branches = pagy(@coop_branches, items: 10, page_param: :pagy_branches, params: {active_tab: "branches"})
+    @pagy_members, @filtered_members = pagy(f_members, items: 10, page_param: :pagy_members, params: {active_tab: "members"})
+
+    # set active tab if search branches btn is clicked
+    if params[:commit] == "Search Branches"
+      params[:active_tab] = "branches"
+    end
   end
 
   def details

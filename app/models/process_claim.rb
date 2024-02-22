@@ -1,7 +1,7 @@
 class ProcessClaim < ApplicationRecord
   attr_accessor :batch_id
 
-  validates_presence_of :cooperative_id, :agreement_id, :entry_type, :claimant_name, :relationship, :claimant_email, :claimant_contact_no
+  validates_presence_of :cooperative_id, :agreement_id, :entry_type, :claimant_name, :relationship, :claimant_email, :claimant_contact_no, :date_incident
 
   enum nature_of_claim: {
     LIFE: 0, # Life
@@ -45,7 +45,10 @@ class ProcessClaim < ApplicationRecord
     denied_claim: 9, # denied
     reconsider_review: 10,
     pending_claim: 11,
-    claimable: 12
+    claimable: 12,
+    paid: 13, # paid
+    voucher_generated: 14,
+    approve_by_audit: 15
   }
 
 
@@ -87,7 +90,8 @@ class ProcessClaim < ApplicationRecord
   has_many :claim_remarks, dependent: :destroy
   has_many :claim_attachments, dependent: :destroy
   has_many :claim_confinements, dependent: :destroy
-  has_one :claim_request_for_payment, dependent: :destroy
+  # has_one :claim_request_for_payment, dependent: :destroy
+  has_one :check_voucher_request, as: :requestable, dependent: :destroy, class_name: "Accounting::CheckVoucherRequest"
   accepts_nested_attributes_for :claim_cause
   # belongs_to :batch
   has_many :claim_documents, dependent: :destroy

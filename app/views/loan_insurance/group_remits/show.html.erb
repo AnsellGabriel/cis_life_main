@@ -2,6 +2,19 @@
 <!-- Batch Import Modal -->
 <%= render "loan_insurance/group_remits/batch_import_modal" %>
 
+<div class="mb-1">
+  <% if @group_remit.agreement.plan.acronym == "LPPI" %>
+    <%= link_to loan_insurance_group_remits_path, class: small_btn("outline-secondary") do %>
+      <i class="bi bi-arrow-left-square"></i>
+      Back
+    <% end %>
+  <% else %>
+    <%= link_to loan_insurance_group_remits_path(p: "sii"), class: small_btn("outline-secondary") do %>
+      <i class="bi bi-arrow-left-square"></i>
+      Back
+    <% end %>
+  <% end %>
+</div>
 
 <div class="<%= flex_justify_align('between', 'start') %> mb-3 gap-3">
   <div class="card" style="height: auto; width: 100%">
@@ -10,10 +23,17 @@
         <%= content_tag :span, @group_remit.status_text, class: @group_remit.status_badge %>
         <%= content_tag :h3, class: 'mb-0 text-primary' do %>
             <%= @group_remit %>    
+            <% if @group_remit.official_receipt.present? %>
+              <%= content_tag :span, "(OR# #{@group_remit.official_receipt})", class: "text-dark small" %>
+            <% end %>
         <% end %>
         <div class="mb-0 gap-1 <%= flex_justify_align('', 'center') %>">
 
           <% if @group_remit.is_pending_or_renewal? %>
+            <% if mis_user?(current_user) %>
+              <%= link_to "#{@group_remit.official_receipt.present? ? "Edit" : "Add"} OR", edit_or_loan_insurance_group_remit_path, class: small_btn("outline-success"), data: {turbo_frame: 'modal'} %>
+            <% end %>
+
             <div class="d-flex gap-1">
               <%= content_tag :button, "Batch Import", 
               class: "btn btn-sm btn-outline-primary",
@@ -61,11 +81,17 @@
           <div class="card d-flex">
             <div class="card-header" style="width: 100%;">
               <div class="text-center">
-                <%= content_tag :span, 'LPPI Enrollment Form ', class: 'text-primary' %>
+                <% plan = @group_remit.agreement.plan.acronym %>
+                <%= content_tag :span, "#{plan} Enrollment Form", class: 'text-primary' %>
               </div>
             </div>
             <div class="card-body" >
-              <%= render "loan_insurance/batches/form", batch: @batch, coop_members: @coop_members, group_remit_id: @group_remit.id %>
+              <% if plan == "LPPI" %>
+                <%= render "loan_insurance/batches/form", batch: @batch, coop_members: @coop_members, group_remit_id: @group_remit.id %>
+              <% else %>
+                <%= render "loan_insurance/batches/sii_form", batch: @batch, coop_members: @coop_members, group_remit_id: @group_remit.id %>
+              <% end %>
+              
             </div>
           </div>
           <div class="<%= flex_justify_align('between','start',true) %>" >
@@ -134,12 +160,20 @@
       <tr class="table-dark">
         <th class="text-center" scope="col">ID</th>
         <th class="text-center" scope="col">Members</th>
-        <th class="text-center" scope="col">Loan Amount</th>
-        <th class="text-center" scope="col">Effectivity Date</th>
-        <th class="text-center" scope="col">Expiry Date</th>
+        <% if @agreement.plan.acronym == "SII" %>
+          <th class="text-center" scope="col">Savings Amount</th>
+        <% else %>
+          <th class="text-center" scope="col">Loan Amount</th>
+        <% end %>
         <th class="text-center" scope="col">Terms</th>
         <th class="text-center" scope="col">Premium</th>
-        <th class="text-center" scope="col">Unused Premium</th>
+        <% if @agreement.plan.acronym == "LPPI" %>
+          <% if @group_remit.agreement.unusable == true %>
+            <th class="text-center" scope="col">Unused Premium</th>
+          <% end %>
+        <% end %>
+        
+        
         <th class="text-center" scope="col">Premium Due</th>
         <th class="text-center" scope="col">Actions</th>
       </tr>
@@ -151,7 +185,7 @@
         <%= render @batches, group_remit: @group_remit, agreement: @agreement %>
       <% else %>
         <tr>
-          <td colspan="8" class="text-center">
+          <td colspan="10" class="text-center">
             No record found.
           </td>
         </tr>
@@ -164,5 +198,5 @@
 <% end %>
 
 <%= turbo_frame_tag "computation" do %>
-  <%= render "group_remits/computation", group_remit: @group_remit, agreement: @agreement %>
+  <%= render "computation", group_remit: @group_remit, agreement: @agreement %>
 <% end %>  

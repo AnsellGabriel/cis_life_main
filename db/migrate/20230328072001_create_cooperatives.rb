@@ -6,7 +6,7 @@ class CreateCooperatives < ActiveRecord::Migration[7.0]
       t.string :province
       t.string :municipality
       t.string :barangay
-      t.string :contact_details
+      # t.string :contact_details
 
       t.timestamps
     end

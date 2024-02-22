@@ -40,7 +40,8 @@ class ProcessRemarksController < ApplicationController
         if @max_amount >= @total_gross_prem
           # if @process_coverage.group_remit.batches.where(batches: { insurance_status: :denied} ).count > 0
           klass_name = @process_coverage.group_remit.batches.first.class.name
-          denied_count =  @process_coverage.count_batches_denied(klass_name)
+          # denied_count =  @process_coverage.count_batches_denied(klass_name)
+          denied_count =  @process_coverage.count_batches("denied")
 
           if denied_count > 0
             @rem_status = "for_head_approval"

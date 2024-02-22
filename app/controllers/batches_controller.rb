@@ -24,12 +24,12 @@ class BatchesController < ApplicationController
       added_dependents_count = @import_result[:added_dependents_counter]
       denied_dependents_count = @import_result[:denied_dependents_counter]
 
-      added_members_message = "#{added_members_count} members successfully added." if added_members_count > 0
-      denied_members_message = "#{denied_members_count} members denied." if denied_members_count > 0
-      added_dependents_message = "#{added_dependents_count} dependents successfully added." if added_dependents_count > 0
-      denied_dependents_message = "#{denied_dependents_count} dependents denied." if denied_dependents_count > 0
+      added_members_message = "<li>#{added_members_count} members added</li>" if added_members_count > 0
+      denied_members_message = "<li>#{denied_members_count} members denied</li>" if denied_members_count > 0
+      added_dependents_message = "<li>#{added_dependents_count} dependents added</li>" if added_dependents_count > 0
+      denied_dependents_message = "<li>#{denied_dependents_count} dependents denied</li>" if denied_dependents_count > 0
 
-      notice = [added_members_message, added_dependents_message, denied_members_message, denied_dependents_message].compact.join(" ")
+      notice = [added_members_message, added_dependents_message, denied_members_message, denied_dependents_message].compact.join("")
       redirect_to group_remit_path(@group_remit), notice: notice
     else
       redirect_to group_remit_path(@group_remit), alert: @import_result
@@ -82,22 +82,32 @@ class BatchesController < ApplicationController
   def approve_all
     @process_coverage = ProcessCoverage.find(params[:process_coverage])
     @batches = @process_coverage.group_remit.batches
+    approved_count = 0
+    for_approved_count = 0
 
     @batches.each do |batch|
-            
+
       if batch.insurance_status == "for_review" || batch.insurance_status == "pending"
+        for_approved_count += 1
         # if (18..65).include?(batch.age)
         if (batch.agreement_benefit.min_age..batch.agreement_benefit.max_age).include?(batch.age)
           if batch.valid_health_dec
             # batch.update_attribute(:insurance_status, "approved") if batch.valid_health_dec
-            batch.update_attribute(:insurance_status, "approved") 
+            batch.update_attribute(:insurance_status, "approved")
             @process_coverage.increment!(:approved_count)
+            approved_count += 1
           end
         end
       end
     end
 
-    redirect_to process_coverage_path(@process_coverage), notice: "Batches have been approved!"
+    if approved_count == for_approved_count
+      redirect_to process_coverage_path(@process_coverage), notice: "All batches have been approved!"
+    elsif approved_count < for_approved_count && approved_count > 0
+      redirect_to process_coverage_path(@process_coverage), notice: "#{approved_count} batch(es) have been approved!"
+    else
+      redirect_to process_coverage_path(@process_coverage), alert: "No batches have been approved!"
+    end
 
   end
 
@@ -140,26 +150,40 @@ class BatchesController < ApplicationController
     rescue NoMethodError => e # if member is not found
       return redirect_to group_remit_path(@group_remit), alert: "Member not found"
     end
-
+    
+    # if @agreement.plan.acronym == "SII"
+    #   Batch.process_batch(
+    #     @batch,
+    #     @group_remit,
+    #     batch_params[:rank],
+    #     0,
+    #     params[:batch][:savings_amount]
+    #   )
+    # else
     Batch.process_batch(
       @batch,
       @group_remit,
-      batch_params[:rank],
-      @group_remit.terms
+      batch_params[:rank]
     )
+    # end
 
     begin
 
+      # unless @agreement.plan.acronym == "SII"
+      
       if member.age(@group_remit.effectivity_date) < @batch.agreement_benefit.min_age or member.age(@group_remit.effectivity_date) > @batch.agreement_benefit.max_age
 
         # return redirect_to group_remit_path(@group_remit), alert: "Member age must be between #{@batch.agreement_benefit.min_age.to_i} and #{@batch.agreement_benefit.max_age.to_i} years old."
         @batch.insurance_status = :denied
         if member.age(@group_remit.effectivity_date) > @batch.agreement_benefit.max_age
-          @batch.batch_remarks.build(remark: "Member age is over the maximum age limit of the plan.", status: :denied, user_type: "CoopUser", user_id: current_user.userable.id)
+          @batch.batch_remarks.build(remark: "Member age is over the maximum age limit of the plan.", status: :denied, user_type: current_user.userable_type, user_id: current_user.userable.id)
         else
-          @batch.batch_remarks.build(remark: "Member age is below the minimum age limit of the plan.", status: :denied, user_type: "CoopUser", user_id: current_user.userable.id)
+          @batch.batch_remarks.build(remark: "Member age is below the minimum age limit of the plan.", status: :denied, user_type: current_user.userable_type, user_id: current_user.userable.id)
         end
       end
+
+      # end
+  
 
       # raise 'errors'
       respond_to do |format|
@@ -189,14 +213,18 @@ class BatchesController < ApplicationController
   end
 
   def edit
-    @coop_members = @cooperative.coop_member_details
+    # @coop_members = @cooperative.coop_member_details
+
   end
 
   def update
+    @batch.manual_premium_and_fees(batch_params[:premium], @group_remit)
+
     respond_to do |format|
-      if @batch.update(batch_params)
+      if @batch.save!
+
         format.html {
-          redirect_to group_remit_path(@group_remit), notice: "Batch updated"
+          redirect_to coop_agreement_group_remit_path(@agreement, @group_remit), notice: "Premium updated"
         }
       else
         format.html { render :edit, status: :unprocessable_entity }
@@ -291,5 +319,5 @@ class BatchesController < ApplicationController
     agreement.coop_members.delete(coop_member) if @batch.status == "recent"
     @batch.batch_group_remits.destroy_all
   end
-  
+
 end

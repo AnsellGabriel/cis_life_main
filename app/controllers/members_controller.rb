@@ -65,8 +65,8 @@ class MembersController < InheritedResources::Base
   def create
     @member = Member.find_or_initialize_by(
       first_name: member_params[:first_name],
-      last_name: member_params[:last_name],
       middle_name: member_params[:middle_name],
+      last_name: member_params[:last_name],
       birth_date: member_params[:birth_date]
     )
 
@@ -74,21 +74,26 @@ class MembersController < InheritedResources::Base
       persisted = true
     end
 
-    @member.assign_attributes(member_params)
-
     respond_to do |format|
-      if @member.save
-        format.html {
-          if current_user.userable_type == "CoopUser"
-            coop_member = @member.coop_members.find_by(cooperative_id: @cooperative.id)
-            redirect_to coop_members_path(cooperative_id: @cooperative.id),
-            notice: "#{persisted ? 'Member is already enrolled. Updated member\'s details instead.' : 'Member enrolled.'}"
-          elsif current_user.userable_type == "Employee"
-            redirect_to cooperative_path(@cooperative), notice: "#{persisted ? 'Member already enrolled. Updated member\'s details' : 'Member enrolled.'}"
-          end
-        }
+      if @member.persisted?
+        format.html { redirect_to coop_members_path(cooperative_id: @cooperative.id), alert: "Member already exist: #{@member.first_name} #{@member.middle_name} #{@member.last_name}"  }
       else
-        format.html { render :new, status: :unprocessable_entity }
+        @member.assign_attributes(member_params)
+
+        if @member.save
+
+          format.html {
+            if current_user.userable_type == "CoopUser"
+              coop_member = @member.coop_members.find_by(cooperative_id: @cooperative.id)
+              redirect_to coop_members_path(cooperative_id: @cooperative.id),
+              notice: "#{persisted ? 'Member is already enrolled. Updated member\'s details instead.' : 'Member enrolled.'}"
+            elsif current_user.userable_type == "Employee"
+              redirect_to cooperative_path(@cooperative), notice: "#{persisted ? 'Member already enrolled. Updated member\'s details' : 'Member enrolled.'}"
+            end
+          }
+        else
+          format.html { render :new, status: :unprocessable_entity }
+        end
       end
     end
   end

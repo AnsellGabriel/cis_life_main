@@ -1,22 +1,169 @@
 
 <div class="card col-6 border-info">
-  <div class="card-body">
-    <table class="table table-hover">
-      <thead>
-        <th>Benefits</th>
-        <th>Coverage Amount</th>
-      </thead>
-      <tbody>
-        <% plan_unit.unit_benefits.each do |ub| %>
+  <% if plan_unit.plan_id == 5 || plan_unit.plan_id == 6 %> <!-- SIP & GBLISS -->
+    <div class="card-body">
+      <table class="table table-hover">
+        <thead>
+          <th>Benefits</th>
+          <th>Coverage Amount</th>
+        </thead>
+        <tbody>
+          <% plan_unit.unit_benefits.each do |ub| %>
+            <tr>
+              <td><%= ub.benefit.name %></td>
+              <td><%= to_currency(ub.coverage_amount) %></td>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
+      <h3>
+        Premium: <%= to_currency(plan_unit.total_prem) %>
+      </h3>
+    </div>
+  
+  <% elsif plan_unit.plan_id == 7 %> <!-- KOOPAMILYA -->
+    <div class="card-body">
+      <h5 class="card-title">Term of Insurance</h5>
+      <p class="card-text">
+        <table class="table">
+          <thead>
+            <th>Length of Membership</th>
+            <th>Insurance Coverage</th>
+            <th>Principal Member</th>
+            <th>Dependents(max of 4)</th>
+          </thead>
+          <tbody>
+            <tr>
+              <td>THREE (3) MONTHS OR LESS</td>
+              <td>
+                <table>
+                  <tr>
+                    <td>Natural Death or Total and Permanent Disability</td>
+                  </tr>
+                  <tr>
+                    <td>Accidental Death</td>
+                  </tr>
+                </table>
+              </td>
+              <td>
+                <table>
+                  <tr>
+                    <td>2,500.00</td>
+                  </tr>
+                  <tr>
+                    <td>20,000.00</td>
+                  </tr>
+                </table>
+              </td>
+              <td>
+                <table>
+                  <tr>
+                    <td>None</td>
+                  </tr>
+                  <tr>
+                    <td>5,000.00</td>
+                  </tr>
+                </table>
+              </td>
+            </tr>
+            <tr>
+              <td>MORE THAN 3 MONTHS UP TO TWELVE (12) MONTHS</td>
+              <td>
+                <table>
+                  <tr>
+                    <td>Natural Death or Total and Permanent Disability</td>
+                  </tr>
+                  <tr>
+                    <td>Accidental Death</td>
+                  </tr>
+                </table>
+              </td>
+              <td>
+                <table>
+                  <tr>
+                    <td>5,000.00</td>
+                  </tr>
+                  <tr>
+                    <td>20,000.00</td>
+                  </tr>
+                </table>
+              </td>
+              <td>
+                <table>
+                  <tr>
+                    <td>None</td>
+                  </tr>
+                  <tr>
+                    <td>5,000.00</td>
+                  </tr>
+                </table>
+              </td>
+            </tr>
+            <tr>
+              <td>MORE THAT TWELVE (12) MONTHS</td>
+              <td>
+                <table>
+                  <tr>
+                    <td>Natural Death or Total and Permanent Disability</td>
+                  </tr>
+                  <tr>
+                    <td>Accidental Death</td>
+                  </tr>
+                </table>
+              </td>
+              <td>
+                <table>
+                  <tr>
+                    <td>40,000.00</td>
+                  </tr>
+                  <tr>
+                    <td>80,000.00</td>
+                  </tr>
+                </table>
+              </td>
+              <td>
+                <table>
+                  <tr>
+                    <td>10,000.00</td>
+                  </tr>
+                  <tr>
+                    <td>20,000.00</td>
+                  </tr>
+                </table>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </p>
+    </div>
+  <% elsif plan_unit.plan_id == 8 %> <!-- SII -->
+    <div class="card-body">
+      <h5 class="card-title fst-italic">SALIENT FEATURES:</h5>
+      <table class="table table-hover">
+        <tbody>
           <tr>
-            <td><%= ub.benefit.name %></td>
-            <td><%= to_currency(ub.coverage_amount) %></td>
+            <td>Insurable Age</td>
+            <td><b>18-65 years old</b></td>
           </tr>
-        <% end %>
-      </tbody>
-    </table>
-    <h3>
-      Premium: <%= to_currency(plan_unit.total_prem) %>
-    </h3>
-  </div>
+          <tr>
+            <td>Minimum Participation</td>
+            <td><b>100 individual members</b></td>
+          </tr>
+          <tr>
+            <td>Maximum Coverage</td>
+            <td><b><%= to_currency(300000) %></b></td>
+          </tr>
+          <tr>
+            <td>Rate</td>
+            <td><b><%= to_currency(10) %> per annum</b></td>
+          </tr>
+        </tbody>
+      </table>
+      <div>
+        <span class="lead fst-italic">Benefit</span>
+      </div>
+      <span class="ms-2">- Basic Life Insurance Based on the Outstanding Balance of Capital Share and/or Savings of the member.</span>
+    </div>
+  <% end %>
+
 </div>

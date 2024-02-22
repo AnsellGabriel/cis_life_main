@@ -10,12 +10,15 @@
           <%= link_to "18-65 Renewal", process_coverage_path(process_coverage, search: "regular_ren"), class: "btn btn-sm btn-outline-primary mb-1" %>
           <%= link_to "Overage", process_coverage_path(process_coverage, search: "overage"), class: "btn btn-sm btn-outline-warning mb-1"  %>
           <%= link_to "w/ Health Dec", process_coverage_path(process_coverage, search: "health_decs"), class: "btn btn-sm btn-outline-secondary mb-1"  %>
-          <%= link_to "For Reconsider", process_coverage_path(process_coverage, search: "reconsider"), class: "btn btn-sm btn-outline-info mb-1"  %>
+          <%= link_to "w/ dependents", process_coverage_path(process_coverage, search: "dependent"), class: "btn btn-sm btn-outline-secondary mb-1"  %>
+          <%= link_to "For Reconsideration", process_coverage_path(process_coverage, search: "reconsider"), class: "btn btn-sm btn-outline-info mb-1"  %>
           <%= link_to "View All", process_coverage_path(process_coverage), class: "btn btn-sm btn-outline-success mb-1"  %>
           <hr>
           <% insured_types2.each do |type| %>
             <% i_type = type.insured_type_before_type_cast %>
-            <% unless i_type == 2..5 %>
+            <%# unless i_type == 2..5 %>
+            <%# if i_type == 2..5 %>
+            <% if [1, 6..].include?(i_type) %>
               <%= link_to type.name, process_coverage_path(process_coverage, insured_type: type), class: "btn btn-primary btn-sm mb-1" %>
             <% end %>
           <% end %>

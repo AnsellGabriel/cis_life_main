@@ -15,7 +15,7 @@ class CoopMembersController < InheritedResources::Base
     @q = Member.coop_member_details(coop_members).ransack(params[:q])
     f_members = @q.result(distinct: true).includes(:coop_members)
 
-    @pagy, @filtered_members = pagy(f_members, items: 10)
+    @pagy_members, @filtered_members = pagy(f_members, items: 10)
   end
 
   def new_ca 

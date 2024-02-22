@@ -1,0 +1,9 @@
+
+<%= render @koopamilya_pb %>
+
+<div>
+  <%= link_to "Edit", edit_koopamilya_pb_path(@koopamilya_pb), class: 'btn btn-primary' %> |
+  <%= link_to "Back", koopamilya_pbs_path, class: 'btn btn-primary' %>
+
+  <%= button_to "Delete", @koopamilya_pb, method: :delete, class: 'btn btn-danger' %>
+</div>

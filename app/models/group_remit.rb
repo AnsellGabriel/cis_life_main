@@ -4,9 +4,11 @@ class GroupRemit < ApplicationRecord
   before_destroy :delete_associated_batches
 
   validates_presence_of :name # , :effectivity_date, :expiry_date, :terms
+  validates_uniqueness_of :official_receipt, allow_blank: true
 
   scope :batch_remits, -> { where(:type => "BatchRemit")}
   scope :loan_remits, -> { where(:type => "LoanInsurance::GroupRemit")}
+  scope :remittances, -> { where(:type => "Remittance")}
 
   belongs_to :agreement
   belongs_to :anniversary, optional: true
@@ -23,6 +25,8 @@ class GroupRemit < ApplicationRecord
   has_one :progress_tracker, as: :trackable, dependent: :destroy
   accepts_nested_attributes_for :payments
 
+  delegate :cooperative, to: :agreement
+
   enum status: {
     pending: 0,
     under_review: 1,
@@ -36,6 +40,12 @@ class GroupRemit < ApplicationRecord
     reupload_payment: 9
   }
 
+  enum refund_status: {
+    not_refunded: 0,
+    ready_for_refund: 1,
+    refunded: 2
+  }
+
   def to_s
     name
   end
@@ -47,7 +57,8 @@ class GroupRemit < ApplicationRecord
     # new_group_remit.expiry_date = self.expiry_date + 1.year # Assuming the renewal duration is 1 year from the current date
     new_group_remit.status = :for_renewal
     new_group_remit.type = "Remittance"
-    new_group_remit.name = "#{GroupRemit.extract_from_substring(self.name, ('GYRT' or 'LPPI'))} RENEWAL"
+    # new_group_remit.name = "#{GroupRemit.extract_from_substring(self.name, ('GYRT' or 'LPPI'))} RENEWAL"
+    new_group_remit.name = "#{self.name} RENEWAL"
     new_group_remit.batch_remit_id = self.id
     self.status = :for_renewal
     self.set_terms_and_expiry_date(self.expiry_date + 1.year)
@@ -116,8 +127,9 @@ class GroupRemit < ApplicationRecord
   def self.process_group_remit(group_remit, anniversary_date, anniv_id)
     group_remit.set_terms_and_expiry_date(anniversary_date)
     agreement = group_remit.agreement
+    anniv_type = agreement.anniversary_type
 
-    if agreement.anniversary_type.downcase == "multiple" || agreement.anniversary_type.downcase == "single"
+    if anniv_type.downcase == "multiple" || anniv_type.downcase == "single"
       group_remit.anniversary_id = anniv_id
     end
 
@@ -126,35 +138,17 @@ class GroupRemit < ApplicationRecord
 
   def self.set_group_remit_names_and_terms(group_remit)
     agreement = group_remit.agreement
+    anniv_type = agreement.anniversary_type
 
-    if (agreement.anniversary_type.downcase == "12 months" or agreement.anniversary_type.nil?) && group_remit.instance_of?(BatchRemit)
-      group_remit.name = "#{extract_from_substring(agreement.moa_no, ('GYRT' or 'LPPI'))} #{group_remit.effectivity_date.strftime('%B').upcase} BATCH"
+    if (anniv_type.downcase == "12 months" or anniv_type.nil?) && group_remit.instance_of?(BatchRemit)
+      # group_remit.name = "#{extract_from_substring(agreement.moa_no, ('GYRT' or 'LPPI'))} #{group_remit.effectivity_date.strftime('%B').upcase} BATCH"
+      group_remit.name = "#{group_remit.effectivity_date.strftime('%B').upcase} BATCH"
     else
-      group_remit.name = "#{extract_from_substring(agreement.moa_no, ('GYRT' or 'LPPI'))} REMITTANCE #{agreement.group_remits.where(type: 'Remittance').size + 1}"
+      # group_remit.name = "#{extract_from_substring(agreement.moa_no, ('GYRT' or 'LPPI'))} REMITTANCE #{agreement.group_remits.where(type: 'Remittance').size + 1}"
+      group_remit.name = "ENROLLMENT LIST #{agreement.group_remits.where(type: 'Remittance').size + 1}"
+
     end
 
-  end
-
-  def set_total_premiums_and_fees
-    self.gross_premium = commisionable_premium
-    self.coop_commission = total_coop_commissions
-    self.agent_commission = total_agent_commissions
-    self.net_premium = net_premium
-
-    unless self.type == "BatchRemit"
-
-      if self.process_coverage.status == "approved"
-        self.status = :for_payment
-        Notification.create(notifiable: self.agreement.cooperative, message: "#{self.name} is approved and now for payment.")
-      else
-        self.status.nil? ? "under_review" : self.status
-      end
-      # self.status = :for_payment
-      # Notification.create(notifiable: self.agreement.cooperative, message: "#{self.name} is approved and now for payment.")
-    end
-
-    self.save!
-    # self.effectivity_date = Date.today
   end
 
   def set_for_payment_status
@@ -201,6 +195,41 @@ class GroupRemit < ApplicationRecord
     agreement.agent_sf
   end
 
+  def set_total_premiums_and_fees
+    self.gross_premium = commisionable_premium
+    self.coop_commission = total_coop_commissions
+    self.agent_commission = total_agent_commissions
+    self.net_premium = net_premium
+
+    unless self.type == "BatchRemit"
+
+      if self.process_coverage.status == "approved"
+        if self.mis_entry?
+          self.status = :paid
+          self.update_batch_remit
+          self.update_batch_coverages
+
+          # net_prem = initial_gross_premium - (denied_principal_premiums + denied_dependent_premiums)
+
+          if self.gross_premium > approved_premiums
+            self.refund_amount = (self.gross_premium - approved_premiums) - ((self.gross_premium - approved_premiums) * (agreement.coop_sf / 100))
+          end
+
+        else
+          self.status = :for_payment
+          Notification.create(notifiable: self.agreement.cooperative, message: "#{self.name} is approved and now for payment.")
+        end
+      else
+        self.status.nil? ? "under_review" : self.status
+      end
+      # self.status = :for_payment
+      # Notification.create(notifiable: self.agreement.cooperative, message: "#{self.name} is approved and now for payment.")
+    end
+
+    self.save!
+    # self.effectivity_date = Date.today
+  end
+
   def total_dependent_premiums
     if agreement.plan.acronym.include?("GYRT")
       batches.includes(:batch_dependents).sum {|batch| batch.batch_dependents.sum(:premium) }
@@ -210,7 +239,18 @@ class GroupRemit < ApplicationRecord
   end
 
   def dependent_coop_commissions
-    batches.approved.includes(:batch_dependents).sum {|batch| batch.batch_dependents.approved.sum(&:coop_sf_amount) }
+# <<<<<<< UndLppi
+#     if agreement.plan.acronym.include?("GYRT")
+#       batches.approved.includes(:batch_dependents).sum {|batch| batch.batch_dependents.approved.sum(&:coop_sf_amount) }
+#     else
+#       0
+# =======
+    if self.instance_of?(LoanInsurance::GroupRemit)
+      0
+    else
+      batches.approved.includes(:batch_dependents).sum {|batch| batch.batch_dependents.approved.sum(&:coop_sf_amount) }
+# >>>>>>> main
+    end
   end
 
   def dependent_agent_commissions
@@ -251,20 +291,44 @@ class GroupRemit < ApplicationRecord
     total_principal_premium + total_dependent_premiums
   end
 
+  def approved_premiums
+    initial_gross_premium - denied_premiums
+  end
+
+  def denied_premiums
+    denied_principal_premiums + denied_dependent_premiums
+  end
+
+  def commisionable_premium
+    if self.mis_entry?
+      initial_gross_premium
+    else
+      approved_premiums
+    end
+  end
+
   def coop_commissions
     batches.approved.sum(:coop_sf_amount)
   end
 
-  def commisionable_premium
-    initial_gross_premium - (denied_principal_premiums + denied_dependent_premiums)
+  def total_coop_commissions
+    if agreement.coop_sf
+        coop_commissions + dependent_coop_commissions
+    else
+      0
+    end
   end
 
-  def total_coop_commissions
+  def front_end_coop_commission
     if agreement.coop_sf
       commisionable_premium * (agreement.coop_sf / 100)
     else
       0
     end
+  end
+
+  def front_end_coop_net_premium
+    commisionable_premium - front_end_coop_commission
   end
 
   def total_agent_commissions
@@ -289,7 +353,11 @@ class GroupRemit < ApplicationRecord
 
   def batches_without_health_dec
     # batches.recent.where.not(id: self.batches.joins(:batch_health_decs).select(:id))
-    batches.recent.where.missing(:batch_health_decs)
+    if self.agreement.plan.acronym.include?("LPPI")
+      batches.recent.where.missing(:batch_health_decs).where.not(loan_amount: 0..agreement.nel)
+    else
+      batches.recent.where.missing(:batch_health_decs)
+    end
   end
 
   def all_batches_have_beneficiaries?
@@ -304,8 +372,6 @@ class GroupRemit < ApplicationRecord
       self.terms = 12
       self.effectivity_date = Date.today.beginning_of_month
       self.expiry_date = anniversary_date
-    elsif plan == "PMFC"
-      self.effectivity_date = Date.today.beginning_of_month
     else
       terms = set_terms(anniversary_date)
       self.terms = terms <= 0 ? terms + 12 : terms
@@ -356,8 +422,50 @@ class GroupRemit < ApplicationRecord
     payments.approved.last
   end
 
-  def posted_or
-    approved_payment.entries.posted.last
+  def sum_approved_batches_premium
+    batches.where(insurance_status: :approved).sum(:premium)
+  end
+
+  def sum_approved_batches_unused
+    batches.where(insurance_status: :approved).sum(:unused)
+  end
+
+  def sum_approved_batches_sf
+    batches.where(insurance_status: :approved).sum(:coop_sf_amount) + batches.where(insurance_status: :approved).sum(:agent_sf_amount)
+  end
+
+  def count_approved_batches
+    batches.where(insurance_status: :approved).count
+  end
+
+  def sum_approved_batches_net_prem
+    case agreement.plan.acronym
+    when "LPPI"
+      sum_approved_batches_premium - (sum_approved_batches_unused + sum_approved_batches_sf)
+    else
+      sum_approved_batches_premium - sum_approved_batches_sf
+    end
+  end
+
+
+  # def posted_or
+  #   approved_payment.entries.posted.last
+  # end
+
+  def editable_by_mis?(current_user)
+    (current_user.userable_type == "Employee" && current_user.userable.department_id == 15) && !self.instance_of?(BatchRemit) && self.pending?
+  end
+
+  def self.ransackable_attributes(auth_object = nil)
+    ["name", "official_receipt"]
+  end
+
+  def self.ransackable_associations(auth_object = nil)
+    []
+  end
+
+  def or_number
+    self.official_receipt
   end
 
   private

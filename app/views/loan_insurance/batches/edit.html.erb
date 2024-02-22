@@ -1,6 +1,10 @@
-<div class="card">
-  <h5 class="card-header">Edit batch</h5>
-  <div class="card-body">
-    <%= render "form", loan_insurance_batch: @loan_insurance_batch %>
+<%= turbo_frame_tag "modal" do %>
+  <div class="modal-header">
+    <%= content_tag :h5, "Edit Loan Details", class: "modal-title text-center", id: "staticBackdropLabel" %>
+    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
   </div>
-</div>
+  
+  <div class="modal-body">
+    <%= render "form", batch: @batch, group_remit_id: @group_remit.id %>
+  </div>
+<% end %>

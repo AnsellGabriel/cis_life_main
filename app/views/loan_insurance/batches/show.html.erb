@@ -1,5 +1,6 @@
 <%= turbo_frame_tag 'modal-xl' do %>
   <% batch_presenter = BatchPresenter.new(@batch) %>
+  <% plan = @batch.group_remit.agreement.plan.acronym %>
   <div class="modal-header">
     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
   </div>
@@ -52,6 +53,9 @@
               </div>
             </div>
             <hr class="mb-5">
+            
+            <% if plan == "LPPI" %>
+              
             <div class="row mb-1">
               <%= content_tag :span, class: 'text-primary' do %>
                 <i class="bi bi-cash"></i> Loan Details
@@ -88,7 +92,6 @@
               </div>
             </div>
             <hr>
-
             <div class="row">
               <div class="col-sm-3">
                 <span class="mb-0 text-secondary">Terms</span>
@@ -104,6 +107,7 @@
               </div>
             </div>
             <hr>
+
             <div class="row">
               <div class="col-sm-3">
                 <span class="mb-0 text-secondary">Release Date</span>
@@ -120,20 +124,24 @@
             </div>
             <hr>
             <div class="row">
-              <div class="col-sm">
+              <div class="col-sm-3">
                 <span class="mb-0 text-secondary">Maturity Date</span>
               </div>
-              <div class="col-sm ">
+              <div class="col-sm-3">
                 <%= month_day_year(@batch.date_mature)%>
               </div>
-              <div class="col-sm">
+              <div class="col-sm-3">
                 <span class="mb-0 text-secondary">Expiry Date</span>
               </div>
-              <div class="col-sm ">
+              <div class="col-sm-3">
                 <%= month_day_year(@batch.expiry_date)%>
               </div>
             </div>
             <hr>
+            <% else %>
+              <%= render "sii_show" %>
+            <% end %>
+            
 
           </div>
         </div>

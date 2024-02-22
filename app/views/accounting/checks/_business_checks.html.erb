@@ -7,7 +7,7 @@
       <% end %>
 
       <% if @claim.present? %>
-        <%= link_to claimable_process_claims_path(v: voucher.id), class: small_btn('success'), data: {turbo_confirm: 'Are you sure?', turbo_method: :get} do %>
+        <%= link_to claimable_accounting_check_path(voucher), class: small_btn('success'), data: {turbo_confirm: 'Are you sure?', turbo_method: :get} do %>
           Ready for claim
         <% end %>
       <% end %>
@@ -21,6 +21,7 @@
         <% if current_user.is_treasurer? && !voucher.claimable?  %>
           <th></th>
         <% end %>
+        
         <th class="text-center">Check No.</th>
         <th class="text-center">Date</th>
         <th class="text-center">Type</th>

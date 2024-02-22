@@ -98,7 +98,7 @@
       <hr>
       <div data-controller='coop'>
         <div class="row">
-          <%= f.association :cooperative, 
+          <%= f.association :cooperative, collection: @cooperatives, 
               input_html: { 
                 id: "coop_id", 
                 data: { 

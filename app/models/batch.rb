@@ -35,7 +35,7 @@ class Batch < ApplicationRecord
 
   belongs_to :coop_member
   belongs_to :member, optional: true
-  belongs_to :agreement_benefit, optional: true
+  belongs_to :agreement_benefit, optional: true, counter_cache: true
 
   has_many :batch_group_remits
   has_many :group_remits, through: :batch_group_remits
@@ -55,11 +55,15 @@ class Batch < ApplicationRecord
 
   # alias_attribute :batches, :reserve_batches
 
+  def full_name
+    # "#{self.last_name}, #{self.first_name} #{self.middle_name}"
+    "#{self.coop_member.member.last_name}, #{self.coop_member.member.first_name} #{self.coop_member.member.middle_name}"
+  end
+
   def update_valid_health_dec
     self.update_attribute(:valid_health_dec, true)
     self.save!
   end
-
 
   def member_details
     coop_member.member
@@ -78,6 +82,10 @@ class Batch < ApplicationRecord
 
   def dependents_premium
     batch_dependents.sum(:premium)
+  end
+
+  def dependents_manual_premium
+    batch_dependents.sum(:manual_premium)
   end
 
   def get_group_remit
@@ -102,15 +110,23 @@ class Batch < ApplicationRecord
   end
 
 
-  def self.process_batch(batch, group_remit, rank = nil, duration = nil)
+  def self.process_batch(batch, group_remit, rank = nil, premium = nil, savings_amount = nil)
     agreement = group_remit.agreement
     coop_member = batch.coop_member
     previous_coverage = agreement.agreements_coop_members.find_by(coop_member_id: coop_member.id)
     batch.expiry_date = group_remit.expiry_date
     batch.effectivity_date = ["single", "multiple"].include?(agreement.anniversary_type.downcase) ? Date.today : group_remit.effectivity_date
+    batch.first_name = coop_member.member.first_name
+    batch.middle_name = coop_member.member&.middle_name
+    batch.last_name = coop_member.member.last_name + " " + coop_member.member.suffix
+    batch.birthdate = coop_member.member.birth_date
+    batch.civil_status = coop_member.member.civil_status
     batch.age = batch.member_details.age(batch.effectivity_date)
-
-    check_plan(agreement, batch, rank, duration, group_remit)
+    # if agreement.plan.acronym == "SII"
+    #   check_plan(agreement, batch, rank, group_remit, premium, savings_amount)
+    # else
+    check_plan(agreement, batch, rank, group_remit, premium)
+    # end
 
     if previous_coverage.present?
       month_difference = expiry_and_today_month_diff(previous_coverage.expiry)
@@ -134,23 +150,28 @@ class Batch < ApplicationRecord
   end
 
 
-  def self.check_plan(agreement, batch, rank, duration, group_remit)
+  def self.check_plan(agreement, batch, rank, group_remit, premium)
     acronym = agreement.plan.acronym
 
     case acronym
     when "GYRT", "GYRTF"
-      batch.set_premium_and_service_fees(:principal, group_remit) # model/concerns/calculate.rb
-      batch.valid_health_dec = true
+      batch.set_premium_and_service_fees(:principal, group_remit, premium) # model/concerns/calculate.rb
     when "GYRTBR", "GYRTFR"
-      determine_premium(rank, batch, group_remit) # Determine premium based on rank and batch
-      batch.valid_health_dec = true
+      batch.set_premium_and_service_fees(rank, group_remit, premium) # Determine premium based on rank and batch
+    when "GBLISS", "SIP"
+      batch.set_premium_and_service_fees(:principal, group_remit, premium) # GBLISS Plan
+    when "KOOPamilya"
+      batch.set_premium_and_service_fees(rank, group_remit, premium)
+    # when "SII"
+    #   batch.set_premium_and_service_fees(:principal, group_remit, premium, savings_amount)
     end
 
+    batch.valid_health_dec = true
   end
 
-  def self.determine_premium(rank, batch, group_remit)
-    batch.set_premium_and_service_fees(rank, group_remit)
-  end
+  # def self.determine_premium(rank, batch, group_remit)
+  #   batch.set_premium_and_service_fees(rank, group_remit, premium)
+  # end
 
   def self.expiry_and_today_month_diff(expiry_date)
     today = Date.today

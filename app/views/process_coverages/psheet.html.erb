@@ -1,0 +1,260 @@
+<%= wicked_pdf_stylesheet_link_tag "application" %>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+<div class="card">
+  <div class="card-body">
+    <div class="mb-5">
+      <%= content_tag :h1, "PROCESSING SHEET", class: "text-center fw-bold" %>
+    </div>
+
+     <!-- TOP PART -->
+    <div class="ms-5 mb-5">
+      <div class="row">
+
+        <div class="col-5">
+          <div class="row">
+            <div class="col-3">
+              <p class="text-uppercase">PS ID:</p>
+            </div>
+            <div class="col-6">
+              <p><b><%= @process_coverage.id %></b></p>
+            </div>
+          </div><br>
+          <div class="row">
+            <div class="col-3">
+              <p class="text-uppercase">PS Date:</p>
+            </div>
+            <div class="col-6">
+              <p><b><%= to_longdate(@process_coverage.created_at) %></b></p>
+            </div>
+          </div><br>
+        </div>
+        
+        <div class="col-2">
+        </div>
+
+        <div class="col-5">
+          <div class="row">
+            <div class="col-3">
+              <p class="text-uppercase">OR NO:</p>
+            </div>
+            <div class="col-6">
+              <p><b>22192</b></p>
+            </div>
+          </div> <br>
+          <div class="row">
+            <div class="col-3">
+              <p class="text-uppercase">OR Date:</p>
+            </div>
+            <div class="col-6">
+              <p><b>December 15, 2023</b></p>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <div class="row">
+        <div class="col-5">
+          <div class="row">
+            <div class="col-5">
+              <p class="text-uppercase">Cooperative:</p>
+            </div>
+            <div class="col-6">
+               <p><b><%= @process_coverage.group_remit.cooperative %></b></p>
+            </div>
+          </div><br>
+          <div class="row">
+            <div class="col-5">
+              <p class="text-uppercase">Address:</p>
+            </div>
+            <div class="col-6">
+               <p><b><%= @process_coverage.group_remit.cooperative.street %></b></p>
+            </div>
+          </div><br>
+          <div class="row">
+            <div class="col-5">
+              <p class="text-uppercase">Region:</p>
+            </div>
+            <div class="col-6">
+               <p><b><%= @process_coverage.group_remit.cooperative.geo_region %></b></p>
+            </div>
+          </div><br>
+        </div>
+
+        <div class="col-2"></div>
+        
+        <div class="col-5">
+          <div class="row">
+            <div class="col-3">
+              <p class="text-uppercase">Branch:</p>
+            </div>
+            <div class="col-6">
+               <p><b>Main Branch</b></p>
+            </div>
+          </div><br>
+          <div class="row">
+            <div class="col-3">
+              <p class="text-uppercase">Agent:</p>
+            </div>
+            <div class="col-6">
+               <p><b><%= @process_coverage.agent %></b></p>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-2">
+          <p class="text-uppercase">Insurance Plan:</p>
+        </div>
+        <div class="col">
+            <p><b><%= @process_coverage.group_remit.agreement.plan %> (<%= @process_coverage.group_remit.agreement.plan.acronym %>)</b></p>
+        </div>
+      </div>
+    </div>
+
+    <!-- TABLE COUNT -->
+    <div class="mb-5">
+      <table class="table table-bordered text-center">
+        <thead>
+          <th>Count</th>
+          <th>Amount of Coverage</th>
+          <th>Effectivity</th>
+          <th>Expiry</th>
+          <th>Premium Due</th>
+        </thead>
+        <tbody>          
+          <% effectivity = @process_coverage.effectivity.nil? ? @process_coverage.group_remit.batches.first.effectivity_date : @process_coverage.effectivity %>
+          <% expiry = @process_coverage.expiry.nil? ? @process_coverage.group_remit.batches.first.expiry_date : @process_coverage.expiry %>
+          <td><%= @process_coverage.group_remit.batches.count %></td>
+          <td><%= psheet_currency(@total_life_cov) %></td>
+          <td><%= effectivity.strftime("%m/%d/%Y") %></td>
+          <td><%= expiry.strftime("%m/%d/%Y") %></td>
+          <td><%= psheet_currency(@process_coverage.group_remit.sum_approved_batches_premium) %></td>
+        </tbody>
+      </table>
+    </div>
+  
+    <!-- DENIED TABLE  & SUMMARY-->
+    <div class="row mb-3">
+      <div class="col-4">
+        <table class="table table-bordered">
+          <thead>
+            <tr class="text-center">
+              <th colspan=3>DENIED MEMBER/S</th>
+            </tr>
+            <tr class="text-center">
+              <th>Coverage Count</th>
+              <th>Premium</th>
+              <th>Coverage</th>
+            </tr>
+          </thead>
+          <tbody>
+            <% denied_batches = @process_coverage.group_remit.batches.where(insurance_status: "denied") %>
+            <% total_denied_cov = ProductBenefit.joins(agreement_benefit: :batches).where("batches.id IN (?)", denied_batches.pluck(:id)).where("product_benefits.benefit_id = ?", 1).sum(:coverage_amount) %>
+            <tr class="text-center">
+              <td><%= @process_coverage.group_remit.batches.where(insurance_status: "denied").count %></td>
+              <td><%= psheet_currency(denied_batches.sum(:premium)) %></td>
+              <td><%= psheet_currency(total_denied_cov) %></td>
+            </tr>
+            <tr class="text-end">
+              <td colspan=3>
+                <div class="row">
+                  <div class="col-6">Service Fee:</div>
+                  <div class="col-2">0.00</div>
+                </div>
+                <div class="row">
+                  <div class="col-6">Total Denied Premium:</div>
+                  <div class="col-2">0.00</div>
+                </div>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="col-4"></div>
+      <div class="col-4">
+        <div class="row">
+          <div class="col-6">
+            <div>Premium Due</div>
+            <div>Unuse Premium</div>
+            <div>Less Service Fee</div>
+          </div>
+          <div class="col-4">
+            <div class="text-end">30,645.00</div>
+            <div class="text-end">0.00</div>
+            <div class="text-end">0.00</div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-6">
+            <div class="fw-bold fst-italic">Net Premium</div>
+          </div>
+          <div class="col-4">
+            <div class="text-end">30,645.00</div>
+          </div>
+        </div>
+        
+        <div class="row">
+          <div class="col-6">
+            <div>Premium Paid</div>
+            <div>Under Payment</div>
+            <div>Less Service Fee</div>
+          </div>
+          <div class="col-4">
+            <div class="text-end">30,645.00</div>
+            <div class="text-end">0.00</div>
+            <div class="text-end">0.00</div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-6">
+            <div class="fw-bold fst-italic">Net Under Payment</div>
+          </div>
+          <div class="col-4">
+            <div class="text-end">0.00</div>
+          </div>
+        </div>
+        
+      </div>
+    </div>
+
+    <!-- REMARKS BOX -->
+    <div class="row justify-content-center mb-5">
+      <div class="col-10 mx-auto">
+        <div class="card">
+          <div class="card-header">Remarks</div>
+          <div class="card-body">
+            
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- APPROVAL PART -->
+    <div class="underwriting">
+      <div class="row mb-5">
+        <div class="col-6 ps-5">
+          <div>
+            <span class="text-uppercase">Processed by:</span>
+          </div>
+          <span class="text-uppercase fw-bold fst-italic"><%= @process_coverage.who_processed.signed_fullname %></span>
+          <div>
+          <span class="text-uppercase"><%= @process_coverage.who_processed.designation %></span>
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-6 ps-5">
+          <div>
+            <span class="text-uppercase">Approved by:</span>
+          </div>
+          <span class="text-uppercase fw-bold fst-italic"><%= @process_coverage.who_approved.signed_fullname %></span>
+          <div>
+          <span class="text-uppercase"><%= @process_coverage.who_approved.designation %></span>
+          </div>
+        </div>
+      </div>  
+    </div>
+
+  </div>
+</div>

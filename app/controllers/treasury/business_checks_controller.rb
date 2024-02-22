@@ -10,7 +10,7 @@ class Treasury::BusinessChecksController < ApplicationController
   end
 
   def requests
-    @vouchers = Accounting::Check.where(status: :posted).where.missing(:business_checks)
+    @vouchers = Accounting::Check.where(status: :posted, claimable: false, audit: :approved).order(created_at: :desc)
 
     @pagy, @vouchers = pagy(@vouchers, items: 10)
   end

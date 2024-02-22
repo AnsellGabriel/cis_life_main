@@ -22,11 +22,9 @@ class GroupRemitsController < InheritedResources::Base
 
   def submit
     if @group_remit.batches.empty?
-      respond_to do |format|
-        format.html { redirect_to coop_agreement_group_remit_path(@group_remit.agreement, @group_remit), alert: "Unable to submit empty remittance!" }
-      end
-
-      return
+      return redirect_to coop_agreement_group_remit_path(@group_remit.agreement, @group_remit), alert: "Unable to submit an empty lisy!"
+    elsif @group_remit.mis_entry? && @group_remit.official_receipt.blank?
+      return redirect_to coop_agreement_group_remit_path(@group_remit.agreement, @group_remit), alert: "Please enter the official receipt number!"
     end
 
     # if @group_remit.batches_all_renewal?
@@ -36,25 +34,29 @@ class GroupRemitsController < InheritedResources::Base
     #   @group_remit.set_under_review_status
     # end
 
-    @group_remit.set_under_review_status
-    @group_remit.date_submitted = Date.today
+    begin
+      ActiveRecord::Base.transaction do
+        # Your transactional code here
+        @group_remit.set_under_review_status
+        @group_remit.date_submitted = Date.today
+        @group_remit.save!
 
-    respond_to do |format|
-      if @group_remit.save!
-        create_process_coverage(@group_remit) # @process_coverage
-        # raise 'errors'
-        if @process_coverage.save
-          format.html { redirect_to coop_agreement_group_remit_path(@group_remit.agreement, @group_remit), notice: "Group remit submitted" }
-        else
-          format.html { redirect_to coop_agreement_group_remit_path(@group_remit.agreement, @group_remit), alert: "Process Coverage not created!" }
-          @group_remit.status = :pending
-          @group_remit.save!
+        create_process_coverage(@group_remit)
+        @process_coverage.save!
+
+        respond_to do |format|
+          format.html { redirect_to coop_agreement_group_remit_path(@group_remit.agreement, @group_remit), notice: "Enrollment list submitted" }
         end
-
-      else
-        format.html { redirect_to coop_agreement_group_remit_path(@group_remit.agreement, @group_remit), alert: "Please see members below and complete the necessary details." }
+      end
+    rescue StandardError => e
+      # Handle the exception here
+      respond_to do |format|
+        format.html { redirect_to coop_agreement_group_remit_path(@group_remit.agreement, @group_remit), alert: "Unable to submit the list. No assigned underwriting analyst. Please contact the administrator" }
       end
     end
+
+
+
   end
 
   def index
@@ -70,15 +72,26 @@ class GroupRemitsController < InheritedResources::Base
 
   def new
     @agreement = Agreement.find_by(id: params[:agreement_id])
-    @group_remit = @agreement.group_remits.build(
-      name: FFaker::Company.name,
-      description: FFaker::Lorem.paragraph,
-      agreement_id: 1,
-      anniversary_id: 1)
+    # @group_remit = @agreement.group_remits.build(
+    #   name: FFaker::Company.name,
+    #   description: FFaker::Lorem.paragraph,
+    #   agreement_id: 1,
+    #   anniversary_id: 1)
+    @group_remit = @agreement.group_remits.build
   end
 
   def create
     @agreement = Agreement.find_by(id: params[:agreement_id])
+
+    if params[:anniversary_id].present?
+      pending_remittance = @agreement.group_remits.pending.remittances.where(anniversary_id: params[:anniversary_id]).last
+    else
+      pending_remittance = @agreement.group_remits.pending.remittances.last
+    end
+
+    if pending_remittance.present?
+      return redirect_to coop_agreement_group_remit_path(@agreement, pending_remittance), alert: "Please complete the pending list first."
+    end
 
     @group_remit = @agreement.group_remits.build(type: "Remittance")
     anniversary_date = set_anniversary(@agreement.anniversary_type, params[:anniversary_id])
@@ -100,6 +113,10 @@ class GroupRemitsController < InheritedResources::Base
           @group_remit.update!(batch_remit_id: params[:batch_remit_id])
         end
 
+        if current_user.is_mis?
+          @group_remit.update!(mis_entry: true)
+        end
+
         format.html { redirect_to coop_agreement_group_remit_path(@agreement, @group_remit), notice: "Group remit was successfully created." }
       else
         format.html { render :new, status: :unprocessable_entity }
@@ -114,7 +131,7 @@ class GroupRemitsController < InheritedResources::Base
   def update
     respond_to do |format|
       if @group_remit.update(group_remit_params)
-        format.html { redirect_to @group_remit, notice: "Group remit was successfully updated." }
+        format.html { redirect_to @group_remit, notice: "Official receipt number updated" }
       else
         format.html { render :edit, status: :unprocessable_entity }
       end
@@ -142,7 +159,7 @@ class GroupRemitsController < InheritedResources::Base
   end
 
   def group_remit_params
-    params.require(:group_remit).permit(:name, :description, :agreement_id, :anniversary_id,
+    params.require(:group_remit).permit(:official_receipt, :name, :description, :agreement_id, :anniversary_id,
       process_coverage_attributes: [:group_remit_id, :effectivity, :expiry], payments_attributes: [:id, :receipt, :_destroy] )
   end
 

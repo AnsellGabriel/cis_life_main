@@ -12,12 +12,18 @@ class ClaimAttachmentsController < ApplicationController
 
   def create
     @process_claim = ProcessClaim.find(params[:v])
+
+    # redirect if file is empty
+    if params[:claim_attachment][:doc].blank?
+      return redirect_to show_coop_process_claim_path(@process_claim.id) , alert: "No file uploaded."
+    end
+
     @claim_attachment = @process_claim.claim_attachments.build(claim_attachment_params)
     # @claim_benefit = ClaimBenefit.new(claim_benefit_params)
     respond_to do |format|
       # raise 'errors'
       if @claim_attachment.save
-        format.html { redirect_to show_coop_process_claim_path(@process_claim.id) , notice: "Benefit claim was successfully created." }
+        format.html { redirect_to show_coop_process_claim_path(@process_claim.id) , notice: "Document uploaded" }
         format.json { render :show, status: :created, location: @claim_benefit }
       else
         format.html { render :new, status: :unprocessable_entity }
@@ -34,7 +40,7 @@ class ClaimAttachmentsController < ApplicationController
     @claim_attachment.destroy
 
     respond_to do |format|
-      format.html { redirect_to show_coop_process_claim_path(@process_claim), notice: "Claim benefit was successfully destroyed." }
+      format.html { redirect_to show_coop_process_claim_path(@process_claim), notice: "Document removed" }
       format.json { head :no_content }
     end
   end

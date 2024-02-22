@@ -1,6 +1,8 @@
 class CoopBranch < ApplicationRecord
   before_save :to_upcase
 
+  validates_presence_of :name
+
   has_many :coop_users
   has_many :coop_members
   belongs_to :cooperative
@@ -25,5 +27,13 @@ class CoopBranch < ApplicationRecord
 
   def to_upcase
     name.upcase
+  end
+
+  def self.ransackable_attributes(auth_object = nil)
+    %w[name] + _ransackers.keys
+  end
+
+  def self.ransackable_associations(auth_object = nil)
+    %w[cooperative] + _ransackers.keys
   end
 end

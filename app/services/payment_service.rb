@@ -1,7 +1,8 @@
 class PaymentService
-  def initialize(payment, current_user)
+  def initialize(payment, current_user, entry)
     @payment = payment
     @current_user = current_user
+    @entry = entry
   end
 
   def post_payment
@@ -22,6 +23,8 @@ class PaymentService
         group_remit.update_batch_remit
         group_remit.update_batch_coverages
       end
+
+      group_remit.update(official_receipt: @entry.or_no)
     end
 
     "Payment posted."

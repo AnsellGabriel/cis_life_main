@@ -1,4 +1,4 @@
 example_id                                    | status | run_time        |
 --------------------------------------------- | ------ | --------------- |
-./spec/models/general_ledger_spec.rb[1:1:1:1] | passed | 0.16147 seconds |
-./spec/models/general_ledger_spec.rb[1:1:2:1] | passed | 0.02035 seconds |
+./spec/models/general_ledger_spec.rb[1:1:1:1] | failed | 0.3823 seconds  |
+./spec/models/general_ledger_spec.rb[1:1:2:1] | failed | 0.03916 seconds |

@@ -13,6 +13,14 @@ class PlansController < InheritedResources::Base
     end
   end
 
+  def show_rates
+    @plan = Plan.find_by(id: params[:id])
+        
+    respond_to do |format|
+      format.turbo_stream
+    end
+  end
+
   private
 
   def plan_params

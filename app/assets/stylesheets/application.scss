@@ -16,6 +16,11 @@
 
 @import "bootstrap";
 
+.row {
+  display: -webkit-box;
+}
+
+
 abbr[title="required"] {
   display: none;
 }
@@ -50,8 +55,10 @@ input::placeholder {
 }
 
 .modal-front {
-  z-index: 1001; /* Adjust the value as needed */
+  z-index: 1001;
+  /* Adjust the value as needed */
 }
+
 // input[type="submit"],
 // button,
 // .btn .btn-success {
@@ -64,7 +71,8 @@ input::placeholder {
 //     line-height: 1.5 !important;
 // }
 
-input[type=checkbox]:hover, input[type="date"]:hover {
+input[type=checkbox]:hover,
+input[type="date"]:hover {
   cursor: pointer;
 }
 
@@ -87,7 +95,7 @@ input[type="number"]::-webkit-outer-spin-button {
   margin: 0;
 }
 
- svg.ss-arrow {
+svg.ss-arrow {
   display: none !important;
 }
 
@@ -101,18 +109,18 @@ input[type="number"]::-webkit-outer-spin-button {
 }
 
 .sm-green-text {
-  font-size: .7rem; 
-  color: var(--bs-green) !important; 
+  font-size: .7rem;
+  color: var(--bs-green) !important;
   font-weight: 700;
 }
 
 .sm-red-text {
-  font-size: .7rem; 
-  color: var(--bs-red) !important; 
+  font-size: .7rem;
+  color: var(--bs-red) !important;
 }
 
 .lg-card {
-  height:  70vh;
+  height: 70vh;
 }
 
 .hovered-link:hover {
@@ -234,38 +242,41 @@ ul.row-sm {
 
 
 ul.timeline {
-    list-style-type: none;
-    position: relative;
+  list-style-type: none;
+  position: relative;
 }
+
 ul.timeline:before {
-    content: ' ';
-    background: #d4d9df;
-    display: inline-block;
-    position: absolute;
-    left: 29px;
-    width: 2px;
-    height: 100%;
-    z-index: 400;
+  content: ' ';
+  background: #d4d9df;
+  display: inline-block;
+  position: absolute;
+  left: 29px;
+  width: 2px;
+  height: 100%;
+  z-index: 400;
 }
-ul.timeline > li {
-    // margin: 25px 0;
-    padding-left: 25px;
+
+ul.timeline>li {
+  // margin: 25px 0;
+  padding-left: 25px;
 }
-ul.timeline > li:before {
-    content: ' ';
-    background: #226cff;
-    display: inline-block;
-    position: absolute;
-    border-radius: 50%;
-    //  border: 3px solid #226cff;
-    left: 22px;
-    width: 15px;
-    height: 15px;
-    z-index: 400;
+
+ul.timeline>li:before {
+  content: ' ';
+  background: #226cff;
+  display: inline-block;
+  position: absolute;
+  border-radius: 50%;
+  //  border: 3px solid #226cff;
+  left: 22px;
+  width: 15px;
+  height: 15px;
+  z-index: 400;
 }
 
 .centered {
-  text-align: center; 
+  text-align: center;
   vertical-align: middle;
   font-size: .9rem;
 }
@@ -274,4 +285,18 @@ ul.timeline > li:before {
 // pagy css
 .pagination {
   margin-bottom: 0;
+}
+
+
+// ts--select
+.ts-wrapper {
+  height: 38px !important;
+}
+
+.ts-control {
+  height: 26px !important;
+  display: flex;
+  padding: 4px 4px !important;
+
+
 }

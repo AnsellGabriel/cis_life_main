@@ -4,47 +4,60 @@
 <div id="<%= dom_id(agreement) %>" class="row <%= flex_justify_align('between') %>">
   <% agreement_presenter = AgreementPresenter.new(agreement) %>
 
-  <div class="<%= flex_justify_align('', 'center', true) %> gap-3">
+  <div class="<%= flex_justify_align('', 'center') %> gap-3 flex-wrap">
     <% agreement.group_remits.where(type: 'BatchRemit').decorate.each do |batch_remit| %>
-      <div class="card">
-        <div class="card-body d-flex flex-column" style="width: 400px">
+      <%= link_to coop_agreement_group_remit_path(@agreement, batch_remit), 
+        data: { turbo: false } do 
+      %>
+        <div class="card mb-0" style="min-height: 220px;">
+          <div class="card-body d-flex flex-column" style="width: 400px">
 
-          <% if batch_remit.remaining_days <= 90 && batch_remit.remaining_days > 0 %>
-            <div class="">
-              <span class="<%= badge("#{batch_remit.countdown_color}") %>">
-                  Expiry : <%= batch_remit.remaining_days %> days
-              </span>
+            <div class="mb-1 <%= flex_justify_align('between', 'center') %>">
+              <%= content_tag :span, "#{batch_remit.name}", class: 'mb-1 text-primary' %>
+              <div class="<%= flex_justify_align('','center') %> gap-1">
+                <span class="<%= batch_remit.status_badge %>">
+                  <% case batch_remit.status %>
+                  <% when "paid" %>
+                    Active
+                  <% when "pending" %>
+                    Inactive
+                  <% else %>
+                    <%= batch_remit.status_text %>
+                  <% end %>
+                </span>
+              </div>
+              <!--
+              <div class="">
+                <%= link_to coop_agreement_group_remit_path(@agreement, batch_remit), 
+                  class: small_btn('primary'), 
+                  data: { turbo: false } 
+                %>
+                <%= link_to 'Remittances', '#',
+                  class: small_btn('outline-warning'),
+                  data: { action: "click->toggler#toggle click->parent#toggleChildren", id: "history-#{batch_remit.id}" }
+                %>
+              </div>
+              -->
             </div>
-          <% end %>
+            <%= render 'submitted_field', group_remit: batch_remit %>
 
-          <div class="mb-1 <%= flex_justify_align('between', 'center') %>">
-            <div class="<%= flex_justify_align('','center') %> gap-1">
-              <span class="<%= batch_remit.status_badge %>">
-                <%= batch_remit.status_text %>
-              </span>
-            </div>
-            <div class="">
-              <%= link_to 'View Batch', coop_agreement_group_remit_path(@agreement, batch_remit), 
-                class: small_btn('primary'), 
-                data: { turbo: false } 
-              %>
-              <%= link_to 'Remittances', '#',
-                class: small_btn('outline-warning'),
-                data: { action: "click->toggler#toggle click->parent#toggleChildren", id: "history-#{batch_remit.id}" }
-              %>
-            </div>
+            <% if batch_remit.remaining_days <= 90 && batch_remit.remaining_days > 0 %>
+              <div class="mt-3">
+                <span class="<%= badge("#{batch_remit.countdown_color}") %>">
+                    <%= "Expiring in  #{batch_remit.remaining_days} day#{batch_remit.remaining_days == 1 ? '' : 's'}" %>
+                </span>
+              </div>
+            <% end %>
           </div>
-          <%= content_tag :span, "#{batch_remit.name}", class: 'mb-1 text-primary' %>
-          <%= render 'submitted_field', group_remit: batch_remit %>
         </div>
-      </div>
+      <% end %>
     <% end %>
 
     <% if anniv == 'multiple' %>
       <% sorted_annivs = @filtered_anniversaries.sort_by(&:anniversary_date) %>
 
       <% sorted_annivs.each do |anniv| %>
-        <div class="card">
+        <div class="card mb-0">
           <div class="card-body d-flex flex-column" style="width: 400px">
             <%= render 'agreement_field', 
               name: 'Anniversary Date', 
@@ -52,7 +65,7 @@
               margin: ''
             %>            
             <div class="mt-4 text-center">
-              <%= button_to "New Batch", group_remits_path, 
+              <%= button_to "Enroll Members", group_remits_path, 
                 method: :post, 
                 params: { 
                   agreement_id: agreement.id, 

@@ -15,6 +15,7 @@ class ApplicationController < ActionController::Base
       else
         case current_user.userable.department_id
         when 26 then redirect_to treasury_dashboard_path
+        when 27 then redirect_to audit_dashboard_path
         when 11 then redirect_to accounting_dashboard_path
         when 17, 13 then redirect_to process_coverages_path
         when 15 then redirect_to mis_dashboard_path
@@ -30,16 +31,17 @@ class ApplicationController < ActionController::Base
   private
 
   def set_cooperative
-    if current_user && current_user.userable_type == "CoopUser"
-      session[:c_id] ||= current_user.userable.cooperative_id
-      @cooperative ||= Cooperative.find_by(id: session[:c_id])
-    elsif params[:c_id]
-      session[:c_id] = params[:c_id]
-      @cooperative = Cooperative.find_by(id: session[:c_id])
-    else
-      @cooperative = Cooperative.find_by(id: session[:c_id])
+    if current_user
+      if current_user.userable_type == "CoopUser"
+        session[:c_id] ||= current_user.userable.cooperative_id
+        @cooperative ||= Cooperative.find_by(id: session[:c_id])
+      elsif params[:c_id]
+        session[:c_id] = params[:c_id]
+        @cooperative = Cooperative.find_by(id: session[:c_id])
+      else
+        @cooperative = Cooperative.find_by(id: session[:c_id])
+      end
     end
-
   end
 
   def set_authority_level
@@ -58,6 +60,12 @@ class ApplicationController < ActionController::Base
 
   def set_retention_limit
     @retention_limit = LoanInsurance::Retention.find_by(active: true).amount
+  end
+
+  def check_agent
+    unless current_user.userable_type == "Agent"
+      render file: "#{Rails.root}/public/404.html", status: :not_found
+    end
   end
 
   # def set_retention_limit

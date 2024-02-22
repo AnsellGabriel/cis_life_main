@@ -9,13 +9,11 @@ class BatchImportService
     @gyrt_plans = ["GYRT", "GYRTF"]
     @gyrt_ranking_plans = ["GYRTBR", "GYRTFR"]
     @gyrt_family_plans = ["GYRTF", "GYRTFR"]
-    @special_term_insurance = ["PMFC"]
 
-    @principal_headers = ["First Name", "Middle Name", "Last Name", "Birthdate"]
-    @dependent_headers = ["Member First Name", "Member Middle Name", "Member Last Name", "Member Birthdate", "Dependent First Name", "Dependent Middle Name", "Dependent Last Name", "Relationship",
+    @principal_headers = ["First Name", "Last Name", "Birthdate"]
+    @dependent_headers = ["Member First Name", "Member Last Name", "Member Birthdate", "Dependent First Name", "Dependent Last Name", "Relationship",
 "Beneficiary?"]
 
-    # @principal_headers << "Terms" if @special_term_insurance.include?(@agreement.plan.acronym)
     @principal_headers << "Rank" if @gyrt_ranking_plans.include?(@agreement.plan.acronym)
     @dependent_headers << "Dependent?" if @agreement.plan.dependable?
 
@@ -48,7 +46,8 @@ class BatchImportService
     missing_dependent_headers = check_missing_headers("DEPENDENT", @dependent_headers, dependent_headers)
     return missing_dependent_headers if missing_dependent_headers
 
-    available_member_list = @cooperative.unselected_coop_members(@agreement.group_remits.joins(:batches).pluck(:coop_member_id))
+    covered_members = @agreement.group_remits.joins(:batches)
+    available_member_list = @cooperative.unselected_coop_members(covered_members.pluck(:coop_member_id))
 
     total_members = principal_spreadsheet.drop(1).count + dependent_spreadsheet.drop(1).count
     progress_counter = 0
@@ -56,6 +55,7 @@ class BatchImportService
     principal_spreadsheet.drop(1).each do |row|
       batch_hash = extract_batch_data(row)
       member = find_or_initialize_member(batch_hash)
+      coop_member = @cooperative.coop_members.find_by(member_id: member.id)
 
       unless member.persisted?
         create_denied_member(member, "Unenrolled member.")
@@ -63,13 +63,12 @@ class BatchImportService
         update_progress(total_members, progress_counter)
         next
       end
-
-      coop_member = @cooperative.coop_members.find_by(member_id: member.id)
       # checks if member is already in another group remit/batch remit
       without_coverage_member = available_member_list.find_by(id: coop_member.id)
 
       if without_coverage_member.nil?
-        create_denied_member(member, "Member already exist in other batch or remittance")
+        previous_group_remit = @agreement.group_remits.joins(batches: :coop_member).where(coop_members: {id: coop_member.id}).order(effectivity_date: :desc).first
+        create_denied_member(member, "Member already exist in other batch or list: #{previous_group_remit.name}")
         progress_counter += 1
         update_progress(total_members, progress_counter)
         next
@@ -97,7 +96,7 @@ class BatchImportService
 
       if duplicate_member
         # add_duplicate_member(member)
-        create_denied_member(member, "Member already exist in the batch.")
+        create_denied_member(member, "Member already exist in the list.")
         progress_counter += 1
         update_progress(total_members, progress_counter)
         next
@@ -130,7 +129,8 @@ class BatchImportService
         birth_date: row["Dependent Birthdate"],
         relationship: row["Relationship"].to_s.upcase.strip,
         beneficiary: row["Beneficiary?"],
-        dependent: row["Dependent?"]
+        dependent: row["Dependent?"],
+        premium: mis_user? && row["Premium"].present? ? row["Premium"].to_f : nil
       }
 
       unless member.persisted?
@@ -196,8 +196,7 @@ true)
           next
         end
 
-        term_insurance = @agreement.plan.acronym == "PMFC" ? true : false
-        batch_dependent.set_premium_and_service_fees(dependent_agreement_benefits, @group_remit, term_insurance)
+        batch_dependent.set_premium_and_service_fees(dependent_agreement_benefits, @group_remit, mis_user? ?dependent_hash[:premium] : nil)
 
         if batch_dependent.save!
           increment_dependents_counter
@@ -208,9 +207,9 @@ true)
           batch_dependent.insurance_status = :denied
 
           if dependent.age > batch_dependent.agreement_benefit.max_age
-            batch_dependent.batch_remarks.build(remark: "Dependent age is over the maximum age limit of the plan.", status: :denied, user_type: "CoopUser", user_id: @current_user.userable.id)
+            batch_dependent.batch_remarks.build(remark: "Dependent age is over the maximum age limit of the plan.", status: :denied, user_type: @current_user.userable_type, user_id: @current_user.userable.id)
           else
-            batch_dependent.batch_remarks.build(remark: "Dependent age is below the minimum age limit of the plan.", status: :denied, user_type: "CoopUser", user_id: @current_user.userable.id)
+            batch_dependent.batch_remarks.build(remark: "Dependent age is below the minimum age limit of the plan.", status: :denied, user_type: @current_user.userable_type, user_id: @current_user.userable.id)
           end
 
           batch_dependent.save!
@@ -304,7 +303,8 @@ true)
       suffix: row["Suffix"].to_s.squish.upcase,
       birth_date: row["Birthdate"],
       rank: row["Rank"].to_s.present? ? row["Rank"].to_s.squish.upcase : nil,
-      terms: row["Terms"].to_i.present? ? row["Terms"].to_i : nil
+      terms: row["Terms"].to_i.present? ? row["Terms"].to_i : nil,
+      premium: row["Premium"].to_f.present? && mis_user? ? row["Premium"].to_f : nil,
     }
   end
 
@@ -312,7 +312,7 @@ true)
     @cooperative.members.find_or_initialize_by(
       first_name: batch_hash[:first_name],
       last_name: batch_hash[:last_name],
-      middle_name: batch_hash[:middle_name],
+      # middle_name: batch_hash[:middle_name],
       birth_date: batch_hash[:birth_date]
     )
   end
@@ -346,7 +346,7 @@ true)
       new_batch,
       @group_remit,
       b_rank,
-      @group_remit.terms
+      mis_user? ? batch_hash[:premium] : nil
     )
 
     if member.age(@group_remit.effectivity_date) < new_batch.agreement_benefit.min_age or member.age(@group_remit.effectivity_date) > new_batch.agreement_benefit.max_age
@@ -379,5 +379,9 @@ true)
     end
 
     nil
+  end
+
+  def mis_user?
+    @current_user.userable_type == "Employee" && @current_user.userable.department_id == 15
   end
 end

@@ -19,7 +19,7 @@ class Member < ApplicationRecord
   belongs_to :geo_municipality, optional: true
   belongs_to :geo_barangay, optional: true
 
-  validates_presence_of :last_name, :first_name, :middle_name, :birth_date, :gender#, :civil_status
+  validates_presence_of :last_name, :first_name, :birth_date
   # validates :email, format: { with: URI::MailTo::EMAIL_REGEXP }
   # belongs_to :coop_branch
 
@@ -62,7 +62,7 @@ class Member < ApplicationRecord
   end
 
   def full_name
-    "#{last_name.capitalize} #{suffix}, #{first_name.capitalize} #{middle_name.capitalize.chr}."
+    "#{last_name}, #{first_name} #{middle_name} #{suffix if suffix.present?}"
   end
 
   def self.get_ri(date_from, date_to)
@@ -86,27 +86,34 @@ class Member < ApplicationRecord
           # ri.batches << batch
           ri_batch = ReinsuranceBatch.find_or_initialize_by(reinsurance_member: ri, batch: batch)
           ri_batch.ri_date = ri_date
+
           if ri.reinsurance.date_from < ri_batch.batch.effectivity_date
             ri_batch.ri_effectivity = ri_batch.batch.effectivity_date.beginning_of_month
           else
             ri_batch.ri_effectivity = ri_start
           end
-          ri_batch.ri_expiry = ri_end
-          ri_batch.ri_terms = ((ri_batch.ri_expiry - ri_batch.ri_effectivity) / 30).to_i
+          if ri_batch.batch.expiry_date < ri.reinsurance.date_to
+            ri_batch.ri_expiry = ri_batch.batch.expiry_date
+          else
+            ri_batch.ri_expiry = ri_end
+          end
+
+          # ri_batch.ri_terms = ((ri_batch.ri_expiry - ri_batch.ri_effectivity) / 30).to_i
+          ri_batch.ri_terms = ((ri_batch.ri_expiry - ri_batch.ri_effectivity) / 30).round
           ri_batch.save!
 
         end
       end
     end
 
-    
+
 
     # self.coop_members.each do |cm|
-            
+
     #   # self.joins(:coop_member).each do |cm|
     #   total = cm.loan_batches.where("(loan_insurance_batches.effectivity_date <= ? and loan_insurance_batches.expiry_date >= ?) OR (loan_insurance_batches.effectivity_date <= ? and loan_insurance_batches.expiry_date >= ?)", ri_start, ri_start, ri_end, ri_end).sum(:loan_amount)
     #   # total += cm.loan_batches.where("(effectivity_date <= ? and expiry_date >= ?) OR (effectivity_date <= ? and expiry_date >= ?)", ri_start, ri_start, ri_end, ri_end).sum(:loan_amount)
-    #   if total >= retention  
+    #   if total >= retention
     #     cm.loan_batches.where("(effectivity_date <= ? and expiry_date >= ?) OR (effectivity_date <= ? and expiry_date >= ?)", ri_start, ri_start, ri_end, ri_end).each do |batch|
     #     # cm.loan_batches.joins(:member).where("(effectivity_date <= ? and expiry_date >= ?) OR (effectivity_date <= ? and expiry_date >= ?)", ri_start, ri_start, ri_end, ri_end).where(member: self).each do |batch|
     #       ri_date = batch.reinsurance_batches.find_by(batch: batch).nil? ? ri.reinsurance.date_from : batch.reinsurance_batches.find_by(batch: batch).ri_date
@@ -155,12 +162,12 @@ class Member < ApplicationRecord
   end
 
   def uppercase_fields
-    self.last_name = self.last_name == nil ? "" : self.last_name.strip.upcase
-    self.first_name = self.first_name == nil ? "" : self.first_name.strip.upcase
-    self.middle_name = self.middle_name == nil ? "" : self.middle_name.strip.upcase
-    self.suffix = self.suffix == nil ? "" : self.suffix.strip.upcase
-    self.civil_status = self.civil_status.strip.upcase
-    self.gender = self.gender.strip.upcase
+    self.last_name = self.last_name ? self.last_name.strip.upcase : ''
+    self.first_name = self.first_name ? self.first_name.strip.upcase : ''
+    self.middle_name = self.middle_name ? self.middle_name.strip.upcase : ''
+    self.suffix = self.suffix ? self.suffix.strip.upcase : ''
+    self.civil_status = self.civil_status ? self.civil_status.strip.upcase : ''
+    self.gender = self.gender ? self.gender.strip.upcase : ''
   end
 
   def self.coop_member_details(coop_members)

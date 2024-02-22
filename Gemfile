@@ -12,7 +12,7 @@ gem "sprockets-rails"
 
 # Use mysql2 as the database for Active Record
 # gem "mysql2", "~> 0.5"
-gem "mysql2", "~> 0.5"
+gem 'mysql2', '~> 0.5.5'
 
 
 # Use the Puma web server [https://github.com/puma/puma]
@@ -110,7 +110,7 @@ end
 gem "store_base_sti_class"
 
 
-gem "capistrano", "~> 3.11"
+gem "capistrano", "3.17.3"
 gem "capistrano-rails", "~> 1.4"
 gem "capistrano-passenger", "~> 0.2.0"
 gem "capistrano-rbenv", "~> 2.1", ">= 2.1.4"
@@ -144,3 +144,8 @@ gem "chartkick"
 
 # gem for sending emails
 gem 'postmark-rails'
+
+# gem for pdf generation
+gem 'wicked_pdf'
+gem 'wkhtmltopdf-binary'
+

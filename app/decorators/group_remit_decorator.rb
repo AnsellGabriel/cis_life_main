@@ -61,17 +61,24 @@ class GroupRemitDecorator < Draper::Decorator
   end
 
   def status_color
-    if object.pending? || object.for_renewal? || object.under_review?
+    if object.pending? || object.for_renewal? || object.under_review? || object.for_payment?
       "var(--bs-yellow)"
-    elsif object.active?
+    elsif object.paid?
       "var(--bs-green)"
     elsif object.expired?
       "var(--bs-red)"
-    elsif object.for_payment?
-      "var(--bs-blue)"
     end
   end
 
+  def refund_badge
+    if object.not_refunded?
+      "badge bg-danger"
+    elsif object.refunded?
+      "badge bg-success"
+    else
+      "badge bg-warning text-dark"
+    end
+  end
 
 
   def link_to_show
@@ -85,15 +92,18 @@ class GroupRemitDecorator < Draper::Decorator
 
   def status_badge
     case object.status
-       when "pending", "for_renewal", "under_review" then "badge bg-warning text-dark"
+       when "pending", "for_renewal", "under_review", "for_payment", "payment_verification", "reupload_payment" then "badge bg-warning text-dark"
        when "expired", "with_pending_members" then "badge bg-danger"
-       when "for_payment", "payment_verification", "paid" then "badge bg-primary"
-       when "reupload_payment" then "badge bg-warning text-dark"
+       when "paid" then "badge bg-success"
     end
    end
 
   def status_text
     object.status.titleize
+  end
+
+  def refund_text
+    object.refund_status.titleize
   end
 
   def status_mappings
@@ -110,6 +120,6 @@ class GroupRemitDecorator < Draper::Decorator
    end
 
   def complete_health_decs?
-    object.batches.where(status: :recent).where.missing(:batch_health_decs).empty?
+    object.batches.where(status: [:recent, :reinstated]).where.missing(:batch_health_decs).where.not(loan_amount: 0..agreement.nel).empty? || object.mis_entry?
    end
 end

@@ -1,5 +1,7 @@
 @import "bootstrap";
-html, body {
+
+html,
+body {
     height: 100%;
     font-family: 'Roboto', sans-serif;
     background: linear-gradient(60deg, rgb(226, 228, 231) 0%, rgb(230, 233, 223) 0%, rgb(241, 244, 244) 100%);
@@ -13,6 +15,10 @@ html, body {
 
 .card {
     margin-bottom: 10px;
+}
+
+.row {
+    display: -webkit-box;
 }
 
 

@@ -1,0 +1,28 @@
+<div class="col-md-6">
+  <div class="nested-fields mb-3">
+    <%# .nested_fields %>
+    <div class="card">
+      <div class="card-body">
+        <div class="row">
+          <%= f.input :min_age, wrapper_html: { class: "col-md-6" }  %>
+          <%= f.input :max_age, wrapper_html: { class: "col-md-6" } %>
+        </div>
+        <div class="row">
+          <%= f.input :monthly_rate, wrapper_html: { class: "col-md-6"} %>
+          <%= f.input :annual_rate, wrapper_html: { class: "col-md-6" } %>
+        </div>
+        <div class="row">
+          <%= f.input :min_amount, wrapper_html: { class: "col-md-6" } %>
+          <%= f.input :max_amount, wrapper_html: { class: "col-md-6" } %>
+        </div>
+        <div class="row">
+          <%= f.input :coop_sf, wrapper_html: { class: "col-md-6" } %>
+          <%= f.input :agent_sf, wrapper_html: { class: "col-md-6" } %>
+        </div>
+      </div>
+      <div class="card-footer">
+        <%= link_to_remove_association "Delete", f, class: "btn btn-sm btn-danger" %>
+      </div>
+    </div>
+  </div>
+</div>
