@@ -257,7 +257,7 @@ only: %i[ show edit update destroy approve_batch deny_batch pending_batch recons
   # GET /process_coverages/1
   def show
     @plan = @process_coverage.get_plan
-    if @plan.acronym == "LPPI"
+    if ["LPPI","SII"].include?(@plan.acronym)
       @batches_o = @process_coverage.group_remit.batches
       if params[:search].present?
         @batches = case params[:search]
@@ -284,7 +284,7 @@ only: %i[ show edit update destroy approve_batch deny_batch pending_batch recons
 
       @total_net_prem = @process_coverage.sum_batches_net_premium
 
-    elsif ["GYRT","GYRTF","GYRTBR","GYRTFR", "GBLISS"].include?(@plan.acronym)
+    elsif ["GYRT","GYRTF","GYRTBR","GYRTFR","GBLISS","SIP","KOOPAMILYA"].include?(@plan.acronym)
 
       @insured_types = @process_coverage.group_remit.agreement.agreement_benefits.insured_types.symbolize_keys.values
       @insured_types2 = @process_coverage.group_remit.agreement.agreement_benefits

@@ -31,6 +31,8 @@
                 <% case a.plan.acronym %>
                 <% when 'LPPI' %>
                   <%= link_to "LPPI", loan_insurance_group_remits_path, class: "dropdown-item" %>
+                <% when "SII" %>
+                  <%= link_to "SII", sii_index_loan_insurance_group_remits_path(p: "sii"), class: "dropdown-item" %>
                 <% else %>
                   <%#= link_to "GYRT", coop_agreement_path(a), class: "dropdown-item" %>
                   <%= link_to a.plan.acronym, coop_agreement_path(a), class: "dropdown-item" %>
@@ -45,6 +47,11 @@
                   <%= @cooperative.notifications.unread.size < 100 ? @cooperative.notifications.unread.size : '99+'%>
                 </span>
               <% end %>
+            <% end %>
+
+          <% elsif agent_user?(current_user) %>
+            <%= render 'layouts/partials/nav_dropdown', title: "Agent" do %>
+              <%= link_to "Group Proposals", group_proposals_path, class: "dropdown-item" %>
             <% end %>
 
           <% else %>

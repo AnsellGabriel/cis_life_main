@@ -5,7 +5,7 @@
     <%= f.association :cooperative, input_html: { data: { controller: "ts--select" } }  %>
     <div class="row">
       <%= f.association :plan, wrapper_html: { class: "col-md-4" }, input_html: { id: "plan_id", data: { action: "change->plan-agree#toggleTargets", plan_agree_target: "planSelect" } } %>
-      <%= f.association :agent, wrapper_html: {class: "col-md-4" }  %>
+      <%= f.association :agent, wrapper_html: {class: "col-md-4" } %>
       <%= f.input :moa_no, label: "MOA", wrapper_html: {class: "col-md-4" } %>
     </div>
     <div class="row">
@@ -67,7 +67,23 @@
           <% end %>
         </div>
       </div>
-      <%= link_to_add_association "Add Rate", f, :loan_rates, data: {association_insertion_node: '.loan_rates', association_insertion_method: :append}, class: "btn btn-primary" %>
+      <div class="add-rate">
+        <%= link_to_add_association "Add Rate", f, :loan_rates, data: {association_insertion_node: '.loan_rates', association_insertion_method: :append}, class: "btn btn-primary" %>
+      </div>
+    </div>
+
+    <div data-plan-agree-target="sii" hidden>
+     <h3>Rates</h3>
+      <div class="loan_rates_sii">
+        <div class="row">
+          <%= f.fields_for :loan_rates do |sr| %>
+            <%= render 'agreements/loan_rate_fields', f: sr %>
+          <% end %>
+        </div>
+      </div>
+      <div class="add-rate">
+        <%= link_to_add_association "Add SII Rate", f, :loan_rates, data: {association_insertion_node: '.loan_rates_sii', association_insertion_method: :append}, class: "btn btn-primary" %>
+      </div>
     </div>
     
   </div>
@@ -77,3 +93,28 @@
     <%= f.button :submit, class: "btn btn-success" %>
   </div>
 <% end %>
+
+<script>
+  $(function() {
+  // limits the number of categories
+  $('.loan_rates_sii').on('cocoon:after-insert', function() {
+    console.log('insert');
+    check_to_hide_or_show_add_link();
+  });
+
+  $('.loan_rates_sii').on('cocoon:after-remove', function() {
+    console.log('remove');
+    check_to_hide_or_show_add_link();
+  });
+
+  check_to_hide_or_show_add_link();
+
+  function check_to_hide_or_show_add_link() {
+    if ($('.loan_rates_sii .nested-fields:visible').length == 1) {
+      $('.add-rate a').hide();
+    } else {
+      $('.add-rate a').show();
+    }
+  }
+})
+</script>

@@ -216,6 +216,10 @@ module ApplicationHelper
     current_user.userable_type == "Employee" && current_user.userable.department_id == 15
   end
 
+  def agent_user?(current_user)
+    current_user.userable_type == "Agent"
+  end
+
   def nav_header(current_user)
     user_type = current_user.userable_type
 

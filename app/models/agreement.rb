@@ -3,6 +3,7 @@ class Agreement < ApplicationRecord
 
   scope :with_moa_like, -> (filter) { where("moa_no LIKE ?", "%#{filter}%") }
   scope :lppi, -> { find {|a| a.plan.acronym == "LPPI"} }
+  scope :sii, -> { find {|a| a.plan.acronym == "SII"} }
 
   Comm_type = ["Gross Commission", "Net Commission"]
   Anniversary = ["Single", "Multiple", "12 Months"]

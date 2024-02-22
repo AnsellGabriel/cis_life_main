@@ -1,0 +1,52 @@
+<div class="row mb-1">
+  <%= content_tag :span, class: 'text-primary' do %>
+    <i class="bi bi-piggy-bank"></i> Insurance Details
+  <% end %>
+</div>
+<hr>
+<div class="row">
+  <div class="col-sm-3">
+    <span class="mb-0 text-secondary">Savings Amount</span>
+  </div>
+  <div class="col-sm-3">
+    <%= to_number(@batch.loan_amount) %>
+  </div>
+  <div class="col-sm-3">
+    <span class="mb-0 text-secondary">Premium</span>
+  </div>
+  <div class="col-sm-3">
+    <%= to_number(@batch.premium) %>
+  </div>
+</div>
+<hr>
+<div class="row">
+  <div class="col-sm-3">
+    <span class="mb-0 text-secondary">Terms</span>
+  </div>
+  <div class="col-sm-3 ">
+    <%= @batch.terms %>
+  </div>
+  <div class="col-sm-3">
+    <span class="mb-0 text-secondary">Premium Due</span>
+  </div>
+  <div class="col-sm-3 ">
+    <%= to_number(@batch.premium_due) %>
+  </div>
+</div>
+<hr>
+
+<div class="row">
+  <div class="col-sm-3">
+    <span class="mb-0 text-secondary">Effectivity Date</span>
+  </div>
+  <div class="col-sm-3 ">
+    <%= month_day_year(@batch.effectivity_date) %>
+  </div>
+  <div class="col-sm-3">
+    <span class="mb-0 text-secondary">Expiry Date</span>
+  </div>
+  <div class="col-sm-3 ">
+    <%= month_day_year(@batch.expiry_date)%>
+  </div>
+</div>
+<hr>

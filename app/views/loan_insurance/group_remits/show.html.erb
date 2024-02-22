@@ -3,9 +3,16 @@
 <%= render "loan_insurance/group_remits/batch_import_modal" %>
 
 <div class="mb-1">
-  <%= link_to loan_insurance_group_remits_path, class: small_btn("outline-secondary") do %>
-    <i class="bi bi-arrow-left-square"></i>
-    Back
+  <% if @group_remit.agreement.plan.acronym == "LPPI" %>
+    <%= link_to loan_insurance_group_remits_path, class: small_btn("outline-secondary") do %>
+      <i class="bi bi-arrow-left-square"></i>
+      Back
+    <% end %>
+  <% else %>
+    <%= link_to loan_insurance_group_remits_path(p: "sii"), class: small_btn("outline-secondary") do %>
+      <i class="bi bi-arrow-left-square"></i>
+      Back
+    <% end %>
   <% end %>
 </div>
 
@@ -74,11 +81,17 @@
           <div class="card d-flex">
             <div class="card-header" style="width: 100%;">
               <div class="text-center">
-                <%= content_tag :span, 'LPPI Enrollment Form ', class: 'text-primary' %>
+                <% plan = @group_remit.agreement.plan.acronym %>
+                <%= content_tag :span, "#{plan} Enrollment Form", class: 'text-primary' %>
               </div>
             </div>
             <div class="card-body" >
-              <%= render "loan_insurance/batches/form", batch: @batch, coop_members: @coop_members, group_remit_id: @group_remit.id %>
+              <% if plan == "LPPI" %>
+                <%= render "loan_insurance/batches/form", batch: @batch, coop_members: @coop_members, group_remit_id: @group_remit.id %>
+              <% else %>
+                <%= render "loan_insurance/batches/sii_form", batch: @batch, coop_members: @coop_members, group_remit_id: @group_remit.id %>
+              <% end %>
+              
             </div>
           </div>
           <div class="<%= flex_justify_align('between','start',true) %>" >
@@ -139,6 +152,7 @@
     </div>
   </div>  
 </div>
+
 <div class="table-responsive">
   <%= turbo_frame_tag "batches" do %>
   <table class="table table-hover">
@@ -146,13 +160,19 @@
       <tr class="table-dark">
         <th class="text-center" scope="col">ID</th>
         <th class="text-center" scope="col">Members</th>
-        <th class="text-center" scope="col">Loan Amount</th>
+        <% if @agreement.plan.acronym == "SII" %>
+          <th class="text-center" scope="col">Savings Amount</th>
+        <% else %>
+          <th class="text-center" scope="col">Loan Amount</th>
+        <% end %>
         <th class="text-center" scope="col">Terms</th>
         <th class="text-center" scope="col">Premium</th>
-        
-        <% if @group_remit.agreement.unusable == true %>
-          <th class="text-center" scope="col">Unused Premium</th>
+        <% if @agreement.plan.acronym == "LPPI" %>
+          <% if @group_remit.agreement.unusable == true %>
+            <th class="text-center" scope="col">Unused Premium</th>
+          <% end %>
         <% end %>
+        
         
         <th class="text-center" scope="col">Premium Due</th>
         <th class="text-center" scope="col">Actions</th>

@@ -29,16 +29,17 @@
 
             <%= content_tag :h6, 'Dependent(s): ', class: "mb-0" %>
             <div class="row">
-              <div class="col-sm-3 text-dark">
-                <%= content_tag :span, "Name (relationship)", class: "lead" %>
+              <div class="col-sm-4 text-dark">
+                <%= content_tag :span, "Name (relationship) & Birthday (age)", class: "lead" %>
               </div>
-              <div class="col-sm-3 text-dark">
-                <%= content_tag :span, "Birthday (age)", class: "lead" %>
+              <div class="col-sm-4 text-dark">
+                <%#= content_tag :span, "Birthday (age)", class: "lead" %>
+                <%= content_tag :span, "Benefits", class: "lead" %>
               </div>
-              <div class="col-sm-3 text-dark">
+              <div class="col-sm-2 text-dark">
                 <%= content_tag :span, "Premium", class: "lead" %>
               </div>
-              <div class="col-sm-3 text-dark">
+              <div class="col-sm-2 text-dark">
                 <%= content_tag :span, "Actions", class: "lead" %>
               </div>
             </div>
@@ -46,18 +47,28 @@
             <% @dependents.each do |dependent| %>
               <% dep_presenter = DependentPresenter.new(dependent) %>
               <div class="row">
-                <div class="col-sm-3 text-secondary">
+                <div class="col-sm-4 text-secondary">
                   <%= "#{dependent.member_dependent.last_name}, #{dependent.member_dependent.first_name} #{dependent.member_dependent.middle_name} (#{dependent.member_dependent.relationship})" %>
                   <%= content_tag :span, "#{dependent.insurance_status.titleize}", class: dep_presenter.status_badge %>
-                </div>
-                <div class="col-sm-3 text-secondary">
-                  <% age = ((dependent.batch.group_remits.find_by(type: "Remittance").effectivity_date - dependent.member_dependent.birth_date) / 365).round %>
+                  <% age = ((dependent.batch.group_remits.find_by(type: "Remittance").effectivity_date - dependent.member_dependent.birth_date) / 365).round %> <br>
                   <%= "#{dependent.member_dependent.birth_date.strftime('%m/%d/%Y')} (#{age} yrs. old)" %>
                 </div>
-                <div class="col-sm-3 text-secondary">
+                <div class="col-sm-4 text-secondary">
+                  <% dependent.agreement_benefit.product_benefits.each do |ben| %>
+                    <div class="row">
+                      <div class="col-6">
+                        *<%= ben.benefit %>
+                      </div>
+                      <div class="col-6">
+                        <%= to_currency(ben.coverage_amount) %>
+                      </div>
+                    </div>
+                  <% end %>
+                </div>
+                <div class="col-sm-2 text-secondary">
                   <%= number_to_currency(dependent.premium, unit: "₱", precision: 2) %>
                 </div>
-                <div class="col-sm-3 text-secondary">
+                <div class="col-sm-2 text-secondary">
                   <% pro_cov = dependent.batch.group_remits.find_by(type: "Remittance").process_coverage %>
                   <% unless pro_cov.approved? || pro_cov.reprocess_approved? %>
                     

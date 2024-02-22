@@ -1,7 +1,7 @@
 class LoanInsurance::GroupRemitsController < ApplicationController
   include BatchesLoader
 
-  before_action :set_agreement, only: %i[index new create show]
+  before_action :set_agreement, only: %i[index new create show sii_index]
   before_action :set_group_remit, only: %i[submit show destroy]
 
   def index
@@ -9,6 +9,12 @@ class LoanInsurance::GroupRemitsController < ApplicationController
     @group_remits = @q.result(distinct: true)
     @group_remit_size = @group_remits.size
     @pagy, @group_remits = pagy(@group_remits, items: 10)
+  end
+
+  def sii_index
+    @group_remits = @agreement.group_remits.loan_remits.order(created_at: :desc)
+    @group_remit_size = @group_remits.size
+    @pagy, @group_remits = pagy(@group_remits, items: 10) 
   end
 
   def submit
@@ -32,7 +38,11 @@ class LoanInsurance::GroupRemitsController < ApplicationController
         @process_coverage.set_default_attributes
         @process_coverage.save!
         # raise 'errors'
-        format.html { redirect_to loan_insurance_group_remit_path(@group_remit), notice: "Group remit submitted" }
+        if @group_remit.agreement.plan.acronym == "LPPI"
+          format.html { redirect_to loan_insurance_group_remit_path(@group_remit), notice: "Group remit submitted" }
+        else
+          format.html { redirect_to loan_insurance_group_remit_path(@group_remit, p: "sii"), notice: "Group remit submitted" }
+        end
         # else
         #   format.html { redirect_to coop_agreement_group_remit_path(@group_remit.agreement, @group_remit), alert: "Process Coverage not created!" }
         #   @group_remit.status = :pending
@@ -54,7 +64,10 @@ class LoanInsurance::GroupRemitsController < ApplicationController
   end
 
   def new
-    @group_remit = @agreement.group_remits.new(type: "LoanInsurance::GroupRemit", name: "#{Date.today.day}#{Date.today.strftime("%B").upcase}#{Date.today.year}")
+    name = @agreement.plan.acronym == "LPPI" ? "#{Date.today.day}#{Date.today.strftime("%B").upcase}#{Date.today.year}" : "#{@agreement.plan.acronym.upcase}-#{Date.today.day}#{Date.today.strftime("%B").upcase}#{Date.today.year}"
+    # @group_remit = @agreement.group_remits.new(type: "LoanInsurance::GroupRemit", name: "#{Date.today.day}#{Date.today.strftime("%B").upcase}#{Date.today.year}")
+    @group_remit = @agreement.group_remits.new(type: "LoanInsurance::GroupRemit", name: name)
+    @p = params[:p]
   end
 
   def create
@@ -67,7 +80,11 @@ class LoanInsurance::GroupRemitsController < ApplicationController
 
     begin
       if @group_remit.save!
-        redirect_to loan_insurance_group_remits_path, notice: "New batch created"
+        if @group_remit.agreement.plan.acronym == "LPPI"
+          redirect_to loan_insurance_group_remits_path, notice: "New batch created"
+        else
+          redirect_to sii_index_loan_insurance_group_remits_path(p: "sii"), notice: "New batch created"
+        end
       else
         render :new
       end
@@ -91,8 +108,13 @@ class LoanInsurance::GroupRemitsController < ApplicationController
   end
 
   def destroy
+    ctr = @group_remit.agreement.plan.acronym == "SII" ? 1 : 0
     if @group_remit.destroy!
-      redirect_to loan_insurance_group_remits_path, alert: "Remittance deleted"
+      if ctr == 1
+        redirect_to sii_index_loan_insurance_group_remits_path(p: "sii"), alert: "Remittance deleted"
+      else
+        redirect_to loan_insurance_group_remits_path, alert: "Remittance deleted"
+      end
     end
   end
 
@@ -103,7 +125,12 @@ class LoanInsurance::GroupRemitsController < ApplicationController
   end
 
   def set_agreement
-    @agreement = @cooperative.agreements.lppi.decorate
+    case params[:p]
+    when "sii"
+      @agreement = @cooperative.agreements.sii.decorate
+    else
+      @agreement = @cooperative.agreements.lppi.decorate
+    end    
   end
 
   def set_group_remit
