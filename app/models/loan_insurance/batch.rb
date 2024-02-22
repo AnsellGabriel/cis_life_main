@@ -61,7 +61,7 @@ class LoanInsurance::Batch < Batch
   def sii_set_terms_and_details(agreement)
     anniv_date = agreement.anniversaries.first.anniversary_date
     self.effectivity_date = Date.today
-    self.expiry_date = self.effectivity_date <= anniv_date ? anniv_date : anniv_date.next_year 
+    self.expiry_date = self.effectivity_date <= anniv_date ? anniv_date : anniv_date.next_year
     self.terms = compute_terms(expiry_date, effectivity_date)
     self.insurance_status = :for_review
     self.age = coop_member.age(effectivity_date)
@@ -100,6 +100,13 @@ class LoanInsurance::Batch < Batch
     # requires no health declaration if loan amount is less than or equal to agreement's nel
     if self.loan_amount <= agreement.nel
       self.valid_health_dec = true
+    end
+
+    if self.rate.nil?
+      loan_rate
+    else
+      calculate_values(agreement, loan_rate, encoded_premium)
+      true
     end
   end
 
