@@ -1,5 +1,5 @@
 <div id="<%= dom_id process_coverage %>">
-  <% if process_coverage.group_remit.agreement.plan.acronym == "LPPI" %>
+  <% if ["LPPI","SII"].include?(process_coverage.group_remit.agreement.plan.acronym) %>
     <div class="row mb-3">
       <div class="col-6">
         <%= render "pro_cov_lppi_details", process_coverage: process_coverage %>

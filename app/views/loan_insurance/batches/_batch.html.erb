@@ -50,19 +50,21 @@
 			</div>
 		</div>
 	</td>
-	<% if group_remit.agreement.unusable == true %>
-		<td class="align-middle" >
-			<div class="<%= flex_justify_align('center') %>">
-				<div class="<%= flex_justify_align('','center',true) %> ps-6">
-					<div class="d-flex flex-column mb-1">
-						<%= content_tag :span, 
-								"(#{to_curr(batch.unused)})", 
-								class: "text-secondary sm-green-text"
-						%>
+	<% if agreement.plan.acronym == "LPPI" %>
+		<% if group_remit.agreement.unusable == true %>
+			<td class="align-middle" >
+				<div class="<%= flex_justify_align('center') %>">
+					<div class="<%= flex_justify_align('','center',true) %> ps-6">
+						<div class="d-flex flex-column mb-1">
+							<%= content_tag :span, 
+									"(#{to_curr(batch.unused)})", 
+									class: "text-secondary sm-green-text"
+							%>
+						</div>
 					</div>
 				</div>
-			</div>
-		</td>
+			</td>
+		<% end %>
 	<% end %>
 	
   <td class="align-middle" >

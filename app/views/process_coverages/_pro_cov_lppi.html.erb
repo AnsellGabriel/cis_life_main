@@ -57,12 +57,18 @@
       <thead class= "table-dark">
         <th></th>
         <th>Member</th>
-        <th>Loan Amount</th>
+        <% if @plan.acronym == "LPPI" %>
+          <th>Loan Amount</th>
+        <% else %>
+          <th>Savings Amount</th>
+        <% end %>
         <th>Terms</th>
         <th>Premium</th>
         <th>Insurance Status</th>
         <th>Health Dec Answers</th>
-        <th>Unuse</th>
+        <% if @plan.acronym == "LPPI" %>
+          <th>Unuse</th>
+        <% end %>
         <th>Action</th>
         <th>Remarks</th>
       </thead>
@@ -98,9 +104,11 @@
                 <div class="row">
                   <%= process_premiums("Agent's SF", batch.agent_sf_amount) %>
                 </div>
-                <div class="row">
-                  <%= process_premiums("Unused Prem", batch.unused) %>
-                </div>
+                <% if @plan.acronym == "LPPI" %>
+                  <div class="row">
+                    <%= process_premiums("Unused Prem", batch.unused) %>
+                  </div>
+                <% end %>
                 <div class="row">
                   <%= process_premiums("Coop's SF", batch.coop_sf_amount) %>
                 </div>
@@ -118,14 +126,15 @@
                   <% end %>
                 <% end %>
               </td>
-              <td>
-                <% unless batch.unused_loan_id.nil? %>
-                  <%= link_to unuse_batch_loan_insurance_batch_path(batch.unused_loan_id), class: "btn btn-sm btn-info mb-1", data: { turbo_frame: "modal-xl", turbo: true } do %>
-                    <%= bootstrap_icon "eye" %>
+              <% if @plan.acronym == "LPPI" %>
+                <td>
+                  <% unless batch.unused_loan_id.nil? %>
+                    <%= link_to unuse_batch_loan_insurance_batch_path(batch.unused_loan_id), class: "btn btn-sm btn-info mb-1", data: { turbo_frame: "modal-xl", turbo: true } do %>
+                      <%= bootstrap_icon "eye" %>
+                    <% end %>
                   <% end %>
-                <% end %>
-                
-              </td>
+                </td>
+              <% end %>
               <td>
                 <% unless process_coverage.approved? || process_coverage.reprocess_approved? %>
                   <div class="<%= batch_buttons(current_user.rank, batch.insurance_status, process_coverage.status) %>">
