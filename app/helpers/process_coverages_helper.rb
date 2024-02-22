@@ -1,11 +1,57 @@
 module ProcessCoveragesHelper
 
-  def approve_deny_button_pro_cov(rank, status)
+  def show_approve_button_pc(rank, process_coverage)
+    if ["approved", "denied"].include?(process_coverage.status)
+      "d-none"
+    else
+      case rank
+      when "analyst"
+        if process_coverage.group_remit.batches.where(insurance_status: [:for_review, :pending, :denied]).count > 0
+          "d-none"
+        else
+          "d-inline"
+        end
+      end
+    end
+  end
+
+  def show_denied_button_pc(rank, process_coverage)
+    if ["approved", "denied"].include?(process_coverage.status)
+      "d-none"
+    else
+      case rank
+      when "analyst"
+        batches_count = process_coverage.group_remit.batches.count
+        denied_count = process_coverage.group_remit.batches.where(insurance_status: :denied).count
+  
+        if batches_count == denied_count
+          "d-inline"
+        else
+          "d-none"
+        end
+      end
+    end
+  end
+
+  def show_for_head_review(rank, process_coverage)
+    case rank
+    when "analyst"
+      denied_count = process_coverage.group_remit.batches.where(insurance_status: :denied).count
+      if denied_count > 0
+        "d-inline"
+      else
+        "d-none"
+      end
+    end
+  end
+
+  def approve_deny_button_pro_cov(rank, process_coverage)
     if rank == "analyst"
 
-      case status
-        when "for_process", "pending" then "d-inline"
-        when "approved", "for_head_approval", "for_vp_approval", "denied", "reprocess", "reprocess_request" then "d-none"
+      if process_coverage.group_remit.batches.where(insurance_status: [:for_review, :pending, :denied]).count > 0
+        "d-none"
+      else
+        "d-inline"
       end
 
     elsif rank == "head"

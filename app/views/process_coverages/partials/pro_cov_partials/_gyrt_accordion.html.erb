@@ -16,7 +16,9 @@
           <hr>
           <% insured_types2.each do |type| %>
             <% i_type = type.insured_type_before_type_cast %>
-            <% unless i_type == 2..5 %>
+            <%# unless i_type == 2..5 %>
+            <%# if i_type == 2..5 %>
+            <% if [1, 6..].include?(i_type) %>
               <%= link_to type.name, process_coverage_path(process_coverage, insured_type: type), class: "btn btn-primary btn-sm mb-1" %>
             <% end %>
           <% end %>

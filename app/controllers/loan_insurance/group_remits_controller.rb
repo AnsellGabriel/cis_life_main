@@ -38,7 +38,11 @@ class LoanInsurance::GroupRemitsController < ApplicationController
         @process_coverage.set_default_attributes
         @process_coverage.save!
         # raise 'errors'
-        format.html { redirect_to loan_insurance_group_remit_path(@group_remit), notice: "Group remit submitted" }
+        if @group_remit.agreement.plan.acronym == "LPPI"
+          format.html { redirect_to loan_insurance_group_remit_path(@group_remit), notice: "Group remit submitted" }
+        else
+          format.html { redirect_to loan_insurance_group_remit_path(@group_remit, p: "sii"), notice: "Group remit submitted" }
+        end
         # else
         #   format.html { redirect_to coop_agreement_group_remit_path(@group_remit.agreement, @group_remit), alert: "Process Coverage not created!" }
         #   @group_remit.status = :pending
