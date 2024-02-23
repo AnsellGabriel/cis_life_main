@@ -59,20 +59,27 @@
       <%= to_currency(@total_net_prem) %>
     <% end %>
     <%# if process_coverage.status == "pending" || process_coverage.status == "for_process" %>
-    <div class="<%= show_approve_button_pc(current_user.rank, @process_coverage) %>">
-      <%= link_to new_process_remark_path(ref: process_coverage, pro_status: "Approve", rem_status: "approved", max_amount: session[:max_amount], total_life_cov: @total_life_cov, total_gross_prem: @total_gross_prem), title: "Approve", class: "btn btn-sm btn-success mb-2 me-2", data: { turbo_frame: "remote_modal" } do %>
-        <%= bootstrap_icon "check-lg" %> Approve
-      <% end %>
-    </div>
-    <div class="<%= show_denied_button_pc(current_user.rank, @process_coverage) %>">
-      <%= link_to new_process_remark_path(ref: process_coverage, pro_status: "Deny", rem_status: "denied"), title: "Denied", class: "btn btn-sm btn-danger mb-2 me-2", data: { turbo_frame: "remote_modal" } do %>
-        <%= bootstrap_icon "x-lg" %> Deny
-      <% end %>
-    </div>
-    <div class="<%= show_for_head_review(current_user.rank, @process_coverage) %>">
-      <%= link_to new_process_remark_path(ref: process_coverage, pro_status: "Approve", rem_status: "approved", max_amount: session[:max_amount], total_life_cov: @total_life_cov, total_gross_prem: @total_gross_prem), title: "Approve", class: "btn btn-sm btn-secondary mb-2 me-2", data: { turbo_frame: "remote_modal" } do %>
-        <%= bootstrap_icon "forward-fill" %> For Head Review
-      <% end %>
+    <div class="btn-group">
+      <div class="<%= show_approve_button_pc(current_user.rank, @process_coverage) %>">
+        <%= link_to new_process_remark_path(ref: process_coverage, pro_status: "Approve", rem_status: "approved", max_amount: session[:max_amount], total_life_cov: @total_life_cov, total_gross_prem: @total_gross_prem), title: "Approve", class: "btn btn-sm btn-success mb-2 me-2", data: { turbo_frame: "remote_modal" } do %>
+          <%= bootstrap_icon "check-lg" %> Approve
+        <% end %>
+      </div>
+      <div class="<%= show_denied_button_pc(current_user.rank, @process_coverage) %>">
+        <%= link_to new_process_remark_path(ref: process_coverage, pro_status: "Deny", rem_status: "denied"), title: "Denied", class: "btn btn-sm btn-danger mb-2 me-2", data: { turbo_frame: "remote_modal" } do %>
+          <%= bootstrap_icon "x-lg" %> Deny
+        <% end %>
+      </div>
+      <div class="<%= show_for_head_review(current_user.rank, @process_coverage) %>">
+        <%= link_to new_process_remark_path(ref: process_coverage, pro_status: "Approve", rem_status: "approved", max_amount: session[:max_amount], total_life_cov: @total_life_cov, total_gross_prem: @total_gross_prem), title: "Approve", class: "btn btn-sm btn-secondary mb-2 me-2", data: { turbo_frame: "remote_modal" } do %>
+          <%= bootstrap_icon "forward-fill" %> For Head Review
+        <% end %>
+      </div>
+      <div class="<%= show_for_vp_review(current_user.rank, @process_coverage) %>">
+        <%= link_to new_process_remark_path(ref: process_coverage, pro_status: "Approve", rem_status: "approved", max_amount: session[:max_amount], total_life_cov: @total_life_cov, total_gross_prem: @total_gross_prem), title: "Approve", class: "btn btn-sm btn-secondary mb-2 me-2", data: { turbo_frame: "remote_modal" } do %>
+          <%= bootstrap_icon "forward-fill" %> For VP Review
+        <% end %>
+      </div>
     </div>
       <% if current_user.head? && process_coverage.for_head_approval? %>
         <%= link_to new_process_remark_path(ref: process_coverage, pro_status: "Reassess", rem_status: "reassess"), title: "Reassess", class: "btn btn-sm btn-primary mb-2", data: { turbo_frame: "remote_modal" } do %>

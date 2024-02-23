@@ -8,6 +8,7 @@ class Cooperative < ApplicationRecord
   has_many :members, through: :coop_members
 
   has_many :agreements
+  has_many :plans, through: :agreements
   has_many :group_remits
   has_many :denied_enrollees
   has_many :notifications, as: :notifiable, dependent: :destroy

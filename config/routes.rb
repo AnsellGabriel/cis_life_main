@@ -106,6 +106,7 @@ Rails.application.routes.draw do
   resources :cooperatives do
     get :selected, on: :member
     get :details, on: :member
+    get :get_plan, on: :member
   end
   resources :coop_branches
 

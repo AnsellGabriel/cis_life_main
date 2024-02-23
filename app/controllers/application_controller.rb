@@ -67,6 +67,18 @@ class ApplicationController < ActionController::Base
     end
   end
 
+  def check_emp_department
+    unless (current_user.userable_type == "Employee" && current_user.userable.department_id == 17) || current_user.senior_officer? # check if underwriting
+      render file: "#{Rails.root}/public/404.html", status: :not_found
+    end
+  end
+
+  def check_employee
+    unless current_user.userable_type == "Employee"
+      render file: "#{Rails.root}/public/404.html", status: :not_found
+    end
+  end
+
   # def set_retention_limit
   #   @retention_limit = Retention.find_by(active: true)
   # end

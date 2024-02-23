@@ -25,7 +25,7 @@
           <% else %>
             <% mem_age = batch.age %>
           <% end %>
-          <tr>
+          <tr class="<%= check_md_reco(batch) %>">
             <td>
               <% unless batch.insurance_status == "approved" || batch.insurance_status == "denied" %>
                 <%#= check_box_tag "id-#{batch.id}", batch.id, false, data: { checkbox_select_all_target: "child", action: "change->checkbox-select-all#toggleParent" } %>
@@ -98,7 +98,7 @@
                   <% end %>
                 </div>
                 <%# if current_user.head? && batch.status == "for_reconsideration" && batch.insurance_status == "denied" %>
-                <% if batch.batch_remarks.where(status: :md_reco).count > 0 %>
+                <% if batch.batch_remarks.where(status: :md_reco).count > 0 && !batch.approved? %>
                   <%= link_to set_premium_batch_process_coverage_path(batch: batch, batch_type: batch.class.name), onclick: "return confirm('Are you sure?')", method: :get, class: "btn btn-sm btn-info mb-1", data: { turbo: true, turbo_frame: "reg_form_modal" } do %>
                     <%= bootstrap_icon "coin" %>
                   <% end %>
