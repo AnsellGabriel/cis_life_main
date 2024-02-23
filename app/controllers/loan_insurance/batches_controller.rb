@@ -95,7 +95,6 @@ class LoanInsurance::BatchesController < ApplicationController
       result = @batch.process_batch
     end
 
-    binding.pry
     respond_to do |format|
       if @batch.save
         if agreement.plan.acronym == "SII"
