@@ -32,6 +32,7 @@ class CoopMember < ApplicationRecord
     self.full_name = "#{member.last_name}, #{member.first_name} #{member.middle_name}"
   end
 
+
   def birthdate
     self.member.birth_date
   end
