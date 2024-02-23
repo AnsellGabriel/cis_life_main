@@ -14,7 +14,7 @@ class LoanInsurance::GroupRemitsController < ApplicationController
   def sii_index
     @group_remits = @agreement.group_remits.loan_remits.order(created_at: :desc)
     @group_remit_size = @group_remits.size
-    @pagy, @group_remits = pagy(@group_remits, items: 10) 
+    @pagy, @group_remits = pagy(@group_remits, items: 10)
   end
 
   def submit
@@ -24,31 +24,38 @@ class LoanInsurance::GroupRemitsController < ApplicationController
       return redirect_to loan_insurance_group_remit_path(@group_remit), alert: "Please enter the official receipt number!"
     end
 
-    @group_remit.set_under_review_status
-    @group_remit.date_submitted = Date.today
-    # @group_remit.terminate_unused_batches(current_user)
+    begin
+      ActiveRecord::Base.transaction do
+        @group_remit.set_under_review_status
+        @group_remit.date_submitted = Date.today
+        # @group_remit.terminate_unused_batches(current_user)
 
-    respond_to do |format|
-      if @group_remit.save!
-        @process_coverage = @group_remit.build_process_coverage
-        @process_coverage.effectivity = @group_remit.effectivity_date
-        @process_coverage.expiry = @group_remit.expiry_date
-        @process_coverage.processor_id  = @group_remit.agreement.emp_agreements.find_by(agreement: @group_remit.agreement, active: true).employee_id
-        @process_coverage.approver_id  = @group_remit.agreement.emp_agreements.find_by(agreement: @group_remit.agreement, active: true).employee.emp_approver.approver_id
-        @process_coverage.set_default_attributes
-        @process_coverage.save!
-        # raise 'errors'
-        if @group_remit.agreement.plan.acronym == "LPPI"
-          format.html { redirect_to loan_insurance_group_remit_path(@group_remit), notice: "Group remit submitted" }
-        else
-          format.html { redirect_to loan_insurance_group_remit_path(@group_remit, p: "sii"), notice: "Group remit submitted" }
+        respond_to do |format|
+          if @group_remit.save!
+            @process_coverage = @group_remit.build_process_coverage
+            @process_coverage.effectivity = @group_remit.effectivity_date
+            @process_coverage.expiry = @group_remit.expiry_date
+            @process_coverage.processor_id  = @group_remit.agreement.emp_agreements.find_by(agreement: @group_remit.agreement, active: true).employee_id
+            @process_coverage.approver_id  = @group_remit.agreement.emp_agreements.find_by(agreement: @group_remit.agreement, active: true).employee.emp_approver.approver_id
+            @process_coverage.set_default_attributes
+            @process_coverage.save!
+            # raise 'errors'
+            if @group_remit.agreement.plan.acronym == "LPPI"
+              format.html { redirect_to loan_insurance_group_remit_path(@group_remit), notice: "Group remit submitted" }
+            else
+              format.html { redirect_to loan_insurance_group_remit_path(@group_remit, p: "sii"), notice: "Group remit submitted" }
+            end
+          end
         end
-        # else
-        #   format.html { redirect_to coop_agreement_group_remit_path(@group_remit.agreement, @group_remit), alert: "Process Coverage not created!" }
-        #   @group_remit.status = :pending
-        #   @group_remit.save!
-        # else
-        #   format.html { redirect_to coop_agreement_group_remit_path(@group_remit.agreement, @group_remit), alert: "Please see members below and complete the necessary details." }
+      end
+    rescue StandardError => e
+      # Handle the exception here
+      respond_to do |format|
+        if @group_remit.agreement.plan.acronym == "LPPI"
+          format.html { redirect_to loan_insurance_group_remit_path(@group_remit), alert: "Unable to submit the list. No assigned underwriting analyst. Please contact the administrator" }
+        else
+          format.html { redirect_to loan_insurance_group_remit_path(@group_remit, p: "sii"), alert: "Unable to submit the list. No assigned underwriting analyst. Please contact the administrator" }
+        end
       end
     end
   end
@@ -130,7 +137,7 @@ class LoanInsurance::GroupRemitsController < ApplicationController
       @agreement = @cooperative.agreements.sii.decorate
     else
       @agreement = @cooperative.agreements.lppi.decorate
-    end    
+    end
   end
 
   def set_group_remit
