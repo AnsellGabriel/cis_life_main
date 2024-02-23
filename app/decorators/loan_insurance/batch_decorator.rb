@@ -11,7 +11,7 @@ class LoanInsurance::BatchDecorator < BatchDecorator
   #   end
 
   def prev_loan_type
-    object.previous_loan.loan.name.titleize
+    object.previous_loan.loan&.name.titleize
   end
 
   def prev_loan_amount

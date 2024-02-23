@@ -90,7 +90,7 @@
                     <%= "Terms: #{lppi.terms}" %>
                   </td>
                   <td>
-                    <%= lppi.loan.name %> - <%= to_currency(lppi.loan_amount) %>
+                    <%= lppi.loan&.name %> - <%= to_currency(lppi.loan_amount) %>
                   </td>
                   <td><%= to_currency(lppi.premium) %></td>
                   <td>
