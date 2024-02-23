@@ -78,6 +78,10 @@ class LoanInsurance::BatchesController < ApplicationController
   # POST /loan_insurance/batches
   def create
     # raise 'errors'
+    if params[:loan_insurance_batch][:coop_member_id].empty?
+      return redirect_to loan_insurance_group_remit_path(params[:loan_insurance_batch][:group_remit_id]), alert: "Please select a member"
+    end
+
     @coop_members = @cooperative.coop_members
     @group_remit_id = params[:loan_insurance_batch][:group_remit_id]
     agreement = GroupRemit.find(@group_remit_id).agreement
@@ -91,6 +95,7 @@ class LoanInsurance::BatchesController < ApplicationController
       result = @batch.process_batch
     end
 
+    binding.pry
     respond_to do |format|
       if @batch.save
         if agreement.plan.acronym == "SII"
