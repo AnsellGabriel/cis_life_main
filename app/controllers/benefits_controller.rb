@@ -1,4 +1,6 @@
 class BenefitsController < ApplicationController
+  before_action :authenticate_user!
+  before_action :check_employee
   before_action :set_benefit, only: %i[ show edit update destroy ]
 
   # GET /benefits or /benefits.json

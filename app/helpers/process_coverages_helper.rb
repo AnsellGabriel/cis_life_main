@@ -37,11 +37,23 @@ module ProcessCoveragesHelper
     case rank
     when "analyst"
       denied_count = process_coverage.group_remit.batches.where(insurance_status: :denied).count
-      if denied_count > 0
+      for_review_count = process_coverage.group_remit.batches.where(insurance_status: [:for_review, :pending]).count
+      if denied_count > 0 && for_review_count == 0
         "d-inline"
       else
         "d-none"
       end
+    when "head"
+      "d-none"
+    end
+  end
+
+  def show_for_vp_review(rank, process_coverage)
+    case rank
+    when "head"
+      "d-inline"
+    when "analyst"
+      "d-none"
     end
   end
 
@@ -122,6 +134,12 @@ module ProcessCoveragesHelper
   def check_md_reco(batch)
     if batch.batch_remarks.where(status: :md_reco).count > 0
       "table-warning"
+    elsif batch.approved?
+      "table-success"
+    elsif batch.denied?
+      "table-danger"
+    elsif batch.pending?
+      "table-secondary"
     end
   end
   
