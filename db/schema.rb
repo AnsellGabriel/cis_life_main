@@ -812,7 +812,7 @@ ActiveRecord::Schema[7.0].define(version: 2024_02_19_053334) do
     t.boolean "reinsurance"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.bigint "loan_insurance_loan_id", null: false
+    t.bigint "loan_insurance_loan_id"
     t.integer "insurance_status"
     t.integer "status"
     t.boolean "terminated"
@@ -1330,7 +1330,6 @@ ActiveRecord::Schema[7.0].define(version: 2024_02_19_053334) do
   add_foreign_key "health_dec_subquestions", "health_decs"
   add_foreign_key "loan_insurance_batches", "coop_members"
   add_foreign_key "loan_insurance_batches", "group_remits"
-  add_foreign_key "loan_insurance_batches", "loan_insurance_loans"
   add_foreign_key "loan_insurance_batches", "loan_insurance_rates"
   add_foreign_key "loan_insurance_details", "batches"
   add_foreign_key "loan_insurance_details", "loan_insurance_loans"

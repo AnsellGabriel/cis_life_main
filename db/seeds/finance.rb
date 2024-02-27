@@ -21,3 +21,7 @@ accountant = Employee.create!(first_name: 'Rulian', middle_name: 'P.', last_name
 User.create!(email: "accountant@gmail.com",  password: 'Password123!', userable: accountant, approved: 1)
 
 puts 'Accountant created'
+
+# accounting
+auditor = Employee.create!(first_name: 'Rulian', middle_name: 'P.', last_name: 'Rong', birthdate: '1996-09-03', department_id: 27)
+User.create!(email: "auditor@gmail.com",  password: 'Password123!', userable: auditor, approved: 1)

@@ -35,6 +35,8 @@ end
 
 ["Life", "Accidental Death & Dismemberment", "Burial"].each do |benefit|
   claim_type = ClaimType.create!(name: benefit)
+  claim_type.claim_type_documents.create(document: Document.find(1), required: true)
+  claim_type.claim_type_benefits.create(benefit: Benefit.find_by(name: benefit))
 end
 
 puts 'Claim types created'

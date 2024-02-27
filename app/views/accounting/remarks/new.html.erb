@@ -1,0 +1,15 @@
+<%= turbo_frame_tag "reg_form_modal" do %>
+  <div class="modal-header">
+    <% if params[:audit] %>
+      <h5 class="card-header">Pending Audit</h5>
+    <% else %>
+      <h5 class="card-header">Cancel Voucher</h5>
+    <% end %>
+
+    <%= link_to '', accounting_check_path(@check), class: 'btn-close', data: {turbo: false}%>
+  </div>
+  
+  <div class="modal-body">
+    <%= render "form", remark: @remark %>
+  </div>
+<% end %>

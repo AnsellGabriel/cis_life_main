@@ -2,7 +2,9 @@
   <td class="text-center"><%= group_remit.official_receipt.present? ? group_remit.official_receipt : '-' %></td>
   <td><%= group_remit.name %></td>
   <td class="text-end"><%= to_curr(group_remit.total_gross_premium) %></td>
-  <td class="text-end"><%= to_curr(group_remit.total_unused_premium) %></td>
+  <% if group_remit.agreement.plan.acronym == "LPPI" %>
+    <td class="text-end"><%= to_curr(group_remit.total_unused_premium) %></td>
+  <% end %>
   <td class="text-end"><%= to_curr(group_remit.total_premium_due) %></td>
   <td class="text-end">
     <span class="<%= group_remit.decorate.status_badge %>"><%= group_remit.status.titleize %></span>

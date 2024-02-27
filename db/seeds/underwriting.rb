@@ -11,6 +11,5 @@ end
 puts 'Life underwriters created'
 
 EmpApprover.create!(employee_id: 3, approver_id: 2)
-EmpAgreement.create!(employee_id: 3, agreement_id: 1)
-EmpAgreement.create!(employee_id: 3, agreement_id: 2)
 EmpAgreement.create!(employee_id: 3, agreement_id: 24)
+EmpAgreement.create!(employee_id: 3, agreement_id: 25)

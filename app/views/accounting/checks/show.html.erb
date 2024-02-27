@@ -1,6 +1,6 @@
 <% if current_user.is_accountant? %>
   <div class="mb-1">
-    <%= link_to  requests_accounting_checks_path, class: small_btn("outline-secondary") do %>
+    <%= link_to  :back, class: small_btn("outline-secondary") do %>
       <i class="bi bi-arrow-left-square"></i>
       Back
     <% end %>
@@ -15,6 +15,12 @@
     <%= link_to "Claim details", claim_process_process_claim_path(@check.check_voucher_request.requestable), class: small_btn('outline-primary'), title: "Claim details", target: "_blank" %>
     <% if @check.for_audit? %>
       <%=  link_to "Approve", approve_audit_check_voucher_path(@check), class: small_btn('success'), data: {turbo_confirm: "Finish audit and approve voucher?", turbo_method: :get}  %>
+      <%=  link_to "Pending", new_accounting_check_remark_path(@check, audit: true), data: {turbo_frame: 'reg_form_modal' }, class: 'btn btn-sm btn-warning', title: 'Pending Voucher'  %>
+    <% end %>
+    <% if @check.remarks.present? %>
+      <%= link_to accounting_check_remarks_path(@check, audit: true), class: 'btn btn-sm btn-outline-danger', data: {turbo_frame: 'reg_form_modal'} do %>
+        <i class="bi bi-card-list"></i> Remarks
+      <% end %>
     <% end %>
   </div>
 <% end %>

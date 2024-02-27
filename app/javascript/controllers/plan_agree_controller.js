@@ -3,7 +3,7 @@ import { get } from "@rails/request.js"
 
 // Connects to data-controller="group-plan"
 export default class extends Controller {
-  static targets = ["lppi", "gyrt", "sii"]
+  static targets = ["lppi", "gyrt", "sii", "planSelect"]
 
 
   toggleTargets(event) {
@@ -24,5 +24,15 @@ export default class extends Controller {
       this.lppiTarget.hidden = true
       this.gyrtTarget.hidden = false
     }
+  }
+
+  search_plans(event) {
+    let coop_id = event.target.selectedOptions[0].value
+    let target = this.planSelectTarget.id
+
+    get(`/cooperatives/${coop_id}/get_plan?target=${target}`, {
+      responseKind: "turbo-stream"
+    })
+
   }
 }

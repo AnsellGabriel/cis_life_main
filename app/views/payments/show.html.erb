@@ -1,13 +1,20 @@
-<%= content_tag :h1, "#{@payment.payable.name} Payment", class: 'mb-3' %>
+<% if current_user.is_treasurer? %>
+  <div class="mb-1">
+    <%= link_to payments_path, class: small_btn("outline-secondary") do %>
+      <i class="bi bi-arrow-left-square"></i>
+      Back
+    <% end %>
+  </div>
+<% end %>
 
 <div class="d-flex gap-3 mb-2">
   <div class="card" style="width: 60%">
     <div class="card-header <%= flex_justify_align('between', 'center') %>">
       <div class="">
-        <h3 class="badge bg-<%= @payment.decorate.status_color %> mb-0"><%= @payment.status.humanize %></h3>
+        <h3 class="<%= @payment.decorate.status_badge %> mb-0"><%= @payment.status.humanize %></h3>
       </div>
       <div class="<%= flex_justify_align('', 'center') %> gap-1 mb-1">
-        <%= link_to @payment.receipt.url, class: 'btn btn-sm btn-outline-primary' do %>
+        <%= link_to @payment.receipt.url, class: 'btn btn-sm btn-outline-primary', target: "_blank" do %>
           <i class="bi bi-cash"></i> Show Payment
         <% end %> 
 

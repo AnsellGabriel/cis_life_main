@@ -37,7 +37,7 @@ class CoopUsersController < ApplicationController
   def create
     @form = :coop
     @coop_user = CoopUser.new(coop_user_params)
-    @branches = @coop_user&.cooperative&.coop_branches
+    @branches = @coop_user&.cooperative.nil? ? [] : @coop_user&.cooperative&.coop_branches.order(:name)
 
     # initialize other forms for bootstrap tabs
     # new agent
@@ -51,6 +51,8 @@ class CoopUsersController < ApplicationController
       if @coop_user.save
         format.html { redirect_to unauthenticated_root_path, notice: "Account was successfully created. Please contact the administrator to activate your account." }
       else
+        # re-initialize the cooperative and branches
+        @cooperatives = Cooperative.all.pluck(:name, :id)
         format.html { render 'devise/registrations/new', status: :unprocessable_entity }
       end
     end

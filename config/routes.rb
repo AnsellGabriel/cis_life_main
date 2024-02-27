@@ -106,6 +106,7 @@ Rails.application.routes.draw do
   resources :cooperatives do
     get :selected, on: :member
     get :details, on: :member
+    get :get_plan, on: :member
   end
   resources :coop_branches
 
@@ -218,11 +219,15 @@ Rails.application.routes.draw do
     resources :journals
 
     resources :checks do
+      get :for_approval_index, on: :collection
       get :claimable, on: :member
-      get :cancel, on: :member
+      # get :cancel, on: :member
       resources :business_checks, as: 'business', except: [:index]
       get :requests, on: :collection
+      resources :remarks
+
     end
+
 
     get "dashboard", to: "dashboard#index"
   end
@@ -255,6 +260,7 @@ Rails.application.routes.draw do
   resources :treasury_cashier_entries, as: 'entries', path: 'entries' , controller: "treasury/cashier_entries" do
     resources :general_ledgers, as: 'ledgers', path: 'ledger' do
       get :post, on: :collection
+      get :for_approval, on: :collection
       get :autofill, on: :collection
     end
 

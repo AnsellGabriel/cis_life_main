@@ -60,7 +60,7 @@ class MemberImportService
         coop_member_hash = {
           cooperative_id: @cooperative.id,
           coop_branch_id: @cooperative.coop_branches.find_by(name: row["Branch"].strip).id,
-          membership_date: row["Membership Date"]
+          membership_date: row["Membership Date"] == nil ? Date.today : row["Membership Date"]
         }
       rescue NoMethodError => e
         create_denied_enrollee(row["First Name"], row["Middle Name"], row["Last Name"], "Coop branch not found: #{row["Branch"]}")

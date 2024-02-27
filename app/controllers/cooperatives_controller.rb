@@ -96,6 +96,15 @@ class CooperativesController < ApplicationController
     end
   end
 
+  def get_plan
+    @target = params[:target]
+    @coop = Cooperative.find(params[:id])
+    @plans = Plan.where.not(id: @coop.plans.pluck(:id))
+    respond_to do |format|
+      format.turbo_stream
+    end
+  end
+
   def branches
     @target = params[:target]
     @branches = Cooperative.find(params[:id]).coop_branches

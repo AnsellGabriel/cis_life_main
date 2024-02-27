@@ -1,4 +1,6 @@
 class AgreementsController < ApplicationController
+  before_action :authenticate_user!
+  before_action :check_employee
   before_action :set_agreement, only: %i[ show edit update destroy show_details ]
 
   # GET /agreements

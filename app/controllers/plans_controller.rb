@@ -1,7 +1,6 @@
 class PlansController < InheritedResources::Base
   before_action :authenticate_user!
-  before_action :check_userable_type
-  # before_action :set_cooperative, only: %i[index new create show]
+  before_action :check_employee
   # before_action :check_userable_type
   # before_action :set_cooperative, only: %i[index new create show]
 

@@ -13,7 +13,7 @@ module DateHelper
     if date == "-"
       date
     else
-      date.strftime("%m-%d-%Y")
+      date&.strftime("%m-%d-%Y")
     end
   end
 

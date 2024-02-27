@@ -1,0 +1,19 @@
+<%= turbo_frame_tag "reg_form_modal" do %>
+  <div class="modal-header">
+    <div class="d-flex gap-1">
+      <%= content_tag :h5, 'Remarks', class: "modal-title", id: "staticBackdropLabel" %>
+      <% if current_user.userable_type == 'Employee' and !@check.pending_audit? %>
+        <%= link_to 'Add Remark', new_accounting_check_remark_path(@check), class: 'btn btn-sm btn-danger', data: {turbo_frame: 'reg_form_modal'} %>
+      <% end %>
+    </div>
+    <% if current_user.userable_type == 'Employee' %>
+      <%= link_to '', accounting_check_path(@check), class: 'btn-close', data: {turbo: false}%>
+    <% else %>
+      <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+    <% end %>
+  </div>
+  
+  <div class="modal-body">
+    <%= render @remarks %>
+  </div>
+<% end %>
