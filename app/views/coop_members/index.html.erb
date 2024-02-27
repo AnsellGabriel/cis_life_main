@@ -1,1 +1,7 @@
-<%= render "show_coop_members" %>
+<div class="card">
+  <%= content_tag :h4, @cooperative, class: "card-header" %>
+  <div class="card-body">
+    <%= content_tag :p, @cooperative.get_address %>
+    <%= render "show_coop_members" %>
+  </div>
+</div>
