@@ -1,133 +1,75 @@
-
-<%= simple_form_for(member) do |f| %>
-  <div class="text-secondary sm-secondary-text fst-italic mb-3">(Fields with '*' are required)</div>
-  <div class="form-inputs mb-3">
-    <div class="row ps-3 pe-3">
-      <div class="col-10">
+  <%= simple_form_for(member) do |f| %>
+  <div class="modal-body">
+    <%# <div class="text-secondary sm-secondary-text fst-italic mb-3">(Fields with '*' are required)</div> %>
+    <div class="form-inputs">
+      <div class="row">
+        <h6 class="text-primary mt-3"><i class="bi bi-person"></i> Personal</h6>
+        <%= f.input :first_name, error: '*Required', label: "First name", wrapper_html: { class: "col-md-4" } %>
+        <%= f.input :middle_name, error: '*Required', label: "MI", wrapper_html: { class: "col-md-2" } %>
+        <%= f.input :last_name, error: '*Required', label: "Last name", wrapper_html: { class: "col-md-4" }%>
+        <%= f.input :suffix, wrapper_html: { class: "col-md-2" } %>
+        <%= f.input :birth_date, as: :string, error: '*Required', input_html: {data: {
+        controller: "flatpickr",
+            flatpickr_max_date: Time.zone.now,
+            flatpickr_next_arrow: "Next",
+            flatpickr_prev_arrow: "Prev"}}, wrapper_html: { class: "col-md-2" } %>
+        <%= f.input :birth_place, wrapper_html: { class: "col-md-4" } %>
+        <%= f.input :gender, collection: [['Male', 'MALE'], ['Female', 'FEMALE']] , error: '*Required', class: 'form-select mb-3', label: "Gender", wrapper_html: { class: "col-md-2" }%>
+        <%= f.input :height, label: "Height (cm)", wrapper_html: { class: "col-md-2" }  %>
+        <%= f.input :weight, label: "Weight (kg)", wrapper_html: { class: "col-md-2" } %>
+      </div>
+      <div class="row">
+        <%= f.input :civil_status, collection: [["Single", "SINGLE"], ["Married", "MARRIED"], ["Divorced", "DIVORCED"], ["Separated", "SEPARATED"], ["Widowed", "WIDOWED"]], error: '*Required', class: "form-select", wrapper_html: { class: "col-md-3" } %>
+        <%= f.input :legal_spouse, wrapper_html: { class: "col-md-3" } %>
+        <div class="col-md-6">
+          <small class="text-primary"><i class="bi bi-diagram-3"></i> Cooperative</small>
           <%= f.simple_fields_for coop_member do |member| %>
-            <div class="form-group d-flex align-items-end coop-member-form">
-              <%= member.hidden_field :cooperative_id, value: @cooperative.id %>
-              <div class="col-md-6">
-                <%= member.input :coop_branch_id, collection: @cooperative.coop_branches.map {|branch| [branch.name, branch.id]}, style: "width: auto" , error: '*Required', class: "form-select mb-3", label_html: {class: 'text-secondary sm-secondary-text'}, label: "*Branch"  %>
-              </div>
-              <div class="col-md-4">
-                <%= member.input :membership_date, as: :string, error: '*Required', input_html: {data: {
-                  controller: "flatpickr",
-                  flatpickr_max_date: Time.zone.now,
-                  flatpickr_next_arrow: "Next",
-                  flatpickr_prev_arrow: "Prev"}}, label_html: {class: 'text-secondary sm-secondary-text'} , label: "*Membership date"%>              
+            <div class="form-group align-items-end coop-member-form">
+              <div class="row">
+                <%= member.hidden_field :cooperative_id, value: @cooperative.id %>
+                <%= member.input :coop_branch_id, collection: @cooperative.coop_branches.map {|branch| [branch.name, branch.id]}, error: '*Required', class: "form-select", label: "Branch", wrapper_html: { class: "col-md-6" }  %>
+                <%= member.input :membership_date, as: :string, input_html: {data: {
+              controller: "flatpickr",
+                      flatpickr_max_date: Time.zone.now,
+                      flatpickr_next_arrow: "Next",
+                      flatpickr_prev_arrow: "Prev"}}, wrapper_html: { class: "col-md-6" } %>
               </div>
             </div>
           <% end %>
+        </div>
       </div>
-    </div>
-    <div class="row">
-      <h6 class="text-primary mt-3"><i class="bi bi-person"></i> Personal</h6>
-    </div>
-    <div class="row ps-3 pe-3">
-      <div class="col-3">
-        <%= f.input :first_name, label_html: {class: 'text-secondary sm-secondary-text'}, error: '*Required', label: "*First name" %>
-      </div>
-      <div class="col-3">
-        <%= f.input :middle_name, label_html: {class: 'text-secondary sm-secondary-text'}, error: '*Required', label: "Middle name" %>
-      </div>
-      <div class="col-3">
-       <%= f.input :last_name, label_html: {class: 'text-secondary sm-secondary-text'}, error: '*Required', label: "*Last name"%>
-      </div>
-      <div class="col-2">
-        <%= f.input :suffix, label_html: {class: 'text-secondary sm-secondary-text'} %>
-      </div>
-    </div>
-    <div class="row ps-3 pe-3">
-      <div class="col-3">
-        <%= f.input :gender, collection: [['Male', 'MALE'], ['Female', 'FEMALE']] , error: '*Required', class: 'form-select mb-3', label_html: {class: 'text-secondary sm-secondary-text'}, label: "Gender" %>
-      </div>
-      <div class="col-3">
-        <%= f.input :height, label: "Height (cm)", label_html: {class: 'text-secondary sm-secondary-text'} %>
-      </div>
-      <div class="col-3">
-        <%= f.input :weight, label: "Weight (kg)", label_html: {class: 'text-secondary sm-secondary-text'}%>
-      </div>
-    </div>
-
-    <div class="row ps-3 pe-3">
-      <div class="col-3">
-        <%= f.input :birth_date, as: :string, error: '*Required', input_html: {data: {
-            controller: "flatpickr",
-            flatpickr_max_date: Time.zone.now,
-            flatpickr_next_arrow: "Next",
-            flatpickr_prev_arrow: "Prev"}}, label_html: {class: 'text-secondary sm-secondary-text'}, label: "*Birthdate" %>
-      </div>
-      <div class="col-6">
-        <%= f.input :birth_place, label_html: {class: 'text-secondary sm-secondary-text'} %>
-      </div>
-    </div>
-
-    <div class="row ps-3 pe-3">
-      <div class="col-3">
-        <%= f.input :civil_status, collection: [["Single", "SINGLE"], ["Married", "MARRIED"], ["Divorced", "DIVORCED"], ["Separated", "SEPARATED"], ["Widowed", "WIDOWED"]], error: '*Required', class: "form-select", label_html: {class: 'text-secondary sm-secondary-text'}, label: "Civil status" %>
-      </div>
-      <div class="col-6">
-        <%= f.input :legal_spouse, label_html: {class: 'text-secondary sm-secondary-text'} %>
-      </div>
-    </div>
-
-    <div class="row">
-      <h6 class="text-primary mt-3"><i class="bi bi-telephone"></i> Contact</h6>
-    </div>
-    <div class="row ps-3 pe-3">
-      <div class="col-6">
-        <%= f.input :email, label_html: {class: 'text-secondary sm-secondary-text'} %>
-      </div>
-      <div class="col-3">
-        <%= f.input :mobile_number, label_html: {class: 'text-secondary sm-secondary-text'} %>
-      </div>
-    </div>
-    <div class="row ps-3 pe-3">
-      <div class="col-12">
-        <%= f.input :address, label_html: {class: 'text-secondary sm-secondary-text'} %>
-          <div class="row" data-controller="geography">
-            <%= f.association :geo_region, label: "Region", input_html: { data: { action: "change->geography#search_provinces" } }, label_html: {class: 'text-secondary sm-secondary-text'}, wrapper_html: { class: "col-4" } %>
-            <%= f.association :geo_province, collection: @province, label: "Province", input_html: { id: "province_id", data: { action: "change->geography#search_municipalities", geography_target: "provinceSelect" } }, label_html: {class: 'text-secondary sm-secondary-text'}, wrapper_html: { class: "col-4" } %>
-            <%= f.association :geo_municipality, collection: @muni, label: "Municipality", input_html: { id: "muni_id", data: { action: "change->geography#search_barangays", geography_target: "muniSelect" } }, label_html: {class: 'text-secondary sm-secondary-text'}, wrapper_html: { class: "col-4" } %>
-            <%= f.association :geo_barangay, collection: @brgy, label: "Barangay", input_html: { id: "brgy_id", data: { geography_target: "brgySelect" } }, label_html: {class: 'text-secondary sm-secondary-text'}, wrapper_html: { class: "col-4" } %>
+      <div class="row">
+        <div class="col-md-6">
+          <h6 class="text-primary mt-3"><i class="bi bi-telephone"></i> Contact</h6>
+          <div data-controller="geography">
+            <div class="row">
+              <%= f.input :email, wrapper_html: { class: 'col-md-6' } %>
+              <%= f.input :mobile_number, wrapper_html: { class: 'col-md-6' } %>
+              <%= f.association :geo_region, label: "Region", input_html: { data: { action: "change->geography#search_provinces" } }, wrapper_html: { class: "col-md-6" } %>
+              <%= f.association :geo_province, collection: @province, label: "Province", input_html: { id: "province_id", data: { action: "change->geography#search_municipalities", geography_target: "provinceSelect" } }, wrapper_html: { class: "col-md-6" } %>
+              <%= f.association :geo_municipality, collection: @muni, label: "Municipality", input_html: { id: "muni_id", data: { action: "change->geography#search_barangays", geography_target: "muniSelect" } }, wrapper_html: { class: "col-md-6" } %>
+              <%= f.association :geo_barangay, collection: @brgy, label: "Barangay", input_html: { id: "brgy_id", data: { geography_target: "brgySelect" } }, wrapper_html: { class: "col-md-6" } %>
+              <%= f.input :address, label: "Street" %>
+            </div>
           </div>
+        </div>
+        <div class="col-md-6">
+          <h6 class="text-primary mt-3"><i class="bi bi-briefcase"></i> Work</h6>
+          <div class="row">
+            <%= f.input :employer %>
+            <%= f.input :occupation, label: 'Position', wrapper_html: { class: 'col-md-6' } %>
+            <%= f.input :work_phone_number, wrapper_html: { class: 'col-md-6' } %>
+            <%= f.input :work_address %>
+            <%= f.input :sss_no, label: "SSS #", wrapper_html: { class: 'col-md-6' } %>
+            <%= f.input :tin_no, label: "TIN #", wrapper_html: { class: 'col-md-6' } %>
+          </div>
+        </div>
       </div>
     </div>
-    <div class="row">
-      <h6 class="text-primary mt-3"><i class="bi bi-briefcase"></i> Work</h6>
-    </div>
-    <div class="row ps-3 pe-3">
-      <div class="col-6">
-        <%= f.input :employer, label_html: {class: 'text-secondary sm-secondary-text'} %>
-      </div>
-      <div class="col-3">
-        <%= f.input :occupation, label: 'Position', label_html: {class: 'text-secondary sm-secondary-text'} %>
-      </div>
-      <div class="col-3">
-        <%= f.input :work_phone_number, label_html: {class: 'text-secondary sm-secondary-text'} %>
-      </div>
-      <div class="col-12">
-        <%= f.input :work_address, label_html: {class: 'text-secondary sm-secondary-text'} %>
-      </div>
-      
-    </div>
-    <div class="row">
-      <h6 class="text-primary mt-3"><i class="bi bi-person-vcard"></i> Other</h6>
-    </div>
-    <div class="row ps-3 pe-3">
-      <div class="col-3">
-        <%= f.input :sss_no, label: "SSS #", label_html: {class: 'text-secondary sm-secondary-text'} %>
-      </div>
-      <div class="col-3">
-        <%= f.input :tin_no, label: "TIN #", label_html: {class: 'text-secondary sm-secondary-text'} %>
-      </div>
-    </div>
-
-    
   </div>
-
-  <div class="form-actions text-center">
-    <%= f.button :submit, "#{member.persisted? ? 'Update' : 'Enroll'}", class: small_btn('primary') %>
+  <div class="modal-footer">
+    <div class="form-actions text-center">
+      <%= f.button :submit, "#{member.persisted? ? 'Update' : 'Enroll'}", class: "btn btn-success"  %>
+    </div>
   </div>
 <% end %>

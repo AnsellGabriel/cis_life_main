@@ -1,6 +1,6 @@
 <%#= turbo_frame_tag "modal-xl" do %>
   <% unless @for_modal.present? %>
-    <%= link_to coop_members_path, data: { turbo: false }, class: 'btn btn-outline-secondary btn-lg mb-1', title: "Back" do %>
+    <%= link_to @coop_member.cooperative, data: { turbo: false }, class: 'btn btn-outline-secondary btn-lg mb-1', title: "Back" do %>
       <i class="bi bi-arrow-left-square"></i>
       Back
     <% end %>
@@ -108,10 +108,7 @@
             <% end %>
           </tbody>
         </table>
-        <div class="card-footer">
-        <% end %>
-      </div>
+      <% end %>
     </div>
   </div>
-</div>
-<%# end %>
+  <%# end %>

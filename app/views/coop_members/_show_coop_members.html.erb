@@ -1,9 +1,9 @@
 <!-- New Member form Modal -->
-<% if mis_user?(current_user) %>
-  <%=  render 'coop_members/member_import_modal' %>
-<% else %>
-  <%=  render 'member_import_modal' %>
-<% end %>
+<%# if mis_user?(current_user) %>
+<%#=  render 'coop_members/member_import_modal' %>
+<%# else %>
+<%#=  render 'member_import_modal' %>
+<%# end %>
 <div class="<%= flex_justify_align('','') %> gap-3">
   <%= content_tag :h3, 'Members', class: 'text-primary mb-0'  %>
   <div class="d-flex gap-1 mb-3">
@@ -11,15 +11,11 @@
       <%= link_to "Enroll Member", new_member_path(cooperative_id: @cooperative.id), 
         class: small_btn('outline-primary'), 
         data: {
-          turbo_frame: "modal-lg"
+          turbo_frame: "modal-xl"
         } %>
     </div>
     <div class="mb-1">
-      <% if mis_user?(current_user) %>
-        <%= render 'coop_members/member_import_btn' %>
-      <% else %>
-        <%= render 'member_import_btn' %>
-      <% end %>
+      <%= render 'coop_members/member_import_btn'  %>
     </div>
     <%  if @cooperative.denied_enrollees.present? %>
       <div class="">
@@ -35,8 +31,8 @@
   </div>
 </div>
 <!-- Button trigger for New Member Enrollment -->
-<div class="d-flex justify-content-between align-items-center">
-  <%== pagy_bootstrap_nav(@pagy_members) %>
+<div class="d-flex justify-content-between align-items-center mb-3">
+  <%== pagy_bootstrap_nav(@pagy_members) if @pagy_members.pages > 1 %>
   <div class="d-flex align-items-center gap-1 mb-1">
     <!-- Old Form -->
     <!--
@@ -96,17 +92,12 @@
           </td>
           <td><%= coop_member.coop_branch.name.titleize %></td>
           <td>
-            <%= link_to coop_member_path(coop_member), class: small_btn('outline-primary'), data: {turbo_frame: 'modal-xl'}, title: 'Show' do %>
-              <i class="bi bi-eye-fill"></i>
-            <% end %>
-            <%= link_to edit_member_path(member, cooperative_id: @cooperative.id), class: small_btn('outline-primary'), data: {turbo_frame: 'modal-lg'}, title: 'Edit' do%>
-              <i class="bi bi-pencil"></i>
-            <% end %>
-            <% if coop_member.with_coverages? %>
-              <%= link_to show_insurance_coop_member_path(coop_member), class: small_btn('outline-primary'), title: 'Coverages' do %>
-                <i class="bi bi-clock-history"></i>
-              <% end %>
-            <% end %>
+            <%= link_to '<i class="bi bi-eye-fill"></i>'.html_safe, coop_member, class: small_btn('outline-primary'), data: {turbo_frame: 'modal-xl'}, title: 'Show' %>
+            <%= link_to '<i class="bi bi-pencil-square"></i>'.html_safe, edit_member_path(member, cooperative_id: @cooperative.id), class: small_btn('outline-primary'), data: {turbo_frame: 'modal-xl'}, title: 'Edit' %>
+            <%# if coop_member.with_coverages? %>
+            <%= link_to '<i class="bi bi-shield-check"></i>'.html_safe, show_insurance_coop_member_path(coop_member), class: small_btn('outline-primary'), title: 'Coverages' %>
+            <%= link_to '<i class="bi bi-clipboard-pulse"></i>'.html_safe, new_ca_process_claims_path(cm: coop_member), class: small_btn('outline-primary'), title: 'File Claims' %>
+            <%# end %>
             <%# <% if coop_member.batches.joins(:group_remits).where(group_remits: { type: 'BatchRemit' }).exists? %>
             <%# <%= link_to 'Insurance', member_agreements_coop_member_path(coop_member), class: 'btn btn-sm btn-primary' %>
             <%# <% end %>

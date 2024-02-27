@@ -1,6 +1,6 @@
 class CoopMember < ApplicationRecord
   before_save :set_full_name
-  validates_presence_of :coop_branch_id, :membership_date, :cooperative_id
+  validates_presence_of :coop_branch_id, :cooperative_id
 
   scope :approved_members, -> (approved_batches) {
     joins(:batches)

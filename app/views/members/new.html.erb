@@ -1,10 +1,9 @@
-<%= turbo_frame_tag "modal-lg" do %>
+<%= turbo_frame_tag "modal-xl" do %>
   <div class="modal-header">
     <h5 class="modal-title text-primary" id="memberEnrollment">Enroll New Member</h5>
     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
   </div>
-  <div class="modal-body <%= flex_justify_align('center')%>">
-    <%= render "form", member: @member, coop_member: :coop_members%>
-  </div>
+  <%# <div class="modal-body"> %>
+  <%= render "form", member: @member, coop_member: :coop_members %>
+  <%# </div> %>
 <% end %>
-<br>

@@ -21,7 +21,7 @@ class CoopMembersController < InheritedResources::Base
   def new_ca 
     @cooperative = Cooperative.find(params[:s])
     @member = Member.new
-    @member.
+    
   end
 
   def new
@@ -97,18 +97,18 @@ class CoopMembersController < InheritedResources::Base
   end
 
   private
-  def set_coop_member
-    @coop_member = CoopMember.find(params[:id])
-  end
-
-  def coop_member_params
-    params.require(:coop_member).permit(:cooperative_id, :coop_branch_id, :last_name, :first_name, :middle_name, :suffix, :birthdate, :mobile_number, :email, :birth_place, :address, :sss_no,
-:tin_no, :civil_status, :legal_spouse, :height, :weight, :occupation, :employer, :work_address, :work_phone_number)
-  end
-
-  def check_userable_type
-    unless current_user.userable_type == "CoopUser" || current_user.userable_type == "Employee"
-      render file: "#{Rails.root}/public/404.html", status: :not_found
+    def set_coop_member
+      @coop_member = CoopMember.find(params[:id])
     end
-  end
+
+    def coop_member_params
+      params.require(:coop_member).permit(:cooperative_id, :coop_branch_id, :last_name, :first_name, :middle_name, :suffix, :birthdate, :mobile_number, :email, :birth_place, :address, :sss_no,
+      :tin_no, :civil_status, :legal_spouse, :height, :weight, :occupation, :employer, :work_address, :work_phone_number)
+    end
+
+    def check_userable_type
+      unless current_user.userable_type == "CoopUser" || current_user.userable_type == "Employee"
+        render file: "#{Rails.root}/public/404.html", status: :not_found
+      end
+    end
 end
