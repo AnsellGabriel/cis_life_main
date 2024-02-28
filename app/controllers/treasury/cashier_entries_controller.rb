@@ -2,6 +2,20 @@ class Treasury::CashierEntriesController < ApplicationController
   before_action :set_entry, only: %i[ show edit update cancel ]
   before_action :set_entriables, only: %i[ new create edit update]
 
+  def download_or
+    @entry = Treasury::CashierEntry.find(params[:id])
+    
+    respond_to do |format|
+      format.pdf do
+        render pdf: "or",
+        template: "treasury/cashier_entries/or.pdf.erb",
+        layout: "pdf.html",
+        orientation: "Portrait",
+        page_size: "A4"
+      end
+    end
+  end
+
   def index
     @entry = Treasury::CashierEntry.new
 
@@ -10,6 +24,12 @@ class Treasury::CashierEntriesController < ApplicationController
     else
       @entries = Treasury::CashierEntry.all.order(created_at: :desc)
     end
+
+    @pagy, @entries = pagy(@entries, items: 10)
+  end
+
+  def for_approval_index
+    @entries = Treasury::CashierEntry.where(status: :for_approval).order(created_at: :desc)
 
     @pagy, @entries = pagy(@entries, items: 10)
   end

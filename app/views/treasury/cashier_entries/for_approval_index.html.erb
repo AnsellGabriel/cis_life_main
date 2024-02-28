@@ -1,0 +1,34 @@
+<div class="<%= flex_justify_align('between', 'center') %> gap-1 mb-1">
+  <%= content_tag :h4, "Cashier Entries for Approval", class: 'text-primary mb-0' %>
+  <%== pagy_bootstrap_nav(@pagy) %>
+</div>
+
+<div class="">
+    <table class="table table-striped table-bordered table-hover">
+      <thead>
+        <tr>
+          <th class="text-center">OR #</th>
+          <th class="text-center">Date</th>
+          <th class="text-center">Payee</th>
+          <th class="text-center">Amount</th>
+        </tr>
+      </thead>
+
+      <tbody>
+        <% if @entries.present? %>
+          <% @entries.each do |entry| %>
+            <tr>
+              <td class="text-center"><%= link_to entry.or_no, entry.decorate.show_path(origin: 'for_approval'), class: 'text-primary' %></td>
+              <td class="text-center"><%= month_day_year(entry.or_date) %></td>
+              <td><%= entry.entriable %></td>
+              <td class="text-end"><%= to_curr(entry.amount) %></td>
+            </tr>
+          <% end %>
+        <% else %>
+          <tr>
+            <td colspan="7" class="text-center">No entries for approval</td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+  </div>

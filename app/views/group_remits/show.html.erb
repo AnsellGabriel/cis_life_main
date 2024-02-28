@@ -31,18 +31,21 @@
 
   <div class="mb-0 gap-1 <%= flex_justify_align('', 'center') %>">
     <% if @group_remit.is_batch_remit? %>
-      <%= button_to "Enroll Members", group_remits_path, 
-        method: :post, 
-        params: { 
-          agreement_id: @group_remit.agreement.id, 
-          anniversary_id: @group_remit.anniversary&.id, 
-          anniv_type: @group_remit.agreement.anniversary_type,
-          type: 'Remittance',
-          batch_remit_id: @group_remit.id
-        }, 
-        class: small_btn('success'), 
-        data: { turbo: false } 
-      %>
+      <% unless @group_remit.expired?%>
+        <%= button_to "Enroll Members", group_remits_path, 
+          method: :post, 
+          params: { 
+            agreement_id: @group_remit.agreement.id, 
+            anniversary_id: @group_remit.anniversary&.id, 
+            anniv_type: @group_remit.agreement.anniversary_type,
+            type: 'Remittance',
+            batch_remit_id: @group_remit.id
+          }, 
+          class: small_btn('success'), 
+          data: { turbo: false } 
+        %>
+      <% end %>
+      
       <%= link_to "Enrollment List", coop_agreement_group_remit_remittances_path(@agreement, @group_remit), class: small_btn('primary') %>
     <% end %>
     
@@ -90,8 +93,8 @@
     <% elsif @group_remit.is_expired? && @group_remit.is_batch_remit? %>
       <%= button_to 'Renew', renewal_group_remit_path(@group_remit),
         method: :get, 
-        class: small_btn('outline-warning'), 
-        data: {turbo_confirm: 'Renew group remit?' } 
+        class: small_btn('warning'), 
+        data: {turbo_confirm: 'Renew GYRT?' } 
       %>
     <% end %>
 

@@ -84,9 +84,9 @@ class GroupRemitsController < InheritedResources::Base
     @agreement = Agreement.find_by(id: params[:agreement_id])
 
     if params[:anniversary_id].present?
-      pending_remittance = @agreement.group_remits.pending.remittances.where(anniversary_id: params[:anniversary_id]).last
+      pending_remittance = @agreement.group_remits.where(status: [:pending, :for_renewal]).remittances.where(anniversary_id: params[:anniversary_id]).last
     else
-      pending_remittance = @agreement.group_remits.pending.remittances.last
+      pending_remittance = @agreement.group_remits.where(status: [:pending, :for_renewal]).remittances.last
     end
 
     if pending_remittance.present?

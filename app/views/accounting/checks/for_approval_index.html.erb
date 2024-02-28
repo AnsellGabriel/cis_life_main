@@ -10,12 +10,14 @@
       <th class="text-center" style="min-width: 125px;">Date</th>
       <th>Payee</th>
       <th class="text-center">Amount</th>
+      <th>Created by</th>
     </tr>
   </thead>
 
   <tbody>
     <% if @checks.present? %>
       <% @checks.each do |check| %>
+        <% accountant = User.find(check.accountant_id) %>
         <tr>
           <td>
             <%= link_to "CV#{check.voucher}", check, class: 'text-primary', title: 'View'%>
@@ -23,6 +25,7 @@
           <td class="text-center"><%= month_day_year(check.date_voucher) %></td>
           <td><%= check.payable %></td>
           <td class="text-end"><%= to_curr(check.amount) %></td>
+          <td><%= accountant.userable.signed_fullname %></td>
         </tr>
       <% end %>
     <% else %>

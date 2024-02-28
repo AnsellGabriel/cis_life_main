@@ -6,6 +6,11 @@
 ), class: 'btn btn-outline-secondary btn-sm' %>
     <% elsif current_user.userable_type == "Employee"%>
         <%= link_to '<i class="bi bi-arrow-bar-left"></i>'.html_safe, index_show_process_claims_path(p: @process_claim.claim_route), class: 'btn btn-secondary btn-sm'  %>
+        <% if @audit_remarks.present? %>
+            <%= link_to accounting_check_remarks_path(@check), class: 'btn btn-sm btn-outline-danger', data: {turbo_frame: 'reg_form_modal'} do %>
+                <i class="bi bi-card-list"></i> Audit Remarks
+            <% end %>
+        <% end %>
         <%= link_to new_claim_remark_path(v: @process_claim, c: 1), class: "btn btn-primary btn-sm position-relative", data: { turbo_frame: "remote_modal" } do %>
             <i class="bi bi-chat-left-text"></i> Message
             <% unless @process_claim.claim_remarks.where(coop: 1, read: 0).where.not(user: current_user).count == 0 %>

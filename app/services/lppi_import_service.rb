@@ -161,9 +161,7 @@ class LppiImportService
 
     result = new_batch.process_batch(batch_hash[:premium])
 
-    if loan_type.nil?
-      create_denied_member(member, "Loan type #{batch_hash[:loan_type]} not found.")
-    elsif result == :no_rate_for_age
+    if result == :no_rate_for_age
       create_denied_member(member, "No rate available for members with age: #{new_batch.age}")
     elsif result == :no_rate_for_amount
       create_denied_member(member, "No rate available for members age #{new_batch.age} and loan amount #{number_to_currency(batch_hash[:loan_amount], unit: "")}")

@@ -39,9 +39,9 @@ class Accounting::ChecksController < ApplicationController
   # GET /accounting/checks
   def index
     if params[:check_number].present?
-      @checks = Accounting::Check.where(voucher: params[:check_number])
+      @checks = Accounting::Check.where(voucher: params[:check_number]).order(created_at: :desc)
     else
-      @checks = Accounting::Check.all
+      @checks = Accounting::Check.all.order(created_at: :desc)
     end
 
     @pagy, @checks = pagy(@checks, items: 10)
