@@ -1,5 +1,12 @@
 <div class="">
-  <%= link_to loan_insurance_group_remit_path(gr), class: small_btn('outline-primary'), title: 'Show' do %>
-    <i class="bi bi-eye"></i>
+  <% if gr.agreement.plan.acronym == "LPPI" %>
+    <%= link_to loan_insurance_group_remit_path(gr), class: small_btn('outline-primary'), title: 'Show' do %>
+      <i class="bi bi-eye"></i>
+    <% end %>
+  <% else %>
+    <%= link_to loan_insurance_group_remit_path(gr,p: "sii"), class: small_btn('outline-primary'), title: 'Show' do %>
+      <i class="bi bi-eye"></i>
+    <% end %>
   <% end %>
+  
 </div>

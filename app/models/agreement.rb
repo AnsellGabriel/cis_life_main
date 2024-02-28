@@ -26,10 +26,10 @@ class Agreement < ApplicationRecord
   accepts_nested_attributes_for :agreement_benefits, reject_if: :all_blank, allow_destroy: true
   accepts_nested_attributes_for :loan_rates, reject_if: :all_blank, allow_destroy: true
 
-  delegate :acronym, to: :plan, prefix: true
-  def to_s
-    moa_no
-  end
+    delegate :acronym, to: :plan, prefix: true
+    def to_s
+      plan
+    end
 
   def coop_name
     self.cooperative.name

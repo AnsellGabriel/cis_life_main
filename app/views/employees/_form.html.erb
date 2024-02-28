@@ -1,4 +1,3 @@
-
 <%= simple_form_for @employee do |f| %>
   <div class="form-inputs mb-3">
     <%# fields for User model associated with Employee %>
@@ -7,34 +6,35 @@
         <%= u.input :email,
                   required: true,
                   autofocus: true,
-                  input_html: { autocomplete: "email" } %>
-      <%= u.input :password,
+                  input_html: { autocomplete: "email" },
+                  error: '*Required' %>
+        <div class="row">
+          <%= u.input :password,
                   required: true,
                   hint: ("#{@minimum_password_length} characters minimum" if @minimum_password_length),
-                  input_html: { autocomplete: "new-password" } %>
-      <%= u.input :password_confirmation,
+                  input_html: { autocomplete: "new-password" }, wrapper_html: { class: "col-md-6" } %>
+          <%= u.input :password_confirmation,
                   required: true,
-                  input_html: { autocomplete: "new-password" } %>
-
+                  input_html: { autocomplete: "new-password" }, wrapper_html: { class: "col-md-6" } %>
+        </div>
         <%= u.hidden_field :userable_type, value: "Employee" %>
         <%= u.hidden_field :userable_id, value: @employee.id %>
       <% end %>
     <% end %>
-
-    <%= f.association :department, error: '*Required' %>
-    <%= f.input :designation %>
-    <%= f.input :employee_number %>
-    <%= f.input :first_name %>
-    <%= f.input :middle_name %>
-    <%= f.input :last_name %>
-    <%= f.input :birthdate, as: :date, html5: true  %>
-    <%= f.input :mobile_number %>
-    
-    
+    <hr>
+    <div class="row">
+      <%= f.input :first_name, wrapper_html: { class: "col-md-4" } %>
+      <%= f.input :middle_name, wrapper_html: { class: "col-md-4" } %>
+      <%= f.input :last_name, wrapper_html: { class: "col-md-4" } %>
+      <%= f.association :department, error: '*Required', wrapper_html: { class: "col-6" } %>
+      <%= f.input :designation, wrapper_html: { class: "col-6" } %>
+      <%= f.input :birthdate, as: :date, html5: true, wrapper_html: { class: "col-md-4" }  %>
+      <%= f.input :employee_number, wrapper_html: { class: "col-md-4" } %>
+      <%= f.input :mobile_number, wrapper_html: { class: "col-md-4" } %>
+    </div>
   </div>
-
   <div class="form-actions text-center">
     <%= f.button :submit, class: 'btn-success' %>
-    <%= link_to "Back", unauthenticated_root_path, class: 'btn btn-secondary' %>
+    <%= link_to "Back", :back, class: 'btn btn-secondary' %>
   </div>
 <% end %>

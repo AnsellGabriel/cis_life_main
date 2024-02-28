@@ -1,0 +1,5 @@
+<%= turbo_stream.update @target do %>
+    <%= @plans.each do |p| %>
+        <%= content_tag :option, p.name, value: p.id %>
+    <% end %>
+<% end %>

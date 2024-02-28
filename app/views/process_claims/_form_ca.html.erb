@@ -55,6 +55,13 @@
                   flatpickr_max_date: Time.zone.now,
                   flatpickr_next_arrow: "Next",
                   flatpickr_prev_arrow: "Prev" } } %>
+            <%#= f.association :agreement, prompt: "Select agreement", collection: Agreement.where(cooperative: @process_claim.cooperative) %>
+            <%#= f.association :agreement, prompt: "Select agreement", collection: @agreement %>
+            <%= f.association :agreement, prompt: "Select agreement", collection: @process_claim.cooperative.agreements %>
+            <div data-controller="agreements">
+              <%#= f.association  %>
+              <%#= f.association :agreement_benefit, label: "Agreement Benefit", wrapper_html: { class: "col col-md-3" }, input_html: { class: 'form-select', id: 'barangay_id', data: { geographs_target: "agreementSelect" } }  %>
+            </div>
           </div>
           <%= f.simple_fields_for :claim_cause do |cc| %>
             <%= cc.input :acd, label: "ACD" %>

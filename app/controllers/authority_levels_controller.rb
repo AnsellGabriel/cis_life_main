@@ -1,4 +1,6 @@
 class AuthorityLevelsController < ApplicationController
+  before_action :authenticate_user!
+  before_action :check_employee
   before_action :set_authority_level, only: %i[ show edit update destroy ]
 
   # GET /authority_levels

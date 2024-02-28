@@ -82,6 +82,8 @@ class ProcessClaimsController < ApplicationController
     @process_claim.claimable = @coop_member
     @process_claim.cooperative = @coop_member.cooperative
     @claim_cause = @process_claim.build_claim_cause
+    @agreement = Agreement.where(cooperative: @process_claim.cooperative)
+    set_dummy_value
   end
 
   def create_coop
