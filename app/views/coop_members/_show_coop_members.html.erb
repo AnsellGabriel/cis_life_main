@@ -1,9 +1,9 @@
 <!-- New Member form Modal -->
-<%# if mis_user?(current_user) %>
-<%#=  render 'coop_members/member_import_modal' %>
-<%# else %>
-<%#=  render 'member_import_modal' %>
-<%# end %>
+<% if mis_user?(current_user) %>
+  <%=  render 'coop_members/member_import_modal' %>
+<% else %>
+  <%=  render 'member_import_modal' %>
+<% end %>
 <div class="<%= flex_justify_align('','') %> gap-3">
   <%= content_tag :h3, 'Members', class: 'text-primary mb-0'  %>
   <div class="d-flex gap-1 mb-3">
@@ -15,7 +15,11 @@
         } %>
     </div>
     <div class="mb-1">
-      <%= render 'coop_members/member_import_btn'  %>
+      <% if mis_user?(current_user) %>
+        <%= render 'coop_members/member_import_btn' %>
+      <% else %>
+        <%= render 'member_import_btn' %>
+      <% end %>
     </div>
     <%  if @cooperative.denied_enrollees.present? %>
       <div class="">
