@@ -31,16 +31,21 @@ class GeneralLedgersController < ApplicationController
   end
 
   def for_approval
+    case params[:e_t]
+    when 'ce' then entry = 'OR'
+    when 'cv' then entry = 'check voucher'
+    end
+
     if (@ledgers.total_debit != @ledgers.total_credit) || @ledgers.empty?
-      return redirect_to entry_path, alert: "Unable to submit voucher, #{@ledgers.empty? ? 'no entry.' : 'credit and debit total not equal.'}"
+      return redirect_to entry_path, alert: "Unable to submit #{entry}, #{@ledgers.empty? ? 'no entry.' : 'credit and debit total not equal.'}"
     end
 
     if (@ledgers.total_debit != @entry.total_amount) || (@ledgers.total_credit != @entry.total_amount)
-      return redirect_to entry_path, alert: "Unable to submit, credit and debit total not equal to total amount"
+      return redirect_to entry_path, alert: "Unable to submit #{entry}, credit and debit total not equal to total amount"
     end
 
     if @entry.update(status: :for_approval)
-      redirect_to entry_path, notice: "Voucher submitted for approval"
+      redirect_to entry_path, notice: "#{entry} submitted for approval"
     end
   end
 

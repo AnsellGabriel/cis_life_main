@@ -48,7 +48,8 @@ class ProcessClaim < ApplicationRecord
     claimable: 12,
     paid: 13, # paid
     voucher_generated: 14,
-    approve_by_audit: 15
+    approve_audit: 15,
+    pending_audit: 16
   }
 
 

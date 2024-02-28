@@ -9,9 +9,22 @@ class Treasury::BusinessChecksController < ApplicationController
     @pagy, @checks = pagy(@checks, items: 10)
   end
 
+  def edit
+    @check = Treasury::BusinessCheck.find(params[:id])
+  end
+
+  def update
+    @check = Treasury::BusinessCheck.find(params[:id])
+
+    if @check.update(check_params.merge(status: :claimed))
+      redirect_to accounting_check_path(@check.voucher), notice: "Business check updated"
+    else
+      render :edit
+    end
+  end
+
   def requests
     @vouchers = Accounting::Check.where(status: :posted, claimable: false, audit: :approved).order(created_at: :desc)
-
     @pagy, @vouchers = pagy(@vouchers, items: 10)
   end
 
@@ -26,6 +39,10 @@ class Treasury::BusinessChecksController < ApplicationController
   end
 
   private
+
+  def check_params
+    params.require(:treasury_business_check).permit(:notes)
+  end
 
   def search_voucher
     @voucher = Accounting::Check.find_by(voucher: params[:voucher], status: :posted)

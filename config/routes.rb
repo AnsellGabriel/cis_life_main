@@ -224,16 +224,16 @@ Rails.application.routes.draw do
       resources :business_checks, as: 'business', except: [:index]
       get :requests, on: :collection
       resources :remarks
-
     end
 
+    resources :check_voucher_requests, only: %i[show]
 
     get "dashboard", to: "dashboard#index"
   end
 
   # treasury
   namespace :treasury do
-    resources :business_checks, as: 'checks', path: 'checks', only: [:index] do
+    resources :business_checks, as: 'checks', path: 'checks', only: %w[index edit update] do
       get :requests, on: :collection
       get :search, on: :collection
     end
@@ -241,6 +241,7 @@ Rails.application.routes.draw do
     resources :payments
     resources :cashier_entries do
       get :cancel, on: :member
+      get :for_approval_index, on: :collection
       # get :autofill, on: :member
     end
 

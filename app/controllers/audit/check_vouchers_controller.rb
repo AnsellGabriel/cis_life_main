@@ -1,6 +1,6 @@
 class Audit::CheckVouchersController < ApplicationController
   def index
-    @vouchers = Accounting::Check.where(audit: :for_audit, status: :posted).order(created_at: :desc)
+    @vouchers = Accounting::Check.where(status: :posted).where(audit: [:for_audit, :pending_audit]).order(created_at: :desc)
     @pagy, @vouchers = pagy(@vouchers, items: 10)
   end
 

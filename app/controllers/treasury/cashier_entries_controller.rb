@@ -14,6 +14,12 @@ class Treasury::CashierEntriesController < ApplicationController
     @pagy, @entries = pagy(@entries, items: 10)
   end
 
+  def for_approval_index
+    @entries = Treasury::CashierEntry.where(status: :for_approval).order(created_at: :desc)
+
+    @pagy, @entries = pagy(@entries, items: 10)
+  end
+
   def show
     @coop = @entry.entriable
     @ledgers = @entry.general_ledgers

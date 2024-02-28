@@ -1,0 +1,49 @@
+<div class="">
+  <%= link_to :back, class: small_btn('outline-secondary') do %>
+    <i class="bi bi-arrow-left-square"></i>
+    Back
+  <% end %>
+  
+  <% if @checks.first.cancelled? %>
+    <%= link_to new_accounting_check_path(rid: params[:id]), class: 'btn btn-sm btn-primary', data: {turbo_frame: 'modal'}, title: "Generate Check Voucher" do %>
+      <i class="bi bi-receipt-cutoff"></i>
+      Generate Voucher
+    <% end %>
+  <% end %>
+</div>
+
+<div class="<%= flex_justify_align('between', 'center') %> gap-1 mb-1">
+  <%= content_tag :h4, "Generated Vouchers", class: 'text-primary mb-0' %>
+  <%== pagy_bootstrap_nav(@pagy) %>
+</div>
+  <table class="table table-striped table-bordered table-hover">
+    <thead>
+      <tr>
+        <th>Voucher</th>
+        <th class="text-center" style="min-width: 125px;">Date</th>
+        <th>Payee</th>
+        <th class="text-center">Amount</th>
+        <th class="text-center">Status</th>
+      </tr>
+    </thead>
+
+    <tbody>
+      <% if @checks.present? %>
+        <% @checks.each do |check| %>
+          <tr>
+            <td>
+              <%= link_to "CV#{check.voucher}", check, class: 'text-primary', title: 'View'%>
+            </td>
+            <td class="text-center"><%= month_day_year(check.date_voucher) %></td>
+            <td><%= check.payable %></td>
+            <td class="text-end"><%= to_curr(check.amount) %></td>
+            <td class="text-center text-<%= check.decorate.status_color %>"><%= check.status.titleize %></td>
+          </tr>
+        <% end %>
+      <% else %>
+        <tr>
+          <td colspan="7" class="text-center">No check vouchers found.</td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>

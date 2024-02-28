@@ -1,0 +1,15 @@
+<%= turbo_frame_tag "modal" do %>
+  <div class="modal-header">
+    <%= content_tag :h5, 'Claim Payout', class: "modal-title text-center", id: "staticBackdropLabel" %>
+    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+  </div>
+  
+  <div class="modal-body">
+    <%= simple_form_for(@check, url: treasury_check_path(@check)) do |f| %>
+      <%= f.input :notes, error: '*Required' %>
+      <div class="text-center">
+        <%= f.button :submit, 'Disburse', class: small_btn('success'), data: {turbo_confirm: 'Save note and set check status to claimed?', turbo_method: :patch} %>
+      </div>
+    <% end %>
+  </div>
+<% end %>

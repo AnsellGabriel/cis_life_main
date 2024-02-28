@@ -128,6 +128,7 @@
               <tr>
                 <th class="text-center">Check No.</th>
                 <th class="text-center">Amount</th>
+                <th class="text-center">Status</th>
               </tr>
             </thead>
             <tbody>
@@ -137,6 +138,7 @@
                     <%= check.check_number %>
                   </td>
                   <td class="text-end"><%= to_curr check.amount %></td>
+                  <td class="text-center"><span class="<%= check.decorate.check_badge %>"><%= check.decorate.check_text %></span></td>
                 </tr>
               <% end %>
             </tbody>

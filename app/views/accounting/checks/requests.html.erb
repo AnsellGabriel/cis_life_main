@@ -27,11 +27,11 @@
                 <span class="text-<%= request.decorate.status_color %>"><%= request.status.titleize %></span>
             </td>
             <td class="text-center">
-              <% if request.check_vouchers.present? &&  !request.check_vouchers.last.cancelled? %>
-                <%= link_to accounting_check_path(request.check_vouchers.last), class: 'btn btn-sm btn-success', title: "View Check Voucher" do %>
-                  <i class="bi bi-receipt"></i>   
-                  Show             
-                <% end %>
+              <% if request.check_vouchers.present? %>
+                <%= link_to accounting_check_voucher_request_path(request), class: small_btn('success') do %>
+                  <i class="bi bi-receipt"></i>
+                  Generated vouchers
+                <% end%>
               <% else %>
                 <%= link_to new_accounting_check_path(rid: request.id), class: 'btn btn-sm btn-primary', data: {turbo_frame: 'modal'}, title: "Generate Check Voucher" do %>
                   <i class="bi bi-receipt-cutoff"></i>
