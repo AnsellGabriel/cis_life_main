@@ -14,12 +14,14 @@ class AgreementBenefitsController < ApplicationController
 
   # GET /agreement_benefits/new
   def new
-    @agreement_benefit = AgreementBenefit.new
+    @agreement = Agreement.find_by(id: params[:a_id])
+    @agreement_benefit = @agreement.agreement_benefits.build
+    # @agreement_benefit = AgreementBenefit.new
     # if params[:a] == 'plan'
     #   @agreement_benefit.plan_id = params[:id]
     # end
     # raise "errors"
-    default_value
+    # default_value
   end
 
 
@@ -29,7 +31,10 @@ class AgreementBenefitsController < ApplicationController
 
   # POST /agreement_benefits
   def create
-    @agreement_benefit = AgreementBenefit.new(agreement_benefit_params)
+    @agreement = Agreement.find(params[:agreement])
+    # @agreement_benefit = AgreementBenefit.new(agreement_benefit_params)
+    @agreement_benefit = @agreement.agreement_benefits.build(agreement_benefit_params)
+    raise 'errors'
 
     if @agreement_benefit.save
       redirect_to @agreement_benefit, notice: "Agreement benefit was successfully created."
@@ -64,8 +69,8 @@ class AgreementBenefitsController < ApplicationController
   # Only allow a list of trusted parameters through.
   def agreement_benefit_params
     # params.require(:agreement_benefit).permit(:agreement_id, :plan_id, :proposal_id, :option_id, :name, :description, :min_age, :max_age, :insured_type)
-    params.require(:agreement_benefit).permit(:agreement_id, :plan_id, :proposal_id, :option_id, :name, :description, :min_age, :max_age, :insured_type,
-      product_benefits_param: [:id, :coverage_amount, :premium, :agreement_benefit_id, :benefit_id, :duration, :residency_floor, :residency_ceiling])
+    params.require(:agreement_benefit).permit(:agreement_id, :plan_id, :proposal_id, :option_id, :name, :description, :min_age, :max_age, :exit_age, :with_dependent, :insured_type,
+      product_benefits_attributes: [:id, :coverage_amount, :premium, :agreement_benefit_id, :benefit_id, :duration, :residency_floor, :residency_ceiling])
   end
 
   def default_value

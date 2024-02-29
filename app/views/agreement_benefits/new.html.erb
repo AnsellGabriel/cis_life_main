@@ -10,6 +10,6 @@
 <%= render "remote_modal", title: "New Agreement benefit" do %>
 
   <%#= render "form", agreement_benefit: @agreement_benefit %>
-  <%= render "form", url: agreement_benefits_path(v: @agreement), meth: 'post' %>
+  <%= render "form", url: agreement_benefits_path(agreement: @agreement), meth: 'post' %>
 <% end %>
  

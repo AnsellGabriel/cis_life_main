@@ -3,8 +3,17 @@ import { get } from "@rails/request.js"
 
 // Connects to data-controller="group-plan"
 export default class extends Controller {
-  static targets = ["lppi", "gyrt", "sii", "planSelect"]
+  static targets = ["lppi", "gyrt", "sii", "prem", "planSelect", "benSelect"]
 
+  connect() {
+    let ben_id = this.benSelectTarget.selectedOptions[0].value
+
+    if (ben_id == "1") { // for Life Benefit 
+      this.premTarget.hidden = false
+    } else {
+      this.premTarget.hidden = true
+    }
+  }
 
   toggleTargets(event) {
 
@@ -14,15 +23,15 @@ export default class extends Controller {
     if (plan_id == "2") { // for LPPI 
       this.lppiTarget.hidden = false
       this.gyrtTarget.hidden = true
-      this.siiTarget.hidden = true
-    } else if (plan_id == "8") { // for SII
-      this.siiTarget.hidden = false
-      this.lppiTarget.hidden = true
-      this.gyrtTarget.hidden = true
-    } else {
-      this.siiTarget.hidden = true
+      // this.siiTarget.hidden = true
+    } else if (plan_id == "1" || plan_id == "3" || plan_id == "4") { // for GYRT
+      // this.siiTarget.hidden = false
       this.lppiTarget.hidden = true
       this.gyrtTarget.hidden = false
+    } else {
+      // this.siiTarget.hidden = true
+      this.lppiTarget.hidden = true
+      this.gyrtTarget.hidden = true
     }
   }
 
@@ -34,5 +43,15 @@ export default class extends Controller {
       responseKind: "turbo-stream"
     })
 
+  }
+
+  toggleTargets2(event) {
+    let ben_id = event.target.value;
+
+    if (ben_id == "1") { // for Life Benefit 
+      this.premTarget.hidden = false
+    } else {
+      this.premTarget.hidden = true
+    }
   }
 }

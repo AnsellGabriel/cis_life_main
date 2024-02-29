@@ -7,10 +7,13 @@ class AgreementBenefit < ApplicationRecord
   has_many :batches
   has_many :batch_dependents
   has_many :product_benefits
+  has_many :benefits, through: :product_benefits
   has_many :prcoess_claims
   belongs_to :agreement, optional: true
   belongs_to :plan, optional: true
   belongs_to :proposal, optional: true
+  accepts_nested_attributes_for :product_benefits, reject_if: :all_blank, allow_destroy: true
+
   #   belongs_to :option, optional: true
 
   #   belongs_to :agreement

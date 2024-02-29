@@ -3,20 +3,22 @@
     <div class="card-body">
       <h4> <%= agreement.cooperative %> </h4>
       <%= agreement.plan %> <br>
-      <small class="text-muted mb-3"><%= agreement.agent %>
-      </small><br>
       <%= agreement.description %> <br>
       <div class="row">
         <div class="col-md-6">
           <dl class="row mt-3">
-            <dt class="col-sm-7">Contestability Period</dt>
-            <dd class="col-sm-5"><%= agreement.contestability %></dd>
-            <dt class="col-sm-7">No Evidence Limit (NEL)</dt>
-            <dd class="col-sm-5"><%= to_currency(agreement.nel) %></dd>
-            <dt class="col-sm-7">Non Medical Limit</dt>
-            <dd class="col-sm-5"><%= to_currency(agreement.nml) %></dd>
-            <dt class="col-sm-7">Anniversary Type</dt>
-            <dd class="col-sm-5"><%= agreement.anniversary_type %></dd>
+            <% unless ["LPPI", "SII"].include?(agreement.plan.acronym) %>
+              <dt class="col-sm-7">Contestability Period</dt>
+              <dd class="col-sm-5"><%= agreement.contestability %></dd>
+              <dt class="col-sm-7">No Evidence Limit (NEL)</dt>
+              <dd class="col-sm-5"><%= to_currency(agreement.nel) %></dd>
+              <dt class="col-sm-7">Non Medical Limit</dt>
+              <dd class="col-sm-5"><%= to_currency(agreement.nml) %></dd>
+              <dt class="col-sm-7">Anniversary Type</dt>
+              <dd class="col-sm-5"><%= agreement.anniversary_type %></dd>
+            <% end %>
+            <dt class="col-sm-7">Marketing Agent</dt>
+            <dd class="col-sm-5"><%= agreement.agent %></dd>
             <dt class="col-sm-7">Commission Type</dt>
             <dd class="col-sm-5"><%= agreement.comm_type %></dd>
             <% if agreement.transferred %>
@@ -50,17 +52,29 @@
 </div>
 
 <% if @agreement.plan_id == 2 || @agreement.plan_id == 8 %> <!-- for LPPI & SII -->
+  <%= link_to new_loan_insurance_rate_path(a_id: @agreement.id), class: "btn btn-primary btn-sm mb-2", data: { turbo_frame: "remote_modal" } do %>
+    Add Rate
+  <% end %>
+
   <div class="row">
     <% @agreement.loan_rates.each do |rate| %>
       <div class="col-md-6 mb-3">
         <div class="card">
-          <div class="card-header">
+          <div class="card-header text-white bg-<%= rate.min_age <= 65 ? "primary" : "danger" %>">
             <h5><%= rate.min_age %> to <%= rate.max_age %> years old</h5>
-            <small class="text-muted">Loan Amount: <%= to_currency(rate.min_amount) %> to <%= to_currency(rate.max_amount) %></small>
+            <small>Loan Amount: <%= to_currency(rate.min_amount) %> to <%= to_currency(rate.max_amount) %></small>
           </div>
           <div class="card-body">
             <small>Annual Rate: <%= to_currency(rate.annual_rate) %></small> <br>
-            <small>Monthly Rate: <%= to_currency(rate.monthly_rate) %> / 1,000</small> 
+            <small>Monthly Rate: <%= to_currency(rate.monthly_rate) %> / <%= to_currency(1000) %></small> <br>
+            <small>No Evidence Limit: <%= to_currency(rate.nel) %></small> <br>
+            <small>Non-medical Limit Rate: <%= to_currency(rate.nml) %></small> <br>
+            <small>Contestability: <%= pluralize(rate.contestability, "month") %></small>
+          </div>
+          <div class="card-footer">
+            <%= link_to edit_loan_insurance_rate_path(rate), class: "btn btn-success btn-sm", data: { turbo_frame: "remote_modal" } do %>
+              Edit
+            <% end %>
           </div>
         </div>
       </div>
@@ -69,11 +83,20 @@
   </div>
 
 <% else %>
+  <%= link_to new_agreement_benefit_path(a_id: @agreement.id), class: "btn btn-primary btn-sm mb-2", data: { turbo_frame: "remote_modal" } do %>
+    Add Agreement Benefit
+  <% end %>
+
   <div class="row">
     <% @agreement_benefits.each do |ab| %>
       <div class="col-md-6 mb-3">
         <div class="card">
-          <h5 class="card-header"><%= ab.name %>  <small class="text-muted"><%= ab.insured_type %></small></h5>
+          <div class="card-header">
+            <h5 class="text-primary"><%= ab.name %></h5>
+            <%= link_to edit_agreement_benefit_path(ab), class: "btn btn-sm btn-success", data: { turbo_frame: "remote_modal" } do %>
+              <%= bootstrap_icon "pencil-square" %>
+            <% end %>
+          </div>
           <div class="card-body">
             <div class="text-center">
               <table class="table">

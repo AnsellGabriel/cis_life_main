@@ -127,6 +127,11 @@
           <%= render 'layouts/partials/nav_dropdown', title: "<i class=\"bi bi-person-circle\"></i> <small> Hi, #{current_user.userable.first_name}</small>".html_safe do %>
             <li class="nav-item"> <a class="nav-link" href="#"><%= current_user.email %></a> </li>
             <li class="nav-item"> <%= link_to "Change Password", edit_user_registration_path, class: "nav-link" %></li>
+            <% if current_user.userable_type == "Employee" %>
+              <%= content_tag :li, class:"nav-item"  do %>
+                <%= link_to "Authority Level: #{to_currency(session[:max_amount])}", "#", class: "nav-link" %>
+              <% end %>
+            <% end %>
             <li class="nav-item"> <%= button_to "Sign Out", destroy_user_session_path, method: :delete, class: "btn btn-sm btn-primary mx-2" %></li>
           <% end %>
 

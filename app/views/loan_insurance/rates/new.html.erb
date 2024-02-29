@@ -1,7 +1,9 @@
-
-<div class="card">
+<%= render "remote_modal", title: "New Rate" do %>
+  <%#= render "form", loan_insurance_rate: @loan_insurance_rate %>
+  <%= render "form", url: loan_insurance_rates_path(agreement: @agreement), meth: 'post' %>
+<% end %>
+<!-- <div class="card">
   <h5 class="card-header">New rate</h5>
   <div class="card-body">
-    <%= render "form", loan_insurance_rate: @loan_insurance_rate %>
   </div>
-</div>
+</div -->

@@ -1,5 +1,6 @@
 class Agreement < ApplicationRecord
-  validates_presence_of :cooperative_id, :plan_id, :agent_id, :moa_no, :contestability, :nel, :nml, :entry_age_from, :entry_age_to, :exit_age, :coop_sf, :agent_sf, :minimum_participation
+  # validates_presence_of :cooperative_id, :plan_id, :agent_id, :moa_no, :contestability, :nel, :nml, :entry_age_from, :entry_age_to, :exit_age, :coop_sf, :agent_sf, :minimum_participation
+  validates_presence_of :cooperative_id, :plan_id, :agent_id
 
   scope :with_moa_like, -> (filter) { where("moa_no LIKE ?", "%#{filter}%") }
   scope :lppi, -> { find {|a| a.plan.acronym == "LPPI"} }
@@ -14,6 +15,8 @@ class Agreement < ApplicationRecord
   belongs_to :cooperative, optional: true
 
   has_many :agreement_benefits
+  has_many :product_benefits, through: :agreement_benefits
+  has_many :benefits, through: :product_benefits
   has_many :emp_agreements
   has_many :employees, through: :emp_agreements
   has_many :group_remits
