@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2024_02_19_053334) do
+ActiveRecord::Schema[7.0].define(version: 2024_02_29_011847) do
   create_table "accounting_vouchers", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.date "date_voucher"
     t.integer "voucher"
@@ -1185,6 +1185,14 @@ ActiveRecord::Schema[7.0].define(version: 2024_02_19_053334) do
     t.index ["sip_ab_id"], name: "index_sip_pbs_on_sip_ab_id"
   end
 
+  create_table "special_arrangements", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+    t.bigint "agreement_id"
+    t.text "arrangement"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["agreement_id"], name: "index_special_arrangements_on_agreement_id"
+  end
+
   create_table "treasury_accounts", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.string "name"
     t.integer "account_type"
@@ -1330,6 +1338,7 @@ ActiveRecord::Schema[7.0].define(version: 2024_02_19_053334) do
   add_foreign_key "health_dec_subquestions", "health_decs"
   add_foreign_key "loan_insurance_batches", "coop_members"
   add_foreign_key "loan_insurance_batches", "group_remits"
+  add_foreign_key "loan_insurance_batches", "loan_insurance_loans"
   add_foreign_key "loan_insurance_batches", "loan_insurance_rates"
   add_foreign_key "loan_insurance_details", "batches"
   add_foreign_key "loan_insurance_details", "loan_insurance_loans"

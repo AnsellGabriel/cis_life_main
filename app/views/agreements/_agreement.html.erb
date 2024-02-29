@@ -34,12 +34,14 @@
             <% end %>
           </dl>
         </div>
-        <% unless agreement.plan_id == 2 %>
-          <div class="col-md-6">
+        <div class="col-md-6">
+          <% unless agreement.plan_id == 2 %>
             <strong class="text-primary mb-3">Anniversary</strong>
             <%= render 'anniversaries/show_anniversary', a: agreement %>
-          </div>
-        <% end %>
+          <% end %>
+          <strong class="text-primary">Special Arrangements</strong>
+          <%= render 'special_arrangements/show_special_arrangements', a: agreement %>
+        </div>
       </div>
     </div>
     <div class="card-footer">

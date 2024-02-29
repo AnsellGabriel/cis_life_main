@@ -17,6 +17,13 @@
                   required: true,
                   input_html: { autocomplete: "new-password" }, wrapper_html: { class: "col-md-6" } %>
         </div>
+        <ul class="small text-danger half-visible mb-0 ">
+          <li data-password-strength-target="min_char">Minimum 8 characters</li>
+          <li data-password-strength-target="lowercase">at least one lowercase letter</li>
+          <li data-password-strength-target="uppercase">at least one uppercase letter</li>
+          <li data-password-strength-target="digit">at least one digit</li>
+          <li data-password-strength-target="special">at least one special character</li>
+        </ul>
         <%= u.hidden_field :userable_type, value: "Employee" %>
         <%= u.hidden_field :userable_id, value: @employee.id %>
       <% end %>

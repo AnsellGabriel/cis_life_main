@@ -21,6 +21,7 @@ class Agreement < ApplicationRecord
   has_many :agreements_coop_members
   has_many :coop_members, through: :agreements_coop_members
   has_many :loan_rates, class_name: "LoanInsurance::Rate"
+  has_many :special_arrangements, dependent: :destroy
   has_one :agreement_proposal, dependent: :destroy
   has_one :group_proposal, through: :agreement_proposal
   accepts_nested_attributes_for :agreement_benefits, reject_if: :all_blank, allow_destroy: true

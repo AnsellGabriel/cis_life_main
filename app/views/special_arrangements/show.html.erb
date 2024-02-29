@@ -1,0 +1,9 @@
+
+<%= render @special_arrangement %>
+
+<div>
+  <%= link_to "Edit", edit_special_arrangement_path(@special_arrangement), class: 'btn btn-primary' %> |
+  <%= link_to "Back", special_arrangements_path, class: 'btn btn-primary' %>
+
+  <%= button_to "Delete", @special_arrangement, method: :delete, class: 'btn btn-danger' %>
+</div>
