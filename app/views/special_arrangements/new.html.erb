@@ -1,0 +1,10 @@
+<%# <div class="card">
+  <h5 class="card-header">New special arrangement</h5>
+  <div class="card-body"> %>
+<%#= render "form", special_arrangement: @special_arrangement %>
+<%# </div>
+</div> %>
+<%= render "remote_modal", title: "New arrangement" do %>
+  <%#= render "form", coop_branch: @coop_branch %>
+  <%= render "form", url: special_arrangements_path(v: @agreement), meth: 'post' %>
+<% end %>

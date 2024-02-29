@@ -1,0 +1,38 @@
+<%= content_tag :h1, "List of Special Arrangements" %>
+
+
+<div class="text-end mb-3">
+  <%= link_to new_special_arrangement_path, class: 'btn btn-primary' do %>
+    New Special Arrangement
+  <% end %>
+</div>
+
+
+  <table class="table table-striped table-bordered table-hover">
+    <thead>
+      <tr>
+      <th>#</th>
+            <th>Agreement</th>
+            <th>Arrangement</th>
+            <th></th>
+        </tr>
+    </thead>
+
+    <tbody>
+      <% @special_arrangements.each do |special_arrangement| %>
+        <tr>
+
+        <th scope="row"><%= special_arrangement.id %></th>
+        <td><%= special_arrangement.agreement %></td>
+        <td><%= special_arrangement.arrangement %></td>
+    
+          <td>
+            <%= link_to 'View', special_arrangement, class: 'btn btn-secondary btn-sm' %>
+            <%= link_to 'Edit', edit_special_arrangement_path(special_arrangement), class: 'btn btn-secondary btn-sm' %>
+            <%= link_to "Delete", special_arrangement, class: "btn btn-danger btn-sm", method: :delete, data: { "turbo-method": :delete, turbo_confirm: "Are you sure?" } %>
+          </td>
+
+        </tr>
+      <% end %>
+    </tbody>
+  </table>

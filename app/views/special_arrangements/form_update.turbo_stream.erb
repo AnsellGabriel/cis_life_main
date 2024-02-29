@@ -1,0 +1,4 @@
+<%= turbo_stream.update "remote_modal_body" do %>
+  <%#= render "form", anniversary: @anniversary %>
+  <%= render "form", url: anniversaries_path(v: @agreement), meth: 'post' %>
+<% end %>
