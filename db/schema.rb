@@ -12,6 +12,7 @@
 
 ActiveRecord::Schema[7.0].define(version: 2024_02_28_075936) do
   create_table "accounting_check_vouchers", charset: "utf8mb4", force: :cascade do |t|
+
     t.date "date_voucher"
     t.string "voucher"
     t.string "payable_type", null: false
@@ -926,8 +927,7 @@ ActiveRecord::Schema[7.0].define(version: 2024_02_28_075936) do
     t.bigint "agreement_id", null: false
     t.decimal "min_amount", precision: 15, scale: 2
     t.decimal "max_amount", precision: 15, scale: 2
-    t.index ["agreement_id"], name: "index_loan_insurance_rates_on_agreement_id"
-  end
+
 
   create_table "loan_insurance_retentions", charset: "utf8mb4", force: :cascade do |t|
     t.decimal "amount", precision: 15, scale: 2
@@ -1042,9 +1042,11 @@ ActiveRecord::Schema[7.0].define(version: 2024_02_28_075936) do
     t.string "gyrt_type"
   end
 
-  create_table "process_claims", charset: "utf8mb4", force: :cascade do |t|
-    t.bigint "cooperative_id", null: false
-    t.bigint "agreement_id", null: false
+
+  create_table "process_claims", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+    t.bigint "cooperative_id"
+    t.bigint "agreement_id"
+    t.bigint "batch_id"
     t.date "date_incident"
     t.integer "entry_type"
     t.datetime "created_at", null: false
@@ -1069,6 +1071,7 @@ ActiveRecord::Schema[7.0].define(version: 2024_02_28_075936) do
     t.integer "status"
     t.index ["agreement_benefit_id"], name: "index_process_claims_on_agreement_benefit_id"
     t.index ["agreement_id"], name: "index_process_claims_on_agreement_id"
+    t.index ["batch_id"], name: "index_process_claims_on_batch_id"
     t.index ["cause_id"], name: "index_process_claims_on_cause_id"
     t.index ["claim_type_id"], name: "index_process_claims_on_claim_type_id"
     t.index ["claimable_type", "claimable_id"], name: "index_process_claims_on_claimable"
@@ -1253,7 +1256,15 @@ ActiveRecord::Schema[7.0].define(version: 2024_02_28_075936) do
     t.index ["sip_ab_id"], name: "index_sip_pbs_on_sip_ab_id"
   end
 
-  create_table "treasury_accounts", charset: "utf8mb4", force: :cascade do |t|
+  create_table "special_arrangements", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+    t.bigint "agreement_id"
+    t.text "arrangement"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["agreement_id"], name: "index_special_arrangements_on_agreement_id"
+  end
+
+  create_table "treasury_accounts", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.string "name"
     t.integer "account_type"
     t.boolean "is_check_account", default: false
@@ -1280,6 +1291,8 @@ ActiveRecord::Schema[7.0].define(version: 2024_02_28_075936) do
     t.bigint "voucher_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.integer "status", default: 0
+    t.text "notes"
     t.index ["voucher_id"], name: "index_treasury_business_checks_on_voucher_id"
   end
 
@@ -1408,8 +1421,6 @@ ActiveRecord::Schema[7.0].define(version: 2024_02_28_075936) do
   add_foreign_key "loan_insurance_rates_copy1", "agreements", name: "loan_insurance_rates_copy1_ibfk_1"
   add_foreign_key "member_dependents", "members"
   add_foreign_key "process_claims", "agreement_benefits"
-  add_foreign_key "process_claims", "agreements"
-  add_foreign_key "process_claims", "cooperatives"
   add_foreign_key "process_coverages", "employees", column: "approver_id"
   add_foreign_key "process_coverages", "employees", column: "processor_id"
   add_foreign_key "process_coverages", "employees", column: "who_approved_id"

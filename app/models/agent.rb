@@ -1,7 +1,7 @@
 class Agent < ApplicationRecord
-  validates_presence_of :first_name, :middle_name, :last_name, :agent_group_id, :birthdate
+  validates_presence_of :first_name, :middle_name, :last_name
 
-  belongs_to :agent_group
+  belongs_to :agent_group, optional: true
 
   has_one :user, as: :userable, dependent: :destroy
   has_many :agreements

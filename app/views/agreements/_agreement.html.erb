@@ -36,12 +36,14 @@
             <% end %>
           </dl>
         </div>
-        <% unless agreement.plan_id == 2 %>
-          <div class="col-md-6">
+        <div class="col-md-6">
+          <% unless agreement.plan_id == 2 %>
             <strong class="text-primary mb-3">Anniversary</strong>
             <%= render 'anniversaries/show_anniversary', a: agreement %>
-          </div>
-        <% end %>
+          <% end %>
+          <strong class="text-primary">Special Arrangements</strong>
+          <%= render 'special_arrangements/show_special_arrangements', a: agreement %>
+        </div>
       </div>
     </div>
     <div class="card-footer">
@@ -86,7 +88,6 @@
   <%= link_to new_agreement_benefit_path(a_id: @agreement.id), class: "btn btn-primary btn-sm mb-2", data: { turbo_frame: "remote_modal" } do %>
     Add Agreement Benefit
   <% end %>
-
   <div class="row">
     <% @agreement_benefits.each do |ab| %>
       <div class="col-md-6 mb-3">
@@ -117,14 +118,30 @@
               </table>
             </div>
             <%# SHOW PRODUCT BENEFIT %>
-            
             <%= render 'product_benefits/show_product_benefit', ab: ab %>
           </div>
         </div>
       </div>
     <% end %>
   </div>
-  
-<% end %>
-
+  <% if @agreement.plan_id == 2 || @agreement.plan_id == 8 %> <!-- for LPPI & SII -->
+    <div class="row">
+      <% @agreement.loan_rates.each do |rate| %>
+        <div class="col-md-6 mb-3">
+          <div class="card">
+            <div class="card-header">
+              <h5><%= rate.min_age %> to <%= rate.max_age %> years old</h5>
+              <small class="text-muted">Loan Amount: <%= to_currency(rate.min_amount) %> to <%= to_currency(rate.max_amount) %></small>
+            </div>
+            <div class="card-body">
+              <small>Annual Rate: <%= to_currency(rate.annual_rate) %></small> <br>
+              <small>Monthly Rate: <%= to_currency(rate.monthly_rate) %> / 1,000</small>
+            </div>
+          </div>
+        </div>
+      <% end %>
+    </div>
+  <% else %>
+  <% end %>
+</div>
 <%#= console %>

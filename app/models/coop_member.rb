@@ -1,6 +1,6 @@
 class CoopMember < ApplicationRecord
   before_save :set_full_name
-  validates_presence_of :coop_branch_id, :membership_date, :cooperative_id
+  validates_presence_of :coop_branch_id, :cooperative_id
 
   scope :approved_members, -> (approved_batches) {
     joins(:batches)
@@ -18,7 +18,7 @@ class CoopMember < ApplicationRecord
   has_many :agreements_coop_members
   has_many :agreements, through: :agreements_coop_members
   has_many :process_claims, as: :claimable
-
+ 
   def to_s
     "#{full_name.titleize}"
   end
@@ -31,6 +31,7 @@ class CoopMember < ApplicationRecord
   def set_full_name
     self.full_name = "#{member.last_name}, #{member.first_name} #{member.middle_name}"
   end
+
 
   def birthdate
     self.member.birth_date

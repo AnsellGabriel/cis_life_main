@@ -57,23 +57,26 @@
           <% else %>
             <% case current_user.userable.department_id %>
             <% when 11 %>
-              <% if current_user.head? %>
-                <%= link_to "For Approval", for_approval_index_accounting_checks_path, class: "nav-link" %>
+              <%= render 'layouts/partials/nav_dropdown', title: 'Check Vouchers' do %>
+                <% if current_user.head? %>
+                  <%= link_to "For Approval", for_approval_index_accounting_checks_path, class: "dropdown-item" %>
+                <% end %>
+                <%= link_to "Index", accounting_checks_path, class: "dropdown-item" %>
+                <%= link_to "Requests", requests_accounting_checks_path, class: "dropdown-item" %>
               <% end %>
-              <%= link_to "Requests", requests_accounting_checks_path, class: "nav-link" %>
-              <%= link_to "Check Vouchers", accounting_checks_path, class: "nav-link" %>
               <%= link_to "Journal Vouchers", accounting_journals_path, class: "nav-link" %>
             <% when 26 %>
                 <%= render 'layouts/partials/nav_dropdown', title: 'Business Checks' do %>
                   <%= link_to "Index", treasury_checks_path	, class: "dropdown-item" %>
                   <%= link_to "Requests", requests_treasury_checks_path	, class: "dropdown-item" %>
                 <% end %>
-                <%= link_to "Cashier Entries", treasury_cashier_entries_path	, class: "nav-link" %>
+                <%= render 'layouts/partials/nav_dropdown', title: 'Cashier Entries' do %>
+                  <%= link_to "Index", treasury_cashier_entries_path	, class: "dropdown-item" %>
+                  <% if current_user.head? %>
+                    <%= link_to "For Approval", for_approval_index_treasury_cashier_entries_path	, class: "dropdown-item" %>
+                  <% end %>
+                <% end %>
                 <%= link_to "Remittances", payments_path	, class: "nav-link" %>
-            <% when 27 %>
-              <%= render 'layouts/partials/nav_dropdown', title: 'For Audit' do %>
-                <%= link_to "Check Vouchers", audit_check_vouchers_path	, class: "dropdown-item" %>
-              <% end %>
             <% when 15 %>
               <%= render 'layouts/partials/nav_dropdown', title: 'Data Entries' do %>
                 <%= link_to "Cooperative", cooperatives_path, class: "dropdown-item" %>

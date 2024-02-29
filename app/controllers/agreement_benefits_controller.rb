@@ -16,6 +16,9 @@ class AgreementBenefitsController < ApplicationController
   def new
     @agreement = Agreement.find_by(id: params[:a_id])
     @agreement_benefit = @agreement.agreement_benefits.build
+    #@agreement = Agreement.find(params[:v])
+    #@agreement_benefit = @agreement.agreement_benefits.build
+    # @agreement_benefit.plan = @agreement.plan
     # @agreement_benefit = AgreementBenefit.new
     # if params[:a] == 'plan'
     #   @agreement_benefit.plan_id = params[:id]
@@ -71,6 +74,7 @@ class AgreementBenefitsController < ApplicationController
     # params.require(:agreement_benefit).permit(:agreement_id, :plan_id, :proposal_id, :option_id, :name, :description, :min_age, :max_age, :insured_type)
     params.require(:agreement_benefit).permit(:agreement_id, :plan_id, :proposal_id, :option_id, :name, :description, :min_age, :max_age, :exit_age, :with_dependent, :insured_type,
       product_benefits_attributes: [:id, :coverage_amount, :premium, :agreement_benefit_id, :benefit_id, :duration, :residency_floor, :residency_ceiling])
+
   end
 
   def default_value

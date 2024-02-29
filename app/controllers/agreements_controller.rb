@@ -79,7 +79,7 @@ class AgreementsController < ApplicationController
   def agreement_params
     # params.require(:agreement).permit(:plan_id, :cooperative_id, :proposal_id, :agent_id, :moa_no, :contestability, :nel, :nml, :anniversary_type, :transferred, :transferred_date, :previous_provider, :comm_type, :claims_fund, :entry_age_from, :entry_age_to, :exit_age)
     params.require(:agreement).permit(:plan_id, :cooperative_id, :agent_id, :moa_no, :contestability, :nel, :nml, :anniversary_type, :transferred, :transferred_date, :previous_provider, :comm_type, :claims_fund, :claims_fund_amount, :entry_age_from, :entry_age_to, :exit_age, :coop_sf, :agent_sf, :minimum_participation, :reconsiderable, :unusable,
-      agreement_benefits_attributes: [:id, :name, :description, :min_age, :max_age, :exit_age, :insured_type, :with_dependent, :_destroy],
+      agreement_benefits_attributes: [:id, :name, :plan_id, :description, :min_age, :max_age, :exit_age, :insured_type, :with_dependent, :_destroy],
       anniversaries_attributes: [:id, :name, :anniversary_date, :_destroy],
       loan_rates_attributes: [:id, :min_age, :max_age, :monthly_rate, :annual_rate, :min_amount, :max_amount, :coop_sf, :agent_sf, :_destroy])
   end

@@ -34,9 +34,16 @@ class MembersController < InheritedResources::Base
     if params[:coop_id].present?
       @cooperative = Cooperative.find(params[:coop_id])
     end
-    @member = Member.new(
-      # birth_place: FFaker::Address.city,
-      # address: FFaker::Address.street_address,
+    @member = Member.new()
+    dummy_data
+    @coop_member = @member.coop_members.build
+    @prov = @muni = @brgy = []
+  end
+
+  def dummy_data
+    if Rails.env.development?
+      @member.birth_place = FFaker::Address.city
+      @member.address = FFaker::Address.street_address
       # sss_no: FFaker::Identification.ssn,
       # tin_no: FFaker::Identification.ssn,
       # civil_status: 'Single',
@@ -47,16 +54,15 @@ class MembersController < InheritedResources::Base
       # employer: 'Company',
       # work_address: FFaker::Address.street_address,
       # work_phone_number: '09123456789',
-      # last_name: FFaker::Name.last_name,
-      # first_name: FFaker::Name.first_name,
-      # middle_name: FFaker::Name.last_name,
+      @member.last_name = FFaker::Name.last_name
+      @member.first_name = FFaker::Name.first_name
+      @member.middle_name = FFaker::Name.last_name
+      @member.birth_date = FFaker::Time.date
       # suffix: 'Jr',
       # email: FFaker::Internet.email,
       # mobile_number: '09123456789',
       # birth_date: FFaker::Time.date
-    )
-    @coop_member = @member.coop_members.build
-    @prov = @muni = @brgy = []
+    end
   end
 
   def create

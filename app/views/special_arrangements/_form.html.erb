@@ -1,0 +1,12 @@
+<%= simple_form_for(@special_arrangement, url: url, method: meth) do |f| %>
+  <%#= simple_form_for(@special_arrangement) do |f| %>
+    <%= f.error_notification %>
+    <%= f.error_notification message: f.object.errors[:base].to_sentence if f.object.errors[:base].present? %>
+    <div class="form-inputs mb-3">
+      <%= f.input :arrangement, input_html: { rows: 6 }, wrapper_html: { style: "text-align: center;" } %>
+    </div>
+    <div class="form-actions text-end">
+      <%#= link_to "Back", :back, class: 'btn btn-secondary' %>
+      <%= f.button :submit, class: 'btn-success' %>
+    </div>
+  <% end %>

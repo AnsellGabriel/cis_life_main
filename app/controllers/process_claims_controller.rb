@@ -43,6 +43,8 @@ class ProcessClaimsController < ApplicationController
     @claim_type_document = ClaimTypeDocument.where(claim_type: @process_claim.claim_type)
     @claim_type_document_ids = @process_claim.claim_attachments.pluck(:claim_type_document_id)
     @required_documents = @claim_type_document.where.not(id: @claim_type_document_ids)
+    @check = @process_claim.check_voucher_request&.check_vouchers&.where(audit: [:pending_audit, :for_audit]).last
+    @audit_remarks = @check&.remarks
   end
   # GET /process_claims/new
   def new
@@ -80,6 +82,8 @@ class ProcessClaimsController < ApplicationController
     @process_claim.claimable = @coop_member
     @process_claim.cooperative = @coop_member.cooperative
     @claim_cause = @process_claim.build_claim_cause
+    @agreement = Agreement.where(cooperative: @process_claim.cooperative)
+    set_dummy_value
   end
 
   def create_coop
@@ -139,8 +143,10 @@ class ProcessClaimsController < ApplicationController
   end
 
   def claim_process
-
+    @check = @process_claim.check_voucher_request&.check_vouchers&.where(audit: [:pending_audit, :for_audit]).last
+    @audit_remarks = @check&.remarks
   end
+
   # POST /process_claims
   def create
     @process_claim = ProcessClaim.new(process_claim_params)
@@ -230,12 +236,18 @@ class ProcessClaimsController < ApplicationController
             #   description: "Claim Request for Payment",
             #   analyst: current_user.userable.signed_fullname
             # )
-            request = CheckVoucherRequestService.new(@process_claim, @process_claim.get_benefit_claim_total, :claims_payment, current_user)
 
-            if request.create_request
-              format.html { redirect_to show_coop_process_claim_path(@process_claim), notice: "#{@process_claim.claim_route.to_s.humanize.titleize} by #{current_user}"  }
+            if @process_claim.check_voucher_request&.check_vouchers&.pending_audit.present?
+              #* put the check voucher to pending here
+              @process_claim.check_voucher_request.check_vouchers.pending_audit.last.update(audit: :for_audit)
             else
-              format.html { redirect_to show_coop_process_claim_path(@process_claim), alert: "Something went wrong" }
+              request = CheckVoucherRequestService.new(@process_claim, @process_claim.get_benefit_claim_total, :claims_payment, current_user)
+
+              if request.create_request
+                format.html { redirect_to show_coop_process_claim_path(@process_claim), notice: "#{@process_claim.claim_route.to_s.humanize.titleize} by #{current_user}"  }
+              else
+                format.html { redirect_to show_coop_process_claim_path(@process_claim), alert: "Something went wrong" }
+              end
             end
           end
         else

@@ -65,7 +65,7 @@ class AnniversariesController < InheritedResources::Base
 
   def set_anniversary
     @anniversary = Anniversary.find(params[:id])
-    @agreement = Agreement.find(@anniversary.agreement.id)
+    @agreement = @anniversary.agreement
   end
 
   def anniversary_params

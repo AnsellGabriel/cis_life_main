@@ -1,6 +1,6 @@
 class CoopMembersController < InheritedResources::Base
   before_action :authenticate_user!
-  before_action :check_userable_type
+  # before_action :check_userable_type
   before_action :set_coop_member, only: %i[show edit update destroy selected member_agreements show_insurance]
 
   def index
@@ -16,6 +16,12 @@ class CoopMembersController < InheritedResources::Base
     f_members = @q.result(distinct: true).includes(:coop_members)
 
     @pagy_members, @filtered_members = pagy(f_members, items: 10)
+  end
+
+  def new_ca 
+    @cooperative = Cooperative.find(params[:s])
+    @member = Member.new
+    
   end
 
   def new
@@ -91,18 +97,18 @@ class CoopMembersController < InheritedResources::Base
   end
 
   private
-  def set_coop_member
-    @coop_member = CoopMember.find(params[:id])
-  end
-
-  def coop_member_params
-    params.require(:coop_member).permit(:cooperative_id, :coop_branch_id, :last_name, :first_name, :middle_name, :suffix, :birthdate, :mobile_number, :email, :birth_place, :address, :sss_no,
-:tin_no, :civil_status, :legal_spouse, :height, :weight, :occupation, :employer, :work_address, :work_phone_number)
-  end
-
-  def check_userable_type
-    unless current_user.userable_type == "CoopUser" || current_user.userable_type == "Employee"
-      render file: "#{Rails.root}/public/404.html", status: :not_found
+    def set_coop_member
+      @coop_member = CoopMember.find(params[:id])
     end
-  end
+
+    def coop_member_params
+      params.require(:coop_member).permit(:cooperative_id, :coop_branch_id, :last_name, :first_name, :middle_name, :suffix, :birthdate, :mobile_number, :email, :birth_place, :address, :sss_no,
+      :tin_no, :civil_status, :legal_spouse, :height, :weight, :occupation, :employer, :work_address, :work_phone_number)
+    end
+
+    def check_userable_type
+      unless current_user.userable_type == "CoopUser" || current_user.userable_type == "Employee"
+        render file: "#{Rails.root}/public/404.html", status: :not_found
+      end
+    end
 end

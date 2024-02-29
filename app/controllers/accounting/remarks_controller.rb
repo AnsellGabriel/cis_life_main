@@ -18,23 +18,27 @@ class Accounting::RemarksController < ApplicationController
     @remark = @check.remarks.build(remark_params.merge(user: current_user))
 
     if @remark.save
-      if params[:audit]
+      if current_user.is_auditor?
         @check.pending_audit!
 
         if params[:remark][:category] == "incorrect_claim_details"
           process_claim = @check.check_voucher_request.requestable
           claim_track = process_claim.process_track.build
-          claim_track.route_id = params[:p]
+          claim_track.route_id = 16
           claim_track.user_id = current_user.id
-          process_claim.update!(claim_route: claim_track.route_id, status: :process, claim_filed: 1, processing: 0, approval: 0, payment: 0)
-        else params[:remark][:category] == "incorrect_voucher_details"
+          claim_track.save
+          process_claim.update!(claim_route: 1, status: :process, claim_filed: 0, processing: 0, approval: 0, payment: 0)
+        elsif params[:remark][:category] == "incorrect_voucher_details"
+          @check.pending!
+          @check.check_voucher_request.pending!
         end
 
-      else
+      elsif current_user.is_accountant?
+        @check.cancelled!
         @check.check_voucher_request.pending! if @check.check_voucher_request.present?
       end
 
-      redirect_to accounting_check_remarks_path(@check), alert: "Voucher cancelled."
+      redirect_to accounting_check_remarks_path(@check), Notification: "Voucher updated"
     else
       render :new, status: :unprocessable_entity
     end

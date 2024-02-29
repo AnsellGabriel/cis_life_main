@@ -26,6 +26,8 @@
         <th class="text-center">Date</th>
         <th class="text-center">Type</th>
         <th class="text-center">Amount</th>
+        <th class="text-center">Status</th>
+        <th class="text-center">Notes</th>
       </tr>
     </thead>
     <tbody>
@@ -53,6 +55,13 @@
             <td class='text-center' ><%= month_day_year check.check_date %></td>
             <td class='text-center'><%= check.check_type&.humanize %></td>
             <td class="text-end"><%= to_curr check.amount %></td>
+            <td class="text-center"><span class="<%= check.decorate.check_badge %>"><%= check.decorate.check_text %></span></td>
+            <td class="text-center">
+              <%= check.notes %>
+              <%= link_to edit_treasury_check_path(check), data: {turbo_frame: 'modal'}, title: 'Edit' do %>
+                <i class="bi bi-pencil-square"></i>
+              <% end %>
+            </td>
           </tr>
         <% end %>
       <% else %>
