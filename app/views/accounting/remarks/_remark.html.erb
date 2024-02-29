@@ -1,6 +1,6 @@
   <div class="mb-3">
     <%= content_tag :p, class: "mb-1" do %>
-      <%= remark.user %> 
+      <%= remark.user.userable.signed_fullname %> 
       
       <%= content_tag :small, "- #{time_ago_in_words(remark.created_at)} ago" %> 
     <% end %>

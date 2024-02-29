@@ -15,11 +15,11 @@ class Treasury::CashierEntryDecorator < ApplicationDecorator
   #     end
   #   end
 
-  def show_path
+  def show_path(origin: nil)
     if remittance?
-      payment_entry_path(object.entriable, object)
+      payment_entry_path(object.entriable, object, origin: origin)
     else
-      treasury_cashier_entry_path(object)
+      treasury_cashier_entry_path(object, origin: origin)
     end
   end
 

@@ -9,9 +9,9 @@
 
   <div class="form-actions text-center">
     <% if params[:audit] %>
-      <%= f.button :submit, "Pending", class: "btn-warning", data: {turbo_confirm: "Add remark and set status as pending", turbo_method: :get} %>
+      <%= f.button :submit, "Pending", class: "btn-warning", data: {turbo_confirm: "Double check category before submitting the form", turbo_method: :post} %>
     <% else %>
-      <%= f.button :submit, "Cancel Voucher", class: "btn-danger", data: {turbo_confirm: "Add remark and cancel voucher", turbo_method: :get} %>
+      <%= f.button :submit, "Cancel Voucher", class: "btn-danger", data: {turbo_confirm: "Add remark and cancel voucher", turbo_method: :post} %>
     <% end %>
   </div>
 <% end %>

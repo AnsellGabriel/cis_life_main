@@ -1,6 +1,6 @@
 <div class="p-3">
 
-  <% if entry.pending? %>
+  <% if entry.pending? and (current_user.is_accountant? or current_user.is_treasurer?) %>
     <div class="mb-3 <%= flex_justify_align('between') %>">
       <div class="">
         <%= link_to new_entry_ledger_path(entry, e_t: entry.entry_type), class: small_btn('primary'), data: {turbo_frame: 'modal'} do %>
@@ -29,7 +29,7 @@
             <td class="<%= "ps-5" if ledger.credit? %>">
               <%= ledger.account.name %> 
 
-              <% if entry.pending? %>
+              <% if entry.pending? and (current_user.is_accountant? or current_user.is_treasurer?) %>
                 <%= link_to edit_entry_ledger_path(entry, ledger, e_t: entry.entry_type), 
                   class: small_btn('outline-primary'), 
                   title: 'Edit entry', data: {turbo_frame: 'modal'} do %>

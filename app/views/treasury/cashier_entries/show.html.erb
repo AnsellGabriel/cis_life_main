@@ -1,14 +1,13 @@
-<div class="<%= flex_justify_align('', 'center') %> gap-1 mb-1">
-  <%= link_to treasury_cashier_entries_path, class: 'btn btn-sm btn-secondary' do %>
-    <i class="bi bi-arrow-90deg-left"></i>
+<div class="mb-1">
+  <%= link_to treasury_cashier_entries_path, class: small_btn("outline-secondary") do %>
+    <i class="bi bi-arrow-left-square"></i>
+    Back
   <% end %>
-
-  <%= content_tag :h1, 'Receipt', class: 'mb-0' %>
 </div>
 
 <%= render 'payments/entries/cashier_entry', entry: @entry, coop: @coop, payment: @payment %>
 
-<div class="card" style="margin-left: 35px;">
+<div class="card">
   <ul class="nav nav-tabs" id="myTab" role="tablist">
     <li class="nav-item" role="presentation">
       <button class="nav-link active" id="home-tab" data-bs-toggle="tab" data-bs-target="#home" type="button" role="tab" aria-controls="home" aria-selected="true">Ledger</button>

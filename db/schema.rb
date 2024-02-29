@@ -876,8 +876,6 @@ ActiveRecord::Schema[7.0].define(version: 2024_02_29_011847) do
     t.bigint "agreement_id", null: false
     t.decimal "min_amount", precision: 15, scale: 2
     t.decimal "max_amount", precision: 15, scale: 2
-    t.decimal "coop_sf", precision: 10, scale: 2
-    t.decimal "agent_sf", precision: 10, scale: 2
     t.index ["agreement_id"], name: "index_loan_insurance_rates_on_agreement_id"
   end
 
@@ -1222,6 +1220,8 @@ ActiveRecord::Schema[7.0].define(version: 2024_02_29_011847) do
     t.bigint "voucher_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.integer "status", default: 0
+    t.text "notes"
     t.index ["voucher_id"], name: "index_treasury_business_checks_on_voucher_id"
   end
 

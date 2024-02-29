@@ -40,7 +40,8 @@ class MembersController < InheritedResources::Base
     @prov = @muni = @brgy = []
   end
 
-  def dummy_data 
+  def dummy_data
+    if Rails.env.development?
       @member.birth_place = FFaker::Address.city
       @member.address = FFaker::Address.street_address
       # sss_no: FFaker::Identification.ssn,
@@ -61,7 +62,9 @@ class MembersController < InheritedResources::Base
       # email: FFaker::Internet.email,
       # mobile_number: '09123456789',
       # birth_date: FFaker::Time.date
+    end
   end
+
   def create
     @member = Member.find_or_initialize_by(
       first_name: member_params[:first_name],

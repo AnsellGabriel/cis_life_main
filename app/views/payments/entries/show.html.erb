@@ -1,8 +1,21 @@
 <div class="<%= flex_justify_align('', 'center') %> gap-1 mb-1">
   <div class="mb-1">
-    <%= link_to payment_path(@payment), class: small_btn("outline-secondary") do %>
-      <i class="bi bi-arrow-left-square"></i>
-      Back
+    <% case params[:origin] %>
+    <% when 'index'%>
+      <%= link_to treasury_cashier_entries_path, class: small_btn("outline-secondary") do %>
+        <i class="bi bi-arrow-left-square"></i>
+        Back
+      <% end %>
+    <% when 'for_approval'%>
+      <%= link_to for_approval_index_treasury_cashier_entries_path, class: small_btn("outline-secondary") do %>
+        <i class="bi bi-arrow-left-square"></i>
+        Back
+      <% end %>
+    <% else %>
+      <%= link_to payment_path(@payment), class: small_btn("outline-secondary") do %>
+        <i class="bi bi-arrow-left-square"></i>
+        Back
+      <% end %>
     <% end %>
   </div>
 </div>
