@@ -40,15 +40,16 @@ class LppiImportService
       end
 
       coop_member = @cooperative.coop_members.find_by(member_id: member.id)
-      duplicate_member = find_duplicate_member(coop_member.id)
+      # duplicate_member = find_duplicate_member(coop_member.id)
 
-      if duplicate_member
-        # add_duplicate_member(member)
-        create_denied_member(member, "Member already exist in the batch.")
-      else
-        create_batch(member, batch_hash)
-      end
+      # if duplicate_member
+      #   # add_duplicate_member(member)
+      #   create_denied_member(member, "Member already exist in the batch.")
+      # else
+      #   create_batch(member, batch_hash)
+      # end
 
+      create_batch(member, batch_hash)
       progress_counter += 1
       update_progress(total_members, progress_counter)
     end
@@ -100,7 +101,7 @@ class LppiImportService
       maturity_date: row["MATURITY_DATE"],
       loan_amount: row["LOAN_AMOUNT"],
       loan_type: row["LOAN_TYPE"].to_s.squish.upcase,
-      premium: mis_user? && row["PREMIUM"].present? ? row["PREMIUM"].to_f : nil
+      premium: @current_user.is_mis? && row["PREMIUM"].present? ? row["PREMIUM"].to_f : nil
     }
   end
 
@@ -173,11 +174,7 @@ class LppiImportService
     end
   end
 
-  def find_duplicate_member(id)
-    @group_remit.batches.find_by(coop_member_id: id)
-  end
-
-  def mis_user?
-    @current_user.userable_type == "Employee" && @current_user.userable.department_id == 15
-  end
+  # def find_duplicate_member(id)
+  #   @group_remit.batches.find_by(coop_member_id: id)
+  # end
 end
