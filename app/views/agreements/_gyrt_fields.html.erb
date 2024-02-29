@@ -1,0 +1,9 @@
+<div class="row">
+  <%= f.input :contestability, wrapper_html: { class: "col-md-2" } %>
+  <%= f.input :nel, wrapper_html: { class: "col-md-2" } %>
+  <%= f.input :nml, wrapper_html: { class: "col-md-2" } %>
+  <%= f.input :anniversary_type, collection: Agreement::Anniversary, wrapper_html: { class: "col-md-3" } %>
+  <%= f.input :coop_sf, wrapper_html: { class: "col-md-4" }, label: 'Coop service fee', placeholder: "%" %>
+  <%= f.input :agent_sf, wrapper_html: { class: "col-md-4" }, label: 'Agent service fee', placeholder: "%" %>
+  <%= f.input :minimum_participation, wrapper_html: { class: "col-md-4" }, label: 'Minimum participants' %>
+</div>

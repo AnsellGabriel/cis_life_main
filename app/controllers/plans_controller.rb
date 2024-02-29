@@ -1,10 +1,10 @@
 class PlansController < InheritedResources::Base
   before_action :authenticate_user!
-  before_action :check_employee
+  before_action :check_agent
   # before_action :check_userable_type
   # before_action :set_cooperative, only: %i[index new create show]
 
-  def selected
+  def selected    
     @target = params[:target]
     @units = PlanUnit.where(plan_id: params[:id])
     respond_to do |format|
@@ -15,6 +15,15 @@ class PlansController < InheritedResources::Base
   def show_rates
     @plan = Plan.find_by(id: params[:id])
         
+    respond_to do |format|
+      format.turbo_stream
+    end
+  end
+
+  def show_fields
+    @plan = Plan.find_by(id: params[:id])
+    @acronym = @plan.acronym
+
     respond_to do |format|
       format.turbo_stream
     end

@@ -56,6 +56,15 @@ class ProcessCoverage < ApplicationRecord
     # self.set_batches_for_review
   end
 
+  def count_members(type)
+    case type
+    when "denied" then group_remit.batches.where(insurance_status: :denied).count
+    when "approved" then group_remit.batches.where(insurance_status: :approved).count
+    when "pending" then group_remit.batches.where(insurance_status: :pending).count
+    when "for_review" then group_remit.batches.where(insurance_status: :for_review).count
+    end
+  end
+
   def get_batch_dep(i_type, type)
     case i_type
       # when 1 then self.group_remit.batches.joins(:batch_dependents).where(batch_dependents: { agreement_benefit: type.id }).count

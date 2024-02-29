@@ -8,4 +8,10 @@ class LoanInsurance::Rate < ApplicationRecord
   # def self.get_rate(id)
   #   # .find_by(id: batch.loan_insurance_rate_id).monthly_rate
   # end
+
+  def set_rate
+    update(monthly_rate: annual_rate / 12, daily_rate: annual_rate / 365)
+    # monthly_rate: annual_rate / 12
+    # daily_rate: annual_rate / 365
+  end
 end
