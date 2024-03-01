@@ -241,6 +241,7 @@ Rails.application.routes.draw do
 
     resources :payments
     resources :cashier_entries do
+      get :print, on: :member
       get :download, on: :member
       get :cancel, on: :member
       get :for_approval_index, on: :collection

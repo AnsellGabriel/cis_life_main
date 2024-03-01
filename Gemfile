@@ -148,4 +148,4 @@ gem 'postmark-rails'
 # gem for pdf generation
 gem 'wicked_pdf'
 gem 'wkhtmltopdf-binary'
-
+gem 'numbers_and_words'
