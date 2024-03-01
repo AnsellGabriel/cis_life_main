@@ -9,8 +9,13 @@
       </div>
       <%#= f.association :agreement_benefit %>
       <div class="row">
-        <%= f.input :coverage_amount, wrapper_html: { class: "col-md-8" } %>
-        <div class="col-md-4" data-plan-agree-target="prem" hidden>
+        <div class="col-md-6">
+          <div class="form-floating">
+            <%= f.input :coverage_amount, label: false, wrapper: false, placeholder: "Coverage Amount (₱)" %>
+            <%= f.label :coverage_amount, "Coverage Amount (₱)" %>
+          </div>
+        </div>
+        <div class="col-md-6" data-plan-agree-target="prem" hidden>
           <%#= f.input :premium, wrapper_html: { class: "col-md-4" } %>
           <%= render "agreement_benefits/premium", f: f %>
         </div>

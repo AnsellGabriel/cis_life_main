@@ -27,7 +27,7 @@
       <%= render 'product_benefit_fields', f: pb %>
     <% end %>
   </div>
-  <%= link_to_add_association "Add Benefits", f, :product_benefits, data: {association_insertion_node: '.product_benefits', form_name: "f", association_insertion_method: :append } %>
+  <%= link_to_add_association "Add Benefits", f, :product_benefits, data: {association_insertion_node: '.product_benefits', form_name: "f", association_insertion_method: :append }, class: "btn btn-sm btn-outline-primary" %>
   
   <br>
   <div class="form-actions text-end">

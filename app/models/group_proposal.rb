@@ -2,6 +2,7 @@ class GroupProposal < ApplicationRecord
   belongs_to :cooperative
   belongs_to :plan
   belongs_to :plan_unit
+  belongs_to :agent
   has_one :agreement_proposal
   has_one :agreement, through: :agreement_proposal
   

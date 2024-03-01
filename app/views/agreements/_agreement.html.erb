@@ -54,7 +54,7 @@
 </div>
 
 <% if @agreement.plan_id == 2 || @agreement.plan_id == 8 %> <!-- for LPPI & SII -->
-  <%= link_to new_loan_insurance_rate_path(a_id: @agreement.id), class: "btn btn-primary btn-sm mb-2", data: { turbo_frame: "remote_modal" } do %>
+  <%= link_to new_loan_insurance_rate_path(a_id: @agreement.id), class: "btn btn-secondary btn-sm mb-2", data: { turbo_frame: "remote_modal" } do %>
     Add Rate
   <% end %>
 
@@ -62,7 +62,7 @@
     <% @agreement.loan_rates.each do |rate| %>
       <div class="col-md-6 mb-3">
         <div class="card">
-          <div class="card-header text-white bg-<%= rate.min_age <= 65 ? "primary" : "danger" %>">
+          <div class="card-header text-white bg-<%= rate.min_age <= 65 ? "primary" : "warning" %>">
             <h5><%= rate.min_age %> to <%= rate.max_age %> years old</h5>
             <small>Loan Amount: <%= to_currency(rate.min_amount) %> to <%= to_currency(rate.max_amount) %></small>
           </div>
@@ -85,7 +85,7 @@
   </div>
 
 <% else %>
-  <%= link_to new_agreement_benefit_path(a_id: @agreement.id), class: "btn btn-primary btn-sm mb-2", data: { turbo_frame: "remote_modal" } do %>
+  <%= link_to new_agreement_benefit_path(a_id: @agreement.id), class: "btn btn-secondary btn-sm mb-2", data: { turbo_frame: "remote_modal" } do %>
     Add Agreement Benefit
   <% end %>
   <div class="row">
@@ -124,24 +124,5 @@
       </div>
     <% end %>
   </div>
-  <% if @agreement.plan_id == 2 || @agreement.plan_id == 8 %> <!-- for LPPI & SII -->
-    <div class="row">
-      <% @agreement.loan_rates.each do |rate| %>
-        <div class="col-md-6 mb-3">
-          <div class="card">
-            <div class="card-header">
-              <h5><%= rate.min_age %> to <%= rate.max_age %> years old</h5>
-              <small class="text-muted">Loan Amount: <%= to_currency(rate.min_amount) %> to <%= to_currency(rate.max_amount) %></small>
-            </div>
-            <div class="card-body">
-              <small>Annual Rate: <%= to_currency(rate.annual_rate) %></small> <br>
-              <small>Monthly Rate: <%= to_currency(rate.monthly_rate) %> / 1,000</small>
-            </div>
-          </div>
-        </div>
-      <% end %>
-    </div>
-  <% else %>
-  <% end %>
-</div>
+<% end %>
 <%#= console %>

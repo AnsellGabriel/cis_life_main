@@ -14,7 +14,11 @@ class GroupProposalsController < ApplicationController
 
   # GET /group_proposals/new
   def new
-    @group_proposal = GroupProposal.new
+    if current_user.userable_type == "Agent"
+      @group_proposal = current_user.userable.group_proposals.build
+    else
+      @group_proposal = GroupProposal.new
+    end
   end
 
   # GET /group_proposals/1/edit
@@ -23,7 +27,13 @@ class GroupProposalsController < ApplicationController
 
   # POST /group_proposals
   def create
-    @group_proposal = GroupProposal.new(group_proposal_params)
+    if current_user.userable_type == "Agent"
+      @group_proposal = current_user.userable.group_proposals.build(group_proposal_params)
+    else
+      @group_proposal = GroupProposal.new(group_proposal_params)
+    end
+
+    raise 'errors'
 
     count = Agreement.joins(:plan).where(plan: {acronym: @group_proposal.plan.acronym}).count
     
@@ -108,7 +118,7 @@ class GroupProposalsController < ApplicationController
 
   # Only allow a list of trusted parameters through.
   def group_proposal_params
-    params.require(:group_proposal).permit(:cooperative_id, :plan_id, :plan_unit_id)
+    params.require(:group_proposal).permit(:cooperative_id, :plan_id, :plan_unit_id, :agent_id)
   end
 
 end
