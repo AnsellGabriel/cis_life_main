@@ -1,5 +1,30 @@
 module ProcessCoveragesHelper
 
+  # def show_hide(current_user, process_coverage, button_type, premium, authority_amount)
+  #   for_review_count = process_coverage.count_members("for_review")
+  #   denied_count = process_coverage.count_members("denied")
+  #   approved_count = process_coverage.count_members("approved")
+  #   pending_count = process_coverage.count_members("pending")
+
+  #   case button_type
+  #   when "approve"
+  #     if current_user.analyst?
+  #       if denied_count == 0 && for_review_count == 0 && pending_count == 0
+  #         if premium <= authority_amount
+  #           "d-inline"
+  #         else 
+  #           "d-none"
+  #         end
+  #       else
+  #         "d-none"
+  #       end
+  #     elsif current_user.head?
+  #       if for_review_count == 0 && pending_count 
+  #     end
+  #   end
+  # end
+
+
   def show_approve_button_pc(rank, process_coverage)
     if ["approved", "denied"].include?(process_coverage.status)
       "d-none"

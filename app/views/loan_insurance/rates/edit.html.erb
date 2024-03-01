@@ -1,6 +1,11 @@
-<div class="card">
+<!-- div class="card">
   <h5 class="card-header">Edit rate</h5>
   <div class="card-body">
-    <%= render "form", loan_insurance_rate: @loan_insurance_rate %>
+    <%#= render "form", loan_insurance_rate: @loan_insurance_rate %>
   </div>
-</div>
+</!-->
+
+<%= render "remote_modal", title: "Edit Rate" do %>
+  <%#= render "form", loan_insurance_rate: @loan_insurance_rate %>
+  <%= render "form", url: loan_insurance_rate_path(@rate), meth: 'patch' %>
+<% end %>

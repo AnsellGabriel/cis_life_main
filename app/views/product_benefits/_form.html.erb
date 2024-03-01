@@ -2,17 +2,18 @@
   <%#= simple_form_for(@product_benefit) do |f| %>
     <%= f.error_notification %>
     <%= f.error_notification message: f.object.errors[:base].to_sentence if f.object.errors[:base].present? %>
-    <div class="form-inputs mb-3">
-      <%= f.association :benefit %>
+    <div class="form-inputs mb-3" data-controller="plan-agree">
+      <%= f.association :benefit, input_html: { id: "ben_id", data: { action: "change->plan-agree#toggleTargets2", plan_agree_target: "benSelect" } } %>
       <div class="form-check form-switch mt-3">
       <%= f.input :main %>
       </div>
       <%#= f.association :agreement_benefit %>
       <div class="row">
         <%= f.input :coverage_amount, wrapper_html: { class: "col-md-8" } %>
-        <% if @product_benefit.benefit_id == 1 %>
-          <%= f.input :premium, wrapper_html: { class: "col-md-4" } %>
-        <% end %>
+        <div class="col-md-4" data-plan-agree-target="prem" hidden>
+          <%#= f.input :premium, wrapper_html: { class: "col-md-4" } %>
+          <%= render "agreement_benefits/premium", f: f %>
+        </div>
         <%#= f.input :duration, placeholder: "In months, ex: 0,3,6,9", wrapper_html: { class: "col-md-4" } %>
         <%#= f.input :residency_floor, wrapper_html: { class: "col-md-4" } %>
         <%#= f.input :residency_ceiling, wrapper_html: { class: "col-md-4" } %>

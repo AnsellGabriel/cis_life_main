@@ -8,7 +8,7 @@ export default class extends Controller {
 
 
   search_units(event) {
-    console.log("Connected sa group-plan")
+    console.log("Connected sa group-plan");
     let plan_id = event.target.selectedOptions[0].value
     let target = this.unitSelectTarget.id
 

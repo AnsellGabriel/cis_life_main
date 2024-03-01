@@ -63,7 +63,7 @@ class ApplicationController < ActionController::Base
   end
 
   def check_agent
-    unless current_user.userable_type == "Agent"
+    unless current_user.userable_type == "Agent" || current_user.userable_type == "Employee"
       render file: "#{Rails.root}/public/404.html", status: :not_found
     end
   end
