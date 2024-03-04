@@ -53,7 +53,6 @@ class AgreementsController < ApplicationController
     else
       @agreement = Agreement.new(agreement_params)
     end
-    raise 'errors'
 
     if @agreement.save!
       redirect_to @agreement, notice: "Agreement was successfully created."

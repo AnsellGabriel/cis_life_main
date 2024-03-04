@@ -11,11 +11,10 @@ class GroupProposal < ApplicationRecord
 
 
   def create_agreement(ctr, current_user)
-
     agreement = self.build_agreement(
       cooperative: self.cooperative,
       plan: self.plan,
-      agent: current_user.userable, # change value to actual agent_id
+      agent: current_user.userable_type == "Agent" ? current_user.userable : self.agent, # change value to actual agent_id
       moa_no: "#{self.plan.acronym}-#{self.cooperative.acronym}-#{ctr}",
       entry_age_from: self.plan.entry_age_from,
       entry_age_to: self.plan.entry_age_to,

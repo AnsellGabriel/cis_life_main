@@ -33,8 +33,6 @@ class GroupProposalsController < ApplicationController
       @group_proposal = GroupProposal.new(group_proposal_params)
     end
 
-    raise 'errors'
-
     count = Agreement.joins(:plan).where(plan: {acronym: @group_proposal.plan.acronym}).count
     
     ctr = count == 0 ? count + 1 : count
@@ -72,7 +70,7 @@ class GroupProposalsController < ApplicationController
       #     premium: prem
       #   )
       # end
-      if GroupProposal.where(cooperative: @group_proposal.cooperative, plan: @group_proposal.plan).exists?
+      if GroupProposal.where(cooperative: @group_proposal.cooperative, plan: @group_proposal.plan, plan_unit: @group_proposal.plan_unit).exists?
         format.html { redirect_to new_group_proposal_path, alert: "Cooperative and Plan selected already exists." }
       else
 
@@ -118,7 +116,7 @@ class GroupProposalsController < ApplicationController
 
   # Only allow a list of trusted parameters through.
   def group_proposal_params
-    params.require(:group_proposal).permit(:cooperative_id, :plan_id, :plan_unit_id, :agent_id)
+    params.require(:group_proposal).permit(:cooperative_id, :plan_id, :plan_unit_id, :agent_id, :anniversary_type)
   end
 
 end
