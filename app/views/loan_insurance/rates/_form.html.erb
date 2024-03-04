@@ -19,6 +19,12 @@
       <%= f.input :coop_sf, wrapper_html: { class: "col-md-4" }, label: "Coop S.F.", placeholder: "%" %>
       <%= f.input :agent_sf, wrapper_html: { class: "col-md-4" }, label: "Agent S.F.", placeholder: "%" %>
     </div>
+    <% if @rate.agreement.with_markup == true %>
+      <div class="row">
+        <%= f.input :markup_rate, wrapper_html: { class: "col-md-6" }, label: "Mark-up Rate", placeholder: "Monthly Rate" %>
+        <%= f.input :markup_sf, wrapper_html: { class: "col-md-6" }, label: "Mark-up Rate", placeholder: "%" %>
+      </div>
+    <% end %>
     <div class="row">
       <%= f.input :nel, wrapper_html: { class: "col-md-4" }, label: "No Evidence Limit", placeholder: "₱" %>
       <%= f.input :nml, wrapper_html: { class: "col-md-4" }, label: "Non-medical Limit", placeholder: "₱" %>

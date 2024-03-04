@@ -63,6 +63,6 @@ class LoanInsurance::RatesController < ApplicationController
 
   # Only allow a list of trusted parameters through.
   def rate_params
-    params.require(:loan_insurance_rate).permit(:agreement_id, :min_age, :max_age, :annual_rate, :min_amount, :max_amount, :coop_sf, :agent_sf, :nel, :nml, :contestability)
+    params.require(:loan_insurance_rate).permit(:agreement_id, :min_age, :max_age, :annual_rate, :min_amount, :max_amount, :coop_sf, :agent_sf, :nel, :nml, :contestability, :markup_rate, :markup_sf)
   end
 end
