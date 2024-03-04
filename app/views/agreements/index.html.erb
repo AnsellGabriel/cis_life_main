@@ -64,7 +64,7 @@
       <tr>
         <th scope="row"><%= agreement.id %></th>
         <td> <strong> <%= agreement.cooperative %> </strong>  <br>
-          <%= agreement.plan %> <br>
+          <%= agreement.plan %> <%= agreement.group_proposal.present? ? "(#{agreement.group_proposal.plan_unit.name})" : "" %> <br>
           <small class="text-muted"><%= agreement.agent %>
           </small>
         </td>

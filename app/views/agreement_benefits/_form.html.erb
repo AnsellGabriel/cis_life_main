@@ -14,8 +14,8 @@
     <%= f.input :description %>
     <%= f.select :insured_type, options_for_select(AgreementBenefit.insured_types.keys.map { |key| [key.humanize, key] }), { prompt: 'Select Type' }, { class: 'form-control' } %>
     <div class="row">
-      <%= f.input :min_age, wrapper_html: { class: "col-md-4" } %>
-      <%= f.input :max_age, wrapper_html: { class: "col-md-4" } %>
+      <%= f.input :min_age, wrapper_html: { class: "col-md-4" }, label: "Entry Age From" %>
+      <%= f.input :max_age, wrapper_html: { class: "col-md-4" }, label: "Entry Age To" %>
       <%= f.input :exit_age, wrapper_html: { class: "col-md-4" } %>
     </div>
     <%#= f.input :insured_type, collection: AgreementBenefit::InsuredType %>
@@ -27,7 +27,7 @@
       <%= render 'product_benefit_fields', f: pb %>
     <% end %>
   </div>
-  <%= link_to_add_association "Add Benefits", f, :product_benefits, data: {association_insertion_node: '.product_benefits', form_name: "f", association_insertion_method: :append } %>
+  <%= link_to_add_association "Add Benefits", f, :product_benefits, data: {association_insertion_node: '.product_benefits', form_name: "f", association_insertion_method: :append }, class: "btn btn-sm btn-outline-primary" %>
   
   <br>
   <div class="form-actions text-end">

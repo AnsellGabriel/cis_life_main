@@ -33,7 +33,7 @@ class Cooperative < ApplicationRecord
     # end
     street = self.street if !self.street.blank?
 
-    [street, geo_barangay&.name, geo_municipality&.name, geo_province&.name].compact.join(", ")
+    [street, geo_barangay&.name, geo_municipality&.name, geo_province&.name, geo_region&.name].compact.join(", ")
   end
 
   def unselected_coop_members(ids)

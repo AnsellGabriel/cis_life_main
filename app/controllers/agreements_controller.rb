@@ -32,7 +32,11 @@ class AgreementsController < ApplicationController
   # GET /agreements/new
   def new
     # @agreement = Agreement.new(contestability: 12, nel: 25000, nml: 5000000, entry_age_from: 18, entry_age_to: 65, exit_age: 65)
-    @agreement = Agreement.new()
+    if current_user.userable_type == "Agent"
+      @agreement = current_user.userable.agreements.build
+    else
+      @agreement = Agreement.new()
+    end
     # @agreement.agreement_benefits.build
     # @agreement.loan_rates.build
     set_dummy_value
@@ -44,8 +48,11 @@ class AgreementsController < ApplicationController
 
   # POST /agreements
   def create
-    # raise 'errors'
-    @agreement = Agreement.new(agreement_params)
+    if current_user.userable_type == "Agent"
+      @agreement = current_user.userable.agreements.build
+    else
+      @agreement = Agreement.new(agreement_params)
+    end
 
     if @agreement.save!
       redirect_to @agreement, notice: "Agreement was successfully created."

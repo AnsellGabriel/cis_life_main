@@ -6,7 +6,9 @@
     <div class="row">
       <%#= f.association :plan, wrapper_html: { class: "col-md-4" }, input_html: { id: "plan_id", data: { action: "change->plan-agree#toggleTargets", plan_agree_target: "planSelect" } } %>
       <%= f.association :plan, wrapper_html: { class: "col-md-4" }, input_html: { id: "plan_id", data: { action: "change->plan-agree#toggleTargets", plan_agree_target: "planSelect" } } %>
-      <%= f.association :agent, wrapper_html: {class: "col-md-4" } %>
+      <% unless current_user.userable_type == "Agent" %>
+        <%= f.association :agent, wrapper_html: {class: "col-md-4" } %>
+      <% end %>
       <%= f.input :moa_no, label: "MOA", wrapper_html: {class: "col-md-4" } %>
     </div>
     <div class="row">
@@ -24,8 +26,8 @@
       <%= f.input :previous_provider, wrapper_html: { class: "col-md-5" } %>
     </div>
     <div class="row">
-      <%= f.input :entry_age_from, wrapper_html: { class: "col-md-4" }, label: 'Min age' %>
-      <%= f.input :entry_age_to, wrapper_html: { class: "col-md-4" }, label: 'Max age' %>
+      <%= f.input :entry_age_from, wrapper_html: { class: "col-md-4" }, label: 'Entry Age from' %>
+      <%= f.input :entry_age_to, wrapper_html: { class: "col-md-4" }, label: 'Entry Age to' %>
       <%= f.input :exit_age, wrapper_html: { class: "col-md-4" }, label: 'Exit age' %>
     </div>
     

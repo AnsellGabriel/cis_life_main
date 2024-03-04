@@ -6,8 +6,13 @@
   <div class="form-inputs mb-3">
     <%= f.association :cooperative %>
     <div class="row" data-controller="group-plan">
-      <%= f.association :plan, input_html: { data: { action: "change->group-plan#search_units" } }, wrapper_html: { class: "col-md-6" } %>
-      <%= f.association :plan_unit, input_html: { id: "plan_unit_id", data: { action: "change->group-plan#selectUnits", group_plan_target: "unitSelect" } }, wrapper_html: { class: "col-md-6" } %>
+      <% sz = current_user.userable_type == "Agent" ? 4 : 3 %>
+      <%= f.association :plan, collection: Plan::GROUP_PLANS, input_html: { data: { action: "change->group-plan#search_units" } }, wrapper_html: { class: "col-md-#{sz}" } %>
+      <%= f.association :plan_unit, input_html: { id: "plan_unit_id", data: { action: "change->group-plan#selectUnits", group_plan_target: "unitSelect" } }, wrapper_html: { class: "col-md-#{sz}" } %>
+      <% unless current_user.userable_type == "Agent" %>
+        <%= f.association :agent, wrapper_html: { class: "col-md-#{sz}" } %>
+      <% end %>
+      <%= f.input :anniversary_type, collection: Agreement::Anniversary, wrapper_html: { class: "col-md-#{sz}" } %>
     </div>
     
     <%= turbo_frame_tag 'unit details' %>
