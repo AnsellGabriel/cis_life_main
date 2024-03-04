@@ -21,6 +21,12 @@
             <dd class="col-sm-5"><%= agreement.agent %></dd>
             <dt class="col-sm-7">Commission Type</dt>
             <dd class="col-sm-5"><%= agreement.comm_type %></dd>
+            <% if agreement.plan.acronym == "LPPI" %>
+              <dt class="col-sm-7">With Unused?</dt>
+              <dd class="col-sm-5"><%= agreement.unusable %></dd>
+              <dt class="col-sm-7">With Mark-Up?</dt>
+              <dd class="col-sm-5"><%= agreement.with_markup %></dd>
+            <% end %>
             <% if agreement.transferred %>
               <strong class="text-primary mb-1 mt-3">Transferred</strong>
               <dt class="col-sm-7">Date Transferred</dt>

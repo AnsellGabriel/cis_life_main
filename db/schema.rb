@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2024_03_01_004526) do
+ActiveRecord::Schema[7.0].define(version: 2024_03_04_032427) do
   create_table "accounting_check_vouchers", charset: "utf8mb4", force: :cascade do |t|
     t.date "date_voucher"
     t.string "voucher"
@@ -230,6 +230,7 @@ ActiveRecord::Schema[7.0].define(version: 2024_03_01_004526) do
     t.boolean "unusable", default: false
     t.integer "minimum_term", default: 0
     t.decimal "minimum_premium", precision: 10, scale: 2, default: "0.0"
+    t.boolean "with_markup", default: false
     t.index ["agent_id"], name: "index_agreements_on_agent_id"
     t.index ["cooperative_id"], name: "index_agreements_on_cooperative_id"
     t.index ["plan_id"], name: "index_agreements_on_plan_id"
@@ -915,6 +916,8 @@ ActiveRecord::Schema[7.0].define(version: 2024_03_01_004526) do
     t.decimal "nel", precision: 10, scale: 2
     t.decimal "nml", precision: 10, scale: 2
     t.integer "contestability"
+    t.decimal "markup_rate", precision: 10, scale: 6
+    t.decimal "markup_sf", precision: 10, scale: 4
     t.index ["agreement_id"], name: "index_loan_insurance_rates_on_agreement_id"
   end
 
