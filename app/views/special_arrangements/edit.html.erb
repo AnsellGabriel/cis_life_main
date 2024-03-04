@@ -1,0 +1,9 @@
+<%# <div class="card">
+  <h5 class="card-header">Edit special arrangement</h5>
+  <div class="card-body"> %>
+<%#= render "form", special_arrangement: @special_arrangement %>
+<%# </div>
+</div> %>
+<%= render "remote_modal", title: "Edit arrangement" do %>
+  <%= render "form", url: special_arrangement_path(@special_arrangement), meth: 'patch' %>
+<% end %>

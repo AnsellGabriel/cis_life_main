@@ -181,7 +181,13 @@ class LoanInsurance::Batch < Batch
   end
 
   def calculate_values(agreement, loan_rate, encoded_premium = nil)
-    self.premium = encoded_premium ? encoded_premium : (loan_amount / 1000 ) * ((rate.annual_rate / 12) * terms) # use encoded premium by MIS if present
+    if agreement.with_markup == true
+      rate_with_markup = (rate.annual_rate / 12) + (rate.markup_rate)
+      self.premium = encoded_premium ? encoded_premium : (loan_amount / 1000 ) * (rate_with_markup * terms) # use encoded premium by MIS if present
+    else
+      self.premium = encoded_premium ? encoded_premium : (loan_amount / 1000 ) * ((rate.annual_rate / 12) * terms) # use encoded premium by MIS if present
+
+    end
 
     if unused_loan_id
       previous_batch = LoanInsurance::Batch.find(unused_loan_id)
@@ -202,8 +208,12 @@ class LoanInsurance::Batch < Batch
 
     # self.agent_sf_amount = calculate_service_fee(agreement.agent_sf, premium_due)
     # self.coop_sf_amount = calculate_service_fee(agreement.coop_sf, premium_due)
+    if agreement.with_markup == true
+      self.coop_sf_amount = calculate_service_fee((loan_rate.coop_sf + loan_rate.markup_sf), premium_due)
+    else
+      self.coop_sf_amount = calculate_service_fee(loan_rate.coop_sf, premium_due)
+    end
     self.agent_sf_amount = calculate_service_fee(loan_rate.agent_sf, premium_due)
-    self.coop_sf_amount = calculate_service_fee(loan_rate.coop_sf, premium_due)
   end
 
   def previous_loan

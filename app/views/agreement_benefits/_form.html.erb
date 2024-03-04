@@ -1,18 +1,34 @@
-<%= simple_form_for(@agreement_benefit) do |f| %>
+
+<%#= simple_form_for(@agreement_benefit) do |f| %>
+<%= simple_form_for(@agreement_benefit, url: url, meth: meth) do |f| %>
+
   <%= f.error_notification %>
   <%= f.error_notification message: f.object.errors[:base].to_sentence if f.object.errors[:base].present? %>
   <div class="form-inputs">
-    <%= f.association :agreement %>
+    <%#= f.association :agreement %>
+
     <%#= f.association :plan %>
     <%#= f.association :proposal %>
     <%#= f.association :option %>
     <%= f.input :name %>
     <%= f.input :description %>
-    <%= f.input :min_age %>
-    <%= f.input :max_age %>
-    <%= f.input :insured_type, collection: AgreementBenefit::InsuredType %>
+    <%= f.select :insured_type, options_for_select(AgreementBenefit.insured_types.keys.map { |key| [key.humanize, key] }), { prompt: 'Select Type' }, { class: 'form-control' } %>
+    <div class="row">
+      <%= f.input :min_age, wrapper_html: { class: "col-md-4" }, label: "Entry Age From" %>
+      <%= f.input :max_age, wrapper_html: { class: "col-md-4" }, label: "Entry Age To" %>
+      <%= f.input :exit_age, wrapper_html: { class: "col-md-4" } %>
+    </div>
+    <%#= f.input :insured_type, collection: AgreementBenefit::InsuredType %>
     <%= f.input :with_dependent, label: 'With Dependents?' %>
   </div>
+
+  <div class="product_benefits">
+    <%= f.fields_for :product_benefits do |pb| %>
+      <%= render 'product_benefit_fields', f: pb %>
+    <% end %>
+  </div>
+  <%= link_to_add_association "Add Benefits", f, :product_benefits, data: {association_insertion_node: '.product_benefits', form_name: "f", association_insertion_method: :append }, class: "btn btn-sm btn-outline-primary" %>
+  
   <br>
   <div class="form-actions text-end">
     <%= link_to "Back", :back, class: 'btn btn-secondary' %>

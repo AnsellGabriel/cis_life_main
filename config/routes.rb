@@ -2,6 +2,7 @@
 require "sidekiq/web"
 
 Rails.application.routes.draw do
+  resources :special_arrangements
   resources :sip_pbs
   resources :sip_abs
   resources :koopamilya_pbs
@@ -45,6 +46,7 @@ Rails.application.routes.draw do
   resources :plans do
     get :selected, on: :member
     get :show_rates, on: :member
+    get :show_fields, on: :member
   end
 
 

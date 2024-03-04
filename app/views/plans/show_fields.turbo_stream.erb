@@ -1,0 +1,6 @@
+
+<% if @arconym == "LPPI" %>
+  <%= turbo_stream.update "other fields", partial: "agreements/lppi_fields" %>
+<% else %>
+  <%= turbo_stream.update "other fields", partial: "agreements/gyrt_fields" %>
+<% end %>

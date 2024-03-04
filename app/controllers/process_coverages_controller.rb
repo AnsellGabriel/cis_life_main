@@ -2,7 +2,7 @@ class ProcessCoveragesController < ApplicationController
   before_action :authenticate_user!
   before_action :check_emp_department
   before_action :set_process_coverage,
-only: %i[ show edit update destroy approve_batch deny_batch pending_batch reconsider_batch pdf set_premium_batch update_batch_prem transfer_to_md update_batch_cov adjust_lppi_cov refund psheet ]
+  only: %i[ show edit update destroy approve_batch deny_batch pending_batch reconsider_batch pdf set_premium_batch update_batch_prem transfer_to_md update_batch_cov adjust_lppi_cov refund psheet ]
 
   # GET /process_coverages
   def index
@@ -92,6 +92,8 @@ only: %i[ show edit update destroy approve_batch deny_batch pending_batch recons
       @analysts = @analysts_x.joins(:emp_approver)
       # @analysts = @analysts_x.joins(:emp_approver).where(emp_approver: { approver: current_user.userable_id })
     end
+
+    @pagy_pc, @filtered_pc = pagy(@process_coverages, items: 10, page_param: :process_coverage, link_extra: 'data-turbo-frame="pro_cov_pagination')
 
     # if params[:search].present?
     #   @process_coverages = @process_coverages_x.joins(group_remit: {agreement: :cooperative}).where("group_remits.name LIKE ? OR group_remits.description LIKE ? OR agreements.moa_no LIKE ? OR cooperatives.name LIKE ?", "%#{params[:search]}%", "%#{params[:search]}%", "%#{params[:search]}%", "%#{params[:search]}%")
@@ -276,10 +278,10 @@ only: %i[ show edit update destroy approve_batch deny_batch pending_batch recons
 
       if params[:search_member].present?
         @batches = @batches_o.joins(coop_member: :member).where("members.last_name LIKE ? OR members.first_name LIKE ? OR members.middle_name LIKE ?", "%#{params[:search_member]}%",
-"%#{params[:search_member]}%", "%#{params[:search_member]}%")
+        "%#{params[:search_member]}%", "%#{params[:search_member]}%")
       end
 
-      @pagy_batch, @filtered_batches  = pagy(@batches, items: 10, page_param: :batch, link_extra: 'data-turbo-frame="pc_pagination"')
+      @pagy_batch, @filtered_batches  = pagy(@batches, items: 10, page_param: :batch, link_extra: 'data-turbo-frame="pc_pagination1"')
       @group_remit = @process_coverage.group_remit
 
       @total_net_prem = @process_coverage.sum_batches_net_premium
@@ -309,14 +311,14 @@ only: %i[ show edit update destroy approve_batch deny_batch pending_batch recons
           # when "health_decs" then @batches_o.joins(:batch_health_decs)
         when "health_decs" then @batches_o.joins(:batch_health_decs).where(batches: { valid_health_dec: false }).distinct
                      # when "health_decs" then @batches_o.joins(:batch_health_dec).where.not(batch_health_decs: { health_dec_question_id: nil })
-                   end
+        end
       else
         @batches = @batches_o
       end
 
       if params[:search_member].present?
         @batches = @batches_o.joins(coop_member: :member).where("members.last_name LIKE ? OR members.first_name LIKE ? OR members.middle_name LIKE ?", "%#{params[:search_member]}%",
-"%#{params[:search_member]}%", "%#{params[:search_member]}%")
+        "%#{params[:search_member]}%", "%#{params[:search_member]}%")
       end
 
       @pagy_batch, @filtered_batches  = pagy(@batches, items: 10, page_param: :batch, link_extra: 'data-turbo-frame="pc_pagination"')
@@ -344,7 +346,7 @@ only: %i[ show edit update destroy approve_batch deny_batch pending_batch recons
       @total_net_prem = @principal_net_prem + @batch_dependents_net_prem
 
       # raise 'errors'
-      puts "#{@total_net_prem} ********************************"
+      # puts "#{@total_net_prem} ********************************"
     end
 
     @process_remarks = @process_coverage.process_remarks

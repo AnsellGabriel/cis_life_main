@@ -13,7 +13,9 @@ class LoanInsurance::RatesController < ApplicationController
 
   # GET /loan_insurance/rates/new
   def new
-    @rate = LoanInsurance::Rate.new
+    # @rate = LoanInsurance::Rate.new
+    @agreement = Agreement.find_by(id: params[:a_id])
+    @rate = @agreement.loan_rates.build
   end
 
   # GET /loan_insurance/rates/1/edit
@@ -22,10 +24,15 @@ class LoanInsurance::RatesController < ApplicationController
 
   # POST /loan_insurance/rates
   def create
-    @rate = LoanInsurance::Rate.new(rate_params)
+    # @rate = LoanInsurance::Rate.new(rate_params)
+    @agreement = Agreement.find(params[:agreement])
+    @rate = @agreement.loan_rates.build(rate_params)
+    # raise 'errors'
+    @rate.set_rate
 
     if @rate.save
-      redirect_to @rate, notice: "Rate was successfully created."
+      redirect_back fallback_location: @agreement, notice: "LPPI Rate was successfully added."
+      # redirect_to @rate, notice: "Rate was successfully created."
     else
       render :new, status: :unprocessable_entity
     end
@@ -34,7 +41,8 @@ class LoanInsurance::RatesController < ApplicationController
   # PATCH/PUT /loan_insurance/rates/1
   def update
     if @rate.update(rate_params)
-      redirect_to @rate, notice: "Rate was successfully updated."
+      # redirect_to @rate, notice: "Rate was successfully updated."
+      redirect_back fallback_location: @agreement, notice: "LPPI Rate was successfully updated."
     else
       render :edit, status: :unprocessable_entity
     end
@@ -50,10 +58,11 @@ class LoanInsurance::RatesController < ApplicationController
   # Use callbacks to share common setup or constraints between actions.
   def set_rate
     @rate = LoanInsurance::Rate.find(params[:id])
+    @agreement = Agreement.find(@rate.agreement.id)
   end
 
   # Only allow a list of trusted parameters through.
   def rate_params
-    params.require(:loan_insurance_rate).permit(:agreement_id, :min_age, :max_age, :monthly_rate, :annual_rate, :daily_rate, :min_amount, :max_amount)
+    params.require(:loan_insurance_rate).permit(:agreement_id, :min_age, :max_age, :annual_rate, :min_amount, :max_amount, :coop_sf, :agent_sf, :nel, :nml, :contestability, :markup_rate, :markup_sf)
   end
 end

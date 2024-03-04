@@ -1,21 +1,40 @@
 
-<%= simple_form_for(@rate) do |f| %>
+<%#= simple_form_for(@rate) do |f| %>
+<%= simple_form_for(@rate, url: url, meth: meth) do |f| %>
   <%= f.error_notification %>
   <%= f.error_notification message: f.object.errors[:base].to_sentence if f.object.errors[:base].present? %>
 
   <div class="form-inputs mb-3">
-    <%= f.association :agreement %>
-    <%= f.input :min_age %>
-    <%= f.input :max_age %>
-    <%= f.input :monthly_rate %>
-    <%= f.input :annual_rate %>
-    <%= f.input :daily_rate %>
-    <%= f.input :min_amount %>
-    <%= f.input :max_amount %>
-  </div>
+    <%#= f.association :agreement %>
+    <div class="row">
+      <%= f.input :min_age, wrapper_html: { class: "col-md-6" }, label: "Minimum Age" %>
+      <%= f.input :max_age, wrapper_html: { class: "col-md-6" }, label: "Maximum Age" %>
+    </div>
+    <div class="row">
+    <%= f.input :min_amount, wrapper_html: { class: "col-md-6" }, label: "Minimum Amount", placeholder: "₱" %>
+    <%= f.input :max_amount, wrapper_html: { class: "col-md-6" }, label: "Maximum Amount", placeholder: "₱" %>
+    </div>
+    <div class="row">
+      <%= f.input :annual_rate, label: "Annual Rate", wrapper_html: { class: "col-md-4" } %>
+      <%= f.input :coop_sf, wrapper_html: { class: "col-md-4" }, label: "Coop S.F.", placeholder: "%" %>
+      <%= f.input :agent_sf, wrapper_html: { class: "col-md-4" }, label: "Agent S.F.", placeholder: "%" %>
+    </div>
+    <% if @rate.agreement.with_markup == true %>
+      <div class="row">
+        <%= f.input :markup_rate, wrapper_html: { class: "col-md-6" }, label: "Mark-up Rate", placeholder: "Monthly Rate" %>
+        <%= f.input :markup_sf, wrapper_html: { class: "col-md-6" }, label: "Mark-up Rate", placeholder: "%" %>
+      </div>
+    <% end %>
+    <div class="row">
+      <%= f.input :nel, wrapper_html: { class: "col-md-4" }, label: "No Evidence Limit", placeholder: "₱" %>
+      <%= f.input :nml, wrapper_html: { class: "col-md-4" }, label: "Non-medical Limit", placeholder: "₱" %>
+      <%= f.input :contestability, wrapper_html: { class: "col-md-4" }, label: "Contestability", placeholder: "Months" %>
+    </div>
+    <%#= f.input :monthly_rate %>
+    <%#= f.input :daily_rate %>
 
   <div class="form-actions text-end">
-    <%= link_to "Back", loan_insurance_rates_path, class: 'btn btn-secondary' %>
+    <%#= link_to "Back", loan_insurance_rates_path, class: 'btn btn-secondary' %>
     <%= f.button :submit, class: 'btn-success' %>
   </div>
 <% end %>

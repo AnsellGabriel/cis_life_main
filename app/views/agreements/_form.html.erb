@@ -4,46 +4,44 @@
   <div class="form-inputs" data-controller="plan-agree">
     <%= f.association :cooperative, input_html: { data: { action: "change->plan-agree#search_plans", controller: "ts--select" } }  %>
     <div class="row">
+      <%#= f.association :plan, wrapper_html: { class: "col-md-4" }, input_html: { id: "plan_id", data: { action: "change->plan-agree#toggleTargets", plan_agree_target: "planSelect" } } %>
       <%= f.association :plan, wrapper_html: { class: "col-md-4" }, input_html: { id: "plan_id", data: { action: "change->plan-agree#toggleTargets", plan_agree_target: "planSelect" } } %>
-      <%= f.association :agent, wrapper_html: {class: "col-md-4" } %>
+      <% unless current_user.userable_type == "Agent" %>
+        <%= f.association :agent, wrapper_html: {class: "col-md-4" } %>
+      <% end %>
       <%= f.input :moa_no, label: "MOA", wrapper_html: {class: "col-md-4" } %>
     </div>
     <div class="row">
       <%= f.input :comm_type, collection: Agreement::Comm_type, wrapper_html: { class: "col-md-3" } %>
-      <%= f.input :anniversary_type, collection: Agreement::Anniversary, wrapper_html: { class: "col-md-3" } %>
-      <%= f.input :contestability, wrapper_html: { class: "col-md-2" } %>
-      <%= f.input :nel, wrapper_html: { class: "col-md-2" } %>
-      <%= f.input :nml, wrapper_html: { class: "col-md-2" } %>
-    </div>
-    <div class="row">
-      <%= f.input :claims_fund, wrapper_html: { class: "col-md-2" } %>
+      <%= f.input :claims_fund, wrapper_html: { class: "col-md-2 mt-4" } %>
       <%= f.input :claims_fund_amount, wrapper_html: { class: "col-md-3" } %>
+      <%= f.input :reconsiderable, wrapper_html: { class: "col-md-3 mt-4" }, label: 'Reconsiderable?' %>
     </div>
     <div class="row">
       <%= f.input :transferred, wrapper_html: { class: "col-md-2" } %>
       <%#= f.input :transferred_date, wrapper_html: { class: "col-md-3" } %>
       <%= f.input :transferred_date, as: :string, wrapper_html: { class: "col-3" }, input_html: { data: { controller: "flatpickr",
-          flatpickr_min_date: Time.zone.now,
           flatpickr_next_arrow: "Next",
           flatpickr_prev_arrow: "Prev" } } %>
       <%= f.input :previous_provider, wrapper_html: { class: "col-md-5" } %>
     </div>
     <div class="row">
-      <%= f.input :entry_age_from, wrapper_html: { class: "col-md-4" }, label: 'Min age' %>
-      <%= f.input :entry_age_to, wrapper_html: { class: "col-md-4" }, label: 'Max age' %>
+      <%= f.input :entry_age_from, wrapper_html: { class: "col-md-4" }, label: 'Entry Age from' %>
+      <%= f.input :entry_age_to, wrapper_html: { class: "col-md-4" }, label: 'Entry Age to' %>
       <%= f.input :exit_age, wrapper_html: { class: "col-md-4" }, label: 'Exit age' %>
     </div>
+    
     <div class="row">
-      <%= f.input :coop_sf, wrapper_html: { class: "col-md-4" }, label: 'Coop service fee' %>
-      <%= f.input :agent_sf, wrapper_html: { class: "col-md-4" }, label: 'Agent service fee' %>
-      <%= f.input :minimum_participation, wrapper_html: { class: "col-md-4" }, label: 'Minimum participants' %>
-    </div>
-    <div class="row">
-      <%= f.input :reconsiderable, wrapper_html: { class: "col-md-4" }, label: 'Reconsiderable?' %>
-      <%= f.input :unusable, wrapper_html: { class: "col-md-4" }, label: 'Unusable?' %>
+      <div data-plan-agree-target="gyrt" hidden>
+        <%= render "gyrt_fields", f: f %>
+      </div>
+      <div data-plan-agree-target="lppi" hidden>
+        <%= render "lppi_fields", f: f %>
+      </div>
     </div>
     <%#= f.association :proposal, input_html: { data: { controller: "ts--select" } }  %>
     <hr>
+    <!-- 
     <div data-plan-agree-target="gyrt" hidden>
       <h3>Agreement Benefits</h3>
       <div class="agreement_benefits">
@@ -84,8 +82,7 @@
       <div class="add-rate">
         <%= link_to_add_association "Add SII Rate", f, :loan_rates, data: {association_insertion_node: '.loan_rates_sii', association_insertion_method: :append}, class: "btn btn-primary" %>
       </div>
-    </div>
-    
+    </div> -->
   </div>
   <br>
   <div class="form-actions text-end">
