@@ -6,13 +6,15 @@ export default class extends Controller {
   static targets = ["lppi", "gyrt", "sii", "prem", "planSelect", "benSelect"]
 
   connect() {
-    let ben_id = this.benSelectTarget.selectedOptions[0].value
+    console.log("konek")
 
-    if (ben_id == "1") { // for Life Benefit 
-      this.premTarget.hidden = false
-    } else {
-      this.premTarget.hidden = true
+    let plan_id = this.planSelectTarget.selectedOptions[0].value
+
+    if (plan_id == "2") {
+      this.lppiTarget.hidden = false
+      console.log(plan_id)
     }
+
   }
 
   toggleTargets(event) {

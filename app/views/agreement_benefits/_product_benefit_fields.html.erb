@@ -1,8 +1,9 @@
   
-<div class="nested-fields" data-controller="plan-agree">
+<div class="nested-fields" data-controller="benefit">
   <div class="card">
     <div class="card-body">
-      <%= f.association :benefit, input_html: { id: "ben_id", data: { action: "change->plan-agree#toggleTargets2", plan_agree_target: "benSelect" } } %>
+      <%#= f.association :benefit, input_html: { id: "ben_id", data: { action: "change->plan-agree#toggleTargets2", plan_agree_target: "benSelect" } } %>
+      <%= f.association :benefit, input_html: { id: "ben_id", data: { action: "change->benefit#toggleTargets2", benefit_target: "benSelect" } } %>
       <div class="form-check form-switch mt-3">
         <%= f.input :main %>
       </div>
@@ -13,7 +14,7 @@
             <%= f.label :coverage_amount, "Coverage Amount (₱) " %>
           </div>
         </div>
-        <div class="col-md-6" data-plan-agree-target="prem" hidden>
+        <div class="col-md-6" data-benefit-target="prem" hidden>
             <%= render "premium", f: f %>
         </div>
           <%#= f.input :premium, wrapper_html: { class: "col-md-4" } %>
