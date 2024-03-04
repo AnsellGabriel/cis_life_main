@@ -5,13 +5,23 @@
     <%= wicked_pdf_stylesheet_link_tag "application" %>
     <%= wicked_pdf_stylesheet_link_tag "bootstrap" %>
   </head>
-  <body>
-    <div class="row">
-      <div class="col-3">
-        
+  <body style="font-size: .9rem">
+    <div class="row" style="padding-top: 100px; width: 845px">
+      <div class="col-4">
+        <p class="text-end  mb-2" style="padding-top: 145px; padding-right: 15px"><%= to_curr @receipt.amount %></p>
+        <p class="text-end  mb-2" style="padding-right: 15px"><%= to_curr @receipt.discount %></p>
+        <p class="text-end  mb-2" style="padding-right: 15px"><%= to_curr(@receipt.amount - @receipt.discount) %></p>
+        <p class="text-end  mb-2" style="padding-right: 15px"><%= to_curr @receipt.withholding_tax %></p>
+        <p class="text-end  mb-2" style="padding-right: 15px"><%= to_curr @receipt.net_amount %></p>
       </div>
-      <div class="col-9">
-        <div class="text-end mb-3 fw-bolder"><%= date_as_month_day_year @receipt.or_date %></div>
+      <div class="col-8">
+        <div class="text-end mb-4"><%= date_as_month_day_year @receipt.or_date %></div>
+        <div class="text-end " style="padding-left: 50px; margin-bottom: 60px"><%=  @entry.name %></div>
+        <div class="" style="padding-left: 50px; margin: 0 0 60px 0"><%=  @entry.get_address %></div>
+        <div class="mb-3" style="padding-left: 130px; "><%=  @amount_in_words %></div>
+        <div class=" mb-4" style="padding-left: 130px"><%=  to_curr @receipt.amount %></div>
+        <div class="" style="padding-left: 50px; margin-bottom: 40px"><%=  @payment_type %></div>
+        <div class="text-end" style="padding-right: 50px"><%=  current_user %></div>
       </div>
     </div>
   </body>

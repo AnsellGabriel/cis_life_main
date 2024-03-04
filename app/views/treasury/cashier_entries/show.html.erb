@@ -3,8 +3,11 @@
     <i class="bi bi-arrow-left-square"></i>
     Back
   <% end %>
-  <%= link_to  'Print OR', print_treasury_cashier_entry_path(@entry, format: :pdf), class: small_btn('warning'), target: '_blank'%>
-  <%= link_to  'Download OR', download_treasury_cashier_entry_path(@entry, format: :pdf), class: small_btn('success'), target: '_blank'%>
+
+  <% if @entry.posted? %>
+    <%= link_to  'Print OR', print_treasury_cashier_entry_path(@entry, format: :pdf), class: small_btn('warning'), target: '_blank'%>
+    <%= link_to  'Download OR', download_treasury_cashier_entry_path(@entry, format: :pdf), class: small_btn('success'), target: '_blank'%>
+  <% end %>
 </div>
 
 <%= render 'payments/entries/cashier_entry', entry: @entry, coop: @coop, payment: @payment %>

@@ -4,12 +4,10 @@ class Treasury::CashierEntriesController < ApplicationController
 
   def download
     @receipt = Treasury::CashierEntry.find(params[:id])
-    @entry = @receipt.entriable
+    @entry = @receipt.entriable.instance_of?(Payment) ? @receipt.entriable.payable.agreement.cooperative : @receipt.entriable
     @amount_in_words = amount_to_words(@receipt.amount)
     @payment_type = payment_type(@receipt.payment_type)
     @vat = @receipt.vat
-
-    # binding.pry
     respond_to do |format|
       format.pdf do
         render pdf: "OR##{@receipt.or_no}",
@@ -20,12 +18,12 @@ class Treasury::CashierEntriesController < ApplicationController
 
   def print
     @receipt = Treasury::CashierEntry.find(params[:id])
-    @entry = @receipt.entriable
+    @entry = @receipt.entriable.instance_of?(Payment) ? @receipt.entriable.payable.agreement.cooperative : @receipt.entriable
     @amount_in_words = amount_to_words(@receipt.amount)
     @payment_type = payment_type(@receipt.payment_type)
     @vat = @receipt.vat
+    # @positions = analyze_pdf("app/assets/pdfs/or_format.pdf", @receipt)
 
-    # binding.pry
     respond_to do |format|
       format.pdf do
         render pdf: "OR##{@receipt.or_no}",
@@ -149,4 +147,39 @@ class Treasury::CashierEntriesController < ApplicationController
       type.titleize
     end
   end
+
+  # def analyze_pdf(pdf_path, receipt)
+  #   # entry = receipt.entriable.instance_of?(Payment) ? receipt.entriable.payable.agreement.cooperative : receipt.entriable
+  #   # amount_in_words = amount_to_words(receipt.amount)
+  #   # payment_type = payment_type(receipt.payment_type)
+  #   # vat = receipt.vat
+
+  #   # pdf = PDF::Reader.new(pdf_path)
+  #   # text = pdf.pages.first.text
+
+  #   # replacements = {
+  #   #   "March 01, 2024" => "#{receipt.or_date.strftime('%B %d, %Y')}",
+  #   #   "CANLA-ON LOCAL GOVERNMENT UNIT" => "#{entry.name}",
+  #   #   "CANLA-ON CITY, NEGROS OCCIDENTAL" => "#{entry.get_address}",
+  #   #   "299,250.00" => "energetic"
+  #   # }
+
+
+  #   # PDF::Reader.open(pdf_path) do |reader|
+  #   #   reader.pages.each do |page|
+  #   #     page.text.each_line do |line|
+  #   #       # Extract text, x-position, and y-position from each line
+  #   #       text = line[:string]
+  #   #       x_position = line[:x]
+  #   #       y_position = line[:y]
+
+  #   #       # Store text, x-position, and y-position in a hash
+  #   #       positions << { text: text, x_position: x_position, y_position: y_position }
+  #   #     end
+  #   #   end
+  #   # end
+
+
+  #   positions
+  # end
 end
