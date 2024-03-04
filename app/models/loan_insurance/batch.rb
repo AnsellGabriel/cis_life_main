@@ -41,11 +41,14 @@ class LoanInsurance::Batch < Batch
       end
 
     else
-      if agreement.transferred_date.present? && (agreement.transferred_date >= coop_member.membership_date)
-        self.status = :transferred
-      else
-        self.status = :recent
-      end
+      # remove transferred date validation because membership date is not required anymore
+      # if agreement.transferred_date.present? && (agreement.transferred_date >= coop_member.membership_date)
+      #   self.status = :transferred
+      # else
+      #   self.status = :recent
+      # end
+
+      self.status = :recent
     end
     if self.loan_amount <= agreement.nel
       self.valid_health_dec = true
@@ -90,11 +93,14 @@ class LoanInsurance::Batch < Batch
       end
 
     else
-      if agreement.transferred_date.present? && (agreement.transferred_date >= coop_member.membership_date)
-        self.status = :transferred
-      else
-        self.status = :recent
-      end
+      # remove transferred date validation because membership date is not required anymore
+      # if agreement.transferred_date.present? && (agreement.transferred_date >= coop_member.membership_date)
+      #   self.status = :transferred
+      # else
+      #   self.status = :recent
+      # end
+
+      self.status = :recent
     end
 
     # requires no health declaration if loan amount is less than or equal to agreement's nel
