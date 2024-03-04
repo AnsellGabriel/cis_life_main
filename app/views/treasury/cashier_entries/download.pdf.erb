@@ -79,13 +79,13 @@
           </div>
         </div>
         <div class="col-8 p-2">
-          <p style="line-height: 3">Received from <span class="inline-block-centered fw-bolder" style="width: 490px; "><%= @entry.name %></span> with TIN <span class="inline-block-centered fw-bolder" style="width: 200px; "><%= @entry.has_attribute?(:tin_no) ? @entry.tin_no : '' %></span> and address at<br><span class="fw-bolder" style="display: inline-block; width: 580px; "><%= @entry.get_address %></span> engaged in the business style of <span  class="inline-block-centered fw-bolder" style="width: 390px; "></span> the sum of <span  class="inline-block-centered fw-bolder" style="width: 510px; "><%= @amount_in_words %></span> pesos (P<span class="inline-block-centered fw-bolder" style="width: 200px; "><%= to_curr @receipt.amount %></span>) in partial/full payment for <span class="fw-bolder" style="display: inline-block; width: 580px; "><%= @payment_type %></span></p>
+          <p style="line-height: 3;">Received from <span class="inline-block-centered fw-bolder" style="width: 490px;"><%= @entry.name %></span> with TIN <span class="inline-block-centered fw-bolder" style="width: 200px; "><%= @entry.has_attribute?(:tin_no) ? @entry.tin_no : '' %></span> and address at<br><span class="fw-bolder" style="display: inline-block; width: 580px; "><%= @entry.get_address %></span> engaged in the business style of <span  class="inline-block-centered fw-bolder" style="width: 390px; "></span> the sum of <span  class="inline-block-centered fw-bolder" style="width: 510px; "><%= @amount_in_words %></span> pesos (P<span class="inline-block-centered fw-bolder" style="width: 200px; "><%= to_curr @receipt.amount %></span>) in partial/full payment for <span class="fw-bolder" style="display: inline-block; width: 580px; "><%= @payment_type %></span></p>
           <div class="row mb-3">
             <p class="col-8">Sr. Citizen TIN</p>
             <div class="col-4 row" >
               <p class="col-2">By: </p>
               <div class="col-10">
-                <p class="mb-0">Administrator</p>
+                <p class="mb-0"><%= current_user %></p>
                 <p style="font-size: .6rem">Cashier/Authorized Representative</p>
               </div>
             </div>
@@ -93,7 +93,7 @@
           <div class="row">
             <p class="col-4">OSCA/PWD ID No.</p>
             <p class="col-4">Signature</p>
-            <p class="col-4 fw-bolder" style="font-size: 1rem">No. <span style="color: maroon">ILO-00170</span></p>
+            <p class="col-4 fw-bolder" style="font-size: 1rem">No. <span style="color: maroon"><%= @receipt.or_no %></span></p>
           </div>
         </div>
       </div>

@@ -4,23 +4,41 @@
     <meta charset='utf-8' />
     <%= wicked_pdf_stylesheet_link_tag "application" %>
     <%= wicked_pdf_stylesheet_link_tag "bootstrap" %>
+    <script>
+      window.addEventListener('DOMContentLoaded', function() {
+        adjustTextPosition();
+      });
+
+      window.addEventListener('resize', function() {
+        adjustTextPosition();
+      });
+
+      function adjustTextPosition() {
+        const adjustableTexts = document.querySelectorAll('.adjustable-text');
+        adjustableTexts.forEach(function(text) {
+          const parentHeight = text.parentNode.clientHeight;
+          const textHeight = text.clientHeight;
+          text.style.bottom = Math.max(0, parentHeight - textHeight) + 'px';
+        });
+      }
+    </script>
   </head>
   <body style="font-size: .9rem">
     <div class="row" style="padding-top: 100px; width: 845px">
-      <div class="col-4">
+      <div class="col-4 ">
         <p class="text-end  mb-2" style="padding-top: 145px; padding-right: 15px"><%= to_curr @receipt.amount %></p>
         <p class="text-end  mb-2" style="padding-right: 15px"><%= to_curr @receipt.discount %></p>
         <p class="text-end  mb-2" style="padding-right: 15px"><%= to_curr(@receipt.amount - @receipt.discount) %></p>
         <p class="text-end  mb-2" style="padding-right: 15px"><%= to_curr @receipt.withholding_tax %></p>
         <p class="text-end  mb-2" style="padding-right: 15px"><%= to_curr @receipt.net_amount %></p>
       </div>
-      <div class="col-8">
+      <div class="col-8 pdf-text-cont">
         <div class="text-end mb-4"><%= date_as_month_day_year @receipt.or_date %></div>
-        <div class="text-end " style="padding-left: 50px; margin-bottom: 60px"><%=  @entry.name %></div>
-        <div class="" style="padding-left: 50px; margin: 0 0 60px 0"><%=  @entry.get_address %></div>
-        <div class="mb-3" style="padding-left: 130px; "><%=  @amount_in_words %></div>
+        <div class="text-end pdf-text-cont" style="padding-left: 50px; margin-bottom: 60px;"><span class="adjustable-text"><%=  @entry.name %></span></div>
+        <div class="pdf-text-cont" style="padding-left: 50px; margin: 0 0 60px 0"><span class="adjustable-text"><%=  @entry.get_address %></span></div>
+        <div class="mb-3 pdf-text-cont" style="padding-left: 130px; "><span class="adjustable-text"><%=  @amount_in_words %></span></div>
         <div class=" mb-4" style="padding-left: 130px"><%=  to_curr @receipt.amount %></div>
-        <div class="" style="padding-left: 50px; margin-bottom: 40px"><%=  @payment_type %></div>
+        <div class="pdf-text-cont" style="padding-left: 50px; margin-bottom: 40px"><span class="adjustable-text"><%=  @payment_type %></span></div>
         <div class="text-end" style="padding-right: 50px"><%=  current_user %></div>
       </div>
     </div>

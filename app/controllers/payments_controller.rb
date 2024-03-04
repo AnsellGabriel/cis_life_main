@@ -25,7 +25,7 @@ class PaymentsController < ApplicationController
 
         route_path(format, :notice, "Proof of payment uploaded")
       else
-        route_path(format, :alert, "Invalid file. Allowed file types: jpg, jpeg, png")
+        route_path(format, :alert, "Invalid file. Allowed file types: jpg, jpeg, png and pdf")
       end
     end
   end

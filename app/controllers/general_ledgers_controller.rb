@@ -85,7 +85,7 @@ class GeneralLedgersController < ApplicationController
     @ledger = @ledgers.find(params[:id])
 
     if @ledger.update(general_ledger_params)
-      edirect_to entry_path, notice: "Entry updated."
+      redirect_to entry_path, notice: "Entry updated."
     else
       render :edit, status: :unprocessable_entity
     end
