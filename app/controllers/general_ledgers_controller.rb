@@ -18,7 +18,7 @@ class GeneralLedgersController < ApplicationController
         pay_service = PaymentService.new(@entry.entriable, current_user, @entry)
         result = pay_service.post_payment
       elsif params[:e_t] == 'cv'
-        @entry.update(status: :posted, post_date: Date.current)
+        @entry.update(status: :posted, post_date: Date.current, approved_by: current_user.id)
         claim_track = @entry.check_voucher_request.requestable.process_track.build
         claim_track.route_id = 14
         claim_track.user_id = current_user.id

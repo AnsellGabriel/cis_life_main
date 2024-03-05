@@ -7,7 +7,7 @@
           <i class="bi bi-plus-lg"></i> Add Entry
         <% end %>
         
-        <% if @entry.entriable.instance_of?(Payment)%>
+        <% if @entry&.entriable&.instance_of?(Payment) or @check&.check_voucher_request&.requestable&.instance_of?(ProcessClaim) %>
           <%= link_to autofill_entry_ledgers_path(entry, e_t: entry.entry_type), class: small_btn('primary') do %>
             <i class="bi bi-arrow-clockwise"></i> Autofill
           <% end %>

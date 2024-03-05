@@ -311,3 +311,14 @@ ul.timeline > li:before {
   position: absolute;
   bottom: 0;
 }
+
+.pdf-cont {
+  position: relative;
+}
+
+.pdf-centered {
+  position: absolute;
+  top: 25%;
+  left: 5%;
+  right: 5%;
+}

@@ -227,6 +227,8 @@ Rails.application.routes.draw do
       resources :business_checks, as: 'business', except: [:index]
       get :requests, on: :collection
       resources :remarks
+      get :download, on: :member
+      get :print, on: :member
     end
 
     resources :check_voucher_requests, only: %i[show]
