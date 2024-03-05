@@ -63,10 +63,14 @@ module ProcessCoveragesHelper
     when "analyst"
       denied_count = process_coverage.group_remit.batches.where(insurance_status: :denied).count
       for_review_count = process_coverage.group_remit.batches.where(insurance_status: [:for_review, :pending]).count
-      if denied_count > 0 && for_review_count == 0
-        "d-inline"
-      else
+      if process_coverage.for_head_approval?
         "d-none"
+      else
+        if denied_count > 0 && for_review_count == 0
+          "d-inline"
+        else
+          "d-none"
+        end
       end
     when "head"
       "d-none"
