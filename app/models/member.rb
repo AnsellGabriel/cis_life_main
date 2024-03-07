@@ -162,12 +162,12 @@ class Member < ApplicationRecord
   end
 
   def uppercase_fields
-    self.last_name = self.last_name ? self.last_name.strip.upcase : ''
-    self.first_name = self.first_name ? self.first_name.strip.upcase : ''
-    self.middle_name = self.middle_name ? self.middle_name.strip.upcase : ''
-    self.suffix = self.suffix ? self.suffix.strip.upcase : ''
-    self.civil_status = self.civil_status ? self.civil_status.strip.upcase : ''
-    self.gender = self.gender ? self.gender.strip.upcase : ''
+    self.last_name = self.last_name ? self.last_name.squish.upcase : ''
+    self.first_name = self.first_name ? self.first_name.squish.upcase : ''
+    self.middle_name = self.middle_name ? self.middle_name.squish.upcase : ''
+    self.suffix = self.suffix ? self.suffix.squish.upcase : ''
+    self.civil_status = self.civil_status ? self.civil_status.squish.upcase : ''
+    self.gender = self.gender ? self.gender.squish.upcase : ''
   end
 
   def self.coop_member_details(coop_members)

@@ -64,7 +64,12 @@
                 <%= link_to "Index", accounting_checks_path, class: "dropdown-item" %>
                 <%= link_to "Requests", requests_accounting_checks_path, class: "dropdown-item" %>
               <% end %>
-              <%= link_to "Journal Vouchers", accounting_journals_path, class: "nav-link" %>
+              <%= render 'layouts/partials/nav_dropdown', title: 'Journal Vouchers' do %>
+                <% if current_user.head? %>
+                  <%= link_to "For Approval", for_approval_index_accounting_journals_path, class: "dropdown-item" %>
+                <% end %>
+                <%= link_to "Index", accounting_journals_path, class: "dropdown-item" %>
+              <% end %>
             <% when 26 %>
                 <%= render 'layouts/partials/nav_dropdown', title: 'Business Checks' do %>
                   <%= link_to "Index", treasury_checks_path	, class: "dropdown-item" %>
@@ -80,6 +85,10 @@
             <% when 15 %>
               <%= render 'layouts/partials/nav_dropdown', title: 'Data Entries' do %>
                 <%= link_to "Cooperative", cooperatives_path, class: "dropdown-item" %>
+              <% end %>
+            <% when 27 %>
+              <%= render 'layouts/partials/nav_dropdown', title: 'For Audit' do %>
+                <%= link_to "Check Vouchers", audit_check_vouchers_path	, class: "dropdown-item" %>
               <% end %>
             <% else %>
               <%= render 'layouts/partials/nav_dropdown', title: 'Claims' do %>

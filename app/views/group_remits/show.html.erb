@@ -128,7 +128,7 @@
         <%= content_tag :span, "(OR# #{@group_remit.or_number})", class: "text-dark small" %>
       <% end %>
   <% end %>
-  <%= content_tag :h3, "(#{plan_acronym})", class: 'mb-0 text-secondary' %>
+  <%= content_tag :h3, "(#{@agreement.plan.acronym.include?('GYRT') ? 'GYRT' : @agreement.plan.acronym})", class: 'mb-0 text-secondary' %>
 
   <div class="<%= flex_justify_align('between') %> mt-2" style="height: 100%; width: 460px;">
     <div style="width: 100%">

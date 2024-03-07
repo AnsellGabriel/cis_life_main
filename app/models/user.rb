@@ -50,8 +50,16 @@ class User < ApplicationRecord
     userable_type == "Employee" && userable.department_id == 15
   end
 
+  def is_claims?
+    userable_type == "Employee" && userable.department_id == 19
+  end
+
   def is_auditor?
     userable_type == "Employee" && userable.department_id == 27
+  end
+
+  def is_coop_user?
+    userable_type == "CoopUser"
   end
 
   private
