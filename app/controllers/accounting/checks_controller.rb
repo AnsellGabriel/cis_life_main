@@ -11,7 +11,6 @@ class Accounting::ChecksController < ApplicationController
     @auditor = Employee.find(@check.audited_by) if @check.audited_by.present?
     @amount_in_words = amount_to_words(@check.amount)
 
-
     respond_to do |format|
       format.pdf do
         render pdf: "Check voucher ##{@check.voucher}",
@@ -27,7 +26,6 @@ class Accounting::ChecksController < ApplicationController
     @certifier = Employee.find(@check.certified_by) if @check.certified_by.present?
     @auditor = Employee.find(@check.audited_by) if @check.audited_by.present?
     @amount_in_words = amount_to_words(@check.amount)
-
 
     respond_to do |format|
       format.pdf do

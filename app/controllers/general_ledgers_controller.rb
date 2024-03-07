@@ -29,6 +29,8 @@ class GeneralLedgersController < ApplicationController
         result = 'Journal posted.'
       end
 
+      @entry.general_ledgers.update_all(transaction_date: Date.current)
+      
       redirect_to entry_path, notice: result
     end
   end

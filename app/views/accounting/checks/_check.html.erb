@@ -21,22 +21,22 @@
         <% if current_user.is_accountant? %>
           <% if current_user.head? and check.for_approval? %>
             <%= link_to "Post Voucher", post_entry_ledgers_path(check, e_t: check.entry_type), class: 'btn btn-sm btn-success mt-1', data: {turbo_confirm: "IMPORTANT: This process is not reversible. Post voucher?", turbo_method: :get} %>
-            <%= link_to new_accounting_check_remark_path(check), data: {turbo_frame: 'reg_form_modal' }, class: 'btn btn-sm btn-outline-danger mt-1', title: 'Cancel Voucher' do %>
-              <i class="bi bi-x-lg"></i><span> Cancel Voucher</span>
+            <%= link_to new_accounting_check_remark_path(check, e_t: check.entry_type), data: {turbo_frame: 'reg_form_modal' }, class: 'btn btn-sm btn-outline-danger mt-1', title: 'Cancel Voucher' do %>
+              <i class="bi bi-x-lg"></i><span> Cancel</span>
             <% end %>
           <% else %>
             <% if check.pending? %>
               <%= link_to "Submit", for_approval_entry_ledgers_path(check, e_t: check.entry_type), class: 'btn btn-sm btn-success mt-1', data: {turbo_confirm: "Submit voucher for approval?", turbo_method: :get} %>
-              <%= link_to edit_accounting_check_path(check), class: 'btn btn-sm btn-outline-primary mt-1', data: {turbo_frame: 'modal'}, title: 'Edit receipt' do %> 
+              <%= link_to edit_accounting_check_path(check, e_t: check.entry_type), class: 'btn btn-sm btn-outline-primary mt-1', data: {turbo_frame: 'modal'}, title: 'Edit receipt' do %> 
                 <i class="bi bi-pencil"></i><span> Edit</span>
               <% end %>
-              <%= link_to new_accounting_check_remark_path(check), data: {turbo_frame: 'reg_form_modal' }, class: 'btn btn-sm btn-outline-danger mt-1', title: 'Cancel Voucher' do %>
-                <i class="bi bi-x-lg"></i><span> Cancel Voucher</span>
+              <%= link_to new_accounting_check_remark_path(check, e_t: check.entry_type), data: {turbo_frame: 'reg_form_modal' }, class: 'btn btn-sm btn-outline-danger mt-1', title: 'Cancel Voucher' do %>
+                <i class="bi bi-x-lg"></i><span> Cancel</span>
               <% end %>
             <% end %>
           <% end %>
           <% if check.cancelled? or check.pending_audit? %>
-            <%= link_to accounting_check_remarks_path(check), class: 'btn btn-sm btn-outline-danger mt-1', data: {turbo_frame: 'reg_form_modal'} do %>
+            <%= link_to accounting_check_remarks_path(check, e_t: check.entry_type), class: 'btn btn-sm btn-outline-danger mt-1', data: {turbo_frame: 'reg_form_modal'} do %>
               <i class="bi bi-card-list"></i> Remarks
             <% end %>
           <% end%>
