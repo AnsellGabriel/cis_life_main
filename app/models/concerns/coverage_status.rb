@@ -33,11 +33,14 @@ module CoverageStatus
     end
 
     def create_new_batch_coverage(agreement, coop_member, batch )
-      if agreement.transferred_date.present? && (agreement.transferred_date >= coop_member.membership_date)
-        batch.status = :transferred
-      else
-        batch.status = :recent
-      end
+      # remove transferred date validation because membership date is not required anymore
+      # if agreement.transferred_date.present? && (agreement.transferred_date >= coop_member.membership_date)
+      #   batch.status = :transferred
+      # else
+      #   batch.status = :recent
+      # end
+
+      batch.status = :recent
 
       agreement.agreements_coop_members.create!(
         coop_member_id: coop_member.id,

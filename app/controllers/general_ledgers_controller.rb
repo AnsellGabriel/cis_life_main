@@ -18,12 +18,15 @@ class GeneralLedgersController < ApplicationController
         pay_service = PaymentService.new(@entry.entriable, current_user, @entry)
         result = pay_service.post_payment
       elsif params[:e_t] == 'cv'
-        @entry.update(status: :posted, post_date: Date.current)
+        @entry.update(post_date: Date.current, approved_by: current_user.id)
         claim_track = @entry.check_voucher_request.requestable.process_track.build
         claim_track.route_id = 14
         claim_track.user_id = current_user.id
         claim_track.save
         result = 'Voucher posted.'
+      elsif params[:e_t] == 'jv'
+        @entry.update(post_date: Date.current, approved_by: current_user.id)
+        result = 'Journal posted.'
       end
 
       redirect_to entry_path, notice: result
@@ -34,13 +37,14 @@ class GeneralLedgersController < ApplicationController
     case params[:e_t]
     when 'ce' then entry = 'OR'
     when 'cv' then entry = 'check voucher'
+    when 'jv' then entry = 'journal voucher'
     end
 
     if (@ledgers.total_debit != @ledgers.total_credit) || @ledgers.empty?
       return redirect_to entry_path, alert: "Unable to submit #{entry}, #{@ledgers.empty? ? 'no entry.' : 'credit and debit total not equal.'}"
     end
 
-    if (@ledgers.total_debit != @entry.total_amount) || (@ledgers.total_credit != @entry.total_amount)
+    if params[:e_t] != 'jv' and ((@ledgers.total_debit != @entry.total_amount) || (@ledgers.total_credit != @entry.total_amount))
       return redirect_to entry_path, alert: "Unable to submit #{entry}, credit and debit total not equal to total amount"
     end
 
@@ -85,7 +89,7 @@ class GeneralLedgersController < ApplicationController
     @ledger = @ledgers.find(params[:id])
 
     if @ledger.update(general_ledger_params)
-      edirect_to entry_path, notice: "Entry updated."
+      redirect_to entry_path, notice: "Entry updated."
     else
       render :edit, status: :unprocessable_entity
     end
@@ -105,6 +109,7 @@ class GeneralLedgersController < ApplicationController
     case params[:e_t]
     when 'ce' then klass = Treasury::CashierEntry
     when 'cv' then klass = Accounting::Check
+    when 'jv' then klass = Accounting::Journal
     end
 
     @entry = klass.find(params[:entry_id])

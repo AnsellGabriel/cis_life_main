@@ -2,7 +2,7 @@
   <div class="mb-1">
     <% if @check.check_voucher_request.present? %>
       <%= link_to accounting_check_voucher_request_path(@check.check_voucher_request), class: small_btn('outline-secondary') do %>
-        <i class="bi bi-receipt"></i>
+        <i class="bi bi-arrow-left-square"></i>
         Back
       <% end%>
     <% else %>
@@ -11,7 +11,13 @@
         Back
       <% end %>
     <% end %>
+
+    <% if @check.posted? %>
+      <%= link_to  'Print Voucher', print_accounting_check_path(@check, format: :pdf), class: small_btn('warning'), target: '_blank'%>
+      <%= link_to  'Download Voucher', download_accounting_check_path(@check, format: :pdf), class: small_btn('success'), target: '_blank'%>
+    <% end %>
   </div>
+  
 <% elsif current_user.is_auditor? %>
   <div class="mb-1">
     <%= link_to  audit_check_vouchers_path, class: small_btn("outline-secondary") do %>

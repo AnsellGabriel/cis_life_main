@@ -211,6 +211,8 @@ class ProcessCoveragesController < ApplicationController
 
     @title = params[:title]
 
+    @pagy_pc, @filtered_pc = pagy(@process_coverages, items: 5, page_param: :process_coverage, link_extra: 'data-turbo-frame="cov_list_pagination"')
+
   end
 
   def update_batch_selected

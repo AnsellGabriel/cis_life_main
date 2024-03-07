@@ -1,0 +1,10 @@
+/* line 1, app/assets/stylesheets/pdf.scss */
+.d-flex {
+  display: flex;
+}
+
+/* line 5, app/assets/stylesheets/pdf.scss */
+.centered {
+  align-items: center;
+  justify-content: center;
+}
