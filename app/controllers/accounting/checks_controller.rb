@@ -7,6 +7,7 @@ class Accounting::ChecksController < ApplicationController
     @ledger_entries = @check.general_ledgers
     @accountant = Employee.find(@check.accountant_id)
     @approver = Employee.find(@check.approved_by) if @check.approved_by.present?
+    @certifier = Employee.find(@check.certified_by) if @check.certified_by.present?
     @auditor = Employee.find(@check.audited_by) if @check.audited_by.present?
     @amount_in_words = amount_to_words(@check.amount)
 
@@ -23,6 +24,7 @@ class Accounting::ChecksController < ApplicationController
     @ledger_entries = @check.general_ledgers
     @accountant = Employee.find(@check.accountant_id)
     @approver = Employee.find(@check.approved_by) if @check.approved_by.present?
+    @certifier = Employee.find(@check.certified_by) if @check.certified_by.present?
     @auditor = Employee.find(@check.audited_by) if @check.audited_by.present?
     @amount_in_words = amount_to_words(@check.amount)
 

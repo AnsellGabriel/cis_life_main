@@ -1,0 +1,76 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset='utf-8' />
+    <%= wicked_pdf_stylesheet_link_tag "application" %>
+    <%= wicked_pdf_stylesheet_link_tag "bootstrap" %>
+  </head>
+  <body style="font-size: .9rem">
+    <%= render 'layouts/pdf_partials/cisp_header', title: "JOURNAL VOUCHER" %>
+    <div class="text-center mb-5"><%= @journal.date_voucher.strftime("%m/%d/%Y")%></div>
+    <div class="row mb-3">
+      <div class="col-8">
+        <div class="row mb-2">
+          <div class="col-2">Payee</div>
+          <div class="col-10 pdf-bottom-border"><%= @journal.payable %></div>
+        </div>
+        <div class="row">
+          <div class="col-2">Address</div>
+          <div class="col-10 pdf-bottom-border" ><%= @journal.payable.get_address %></div>
+        </div>
+      </div>
+      <div class="col-1"></div>
+      <div class="col-3">
+        <div class="row">
+          <div class="col-6">JV number</div>
+          <div class="col-5 pdf-bottom-border"><%= @journal.formatted_voucher %></div>
+        </div>
+      </div>
+    </div>
+    <div class="mb-3" style="height: 100px; border: 2px solid black">
+      <div class="p-1 text-center fw-bolder" style="border-bottom: 2px solid black">PARTICULARS</div>
+      <div class="p-1 text-center"><%= @journal.particulars %></div>
+    </div>
+    <div class="mb-4" style="border: 2px solid black;">
+      <div class="row" style="border-bottom: 2px solid black;">
+        <div class="p-1 col-2 fw-bolder text-center">CODE</div>
+        <div class="p-1 col-6 fw-bolder text-center">ACCOUNT</div>
+        <div class="p-1 col-2 fw-bolder text-center">DEBIT</div>
+        <div class="p-1 col-2 fw-bolder text-center">CREDIT</div>
+      </div>
+      <% @journal.general_ledgers.each do |entry| %>
+        <div class="row" style="font-size: .8rem">
+          <div class="p-1 col-2"><%= entry.id %></div>
+          <div class="p-1 col-6"><%= entry.account %></div>
+          <div class="p-1 col-2 text-end" style="border-left: 2px solid black"><%= entry.amount if entry.debit? %></div>
+          <div class="p-1 col-2 text-end" style="border-left: 2px solid black"><%= entry.amount if entry.credit? %></div>
+        </div>
+      <% end %>
+      <div class="row" style="border-top: 2px solid black">
+        <div class="col-2"></div>
+        <div class="col-6"></div>
+        <div class="p-1 col-2 text-end" style="border-left: 2px solid black"><%= @journal.general_ledgers.debits.sum(:amount) %></div>
+        <div class="p-1 col-2 text-end" style="border-left: 2px solid black"><%= @journal.general_ledgers.credits.sum(:amount)  %></div>
+      </div>
+    </div>
+    <div class="row mb-5">
+      <div class="col-4 text-center">Prepared by</div>
+      <div class="col-4 text-center">Certified correct by</div>
+      <div class="col-4 text-center">Approved by</div>
+    </div>
+    <div class="row">
+      <div class="col-4 text-center">
+        <div class="fw-bolder mb-2"><%= @accountant&.signed_fullname %></div>
+        <div class=""><%= @accountant&.designation&.titleize %></div>
+      </div>
+      <div class="col-4 text-center">
+        <div class="fw-bolder mb-2"><%= @certifier&.signed_fullname %></div>
+        <div class=""><%= @certifier&.designation&.titleize %></div>
+      </div>
+      <div class="col-4 text-center">
+        <div class="fw-bolder mb-2"><%= @approver&.signed_fullname %></div>
+        <div class=""><%= @approver&.designation&.titleize %></div>
+      </div>
+    </div>
+  </body>
+</html>

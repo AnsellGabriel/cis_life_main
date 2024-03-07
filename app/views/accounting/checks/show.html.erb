@@ -13,8 +13,8 @@
     <% end %>
 
     <% if @check.posted? %>
-      <%= link_to  'Print Voucher', print_accounting_check_path(@check, format: :pdf), class: small_btn('warning'), target: '_blank'%>
-      <%= link_to  'Download Voucher', download_accounting_check_path(@check, format: :pdf), class: small_btn('success'), target: '_blank'%>
+      <%= link_to  'Print', print_accounting_check_path(@check, format: :pdf), class: small_btn('warning'), target: '_blank'%>
+      <%= link_to  'Download', download_accounting_check_path(@check, format: :pdf), class: small_btn('success'), target: '_blank'%>
     <% end %>
   </div>
   

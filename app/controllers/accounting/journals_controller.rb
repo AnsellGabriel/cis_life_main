@@ -6,12 +6,11 @@ class Accounting::JournalsController < ApplicationController
     @ledger_entries = @journal.general_ledgers
     @accountant = Employee.find(@journal.accountant_id)
     @approver = Employee.find(@journal.approved_by) if @journal.approved_by.present?
-    @auditor = Employee.find(@journal.audited_by) if @journal.audited_by.present?
-
+    @certifier = Employee.find(@journal.certified_by) if @journal.certified_by.present?
 
     respond_to do |format|
       format.pdf do
-        render pdf: "Check voucher ##{@check.voucher}",
+        render pdf: "Check voucher ##{@journal.voucher}",
                page_size: "A4"
       end
     end
