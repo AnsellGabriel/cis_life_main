@@ -51,12 +51,6 @@ module ProcessCoveragesHelper
         "d-inline"
       else
         "d-none"
-      else
-        if denied_count > 0 && for_review_count == 0
-          "d-inline"
-        else
-          "d-none"
-        end
       end
     end
 
