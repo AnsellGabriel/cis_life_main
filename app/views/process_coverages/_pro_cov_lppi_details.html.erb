@@ -57,11 +57,13 @@
       <%= to_currency(@total_net_prem) %>
     <% end %>
     <%# if process_coverage.status == "pending" || process_coverage.status == "for_process" %>
-    <% if (current_user.analyst? || current_user.head? || current_user.senior_officer?) && @process_coverage.count_members("denied") == 0 && @process_coverage.count_members("pending") == 0 && @total_net_premium <= session[:max_amount] %>
+    <%# if (current_user.analyst? || current_user.head? || current_user.senior_officer?) && @process_coverage.count_members("denied") == 0 && @process_coverage.count_members("pending") == 0 && @total_net_premium <= session[:max_amount] %>
+    <div class="<%= button_show_pc(current_user.rank, @process_coverage) %>">
       <%= link_to new_process_remark_path(ref: process_coverage, pro_status: "Approve", rem_status: "approved", max_amount: session[:max_amount], total_life_cov: @total_life_cov, total_gross_prem: @total_gross_prem), title: "Approve", class: "btn btn-sm btn-success mb-2 me-2", data: { turbo_frame: "remote_modal" } do %>
         <%= bootstrap_icon "check-lg" %> Approve
       <% end %>
-    <% end %>
+    </div>
+    <%# end %>
     <!-- div class="<%= show_approve_button_pc(current_user.rank, @process_coverage) %>">
     </div -->
     <div class="<%= show_denied_button_pc(current_user.rank, @process_coverage) %>">

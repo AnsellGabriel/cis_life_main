@@ -93,7 +93,7 @@ class ProcessCoveragesController < ApplicationController
       # @analysts = @analysts_x.joins(:emp_approver).where(emp_approver: { approver: current_user.userable_id })
     end
 
-    @pagy_pc, @filtered_pc = pagy(@process_coverages, items: 10, page_param: :process_coverage, link_extra: 'data-turbo-frame="pro_cov_pagination')
+    @pagy_pc, @filtered_pc = pagy(@process_coverages, items: 10, page_param: :process_coverage, link_extra: 'data-turbo-frame="pro_cov_pagination"')
 
     # if params[:search].present?
     #   @process_coverages = @process_coverages_x.joins(group_remit: {agreement: :cooperative}).where("group_remits.name LIKE ? OR group_remits.description LIKE ? OR agreements.moa_no LIKE ? OR cooperatives.name LIKE ?", "%#{params[:search]}%", "%#{params[:search]}%", "%#{params[:search]}%", "%#{params[:search]}%")

@@ -30,6 +30,7 @@
             <thead>
               <th>Age</th>
               <th>Rate (monthly)</th>
+              <th></th>
             </thead>
             <tbody>
               <% moa.loan_rates.each do |rate| %>
@@ -40,6 +41,12 @@
                   </td>
                   <td>
                     <%= content_tag :p, "#{to_currency(rate.annual_rate / 12.to_d)} / 1000" %>
+                    <%= content_tag :p, "Mark-up Rate: #{rate.markup_rate}" %>
+                  </td>
+                  <td>
+                    <small>NEL: <%= to_currency(rate.nel) %></small> <br>
+                    <small>NML: <%= to_currency(rate.nml) %></small> <br>
+                    <small>Contestability <%= pluralize(rate.contestability, "month") %></small>
                   </td>
                 </tr>
               <% end %>
@@ -109,28 +116,30 @@
             <%= content_tag :h5, "OTHER DETAILS", class: "mb-0" %>
           </div>
           <div class="col-12 border-bottom py-2 mb-5">
-            <%= content_tag :span, "Age Requirements", class: "lead text-primary" %>
-            <%= content_tag :ul, class: "mb-2" do %>
-              <%= content_tag :li do %>
-                <p>Entry Age: <b><%= moa.entry_age_from.to_i %> to <%= moa.entry_age_to.to_i %></b> years old </p>
+            <% unless moa.plan.acronym == "LPPI" %>
+              <%= content_tag :span, "Age Requirements", class: "lead text-primary" %>
+              <%= content_tag :ul, class: "mb-2" do %>
+                <%= content_tag :li do %>
+                  <p>Entry Age: <b><%= moa.entry_age_from.to_i %> to <%= moa.entry_age_to.to_i %></b> years old </p>
+                <% end %>
+                <%= content_tag :li do %>
+                  <p>Exit Age: <b><%= moa.exit_age.to_i %></b> years and <b>6</b> months old </p>
+                <% end %>
               <% end %>
-              <%= content_tag :li do %>
-                <p>Exit Age: <b><%= moa.exit_age.to_i %></b> years and <b>6</b> months old </p>
+              <%= content_tag :span, "Minimum Participation", class: "lead text-primary" %>
+              <%= content_tag :ul, class: "mb-2" do %>
+                <%= content_tag :li do %>
+                  <p><b><%= num_delimit(moa.minimum_participation.nil? ? 0 : moa.minimum_participation) %></b> members</p>
+                <% end %>
               <% end %>
-            <% end %>
-            <%= content_tag :span, "Minimum Participation", class: "lead text-primary" %>
-            <%= content_tag :ul, class: "mb-2" do %>
-              <%= content_tag :li do %>
-                <p><b><%= num_delimit(moa.minimum_participation.nil? ? 0 : moa.minimum_participation) %></b> members</p>
-              <% end %>
-            <% end %>
-            <%= content_tag :span, "Service Fee", class: "lead text-primary" %>
-            <%= content_tag :ul, class: "mb-2" do %>
-              <%= content_tag :li do %>
-                <p>Cooperative: <b><%= to_percent((moa.coop_sf.nil? ? 0 : moa.coop_sf)) %></b></p>
-              <% end %>
-              <%= content_tag :li do %>
-                <p>Marketing Agent: <b><%= to_percent((moa.agent_sf.nil? ? 0 : moa.agent_sf)) %></b></p>
+              <%= content_tag :span, "Service Fee", class: "lead text-primary" %>
+              <%= content_tag :ul, class: "mb-2" do %>
+                <%= content_tag :li do %>
+                  <p>Cooperative: <b><%= to_percent((moa.coop_sf.nil? ? 0 : moa.coop_sf)) %></b></p>
+                <% end %>
+                <%= content_tag :li do %>
+                  <p>Marketing Agent: <b><%= to_percent((moa.agent_sf.nil? ? 0 : moa.agent_sf)) %></b></p>
+                <% end %>
               <% end %>
             <% end %>
             <% if ["GYRT","GYRTF","GYRTBR","GYRTFR"].include?(moa.plan.acronym) %>
@@ -146,19 +155,19 @@
                 <% end %>
               <% end %>
             <% end %>
-            <%= content_tag :span, "Contestability", class: "lead text-primary" %>
-            <%= content_tag :ul, class: "mb-2" do %>
-              <%= content_tag :li do %>
-                <p>Contestability: <b><%= moa.contestability if moa.contestability %></b> </p>
+            <% unless moa.plan.acronym == "LPPI" %>
+              <%= content_tag :span, "Contestability", class: "lead text-primary" %>
+              <%= content_tag :ul, class: "mb-2" do %>
+                <%= content_tag :li do %>
+                  <p>Contestability: <b><%= moa.contestability if moa.contestability %></b> </p>
+                <% end %>
               <% end %>
-            <% end %>
-            <%= content_tag :span, "No Evidence Limit", class: "lead text-primary" %>
-            <%= content_tag :ul, class: "mb-2" do %>
-              <%= content_tag :li do %>
-                <p><%= nel_nml(moa.nel) %></p>
+              <%= content_tag :span, "No Evidence Limit", class: "lead text-primary" %>
+              <%= content_tag :ul, class: "mb-2" do %>
+                <%= content_tag :li do %>
+                  <p><%= nel_nml(moa.nel) %></p>
+                <% end %>
               <% end %>
-            <% end %>
-            <% unless ["GYRT","GYRTF","GYRTBR","GYRTFR"].any? { |str| moa.plan.acronym.include?(str) } %>
               <%= content_tag :span, "Non-Medical Limit", class: "lead text-primary" %>
               <%= content_tag :ul, class: "mb-2" do %>
                 <%= content_tag :li do %>
@@ -166,6 +175,8 @@
                 <% end %>
               <% end %>
             <% end %>
+            <%# unless ["GYRT","GYRTF","GYRTBR","GYRTFR"].any? { |str| moa.plan.acronym.include?(str) } %>
+            <%# end %>
             <%= content_tag :span, "Signed Date", class: "lead text-primary" %>
             <%= content_tag :ul, class: "mb-2" do %>
               <%= content_tag :li do %>

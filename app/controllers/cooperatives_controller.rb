@@ -5,7 +5,7 @@ class CooperativesController < ApplicationController
   # GET /cooperatives or /cooperatives.json
   def index
     if params[:coop_filter]
-      @cooperatives = Cooperative.where("name LIKE ?", "%#{params[:coop_filter]}%")
+      @cooperatives = Cooperative.where("name LIKE ? OR acronym LIKE ?", "%#{params[:coop_filter]}%", "%#{params[:coop_filter]}%")
     else
       @cooperatives = Cooperative.all
     end
