@@ -218,7 +218,10 @@ Rails.application.routes.draw do
   # * Finance Module Routes
   # accounting
   namespace :accounting do
-    resources :journals
+    resources :journals do
+      get :download, on: :member
+      get :for_approval_index, on: :collection
+    end
 
     resources :checks do
       get :for_approval_index, on: :collection

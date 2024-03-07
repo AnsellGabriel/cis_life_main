@@ -13,9 +13,10 @@ module Treasuries::Path
         end
       when 'cv'
         accounting_check_path(@entry)
+      when 'jv'
+        accounting_journal_path(@entry)
       end
     end
-
   end
 
 end
