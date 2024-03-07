@@ -20,7 +20,6 @@
   display: -webkit-box;
 }
 
-
 abbr[title="required"] {
   display: none;
 }
@@ -71,7 +70,7 @@ input::placeholder {
 //     line-height: 1.5 !important;
 // }
 
-input[type=checkbox]:hover,
+input[type="checkbox"]:hover,
 input[type="date"]:hover {
   cursor: pointer;
 }
@@ -83,7 +82,6 @@ input[type="date"]:hover {
   border-color: #007bff;
   color: #ffffff;
 }
-
 
 a {
   text-decoration: none !important;
@@ -101,21 +99,20 @@ svg.ss-arrow {
 
 .coop-member-form {
   gap: 20px;
-
 }
 
 .sm-secondary-text {
-  font-size: .8rem;
+  font-size: 0.8rem;
 }
 
 .sm-green-text {
-  font-size: .7rem;
+  font-size: 0.7rem;
   color: var(--bs-green) !important;
   font-weight: 700;
 }
 
 .sm-red-text {
-  font-size: .7rem;
+  font-size: 0.7rem;
   color: var(--bs-red) !important;
 }
 
@@ -130,9 +127,8 @@ svg.ss-arrow {
 // .long-name {
 //   display: inline-block;
 //   max-width: 200px; /* Set the desired maximum width */
-//   overflow-wrap: break-word; 
+//   overflow-wrap: break-word;
 // }
-
 
 // claims tracker CSS
 .track {
@@ -240,14 +236,13 @@ ul.row-sm {
   color: #212529;
 }
 
-
 ul.timeline {
   list-style-type: none;
   position: relative;
 }
 
 ul.timeline:before {
-  content: ' ';
+  content: " ";
   background: #d4d9df;
   display: inline-block;
   position: absolute;
@@ -257,13 +252,13 @@ ul.timeline:before {
   z-index: 400;
 }
 
-ul.timeline>li {
+ul.timeline > li {
   // margin: 25px 0;
   padding-left: 25px;
 }
 
-ul.timeline>li:before {
-  content: ' ';
+ul.timeline > li:before {
+  content: " ";
   background: #226cff;
   display: inline-block;
   position: absolute;
@@ -278,15 +273,13 @@ ul.timeline>li:before {
 .centered {
   text-align: center;
   vertical-align: middle;
-  font-size: .9rem;
+  font-size: 0.9rem;
 }
-
 
 // pagy css
 .pagination {
   margin-bottom: 0;
 }
-
 
 // ts--select
 .ts-wrapper {
@@ -297,6 +290,35 @@ ul.timeline>li:before {
   height: 26px !important;
   display: flex;
   padding: 4px 4px !important;
+}
 
+.inline-block-centered {
+  display: inline-block;
+  text-align: center;
+}
 
+.invisible {
+  opacity: 0;
+}
+
+.pdf-text-cont {
+  position: relative;
+  overflow: visible;
+  height: 15px;
+}
+
+.adjustable-text {
+  position: absolute;
+  bottom: 0;
+}
+
+.pdf-cont {
+  position: relative;
+}
+
+.pdf-centered {
+  position: absolute;
+  top: 25%;
+  left: 5%;
+  right: 5%;
 }

@@ -218,7 +218,10 @@ Rails.application.routes.draw do
   # * Finance Module Routes
   # accounting
   namespace :accounting do
-    resources :journals
+    resources :journals do
+      get :download, on: :member
+      get :for_approval_index, on: :collection
+    end
 
     resources :checks do
       get :for_approval_index, on: :collection
@@ -227,6 +230,8 @@ Rails.application.routes.draw do
       resources :business_checks, as: 'business', except: [:index]
       get :requests, on: :collection
       resources :remarks
+      get :download, on: :member
+      get :print, on: :member
     end
 
     resources :check_voucher_requests, only: %i[show]
@@ -243,6 +248,7 @@ Rails.application.routes.draw do
 
     resources :payments
     resources :cashier_entries do
+      get :print, on: :member
       get :download, on: :member
       get :cancel, on: :member
       get :for_approval_index, on: :collection

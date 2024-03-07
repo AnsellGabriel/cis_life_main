@@ -1,31 +1,56 @@
-<div class="card" style="max-width: 500px;">
-  <div class="card-body">
-    <div class="row mb-3">
-      <div class="col-9">
-        <strong>Voucher Date: </strong>
-        <%= month_day_year(journal.date_voucher) %>
+<div class="d-flex gap-3">
+  <div class="card" style="width: 60%;">
+    <div class="card-header <%= flex_justify_align('between', '') %>">
+      <div class="">
+        <div class="<%= flex_justify_align('','center') %> gap-1">
+          <p class="text-muted"><small>Journal Voucher</small></p>
+          <p class="badge bg-<%= journal.decorate.status_color %>"><%= journal.status.humanize %></p>
+        </div>
+        <h3 class="text-primary"><%= "#{journal.formatted_voucher}" %></h3>
+        <p><small><strong>Voucher date:</strong> <span><%= month_day_year(journal.date_voucher) %></span></small></p>
+        <% if journal.post_date? %>
+          <p><small><strong>Post date:</strong> <span><%= month_day_year(journal.post_date) %></span></small></p>
+        <% end %>
       </div>
-      <div class="col-3">
-        <strong><%= "#{journal.formatted_voucher}" %></strong>
+      <div class="">
+        <% if current_user.is_accountant? %>
+          <% if current_user.head? and journal.for_approval? %>
+            <%= link_to post_entry_ledgers_path(journal, e_t: journal.entry_type), class: 'btn btn-sm btn-success mt-1', data: {turbo_confirm: "IMPORTANT: This process is not reversible. Post voucher?", turbo_method: :get} do %>
+              <i class="bi bi-check-circle-fill"></i> Approve
+            <% end %>
+            <%= link_to new_accounting_check_remark_path(journal, e_t: journal.entry_type), data: {turbo_frame: 'reg_form_modal' }, class: 'btn btn-sm btn-danger mt-1', title: 'Cancel' do %>
+              <i class="bi bi-x-lg"></i><span> Cancel</span>
+            <% end %>
+          <% else %>
+            <% if journal.pending? %>
+              <%= link_to "Submit", for_approval_entry_ledgers_path(journal, e_t: journal.entry_type), class: 'btn btn-sm btn-success mt-1', data: {turbo_confirm: "Submit voucher for approval?", turbo_method: :get} %>
+              <%= link_to edit_accounting_journal_path(journal), class: 'btn btn-sm btn-outline-primary mt-1', data: {turbo_frame: 'modal'}, title: 'Edit receipt' do %> 
+                <i class="bi bi-pencil"></i><span> Edit</span>
+              <% end %>
+              <%= link_to new_accounting_check_remark_path(journal, e_t: journal.entry_type), data: {turbo_frame: 'reg_form_modal' }, class: 'btn btn-sm btn-outline-danger mt-1', title: 'Cancel' do %>
+                <i class="bi bi-x-lg"></i><span> Cancel</span>
+              <% end %>
+            <% end %>
+          <% end %>
+          <% if journal.cancelled? or journal.pending_audit? %>
+            <%= link_to accounting_check_remarks_path(journal, e_t: journal.entry_type), class: 'btn btn-sm btn-outline-danger mt-1', data: {turbo_frame: 'reg_form_modal'} do %>
+              <i class="bi bi-card-list"></i> Remarks
+            <% end %>
+          <% end%>
+        <% end %>
       </div>
     </div>
-    <div class="row mb-3">
-      <div>
-        <p class="mb-0"><strong>Payee</strong></p>
-        <%= journal.payable %>
+
+    <div class="card-body">
+      <div class="row mb-3">
+        <span class="small fw-bold col-2">Payee: </span>
+        <span class="small col-10"><%= journal.payable %></span>
       </div>
-    </div>
-    <div class="row mb-3">
-      <div>
-        <p class="mb-0"><strong>Address</strong></p>
-        <%= journal.payable.get_address %>
-      </div>
-    </div>
-    <div class="row mb-3">
-      <div class="col-6">
-        <p class="mb-0"><strong>Particulars</strong></p>
-        <%= journal.particulars %>
+      <div class="row mb-3">
+        <span class="small fw-bold col-2">Particulars: </span>
+        <span class="small col-10"><%= journal.particulars %></span>
       </div>
     </div>
   </div>
 </div>
+

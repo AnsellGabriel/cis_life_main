@@ -21,6 +21,10 @@ class Employee < ApplicationRecord
     "#{last_name}, #{first_name}, #{middle_name[0]}.".titleize
   end
 
+  def initials_name
+    "#{first_name[0]}#{middle_name[0].upcase} #{last_name.titleize}"
+  end
+
   def signed_fullname
     "#{first_name} #{middle_name[0]}. #{last_name}".titleize
   end

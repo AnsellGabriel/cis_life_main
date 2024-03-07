@@ -2,16 +2,32 @@ class Treasury::CashierEntriesController < ApplicationController
   before_action :set_entry, only: %i[ show edit update cancel ]
   before_action :set_entriables, only: %i[ new create edit update]
 
-  def download_or
-    @entry = Treasury::CashierEntry.find(params[:id])
-    
+  def download
+    @receipt = Treasury::CashierEntry.find(params[:id])
+    @entry = @receipt.entriable.instance_of?(Payment) ? @receipt.entriable.payable.agreement.cooperative : @receipt.entriable
+    @amount_in_words = amount_to_words(@receipt.amount)
+    @payment_type = payment_type(@receipt.payment_type)
+    @vat = @receipt.vat
     respond_to do |format|
       format.pdf do
-        render pdf: "or",
-        template: "treasury/cashier_entries/or.pdf.erb",
-        layout: "pdf.html",
-        orientation: "Portrait",
-        page_size: "A4"
+        render pdf: "OR##{@receipt.or_no}",
+               page_size: "A4"
+      end
+    end
+  end
+
+  def print
+    @receipt = Treasury::CashierEntry.find(params[:id])
+    @entry = @receipt.entriable.instance_of?(Payment) ? @receipt.entriable.payable.agreement.cooperative : @receipt.entriable
+    @amount_in_words = amount_to_words(@receipt.amount)
+    @payment_type = payment_type(@receipt.payment_type)
+    @vat = @receipt.vat
+    # @positions = analyze_pdf("app/assets/pdfs/or_format.pdf", @receipt)
+
+    respond_to do |format|
+      format.pdf do
+        render pdf: "OR##{@receipt.or_no}",
+               page_size: "A4"
       end
     end
   end
@@ -110,4 +126,60 @@ class Treasury::CashierEntriesController < ApplicationController
     params.require(:treasury_cashier_entry).permit(:or_no, :or_date, :global_entriable, :payment_type, :treasury_account_id, :amount)
   end
 
+  def amount_to_words(amount)
+    # Convert the integer part to words
+    integer_part_words = amount.to_i.to_words
+
+    # Convert the decimal part to words
+    decimal_part = (amount.modulo(1) * 100).to_i
+
+    # Format the result
+    result = "#{integer_part_words.titleize} Pesos and #{decimal_part}/100 only"
+  end
+
+  def payment_type(type)
+    case type
+    when "lppi"
+      "LOAN PAYMENT PROTECTION INSURANCE (LPPI)"
+    when "gyrt"
+      "GROUP YEARLY RENEWABLE TERM (GYRT)"
+    else
+      type.titleize
+    end
+  end
+
+  # def analyze_pdf(pdf_path, receipt)
+  #   # entry = receipt.entriable.instance_of?(Payment) ? receipt.entriable.payable.agreement.cooperative : receipt.entriable
+  #   # amount_in_words = amount_to_words(receipt.amount)
+  #   # payment_type = payment_type(receipt.payment_type)
+  #   # vat = receipt.vat
+
+  #   # pdf = PDF::Reader.new(pdf_path)
+  #   # text = pdf.pages.first.text
+
+  #   # replacements = {
+  #   #   "March 01, 2024" => "#{receipt.or_date.strftime('%B %d, %Y')}",
+  #   #   "CANLA-ON LOCAL GOVERNMENT UNIT" => "#{entry.name}",
+  #   #   "CANLA-ON CITY, NEGROS OCCIDENTAL" => "#{entry.get_address}",
+  #   #   "299,250.00" => "energetic"
+  #   # }
+
+
+  #   # PDF::Reader.open(pdf_path) do |reader|
+  #   #   reader.pages.each do |page|
+  #   #     page.text.each_line do |line|
+  #   #       # Extract text, x-position, and y-position from each line
+  #   #       text = line[:string]
+  #   #       x_position = line[:x]
+  #   #       y_position = line[:y]
+
+  #   #       # Store text, x-position, and y-position in a hash
+  #   #       positions << { text: text, x_position: x_position, y_position: y_position }
+  #   #     end
+  #   #   end
+  #   # end
+
+
+  #   positions
+  # end
 end

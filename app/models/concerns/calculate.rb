@@ -41,7 +41,6 @@ module Calculate
       else
         self.premium = calculate_premium(premium, group_remit.terms)
       end
-      binding.pry
       self.coop_sf_amount = calculate_service_fee(group_remit.get_coop_sf, self.premium)
       self.agent_sf_amount = calculate_service_fee(group_remit.get_agent_sf, self.premium)
     end

@@ -1,0 +1,106 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset='utf-8' />
+    <%= wicked_pdf_stylesheet_link_tag "application" %>
+    <%= wicked_pdf_stylesheet_link_tag "bootstrap" %>
+  </head>
+  <body style="font-size: 0.8rem">
+    <div id="content">
+      <div class="row mb-3">
+        <div class="col-2">
+          <%= image_tag wicked_pdf_asset_base64("1cisp_logo.png"), style: "height: 100px; width: auto;" %>
+        </div>
+        <div class="col-8 d-flex align-items-center justify-content-center">
+          <p class="fw-bolder mb-0 text-center mb-1">1 COOPERATIVE INSURANCE SYSTEM OF THE PHILIPPINES</p>
+          <p class="fw-bolder mb-0 text-center mb-1">LIFE AND GENERAL INSURANCE (1CISP)</p>
+          <p class="mb-0 text-center mb-1">1CISP Building, 11 Mapagbigay St., Brgy. Pinyahan, Quezon City</p>
+          <p class="mb-0 text-center mb-1">Tel. Nos. 02 8556 2700, 02 7092 0529</p>
+          <p class="mb-3 text-center"><%= 'NON-' unless @receipt.vatable? %>VAT REG. TIN 000-658-963-000</p>
+          <p class="fw-bolder mb-0 text-center"><span>O F F I C I A L</span><span style="margin-left: 20px">R E C E I P T</span></p>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-12 text-end">
+          Date: <%= date_as_month_day_year @receipt.or_date %>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-4" style="height: 400px; border: 2px solid black">
+          <div class="text-center p-2 fw-bolder" style="height: 10%; border-bottom: 2px solid black;">In settlement of the following</div>
+          <div class="row" style="height: 70%">
+            <div class="col-6 p-2" style="border-right: 2px solid black">
+              <p class="text-center mb-5 fw-bold">Invoice No.</p>
+              <% if !@receipt.vatable? %>
+                <p class="small">Total Sales</p>
+                <p class="small">Less: SC/PWD Discount</p>
+                <p class="small">Total Due</p>
+                <p class="small">Less: Withholding Tax</p>
+                <p class="small">Payment Due</p>
+              <% else %>
+                <p class="small mb-0">Total Sales</p>
+                <p class="small mb-0">Less: SC/PWD Discount</p>
+                <p class="small mb-0">Less: Withholding Tax</p>
+                <p class="small mb-3">Total Amount Due</p>
+                <p class="small mb-0 ">VATable Sales</p>
+                <p class="small mb-0">VAT-Exempt Sales</p>
+                <p class="small mb-0">Zero Rated Sales</p>
+                <p class="small mb-0">Value Added Tax</p>
+                <p class="small">Total Sales</p>
+              <% end %>
+            </div>
+            <div class="col-6 p-2">
+              <p class="text-center mb-5 fw-bolder">Amount</p>
+              <% if !@receipt.vatable? %>
+                <p class="text-end fw-bolder small"><%= to_curr @receipt.amount %></p>
+                <p class="text-end fw-bolder small"><%= to_curr @receipt.discount %></p>
+                <p class="text-end fw-bolder small"><%= to_curr(@receipt.amount - @receipt.discount) %></p>
+                <p class="text-end fw-bolder small"><%= to_curr @receipt.withholding_tax %></p>
+                <p class="text-end fw-bolder small"><%= to_curr @receipt.net_amount %></p>
+              <% else %>
+                <p class="text-end fw-bolder small mb-0"><%= to_curr @receipt.amount %></p>
+                <p class="text-end fw-bolder small mb-0"><%= to_curr @receipt.discount %></p>
+                <p class="text-end fw-bolder small mb-0"><%= to_curr @receipt.withholding_tax %></p>
+                <p class="text-end fw-bolder small mb-3"><%= to_curr @receipt.net_amount %></p>
+                <p class="text-end fw-bolder small mb-0">0</p>
+                <p class="text-end fw-bolder small mb-0">0</p>
+                <p class="text-end fw-bolder small mb-0">0</p>
+                <p class="text-end fw-bolder small mb-0">0</p>
+                <p class="text-end fw-bolder small"></p>
+              <% end %>
+            </div>
+          </div>
+          <div class="p-2" style="height: 20%; border-top: 2px solid black">
+            <p>Form of payment</p>
+            <div class="row">
+              <div class="col-6">Cash</div>
+              <div class="col-6">Check</div>
+            </div>
+          </div>
+        </div>
+        <div class="col-8 p-2">
+          <p style="line-height: 3;">Received from <span class="inline-block-centered fw-bolder" style="width: 490px;"><%= @entry.name %></span> with TIN <span class="inline-block-centered fw-bolder" style="width: 200px; "><%= @entry.has_attribute?(:tin_no) ? @entry.tin_no : '' %></span> and address at<br><span class="fw-bolder" style="display: inline-block; width: 580px; "><%= @entry.get_address %></span> engaged in the business style of <span  class="inline-block-centered fw-bolder" style="width: 390px; "></span> the sum of <span  class="inline-block-centered fw-bolder" style="width: 510px; "><%= @amount_in_words %></span> pesos (P<span class="inline-block-centered fw-bolder" style="width: 200px; "><%= to_curr @receipt.amount %></span>) in partial/full payment for <span class="fw-bolder" style="display: inline-block; width: 580px; "><%= @payment_type %></span></p>
+          <div class="row mb-3">
+            <p class="col-8">Sr. Citizen TIN</p>
+            <div class="col-4 row" >
+              <p class="col-2">By: </p>
+              <div class="col-10">
+                <p class="mb-0"><%= current_user %></p>
+                <p style="font-size: .6rem">Cashier/Authorized Representative</p>
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <p class="col-4">OSCA/PWD ID No.</p>
+            <p class="col-4">Signature</p>
+            <p class="col-4 fw-bolder" style="font-size: 1rem">No. <span style="color: maroon"><%= @receipt.or_no %></span></p>
+          </div>
+        </div>
+      </div>
+      <div class="text-center mt-3">
+        <p class="fw-bolder" style="text-decoration: underline">"THIS DOCUMENT IS NOT VALID FOR CLAIMING INPUT TAXES"</p>
+        <p style="font-style: italic">THIS OFFICIAL RECEIPT SHALL BE VALID FOR FIVE(5) YEARS FROM DATE OF ATP</p>
+      </div>
+    </div>
+  </body>
+</html>

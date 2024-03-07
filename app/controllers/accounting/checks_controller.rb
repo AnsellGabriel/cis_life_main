@@ -1,7 +1,39 @@
 class Accounting::ChecksController < ApplicationController
   before_action :authenticate_user!
-  before_action :set_check, only: %i[ show edit update destroy cancel check claimable]
+  before_action :set_check, only: %i[ show edit update destroy cancel check claimable download print]
   before_action :set_payables, only: %i[ new edit create update]
+
+  def download
+    @ledger_entries = @check.general_ledgers
+    @accountant = Employee.find(@check.accountant_id)
+    @approver = Employee.find(@check.approved_by) if @check.approved_by.present?
+    @auditor = Employee.find(@check.audited_by) if @check.audited_by.present?
+    @amount_in_words = amount_to_words(@check.amount)
+
+
+    respond_to do |format|
+      format.pdf do
+        render pdf: "Check voucher ##{@check.voucher}",
+               page_size: "A4"
+      end
+    end
+  end
+
+  def print
+    @ledger_entries = @check.general_ledgers
+    @accountant = Employee.find(@check.accountant_id)
+    @approver = Employee.find(@check.approved_by) if @check.approved_by.present?
+    @auditor = Employee.find(@check.audited_by) if @check.audited_by.present?
+    @amount_in_words = amount_to_words(@check.amount)
+
+
+    respond_to do |format|
+      format.pdf do
+        render pdf: "Check voucher ##{@check.voucher}",
+               page_size: "A4"
+      end
+    end
+  end
 
   def requests
     @claim_requests = Accounting::CheckVoucherRequest.all.order(created_at: :desc)
@@ -138,6 +170,17 @@ class Accounting::ChecksController < ApplicationController
   def modified_check_params
     check_params[:amount] = check_params[:amount].to_f
     check_params
+  end
+
+  def amount_to_words(amount)
+    # Convert the integer part to words
+    integer_part_words = amount.to_i.to_words
+
+    # Convert the decimal part to words
+    decimal_part = (amount.modulo(1) * 100).to_i
+
+    # Format the result
+    result = "#{integer_part_words.titleize} Pesos and #{decimal_part}/100 only"
   end
 
 end
