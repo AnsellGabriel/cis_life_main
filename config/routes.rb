@@ -139,6 +139,7 @@ Rails.application.routes.draw do
   end
 
   resources :group_remits do
+    resources :remarks, controller: "group_remit/remarks"
     get "denied_members", to: "denied_members#index"
     get "download_csv", to: "denied_members#download_csv"
     delete "destroy_all", to: "denied_members#destroy_all"

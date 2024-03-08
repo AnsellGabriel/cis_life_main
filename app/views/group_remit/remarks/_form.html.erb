@@ -1,0 +1,9 @@
+<%= simple_form_for(remark, url: group_remit_remarks_path(@group_remit)) do |f| %>
+  <div class="form-inputs mb-3">
+    <%= f.input :remark, error: '*Required' %>
+  </div>
+
+  <div class="form-actions text-center">
+      <%= f.button :submit, "Add", class: "btn-danger", data: {turbo_confirm: "Add remark?", turbo_method: :post} %>
+  </div>
+<% end %>
