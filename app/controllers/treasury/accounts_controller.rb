@@ -10,6 +10,8 @@ class Treasury::AccountsController < ApplicationController
   # GET /treasury/accounts/1
   def show
     @q = Treasury::Account.ransack(params[:q])
+    @ledger = @treasury_account.general_ledgers.where.not(transaction_date: nil)
+    # binding.pry
   end
 
   # GET /treasury/accounts/new

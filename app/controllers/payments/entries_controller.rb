@@ -48,6 +48,7 @@ class Payments::EntriesController < ApplicationController
   def cancel
     @entry = @entries.find(params[:id])
     @entry.cancelled!
+    @entry.general_ledgers.update_all(transaction_date: nil)
 
     redirect_to payment_entry_path(@payment, @entry), notice: "OR cancelled"
   end
