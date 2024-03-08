@@ -3,10 +3,11 @@ class Treasury::CashierEntry < ApplicationRecord
 
   validates_presence_of :or_no, :or_date, :payment_type, :treasury_account_id, :global_entriable, :amount
 
-  enum payment_type: { gyrt: 1, lppi: 2, others: 3 }
+  # enum payment_type: { gyrt: 1, lppi: 2, others: 3 }
   enum status: { pending: 0, posted: 1, cancelled: 2, for_approval: 3}
 
   belongs_to :treasury_account, class_name: "Treasury::Account"
+  belongs_to :payment_type, class_name: "Treasury::PaymentType"
   belongs_to :entriable, polymorphic: true
 
   has_many :payments, class_name: "Treasury::Payment", dependent: :destroy
