@@ -1,27 +1,21 @@
-<div id="<%= dom_id account %>">
-  <p>
-    <strong>Name:</strong>
-    <%= account.name %>
-  </p>
-
-  <p>
-    <strong>Account type:</strong>
-    <%= account.account_type %>
-  </p>
-
-  <p>
-    <strong>Is check account:</strong>
-    <%= account.is_check_account %>
-  </p>
-
-  <p>
-    <strong>Contact number:</strong>
-    <%= account.contact_number %>
-  </p>
-
-  <p>
-    <strong>Address:</strong>
-    <%= account.address %>
-  </p>
-
+<div class="row" style="margin: auto">
+  <div class="card col-6">
+    <div class="card-body">
+      <h3 class="text-primary">
+        <%= account.name %> 
+        <span class="text-dark" style="font-size: .9rem">(<%= account.account_type.titleize %><%= "/Check Account" if account.is_check_account %>)</span>
+      </h3>
+      <p class="small">
+        <i class="bi bi-geo-alt-fill"></i>      
+        <%= account.address %>
+      </p>
+      <p class="small">
+        <i class="bi bi-telephone-fill"></i>
+        <%= account.contact_number %>
+      </p>
+    </div>
+  </div>
+  <div class="col-6">
+    
+  </div>
 </div>

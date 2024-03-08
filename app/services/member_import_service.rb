@@ -73,8 +73,8 @@ class MemberImportService
 
       # Check if a member with the same first name, last name, and birth date already exists
       member = Member.find_or_initialize_by(
-        first_name: member_hash[:first_name],
-        last_name: member_hash[:last_name],
+        first_name: member_hash[:first_name].squish,
+        last_name: member_hash[:last_name].squish,
         birth_date: member_hash[:birth_date]
       )
 

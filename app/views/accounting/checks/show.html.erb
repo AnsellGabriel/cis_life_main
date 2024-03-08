@@ -13,8 +13,8 @@
     <% end %>
 
     <% if @check.posted? %>
-      <%= link_to  'Print Voucher', print_accounting_check_path(@check, format: :pdf), class: small_btn('warning'), target: '_blank'%>
-      <%= link_to  'Download Voucher', download_accounting_check_path(@check, format: :pdf), class: small_btn('success'), target: '_blank'%>
+      <%= link_to  'Print', print_accounting_check_path(@check, format: :pdf), class: small_btn('warning'), target: '_blank'%>
+      <%= link_to  'Download', download_accounting_check_path(@check, format: :pdf), class: small_btn('success'), target: '_blank'%>
     <% end %>
   </div>
   
@@ -28,10 +28,10 @@
     <%= link_to "Claim details", claim_process_process_claim_path(@check.check_voucher_request.requestable), class: small_btn('outline-primary'), title: "Claim details", target: "_blank" %>
     <% unless @check.approved? %>
       <%=  link_to "Approve", approve_audit_check_voucher_path(@check), class: small_btn('success'), data: {turbo_confirm: "Finish audit and approve voucher?", turbo_method: :get}  %>
-      <%=  link_to "Pending", new_accounting_check_remark_path(@check, audit: true), data: {turbo_frame: 'reg_form_modal' }, class: 'btn btn-sm btn-warning', title: 'Pending Voucher'  %>
+      <%=  link_to "Pending", new_accounting_check_remark_path(@check, e_t: @check.entry_type, audit: true), data: {turbo_frame: 'reg_form_modal' }, class: 'btn btn-sm btn-warning', title: 'Pending Voucher'  %>
     <% end %>
     <% if @check.remarks.present? %>
-      <%= link_to accounting_check_remarks_path(@check, audit: true), class: 'btn btn-sm btn-outline-danger', data: {turbo_frame: 'reg_form_modal'} do %>
+      <%= link_to accounting_check_remarks_path(@check, e_t: @check.entry_type, audit: true), class: 'btn btn-sm btn-outline-danger', data: {turbo_frame: 'reg_form_modal'} do %>
         <i class="bi bi-card-list"></i> Remarks
       <% end %>
     <% end %>

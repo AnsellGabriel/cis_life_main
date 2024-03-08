@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2024_03_05_062911) do
+ActiveRecord::Schema[7.0].define(version: 2024_03_07_054757) do
   create_table "accounting_vouchers", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.date "date_voucher"
     t.integer "voucher"
@@ -30,6 +30,7 @@ ActiveRecord::Schema[7.0].define(version: 2024_03_05_062911) do
     t.date "post_date"
     t.integer "accountant_id"
     t.integer "approved_by"
+    t.integer "certified_by"
     t.index ["check_voucher_request_id"], name: "index_accounting_vouchers_on_check_voucher_request_id"
     t.index ["payable_type", "payable_id"], name: "index_accounting_vouchers_on_payable"
     t.index ["treasury_account_id"], name: "index_accounting_vouchers_on_treasury_account_id"
@@ -677,6 +678,7 @@ ActiveRecord::Schema[7.0].define(version: 2024_03_05_062911) do
     t.decimal "amount", precision: 15, scale: 2, default: "0.0"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.date "transaction_date"
     t.index ["account_id"], name: "index_general_ledgers_on_account_id"
     t.index ["ledgerable_type", "ledgerable_id"], name: "index_general_ledgers_on_ledgerable"
   end

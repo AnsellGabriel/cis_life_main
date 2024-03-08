@@ -37,8 +37,11 @@ class Accounting::RemarksController < ApplicationController
         end
 
       elsif current_user.is_accountant?
-        @voucher.cancelled!
-        @voucher.check_voucher_request.pending! if params[:e_t] == 'cv' and @voucher&.check_voucher_request&.present?
+        @voucher.transaction do
+          @voucher.general_ledgers.update_all(transaction_date: nil)
+          @voucher.cancelled!
+          @voucher.check_voucher_request.pending! if params[:e_t] == 'cv' and @voucher&.check_voucher_request&.present?
+        end
       end
 
       redirect_to accounting_check_remarks_path(@voucher, e_t: @voucher.entry_type), Notification: "Voucher updated"
