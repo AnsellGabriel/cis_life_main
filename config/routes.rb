@@ -381,4 +381,9 @@ Rails.application.routes.draw do
 
   # Defines the root path route ("/")
   # root "articles#index"
+
+  #* Reports Module Routes
+  namespace :reports do
+    resources :accounts, only: [:index, :show]
+  end
 end

@@ -1,8 +1,19 @@
-<div class="<%= flex_justify_align('between', 'center') %> mb-3">
+<div class="<%= flex_justify_align('between', 'center') %> mb-1">
   <div class="<%= flex_justify_align('', 'center') %> gap-3">
     <%= content_tag :h4, "Accounts", class: 'text-primary' %>
-    <%= link_to new_treasury_account_path, class: small_btn('primary'), data: {turbo_frame: 'modal'} do %>
-      New Account
+    <% if current_user.is_treasurer? %>
+      <%= link_to new_treasury_account_path, class: small_btn('primary'), data: {turbo_frame: 'modal'} do %>
+        New Account
+      <% end %>
+    <% end %>
+  </div>
+
+  <div class="">
+    <%= search_form_for @q do |f| %>
+      <div class="form-group d-flex gap-1">
+        <%= f.search_field :name_cont, placeholder: "Account name", class: "form-control" %>
+        <%= f.submit "Search", class: small_btn('warning text-dark') %>
+      </div>
     <% end %>
   </div>
 </div>
@@ -11,28 +22,19 @@
   <thead>
     <tr>
       <th>#</th>
-      <th>Name</th>
-      <th>Type</th>
-      <th>Address</th>
-      <th></th>
+      <th>Account</th>
+      <th class="text-center">Actions</th>
     </tr>
   </thead>
 
   <tbody>
     <% @treasury_accounts.each do |account| %>
       <tr>
-
         <th scope="row"><%= account.id %></th>
         <td><%= account.name %></td>
-        <td><%= account.account_type.humanize %></td>
-        <td><%= account.address %></td>
-
-        <td>
-          <%= link_to 'View', account, class: 'btn btn-secondary btn-sm' %>
-          <%= link_to 'Edit', edit_treasury_account_path(account), class: 'btn btn-secondary btn-sm' %>
-          <%= link_to "Delete", account, class: "btn btn-danger btn-sm", method: :delete, data: { "turbo-method": :delete, turbo_confirm: "Are you sure?" } %>
+        <td class="text-center">
+          <%= link_to 'View', account, class: 'btn btn-primary btn-sm' %>
         </td>
-
       </tr>
     <% end %>
   </tbody>

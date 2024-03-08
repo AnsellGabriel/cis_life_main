@@ -1,0 +1,33 @@
+<h1 class="text-primary">Accounts</h1>
+
+<table class="table table-striped table-bordered table-hover">
+  <thead>
+    <tr>
+      <th>ID</th>
+      <th class="text-center" style="min-width: 125px;">Account</th>
+      <th class="text-center">Action</th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% if @checks.present? %>
+      <% @checks.each do |check| %>
+        <tr>
+          <td>
+            <%= link_to "CV#{check.voucher}", check, class: 'text-primary', title: 'View'%>
+          </td>
+          <td class="text-center"><%= month_day_year(check.date_voucher) %></td>
+          <td><%= check.payable %></td>
+          <td class="text-end"><%= to_curr(check.amount) %></td>
+          <td class="text-center">
+            <span class="<%= check.decorate.status_badge %>"><%= check.status.titleize %></span>
+          </td>          
+        </tr>
+      <% end %>
+    <% else %>
+      <tr>
+        <td colspan="7" class="text-center">No check vouchers found.</td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>

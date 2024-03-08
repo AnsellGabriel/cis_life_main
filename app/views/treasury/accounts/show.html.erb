@@ -1,9 +1,34 @@
+<div class="container">
+  <div class="gap-1">
+    <%= link_to treasury_accounts_path, class: 'btn-sm btn btn-outline-secondary mb-1' do %>
+      <i class="bi bi-arrow-left-square"></i>
+      Back
+    <% end %>
+  </div>
 
-<%= render @treasury_account %>
+  <%= render @treasury_account %>
 
-<div>
-  <%= link_to "Edit", edit_treasury_account_path(@treasury_account), class: 'btn btn-primary' %> |
-  <%= link_to "Back", treasury_accounts_path, class: 'btn btn-primary' %>
-
-  <%= button_to "Delete", @treasury_account, method: :delete, class: 'btn btn-danger' %>
+  <div class="">
+    <%= form_with do |f| %>
+      <%= f.date_field :created_at, as: :string, data: {
+        controller: "flatpickr",
+        flatpickr_max_date: Date.today,
+        flatpickr_next_arrow: "Next",
+        flatpickr_prev_arrow: "Prev"}, label: 'From Date',
+        class: 'text-center',
+        placeholder: 'From'
+      %> 
+      <span> - </span>
+      <%= f.date_field :updated_at, as: :string, data: {
+        controller: "flatpickr",
+        flatpickr_max_date: Date.today,
+        flatpickr_next_arrow: "Next",
+        flatpickr_prev_arrow: "Prev"}, label: 'To Date',
+        class: 'text-center',
+        placeholder: 'To'
+      %> 
+      <%= f.submit "Generate", class: 'btn-sm btn btn-success mb-1' do %>
+      <% end %>
+    <% end %>
+  </div>
 </div>
