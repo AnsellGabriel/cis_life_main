@@ -8,27 +8,63 @@
 
   <%= render @treasury_account %>
 
-  <div class="">
-    <%= form_with do |f| %>
-      <%= f.date_field :created_at, as: :string, data: {
-        controller: "flatpickr",
-        flatpickr_max_date: Date.today,
-        flatpickr_next_arrow: "Next",
-        flatpickr_prev_arrow: "Prev"}, label: 'From Date',
-        class: 'text-center',
-        placeholder: 'From'
-      %> 
-      <span> - </span>
-      <%= f.date_field :updated_at, as: :string, data: {
-        controller: "flatpickr",
-        flatpickr_max_date: Date.today,
-        flatpickr_next_arrow: "Next",
-        flatpickr_prev_arrow: "Prev"}, label: 'To Date',
-        class: 'text-center',
-        placeholder: 'To'
-      %> 
-      <%= f.submit "Generate", class: 'btn-sm btn btn-success mb-1' do %>
-      <% end %>
+  <div class="mb-2">
+    <%= form_with(url: treasury_account_path(@treasury_account), method: :get) do |f| %>
+      <div class="<%= flex_justify_align('','center') %> gap-1" style="width: 500px;">
+        <%= f.date_field :date_from, as: :string, data: {
+          controller: "flatpickr",
+          flatpickr_min_date: Date.new(Date.today.year, 1, 1),
+          flatpickr_max_date: Date.today,
+          flatpickr_next_arrow: "Next",
+          flatpickr_prev_arrow: "Prev"}, label: 'From Date',
+          class: 'text-center form-control',
+          placeholder: 'From'
+        %> 
+        <span> - </span>
+        <%= f.date_field :date_to, as: :string, data: {
+          controller: "flatpickr",
+          flatpickr_min_date: Date.new(Date.today.year, 1, 1),
+          flatpickr_max_date: Date.today,
+          flatpickr_next_arrow: "Next",
+          flatpickr_prev_arrow: "Prev"}, label: 'To Date',
+          class: 'text-center form-control',
+          placeholder: 'To'
+        %> 
+        <%= f.submit "Generate ledger", class: 'btn-sm btn btn-success' %>
+      </div>
     <% end %>
   </div>
+
+  <table class="table table-sm table-striped table-bordered table-hover" style="font-size: .8rem">
+    <thead>
+      <tr class="text-center table-dark">
+        <th style="width: 10%">Reference</th>
+        <th style="width: 10%">Date</th>
+        <th>Payee</th>
+        <th>Description</th>
+        <th style="width: 10%">Debit</th>
+        <th style="width: 10%">Credit</th>
+        <th style="width: 10%">Balance</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% if @ledger.empty? %>
+        <tr>
+          <td colspan="7" class="text-center">No records found</td>
+        </tr>
+      <% else %>
+        <% @ledger.each do |entry| %>
+          <tr class="text-center">
+            <td class="text-start"><%= entry.ledgerable.reference %></td>
+            <td class="text-end"><%= date_as_month_day_year(entry.transaction_date) %></td>
+            <td class="text-start"><%= entry.payee %></td>
+            <td class="text-start"><%= entry.description %></td>
+            <td class="text-end"><%= to_curr(entry.debit? ? entry.amount : 0) %></td>
+            <td class="text-end"><%= to_curr(entry.credit? ? entry.amount : 0) %></td>
+            <td class="text-end"><%= to_curr(0) %></td>
+          </tr>
+        <% end %>
+      <% end %>
+    </tbody>
+  </table>
 </div>

@@ -32,6 +32,7 @@
           <% if @group_remit.is_pending_or_renewal? %>
             <% if mis_user?(current_user) %>
               <%= link_to "#{@group_remit.official_receipt.present? ? "Edit" : "Add"} OR", edit_or_loan_insurance_group_remit_path, class: small_btn("outline-success"), data: {turbo_frame: 'modal'} %>
+              <%= link_to "Remarks", group_remit_remarks_path(@group_remit), class: small_btn('danger'), data: {turbo_frame: 'reg_form_modal'} %>
             <% end %>
 
             <div class="d-flex gap-1">

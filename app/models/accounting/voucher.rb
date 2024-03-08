@@ -9,7 +9,7 @@ class Accounting::Voucher < ApplicationRecord
   enum status: { pending: 0, posted: 1, cancelled: 2, for_approval: 3}
 
   def to_s
-    voucher
+    self.voucher
   end
 
   def global_payable

@@ -66,6 +66,19 @@ class GeneralLedger < ApplicationRecord
     end
   end
 
+  def payee
+    case ledgerable_type
+    when "Treasury::CashierEntry"
+      if self.ledgerable.entriable == "Payment"
+        self.ledgerable.entriable.payable.agreement.cooperative
+      end
+    when "Accounting::Check"
+      self.ledgerable.payable
+    when "Accounting::Journal"
+      self.ledgerable.payable
+    end
+  end
+
   private
 
   def self.service_fee_account(payment_type)
