@@ -52,12 +52,10 @@
     </div>
   </div>
 </div>
-
 <% if @agreement.plan_id == 2 || @agreement.plan_id == 8 %> <!-- for LPPI & SII -->
   <%= link_to new_loan_insurance_rate_path(a_id: @agreement.id), class: "btn btn-primary btn-sm mb-2", data: { turbo_frame: "remote_modal" } do %>
     Add Rate
   <% end %>
-
   <div class="row">
     <% @agreement.loan_rates.each do |rate| %>
       <div class="col-md-6 mb-3">
@@ -81,21 +79,19 @@
         </div>
       </div>
     <% end %>
-    
   </div>
-
 <% else %>
   <%= link_to new_agreement_benefit_path(a_id: @agreement.id), class: "btn btn-primary btn-sm mb-2", data: { turbo_frame: "remote_modal" } do %>
-    Add Agreement Benefit
+    Add Agreement Plan
   <% end %>
   <div class="row">
     <% @agreement_benefits.each do |ab| %>
-      <div class="col-md-6 mb-3">
+      <div class="col-md-4 mb-3">
         <div class="card">
-          <div class="card-header">
-            <h5 class="text-primary"><%= ab.name %></h5>
-            <%= link_to edit_agreement_benefit_path(ab), class: "btn btn-sm btn-success", data: { turbo_frame: "remote_modal" } do %>
-              <%= bootstrap_icon "pencil-square" %>
+          <div class="card-header text-center">
+            <strong class="text-primary"><%= ab.name %></strong>
+            <%= link_to edit_agreement_benefit_path(ab), class: "text-muted", data: { turbo_frame: "remote_modal" } do %>
+              <%= bootstrap_icon "pencil-square" %> Edit
             <% end %>
           </div>
           <div class="card-body">
@@ -124,24 +120,6 @@
       </div>
     <% end %>
   </div>
-  <% if @agreement.plan_id == 2 || @agreement.plan_id == 8 %> <!-- for LPPI & SII -->
-    <div class="row">
-      <% @agreement.loan_rates.each do |rate| %>
-        <div class="col-md-6 mb-3">
-          <div class="card">
-            <div class="card-header">
-              <h5><%= rate.min_age %> to <%= rate.max_age %> years old</h5>
-              <small class="text-muted">Loan Amount: <%= to_currency(rate.min_amount) %> to <%= to_currency(rate.max_amount) %></small>
-            </div>
-            <div class="card-body">
-              <small>Annual Rate: <%= to_currency(rate.annual_rate) %></small> <br>
-              <small>Monthly Rate: <%= to_currency(rate.monthly_rate) %> / 1,000</small>
-            </div>
-          </div>
-        </div>
-      <% end %>
-    </div>
-  <% else %>
-  <% end %>
-</div>
+<% end %>
+<%# test this layout %>
 <%#= console %>

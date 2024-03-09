@@ -299,7 +299,9 @@ Rails.application.routes.draw do
     get :claim_process, on: :member
     get :update_status, on: :member
     get :new_ca, to: "process_claims#new_ca", on: :collection
+    get :edit_ca, to: "process_claims#edit_ca", on: :member
     post :create_ca, to: "process_claims#create_ca", on: :collection
+    patch :update_ca, to: "process_claims#update_ca", on: :member
     # get :claimable, on: :collection
   end
   resources :underwriting_routes

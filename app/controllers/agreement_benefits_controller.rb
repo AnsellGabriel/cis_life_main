@@ -37,7 +37,7 @@ class AgreementBenefitsController < ApplicationController
     @agreement = Agreement.find(params[:agreement])
     # @agreement_benefit = AgreementBenefit.new(agreement_benefit_params)
     @agreement_benefit = @agreement.agreement_benefits.build(agreement_benefit_params)
-    raise 'errors'
+    # raise 'errors'
 
     if @agreement_benefit.save
       redirect_to @agreement_benefit, notice: "Agreement benefit was successfully created."
