@@ -98,7 +98,7 @@
                   <% end %>
                 </div>
                 <%# if current_user.head? && batch.status == "for_reconsideration" && batch.insurance_status == "denied" %>
-                <% if batch.batch_remarks.where(status: :md_reco).count > 0 && !batch.approved? %>
+                <% if batch.batch_remarks.where(status: :md_reco).count > 0 && (!batch.approved? && !process_coverage.reprocess_request?) %>
                   <%= link_to set_premium_batch_process_coverage_path(batch: batch, batch_type: batch.class.name), onclick: "return confirm('Are you sure?')", method: :get, class: "btn btn-sm btn-info mb-1", data: { turbo: true, turbo_frame: "reg_form_modal" } do %>
                     <%= bootstrap_icon "coin" %>
                   <% end %>

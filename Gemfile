@@ -17,6 +17,7 @@ gem 'mysql2', '~> 0.5.5'
 
 # Use the Puma web server [https://github.com/puma/puma]
 gem "puma", "~> 5.0"
+# gem "puma", "~> 4.3"
 
 # Use JavaScript with ESM import maps [https://github.com/rails/importmap-rails]
 gem "importmap-rails"
@@ -147,5 +148,7 @@ gem 'postmark-rails'
 
 # gem for pdf generation
 gem 'wicked_pdf'
-gem 'wkhtmltopdf-binary'
-
+# gem 'wkhtmltopdf-binary'
+gem 'wkhtmltopdf-binary-edge'
+gem 'numbers_and_words'
+# gem 'pdf-reader'

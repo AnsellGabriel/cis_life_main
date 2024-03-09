@@ -1,5 +1,5 @@
-<%= simple_form_for(remark, url: accounting_check_remarks_path(@check, audit:true)) do |f| %>
-  <% if params[:audit] %>
+<%= simple_form_for(remark, url: accounting_check_remarks_path(@voucher, e_t: @voucher.entry_type, audit: current_user.is_auditor?)) do |f| %>
+  <% if params[:audit].present? && params[:audit].to_s == "true" %>
     <%= f.input :category, as: :select, collection: Remark.categories.keys.map { |c| [c.humanize, c] } %>
   <% end %>
 
@@ -8,7 +8,7 @@
   </div>
 
   <div class="form-actions text-center">
-    <% if params[:audit] %>
+    <% if params[:audit].present? && params[:audit].to_s == "true" %>
       <%= f.button :submit, "Pending", class: "btn-warning", data: {turbo_confirm: "Double check category before submitting the form", turbo_method: :post} %>
     <% else %>
       <%= f.button :submit, "Cancel Voucher", class: "btn-danger", data: {turbo_confirm: "Add remark and cancel voucher", turbo_method: :post} %>

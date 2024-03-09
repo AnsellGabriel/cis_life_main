@@ -1,0 +1,35 @@
+<div class="<%= flex_justify_align('between', 'center') %> gap-1 mb-3">
+  <%= content_tag :h4, "Journal Vouchers for Approval", class: 'text-primary mb-0' %>
+  <%== pagy_bootstrap_nav(@pagy) %>
+</div>
+
+<table class="table table-striped table-bordered table-hover">
+  <thead>
+    <tr>
+      <th>Voucher</th>
+      <th class="text-center" style="min-width: 125px;">Date</th>
+      <th>Payee</th>
+      <th>Created by</th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% if @journals.present? %>
+      <% @journals.each do |journal| %>
+        <% accountant = User.find(journal.accountant_id) %>
+        <tr>
+          <td>
+            <%= link_to "#{journal.formatted_voucher}", journal, class: 'text-primary', title: 'View'%>
+          </td>
+          <td class="text-center"><%= month_day_year(journal.date_voucher) %></td>
+          <td><%= journal.payable %></td>
+          <td><%= accountant.userable.signed_fullname %></td>
+        </tr>
+      <% end %>
+    <% else %>
+      <tr>
+        <td colspan="7" class="text-center">No journal voucher for approval</td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>

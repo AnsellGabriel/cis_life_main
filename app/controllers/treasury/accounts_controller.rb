@@ -3,11 +3,15 @@ class Treasury::AccountsController < ApplicationController
 
   # GET /treasury/accounts
   def index
-    @treasury_accounts = Treasury::Account.all
+    @q = Treasury::Account.ransack(params[:q])
+    @treasury_accounts = @q.result(distinct: true)
   end
 
   # GET /treasury/accounts/1
   def show
+    @q = Treasury::Account.ransack(params[:q])
+    @ledger = @treasury_account.general_ledgers.where.not(transaction_date: nil)
+    # binding.pry
   end
 
   # GET /treasury/accounts/new

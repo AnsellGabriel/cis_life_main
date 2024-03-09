@@ -32,7 +32,11 @@ class AgreementsController < ApplicationController
   # GET /agreements/new
   def new
     # @agreement = Agreement.new(contestability: 12, nel: 25000, nml: 5000000, entry_age_from: 18, entry_age_to: 65, exit_age: 65)
-    @agreement = Agreement.new()
+    if current_user.userable_type == "Agent"
+      @agreement = current_user.userable.agreements.build
+    else
+      @agreement = Agreement.new()
+    end
     # @agreement.agreement_benefits.build
     # @agreement.loan_rates.build
     set_dummy_value
@@ -44,8 +48,11 @@ class AgreementsController < ApplicationController
 
   # POST /agreements
   def create
-    # raise 'errors'
-    @agreement = Agreement.new(agreement_params)
+    if current_user.userable_type == "Agent"
+      @agreement = current_user.userable.agreements.build
+    else
+      @agreement = Agreement.new(agreement_params)
+    end
 
     if @agreement.save!
       redirect_to @agreement, notice: "Agreement was successfully created."
@@ -78,7 +85,7 @@ class AgreementsController < ApplicationController
   # Only allow a list of trusted parameters through.
   def agreement_params
     # params.require(:agreement).permit(:plan_id, :cooperative_id, :proposal_id, :agent_id, :moa_no, :contestability, :nel, :nml, :anniversary_type, :transferred, :transferred_date, :previous_provider, :comm_type, :claims_fund, :entry_age_from, :entry_age_to, :exit_age)
-    params.require(:agreement).permit(:plan_id, :cooperative_id, :agent_id, :moa_no, :contestability, :nel, :nml, :anniversary_type, :transferred, :transferred_date, :previous_provider, :comm_type, :claims_fund, :claims_fund_amount, :entry_age_from, :entry_age_to, :exit_age, :coop_sf, :agent_sf, :minimum_participation, :reconsiderable, :unusable,
+    params.require(:agreement).permit(:plan_id, :cooperative_id, :agent_id, :moa_no, :contestability, :nel, :nml, :anniversary_type, :transferred, :transferred_date, :previous_provider, :comm_type, :claims_fund, :claims_fund_amount, :entry_age_from, :entry_age_to, :exit_age, :coop_sf, :agent_sf, :minimum_participation, :reconsiderable, :unusable, :with_markup,
       agreement_benefits_attributes: [:id, :name, :plan_id, :description, :min_age, :max_age, :exit_age, :insured_type, :with_dependent, :_destroy],
       anniversaries_attributes: [:id, :name, :anniversary_date, :_destroy],
       loan_rates_attributes: [:id, :min_age, :max_age, :monthly_rate, :annual_rate, :min_amount, :max_amount, :coop_sf, :agent_sf, :_destroy])

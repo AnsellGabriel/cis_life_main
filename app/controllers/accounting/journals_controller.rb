@@ -1,6 +1,26 @@
 class Accounting::JournalsController < ApplicationController
-  before_action :set_journal, only: %i[ show edit update destroy ]
+  before_action :set_journal, only: %i[ show edit update destroy download]
   before_action :set_payables, only: %i[ new edit create update]
+
+  def download
+    @ledger_entries = @journal.general_ledgers
+    @accountant = Employee.find(@journal.accountant_id)
+    @approver = Employee.find(@journal.approved_by) if @journal.approved_by.present?
+    @certifier = Employee.find(@journal.certified_by) if @journal.certified_by.present?
+
+    respond_to do |format|
+      format.pdf do
+        render pdf: "Check voucher ##{@journal.voucher}",
+               page_size: "A4"
+      end
+    end
+  end
+
+  def for_approval_index
+    @journals = Accounting::Journal.where(status: :for_approval).order(created_at: :desc)
+
+    @pagy, @journals = pagy(@journals, items: 10)
+  end
 
   # GET /accounting/journals
   def index
@@ -17,6 +37,7 @@ class Accounting::JournalsController < ApplicationController
 
   # GET /accounting/journals/1
   def show
+    @ledgers = @journal.general_ledgers
   end
 
   # GET /accounting/journals/new
@@ -39,6 +60,7 @@ class Accounting::JournalsController < ApplicationController
   def create
     @journal = Accounting::Journal.new(journal_params)
     @journal.voucher = voucher_series
+    @journal.accountant_id = current_user.id
 
     if @journal.save
       redirect_to @journal, notice: "Journal was successfully created."
@@ -81,6 +103,12 @@ class Accounting::JournalsController < ApplicationController
   end
 
   def voucher_series
-    journal_params[:voucher_year] + journal_params[:voucher_month] + journal_params[:voucher_series]
+    # Check if any of the parameters is empty
+    if journal_params[:voucher_year].empty? || journal_params[:voucher_month].empty? || journal_params[:voucher_series].empty?
+      return nil
+    else
+      return journal_params[:voucher_year] + journal_params[:voucher_month] + journal_params[:voucher_series]
+    end
   end
+
 end

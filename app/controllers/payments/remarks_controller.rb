@@ -18,8 +18,12 @@ class Payments::RemarksController < ApplicationController
 
     if @remark.save
       if !@payment.rejected?
-        @payment.reject
-        @payment.entries.map(&:cancelled!)
+        # scope this in a transaction block
+        @payment.transaction do
+          @payment.reject
+          @payment.entries.map(&:cancelled!)
+          @payment.general_ledgers.update_all(transaction_date: nil)
+        end
 
         redirect_to payment_remarks_path(@payment), alert: "Payment rejected."
       else

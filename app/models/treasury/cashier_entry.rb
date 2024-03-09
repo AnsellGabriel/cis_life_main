@@ -14,7 +14,11 @@ class Treasury::CashierEntry < ApplicationRecord
   has_many :general_ledgers, as: :ledgerable
 
   def to_s
-    or_no
+    self.or_no
+  end
+
+  def reference
+    self.or_no
   end
 
   def entry_type

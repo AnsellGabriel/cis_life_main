@@ -2,15 +2,20 @@
   <%#= simple_form_for(@product_benefit) do |f| %>
     <%= f.error_notification %>
     <%= f.error_notification message: f.object.errors[:base].to_sentence if f.object.errors[:base].present? %>
-    <div class="form-inputs mb-3" data-controller="plan-agree">
-      <%= f.association :benefit, input_html: { id: "ben_id", data: { action: "change->plan-agree#toggleTargets2", plan_agree_target: "benSelect" } } %>
+    <div class="form-inputs mb-3" data-controller="benefit">
+      <%= f.association :benefit, input_html: { id: "ben_id", data: { action: "change->benefit#toggleTargets2", benefit_target: "benSelect" } } %>
       <div class="form-check form-switch mt-3">
       <%= f.input :main %>
       </div>
       <%#= f.association :agreement_benefit %>
       <div class="row">
-        <%= f.input :coverage_amount, wrapper_html: { class: "col-md-8" } %>
-        <div class="col-md-4" data-plan-agree-target="prem" hidden>
+        <div class="col-md-6">
+          <div class="form-floating">
+            <%= f.input :coverage_amount, label: false, wrapper: false, placeholder: "Coverage Amount (₱)" %>
+            <%= f.label :coverage_amount, "Coverage Amount (₱)" %>
+          </div>
+        </div>
+        <div class="col-md-6" data-benefit-target="prem" hidden>
           <%#= f.input :premium, wrapper_html: { class: "col-md-4" } %>
           <%= render "agreement_benefits/premium", f: f %>
         </div>

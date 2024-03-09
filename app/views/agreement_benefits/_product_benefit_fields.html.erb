@@ -1,17 +1,25 @@
-<div class="card-body">
   
-  <div class="nested-fields" data-controller="plan-agree">
-    <%= f.association :benefit, input_html: { id: "ben_id", data: { action: "change->plan-agree#toggleTargets2", plan_agree_target: "benSelect" } } %>
-    <div class="form-check form-switch mt-3">
-      <%= f.input :main %>
-    </div>
-    <div class="row">
-      <%= f.input :coverage_amount, wrapper_html: { class: "col-md-8" } %>
-      <div class="col-md-4" data-plan-agree-target="prem" hidden>
-          <%= render "premium", f: f %>
+<div class="nested-fields" data-controller="benefit">
+  <div class="card">
+    <div class="card-body">
+      <%#= f.association :benefit, input_html: { id: "ben_id", data: { action: "change->plan-agree#toggleTargets2", plan_agree_target: "benSelect" } } %>
+      <%= f.association :benefit, input_html: { id: "ben_id", data: { action: "change->benefit#toggleTargets2", benefit_target: "benSelect" } } %>
+      <div class="form-check form-switch mt-3">
+        <%= f.input :main %>
       </div>
-        <%#= f.input :premium, wrapper_html: { class: "col-md-4" } %>
+      <div class="row">
+        <div class="col-md-6">
+          <div class="form-floating">
+            <%= f.input :coverage_amount, label: false, wrapper: false, placeholder: "Coverage Amount (₱)" %>
+            <%= f.label :coverage_amount, "Coverage Amount (₱) " %>
+          </div>
+        </div>
+        <div class="col-md-6" data-benefit-target="prem" hidden>
+            <%= render "premium", f: f %>
+        </div>
+          <%#= f.input :premium, wrapper_html: { class: "col-md-4" } %>
+      </div>
+      <%= link_to_remove_association "Remove", f, class: "link-danger" %>
     </div>
-    <%= link_to_remove_association "Remove", f %>
   </div>
 </div>

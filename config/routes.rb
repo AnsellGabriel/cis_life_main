@@ -139,6 +139,7 @@ Rails.application.routes.draw do
   end
 
   resources :group_remits do
+    resources :remarks, controller: "group_remit/remarks"
     get "denied_members", to: "denied_members#index"
     get "download_csv", to: "denied_members#download_csv"
     delete "destroy_all", to: "denied_members#destroy_all"
@@ -218,7 +219,10 @@ Rails.application.routes.draw do
   # * Finance Module Routes
   # accounting
   namespace :accounting do
-    resources :journals
+    resources :journals do
+      get :download, on: :member
+      get :for_approval_index, on: :collection
+    end
 
     resources :checks do
       get :for_approval_index, on: :collection
@@ -227,6 +231,8 @@ Rails.application.routes.draw do
       resources :business_checks, as: 'business', except: [:index]
       get :requests, on: :collection
       resources :remarks
+      get :download, on: :member
+      get :print, on: :member
     end
 
     resources :check_voucher_requests, only: %i[show]
@@ -243,6 +249,7 @@ Rails.application.routes.draw do
 
     resources :payments
     resources :cashier_entries do
+      get :print, on: :member
       get :download, on: :member
       get :cancel, on: :member
       get :for_approval_index, on: :collection
@@ -377,4 +384,9 @@ Rails.application.routes.draw do
 
   # Defines the root path route ("/")
   # root "articles#index"
+
+  #* Reports Module Routes
+  namespace :reports do
+    resources :accounts, only: [:index, :show]
+  end
 end

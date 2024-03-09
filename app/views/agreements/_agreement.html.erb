@@ -16,11 +16,19 @@
               <dd class="col-sm-5"><%= to_currency(agreement.nml) %></dd>
               <dt class="col-sm-7">Anniversary Type</dt>
               <dd class="col-sm-5"><%= agreement.anniversary_type %></dd>
+              <dt class="col-sm-7">Minimum Participation</dt>
+              <dd class="col-sm-5"><%= agreement.minimum_participation %></dd>
             <% end %>
             <dt class="col-sm-7">Marketing Agent</dt>
             <dd class="col-sm-5"><%= agreement.agent %></dd>
             <dt class="col-sm-7">Commission Type</dt>
             <dd class="col-sm-5"><%= agreement.comm_type %></dd>
+            <% if agreement.plan.acronym == "LPPI" %>
+              <dt class="col-sm-7">With Unused?</dt>
+              <dd class="col-sm-5"><%= agreement.unusable %></dd>
+              <dt class="col-sm-7">With Mark-Up?</dt>
+              <dd class="col-sm-5"><%= agreement.with_markup %></dd>
+            <% end %>
             <% if agreement.transferred %>
               <strong class="text-primary mb-1 mt-3">Transferred</strong>
               <dt class="col-sm-7">Date Transferred</dt>
@@ -53,14 +61,14 @@
   </div>
 </div>
 <% if @agreement.plan_id == 2 || @agreement.plan_id == 8 %> <!-- for LPPI & SII -->
-  <%= link_to new_loan_insurance_rate_path(a_id: @agreement.id), class: "btn btn-primary btn-sm mb-2", data: { turbo_frame: "remote_modal" } do %>
+  <%= link_to new_loan_insurance_rate_path(a_id: @agreement.id), class: "btn btn-secondary btn-sm mb-2", data: { turbo_frame: "remote_modal" } do %>
     Add Rate
   <% end %>
   <div class="row">
     <% @agreement.loan_rates.each do |rate| %>
       <div class="col-md-6 mb-3">
         <div class="card">
-          <div class="card-header text-white bg-<%= rate.min_age <= 65 ? "primary" : "danger" %>">
+          <div class="card-header text-white bg-<%= rate.min_age <= 65 ? "primary" : "warning" %>">
             <h5><%= rate.min_age %> to <%= rate.max_age %> years old</h5>
             <small>Loan Amount: <%= to_currency(rate.min_amount) %> to <%= to_currency(rate.max_amount) %></small>
           </div>
@@ -69,7 +77,11 @@
             <small>Monthly Rate: <%= to_currency(rate.monthly_rate) %> / <%= to_currency(1000) %></small> <br>
             <small>No Evidence Limit: <%= to_currency(rate.nel) %></small> <br>
             <small>Non-medical Limit Rate: <%= to_currency(rate.nml) %></small> <br>
-            <small>Contestability: <%= pluralize(rate.contestability, "month") %></small>
+            <small>Contestability: <%= pluralize(rate.contestability, "month") %></small> <br>
+            <% if @agreement.with_markup == true && rate.markup_rate != nil %>
+              <small>Mark-up Rate (monthly): <%= rate.markup_rate%></small> <br>
+              <small>Mark-up Coop SF: <%= number_to_percentage(rate.markup_sf, precision: 1) %></small> <br>
+            <% end %>
           </div>
           <div class="card-footer">
             <%= link_to edit_loan_insurance_rate_path(rate), class: "btn btn-success btn-sm", data: { turbo_frame: "remote_modal" } do %>

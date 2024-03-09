@@ -18,6 +18,14 @@ class Accounting::VoucherDecorator < ApplicationDecorator
     end
   end
 
+  def status_badge
+    case object.status
+      when "pending", "for_approval" then "badge bg-warning text-dark"
+      when "posted" then "badge bg-success"
+      when "cancelled" then "badge bg-danger"
+    end
+  end
+
   def audit_text
     object.audit.titleize
   end

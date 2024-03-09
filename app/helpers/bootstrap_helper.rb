@@ -25,4 +25,11 @@ module BootstrapHelper
     classes << "btn-#{type}"
     classes.join(" ")
   end
+
+  def reg_btn(type)
+    classes = []
+    classes << "btn"
+    classes << "btn-#{type}"
+    classes.join(" ")
+  end
 end

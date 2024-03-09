@@ -1,0 +1,76 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset='utf-8' />
+    <%= wicked_pdf_stylesheet_link_tag "application" %>
+    <%= wicked_pdf_stylesheet_link_tag "bootstrap" %>
+  </head>
+  <body style="font-size: .9rem; padding-top: 180px">
+    <div class="row">
+      <div class="col-2"></div>
+      <div class="col-10">
+        <%= @check.payable %>
+      </div>
+    </div>
+    <div class="row" style="margin-bottom: 60px; margin-top: 10px;">
+      <div class="col-8"></div>
+      <div class="col-4" style="padding-left: 60px">
+        <%= date_as_month_day_year @check.date_voucher %>
+      </div>
+    </div>
+    <div class="row" style="margin-bottom: 110px;">
+      <div class="col-8 ps-1">
+        <%= @check.particulars %>
+      </div>
+      <div class="col-4 text-center fw-bolder" style="font-size: 1rem">
+        <%= to_curr @check.amount %>
+      </div>
+    </div>
+    <div class="row" style="height: 180px;">
+      <div class="row col-7">
+        <div class="col-3">
+          <% @ledger_entries.each do |entry| %>
+            <div class="pt-1"><%= entry.id %></div>
+          <% end %>
+        </div>
+        <div class="col-9">
+          <% @ledger_entries.each do |entry| %>
+            <div class="ps-3 pt-1"><%= entry.account %></div>
+          <% end %>
+        </div>
+      </div>
+      <div class="row col-5">
+        <div class="col-4">
+          <% @ledger_entries.each do |entry| %>
+            <% if entry.debit? %>
+              <div class="pe-1 pt-1 text-end"><%= to_curr entry.amount %></div>
+            <% else %>
+              <br>
+            <% end %>
+          <% end %>
+        </div>
+        <div class="col-1"></div>
+        <div class="col-4">
+          <% @ledger_entries.each do |entry| %>
+            <% if entry.credit? %>
+              <div class=" pt-1 text-end"><%= to_curr entry.amount %></div>
+            <% else %>
+              <br>
+            <% end %>
+          <% end %>
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="row col-6" style="padding-top: 30px">
+        <div class="col-2 ps-1"><%= @accountant&.initials_name %></div>
+        <div class="col-2 ps-1"><%= @certifier&.initials_name %></div>
+        <div class="col-2 ps-1"><%= @auditor&.initials_name %></div>
+      </div>
+      <div class="col-6" style="font-size: 0.8rem">
+        <div class="ps-5 mb-1"><%= @amount_in_words %></div>
+        <div class="" style="padding-left: 60px;"><%= to_curr @check.amount %></div>
+      </div>
+    </div>
+  </body>
+</html>
