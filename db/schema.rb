@@ -1007,7 +1007,7 @@ ActiveRecord::Schema[7.0].define(version: 2024_03_07_054757) do
     t.string "claimant_email"
     t.string "claimant_contact_no"
     t.integer "nature_of_claim"
-    t.bigint "agreement_benefit_id", null: false
+    t.bigint "agreement_benefit_id"
     t.string "claimant_name"
     t.string "relationship"
     t.integer "claim_route"

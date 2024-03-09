@@ -1,5 +1,5 @@
 class ProcessClaimsController < ApplicationController
-  before_action :set_process_claim, only: %i[ show edit update destroy show_coop claim_route claims_file claim_process update_status ]
+  before_action :set_process_claim, only: %i[ show edit update destroy show_coop claim_route claims_file claim_process update_status edit_ca update_ca ]
   # GET /process_claims
 
   # def claimable
@@ -113,24 +113,36 @@ class ProcessClaimsController < ApplicationController
   def create_ca
     @process_claim = ProcessClaim.new(process_claim_params)
     @process_claim.entry_type = :claim
-    @process_claim.claim_route = :file_claim
+    @process_claim.claim_route = :filed_by_analyst
     @process_claim.age = @process_claim.get_age.to_i
 
     respond_to do |format|
       if @process_claim.save
-        @process_claim.process_track.create(route_id: 0, user: current_user)
+        @process_claim.process_track.create(route_id: 17, user: current_user)
         format.html { redirect_to show_coop_process_claim_path(@process_claim), notice: "Claims was successfully added." }
         format.json { render :show, status: :created, location: @anniversary }
       else
-        format.html { render :new_coop, status: :unprocessable_entity }
+        format.html { render :new_ca, status: :unprocessable_entity }
         format.json { render json: @process_claim.errors, status: :unprocessable_entity }
         # format.turbo_stream { render :form_update, status: :unprocessable_entity }
       end
     end
   end
 
+  def update_ca
+    if @process_claim.update(process_claim_params)
+
+        redirect_to index_show_process_claims_path(p: 17), notice: "Process claim was successfully updated."
+    else
+      render :edit, status: :unprocessable_entity
+    end
+  end
+
   # GET /process_claims/1/edit
   def edit
+  end
+
+  def edit_ca
   end
 
   def claims_file
@@ -319,7 +331,7 @@ class ProcessClaimsController < ApplicationController
 
   # Only allow a list of trusted parameters through.
   def process_claim_params
-    params.require(:process_claim).permit(:cooperative_id, :claim_route, :agreement_id, :batch_id, :claimable_id, :cause_id, :claim_type_id, :date_file, :claim_filed, :processing, :approval, :payment, :claimable_type, :date_incident, :entry_type, :claimant_name, :claimant_email, :claimant_contact_no, :nature_of_claim, :agreement_benefit_id, :relationship,
+    params.require(:process_claim).permit(:cooperative_id, :claim_route, :agreement_id, :agreement_benefit_id, :batch_id, :claimable_id, :cause_id, :claim_type_id, :date_file, :claim_filed, :processing, :approval, :payment, :claimable_type, :date_incident, :entry_type, :claimant_name, :claimant_email, :claimant_contact_no, :nature_of_claim, :agreement_benefit_id, :relationship,
       claim_documents_attributes: [:id, :document, :document_type, :_destroy],
       process_tracks_attributes: [:id, :description, :route_id, :trackable_type, :trackable_id ],
       claim_benefits_param: [:id, :benefit_id, :amount, :status],
