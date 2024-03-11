@@ -98,6 +98,7 @@ class Treasury::CashierEntry < ApplicationRecord
 
   private
 
+
   # def service_fee(payment_type)
   #   case payment_type
   #   when 'gyrt'

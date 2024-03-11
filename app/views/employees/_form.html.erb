@@ -2,37 +2,45 @@
   <div class="form-inputs mb-3">
     <%# fields for User model associated with Employee %>
     <% unless current_user %>
-      <%= f.fields_for :user do |u| %>
-        <%= u.input :email,
-                  required: true,
-                  autofocus: true,
-                  input_html: { autocomplete: "email" },
-                  error: '*Required' %>
-        <div class="row">
-          <%= u.input :password,
-                  required: true,
-                  hint: ("#{@minimum_password_length} characters minimum" if @minimum_password_length),
-                  input_html: { autocomplete: "new-password" }, wrapper_html: { class: "col-md-6" } %>
-          <%= u.input :password_confirmation,
-                  required: true,
-                  input_html: { autocomplete: "new-password" }, wrapper_html: { class: "col-md-6" } %>
-        </div>
-        <ul class="small text-danger half-visible mb-0 ">
-          <li data-password-strength-target="min_char">Minimum 8 characters</li>
-          <li data-password-strength-target="lowercase">at least one lowercase letter</li>
-          <li data-password-strength-target="uppercase">at least one uppercase letter</li>
-          <li data-password-strength-target="digit">at least one digit</li>
-          <li data-password-strength-target="special">at least one special character</li>
-        </ul>
-        <%= u.hidden_field :userable_type, value: "Employee" %>
-        <%= u.hidden_field :userable_id, value: @employee.id %>
-      <% end %>
+      <div class="" data-controller="password-strength">
+        <%= f.fields_for :user do |u| %>
+          <%= u.input :email,
+                    required: true,
+                    autofocus: true,
+                    input_html: { autocomplete: "email" },
+                    error: '*Required' %>
+          <div class="row">
+            <%= u.input :password,
+                    required: true,
+                    hint: ("#{@minimum_password_length} characters minimum" if @minimum_password_length),
+                    input_html: { autocomplete: "new-password", 
+                      data: {
+                        action: "input->password-strength#change"
+                        } 
+                      }, 
+                    wrapper_html: { class: "col-md-6" } %>
+            <%= u.input :password_confirmation,
+                    required: true,
+                    input_html: { autocomplete: "new-password" }, wrapper_html: { class: "col-md-6" } %>
+          </div>
+          <ul class="small text-danger half-visible mb-0 ">
+            <li data-password-strength-target="min_char">Minimum 8 characters</li>
+            <li data-password-strength-target="lowercase">at least one lowercase letter</li>
+            <li data-password-strength-target="uppercase">at least one uppercase letter</li>
+            <li data-password-strength-target="digit">at least one digit</li>
+            <li data-password-strength-target="special">at least one special character</li>
+          </ul>
+          <%= u.hidden_field :userable_type, value: "Employee" %>
+          <%= u.hidden_field :userable_id, value: @employee.id %>
+        <% end %>
+      </div>
     <% end %>
     <hr>
     <div class="row">
       <%= f.input :first_name, wrapper_html: { class: "col-md-4" } %>
       <%= f.input :middle_name, wrapper_html: { class: "col-md-4" } %>
       <%= f.input :last_name, wrapper_html: { class: "col-md-4" } %>
+      <%= f.input :branch, as: :select, collection: Employee.branches.keys.map {|k| [k.humanize, k] }, wrapper_html: { class: "col-md-4" } %>
       <%= f.association :department, error: '*Required', wrapper_html: { class: "col-6" } %>
       <%= f.input :designation, wrapper_html: { class: "col-6" } %>
       <%= f.input :birthdate, as: :date, html5: true, wrapper_html: { class: "col-md-4" }  %>

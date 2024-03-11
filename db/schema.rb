@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2024_03_08_080425) do
+ActiveRecord::Schema[7.0].define(version: 2024_03_11_010451) do
   create_table "accounting_vouchers", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.date "date_voucher"
     t.integer "voucher"
@@ -666,6 +666,7 @@ ActiveRecord::Schema[7.0].define(version: 2024_03_08_080425) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.bigint "department_id", null: false
+    t.integer "branch"
     t.index ["department_id"], name: "index_employees_on_department_id"
   end
 
@@ -1235,12 +1236,12 @@ ActiveRecord::Schema[7.0].define(version: 2024_03_08_080425) do
     t.index ["voucher_id"], name: "index_treasury_business_checks_on_voucher_id"
   end
 
-  create_table "treasury_cashier_entries", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+  create_table "treasury_cashier_entries", primary_key: ["id", "created_at"], charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+    t.bigint "id", null: false, auto_increment: true
     t.integer "or_no"
     t.date "or_date"
     t.string "entriable_type", null: false
     t.bigint "entriable_id", null: false
-    t.integer "payment_type"
     t.integer "status", default: 0
     t.bigint "treasury_account_id", null: false
     t.decimal "amount", precision: 15, scale: 2
@@ -1251,8 +1252,11 @@ ActiveRecord::Schema[7.0].define(version: 2024_03_08_080425) do
     t.decimal "net_amount", precision: 15, scale: 2, default: "0.0"
     t.decimal "withholding_tax", precision: 15, scale: 2, default: "0.0"
     t.boolean "vatable", default: false
+    t.bigint "treasury_payment_type_id", null: false
+    t.string "branch"
     t.index ["entriable_type", "entriable_id"], name: "index_treasury_cashier_entries_on_entriable"
     t.index ["treasury_account_id"], name: "index_treasury_cashier_entries_on_treasury_account_id"
+    t.index ["treasury_payment_type_id"], name: "index_treasury_cashier_entries_on_treasury_payment_type_id"
   end
 
   create_table "treasury_payment_types", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
@@ -1381,6 +1385,7 @@ ActiveRecord::Schema[7.0].define(version: 2024_03_08_080425) do
   add_foreign_key "treasury_billing_statements", "treasury_cashier_entries", column: "cashier_entry_id"
   add_foreign_key "treasury_business_checks", "accounting_vouchers", column: "voucher_id"
   add_foreign_key "treasury_cashier_entries", "treasury_accounts"
+  add_foreign_key "treasury_cashier_entries", "treasury_payment_types"
   add_foreign_key "treasury_payments", "treasury_accounts", column: "account_id"
   add_foreign_key "treasury_payments", "treasury_cashier_entries", column: "cashier_entry_id"
 end
