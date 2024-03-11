@@ -199,7 +199,7 @@ class LoanInsurance::BatchesController < ApplicationController
     @unused_Loan = LoanInsurance::Batch.find(batch.unused_loan_id)
 
     @unused_Loan.update!(status: :recent, terminate_date: nil)
-    batch.update!(unused_loan_id: nil)
+    batch.update!(unused_loan_id: nil, excess: 0)
     loan_rate = LoanInsurance::Rate.find(batch.loan_insurance_rate_id)
     batch.calculate_values(batch.group_remit.agreement, loan_rate)
 
@@ -210,11 +210,14 @@ class LoanInsurance::BatchesController < ApplicationController
 
   # DELETE /loan_insurance/batches/1
   def destroy
-    if @batch.destroy!
+    @batch.transaction do
       if @batch.unused_loan_id.present?
         LoanInsurance::Batch.find(@batch.unused_loan_id).update(status: :recent)
       end
-      redirect_to loan_insurance_group_remit_path(@batch.group_remit), alert: "Member removed"
+
+      if @batch.destroy!
+        redirect_to loan_insurance_group_remit_path(@batch.group_remit), alert: "Member removed"
+      end
     end
   end
 

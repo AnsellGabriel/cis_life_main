@@ -57,6 +57,8 @@ class Treasury::CashierEntriesController < ApplicationController
   end
 
   def new
+    binding.pry
+    
     @entry = Treasury::CashierEntry.new(or_no: Treasury::CashierEntry.last&.or_no.to_i + 1, or_date: Date.today)
 
     if params[:gr_id].present?

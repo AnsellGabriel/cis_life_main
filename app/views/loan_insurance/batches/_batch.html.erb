@@ -55,11 +55,17 @@
 			<td class="align-middle" >
 				<div class="<%= flex_justify_align('center') %>">
 					<div class="<%= flex_justify_align('','center',true) %> ps-6">
-						<div class="d-flex flex-column mb-1">
+						<div class="<%= flex_justify_align('center', 'center', true) %> mb-1">
 							<%= content_tag :span, 
 									"(#{to_curr(batch.unused)})", 
 									class: "text-secondary sm-green-text"
 							%>
+							<% if batch.excess > 0 %>
+								<%= content_tag :span, 
+									"Excess: #{to_curr(batch.excess)}", 
+									class: "sm-green-text"
+								%>
+							<% end %>
 						</div>
 					</div>
 				</div>
