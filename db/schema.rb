@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2024_03_05_062911) do
+ActiveRecord::Schema[7.0].define(version: 2024_03_07_054757) do
   create_table "accounting_check_vouchers", charset: "utf8mb4", force: :cascade do |t|
     t.date "date_voucher"
     t.string "voucher"
@@ -42,7 +42,7 @@ ActiveRecord::Schema[7.0].define(version: 2024_03_05_062911) do
     t.integer "accountant_id"
     t.integer "approved_by"
     t.integer "certified_by"
-    t.index ["check_voucher_request_id"], name: "index_accounting_vouchers_on_check_voucher_request_id"
+    t.index ["claim_request_for_payment_id"], name: "index_accounting_vouchers_on_claim_request_for_payment_id"
     t.index ["payable_type", "payable_id"], name: "index_accounting_vouchers_on_payable"
     t.index ["treasury_account_id"], name: "index_accounting_vouchers_on_treasury_account_id"
   end
