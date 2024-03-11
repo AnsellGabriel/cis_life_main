@@ -1,0 +1,17 @@
+<%= turbo_frame_tag "reg_form_modal" do %>
+  <div class="modal-header">
+    <div class="d-flex gap-1">
+      <%= content_tag :h5, 'Remarks', class: "modal-title", id: "staticBackdropLabel" %>
+      <%= link_to "New", new_group_remit_remark_path, class: small_btn('danger') %>
+    </div>
+    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+  </div>
+  
+  <div class="modal-body">
+    <% if @remarks.present? %>
+      <%= render @remarks %>
+    <% else %>
+      <div class="text-center">No remarks found</div>
+    <% end %>
+  </div>
+<% end %>

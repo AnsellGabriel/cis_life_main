@@ -10,6 +10,10 @@ class Accounting::Check < Accounting::Voucher
 
   # enum status: { pending: 0, posted: 1, cancelled: 2, for_approval: 3}
 
+  def reference
+    "CV#{self.voucher}"
+  end
+
   def entry_type
     'cv'
   end

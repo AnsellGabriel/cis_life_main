@@ -13,6 +13,7 @@ class GroupRemit < ApplicationRecord
   belongs_to :agreement
   belongs_to :anniversary, optional: true
 
+  has_many :remarks, as: :remarkable, dependent: :destroy
   has_many :batch_group_remits
   has_many :batches, through: :batch_group_remits
   has_many :denied_members, dependent: :destroy

@@ -67,9 +67,9 @@ class MembersController < InheritedResources::Base
 
   def create
     @member = Member.find_or_initialize_by(
-      first_name: member_params[:first_name],
-      middle_name: member_params[:middle_name],
-      last_name: member_params[:last_name],
+      first_name: member_params[:first_name].squish,
+      middle_name: member_params[:middle_name].squish,
+      last_name: member_params[:last_name].squish,
       birth_date: member_params[:birth_date]
     )
 

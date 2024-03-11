@@ -6,12 +6,7 @@
     <%= wicked_pdf_stylesheet_link_tag "bootstrap" %>
   </head>
   <body>
-    <div class="d-flex" style="line-height: 0">
-      <h3 class="mb-0 text-center fw-bolder">1 COOPERATIVE INSURANCE SYSTEM OF THE PHILIPPINES</h3> 
-      <h3 class="text-center fw-bolder">LIFE AND GENERAL INSURANCE</h3>
-      <p class="text-center mb-4">No. 80 Malakas St., Brgy. Pinayahan, Central District, Quezon City</p>
-      <h2 class="text-center fw-bolder mb-4">CHECK VOUCHER</h2>
-    </div>
+    <%= render 'layouts/pdf_partials/cisp_header', title: "CHECK VOUCHER" %>
     <div class="row mb-2">
       <div class="col-8">
         <div class="row mb-1">
@@ -135,7 +130,7 @@
           </div>
           <div class="col-4 small pt-1" style="height: 50px; border-right: 1px solid black">
             <div class="ps-1" style="border-bottom: 1px solid black">Certified Correct by:</div>
-            <div class="ps-1 pt-2"><%= @approver&.initials_name %></div>
+            <div class="ps-1 pt-2"><%= @certifier&.initials_name %></div>
           </div>
           <div class="col-4 small pt-1" style="height: 50px;">
             <div class="ps-1" style="border-bottom: 1px solid black">Audited by:</div>

@@ -42,7 +42,9 @@
           </td>
           <td class="text-center"><%= month_day_year(journal.date_voucher) %></td>
           <td><%= journal.payable %></td>
-          <td class="text-center text-<%= journal.decorate.status_color %>"><%= journal.status.titleize %></td>
+          <td class="text-center">
+            <span class="<%= journal.decorate.status_badge %>"><%= journal.status.titleize %></span>
+          </td>
         </tr>
       <% end %>
     </tbody>

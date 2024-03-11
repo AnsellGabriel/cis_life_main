@@ -41,7 +41,8 @@ ActiveRecord::Schema[7.0].define(version: 2024_03_05_062911) do
     t.date "post_date"
     t.integer "accountant_id"
     t.integer "approved_by"
-    t.index ["claim_request_for_payment_id"], name: "index_accounting_vouchers_on_claim_request_for_payment_id"
+    t.integer "certified_by"
+    t.index ["check_voucher_request_id"], name: "index_accounting_vouchers_on_check_voucher_request_id"
     t.index ["payable_type", "payable_id"], name: "index_accounting_vouchers_on_payable"
     t.index ["treasury_account_id"], name: "index_accounting_vouchers_on_treasury_account_id"
   end
@@ -707,6 +708,7 @@ ActiveRecord::Schema[7.0].define(version: 2024_03_05_062911) do
     t.decimal "amount", precision: 15, scale: 2, default: "0.0"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.date "transaction_date"
     t.index ["account_id"], name: "index_general_ledgers_on_account_id"
     t.index ["ledgerable_type", "ledgerable_id"], name: "index_general_ledgers_on_ledgerable"
   end
@@ -1059,7 +1061,7 @@ ActiveRecord::Schema[7.0].define(version: 2024_03_05_062911) do
     t.string "claimant_email"
     t.string "claimant_contact_no"
     t.integer "nature_of_claim"
-    t.bigint "agreement_benefit_id", null: false
+    t.bigint "agreement_benefit_id"
     t.string "claimant_name"
     t.string "relationship"
     t.integer "claim_route"

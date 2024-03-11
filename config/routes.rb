@@ -139,6 +139,7 @@ Rails.application.routes.draw do
   end
 
   resources :group_remits do
+    resources :remarks, controller: "group_remit/remarks"
     get "denied_members", to: "denied_members#index"
     get "download_csv", to: "denied_members#download_csv"
     delete "destroy_all", to: "denied_members#destroy_all"
@@ -305,7 +306,9 @@ Rails.application.routes.draw do
     get :claim_process, on: :member
     get :update_status, on: :member
     get :new_ca, to: "process_claims#new_ca", on: :collection
+    get :edit_ca, to: "process_claims#edit_ca", on: :member
     post :create_ca, to: "process_claims#create_ca", on: :collection
+    patch :update_ca, to: "process_claims#update_ca", on: :member
     # get :claimable, on: :collection
   end
   resources :underwriting_routes
@@ -381,4 +384,9 @@ Rails.application.routes.draw do
 
   # Defines the root path route ("/")
   # root "articles#index"
+
+  #* Reports Module Routes
+  namespace :reports do
+    resources :accounts, only: [:index, :show]
+  end
 end

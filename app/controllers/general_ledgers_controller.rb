@@ -18,17 +18,19 @@ class GeneralLedgersController < ApplicationController
         pay_service = PaymentService.new(@entry.entriable, current_user, @entry)
         result = pay_service.post_payment
       elsif params[:e_t] == 'cv'
-        @entry.update(post_date: Date.current, approved_by: current_user.id)
+        @entry.update(post_date: Date.current, certified_by: current_user.id)
         claim_track = @entry.check_voucher_request.requestable.process_track.build
         claim_track.route_id = 14
         claim_track.user_id = current_user.id
         claim_track.save
         result = 'Voucher posted.'
       elsif params[:e_t] == 'jv'
-        @entry.update(post_date: Date.current, approved_by: current_user.id)
+        @entry.update(post_date: Date.current, certified_by: current_user.id)
         result = 'Journal posted.'
       end
 
+      @entry.general_ledgers.update_all(transaction_date: Date.current)
+      
       redirect_to entry_path, notice: result
     end
   end
