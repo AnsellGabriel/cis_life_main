@@ -1,7 +1,7 @@
 class ProcessClaim < ApplicationRecord
   attr_accessor :batch_id
 
-  validates_presence_of :cooperative_id, :agreement_id, :entry_type, :claimant_name, :relationship, :claimant_email, :claimant_contact_no, :date_incident
+  validates_presence_of :cooperative_id, :agreement_id, :entry_type, :claimant_name, :claimant_email, :claimant_contact_no, :date_incident
 
   enum nature_of_claim: {
     LIFE: 0, # Life
@@ -49,7 +49,8 @@ class ProcessClaim < ApplicationRecord
     paid: 13, # paid
     voucher_generated: 14,
     approve_audit: 15,
-    pending_audit: 16
+    pending_audit: 16,
+    filed_by_analyst: 17
   }
 
 
@@ -81,7 +82,7 @@ class ProcessClaim < ApplicationRecord
   belongs_to :claimable, polymorphic: true
   belongs_to :cooperative
   belongs_to :agreement
-  belongs_to :agreement_benefit
+  belongs_to :agreement_benefit, optional: true
   belongs_to :cause, optional: true
   belongs_to :claim_type
   has_many :process_track, as: :trackable, dependent: :destroy
