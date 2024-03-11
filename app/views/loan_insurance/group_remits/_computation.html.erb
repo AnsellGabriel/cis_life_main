@@ -39,7 +39,7 @@
 
       <% if group_remit.total_excess_premium > 0 %>
         <div class="<%= flex_justify_align('between') %>">
-          <%= content_tag :p, "Excess Payment", style: "width: 200px;", class: 'text-success', style: "font-size: .8rem" %>
+          <%= content_tag :p, "Excess Premium", style: "width: 200px;", class: 'text-success', style: "font-size: .8rem" %>
           <%= content_tag :p, "(#{number_to_currency(group_remit.total_excess_premium, unit: "₱", precision: 2)})", style: "font-size: .8rem; color: var(--bs-green);"%>
         </div>
       <% end %>
