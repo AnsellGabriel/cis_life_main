@@ -11,7 +11,8 @@ class Payments::EntriesController < ApplicationController
   end
 
   def new
-    @entry = @entries.new(or_no: Treasury::CashierEntry.last&.or_no.to_i + 1, or_date: Date.today)
+    last_series = Treasury::CashierEntry.all.present? ? Treasury::CashierEntry.last.or_no.to_i + 1 : 1
+    @entry = @entries.new(or_no: last_series, or_date: Date.today)
     @payment_type = @payment.plan.acronym.downcase.include?("gyrt") ? "GYRT" : @payment.plan.acronym
   end
 
@@ -19,7 +20,7 @@ class Payments::EntriesController < ApplicationController
     @entry = @entries.new(entry_params)
     @payment_type = @payment.plan.acronym.downcase.include?("gyrt") ? "GYRT" : @payment.plan.acronym
 
-    @entry.payment_type = Treasury::CashierEntry.payment_enum_value(@payment_type.downcase)
+    # @entry.payment_type = Treasury::CashierEntry.payment_enum_value(@payment_type.downcase)
     # binding.pry
     if @entry.save
       redirect_to payment_entry_path(@payment, @entry), notice: "OR added"
@@ -56,7 +57,7 @@ class Payments::EntriesController < ApplicationController
   private
 
   def entry_params
-    params.require(:treasury_cashier_entry).permit(:or_no, :or_date, :treasury_account_id, :amount, general_ledgers_attributes: [:account_id, :amount, :ledger_type, :id, :_destroy])
+    params.require(:treasury_cashier_entry).permit(:treasury_payment_type_id, :dummy_payee, :dummy_entry_type, :or_no, :or_date, :treasury_account_id, :amount, general_ledgers_attributes: [:account_id, :amount, :ledger_type, :id, :_destroy])
   end
 
   def set_payment_and_entries

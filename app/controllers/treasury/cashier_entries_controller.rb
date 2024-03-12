@@ -57,9 +57,8 @@ class Treasury::CashierEntriesController < ApplicationController
   end
 
   def new
-    binding.pry
-    
-    @entry = Treasury::CashierEntry.new(or_no: Treasury::CashierEntry.last&.or_no.to_i + 1, or_date: Date.today)
+    last_series = Treasury::CashierEntry.all.present? ? Treasury::CashierEntry.last.or_no.to_i + 1 : 1
+    @entry = Treasury::CashierEntry.new(or_no: last_series, or_date: Date.today)
 
     if params[:gr_id].present?
       @group_remit = GroupRemit.find(params[:gr_id])
@@ -125,7 +124,7 @@ class Treasury::CashierEntriesController < ApplicationController
 
   # Only allow a list of trusted parameters through.
   def entry_params
-    params.require(:treasury_cashier_entry).permit(:or_no, :or_date, :global_entriable, :payment_type, :treasury_account_id, :amount)
+    params.require(:treasury_cashier_entry).permit(:or_no, :or_date, :global_entriable, :treasury_payment_type_id, :treasury_account_id, :amount)
   end
 
   def amount_to_words(amount)

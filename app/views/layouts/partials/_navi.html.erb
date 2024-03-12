@@ -80,6 +80,9 @@
                   <% end %>
                 <% end %>
                 <%= link_to "Remittances", payments_path	, class: "nav-link" %>
+                <%= render 'layouts/partials/nav_dropdown', title: 'Encoding' do %>
+                  <%= link_to "Payment Types", treasury_payment_types_path	, class: "dropdown-item" %>
+                <% end %>
             <% when 15 %>
               <%= render 'layouts/partials/nav_dropdown', title: 'Data Entries' do %>
                 <%= link_to "Cooperative", cooperatives_path, class: "dropdown-item" %>
