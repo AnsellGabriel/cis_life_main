@@ -58,23 +58,30 @@
     <% end %>
     <%# if process_coverage.status == "pending" || process_coverage.status == "for_process" %>
     <%# if (current_user.analyst? || current_user.head? || current_user.senior_officer?) && @process_coverage.count_members("denied") == 0 && @process_coverage.count_members("pending") == 0 && @total_net_premium <= session[:max_amount] %>
-    <div class="<%= button_show_pc(current_user.rank, @process_coverage, @total_net_prem, "approve") %>">
-      <%= link_to new_process_remark_path(ref: process_coverage, pro_status: "Approve", rem_status: "approved", max_amount: session[:max_amount], total_life_cov: @total_life_cov, total_gross_prem: @total_gross_prem), title: "Approve", class: "btn btn-sm btn-success mb-2 me-2", data: { turbo_frame: "remote_modal" } do %>
-        <%= bootstrap_icon "check-lg" %> Approve
-      <% end %>
-    </div>
-    <%# end %>
-    <!-- div class="<%#= show_approve_button_pc(current_user.rank, @process_coverage) %>">
-    </div -->
-    <div class="<%= button_show_pc(current_user.rank, @process_coverage, @total_net_prem, "deny") %>">
-      <%= link_to new_process_remark_path(ref: process_coverage, pro_status: "Deny", rem_status: "denied"), title: "Denied", class: "btn btn-sm btn-danger mb-2 me-2", data: { turbo_frame: "remote_modal" } do %>
-        <%= bootstrap_icon "x-lg" %> Deny
-      <% end %>
-    </div>
-    <div class="<%= button_show_pc(current_user.rank, @process_coverage, @total_net_prem, "for_head_review") %>">
-      <%= link_to new_process_remark_path(ref: process_coverage, pro_status: "Approve", rem_status: "approved", max_amount: session[:max_amount], total_life_cov: @total_life_cov, total_gross_prem: @total_gross_prem), title: "Approve", class: "btn btn-sm btn-secondary mb-2 me-2", data: { turbo_frame: "remote_modal" } do %>
-        <%= bootstrap_icon "forward-fill" %> For Head Review
-      <% end %>
+    <div class="btn-group">
+      <div class="<%= button_show_pc(current_user.rank, @process_coverage, @total_net_prem, "approve") %>">
+        <%= link_to new_process_remark_path(ref: process_coverage, pro_status: "Approve", rem_status: "approved", max_amount: session[:max_amount], total_life_cov: @total_life_cov, total_gross_prem: @total_gross_prem), title: "Approve", class: "btn btn-sm btn-success mb-2 me-2", data: { turbo_frame: "remote_modal" } do %>
+          <%= bootstrap_icon "check-lg" %> Approve
+        <% end %>
+      </div>
+      <%# end %>
+      <!-- div class="<%#= show_approve_button_pc(current_user.rank, @process_coverage) %>">
+      </div -->
+      <div class="<%= button_show_pc(current_user.rank, @process_coverage, @total_net_prem, "deny") %>">
+        <%= link_to new_process_remark_path(ref: process_coverage, pro_status: "Deny", rem_status: "denied"), title: "Denied", class: "btn btn-sm btn-danger mb-2 me-2", data: { turbo_frame: "remote_modal" } do %>
+          <%= bootstrap_icon "x-lg" %> Deny
+        <% end %>
+      </div>
+      <div class="<%= button_show_pc(current_user.rank, @process_coverage, @total_net_prem, "for_head_review") %>">
+        <%= link_to new_process_remark_path(ref: process_coverage, pro_status: "Approve", rem_status: "approved", max_amount: session[:max_amount], total_life_cov: @total_life_cov, total_gross_prem: @total_gross_prem), title: "Approve", class: "btn btn-sm btn-secondary mb-2 me-2", data: { turbo_frame: "remote_modal" } do %>
+          <%= bootstrap_icon "forward-fill" %> For Head Review
+        <% end %>
+      </div>
+      <div class="<%= button_show_pc(current_user.rank, @process_coverage, @total_net_prem, "for_vp_review") %>">
+        <%= link_to new_process_remark_path(ref: process_coverage, pro_status: "Approve", rem_status: "approved", max_amount: session[:max_amount], total_life_cov: @total_life_cov, total_gross_prem: @total_gross_prem), title: "Approve", class: "btn btn-sm btn-secondary mb-2 me-2", data: { turbo_frame: "remote_modal" } do %>
+          <%= bootstrap_icon "forward-fill" %> For VP Review
+        <% end %>
+      </div>
     </div>
     
       <% if current_user.head? && process_coverage.for_head_approval? %>
@@ -87,11 +94,13 @@
         <%= bootstrap_icon "arrow-repeat" %> Reprocess
       <% end %>
     <% end %>
-    <% if (current_user.head? || current_user.senior_officer?) && (process_coverage.reprocess_request?) %>
+    <%# if (current_user.head? || current_user.senior_officer?) && (process_coverage.reprocess_request?) %>
+    <div class="<%= button_show_pc(current_user.rank, @process_coverage, @total_net_prem, "re_approve") %>">
       <%= link_to new_process_remark_path(ref: process_coverage, pro_status: "Reprocess", rem_status: "reprocess_approved"), title: "Reprocess", class: "btn btn-sm btn-warning mb-2", data: { turbo_frame: "remote_modal" } do %>
         <%= bootstrap_icon "arrow-repeat" %> Approve Reprocess
       <% end %>
-    <% end %>
+    </div>
+    <%# end %>
     <%# end %>
     <%# unless process_coverage.group_remit.batches.where(insurance_status: "for_review").count == 0 %>
     <%#= link_to "Approve All", approve_all_group_remit_batches_path(@group_remit,group_remit: process_coverage.group_remit, process_coverage: process_coverage), class: "btn btn-success", onclick: "return confirm('Are you sure?')", method: :get %>
