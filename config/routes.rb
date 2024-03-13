@@ -41,7 +41,7 @@ Rails.application.routes.draw do
   end
   # resources :denied_dependents
 
-  resources :anniversaries, :agent_groups, :departments, :agents, :coop_users, :employees, :product_benefits, :claim_benefits, :claim_coverages
+  resources :anniversaries, :agent_groups, :departments, :agents, :coop_users, :employees, :product_benefits
 
   resources :plans do
     get :selected, on: :member
@@ -258,6 +258,7 @@ Rails.application.routes.draw do
     end
 
     resources :accounts
+
     get "dashboard", to: "dashboard#index"
   end
 
