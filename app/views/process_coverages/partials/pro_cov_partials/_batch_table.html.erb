@@ -80,13 +80,18 @@
             <td>
               <%# unless process_coverage.approved? || process_coverage.reprocess_approved? %>
               <% unless process_coverage.approved? %>
-                <div class="<%= batch_buttons(current_user.rank, batch.insurance_status, process_coverage.status) %>">
+                <!-- div class="<%#= batch_buttons(current_user.rank, batch.insurance_status, process_coverage.status) %>"-->
+                <div class="<%= batch_buttons(current_user.rank, "approve", batch.insurance_status, process_coverage.status) %>">
                   <%= link_to approve_batch_process_coverage_path(batch: batch), onclick: "return confirm('Are you sure?')", method: :get, title: "Approve", class: "btn btn-sm btn-success mb-1" do %>
                     <%= bootstrap_icon "check-lg" %>
                   <% end %>
+                </div>
+                <div class="<%= batch_buttons(current_user.rank, "pending", batch.insurance_status, process_coverage.status) %>">
                   <%= link_to new_batch_remark_path(ref: batch, pro_cov: process_coverage, batch_status: "Pending", batch_type: batch.class.name), title: "Pending", class: "btn btn-sm btn-secondary mb-1", data: { turbo: true, turbo_frame: "reg_form_modal" } do %>
                     <%= bootstrap_icon "arrow-clockwise" %>
                   <% end %>
+                </div>
+                <div class="<%= batch_buttons(current_user.rank, "deny", batch.insurance_status, process_coverage.status) %>">
                   <%= link_to new_batch_remark_path(ref: batch, pro_cov: process_coverage, batch_status: "Deny", batch_type: batch.class.name), title: "Deny", class: "btn btn-sm btn-danger mb-1", data: { turbo: true, turbo_frame: "reg_form_modal" } do %>
                     <%= bootstrap_icon "x-lg" %>
                   <% end %>
