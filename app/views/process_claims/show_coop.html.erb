@@ -1,4 +1,4 @@
- <div class="mb-1">
+<div class="mb-1">
   <%= render 'action_button' %>
 </div>
 <div class="row">
@@ -6,33 +6,32 @@
     <div class="card">
       <div class="card-body">
         <div class="track">
-            <div class="step <%= "active" if @process_claim.claim_filed %>"> <span class="icon"> <i class="bi bi-card-list"></i> </span> <span class="text"> <small> Claims filed </small> </span> </div>
-            <div class="step <%= "active" if @process_claim.processing %>"> <span class="icon"> <i class="bi bi-window"></i> </span> <span class="text"> <small> Processing </small> </span> </div>
-            <div class="step <%= "active" if @process_claim.approval %>">
-              <% if @process_claim.denied? %>
-                <span class="icon"> <i class="bi bi-shield-x"></i></span> <span class="text"> <small> Denied </small> </span>
-              <% elsif @process_claim.approved? %>
-                <span class="icon"> <i class="bi bi-shield-check"></i></span> <span class="text"> <small> Approved </small> </span>
-              <% else %>
-                <span class="icon"> <i class="bi bi-journal-check"></i> </span> <span class="text"> <small> Evaluation </small> </span>
-              <% end %>
-            </div>
-            <div class="step <%= "active" if @process_claim.payment %>"> <span class="icon"> <i class="bi bi-cash-coin"></i> </span> <span class="text"> <small> Payment </small>  </span> </div>
+          <div class="step <%= "active" if @process_claim.claim_filed %>"> <span class="icon"> <i class="bi bi-card-list"></i> </span> <span class="text"> <small> Claims filed </small> </span> </div>
+          <div class="step <%= "active" if @process_claim.processing %>"> <span class="icon"> <i class="bi bi-window"></i> </span> <span class="text"> <small> Processing </small> </span> </div>
+          <div class="step <%= "active" if @process_claim.approval %>">
+            <% if @process_claim.denied? %>
+              <span class="icon"> <i class="bi bi-shield-x"></i></span> <span class="text"> <small> Denied </small> </span>
+            <% elsif @process_claim.approved? %>
+              <span class="icon"> <i class="bi bi-shield-check"></i></span> <span class="text"> <small> Approved </small> </span>
+            <% else %>
+              <span class="icon"> <i class="bi bi-journal-check"></i> </span> <span class="text"> <small> Evaluation </small> </span>
+            <% end %>
+          </div>
+          <div class="step <%= "active" if @process_claim.payment %>"> <span class="icon"> <i class="bi bi-cash-coin"></i> </span> <span class="text"> <small> Payment </small>  </span> </div>
         </div>
       </div>
     </div>
-      
     <%#= render 'show_coop' unless current_user.userable_type == 'CoopUser' %>
     <%= render 'claims_detail' %>
     <% unless @process_claim.cause.nil? %>
       <div class="card">
-      <div class="card-body">
-        <%= render 'show_cause' %>
-      </div>
+        <div class="card-body">
+          <%= render 'show_cause' %>
+        </div>
       </div>
     <% end %>
     <div class="card">
-        <h5 class="card-header">Claimant details</h5>
+      <h5 class="card-header">Claimant details</h5>
       <div class="card-body">
         <dl class="row">
           <dt class="col-sm-4">Name</dt>
@@ -47,8 +46,6 @@
       </div>
     </div>
   </div>
-    
-    
   <div class="col-md-6">
     <% if @process_claim.claim_type && @process_claim.claim_type == ClaimType.find_by(name: 'Hospital Confinement Claim') %>
       <div class="card">
@@ -66,44 +63,44 @@
               </div>
             </div>
           </div>
-            <%= render 'claim_confinements/show_confinement'  %>
-            <%= render 'claim_benefits/show_benefit' %>
+          <%= render 'claim_confinements/show_confinement'  %>
+          <%= render 'claim_benefits/show_benefit' %>
         </div>
       </div>
     <% end %>
-    <% if @process_claim.file_claim? %>
+    <% if @process_claim.file_claim? || @process_claim.filed_by_analyst? %>
       <div class="card">
-      <div class="card-body">
+        <div class="card-body">
           <table class="table table-hover">
             <thead>
               <tr>
                 <th>Documents <br>
-                <%= content_tag :span, 'Required <i class="bi bi-asterisk"></i>'.html_safe, class: "badge rounded-pill text-bg-warning" %></th>
+                  <%= content_tag :span, 'Required <i class="bi bi-asterisk"></i>'.html_safe, class: "badge rounded-pill text-bg-warning" %></th>
                 <th></th>
               </tr>
             </thead>
             <tbody>
               <% @claim_type_document.each do |doc| %>
-              <tr>
-                <% @claim_attach = ClaimAttachment.find_by(process_claim_id: @process_claim, claim_type_document: doc) %>
-                <td><%= doc.document %> 
-                  <%= content_tag :span, '<i class="bi bi-asterisk"></i>'.html_safe, class: "badge rounded-pill text-bg-warning" if doc.required %> 
-                  <br>
-                  <%= content_tag :small, @claim_attach.created_at, class: "text-muted" unless @claim_attach.nil? %>
-                </td>
-                <td class="text-end">
-                  <% unless @claim_attach.nil? %>
-                    <%= link_to '<i class="bi bi-eye"></i>'.html_safe, rails_blob_url(@claim_attach.doc), target: :_blank, class: 'btn btn-outline-primary btn-sm' if @claim_attach.doc.attached?  %>
-                    <%= link_to '<i class="bi bi-trash-fill"></i>'.html_safe, @claim_attach, class: "btn btn-danger btn-sm", method: :delete, data: { "turbo-method": :delete, turbo_confirm: "Are you sure?" } if @claim_attach.doc.attached? && current_user.userable_type == 'CoopUser' && @process_claim.file_claim? %>
-                  <% else %>
-                    <%= link_to '<i class="bi bi-upload"></i>'.html_safe, new_claim_attachment_path(p: @process_claim.id, d: doc.id), class: "btn btn-primary", data: { turbo_frame: "remote_modal" } if current_user.userable_type == 'CoopUser' && @process_claim.file_claim? %>
-                  <% end %>
-                </td>
-              </tr>
+                <tr>
+                  <% @claim_attach = ClaimAttachment.find_by(process_claim_id: @process_claim, claim_type_document: doc) %>
+                  <td><%= doc.document %>
+                    <%= content_tag :span, '<i class="bi bi-asterisk"></i>'.html_safe, class: "badge rounded-pill text-bg-warning" if doc.required %>
+                    <br>
+                    <%= content_tag :small, @claim_attach.created_at, class: "text-muted" unless @claim_attach.nil? %>
+                  </td>
+                  <td class="text-end">
+                    <% unless @claim_attach.nil? %>
+                      <%= link_to '<i class="bi bi-eye"></i>'.html_safe, rails_blob_url(@claim_attach.doc), target: :_blank, class: 'btn btn-outline-primary btn-sm' if @claim_attach.doc.attached?  %>
+                      <%= link_to '<i class="bi bi-trash-fill"></i>'.html_safe, @claim_attach, class: "btn btn-danger btn-sm", method: :delete, data: { "turbo-method": :delete, turbo_confirm: "Are you sure?" } if @claim_attach.doc.attached? && current_user.userable_type == 'CoopUser' && @process_claim.file_claim? %>
+                    <% else %>
+                      <%= link_to '<i class="bi bi-upload"></i>'.html_safe, new_claim_attachment_path(p: @process_claim.id, d: doc.id), class: "btn btn-primary", data: { turbo_frame: "remote_modal" } if @process_claim.file_claim? || @process_claim.filed_by_analyst? %>
+                    <% end %>
+                  </td>
+                </tr>
               <% end %>
             </tbody>
           </table>
-      </div>
+        </div>
       </div>
     <% else %>
       <div class="card">
@@ -115,10 +112,16 @@
     <div class="card">
       <div class="card-body">
         <%#= link_to "Evaluate", evaluate_process_claim_path(@process_claim.id), class: "btn btn-warning" %>
-        <h4 class="text-primary">Claims Benefit</h4>
         <%= render 'claim_benefits/show_benefit' %>
       </div>
     </div>
+    <% if @process_claim.claim? %>
+      <div class="card">
+        <div class="card-body">
+          <%= render 'claim_coverages/show_coverages' %>
+        </div>
+      </div>
+    <% end %>
     <% if @process_claim.check_voucher_request&.check_vouchers.present? %>
       <div class="card">
         <div class="card-body">
@@ -149,7 +152,7 @@
   </div>
   <%# <div class="card">
       <div class="card-body"> %>
-        <%#= render 'claim_remarks/show_coop_remark' %>
-      <%# </div>
+  <%#= render 'claim_remarks/show_coop_remark' %>
+  <%# </div>
   </div>  %>
 </div>

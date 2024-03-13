@@ -1,2 +1,3 @@
-<h1>ClaimCoverages#edit</h1>
-<p>Find me in app/views/claim_coverages/edit.html.erb</p>
+<%= render "remote_modal", title: "Edit coverage" do %>
+  <%= render "form", url: claim_coverage_path(@claim_coverage), meth: 'patch' %>
+<% end %>

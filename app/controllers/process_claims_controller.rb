@@ -1,5 +1,5 @@
 class ProcessClaimsController < ApplicationController
-  before_action :set_process_claim, only: %i[ show edit update destroy show_coop claim_route claims_file claim_process update_status edit_ca update_ca ]
+  before_action :set_process_claim, only: %i[ show edit update destroy show_coop show_ca claim_route claims_file claim_process update_status edit_ca update_ca ]
   # GET /process_claims
 
   # def claimable
@@ -45,6 +45,9 @@ class ProcessClaimsController < ApplicationController
     @required_documents = @claim_type_document.where.not(id: @claim_type_document_ids)
     @check = @process_claim.check_voucher_request&.check_vouchers&.where(audit: [:pending_audit, :for_audit])&.last
     @audit_remarks = @check&.remarks
+  end
+  def show_ca 
+
   end
   # GET /process_claims/new
   def new

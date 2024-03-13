@@ -9,10 +9,32 @@ class ClaimCoveragesController < ApplicationController
   end
 
   def create
-
+    @process_claim = ProcessClaim.find(params[:v])
+    @claim_coverage = @process_claim.claim_coverages.build(claim_coverage_params)
+    # @claim_benefit = ClaimBenefit.new(claim_benefit_params)
+    respond_to do |format|
+      if @claim_coverage.save
+        format.html { redirect_back fallback_location: @process_claim, notice: "Coverage was successfully created." }
+        format.json { render :show, status: :created, location: @claim_benefit }
+      else
+        format.html { render :new, status: :unprocessable_entity }
+        format.json { render json: @claim_benefit.errors, status: :unprocessable_entity }
+        format.turbo_stream { render :form_update, status: :unprocessable_entity }
+      end
+    end
   end
 
   def update
+    respond_to do |format|
+      if @claim_coverage.update(claim_coverage_params)
+        format.html { redirect_back fallback_location: @process_claim, notice: "Coverage was successfully created." }
+        format.json { render :show, status: :ok, location: @claim_coverage }
+      else
+        format.html { render :edit, status: :unprocessable_entity }
+        format.json { render json: @claim_coverage.errors, status: :unprocessable_entity }
+        format.turbo_stream { render :form_update, status: :unprocessable_entity }
+      end
+    end
   end
 
   def destroy
@@ -32,7 +54,8 @@ class ClaimCoveragesController < ApplicationController
 
   # Only allow a list of trusted parameters through.
   def claim_coverage_params
-    params.require(:claim_coverage).permit(:process_claim_id, :batch, :amount_cover, :coverage_type,
-          batch_attributes: [:id, :effectivity, :expiry])
+    # params.require(:claim_coverage).permit(:process_claim_id, :batch, :amount_cover, :coverage_type,
+          # batch_attributes: [:id, :effectivity, :expiry])
+    params.require(:claim_coverage).permit(:orno, :or_date, :bsno, :bs_date, :effectivity, :expiry, :amount, :amount_cover, :coverage_type, :status, :process_claim_id)
   end
 end

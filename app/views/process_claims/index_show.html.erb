@@ -27,13 +27,7 @@
             <%= content_tag :small, "Date Filed: #{to_shortdate(process_claim.date_file)}" unless process_claim.date_file.nil? %></td>
           <%# <td><%= process_claim.batch %>
           <td>
-            <% if process_claim.submitted? || process_claim.claim_filed? %>
-              <%= link_to "Edit", claims_file_process_claim_path(process_claim), class: "btn btn-warning btn-sm" if process_claim.claim_filed? %>
-              <%= link_to "View", show_coop_process_claim_path(process_claim), class: "btn btn-warning btn-sm"  %>
-            <% else %>
-              <%= link_to "Edit", edit_ca_process_claim_path(process_claim), class: "btn btn-warning btn-sm" %>
-              <%= link_to "View", claim_process_process_claim_path(process_claim), class: "btn btn-warning btn-sm"  %>
-            <% end %>
+            <%= render 'index_link', p: process_claim %>
           </td>
         </tr>
       <% end %>

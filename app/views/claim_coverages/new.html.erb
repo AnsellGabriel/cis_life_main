@@ -1,2 +1,3 @@
-<h1>ClaimCoverages#new</h1>
-<p>Find me in app/views/claim_coverages/new.html.erb</p>
+  <%= render "remote_modal", title: "New coverage" do %>
+  <%= render "form", url: claim_coverages_path(v: @process_claim), meth: 'post' %>
+<% end %>

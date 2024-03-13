@@ -1,0 +1,42 @@
+<%= simple_form_for(@claim_coverage, url: url, method: meth) do |f| %>
+  <%= f.error_notification %>
+  <%= f.error_notification message: f.object.errors[:base].to_sentence if f.object.errors[:base].present? %>
+  <div class="form-inputs mb-3">
+    <div class="row">
+      <%= f.input :orno, label: "ORNO", wrapper_html: { class: "col-md-6" } %>
+      <%#= f.input :or_date, label: "OR date", wrapper_html: { class: "col-md-6" } %>
+      <%= f.input :or_date, label: "OR date", as: :string, wrapper_html: { class: "col-md-6" }, 
+              input_html: { data: { controller: "flatpickr",
+                  flatpickr_max_date: Time.zone.now,
+                  flatpickr_next_arrow: "Next",
+                  flatpickr_prev_arrow: "Prev" } } %>
+    </div>
+    <%# <div class="row"> %>
+    <%#= f.input :bsno, label: "BSNO", wrapper_html: { class: "col-md-6" } %>
+    <%#= f.input :bs_date, label: "BS date", wrapper_html: { class: "col-md-6" } %>
+    <%# </div> %>
+    <div class="row">
+      <%#= f.input :effectivity, wrapper_html: { class: "col-md-6" } %>
+      <%#= f.input :expiry, wrapper_html: { class: "col-md-6" } %>
+      <%= f.input :effectivity, label: "Effectivity", as: :string, wrapper_html: { class: "col-md-6" }, 
+              input_html: { data: { controller: "flatpickr",
+                  flatpickr_next_arrow: "Next",
+                  flatpickr_prev_arrow: "Prev" } } %>
+      <%= f.input :expiry, label: "Expiry", as: :string, wrapper_html: { class: "col-md-6" }, 
+              input_html: { data: { controller: "flatpickr",
+                  flatpickr_next_arrow: "Next",
+                  flatpickr_prev_arrow: "Prev" } } %>
+    </div>
+    <div class="row">
+      <%= f.input :amount, label: "Amount Insured", wrapper_html: { class: "col-md-6" } %>
+      <%= f.input :amount_cover, label: "Amount Covered", wrapper_html: { class: "col-md-6" } %>
+      <%= f.input :coverage_type, label: "Coverage Type", collection: ClaimCoverage::Coverage_status, wrapper_html: { class: "col-md-6" } %>
+      <%= f.input :status, collection: ClaimCoverage::Status, wrapper_html: { class: "col-md-6" } %>
+    </div>
+  </div>
+  <br>
+  <div class="form-actions text-end">
+    <%= link_to "Back", :back, class: "btn btn-secondary" %>
+    <%= f.button :submit, class: "btn btn-success" %>
+  </div>
+<% end %>

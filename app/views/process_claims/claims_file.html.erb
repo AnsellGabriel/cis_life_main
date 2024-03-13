@@ -61,11 +61,6 @@
             <div class="col-md-6">
               <h4 class="text-primary">Claims Benefit</h4>
             </div>
-            <div class="col-md-6">
-              <div class="text-end">
-                <%= link_to '<i class="bi bi-plus-square"></i> Add Benefit'.html_safe, new_claim_benefit_path(v: @process_claim), class: "btn btn-primary btn-sm mb-3", data: { turbo_frame: "remote_modal" } %>
-              </div>
-            </div>
           </div>
           <%= render 'claim_benefits/show_benefit' %>
           <%= render 'claim_coverages/show_coverages' %>
