@@ -30,7 +30,7 @@ class GeneralLedgersController < ApplicationController
       end
 
       @entry.general_ledgers.update_all(transaction_date: Date.current)
-      
+
       redirect_to entry_path, notice: result
     end
   end
@@ -73,6 +73,12 @@ class GeneralLedgersController < ApplicationController
 
   def create
     @ledger = @ledgers.new(general_ledger_params)
+
+    if params[:e_t] == 'ce'
+      @ledger.description = @ledger.ledgerable.treasury_payment_type.name
+    else
+      @ledger.description = @ledger.ledgerable.particulars
+    end
 
     if @ledger.save
       redirect_to entry_path, notice: "Entry added."

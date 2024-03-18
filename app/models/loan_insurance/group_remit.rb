@@ -51,6 +51,10 @@ batch_status: "terminated")
     batches.sum(:premium)
   end
 
+  def total_excess_premium
+    batches.sum(:excess)
+  end
+
   def total_loan_amount
     batches.sum(:loan_amount)
   end
