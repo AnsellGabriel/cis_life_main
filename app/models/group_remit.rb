@@ -147,9 +147,12 @@ class GroupRemit < ApplicationRecord
     else
       # group_remit.name = "#{extract_from_substring(agreement.moa_no, ('GYRT' or 'LPPI'))} REMITTANCE #{agreement.group_remits.where(type: 'Remittance').size + 1}"
       group_remit.name = "ENROLLMENT LIST #{agreement.group_remits.where(type: 'Remittance').size + 1}"
-
     end
+  end
 
+  def create_notification
+    employee = agreement.emp_agreements.find_by(active: true).employee
+    Notification.create(notifiable: employee, message: "#{self.cooperative.name} - #{self.name} submitted a checklist")
   end
 
   def set_for_payment_status
@@ -201,7 +204,7 @@ class GroupRemit < ApplicationRecord
     self.coop_commission = total_coop_commissions
     self.agent_commission = total_agent_commissions
     self.net_premium = net_premium
-
+    
     unless self.type == "BatchRemit"
 
       if self.process_coverage.status == "approved"
