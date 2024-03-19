@@ -1,0 +1,9 @@
+
+<%= render @treasury_payment_type %>
+
+<div>
+  <%= link_to "Edit", edit_treasury_payment_type_path(@treasury_payment_type), class: 'btn btn-primary' %> |
+  <%= link_to "Back", treasury_payment_types_path, class: 'btn btn-primary' %>
+
+  <%= button_to "Delete", @treasury_payment_type, method: :delete, class: 'btn btn-danger' %>
+</div>

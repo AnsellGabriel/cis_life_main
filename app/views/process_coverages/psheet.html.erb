@@ -5,14 +5,14 @@
     <div class="mb-5">
       <%= content_tag :h1, "PROCESSING SHEET", class: "text-center fw-bold" %>
     </div>
-
+    
      <!-- TOP PART -->
     <div class="ms-5 mb-5">
       <div class="row">
 
         <div class="col-5">
           <div class="row">
-            <div class="col-3">
+            <div class="col-5">
               <p class="text-uppercase">PS ID:</p>
             </div>
             <div class="col-6">
@@ -20,7 +20,7 @@
             </div>
           </div><br>
           <div class="row">
-            <div class="col-3">
+            <div class="col-5">
               <p class="text-uppercase">PS Date:</p>
             </div>
             <div class="col-6">
@@ -38,7 +38,7 @@
               <p class="text-uppercase">OR NO:</p>
             </div>
             <div class="col-6">
-              <p><b>22192</b></p>
+              <p><b><%= @process_coverage.group_remit&.or_number %></b></p>
             </div>
           </div> <br>
           <div class="row">
@@ -46,7 +46,7 @@
               <p class="text-uppercase">OR Date:</p>
             </div>
             <div class="col-6">
-              <p><b>December 15, 2023</b></p>
+              <p><b><%= @process_coverage.group_remit.payments&.last&.entries&.last&.or_date %></b></p>
             </div>
           </div>
         </div>
@@ -152,19 +152,19 @@
             <% denied_batches = @process_coverage.group_remit.batches.where(insurance_status: "denied") %>
             <% total_denied_cov = ProductBenefit.joins(agreement_benefit: :batches).where("batches.id IN (?)", denied_batches.pluck(:id)).where("product_benefits.benefit_id = ?", 1).sum(:coverage_amount) %>
             <tr class="text-center">
-              <td><%= @process_coverage.group_remit.batches.where(insurance_status: "denied").count %></td>
+              <td><%= denied_batches.count %></td>
               <td><%= psheet_currency(denied_batches.sum(:premium)) %></td>
-              <td><%= psheet_currency(total_denied_cov) %></td>
+              <td><%#= psheet_currency(total_denied_cov) %><%= psheet_currency(@process_coverage.sum_denied_cov(denied_batches)) %></td>
             </tr>
             <tr class="text-end">
               <td colspan=3>
                 <div class="row">
                   <div class="col-6">Service Fee:</div>
-                  <div class="col-2">0.00</div>
+                  <div class="col-3"><%= psheet_currency(@process_coverage.sum_denied_batches_sf) %></div>
                 </div>
                 <div class="row">
                   <div class="col-6">Total Denied Premium:</div>
-                  <div class="col-2">0.00</div>
+                  <div class="col-3"><%= psheet_currency(@process_coverage.sum_denied_batches_prem) %></div>
                 </div>
               </td>
             </tr>
@@ -180,9 +180,9 @@
             <div>Less Service Fee</div>
           </div>
           <div class="col-4">
-            <div class="text-end">30,645.00</div>
+            <div class="text-end"><%= psheet_currency(@process_coverage.group_remit.sum_approved_batches_premium) %></div>
             <div class="text-end">0.00</div>
-            <div class="text-end">0.00</div>
+            <div class="text-end"><%= psheet_currency(@process_coverage.sum_batches_service_fee) %></div>
           </div>
         </div>
         <div class="row">
@@ -190,7 +190,7 @@
             <div class="fw-bold fst-italic">Net Premium</div>
           </div>
           <div class="col-4">
-            <div class="text-end">30,645.00</div>
+            <div class="text-end fw-bold fst-italic"><%= psheet_currency(@process_coverage.sum_batches_net_premium) %></div>
           </div>
         </div>
         
@@ -201,7 +201,7 @@
             <div>Less Service Fee</div>
           </div>
           <div class="col-4">
-            <div class="text-end">30,645.00</div>
+            <div class="text-end"><%= psheet_currency(@process_coverage.sum_batches_net_premium) %></div>
             <div class="text-end">0.00</div>
             <div class="text-end">0.00</div>
           </div>
@@ -224,7 +224,11 @@
         <div class="card">
           <div class="card-header">Remarks</div>
           <div class="card-body">
-            
+            <ul>
+              <% @process_coverage.process_remarks.each do |pr| %>
+                <li><%= pr.remark %> - <%= pr.user %></li>
+              <% end %>
+            </ul>
           </div>
         </div>
       </div>
@@ -232,18 +236,20 @@
 
     <!-- APPROVAL PART -->
     <div class="underwriting">
-      <div class="row mb-5">
-        <div class="col-6 ps-5">
-          <div>
-            <span class="text-uppercase">Processed by:</span>
-          </div>
-          <span class="text-uppercase fw-bold fst-italic"><%= @process_coverage.who_processed.signed_fullname %></span>
-          <div>
-          <span class="text-uppercase"><%= @process_coverage.who_processed.designation %></span>
+      <% unless @process_coverage.who_processed.nil? %>
+        <div class="row mb-5">
+          <div class="col-6 ps-5">
+            <div>
+              <span class="text-uppercase">Processed by:</span>
+            </div>
+            <span class="text-uppercase fw-bold fst-italic"><%= @process_coverage.who_processed.signed_fullname %></span>
+            <div>
+            <span class="text-uppercase"><%= @process_coverage.who_processed.designation %></span>
+            </div>
           </div>
         </div>
-      </div>
-      <div class="row">
+      <% end %>
+      <div class="row mb-5">
         <div class="col-6 ps-5">
           <div>
             <span class="text-uppercase">Approved by:</span>

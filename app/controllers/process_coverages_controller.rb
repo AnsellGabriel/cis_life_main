@@ -78,7 +78,7 @@ class ProcessCoveragesController < ApplicationController
          date_from = Date.strptime(params[:date_from], "%Y-%m-%d")
          # date_to = Date.strptime(params[:date_to], "%m-%d-%Y")
          date_to = Date.strptime(params[:date_to], "%Y-%m-%d")
-        @process_coverages = @process_coverages_x.where(processor_id: params[:emp_id], status: params[:process_type], created_at: date_from..date_to)
+        @process_coverages = @process_coverages_x.where(status: params[:process_type], created_at: date_from..date_to)
       end
 
     else

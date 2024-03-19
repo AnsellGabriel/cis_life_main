@@ -26,6 +26,9 @@
         <i class="bi bi-arrow-left-square"></i> 
         Back
       <% end %>
+      <% if current_user.is_mis? and !@group_remit.is_batch_remit? %>
+        <%= link_to "Remarks", group_remit_remarks_path(@group_remit), class: small_btn('danger'), data: {turbo_frame: 'reg_form_modal'} %>
+      <% end %>
     </div>
   <% end %>
 

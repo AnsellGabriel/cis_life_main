@@ -1,5 +1,5 @@
 class GeneralLedger < ApplicationRecord
-  validates_presence_of :ledger_type, :account_id, :amount
+  validates_presence_of :ledger_type, :account_id, :amount, :description
 
   belongs_to :ledgerable, polymorphic: true
   belongs_to :account, class_name: "Treasury::Account", foreign_key: "account_id"
@@ -69,8 +69,10 @@ class GeneralLedger < ApplicationRecord
   def payee
     case ledgerable_type
     when "Treasury::CashierEntry"
-      if self.ledgerable.entriable == "Payment"
-        self.ledgerable.entriable.payable.agreement.cooperative
+      if self.ledgerable.entriable_type == "Payment"
+        self.ledgerable.entriable.payable.agreement.cooperative.name
+      elsif self.ledgerable.entriable_type == "Cooperative"
+        self.ledgerable.entriable.name
       end
     when "Accounting::Check"
       self.ledgerable.payable

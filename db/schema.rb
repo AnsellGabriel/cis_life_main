@@ -696,6 +696,7 @@ ActiveRecord::Schema[7.0].define(version: 2024_03_07_054757) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.bigint "department_id", null: false
+    t.integer "branch"
     t.index ["department_id"], name: "index_employees_on_department_id"
   end
 
@@ -1303,11 +1304,10 @@ ActiveRecord::Schema[7.0].define(version: 2024_03_07_054757) do
   end
 
   create_table "treasury_cashier_entries", charset: "utf8mb4", force: :cascade do |t|
-    t.integer "or_no"
+    t.string "or_no"
     t.date "or_date"
     t.string "entriable_type", null: false
     t.bigint "entriable_id", null: false
-    t.integer "payment_type"
     t.bigint "treasury_account_id", null: false
     t.decimal "amount", precision: 15, scale: 2
     t.datetime "created_at", null: false
@@ -1318,8 +1318,17 @@ ActiveRecord::Schema[7.0].define(version: 2024_03_07_054757) do
     t.decimal "net_amount", precision: 15, scale: 2, default: "0.0"
     t.decimal "withholding_tax", precision: 15, scale: 2, default: "0.0"
     t.boolean "vatable", default: false
+    t.bigint "treasury_payment_type_id", null: false
+    t.string "branch"
     t.index ["entriable_type", "entriable_id"], name: "index_treasury_cashier_entries_on_entriable"
     t.index ["treasury_account_id"], name: "index_treasury_cashier_entries_on_treasury_account_id"
+    t.index ["treasury_payment_type_id"], name: "index_treasury_cashier_entries_on_treasury_payment_type_id"
+  end
+
+  create_table "treasury_payment_types", charset: "utf8mb4", force: :cascade do |t|
+    t.string "name"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
   end
 
   create_table "treasury_payments", charset: "utf8mb4", force: :cascade do |t|

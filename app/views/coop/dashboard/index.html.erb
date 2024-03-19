@@ -60,7 +60,7 @@
       <%= render 'counter_box', title: 'Total members', count: @cooperative.coop_members.size %>
       <% @cooperative.agreements.each do |a| %>
         <% agreement = a.decorate %>
-        <%= render 'counter_box', title: "Enrolled in #{agreement.plan_acronym}", count: agreement.active_batches_count %>
+        <%= render 'counter_box', title: agreement.plan_acronym.upcase == "LPPI" ? "Insured Loans" : "Enrolled in #{agreement.plan_acronym}", count: agreement.active_batches_count %>
       <% end %>
     </div>
 

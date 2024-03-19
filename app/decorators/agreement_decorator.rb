@@ -14,7 +14,11 @@ class AgreementDecorator < Draper::Decorator
 
   def active_batches_count
     if is_lppi?
-      object.group_remits.where(status: :paid).joins(:loan_batches).where("insurance_status = ?", "approved").size
+      object.group_remits.where(status: :paid).joins(:loan_batches).where(loan_batches: { status: [
+        :recent,
+        :transferred,
+        :reinstated,
+        :reloan], insurance_status: :approved}).size
     else
       object.group_remits.where(status: :paid, type: "BatchRemit").joins(:batches).where("insurance_status = ?", "approved").size
     end
