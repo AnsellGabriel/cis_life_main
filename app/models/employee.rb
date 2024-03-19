@@ -1,4 +1,6 @@
 class Employee < ApplicationRecord
+  mount_uploader :report, ReportUploader
+
   belongs_to :department
   has_one :emp_approver
   has_many :emp_agreements
@@ -30,4 +32,10 @@ class Employee < ApplicationRecord
     "#{first_name} #{middle_name[0]}. #{last_name}".titleize
   end
 
+  def delete_uploaded_report
+    if self.report.identifier.present?
+      # Delete the file using CarrierWave
+      self.update!(remove_report: true)
+    end
+  end
 end

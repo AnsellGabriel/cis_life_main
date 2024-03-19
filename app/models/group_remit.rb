@@ -42,7 +42,7 @@ class GroupRemit < ApplicationRecord
   }
 
   enum refund_status: {
-    not_refunded: 0,
+    unrefunded: 0,
     ready_for_refund: 1,
     refunded: 2
   }

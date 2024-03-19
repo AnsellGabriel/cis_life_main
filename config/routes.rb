@@ -257,7 +257,9 @@ Rails.application.routes.draw do
       # get :autofill, on: :member
     end
 
-    resources :accounts
+    resources :accounts do
+      get :show_report, on: :collection
+    end
 
     get "dashboard", to: "dashboard#index"
   end
