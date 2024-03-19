@@ -85,7 +85,7 @@
                 </td>
                 <td>
                   <!-- <%= link_to batch.coop_member.member, show_insurance_coop_member_path(batch.coop_member, pro_cov: true), class: "link-primary", data: { turbo_frame: "modal-xl" } %> <br>-->
-                  <%= link_to batch.coop_member.member, show_coverages_member_path(batch.coop_member.member, pro_cov: true), class: "link-primary", data: { turbo_frame: "modal-xl" } %> <br>
+                  <%= link_to batch.coop_member.member, show_coverages_member_path(batch.coop_member.member, pro_cov: true), class: "link-primary", data: { turbo: true, turbo_frame: "modal-xl" } %> <br>
                   <%= content_tag :small, "Age: #{mem_bday.nil? ? "0" : batch.age}" %> <br>
                   <%= content_tag :small, mem_bday.nil? ? "No Birthday" : "Birthday: #{mem_bday.strftime('%b-%d-%Y')}", class: "text-secondary" %> <br>
                   <%= batch_status(batch.status) %> <%= batch.substandard? ? substandard(batch.substandard) : "" %>
@@ -137,7 +137,7 @@
                   </td>
                 <% end %>
                 <td>
-                  <% unless process_coverage.approved? || process_coverage.reprocess_approved? %>
+                  <% unless process_coverage.approved? %>
                     <!--div class="<%#= batch_buttons(current_user.rank, batch.insurance_status, process_coverage.status) %>" -->
                     <div class="<%= batch_buttons(current_user.rank, "approve", batch.insurance_status, process_coverage.status) %>">
                       <%= link_to approve_batch_process_coverage_path(batch: batch, batch_type: batch.class.name), onclick: "return confirm('Are you sure?')", method: :get, title: "Approve", class: "btn btn-sm btn-success mb-1" do %>
