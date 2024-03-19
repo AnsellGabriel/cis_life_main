@@ -4,8 +4,6 @@ import { get } from "@rails/request.js";
 export default class extends Controller {
   connect() {
     if (localStorage.getItem("downloadTitle") && localStorage.getItem("downloadLink")) {
-      console.log(localStorage.getItem("downloadTitle"),localStorage.getItem("downloadLink"));
-
       this.showDownload();
     }
   }
@@ -13,8 +11,6 @@ export default class extends Controller {
   check() {
     const check_report_status = setInterval(function () {
       const downloaderToast = document.getElementById("downloader");
-      // const hidden = notificationToast.dataset.hidden
-      console.log(downloaderToast);
 
       if (downloaderToast.classList.contains("d-none")) {
         get("/treasury/accounts/show_report", {
@@ -22,7 +18,7 @@ export default class extends Controller {
         });
       } else {
         clearInterval(check_report_status);
-        console.log("Download is ready");
+        
         // initialize bs toast
         let toastEl = document.getElementById("downloaderToast");
         let toastTitle = document.getElementById("downloadTitle");
