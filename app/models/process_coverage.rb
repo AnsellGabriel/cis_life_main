@@ -120,6 +120,18 @@ class ProcessCoverage < ApplicationRecord
     self.group_remit.batches.where(insurance_status: :approved).sum(:loan_amount)
   end
 
+  def sum_batches_service_fee
+    group_remit.batches.where(insurance_status: :approved).sum(:coop_sf_amount) 
+  end
+
+  def sum_denied_batches_prem
+    group_remit.batches.where(insurance_status: :denied).sum(:premium).to_f
+  end
+
+  def sum_denied_batches_sf
+    group_remit.batches.where(insurance_status: :denied).sum(:coop_sf_amount).to_f
+  end
+
   def sum_batches_gross_prem(klass)
     case klass
     when "LoanInsurance::Batch"
