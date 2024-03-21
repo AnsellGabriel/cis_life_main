@@ -16,9 +16,10 @@ export default class extends Controller {
         get("/treasury/accounts/show_report", {
           responseKind: "turbo-stream",
         });
+        console.log('Checking report status...')
       } else {
         clearInterval(check_report_status);
-        
+        console.log('Report is ready to download!')
         // initialize bs toast
         let toastEl = document.getElementById("downloaderToast");
         let toastTitle = document.getElementById("downloadTitle");

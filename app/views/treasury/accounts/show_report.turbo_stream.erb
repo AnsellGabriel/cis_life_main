@@ -4,8 +4,8 @@
       <div class="toast" role="alert" aria-live="assertive" aria-atomic="true" id="downloaderToast" data-bs-autohide="false">
         <div class="toast-header text-white">
           <strong class="me-auto text-dark d-flex gap-1">
-            <div class="span" id="downloadTitle">CSV ready -</div>
-            <%= link_to 'Download', current_user.userable.report.url, id: 'downloadLink' %>
+            <div class="span" id="downloadTitle"><%= @report_name %> </div>
+            <%= link_to 'Download', current_user.userable.report.url, id: 'downloadLink', target: '_blank' %>
           </strong>
           <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close" data-action="click->report-checker#clearDownload"></button>
         </div>

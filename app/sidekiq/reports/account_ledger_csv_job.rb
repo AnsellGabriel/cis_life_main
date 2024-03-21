@@ -1,14 +1,18 @@
-class Reports::AccountLedgerJob
+class Reports::AccountLedgerCsvJob
   include Sidekiq::Job
-  include Sidekiq::Status::Worker # enables job status tracking
   include ActionView::Helpers::NumberHelper
 
   def perform(employee_id, account_id, date_from, date_to)
     employee = Employee.find(employee_id)
-
-    return if employee.report.present?
-
     @account = Treasury::Account.find(account_id)
+    save_path = Rails.root.join("public/uploads/employee/report/#{employee_id}", "#{@account.name.downcase}_#{date_from}_#{date_to}_ledger.csv")
+
+    if File.exist?(save_path)
+      return
+    else
+      employee.delete_uploaded_report
+    end
+
     set_dates(date_from, date_to)
     set_ledgers
     set_balance(date_from)
@@ -28,11 +32,15 @@ class Reports::AccountLedgerJob
       csv << ["End Balance", number_to_currency(@balance, unit: "")]
     end
 
-    csv_file = Tempfile.new(['report', '.csv'])
-    csv_file.write(report)
-    csv_file.close
+    File.open(save_path, 'wb') { |file|
+      file << report
+      employee.update!(report: file)
+    }
+    # csv_file = Tempfile.new(['report', '.csv'])
+    # csv_file.write(report)
+    # csv_file.close
 
-    employee.update(report: csv_file)
+    # employee.update(report: csv_file)
   end
 
   def set_dates(date_from, date_to)

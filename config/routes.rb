@@ -259,6 +259,7 @@ Rails.application.routes.draw do
 
     resources :accounts do
       get :show_report, on: :collection
+      get :show_pdf, on: :collection
     end
 
     get "dashboard", to: "dashboard#index"
