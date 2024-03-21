@@ -346,6 +346,7 @@ Rails.application.routes.draw do
     get :cov_list, on: :collection
     patch :update_batch_selected, on: :collection
     get :transfer_to_md, on: :member
+    get :und, on: :collection
   end
 
   get "preview", to: "process_coverages#preview"

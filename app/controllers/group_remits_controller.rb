@@ -100,6 +100,7 @@ class GroupRemitsController < InheritedResources::Base
 
     respond_to do |format|
       if @group_remit.save!
+        @group_remit.create_notification
 
         if params[:type] == "BatchRemit"
           batch_remit = @agreement.group_remits.build(type: "BatchRemit")

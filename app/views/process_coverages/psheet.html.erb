@@ -12,7 +12,7 @@
 
         <div class="col-5">
           <div class="row">
-            <div class="col-3">
+            <div class="col-5">
               <p class="text-uppercase">PS ID:</p>
             </div>
             <div class="col-6">
@@ -20,7 +20,7 @@
             </div>
           </div><br>
           <div class="row">
-            <div class="col-3">
+            <div class="col-5">
               <p class="text-uppercase">PS Date:</p>
             </div>
             <div class="col-6">
@@ -38,7 +38,7 @@
               <p class="text-uppercase">OR NO:</p>
             </div>
             <div class="col-6">
-              <p><b>22192</b></p>
+              <p><b><%= @process_coverage.group_remit&.or_number %></b></p>
             </div>
           </div> <br>
           <div class="row">
@@ -46,7 +46,7 @@
               <p class="text-uppercase">OR Date:</p>
             </div>
             <div class="col-6">
-              <p><b>December 15, 2023</b></p>
+              <p><b><%= @process_coverage.group_remit.payments&.last&.entries&.last&.or_date %></b></p>
             </div>
           </div>
         </div>
@@ -152,19 +152,19 @@
             <% denied_batches = @process_coverage.group_remit.batches.where(insurance_status: "denied") %>
             <% total_denied_cov = ProductBenefit.joins(agreement_benefit: :batches).where("batches.id IN (?)", denied_batches.pluck(:id)).where("product_benefits.benefit_id = ?", 1).sum(:coverage_amount) %>
             <tr class="text-center">
-              <td><%= @process_coverage.group_remit.batches.where(insurance_status: "denied").count %></td>
+              <td><%= denied_batches.count %></td>
               <td><%= psheet_currency(denied_batches.sum(:premium)) %></td>
-              <td><%= psheet_currency(total_denied_cov) %></td>
+              <td><%#= psheet_currency(total_denied_cov) %><%= psheet_currency(@process_coverage.sum_denied_cov(denied_batches)) %></td>
             </tr>
             <tr class="text-end">
               <td colspan=3>
                 <div class="row">
                   <div class="col-6">Service Fee:</div>
-                  <div class="col-2"><%= psheet_currency(@process_coverage.sum_denied_batches_sf) %></div>
+                  <div class="col-3"><%= psheet_currency(@process_coverage.sum_denied_batches_sf) %></div>
                 </div>
                 <div class="row">
                   <div class="col-6">Total Denied Premium:</div>
-                  <div class="col-2"><%= psheet_currency(@process_coverage.sum_denied_batches_prem) %></div>
+                  <div class="col-3"><%= psheet_currency(@process_coverage.sum_denied_batches_prem) %></div>
                 </div>
               </td>
             </tr>

@@ -28,7 +28,7 @@ class BatchRemarksController < ApplicationController
 
     @batch_status = params[:batch_status]
     @rem_status = remark_status(@batch_status)
-    @process_coverage = params[:pro_cov]
+    @process_coverage = ProcessCoverage.find(params[:pro_cov])
 
     # @batch_type = params[:batch_type].nil? ? "Batch" : params[:batch_type]
   end
