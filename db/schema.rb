@@ -23,8 +23,8 @@ ActiveRecord::Schema[7.0].define(version: 2024_03_14_030811) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.integer "status", default: 0
-    t.bigint "check_voucher_request_id"
     t.boolean "claimable", default: false
+    t.bigint "check_voucher_request_id"
     t.integer "audit", default: 0
     t.integer "audited_by"
     t.date "post_date"
