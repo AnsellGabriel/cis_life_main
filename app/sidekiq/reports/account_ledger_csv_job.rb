@@ -36,6 +36,7 @@ class Reports::AccountLedgerCsvJob
       file << report
       employee.update!(report: file)
     }
+
     # csv_file = Tempfile.new(['report', '.csv'])
     # csv_file.write(report)
     # csv_file.close
