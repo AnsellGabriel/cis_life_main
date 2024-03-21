@@ -6,6 +6,7 @@ class Employee < ApplicationRecord
   has_many :emp_agreements
   has_many :agreements, through: :emp_agreements
   has_one :user, as: :userable, dependent: :destroy
+  has_many :notifications, as: :notifiable, dependent: :destroy
   validates_presence_of :last_name, :first_name, :branch, :department_id, :designation
   # has_one :member_import_tracker, as: :trackable, dependent: :destroy
 

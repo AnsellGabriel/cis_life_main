@@ -13,7 +13,7 @@ module ProcessCoveragesHelper
       batches_selected = btn_type == "approve" ? batches_approved : batches_denied      
       case rank
       when "analyst"
-        if status == "for_process"
+        if status == "for_process" || status == "reprocess_approved"
           if total_batches == batches_selected
             if net_premium <= session[:max_amount]
               "d-inline"
@@ -121,12 +121,14 @@ module ProcessCoveragesHelper
     when "approve", "deny", "pending"
       case rank
       when "analyst"
-        if p_status == "for_process"
+        if p_status == "for_process" 
           if b_status == "for_review"
             "d-inline"
           else
             "d-none"
           end
+        elsif p_status == "reprocess_approved"
+          "d-inline"
         else
           "d-none"
         end

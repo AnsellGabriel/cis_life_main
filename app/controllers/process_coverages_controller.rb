@@ -64,6 +64,15 @@ class ProcessCoveragesController < ApplicationController
     elsif current_user.analyst?
       # @process_coverages_x = ProcessCoverage.joins(group_remit: { agreement: :emp_agreements }).where( emp_agreements: { employee_id: current_user.userable_id, active: true })
       @process_coverages_x = ProcessCoverage.joins(group_remit: {agreement: :plan}).where(processor: current_user.userable_id)
+      @for_process_coverages = @process_coverages_x.where(status: :for_process)
+      @approved_process_coverages = @process_coverages_x.where(status: :approved)
+      # @pending_process_coverages = ProcessCoverage.where(status: :pending)
+      @reprocess_coverages = @process_coverages_x.where(status: :reprocess)
+      @reassess_coverages = @process_coverages_x.where(status: :reassess)
+      @denied_process_coverages = @process_coverages_x.where(status: :denied)
+      @processed_coverages = @process_coverages_x.where(status: [:for_head_review, :for_vp_review])
+
+      @coverages_total_processed = ProcessCoverage.where(status: [:approved, :denied, :reprocess])
 
       if params[:search].present?
         @process_coverages = @process_coverages_x.joins("INNER JOIN cooperatives ON cooperatives.id = agreements.cooperative_id").where(
@@ -93,8 +102,8 @@ class ProcessCoveragesController < ApplicationController
       # @analysts = @analysts_x.joins(:emp_approver).where(emp_approver: { approver: current_user.userable_id })
     end
 
-    @pagy_pc, @filtered_pc = pagy(@process_coverages, items: 10, page_param: :process_coverage, link_extra: 'data-turbo-frame="pro_cov_pagination"')
-
+    @pagy_pc, @filtered_pc = pagy(@process_coverages, items: 5, page_param: :process_coverage, link_extra: 'data-turbo-frame="pro_cov_pagination"')
+    @notifications = current_user.userable.notifications
     # if params[:search].present?
     #   @process_coverages = @process_coverages_x.joins(group_remit: {agreement: :cooperative}).where("group_remits.name LIKE ? OR group_remits.description LIKE ? OR agreements.moa_no LIKE ? OR cooperatives.name LIKE ?", "%#{params[:search]}%", "%#{params[:search]}%", "%#{params[:search]}%", "%#{params[:search]}%")
     # else
@@ -142,6 +151,12 @@ class ProcessCoveragesController < ApplicationController
       filename: "#{@process_coverage.group_remit.agreement.plan.acronym}-#{@process_coverage.group_remit.name}.pdf",
       type: "application/pdf",
       disposition: "inline")
+  end
+
+  def und
+    @notifications = current_user.userable.notifications
+    @process_coverages = ProcessCoverage.all
+    @pagy_pc, @filtered_pc = pagy(@process_coverages, items: 5, page_param: :process_coverage, link_extra: 'data-turbo-frame="pro_cov_pagination"')
   end
 
 

@@ -132,6 +132,15 @@ class ProcessCoverage < ApplicationRecord
     group_remit.batches.where(insurance_status: :denied).sum(:coop_sf_amount).to_f
   end
 
+  def sum_denied_cov(denied_batches)
+    case group_remit.type
+    when "LoanInsurance::GroupRemit"
+      group_remit.batches.where(insurance_status: :denied).sum(:loan_amount)
+    else
+      ProductBenefit.joins(agreement_benefit: :batches).where("batches.id IN (?)", denied_batches.pluck(:id)).where("product_benefits.benefit_id = ?", 1).sum(:coverage_amount)
+    end
+  end
+
   def sum_batches_gross_prem(klass)
     case klass
     when "LoanInsurance::Batch"

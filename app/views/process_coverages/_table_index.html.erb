@@ -1,16 +1,12 @@
 <%= turbo_frame_tag "pro_cov_pagination" do %>
   <%= render PaginationComponent.new(results: @pagy_pc) %>
-  <table class="table table-bordered table-hover">
+  <table class="table table-bordered table-hover mt-2">
     <thead>
       <tr>
         <th></th>
-        <th>Group Remit</th>
-        <th>Effectivity</th>
-        <th>Expiry</th>
+        <th>Details</th>
         <%# <th>Terms</th> %>
         <%# <th>Count</th> %>
-        <th>Summary</th>
-        <th>OR No. & Date</th>
         <th>Analyst</th>
         <th></th>
       </tr>
@@ -21,22 +17,19 @@
           <tr>
             <td scope="row" class="text-center"><small><%= pc.group_remit.agreement.plan.acronym %><%= pc.id %></small> <br>
               <small><%= process_status(pc.status) %></small> <br>
-              <small class="fw-lighter"><%= pc.created_at.strftime('%b %d, %y') %></small> </td>
+              <small class="fw-lighter"><%= pc.created_at.strftime('%b %d, %y') %></small> 
+            </td>
             <td>
               <!-- temp change process_coverage.group_remit to process_coverage.group_remit.id -->
               <strong> <%= pc.group_remit.agreement.cooperative %> </strong> <%= content_tag :small, "#{pc.group_remit.agreement.cooperative.acronym}", class: "text-primary" %> <br>
               <%= pc.agent %> <br>
-              <%= content_tag :small, pc.group_remit.agreement.plan, class: "fw-lighter" %>
-            </td>
-            <td width="120px"><%= pc.effectivity.nil? ? "-" : month_day_year(pc.effectivity) %></td>
-            <td width="120px"><%= pc.expiry.nil? ? "-" : month_day_year(pc.expiry) %></td>
-            <%# <td></td> %>
-            <% sum_prem = pc.group_remit.batches.sum(:premium) %>
-            <td class="text-end" width="180px"><%= pluralize(pc.group_remit.batches.count, "Members") %> <br>
+              <%= content_tag :small, pc.group_remit.agreement.plan, class: "fw-lighter" %> <br>
+              Effectivity: <%= pc.effectivity.nil? ? "-" : month_day_year(pc.effectivity) %> <br>
+              Expiry: <%= pc.expiry.nil? ? "-" : month_day_year(pc.expiry) %> <br>
+              <%= pluralize(pc.group_remit.batches.count, "Members") %> <br>
+              <% sum_prem = pc.group_remit.batches.sum(:premium) %>
               <small>Premium <%= to_curr(sum_prem) %></small> <br>
               <small>Net <%= to_curr(sum_prem - pc.group_remit.batches.sum(:coop_sf_amount)) %></small>
-            </td>
-            <td>
               <%= content_tag :strong, pc.get_or_number %> <br>
               <%= content_tag :small, month_day_year(pc.get_or_date) %>
             </td>

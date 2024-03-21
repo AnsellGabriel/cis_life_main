@@ -32,6 +32,7 @@ class LoanInsurance::GroupRemitsController < ApplicationController
 
         respond_to do |format|
           if @group_remit.save!
+            @group_remit.create_notification
             @process_coverage = @group_remit.build_process_coverage
             @process_coverage.effectivity = @group_remit.effectivity_date
             @process_coverage.expiry = @group_remit.expiry_date
