@@ -10,7 +10,6 @@ import "controllers"
 // import "bootstrap"
 import "@nathanvda/cocoon"
 // import 'cocoon-js'
-
 import "chartkick"
 import "Chart.bundle"
 
@@ -28,7 +27,7 @@ document.addEventListener("turbo:load", function () {
   });
 
   // initialize bs toast
-  var toastEl = document.querySelector('.toast')
+  var toastEl = document.getElementById('notificationToast')
   var toast = new bootstrap.Toast(toastEl)
   toast.show()
 });

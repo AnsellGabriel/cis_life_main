@@ -17,6 +17,14 @@ class GeneralLedger < ApplicationRecord
     credits.sum(:amount)
   end
 
+  def self.to_csv(employee_id, account_id, date_from, date_to)
+    Reports::AccountLedgerCsvJob.perform_async(employee_id, account_id, date_from, date_to)
+  end
+
+  def self.to_pdf(employee_id, account_id, date_from, date_to)
+    Reports::AccountLedgerPdfJob.perform_async(employee_id, account_id, date_from, date_to)
+  end
+
   def self.autofill(ledgerable_type, ledgerable)
     ledger_entries = ledgerable.general_ledgers
     ledger_entries.destroy_all

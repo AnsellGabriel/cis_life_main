@@ -66,6 +66,7 @@ gem "jquery-rails"
 gem "cocoon"
 gem "sidekiq"
 gem "sidekiq-scheduler"
+gem 'sidekiq-status'
 gem "bullet", group: "development"
 gem "carrierwave", "~> 3.0"
 gem "humanize"
