@@ -1,5 +1,10 @@
 <%#= turbo_frame_tag "modal-xl" do %>
-  <% unless @for_modal.present? %>
+  <% if current_user.is_coop_user? %>
+    <%= link_to coop_members_path, data: { turbo: false }, class: 'btn btn-outline-secondary btn-lg mb-1', title: "Back" do %>
+      <i class="bi bi-arrow-left-square"></i>
+      Back
+    <% end %>
+  <% elsif !@for_modal.present? %>
     <%= link_to @coop_member.cooperative, data: { turbo: false }, class: 'btn btn-outline-secondary btn-lg mb-1', title: "Back" do %>
       <i class="bi bi-arrow-left-square"></i>
       Back

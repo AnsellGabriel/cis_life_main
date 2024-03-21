@@ -91,6 +91,7 @@ class ProcessClaimsController < ApplicationController
     @process_claim.entry_type = :coop
     @process_claim.claim_route = :file_claim
     @rel_css = process_claim_params[:relationship].empty? ? "is-invalid" : "is-valid"
+    @coop_member = CoopMember.find(process_claim_params[:claimable_id])
 
     unless process_claim_params[:date_incident].empty?
       @process_claim.age = @process_claim.get_age.to_i
