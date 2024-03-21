@@ -1,5 +1,5 @@
 <div class="mb-1">
-  <%= link_to show_insurance_coop_member_path(params[:cm]), class: small_btn('outline-secondary') do %>
+  <%= link_to show_insurance_coop_member_path(@coop_member), class: small_btn('outline-secondary') do %>
     <i class="bi bi-arrow-left-square"></i>
     Back
   <% end %>
@@ -37,8 +37,8 @@
                 dateformat: "m-d-Y\\Z",
                 wrapper_html: {class: "#{flex_justify_align('start', '', true)} col-6"},
                 label_html: {style: ""}, error: "*Required" %>
-        <%# benefit_names = @process_claim.agreement_benefit.product_benefits.joins(:benefit).pluck('LOWER(benefits.name)') %>
-        <%#= f.association :claim_type, collection: ClaimType.where(name: benefit_names).order(:name), error: "*Required", wrapper_html: {class: "col-6"} %>
+        <% benefit_names = @process_claim.agreement_benefit.product_benefits.joins(:benefit).pluck('LOWER(benefits.name)') %>
+        <%= f.association :claim_type, collection: ClaimType.where(name: benefit_names).order(:name), error: "*Required", wrapper_html: {class: "col-6"} %>
       </div>
     </div>
   </div>
