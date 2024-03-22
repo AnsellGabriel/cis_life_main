@@ -960,7 +960,9 @@ ActiveRecord::Schema[7.0].define(version: 2024_03_21_062931) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.boolean "viewed", default: false
+    t.bigint "process_coverage_id"
     t.index ["notifiable_type", "notifiable_id"], name: "index_notifications_on_notifiable"
+    t.index ["process_coverage_id"], name: "index_notifications_on_process_coverage_id"
   end
 
   create_table "payees", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|

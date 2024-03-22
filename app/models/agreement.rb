@@ -36,7 +36,7 @@ class Agreement < ApplicationRecord
     end
 
   def coop_name
-    self.cooperative.name
+    "#{cooperative.name} - #{plan.acronym}"
   end
   # filters anniversaries based on a given set of expiry dates
   def get_filtered_anniversaries(expiry_dates)
