@@ -169,7 +169,7 @@ class Batch < ApplicationRecord
     #   batch.set_premium_and_service_fees(:principal, group_remit, premium, savings_amount)
     end
 
-    batch.valid_health_dec = true
+    # batch.valid_health_dec = true
   end
 
   # def self.determine_premium(rank, batch, group_remit)

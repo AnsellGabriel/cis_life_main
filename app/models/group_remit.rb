@@ -152,7 +152,7 @@ class GroupRemit < ApplicationRecord
 
   def create_notification
     employee = agreement.emp_agreements.find_by(active: true).employee
-    Notification.create(notifiable: employee, message: "#{self.cooperative.name} - #{self.name} submitted a checklist")
+    Notification.create(notifiable: employee, process_coverage: process_coverage, message: "#{self.cooperative.name} - #{self.name} submitted a checklist")
   end
 
   def set_for_payment_status

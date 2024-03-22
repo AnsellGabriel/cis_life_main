@@ -243,6 +243,17 @@ class ProcessCoverage < ApplicationRecord
     where(status: status, created_at: date_range)
   end
 
+  def self.cov_list_analyst(user, status=nil, type=nil)
+    case type
+    when nil
+      where(processor: user, status: status)
+    when "eval"
+      where(processor: user, status: ["approved", "denied"])
+    when "process"
+      where(processor: user, status: ["for_head_approval", "for_vp_approval"])
+    end
+  end
+
   def self.for_head_approvals(user)
     case user.rank
     when "head"
