@@ -71,7 +71,7 @@ class GroupRemitDecorator < Draper::Decorator
   end
 
   def refund_badge
-    if object.not_refunded?
+    if object.unrefunded?
       "badge bg-danger"
     elsif object.refunded?
       "badge bg-success"

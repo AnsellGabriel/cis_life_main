@@ -10,18 +10,20 @@ module CisLifeMain
   class Application < Rails::Application
     # Initialize configuration defaults for originally generated Rails version.
     config.load_defaults 7.0
-    config.active_job.queue_adapter = :sidekiqx
+    config.active_job.queue_adapter = :sidekiq
     config.active_job.queue_name_prefix = Rails.env
     config.active_job.queue_name_delimiter = "_"
 
-    Sidekiq.configure_server do |config|
-      config.redis = { url: "redis://localhost:6379/0" }
+    Sidekiq.configure_client do |config|
+      config.redis = { url: 'redis://localhost:6379/0' }
+      Sidekiq::Status.configure_client_middleware config, expiration: 30.minutes.to_i
     end
 
-    # Sidekiq.configure_client do |config|
-    #   config.redis = { url: 'redis://localhost:6379/0' }
-    # end
-
+    Sidekiq.configure_server do |config|
+      config.redis = { url: "redis://localhost:6379/0" }
+      Sidekiq::Status.configure_server_middleware config, expiration: 30.minutes.to_i
+      Sidekiq::Status.configure_client_middleware config, expiration: 30.minutes.to_i
+    end
 
     # Configuration for the application, engines, and railties goes here.
     # re

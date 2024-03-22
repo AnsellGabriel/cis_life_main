@@ -6,7 +6,7 @@ class Treasury::CashierEntriesController < ApplicationController
     @receipt = Treasury::CashierEntry.find(params[:id])
     @entry = @receipt.entriable.instance_of?(Payment) ? @receipt.entriable.payable.agreement.cooperative : @receipt.entriable
     @amount_in_words = amount_to_words(@receipt.amount)
-    @payment_type = payment_type(@receipt.payment_type)
+    @payment_type = @receipt.treasury_payment_type.name
     @vat = @receipt.vat
     respond_to do |format|
       format.pdf do
@@ -20,7 +20,7 @@ class Treasury::CashierEntriesController < ApplicationController
     @receipt = Treasury::CashierEntry.find(params[:id])
     @entry = @receipt.entriable.instance_of?(Payment) ? @receipt.entriable.payable.agreement.cooperative : @receipt.entriable
     @amount_in_words = amount_to_words(@receipt.amount)
-    @payment_type = payment_type(@receipt.payment_type)
+    @payment_type = @receipt.treasury_payment_type.name
     @vat = @receipt.vat
     # @positions = analyze_pdf("app/assets/pdfs/or_format.pdf", @receipt)
 
@@ -109,8 +109,6 @@ class Treasury::CashierEntriesController < ApplicationController
       redirect_to treasury_cashier_entry_path(@entry), notice: "OR cancelled"
     end
   end
-
-
 
   private
   # Use callbacks to share common setup or constraints between actions.
