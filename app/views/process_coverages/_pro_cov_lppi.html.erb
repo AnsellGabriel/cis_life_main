@@ -45,8 +45,8 @@
             <% if process_coverage.group_remit.batches.where(insurance_status: [:pending, :for_review]).count > 0 %>
               <div class="text-end">
                 <%#= link_to "Approve All", approve_all_group_remit_batches_path(@group_remit,group_remit: process_coverage.group_remit, process_coverage: process_coverage), class: "btn btn-success", onclick: "return confirm('Are you sure?')", method: :get %>
-                <%= link_to "Approve All Eligible", approve_all_loan_insurance_batches_path(@group_remit,group_remit: process_coverage.group_remit, process_coverage: process_coverage), class: "btn btn-success", onclick: "return confirm('Are you sure?')", method: :get %>
-                <%= submit_tag 'Approve Selected', name: 'approve', onclick: "return confirm('Are you sure?')", class: "btn btn-primary" %>
+                <%= link_to "Accept All Eligible", approve_all_loan_insurance_batches_path(@group_remit,group_remit: process_coverage.group_remit, process_coverage: process_coverage), class: "btn btn-success", onclick: "return confirm('Are you sure?')", method: :get %>
+                <%= submit_tag 'Accept Selected', name: 'approve', onclick: "return confirm('Are you sure?')", class: "btn btn-primary" %>
                 <%= button_tag 'Deny Selected', name: 'deny', type: "submit", onclick: "return confirm('Are you sure?')", class: "btn btn-danger" %>
               </div>
             <% end %>
@@ -140,7 +140,7 @@
                   <% unless process_coverage.approved? %>
                     <!--div class="<%#= batch_buttons(current_user.rank, batch.insurance_status, process_coverage.status) %>" -->
                     <div class="<%= batch_buttons(current_user.rank, "approve", batch.insurance_status, process_coverage.status) %>">
-                      <%= link_to approve_batch_process_coverage_path(batch: batch, batch_type: batch.class.name), onclick: "return confirm('Are you sure?')", method: :get, title: "Approve", class: "btn btn-sm btn-success mb-1" do %>
+                      <%= link_to approve_batch_process_coverage_path(batch: batch, batch_type: batch.class.name), onclick: "return confirm('Are you sure?')", method: :get, title: "Accept", class: "btn btn-sm btn-success mb-1" do %>
                         <%= bootstrap_icon "check-lg" %>
                       <% end %>
                     </div>
