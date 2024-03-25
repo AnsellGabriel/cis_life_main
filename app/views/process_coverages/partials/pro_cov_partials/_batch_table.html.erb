@@ -82,7 +82,7 @@
               <% unless process_coverage.approved? %>
                 <!-- div class="<%#= batch_buttons(current_user.rank, batch.insurance_status, process_coverage.status) %>"-->
                 <div class="<%= batch_buttons(current_user.rank, "approve", batch.insurance_status, process_coverage.status) %>">
-                  <%= link_to approve_batch_process_coverage_path(batch: batch), onclick: "return confirm('Are you sure?')", method: :get, title: "Approve", class: "btn btn-sm btn-success mb-1" do %>
+                  <%= link_to approve_batch_process_coverage_path(batch: batch), onclick: "return confirm('Are you sure?')", method: :get, title: "Accept", class: "btn btn-sm btn-success mb-1" do %>
                     <%= bootstrap_icon "check-lg" %>
                   <% end %>
                 </div>
