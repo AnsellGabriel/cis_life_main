@@ -8,6 +8,7 @@ class GeneralLedger < ApplicationRecord
 
   scope :debits , -> { where(ledger_type: 0) }
   scope :credits, -> { where(ledger_type: 1) }
+  scope :with_transaction_date, ->(date_from, date_to) { where(transaction_date: date_from..date_to) }
 
   def self.total_debit
     debits.sum(:amount)
