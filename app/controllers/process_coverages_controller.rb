@@ -70,7 +70,7 @@ class ProcessCoveragesController < ApplicationController
       @reprocess_coverages = @process_coverages_x.where(status: :reprocess)
       @reassess_coverages = @process_coverages_x.where(status: :reassess)
       @denied_process_coverages = @process_coverages_x.where(status: :denied)
-      @processed_coverages = @process_coverages_x.where(status: [:for_head_approval, :for_vp_approval])
+      @evaluated_process_coverages = @process_coverages_x.where(status: [:for_head_approval, :for_vp_approval])
 
       @coverages_total_processed = ProcessCoverage.where(status: [:approved, :denied, :reprocess])
 
@@ -556,8 +556,11 @@ class ProcessCoveragesController < ApplicationController
 
   def reassess
     @process_coverage = ProcessCoverage.find_by(id: params[:process_coverage_id])
+    @group_remit = @process_coverage.group_remit
+    
     respond_to do |format|
       if @process_coverage.update_attribute(:status, "reassess")
+        @group_remit.update_attribute(:status, "under_review")
         format.html { redirect_to process_coverage_path(@process_coverage), notice: "Process Coverage For Reassessment!" }
       end
     end
