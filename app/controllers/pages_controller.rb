@@ -1,6 +1,6 @@
 class PagesController < ApplicationController
   before_action :set_gender_chart, only: %i[ coso president coop ]
-  before_action :set_sample_coop, only: %i[ coop]
+  before_action :set_sample_coop, only: %i[ coop ]
 
   def home
   end
@@ -309,21 +309,21 @@ class PagesController < ApplicationController
   end
 
   def coop
+    
     @prem_v_claims = [
-      ["Premium", 5128317],
-      ["Claims", 2192800]
+      ["Premium", @cooperative.group_remits.where(type: ["LoanInsurance::GroupRemit", "Remittance"]).sum(:net_premium)],
+      ["Claims", @cooperative.group_remits.joins(agreement: [ process_claims: :claim_benefits]).where(type: ["LoanInsurance::GroupRemit", "Remittance"]).sum('claim_benefits.amount')]
     ]
 
     @age_bracket = [
-      ["18-65", rand(100..150)],
-      ["16-70", rand(20..30)],
-      ["71-75", rand(50..70)],
-      ["76-80", rand(10..15)]
+      ["18-65", @cooperative.get_age_demo("regular")],
+      ["Overage", @cooperative.get_age_demo("overage")]
     ]
 
-    @job_demo = Member.pluck(:occupation).compact.sample(10).map do |occ|
-      [occ, rand(10.50)]
-    end
+    @job_demo = @cooperative.get_job_demo
+    # @job_demo = Member.pluck(:occupation).compact.sample(10).map do |occ|
+    #   [occ, rand(10.50)]
+    # end
     
 
     # @prem_per_gr = GroupRemit.where(type: "Remittance", net_premium: 0..).pluck(:name, :net_premium)
@@ -333,11 +333,13 @@ class PagesController < ApplicationController
     @gr_chart = [
       {
         name: "Premium",
-        data: GroupRemit.where(type: "Remittance", net_premium: 0..).pluck(:name, :net_premium) 
+        # data: @coop.GroupRemit.where(type: "Remittance", net_premium: 0..).pluck(:name, :net_premium) 
+        data: @cooperative.group_remits.where(type: ["LoanInsurance::GroupRemit", "Remittance"], net_premium: 0..).pluck(:name, :net_premium)
       },
       {
         name: "Claims",
-        data: GroupRemit.where(type: "Remittance", net_premium: 0..).pluck(:name, :net_premium).map { |name, premium| [name, premium * (rand(0.3..0.6))] }
+        data: @cooperative.group_remits.joins(agreement: [ process_claims: :claim_benefits]).where(type: ["LoanInsurance::GroupRemit", "Remittance"], net_premium: 0..).pluck(:name, 'claim_benefits.amount')
+        # data: GroupRemit.where(type: "Remittance", net_premium: 0..).pluck(:name, :net_premium).map { |name, premium| [name, premium * (rand(0.3..0.6))] }
       }
     ]
 
@@ -712,7 +714,11 @@ class PagesController < ApplicationController
   private
 
   def set_sample_coop
-    @coop_name = Cooperative.find(4).name
+    if current_user.userable_type == "CoopUser"
+      @cooperative = current_user.userable.cooperative
+    else
+      @coop_name = ""
+    end
   end
 
   def set_gender_chart

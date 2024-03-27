@@ -20,6 +20,7 @@ class Agreement < ApplicationRecord
   has_many :emp_agreements
   has_many :employees, through: :emp_agreements
   has_many :group_remits
+  has_many :process_claims
   has_many :anniversaries
   has_many :agreements_coop_members
   has_many :coop_members, through: :agreements_coop_members
@@ -29,6 +30,7 @@ class Agreement < ApplicationRecord
   has_one :group_proposal, through: :agreement_proposal
   accepts_nested_attributes_for :agreement_benefits, reject_if: :all_blank, allow_destroy: true
   accepts_nested_attributes_for :loan_rates, reject_if: :all_blank, allow_destroy: true
+
 
     delegate :acronym, to: :plan, prefix: true
     def to_s
