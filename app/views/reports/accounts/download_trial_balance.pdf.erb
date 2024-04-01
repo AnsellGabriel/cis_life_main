@@ -1,0 +1,33 @@
+<%= render 'layouts/pdf_partials/html_template' do %>
+  <div class="row mb-3">
+    <%= image_tag wicked_pdf_asset_base64("1cisp_logo.png"), style: "height: 150px; width: auto;", class: '' %>
+    <div class="">
+      <p>1 COOPERATIVE INSURANCE SYSTEM OF THE PHILIPPINES</p>
+      <p class="mb-5">LIFE AND GENERAL INSURANCE</p>
+      <p>TRIAL BALANCE</p>
+      <p class="small">Period Covered <%= "(#{month_day_year(@date_from)} to #{month_day_year(@date_to)})" %></p>
+    </div>
+  </div>
+
+  <table class="table table-bordered table-sm">
+    <thead>
+      <tr>
+        <th class="text-center" style="font-size: 1.1rem; font-weight: bold; border: 2px solid black">Code</th>
+        <th class="text-center" style="font-size: 1.1rem; font-weight: bold; border: 2px solid black">Title</th>
+        <th class="text-center" style="font-size: 1.1rem; font-weight: bold; border: 2px solid black">Debit</th>
+        <th class="text-center" style="font-size: 1.1rem; font-weight: bold; border: 2px solid black">Credit</th>
+      </tr>
+    </thead>
+    <tbody>
+      <%= render 'reports/accounts/accounts', name: 'ASSETS', accounts: @assets %>
+      <%= render 'reports/accounts/accounts', name: 'LIABILITIES', accounts: @liabilities %>
+      <%= render 'reports/accounts/accounts', name: 'INCOME', accounts: @income %>
+      <%= render 'reports/accounts/accounts', name: 'EXPENSE', accounts: @expense %>
+      <%= render 'reports/accounts/accounts', name: 'STATUTORY RESERVE', accounts: @reserve %>
+
+      <tr  style="border-top: 2px solid black">
+        <td colspan="2" class="text-end"></td>
+        <td class="text-end"><%= number_to_currency(@total_debit, unit: '') %></td>
+        <td class="text-end"><%= number_to_currency(@total_credit, unit: '') %></td>
+    </tbody>
+<% end %>

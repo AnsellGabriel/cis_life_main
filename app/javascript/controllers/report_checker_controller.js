@@ -3,6 +3,7 @@ import { get } from "@rails/request.js";
 
 export default class extends Controller {
   connect() {
+    console.log('Report Checker Controller connected...')
     if (localStorage.getItem("downloadTitle") && localStorage.getItem("downloadLink")) {
       this.showDownload();
     }
@@ -31,7 +32,7 @@ export default class extends Controller {
         localStorage.setItem("downloadTitle", toastTitle.textContent);
         localStorage.setItem("downloadLink", toastLink.href);
       }
-    }, 2000);
+    }, 3000);
   }
 
   showDownload() {

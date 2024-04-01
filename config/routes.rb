@@ -393,6 +393,8 @@ Rails.application.routes.draw do
 
   #* Reports Module Routes
   namespace :reports do
-    resources :accounts, only: [:index, :show]
+    resources :accounts, only: [:index, :show] do
+      get :trial_balance, on: :collection
+    end
   end
 end
