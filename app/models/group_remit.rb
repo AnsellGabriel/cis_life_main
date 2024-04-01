@@ -16,7 +16,9 @@ class GroupRemit < ApplicationRecord
   has_many :remarks, as: :remarkable, dependent: :destroy
   has_many :batch_group_remits
   has_many :batches, through: :batch_group_remits
+  has_many :claim_coverages, through: :batches
   has_many :denied_members, dependent: :destroy
+  has_many :notifications, through: :process_coverage
   has_many :payments, as: :payable, dependent: :destroy
   has_many :loan_batches, dependent: :destroy, class_name: "LoanInsurance::Batch"
   has_many :cashier_entries, as: :entriable, class_name: "Treasury::CashierEntry", dependent: :destroy
@@ -152,7 +154,7 @@ class GroupRemit < ApplicationRecord
 
   def create_notification
     employee = agreement.emp_agreements.find_by(active: true).employee
-    Notification.create(notifiable: employee, message: "#{self.cooperative.name} - #{self.name} submitted a checklist")
+    Notification.create(notifiable: employee, process_coverage: process_coverage, message: "#{self.cooperative.name} - #{self.name} submitted a checklist")
   end
 
   def set_for_payment_status

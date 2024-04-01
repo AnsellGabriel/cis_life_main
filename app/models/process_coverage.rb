@@ -11,6 +11,7 @@ class ProcessCoverage < ApplicationRecord
   belongs_to :who_processed, class_name: "Employee", optional: true
   belongs_to :who_approved, class_name: "Employee", optional: true
   has_many :process_remarks
+  has_many :notifications
   has_one :check_voucher_request, as: :requestable, dependent: :destroy, class_name: "Accounting::CheckVoucherRequest"
 
   delegate :cooperative, to: :group_remit
@@ -241,6 +242,17 @@ class ProcessCoverage < ApplicationRecord
     # joins(group_remit: { agreement: { emp_agreements: {employee: :emp_approver} } }).where( emp_approver: { approver_id: approver_id }, emp_agreements: { active: true}).where(status: status, created_at: date_range)
     # where(status: status, created_at: date_range, approver_id: approver_id)
     where(status: status, created_at: date_range)
+  end
+
+  def self.cov_list_analyst(user, status=nil, type=nil)
+    case type
+    when nil
+      where(processor: user, status: status)
+    when "eval"
+      where(processor: user, status: ["approved", "denied"])
+    when "process"
+      where(processor: user, status: ["for_head_approval", "for_vp_approval"])
+    end
   end
 
   def self.for_head_approvals(user)
