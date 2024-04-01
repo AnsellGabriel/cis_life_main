@@ -91,12 +91,12 @@ class BatchesController < ApplicationController
         for_approved_count += 1
         # if (18..65).include?(batch.age)
         if (batch.agreement_benefit.min_age..batch.agreement_benefit.max_age).include?(batch.age)
-          if batch.valid_health_dec
+          # if batch.valid_health_dec
             # batch.update_attribute(:insurance_status, "approved") if batch.valid_health_dec
-            batch.update_attribute(:insurance_status, "approved")
-            @process_coverage.increment!(:approved_count)
-            approved_count += 1
-          end
+          batch.update_attribute(:insurance_status, "approved")
+          @process_coverage.increment!(:approved_count)
+          approved_count += 1
+          # end
         end
       end
     end

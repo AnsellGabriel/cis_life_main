@@ -22,6 +22,7 @@
               <%= link_to "Members", coop_members_path, class: "dropdown-item" %>
               <%= link_to "Claims Filed", index_coop_process_claims_path, class: "dropdown-item" %>
               <%= link_to "Claims Message", claim_remarks_path, class: "dropdown-item" %>
+              <%= link_to "Graph", pages_coop_path, class: "dropdown-item", data: {turbo: false} %>
             <% end %>
             <%= render 'layouts/partials/nav_dropdown', title: 'Insurance' do %>
               <% @cooperative.agreements.includes(:plan).each do |a| %>

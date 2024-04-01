@@ -2,7 +2,7 @@
 <!-- Necessary for both Coop and MIS batch enrollment please don't remove -->
 <% if mis_user?(current_user) %>
   <%=  render 'coop_members/member_import_modal' %>
-<% else %>
+<% elsif current_user.userable_type == "CoopUser" %>
   <%=  render 'member_import_modal' %>
 <% end %>
 
@@ -20,7 +20,7 @@
     <div class="mb-1">
       <% if mis_user?(current_user) %>
         <%= render 'coop_members/member_import_btn' %>
-      <% else %>
+      <% elsif current_user.userable_type == "CoopUser" %>
         <%= render 'member_import_btn' %>
       <% end %>
     </div>

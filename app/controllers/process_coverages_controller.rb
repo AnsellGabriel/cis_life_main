@@ -70,7 +70,7 @@ class ProcessCoveragesController < ApplicationController
       @reprocess_coverages = @process_coverages_x.where(status: :reprocess)
       @reassess_coverages = @process_coverages_x.where(status: :reassess)
       @denied_process_coverages = @process_coverages_x.where(status: :denied)
-      @processed_coverages = @process_coverages_x.where(status: [:for_head_review, :for_vp_review])
+      @evaluated_process_coverages = @process_coverages_x.where(status: [:for_head_approval, :for_vp_approval])
 
       @coverages_total_processed = ProcessCoverage.where(status: [:approved, :denied, :reprocess])
 
@@ -103,7 +103,7 @@ class ProcessCoveragesController < ApplicationController
     end
 
     @pagy_pc, @filtered_pc = pagy(@process_coverages, items: 5, page_param: :process_coverage, link_extra: 'data-turbo-frame="pro_cov_pagination"')
-    @notifications = current_user.userable.notifications
+    @notifications = current_user.userable.notifications.where(created_at: @current_date.beginning_of_week..@current_date.end_of_week)
     # if params[:search].present?
     #   @process_coverages = @process_coverages_x.joins(group_remit: {agreement: :cooperative}).where("group_remits.name LIKE ? OR group_remits.description LIKE ? OR agreements.moa_no LIKE ? OR cooperatives.name LIKE ?", "%#{params[:search]}%", "%#{params[:search]}%", "%#{params[:search]}%", "%#{params[:search]}%")
     # else
@@ -183,6 +183,19 @@ class ProcessCoveragesController < ApplicationController
           ProcessCoverage.index_cov_list(current_user.userable_id, :for_process, start_date..end_date)
         elsif current_user.senior_officer?
           ProcessCoverage.where(status: :for_process, created_at: start_date..end_date)
+        elsif current_user.analyst?
+          puts "#{self}**"
+          ProcessCoverage.cov_list_analyst(current_user.userable, :for_process)
+        end
+
+      when "Evaluated"
+        if current_user.analyst?
+          ProcessCoverage.cov_list_analyst(current_user.userable, "", "eval")
+        end
+
+      when "Processed"
+        if current_user.analyst?
+          ProcessCoverage.cov_list_analyst(current_user.userable, "", "process")
         end
 
       when "Approved"
@@ -543,8 +556,11 @@ class ProcessCoveragesController < ApplicationController
 
   def reassess
     @process_coverage = ProcessCoverage.find_by(id: params[:process_coverage_id])
+    @group_remit = @process_coverage.group_remit
+    
     respond_to do |format|
       if @process_coverage.update_attribute(:status, "reassess")
+        @group_remit.update_attribute(:status, "under_review")
         format.html { redirect_to process_coverage_path(@process_coverage), notice: "Process Coverage For Reassessment!" }
       end
     end

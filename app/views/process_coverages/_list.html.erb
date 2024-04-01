@@ -3,12 +3,8 @@
   <table class="table">
     <thead>
       <th>ID</th>
-      <th>Group Remit</th>
-      <th>Plan</th>
-      <th>Agent</th>
-      <th>Terms</th>
-      <th>Status</th>
-      <th>Approver</th>
+      <th>Details</th>
+      <th></th>
     </thead>
     <tbody>
       <% unless process_coverages.count == 0 %>
@@ -17,12 +13,23 @@
             <%  %>
             <% term = pc.effectivity.nil? ? 0 : (pc.expiry.year * 12 + pc.expiry.month) - (pc.effectivity.year * 12 + pc.effectivity.month)%>
             <td><%= pc.id %></td>
-            <td><%= link_to pc.group_remit, pc, data: {turbo: false} %></td>
-            <td><%= pc.group_remit.agreement.plan %></td>
-            <td><%= pc.agent %></td>
-            <td><%= term %></td>
-            <td><%= pc.status %></td>
-            <td><%= pc.approver %></td>
+            <td>
+              <strong><%= pc.group_remit.cooperative %></strong> <br>
+              <small><%= link_to pc.group_remit, pc, data: {turbo: false} %></small> <br>
+              <small><i><%= pc.group_remit.agreement.plan %></i></small> <br>
+              <small><%= pc.agent.nil? ? "-" : pc.agent %></small> <br>
+              <% unless pc.group_remit.agreement.plan.acronym == "LPPI" %>
+                <small>Effectivity: <%= pc.effectivity %> / Expiry: <%= pc.expiry %></small> <br>
+              <% end %>
+              <small>Status: <%= process_status(pc.status) %></small>
+            </td>
+            <td>
+              <% if pc.for_process? %>
+                <%= link_to "Process", pc, data: {turbo: false}, class: "btn btn-sm btn-outline-success" %>
+              <% else %>
+                <%= link_to "View", pc, data: {turbo: false}, class: "btn btn-sm btn-outline-primary" %>
+              <% end %>
+            </td>
           </tr>
         <% end %>
       <% else %>
