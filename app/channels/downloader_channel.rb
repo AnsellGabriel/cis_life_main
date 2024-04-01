@@ -1,6 +1,6 @@
-class DownloadToastChannel < ApplicationCable::Channel
+class DownloaderChannel < ApplicationCable::Channel
   def subscribed
-    stream_from "downloader_toast_channel"
+    stream_from "downloader"
   end
 
   def unsubscribed

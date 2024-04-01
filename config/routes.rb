@@ -2,6 +2,8 @@
 require "sidekiq/web"
 
 Rails.application.routes.draw do
+  mount ActionCable.server => "/cable"
+
   resources :special_arrangements
   resources :sip_pbs
   resources :sip_abs

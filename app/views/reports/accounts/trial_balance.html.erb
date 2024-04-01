@@ -1,4 +1,5 @@
-<%= turbo_stream_from "downloads" %>
+<%= turbo_stream_from "downloader" %>
+<%= turbo_frame_tag "download-#{current_user.userable.id}" %>
 
 <div class="container w-100 <%= flex_justify_align('center', 'center', true) %>" >
   <%= content_tag :h3, 'Generate Trial Balance', class: 'text-primary' %>
@@ -25,7 +26,7 @@
               error: '*Required',
               class: 'form-control'
             %> 
-          <%= form.submit "Generate", class: small_btn('success'), data: {action: "click->report-checker#clearDownload click->report-checker#check"} %>
+          <%= form.submit "Generate", class: small_btn('success') %>
         </div>
       <% end %>
     </div>
