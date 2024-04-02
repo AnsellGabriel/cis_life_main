@@ -8,11 +8,11 @@ class Reports::AccountLedgerCsvJob
     save_path = Rails.root.join("public/uploads/employee/report/#{employee_id}", "#{@account.name.downcase}_#{date_from}_#{date_to}_ledger.csv")
 
     if File.exist?(save_path)
+      broadcast_download(employee)
       return
     else
       employee.delete_uploaded_report
       FileUtils.mkdir_p(File.dirname(save_path))
-
     end
 
     set_dates(date_from, date_to)
@@ -39,10 +39,7 @@ class Reports::AccountLedgerCsvJob
       employee.update!(report: file)
     }
 
-    Turbo::StreamsChannel.broadcast_replace_to ["downloader", employee.user.to_gid_param].join(":"),
-        target: "download_cont_#{employee.user.id}",
-        partial: "layouts/partials/download_script",
-        locals: { title: employee.report.identifier, link_path: employee.report.url}
+    broadcast_download(employee)
 
     # csv_file = Tempfile.new(['report', '.csv'])
     # csv_file.write(report)
@@ -63,5 +60,12 @@ class Reports::AccountLedgerCsvJob
 
   def set_balance(date_from)
     @balance = @account.general_ledgers.where(transaction_date: DateTime.new(Date.today.year, 1, 1)..date_from&.to_date&.prev_day).sum(:amount)
+  end
+
+  def broadcast_download(employee)
+    Turbo::StreamsChannel.broadcast_replace_to ["downloader", employee.user.to_gid_param].join(":"),
+      target: "download_cont_#{employee.user.id}",
+      partial: "layouts/partials/download_script",
+      locals: { title: employee.report.identifier, link_path: employee.report.url}
   end
 end

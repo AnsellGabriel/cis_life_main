@@ -23,7 +23,7 @@
               error: '*Required',
               class: 'form-control'
             %> 
-          <%= form.submit "Generate", class: small_btn('success') %>
+          <%= form.submit "Generate", class: small_btn('success'), data: {turbo: false, action: "click->report-checker#clearDownload"} %>
         </div>
       <% end %>
     </div>
