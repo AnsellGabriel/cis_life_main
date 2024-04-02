@@ -37,6 +37,11 @@ class Reports::AccountLedgerPdfJob
         file << pdf_contents
         employee.update!(report: file)
       }
+
+      Turbo::StreamsChannel.broadcast_replace_to ["downloader", employee.user.to_gid_param].join(":"),
+        target: "download_cont_#{employee.user.id}",
+        partial: "layouts/partials/download_script",
+        locals: { title: employee.report.identifier, link_path: employee.report.url}
     rescue => e
       # Handle errors (e.g., log the error, send a notification, etc.)
       Rails.logger.error("Error generating PDF: #{e.message}")

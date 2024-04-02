@@ -39,6 +39,11 @@ class Reports::AccountLedgerCsvJob
       employee.update!(report: file)
     }
 
+    Turbo::StreamsChannel.broadcast_replace_to ["downloader", employee.user.to_gid_param].join(":"),
+        target: "download_cont_#{employee.user.id}",
+        partial: "layouts/partials/download_script",
+        locals: { title: employee.report.identifier, link_path: employee.report.url}
+
     # csv_file = Tempfile.new(['report', '.csv'])
     # csv_file.write(report)
     # csv_file.close
