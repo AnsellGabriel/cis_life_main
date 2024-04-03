@@ -12,6 +12,8 @@ import "@nathanvda/cocoon"
 // import 'cocoon-js'
 import "chartkick"
 import "Chart.bundle"
+import "./channels"
+
 
 Turbo.session.drive = true
 window.bootstrap = bootstrap

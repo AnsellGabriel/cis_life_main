@@ -2,6 +2,8 @@
 require "sidekiq/web"
 
 Rails.application.routes.draw do
+  mount ActionCable.server => "/cable"
+
   resources :special_arrangements
   resources :sip_pbs
   resources :sip_abs
@@ -393,6 +395,8 @@ Rails.application.routes.draw do
 
   #* Reports Module Routes
   namespace :reports do
-    resources :accounts, only: [:index, :show]
+    resources :accounts, only: [:index, :show] do
+      get :trial_balance, on: :collection
+    end
   end
 end

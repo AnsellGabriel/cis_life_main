@@ -10,6 +10,7 @@ class Reports::AccountLedgerPdfJob
       return
     else
       employee.delete_uploaded_report
+      FileUtils.mkdir_p(File.dirname(save_path))
     end
 
     set_dates(date_from, date_to)

@@ -69,6 +69,9 @@
                 <%= link_to "Index", accounting_journals_path, class: "dropdown-item" %>
               <% end %>
               <%= link_to "Accounts", treasury_accounts_path, class: "nav-link" %>
+              <%= render 'layouts/partials/nav_dropdown', title: 'Reports' do %>
+                <%= link_to "Trial Balance", trial_balance_reports_accounts_path, class: 'nav-link' %>
+              <% end %>
             <% when 26 %>
                 <%= render 'layouts/partials/nav_dropdown', title: 'Business Checks' do %>
                   <%= link_to "Index", treasury_checks_path	, class: "dropdown-item" %>

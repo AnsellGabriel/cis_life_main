@@ -3,7 +3,7 @@
     <div class="toast-header text-white">
       <strong class="me-auto text-dark d-flex gap-1">
         <div class="span" id="downloadTitle"></div>
-        <%= link_to 'Download', '', id: 'downloadLink' %>
+        <%= link_to 'Download', '', id: 'downloadLink', target: '_blank', data: {action: "click->report-checker#clearDownload"} %>
       </strong>
       <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close" data-action="click->report-checker#clearDownload"></button>
     </div>
