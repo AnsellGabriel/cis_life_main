@@ -226,6 +226,15 @@ class LoanInsurance::Batch < Batch
     LoanInsurance::Batch.find(unused_loan_id)
   end
 
+  def call_for_private_meth(type, agreement, percentage, premium)
+    case type
+    when "rate"
+      find_loan_rate(agreement)
+    when "sf"
+      calculate_service_fee(percentage, premium)
+    end
+  end
+
   private
 
   def skip_validation

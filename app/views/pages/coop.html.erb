@@ -33,7 +33,7 @@
 
 
   <div class="row mb-2">
-    <%= render "pages/graphs/benefit_chart", chart_data: @benefits_chart, c_id: "chart-ben" %>
+    <%= render "pages/graphs/benefit_chart", chart_data: @coop_claim_per_benefits, c_id: "chart-ben" %>
   </div>
 
   <!-- <div class="row mb-2">
@@ -46,7 +46,7 @@
   </div> -->
 
   <div class="row mb-2">
-    <%= column_chart @gr_chart, title: "Premium & Claims per Group Remit", colors: ["#0DD823", "#EE2525"] %>
+    <%= column_chart @gr_chart, title: "Premium & Claims per Listings", colors: ["#0DD823", "#EE2525"] %>
   </div>
 
   <div class="row mb-2">

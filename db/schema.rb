@@ -531,6 +531,7 @@ ActiveRecord::Schema[7.0].define(version: 2024_03_21_082355) do
     t.datetime "updated_at", null: false
     t.string "full_name"
     t.boolean "deceased", default: false
+    t.string "old_mem_code"
     t.index ["coop_branch_id"], name: "index_coop_members_on_coop_branch_id"
     t.index ["cooperative_id"], name: "index_coop_members_on_cooperative_id"
     t.index ["member_id"], name: "index_coop_members_on_member_id"

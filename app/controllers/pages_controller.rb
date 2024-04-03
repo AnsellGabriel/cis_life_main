@@ -309,6 +309,10 @@ class PagesController < ApplicationController
   end
 
   def coop
+
+    @coop_cause_chart = 
+    
+    @coop_claim_per_benefits = @cooperative.get_claims_per_benefit
     
     @prem_v_claims = [
       ["Premium", @cooperative.group_remits.where(type: ["LoanInsurance::GroupRemit", "Remittance"]).sum(:net_premium)],

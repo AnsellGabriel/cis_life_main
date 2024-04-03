@@ -111,30 +111,38 @@
 
               <%= render 'layouts/partials/nav_dropdown', title: 'Underwriting' do %>
                 <%= link_to "Process", process_coverages_path, class: "dropdown-item" %>
-                <%= link_to "Medical Director", med_directors_home_path, class: "dropdown-item" %>
+                <% if current_user.medical_director? %>
+                  <%= link_to "Medical Director", med_directors_home_path, class: "dropdown-item" %>
+                <% end %>
               <% end %>
 
-              <%= render 'layouts/partials/nav_dropdown', title: "Dashboard" do %>
-                <%= link_to "Cooperative", pages_coop_path, class: "dropdown-item", data: { turbo: false } %>
-                <%= link_to "C.O.S.O.", pages_coso_path, class: "dropdown-item", data: { turbo: false } %>
-                <%= link_to "President", pages_president_path, class: "dropdown-item", data: { turbo: false } %>
+              <% if current_user.senior_officer? %>
+                <%= render 'layouts/partials/nav_dropdown', title: "Dashboard" do %>
+                  <%#= link_to "Cooperative", pages_coop_path, class: "dropdown-item", data: { turbo: false } %>
+                  <%= link_to "C.O.S.O.", pages_coso_path, class: "dropdown-item", data: { turbo: false } %>
+                  <%= link_to "President", pages_president_path, class: "dropdown-item", data: { turbo: false } %>
+                <% end %>
               <% end %>
               
               <%= render 'layouts/partials/nav_dropdown', title: 'Data Entries' do %>
-                <%= link_to "Agreement", agreements_path, class: "dropdown-item" %>
-                <%= link_to "EmpAgreement", emp_agreements_path, class: "dropdown-item" %>
-                <%= link_to "Approver", emp_approvers_path, class: "dropdown-item" %>
-                <%= link_to "Authority Levels", authority_levels_path, class: "dropdown-item" %>
-                <%= link_to "Plans", plans_path, class: "dropdown-item" %>
-                <%= link_to "Benefits", benefits_path, class: "dropdown-item" %>
-                <li><hr class="dropdown-divider"></li>
+                <% if current_user.head? %>
+                  <%= link_to "Agreement", agreements_path, class: "dropdown-item" %>
+                  <%= link_to "EmpAgreement", emp_agreements_path, class: "dropdown-item" %>
+                  <%= link_to "Approver", emp_approvers_path, class: "dropdown-item" %>
+                  <%= link_to "Authority Levels", authority_levels_path, class: "dropdown-item" %>
+                  <%= link_to "Plans", plans_path, class: "dropdown-item" %>
+                  <%= link_to "Benefits", benefits_path, class: "dropdown-item" %>
+                  <li><hr class="dropdown-divider"></li>
+                <% end %>
                 <%= link_to "Cooperative", cooperatives_path, class: "dropdown-item" %>
-                <li><hr class="dropdown-divider"></li>
-                <%= link_to "Employees", employees_path, class: "dropdown-item" %>
-                <%= link_to "User Levels", user_levels_path, class: "dropdown-item" %>
-                <%= link_to "Cooperative User", coop_users_path, class: "dropdown-item" %>
-                <%= link_to "Agents", agents_path, class: "dropdown-item" %>
-                <%= link_to "Pending Users", user_index_path, class: "dropdown-item" %>
+                <% if current_user.head? %>
+                  <li><hr class="dropdown-divider"></li>
+                  <%= link_to "Employees", employees_path, class: "dropdown-item" %>
+                  <%= link_to "User Levels", user_levels_path, class: "dropdown-item" %>
+                  <%= link_to "Cooperative User", coop_users_path, class: "dropdown-item" %>
+                  <%= link_to "Agents", agents_path, class: "dropdown-item" %>
+                  <%= link_to "Pending Users", user_index_path, class: "dropdown-item" %>
+                <% end %>
               <% end %>
             <% end %>
           <% end %>

@@ -223,7 +223,8 @@ class GroupRemit < ApplicationRecord
 
         else
           self.status = :for_payment
-          Notification.create(notifiable: self.agreement.cooperative, message: "#{self.name} is approved and now for payment.")
+          # Notification.create(notifiable: self.agreement.cooperative, message: "#{self.name} is approved and now for payment.")
+          Notification.create(notifiable: self.agreement.cooperative, message: "#{self.name} is approved and now for payment.", process_coverage: self.process_coverage)
         end
       else
         self.status.nil? ? "under_review" : self.status

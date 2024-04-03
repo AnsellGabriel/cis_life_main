@@ -20,14 +20,14 @@
             <td class="text-primary">EVALUATED</td>
             <td><%= @evaluated_process_coverages.count %></td>
             <td>
-              <%= link_to "View", cov_list_process_coverages_path(cov_type: "Evaluated", current_date: @current_date, date_type: "yearly", title: "EVALUATED"), class: "btn btn-primary btn-sm", data: { turbo_frame: "remote_modal" } %>
+              <%= link_to "View", cov_list_process_coverages_path(cov_type: "Processed", current_date: @current_date, date_type: "yearly", title: "EVALUATED"), class: "btn btn-primary btn-sm", data: { turbo_frame: "remote_modal" } %>
             </td>
           </tr>
           <tr>
             <td>PROCESSED</td>
             <td><%= @approved_process_coverages.count %></td>
             <td>
-              <%= link_to "View", cov_list_process_coverages_path(cov_type: "Processed", current_date: @current_date, date_type: "yearly", title: "PROCESSED"), class: "btn btn-primary btn-sm", data: { turbo_frame: "remote_modal" } %>
+              <%= link_to "View", cov_list_process_coverages_path(cov_type: "Evaluated", current_date: @current_date, date_type: "yearly", title: "PROCESSED"), class: "btn btn-primary btn-sm", data: { turbo_frame: "remote_modal" } %>
             </td>
           </tr>
           <tr>
@@ -72,7 +72,7 @@
         <%= form_with(url: process_coverages_path, method: :get, authenticty_token: :false) do |f| %>
           <div class="input-group mb-3">
             <%= f.text_field :search, placeholder: 'Search by Cooperative, OR No., Batch Name and/or Plan', label: false, aria: { label: "Search", describedby: "button-addon2"}, class: "form-control" %>
-            <%#= f.submit "Search", as: :button, class: "btn btn-outline-success", id: "button-addon2" %>
+            <%#= f.submit as: :button, class: "btn btn-outline-success", id: "button-addon2" do %>
             <%#= button_to "View All", process_coverages_path, class: "btn btn-outline-secondary btn-sm" %>
             <%= button_tag type: 'submit', class: "btn btn-outline-success", id: "button-addon2" do %>
               <%= bootstrap_icon "search" %>
