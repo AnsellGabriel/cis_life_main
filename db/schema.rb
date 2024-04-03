@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2024_04_02_032348) do
+ActiveRecord::Schema[7.0].define(version: 2024_04_03_030203) do
   create_table "accounting_vouchers", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.date "date_voucher"
     t.integer "voucher"
@@ -774,6 +774,7 @@ ActiveRecord::Schema[7.0].define(version: 2024_04_02_032348) do
     t.decimal "refund_amount", precision: 15, scale: 2
     t.boolean "refunded", default: false
     t.integer "refund_status", default: 0
+    t.integer "mis_user"
     t.index ["agreement_id"], name: "index_group_remits_on_agreement_id"
     t.index ["anniversary_id"], name: "index_group_remits_on_anniversary_id"
   end

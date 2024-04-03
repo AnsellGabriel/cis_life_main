@@ -67,7 +67,7 @@ class CoopMember < ApplicationRecord
     loan_batches = self.loan_batches
 
     # Retrieve all group_remits associated with the member_batches
-    group_remits = GroupRemit.joins(:batches, :loan_batches).where(batches: { id: member_batches }, loan_batches: { id: loan_batches }).where(status: ["paid", "expired"]).distinct
+    group_remits = GroupRemit.joins(:batches).where(batches: { id: member_batches }).where(status: ["paid", "expired"]).distinct
     loan_remits =  GroupRemit.joins(:loan_batches).where(loan_batches: { id: loan_batches }).where(status: ["paid", "expired"]).distinct
     paid_group_remits = group_remits + loan_remits
     # Filter the group_remits with a status of "paid"
