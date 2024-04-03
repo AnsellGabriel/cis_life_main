@@ -3,7 +3,12 @@ class LoanInsurance::LoansController < ApplicationController
 
   # GET /loan_insurance/loans
   def index
-    @loans = LoanInsurance::Loan.all
+    if current_user.userable_type == "CoopUser"
+      @cooperative = current_user.userable.cooperative
+      @loans = @cooperative.loans
+    else
+      @loans = LoanInsurance::Loan.all
+    end
   end
 
   # GET /loan_insurance/loans/1
@@ -12,7 +17,12 @@ class LoanInsurance::LoansController < ApplicationController
 
   # GET /loan_insurance/loans/new
   def new
-    @loan = LoanInsurance::Loan.new
+    if current_user.userable_type == "CoopUser"
+      @cooperative = current_user.userable.cooperative
+      @loan = @cooperative.loans.build
+    else
+      @loan = LoanInsurance::Loan.new
+    end
   end
 
   # GET /loan_insurance/loans/1/edit
@@ -24,7 +34,8 @@ class LoanInsurance::LoansController < ApplicationController
     @loan = LoanInsurance::Loan.new(loan_params)
 
     if @loan.save
-      redirect_to @loan, notice: "Loan was successfully created."
+      # redirect_to @loan, notice: "Loan was successfully created."
+      redirect_to loan_insurance_loans_path, notice: "Loan was successfully created."
     else
       render :new, status: :unprocessable_entity
     end

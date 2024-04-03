@@ -27,6 +27,10 @@ class Cooperative < ApplicationRecord
   belongs_to :geo_municipality, optional: true
   belongs_to :geo_barangay, optional: true
 
+  def get_claims_per_benefit
+    process_claims.includes(claim_benefits: :benefit).where(claim_filed: :true).group(:name).sum(:amount).to_a
+  end
+
   def get_age_demo(type)
     case type
     when "regular"
@@ -42,7 +46,6 @@ class Cooperative < ApplicationRecord
   def get_job_demo
     members.group(:occupation).count.to_a
   end
-  
 
   def to_s
     name

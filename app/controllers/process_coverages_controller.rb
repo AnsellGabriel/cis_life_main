@@ -579,6 +579,7 @@ class ProcessCoveragesController < ApplicationController
         # if @process_coverage.update_attribute(:status, "for_review")
         if @process_coverage.update_attribute(:status, "reprocess_approved")
           @process_coverage.update(reprocess: true)
+          @process_coverage.group_remit.update(status: :under_review)
           format.html { redirect_to process_coverage_path(@process_coverage), notice: "Reprocess Coverage approved!" }
         end
       else

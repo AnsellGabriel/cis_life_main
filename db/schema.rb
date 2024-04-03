@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2024_03_21_062931) do
+ActiveRecord::Schema[7.0].define(version: 2024_04_01_085907) do
   create_table "accounting_vouchers", charset: "utf8mb4", force: :cascade do |t|
     t.date "date_voucher"
     t.integer "voucher"
@@ -531,6 +531,7 @@ ActiveRecord::Schema[7.0].define(version: 2024_03_21_062931) do
     t.datetime "updated_at", null: false
     t.string "full_name"
     t.boolean "deceased", default: false
+    t.string "old_mem_code"
     t.index ["coop_branch_id"], name: "index_coop_members_on_coop_branch_id"
     t.index ["cooperative_id"], name: "index_coop_members_on_cooperative_id"
     t.index ["member_id"], name: "index_coop_members_on_member_id"

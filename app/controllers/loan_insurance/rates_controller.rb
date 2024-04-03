@@ -40,6 +40,9 @@ class LoanInsurance::RatesController < ApplicationController
 
   # PATCH/PUT /loan_insurance/rates/1
   def update
+    @rate.monthly_rate = rate_params[:annual_rate].to_d / 12
+    @rate.daily_rate = rate_params[:annual_rate].to_d / 365
+    
     if @rate.update(rate_params)
       # redirect_to @rate, notice: "Rate was successfully updated."
       redirect_back fallback_location: @agreement, notice: "LPPI Rate was successfully updated."
