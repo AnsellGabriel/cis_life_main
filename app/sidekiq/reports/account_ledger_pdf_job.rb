@@ -7,6 +7,7 @@ class Reports::AccountLedgerPdfJob
     save_path = Rails.root.join("public/uploads/employee/report/#{employee_id}", "#{@treasury_account.name.downcase}_#{date_from}_#{date_to}_ledger.pdf")
 
     if File.exist?(save_path)
+      broadcast_download(employee)
       return
     else
       employee.delete_uploaded_report
@@ -37,6 +38,8 @@ class Reports::AccountLedgerPdfJob
         file << pdf_contents
         employee.update!(report: file)
       }
+
+      broadcast_download(employee)
     rescue => e
       # Handle errors (e.g., log the error, send a notification, etc.)
       Rails.logger.error("Error generating PDF: #{e.message}")
@@ -57,5 +60,12 @@ class Reports::AccountLedgerPdfJob
     @balance = @treasury_account.general_ledgers.where(transaction_date: DateTime.new(Date.today.year, 1, 1)..date_from&.to_date&.prev_day).sum(:amount)
     @total_debit = @searched_ledgers.debits.sum(:amount)
     @total_credit = @searched_ledgers.credits.sum(:amount)
+  end
+
+  def broadcast_download(employee)
+    Turbo::StreamsChannel.broadcast_replace_to ["downloader", employee.user.to_gid_param].join(":"),
+      target: "download_cont_#{employee.user.id}",
+      partial: "layouts/partials/download_script",
+      locals: { title: employee.report.identifier, link_path: employee.report.url}
   end
 end

@@ -6,8 +6,10 @@ class Reports::TrialBalancePdfJob
     save_path = Rails.root.join("public/uploads/employee/report/#{employee_id}", "trial_balance_#{date_from}_#{date_to}.pdf")
 
     if File.exist?(save_path)
+      broadcast_download(employee)
       return
     else
+      employee.delete_uploaded_report
       FileUtils.mkdir_p(File.dirname(save_path))
     end
 
@@ -36,6 +38,8 @@ class Reports::TrialBalancePdfJob
         file << pdf_contents
         employee.update!(report: file)
       }
+
+      broadcast_download(employee)
     rescue => e
       # Handle errors (e.g., log the error, send a notification, etc.)
       Rails.logger.error("Error generating PDF: #{e.message}")
@@ -52,5 +56,12 @@ class Reports::TrialBalancePdfJob
     @reserve = Treasury::Account.where(account_type: 6)
     @total_debit = 0
     @total_credit = 0
+  end
+
+  def broadcast_download(employee)
+    Turbo::StreamsChannel.broadcast_replace_to ["downloader", employee.user.to_gid_param].join(":"),
+      target: "download_cont_#{employee.user.id}",
+      partial: "layouts/partials/download_script",
+      locals: { title: employee.report.identifier, link_path: employee.report.url}
   end
 end

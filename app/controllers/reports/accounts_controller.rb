@@ -4,7 +4,7 @@ class Reports::AccountsController < ApplicationController
 
   def trial_balance
     if params[:commit].present?
-      current_user.userable.delete_uploaded_report
+      # current_user.userable.delete_uploaded_report
 
       if params[:date_from].present? && params[:date_to].present?
         Treasury::Account.trial_balance_pdf(current_user.userable.id, params[:date_from], params[:date_to])

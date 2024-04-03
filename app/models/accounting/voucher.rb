@@ -2,6 +2,8 @@ class Accounting::Voucher < ApplicationRecord
   validates_presence_of :date_voucher, :global_payable, :particulars, :voucher
 
   belongs_to :payable, polymorphic: true
+  belongs_to :treasury_account, class_name: "Treasury::Account", foreign_key: :treasury_account_id, optional: true
+
   has_many :general_ledgers, as: :ledgerable
   has_many :remarks, as: :remarkable, dependent: :destroy
 

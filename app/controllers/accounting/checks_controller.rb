@@ -113,7 +113,7 @@ class Accounting::ChecksController < ApplicationController
   # POST /accounting/checks
   def create
     @check = Accounting::Check.new(modified_check_params)
-    @check.accountant_id = current_user.id
+    @check.accountant_id = current_user.userable.id
 
     if @check.save
       if params[:rid].present?
