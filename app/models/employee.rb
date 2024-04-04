@@ -22,7 +22,7 @@ class Employee < ApplicationRecord
   end
 
   def get_fullname
-    "#{last_name}, #{first_name}, #{middle_name[0]}.".titleize
+    "#{first_name} #{middle_name[0]} #{last_name}".titleize
   end
 
   def initials_name
