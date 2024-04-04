@@ -13,18 +13,16 @@
 <!-- Member's count Modal -->
 <%= render "member_count_modal" %>
 
-<div class="<%= flex_justify_align('', 'center') %> gap-1 mb-3">
+<div class="<%= flex_justify_align('', 'center') %> gap-1 mb-1">
 
   <% if @group_remit.is_batch_remit? %>
     <%= link_to coop_agreement_path(@agreement), class: small_btn('outline-secondary'), title: 'Back' do %>
-      <i class="bi bi-arrow-left-square"></i>  
-      Back  
+      <i class="bi bi-chevron-left"></i>
     <% end %>
   <% else %>
     <div class="d-flex gap-1">
       <%= link_to coop_agreement_group_remit_remittances_path(@agreement, @group_remit.batch_remit_id), class: small_btn('outline-secondary'), title: 'Back' do %>
-        <i class="bi bi-arrow-left-square"></i> 
-        Back
+        <i class="bi bi-chevron-left"></i>
       <% end %>
       <% if current_user.is_mis? and !@group_remit.is_batch_remit? %>
         <%= link_to "Remarks", group_remit_remarks_path(@group_remit), class: small_btn('danger'), data: {turbo_frame: 'reg_form_modal'} %>
@@ -121,38 +119,49 @@
   <% end %>
 </div>
 
-<div class="<%=  flex_justify_align('', 'center') %> gap-2  ">
-  <% unless @group_remit.is_batch_remit? %>
-    <%= content_tag :span, @group_remit.status.titleize, class: @group_remit.status_badge %>
-  <% end %>
-  <%= content_tag :h3, class: 'mb-0 text-primary' do %>
-      <%= @group_remit %>    
-      <% if @group_remit.or_number.present? %>
-        <%= content_tag :span, "(OR# #{@group_remit.or_number})", class: "text-dark small" %>
-      <% end %>
-  <% end %>
-  <%= content_tag :h3, "(#{@agreement.plan.acronym.include?('GYRT') ? 'GYRT' : @agreement.plan.acronym})", class: 'mb-0 text-secondary' %>
+<% if @group_remit.is_batch_remit? %>
+  <%= content_tag :h3, "#{@group_remit.name}", class: 'mb-0 text-primary mb-1' %>
+<% else %>
+  <div class="card">
+    <div class="card-body <%= flex_justify_align('between', 'center') %>">
+      <div class="<%=  flex_justify_align('', 'center') %> gap-2  ">
+        <%= content_tag :span, @group_remit.status.titleize, class: @group_remit.status_badge %>
+        <%= content_tag :h3, class: 'mb-0 text-primary' do %>
+            <%= @group_remit %>    
+        <% end %>
+        
+        <div class="<%= flex_justify_align('between') %> mt-2">
+          <div style="width: 100%">
 
-  <div class="<%= flex_justify_align('between') %> mt-2" style="height: 100%; width: 460px;">
-    <div style="width: 100%">
-
-      <% if(@group_remit.is_for_payment? || @group_remit.is_for_reupload?) && (@group_remit.process_coverage.approved?) %>
-        <%= render 'payment', group_remit: @group_remit %>
-      <% end %>
-
-      <% if @group_remit.is_pending_or_renewal? && @group_remit.is_remittance? %>
-          <%= turbo_frame_tag "batch_import_form" do %>
-            <%= turbo_frame_tag "batch_form" do %>   
-                <div class="d-flex gap-3 mb-2">
-                  <%= render 'group_remits/add_member' %>
-                </div>
+            <% if(@group_remit.is_for_payment? || @group_remit.is_for_reupload?) && (@group_remit.process_coverage.approved?) %>
+              <%= render 'payment', group_remit: @group_remit %>
             <% end %>
-          <% end %>
-      <% end%>
 
+            <% if @group_remit.is_pending_or_renewal? && @group_remit.is_remittance? %>
+                <%= turbo_frame_tag "batch_import_form" do %>
+                  <%= turbo_frame_tag "batch_form" do %>   
+                      <div class="d-flex gap-3 mb-2">
+                        <%= render 'group_remits/add_member' %>
+                      </div>
+                  <% end %>
+                <% end %>
+            <% end%>
+
+          </div>
+        </div>
+      </div>
+
+      <div class="<%= flex_justify_align('start', 'end', true) %>">
+          <div class="small"><span class="text-primary">Official Receipt No.: </span><%= content_tag :span, "#{@group_remit.or_number}", class: "text-dark" %></div>
+          <% if @group_remit.mis_entry? %>
+            <div class="small"><span class="text-primary">Encoded By: </span><%= content_tag :span, "#{User.find(@group_remit.mis_user).userable.get_fullname}", class: "text-dark" %></div>
+          <% end %>
+      </div>
     </div>
   </div>
-</div>
+<% end %>
+
+
 
   <% if ['GYRTBR','GYRTFR','KOOPamilya'].include?(plan_acronym) %>
     <div class="<%= flex_justify_align('between', 'center') %> gap-1">
@@ -187,7 +196,7 @@
     </div>
   <% end %>
   
-  <div class="d-flex gap-1">
+  <div class="<%= flex_justify_align('center', 'center') %> gap-1">
     <%= form_with url: group_remit_path(@group_remit), method: :get do %>
       <div class="form-group d-flex justify-content-end gap-1 mb-1">
         <%= text_field_tag 'batch_filter', 
@@ -196,12 +205,15 @@
           class: "form-control", 
           style: "width: auto"
         %>
-        <%= submit_tag 'Search', class: small_btn('warning') %>
+        <%= button_tag(type: 'submit', class: small_btn('warning text-dark'), style: 'width: 40px') do %>
+          <i class="bi bi-search"></i>
+        <% end %>
       </div>
     <% end %>
-  </div>
-  
-    
+    <%= link_to group_remit_path(@group_remit), class: "btn btn-secondary mb-1", title: "Reload" do %>
+      <i class="bi bi-arrow-clockwise"></i>
+    <% end %>
+  </div> 
 </div>
 
 <div class="table-responsive">

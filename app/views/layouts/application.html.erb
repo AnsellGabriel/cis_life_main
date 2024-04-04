@@ -18,7 +18,7 @@
     <%= javascript_include_tag "//www.google.com/jsapi", "chartkick" %>
   </head>
   <body class="d-flex flex-column" style="background-color: #f0f2f5;">
-    <%= turbo_stream_from ["downloader", current_user] if user_signed_in? %>
+    <%= turbo_stream_from ["downloader", current_user] if user_signed_in? && current_user.is_employee? %>
     <%= turbo_frame_tag "download_cont_#{current_user.id}" if user_signed_in? %>
     <%= render 'layouts/partials/downloader' %>
     <%= render 'layouts/partials/navi' %>

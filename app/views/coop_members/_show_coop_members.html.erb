@@ -7,10 +7,12 @@
 <% end %>
 
 <div class="<%= flex_justify_align('','') %> gap-3">
-  <%= content_tag :h3, 'Members', class: 'text-primary mb-0'  %>
+  <% unless current_user.is_mis? %>
+    <%= content_tag :h3, 'Members', class: 'text-primary mb-0'  %>
+  <% end %>
   <div class="d-flex gap-1 mb-3">
     <div class="mb-1">
-      <%= link_to "Enroll Member", new_member_path(cooperative_id: @cooperative.id), 
+      <%= link_to "Enroll", new_member_path(cooperative_id: @cooperative.id), 
         class: small_btn('outline-primary'), 
         data: {
           turbo_frame: "modal-xl"
@@ -27,7 +29,7 @@
     <%  if @cooperative.denied_enrollees.present? %>
       <div class="">
         <%= link_to denied_enrollees_path, class: "#{small_btn('outline-danger')} position-relative" do %>
-          Denied Enrollees
+          Remarks
           <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
             !
             <span class="visually-hidden">unread messages</span>
@@ -38,30 +40,27 @@
   </div>
 </div>
 
-<!-- Button trigger for New Member Enrollment -->
+
 <div class="d-flex justify-content-between align-items-center mb-3">
-  <%== pagy_bootstrap_nav(@pagy_members) if @pagy_members.pages > 1 %>
   <div class="d-flex align-items-center gap-1 mb-1">
-    <!-- Old Form -->
-    <!--
-    <%= form_with url: coop_members_path(cooperative_id: @cooperative.id), method: :get do %>
-      <div class="form-group d-flex gap-1">
-        <%= text_field_tag 'first_name_filter', nil, placeholder: 'First name', class: "form-control", style: "width: auto"%>
-        <%= text_field_tag 'last_name_filter', nil, placeholder: 'Last name', class: "form-control", style: "width: auto;"%>
-        <%= submit_tag 'Filter', class: small_btn('warning text-dark') %>
-      </div>
-    <% end %>
-    <%= link_to "All", coop_members_path, class: "#{small_btn('outline-warning')} d-flex align-items-center", style: 'height: 38px;' %>
-    -->
-    <!-- New Ransack Form -->
     <%= search_form_for @q, url: mis_user?(current_user) ? cooperative_path(@cooperative.id) : coop_members_path(cooperative_id: @cooperative.id), method: :get do |f| %>
       <div class="form-group d-flex gap-1">
-        <%= f.search_field :first_name_or_middle_name_or_last_name_or_email_or_mobile_number_cont, placeholder: "Member name", class: "form-control" %>
-        <%= f.submit "Search", class: small_btn('warning text-dark') %>
+        <%= f.search_field :first_name_or_middle_name_or_last_name_or_email_or_mobile_number_cont, placeholder: "Member Name", class: "form-control" %>
+        <%= button_tag(type: 'submit', class: small_btn('warning text-dark'), style: "width: 40px") do %>
+          <i class="bi bi-search"></i>
+        <% end %>
       </div>
     <% end %>
+    <%= link_to cooperative_path(@cooperative), class: "btn btn-secondary", title: "Reload" do %>
+      <i class="bi bi-arrow-clockwise"></i>
+    <% end %>
   </div>
+
+  <% if @pagy_members.pages > 1 %>
+    <%== pagy_bootstrap_nav(@pagy_members) %>
+  <% end %>
 </div>
+
 <div class="table table-striped">
   <table class="table table-striped table-bordered table-hover align-middle">
     <thead>

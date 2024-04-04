@@ -148,7 +148,7 @@ class GroupRemit < ApplicationRecord
       group_remit.name = "#{group_remit.effectivity_date.strftime('%B').upcase} BATCH"
     else
       # group_remit.name = "#{extract_from_substring(agreement.moa_no, ('GYRT' or 'LPPI'))} REMITTANCE #{agreement.group_remits.where(type: 'Remittance').size + 1}"
-      group_remit.name = "ENROLLMENT LIST #{agreement.group_remits.where(type: 'Remittance').size + 1}"
+      group_remit.name = "#{group_remit.agreement.plan.acronym.include?('GYRT') ? 'GYRT' : group_remit.agreement.plan.acronym} List #{agreement.group_remits.where(type: 'Remittance').size + 1}"
     end
   end
 
@@ -205,8 +205,8 @@ class GroupRemit < ApplicationRecord
     self.gross_premium = commisionable_premium
     self.coop_commission = total_coop_commissions
     self.agent_commission = total_agent_commissions
-    self.net_premium = net_premium
-    
+    self.net_premium = computed_net_premium
+
     unless self.type == "BatchRemit"
 
       if self.process_coverage.status == "approved"
@@ -350,7 +350,7 @@ class GroupRemit < ApplicationRecord
     commisionable_premium - (total_coop_commissions)
   end
 
-  def net_premium
+  def computed_net_premium
     (commisionable_premium - (total_coop_commissions + total_agent_commissions) ) - (denied_principal_premiums + denied_dependent_premiums)
   end
 

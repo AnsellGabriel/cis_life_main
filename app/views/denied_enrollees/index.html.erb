@@ -1,31 +1,31 @@
 <div class="mb-3">
-	<%= link_to :back, class: small_btn('secondary') do %>
-		<i class="bi bi-arrow-bar-left"></i>
+	<%= link_to :back, class: small_btn('outline-secondary'), title: 'Back' do %>
+		<i class="bi bi-chevron-left"></i>
 	<% end %>
 
-	<%= link_to 'Clear All', destroy_all_denied_enrollees_path, class: small_btn('danger'), data: {turbo_confirm: 'Delete all denied enrollees?', turbo_method: :delete}  %>
+	<%= link_to 'Clear', destroy_all_denied_enrollees_path, class: small_btn('danger'), data: {turbo_confirm: 'Delete all denied enrollees?', turbo_method: :delete}  %>
 </div>
 <div class="<%= flex_justify_align('', 'center') %> gap-1 mb-3">
-  <%= content_tag :h6, "Denied Enrollees", class: 'mb-0' %>
+  <%= content_tag :h6, "Enrollment Remarks", class: 'mb-0' %>
 </div>
 
 		<table class="table table-hover">
 		<thead>
 		<tr class="table-dark">
-			<th class="text-center" scope="col">Name</th>
-			<th class="text-center" scope="col">Reason</th>
+			<th class="ps-4" scope="col">Name</th>
+			<th class="" scope="col">Remarks</th>
 		</tr>
 		</thead>
 
 		<tbody id="batches_body">
 			<% @denied_enrollees.each do |e| %>
 				<tr class="text-muted">
-					<td class="text-center">
+					<td class="ps-4">
 						<div class="" style="font-size: .7rem;">
 							<%= e.name %>
 						</div>
 					</td>
-					<td class="text-center" style="font-size: .7rem;">
+					<td class="" style="font-size: .7rem;">
 						<%= e.reason %>
 					</td>
 				</tr>
