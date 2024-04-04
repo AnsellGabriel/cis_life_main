@@ -19,7 +19,7 @@ class ApplicationController < ActionController::Base
         # when 27 then redirect_to audit_dashboard_path
         when 27 then redirect_to audit_check_vouchers_path
         # when 11 then redirect_to accounting_dashboard_path
-        when 11 then redirect_to audit_check_vouchers_path
+        when 11 then redirect_to requests_accounting_checks_path
         when 17, 13 then redirect_to process_coverages_path
         when 15 then redirect_to mis_dashboard_path
         else redirect_to employees_path
