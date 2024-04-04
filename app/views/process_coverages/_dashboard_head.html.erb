@@ -111,16 +111,19 @@
         </div>
       </div>
       
+      
       <%= render "process_coverages/analysts_inventory" %>
     </div>
     <div class="row mt-3">
       <div class="col-12">
         <%= form_with url: process_coverages_path, method: :get do %>
+        <%#= form_with url: product_csv_path, method: :get do %>
           <div class="d-flex justify-content-between align-items-center mb-3">
             <div class="d-flex gap-3 text-center">
               <%= text_field_tag 'search', nil, placeholder: 'Search...', class: "form-control", style: "width: auto", required: true %>
               <%= submit_tag 'Search', class: "btn btn-success" %>
               <%= link_to "View All", process_coverages_path, class: "btn btn-secondary" %>
+              <%= link_to "Generate CSV", gen_csv_process_coverages_path, class: "btn btn-primary", data: { turbo_frame: "remote_modal" } %>
               <%= content_tag :a, "Analyst Inventory", 
                   class: reg_btn('outline-success'), 
                   data: {bs_toggle: "modal",

@@ -1,4 +1,6 @@
 class ProcessCoveragesController < ApplicationController
+  include CsvGenerator
+  
   before_action :authenticate_user!
   before_action :check_emp_department
   before_action :set_process_coverage,
@@ -58,7 +60,7 @@ class ProcessCoveragesController < ApplicationController
         date_to = Date.strptime(params[:date_to], "%Y-%m-%d")
 
 
-        @process_coverages = @process_coverages_x.where(processor_id: params[:emp_id], status: params[:process_type], created_at: date_from..date_to)
+        @process_coverages = @process_coverages_x.where(processor_id: params[:emp_id], status: params[:process_type], created_at: params[:date_from]..params[:date_to])
       end
 
     elsif current_user.analyst?
@@ -82,12 +84,11 @@ class ProcessCoveragesController < ApplicationController
       end
 
       if params[:emp_id].present?
-        # raise 'errors'
          # date_from = Date.strptime(params[:date_from], "%m-%d-%Y")
          date_from = Date.strptime(params[:date_from], "%Y-%m-%d")
          # date_to = Date.strptime(params[:date_to], "%m-%d-%Y")
          date_to = Date.strptime(params[:date_to], "%Y-%m-%d")
-        @process_coverages = @process_coverages_x.where(status: params[:process_type], created_at: date_from..date_to)
+        @process_coverages = @process_coverages_x.where(status: params[:process_type], created_at: params[:date_from]..params[:date_to])
       end
 
     else
@@ -133,7 +134,30 @@ class ProcessCoveragesController < ApplicationController
     send_data(pdf.render,
       filename: "hello.pdf",
       type: "application/pdf")
+  end
 
+  def gen_csv
+
+  end
+
+  def product_csv
+    date_from = Date.strptime(params[:date_from], "%m-%d-%Y")
+    date_to = Date.strptime(params[:date_to], "%m-%d-%Y")
+
+    case params[:emp_id]
+    when "0" then
+      emp = "PROCESS COVERAGES"
+      @process_coverages = ProcessCoverage.get_reports(params[:process_type].to_i, date_from, date_to)
+    else
+      emp = Employee.find(params[:emp_id])
+      @process_coverages = ProcessCoverage.where(processor_id: params[:emp_id], status: params[:process_type], created_at: date_from..date_to).order(:created_at)
+    end
+
+    if @process_coverages.nil? || @process_coverages.empty? 
+      redirect_back fallback_location: process_coverages_path, alert: "No record(s) found."
+    else
+      generate_csv(@process_coverages, "#{emp} - #{date_from} to #{date_to}")
+    end
   end
 
   def pdf
