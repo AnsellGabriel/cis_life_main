@@ -72,7 +72,14 @@
         <% if @notifications.present? %>
           <ul>
             <% @notifications.limit(10).order(created_at: :desc).each do |notice| %>
-              <%= content_tag :li, notice.message, class: 'text-secondary sm-secondary-text mb-1' %>
+              <% if notice.process_coverage.nil? %>
+                  <%= content_tag :li, notice.message, class: 'text-secondary sm-secondary-text mb-1' %>
+              <% else %>
+                <%= link_to notice.process_coverage.group_remit do %>
+                  <%= content_tag :li, notice.message, class: 'text-secondary sm-secondary-text mb-1' %>
+                <% end %>
+              <% end %>
+              
             <% end %>
           </ul>
         <% else %>

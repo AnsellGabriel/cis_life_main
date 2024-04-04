@@ -24,7 +24,8 @@ class CoopTypesController < ApplicationController
     @coop_type = CoopType.new(coop_type_params)
 
     if @coop_type.save
-      redirect_to @coop_type, notice: "Coop type was successfully created."
+      # redirect_to @coop_type, notice: "Coop type was successfully created."
+      redirect_to coop_types_path, notice: "Coop type was successfully created."
     else
       render :new, status: :unprocessable_entity
     end
