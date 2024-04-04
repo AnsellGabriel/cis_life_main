@@ -75,8 +75,8 @@
               <% if notice.process_coverage.nil? %>
                   <%= content_tag :li, notice.message, class: 'text-secondary sm-secondary-text mb-1' %>
               <% else %>
-                <%= link_to notice.process_coverage.group_remit do %>
-                  <%= content_tag :li, notice.message, class: 'text-secondary sm-secondary-text mb-1' %>
+                <%= link_to notice.process_coverage.group_remit.type == "LoanInsurance::GroupRemit" ? loan_insurance_group_remits_path(notice.process_coverage.group_remit) : group_remit_path(notice.process_coverage.group_remit) do %>
+                  <%= content_tag :li, notice.message, class: 'text-primary sm-secondary-text mb-1' %>
                 <% end %>
               <% end %>
               
