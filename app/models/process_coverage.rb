@@ -36,6 +36,8 @@ class ProcessCoverage < ApplicationRecord
   }
   FILTERED_STATUSES = statuses.select { |key, value| [0, 2, 3, 10].include?(value) }.keys
 
+  STATUSES = [["All", 0], ["FOR PROCESS", 1], ["PROCESSED", 3]]
+
   enum und_route: {
     for_analyst_review: 0,
     for_head_review: 1,
@@ -277,5 +279,29 @@ class ProcessCoverage < ApplicationRecord
   #     batch.update_attribute(:insurance_status, :for_review)
   #   end
   # end
+
+  def self.to_csv
+    attributes = %w{id cooperative plan marketing gross_premium coop_service_fee agent_commission net_premium region processor}
+
+    CSV.generate(headers: true) do |csv|
+      csv << attributes
+
+      all.each do |pc|
+        csv << attributes.map{ |attr| pc.send(attr) }
+      end
+    end
+  end
+
+  def self.get_reports(type, date_from, date_to)
+    case type
+    when 0 # ALL status
+      where(created_at: date_from..date_to).order(:created_at) 
+    when 1 # UNPROCESSED
+      where(status: :for_process, created_at: date_from..date_to).order(:created_at)
+    when 2 # PROCESSED
+      where(status: [:approved, :denied], created_at: date_from..date_to).order(:created_at)
+    end
+
+  end
 
 end

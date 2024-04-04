@@ -7,6 +7,8 @@ module CsvGenerator
     case data.first.class.name
     when "GeneralLedger"
       csv_data = account_ledger(data, balance)
+    when "ProcessCoverage"
+      csv_data = und_data(data)
     else
       csv_data = generic_data(data)
     end
@@ -47,4 +49,33 @@ module CsvGenerator
 
     csv_data
   end
+
+  def und_data(data)
+    csv_data = CSV.generate(headers: true) do |csv|
+      csv << ["Code", "Cooperative", "Plan", "Marketing", "Gross Premium", "Coop Service Fee", "Agent Commission", "Net Premium", "Region", "Date", "Processor", "Status"]
+
+      data.each do |record|        
+        csv << [
+          record.id,
+          record.group_remit&.cooperative,
+          record.group_remit&.agreement&.plan,
+          record.agent,
+          record.group_remit&.gross_premium,
+          record.group_remit&.coop_commission,
+          record.group_remit&.agent_commission,
+          record.group_remit&.read_attribute(:net_premium),
+          record.group_remit&.agreement&.cooperative&.geo_region,
+          record.created_at,
+          record&.processor,
+          record.status
+        ]
+      end
+    end
+
+    csv_data
+  end
+
+  # def product_monitor(data)
+
+  # end
 end
