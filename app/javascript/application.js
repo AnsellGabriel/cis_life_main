@@ -29,7 +29,10 @@ document.addEventListener("turbo:load", function () {
   });
 
   // initialize bs toast
-  var toastEl = document.getElementById('notificationToast')
-  var toast = new bootstrap.Toast(toastEl)
-  toast.show()
+  var toastEle = document.getElementById('notificationToast')
+  
+  if(toastEle) {
+    var toast = new bootstrap.Toast(toastEle)
+    toast.show()
+  }
 });

@@ -60,7 +60,7 @@ class Accounting::JournalsController < ApplicationController
   def create
     @journal = Accounting::Journal.new(journal_params)
     @journal.voucher = voucher_series
-    @journal.accountant_id = current_user.id
+    @journal.accountant_id = current_user.userable.id
 
     if @journal.save
       redirect_to @journal, notice: "Journal was successfully created."

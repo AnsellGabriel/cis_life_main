@@ -41,12 +41,12 @@
         <%= link_to "Generate CSV", treasury_account_path(@treasury_account, download_csv: 'true', date_from: params[:date_from], date_to: params[:date_to]), 
           class: 'btn-sm btn btn-warning', 
           method: :get,
-          data: {action: "click->report-checker#clearDownload click->report-checker#check"}
+          data: {turbo: false, action: "click->report-checker#clearDownload"}
         %>
         <%= link_to "Print PDF", treasury_account_path(@treasury_account, download_pdf: 'true', date_from: params[:date_from], date_to: params[:date_to] ), 
           class: 'btn-sm btn btn-warning', 
           method: :get,
-          data: {action: "click->report-checker#clearDownload click->report-checker#check"}
+          data: {turbo: false, action: "click->report-checker#clearDownload"}
         %>
       <% end %>
 
