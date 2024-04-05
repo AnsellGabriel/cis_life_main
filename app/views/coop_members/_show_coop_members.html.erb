@@ -51,7 +51,7 @@
         <% end %>
       </div>
     <% end %>
-    <%= link_to cooperative_path(@cooperative), class: "btn btn-secondary", title: "Reload" do %>
+    <%= link_to current_user.is_mis? ? cooperative_path(@cooperative) : coop_members_path(cooperative_id: @cooperative.id), class: "btn btn-secondary", title: "Reload" do %>
       <i class="bi bi-arrow-clockwise"></i>
     <% end %>
   </div>
