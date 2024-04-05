@@ -20,20 +20,26 @@
         </div>
       </div>
     </div>
-    <%= f.input :global_payable, 
-      collection: @payables, 
-      label_method: :to_s, 
-      value_method: :to_global_id, 
-      label: 'Payee', 
-      error: '*Required',
-      input_html: {data: {controller: 'ts--select'}}
-     %>
+
+    <% if params[:rid].present? %>
+      <%= f.label 'Payee', class: 'mb-1' %>
+      <%= f.select :global_payable, [[@coop.name, @coop.to_global_id]], {}, { class: 'form-control mb-3', readonly: true } %>
+    <% else %>
+      <%= f.input :global_payable, 
+        collection: @payables, 
+        label_method: :to_s, 
+        value_method: :to_global_id, 
+        label: 'Payee', 
+        error: '*Required',
+        input_html: {data: {controller: 'ts--select'}}
+      %>
+    <% end %>
     <div class="row">
       <div class="col-7">
         <%= f.association :treasury_account, label: 'Bank', error: '*Required', input_html: {data: {controller: 'ts--select'}} %>
       </div>
-      <div class="col-5" data-controller="number-formatter">
-        <%= f.input :amount, as: :string, error: '*Required', input_html: {data: {number_formatter_target: 'input'}} %>
+      <div class="col-5">
+        <%= f.input :amount, as: :string, error: '*Required', input_html: {data: {number_formatter_target: 'input'}, readonly: true}%>
       </div>
     </div>
     <%= f.input :particulars, error: '*Required' %>
