@@ -347,8 +347,10 @@ Rails.application.routes.draw do
     patch :update_batch_selected, on: :collection
     get :transfer_to_md, on: :member
     get :und, on: :collection
+    get :gen_csv, on: :collection
   end
-
+  
+  get "product_csv", to: "process_coverages#product_csv"
   get "preview", to: "process_coverages#preview"
   get "download", to: "process_coverages#download"
   get "process_coverages/pdf/:id", to: "process_coverages#pdf", as: "pc_pdf"

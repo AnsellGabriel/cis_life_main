@@ -1,0 +1,32 @@
+<%= @process_coverages %>
+<%= link_to "Download CSV", product_csv_path(@process_coverage, format: "csv") %>
+<table class="table table-striped">
+  <thead>
+    <th>Code</th>
+    <th>Cooperative</th>
+    <th>Plan</th>
+    <th>Marketing</th>
+    <th>Gross Premium</th>
+    <th>Coop Service Fee</th>
+    <th>Agent Commission</th>
+    <th>Net Premium</th>
+    <th>Region</th>
+    <th>Processor</th>
+  </thead>
+  <tbody>
+    <% @process_coverages.each do |pc| %>
+      <tr>
+        <td><%= pc.id %></td>
+        <td><%= pc.group_remit.cooperative %></td>
+        <td><%= pc.group_remit.agreement.plan  %></td>
+        <td><%= pc.agent %></td>
+        <td><%= to_currency(pc.group_remit.gross_premium) %></td>
+        <td><%= to_currency(pc.group_remit.coop_commission) %></td>
+        <td><%= to_currency(pc.group_remit.agent_commission) %></td>
+        <td><%= to_currency(pc.group_remit.net_premium) %></td>
+        <td><%= pc.group_remit.agreement.cooperative.geo_region %></td>
+        <td><%= pc.processor %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
