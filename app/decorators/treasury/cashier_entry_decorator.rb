@@ -17,7 +17,7 @@ class Treasury::CashierEntryDecorator < ApplicationDecorator
 
   def status_badge
     case object.status
-       when "pending" then "badge bg-warning text-dark"
+       when "pending", "for_approval" then "badge bg-warning text-dark"
        when "cancelled" then "badge bg-danger"
        when "posted" then "badge bg-success"
     end

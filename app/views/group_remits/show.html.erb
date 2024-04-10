@@ -152,7 +152,10 @@
       </div>
 
       <div class="<%= flex_justify_align('start', 'end', true) %>">
-          <div class="small"><span class="text-primary">Official Receipt No.: </span><%= content_tag :span, "#{@group_remit.or_number}", class: "text-dark" %></div>
+          <% if @group_remit.or_number.present? %>
+            <div class="small"><span class="text-primary">Official Receipt No.: </span><%= content_tag :span, "#{@group_remit.or_number}", class: "text-dark" %></div>
+          <% end %>
+          
           <% if @group_remit.mis_entry? %>
             <div class="small"><span class="text-primary">Encoded By: </span><%= content_tag :span, "#{User.find(@group_remit.mis_user).userable.get_fullname}", class: "text-dark" %></div>
           <% end %>
