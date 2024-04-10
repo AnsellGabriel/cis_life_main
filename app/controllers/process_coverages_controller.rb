@@ -28,8 +28,8 @@ class ProcessCoveragesController < ApplicationController
 
       if params[:emp_id].present?
         # raise 'errors'
-        date_from = params[:date_from]
-        date_to = params[:date_to]
+        date_from = Date.strptime(params[:date_from], "%m-%d-%Y")
+        date_to = Date.strptime(params[:date_to], "%m-%d-%Y")
         @process_coverages = @process_coverages_x.where(processor_id: params[:emp_id], status: :for_process, created_at: date_from..date_to)
       end
 
@@ -51,16 +51,12 @@ class ProcessCoveragesController < ApplicationController
       else
         @process_coverages = @process_coverages_x
       end
-      # raise 'errors'
+
       if params[:emp_id].present?
-        # raise 'errors'
-        # date_from = Date.strptime(params[:date_from], "%m-%d-%Y")
-        date_from = Date.strptime(params[:date_from], "%Y-%m-%d")
-        # date_to = Date.strptime(params[:date_to], "%m-%d-%Y")
-        date_to = Date.strptime(params[:date_to], "%Y-%m-%d")
-
-
-        @process_coverages = @process_coverages_x.where(processor_id: params[:emp_id], status: params[:process_type], created_at: params[:date_from]..params[:date_to])
+        date_from = Date.strptime(params[:date_from], "%m-%d-%Y")
+        date_to = Date.strptime(params[:date_to], "%m-%d-%Y")
+        # @process_coverages = @process_coverages_x.where(processor_id: params[:emp_id], status: params[:process_type], created_at: params[:date_from]..params[:date_to])
+        @process_coverages = @process_coverages_x.where(processor_id: params[:emp_id], status: params[:process_type], created_at: date_from..date_to)
       end
 
     elsif current_user.analyst?
@@ -141,6 +137,7 @@ class ProcessCoveragesController < ApplicationController
   end
 
   def product_csv
+        
     date_from = Date.strptime(params[:date_from], "%m-%d-%Y")
     date_to = Date.strptime(params[:date_to], "%m-%d-%Y")
 
