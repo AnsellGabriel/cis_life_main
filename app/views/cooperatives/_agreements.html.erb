@@ -30,7 +30,9 @@
           </small>
         </td>
         <td>
-          <%= link_to 'View', agreement.insurance_path, class: 'btn btn-outline-primary btn-sm' %>
+          <%= link_to agreement.insurance_path, class: 'btn btn-outline-primary btn-sm', title: 'View' do %>
+            <i class="bi bi-eye-fill"></i>
+          <% end %>
           <%= link_to "MOA", show_details_agreement_path(agreement), data: { turbo_frame: "remote_modal" }, class: 'btn btn-warning btn-sm' %>
         </td>
       </tr>

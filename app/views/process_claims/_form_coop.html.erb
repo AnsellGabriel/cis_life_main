@@ -1,7 +1,6 @@
 <div class="mb-1">
-  <%= link_to show_insurance_coop_member_path(@coop_member), class: small_btn('outline-secondary') do %>
-    <i class="bi bi-arrow-left-square"></i>
-    Back
+  <%= link_to show_insurance_coop_member_path(@coop_member), class: small_btn('secondary') do %>
+    <i class="bi bi-chevron-left"></i>
   <% end %>
 </div>
 <%= simple_form_for(@process_claim, url: url) do |f| %>
@@ -17,6 +16,7 @@
         <dd class="col-sm-8"><%= @process_claim.claimable_type %></dd>
         <dt class="col-sm-4">Name:</dt>
         <dd class="col-sm-8 text-primary"><%= @process_claim.claimable.get_fullname %></dd>
+        
         <dt class="col-sm-4">Birthdate</dt>
         <dd class="col-sm-8"> <%= to_shortdate(@process_claim.claimable.member.birth_date) %></dd>
         <dt class="col-sm-4">Branch:</dt>
@@ -26,6 +26,16 @@
         <dt class="col-sm-4">Email:</dt>
         <dd class="col-sm-8"><%= @process_claim.claimable.member.email %> </dd>
       </dl>
+      <% if @loan_batch.present? %>
+        <dl class="row">
+          <dt class="col-sm-4">Loan amount:</dt>
+          <dd class="col-sm-8 text-primary"><%= to_curr @loan_batch.loan_amount %></dd>
+          <dt class="col-sm-4">Loan effectivity date:</dt>
+          <dd class="col-sm-8 text-primary"><%= to_shortdate @loan_batch.effectivity_date %></dd>
+          <dt class="col-sm-4">Loan expiry date:</dt>
+          <dd class="col-sm-8 text-primary"><%= to_shortdate @loan_batch.expiry_date %></dd>
+        </dl>
+      <% end %>
       <div class="row">
         <%= f.input :date_incident, as: :string, input_html: {data: {
                 controller: "flatpickr",
@@ -37,8 +47,12 @@
                 dateformat: "m-d-Y\\Z",
                 wrapper_html: {class: "#{flex_justify_align('start', '', true)} col-6"},
                 label_html: {style: ""}, error: "*Required" %>
-        <% benefit_names = @process_claim.agreement_benefit.product_benefits.joins(:benefit).pluck('LOWER(benefits.name)') %>
-        <%= f.association :claim_type, collection: ClaimType.where(name: benefit_names).order(:name), error: "*Required", wrapper_html: {class: "col-6"} %>
+        <% if @process_claim.agreement.plan.acronym.upcase == 'LPPI'%>
+          <%= f.association :claim_type, collection: ClaimType.where(name: 'Life').order(:name), error: "*Required", wrapper_html: {class: "col-6"} %>
+        <% else %>
+          <% benefit_names = @process_claim.agreement_benefit.product_benefits.joins(:benefit).pluck('LOWER(benefits.name)') %>
+          <%= f.association :claim_type, collection: ClaimType.where(name: benefit_names).order(:name), error: "*Required", wrapper_html: {class: "col-6"} %>
+        <% end %>
       </div>
     </div>
   </div>
@@ -55,7 +69,7 @@
       <%= render 'claimant', f: f %>
     </div>
     <div class="card-footer text-center">
-      <%= f.button :submit, 'Submit Claim', class: 'btn-success' %>
+      <%= f.button :submit, 'Submit Claim', class: 'btn-success', data: {turbo_confirm: "Please confirm that all details are accurate and correct"} %>
     </div>
   </div>
   <%# </div> %>

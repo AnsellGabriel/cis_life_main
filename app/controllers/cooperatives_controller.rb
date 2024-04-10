@@ -32,7 +32,7 @@ class CooperativesController < ApplicationController
     @pagy_members, @filtered_members = pagy(f_members, items: 10, page_param: :pagy_members, params: {active_tab: "members"})
 
     # set active tab if search branches btn is clicked
-    if params[:commit] == "Search Branches"
+    if params[:button] == "branches"
       params[:active_tab] = "branches"
     end
   end

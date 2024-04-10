@@ -117,7 +117,7 @@ class GroupRemitsController < InheritedResources::Base
         end
 
         if current_user.is_mis?
-          @group_remit.update!(mis_entry: true)
+          @group_remit.update!(mis_entry: true, mis_user: current_user.id)
         end
 
         format.html { redirect_to coop_agreement_group_remit_path(@agreement, @group_remit), notice: "Group remit was successfully created." }

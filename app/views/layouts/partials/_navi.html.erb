@@ -83,7 +83,7 @@
                     <%= link_to "For Approval", for_approval_index_treasury_cashier_entries_path	, class: "dropdown-item" %>
                   <% end %>
                 <% end %>
-                <%= link_to "Remittances", payments_path	, class: "nav-link" %>
+                <%= link_to "For ORs", payments_path	, class: "nav-link" %>
                 <%= render 'layouts/partials/nav_dropdown', title: 'Encoding' do %>
                   <%= link_to "Payment Types", treasury_payment_types_path	, class: "dropdown-item" %>
                 <% end %>
@@ -151,7 +151,7 @@
           <%= render 'layouts/partials/nav_dropdown', title: "<i class=\"bi bi-person-circle\"></i> <small> Hi, #{current_user.userable.first_name}</small>".html_safe do %>
             <li class="nav-item"> <a class="nav-link" href="#"><%= current_user.email %></a> </li>
             <li class="nav-item"> <%= link_to "Change Password", edit_user_registration_path, class: "nav-link" %></li>
-            <% if current_user.userable_type == "Employee" %>
+            <% if current_user.userable_type == "Employee" and !current_user.is_mis? %>
               <%= content_tag :li, class:"nav-item"  do %>
                 <%= link_to "Authority Level: #{to_currency(session[:max_amount])}", "#", class: "nav-link" %>
               <% end %>

@@ -1,50 +1,68 @@
-<%= content_tag :h1, "List of Cooperatives", class: 'text-primary' %>
 
-<div class="<%= flex_justify_align('between', 'center') %>">
-  <%= link_to new_cooperative_path, class: 'btn btn-primary' do %>
-    New Cooperative
-  <% end %>
+  <div class="">
+    <div class="<%= flex_justify_align('','center') %> gap-3 mb-3">
+      <%= content_tag :h3, "List of Cooperatives", class: 'text-primary' %>
+      <% if current_user.admin? %>
+        <%= link_to 'New', new_cooperative_path, class: 'btn btn-sm btn-primary' %>
+      <% end %>
+    </div>
+  </div>
 
+<div class="<%= flex_justify_align('between', 'center') %> mb-0">
   <%= form_with url: cooperatives_path, method: :get do %>
-    <div class="form-group d-flex justify-content-end gap-3 mb-3">
+    <div class="form-group d-flex justify-content-end gap-1">
       <%= text_field_tag 'coop_filter', 
         nil, 
-        placeholder: 'Search Cooperatives', 
+        placeholder: 'Coop Name', 
         class: "form-control", 
         style: "width: auto"
       %>
-      <%= submit_tag 'Search', class: small_btn('warning') %>
-      <%= link_to "View All", cooperatives_path, class: "btn btn-success" %>
+      <%= button_tag(type: 'submit', class: small_btn('warning'), style: "width: 40px") do %>
+        <i class='bi bi-search'></i>
+      <% end %>
+      <%= link_to cooperatives_path, class: "btn btn-secondary", title: "Reload" do %>
+        <i class="bi bi-arrow-clockwise"></i>
+      <% end %>
     </div>
   <% end %>
-</div>
-<div class="">
+
   <%== pagy_bootstrap_nav(@pagy) %>
+
 </div>
 <table class ="table table-striped">
   <table class="table table-striped table-bordered table-hover">
     <thead>
       <tr>
-        <th>#</th>
         <th>Details</th>
-        <th></th>
       </tr>
     </thead>
 
     <tbody>
       <% if @cooperatives.present? %>
-        <% @cooperatives.each do |cooperative| %>
+        <% @cooperatives.order(:name).each do |cooperative| %>
           <tr>
-
-          <th scope="row"><%= cooperative.id %></th>
-          <td><strong><%= cooperative.name %></strong> <small class="text-primary"><%= cooperative.acronym %></small> <br>
-          <small> <%= cooperative.get_address %> </small> <br>
-          <small><%= cooperative.contact_number %> | <%= cooperative.email %></small></td>
-      
             <td>
-              <%= link_to 'View', cooperative_path(cooperative, c_id: cooperative.id), class: 'btn btn-secondary btn-sm' %>
-            </td>
+              <%= link_to cooperative_path(cooperative, c_id: cooperative.id) do %>
+                <strong><%= cooperative.name %></strong> <small class="text-primary"><%= cooperative.acronym %></small> <br>
+              <% end %>
+              <% if cooperative.get_address == '' %>
+                <small><i class="bi bi-geo-alt text-primary"></i> No address provided </small> <br>
+              <% else %>
+                <small><i class="bi bi-geo-alt text-primary"></i> <%= cooperative.get_address %> </small> <br>
+              <% end %>
 
+              <% if cooperative.contact_number.present? %>
+                <small><i class="bi bi-telephone text-primary"></i> <%= cooperative.contact_number %></small> <br>
+              <% else %>
+                <small><i class="bi bi-telephone text-primary"></i> No contact number provided</small> <br>
+              <% end %>
+
+              <% if cooperative.email.present? %>
+                <small><i class="bi bi-envelope-at text-primary"></i> <%= cooperative.email %></small>
+              <% else %>
+                <small><i class="bi bi-envelope-at text-primary"></i> No email provided</small>
+              <% end %>
+            </td> 
           </tr>
         <% end %>
 

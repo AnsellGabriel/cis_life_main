@@ -42,6 +42,10 @@ class User < ApplicationRecord
     userable.department_id == 11
   end
 
+  def is_employee?
+    userable_type == "Employee"
+  end
+
   def is_treasurer?
     userable.department_id == 26
   end
