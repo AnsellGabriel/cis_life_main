@@ -3,7 +3,7 @@
   <%== pagy_bootstrap_nav(@pagy) %>
 </div>
 
-<table class="table table-bordered table-hover bg-white">
+<table class="table table-bordered table-hover bg-white table-sm">
     <thead class="table-dark">
       <tr>
         <th class="text-center" scope="col">ID</th>
@@ -32,7 +32,9 @@
               <span class="<%= payment.status_badge %>"><%= payment.status.titleize %></span>
             </td>
             <td class="text-center">
-              <%= link_to "show", payment_path(payment), class: small_btn("primary") %>
+              <%= link_to payment_path(payment), class: small_btn("outline-primary"), title: "Show" do %>
+                <i class="bi bi-eye-fill"></i>
+              <% end %>
             </td>
           </tr>
         <% end %>

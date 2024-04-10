@@ -56,8 +56,8 @@ class Batch < ApplicationRecord
   # alias_attribute :batches, :reserve_batches
 
   def full_name
-    # "#{self.last_name}, #{self.first_name} #{self.middle_name}"
-    "#{self.coop_member.member.last_name}, #{self.coop_member.member.first_name} #{self.coop_member.member.middle_name}"
+    "#{self.last_name}, #{self.first_name} #{self.middle_name}"
+    # "#{self.coop_member.member.last_name}, #{self.coop_member.member.first_name} #{self.coop_member.member.middle_name}"
   end
 
   def update_valid_health_dec
@@ -118,7 +118,7 @@ class Batch < ApplicationRecord
     batch.effectivity_date = ["single", "multiple"].include?(agreement.anniversary_type.downcase) ? Date.today : group_remit.effectivity_date
     batch.first_name = coop_member.member.first_name
     batch.middle_name = coop_member.member&.middle_name
-    batch.last_name = coop_member.member.last_name + " " + coop_member.member.suffix
+    batch.last_name = "#{coop_member.member.last_name}#{coop_member.member.suffix.present? ? " #{coop_member.member.suffix}" : ""}"
     batch.birthdate = coop_member.member.birth_date
     batch.civil_status = coop_member.member.civil_status
     batch.age = batch.member_details.age(batch.effectivity_date)
@@ -151,7 +151,6 @@ class Batch < ApplicationRecord
     end
 
   end
-
 
   def self.check_plan(agreement, batch, rank, group_remit, premium)
     acronym = agreement.plan.acronym
