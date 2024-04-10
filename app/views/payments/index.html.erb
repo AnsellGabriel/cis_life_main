@@ -6,8 +6,7 @@
 <table class="table table-bordered table-hover bg-white table-sm">
     <thead class="table-dark">
       <tr>
-        <th class="text-center" scope="col">ID</th>
-        <th class="text-center" scope="col">Date</th>
+        <th class="text-center" scope="col" style="width: 8%; min-width: 110px">Date</th>
         <th class="text-center" scope="col">Payee</th>
         <th class="text-center" scope="col">Payment</th>
         <th class="text-center" scope="col">Net Premium</th>
@@ -23,7 +22,6 @@
           <% group_remit = payment.payable %>
           <% payment = payment.decorate %>
           <tr>
-            <td class="text-center"><%=payment.id %></td>
             <td class="text-center"><%= month_day_year(payment.created_at) %></td>
             <td><%= group_remit.agreement.cooperative %></td>
             <td class="text-center"><%= group_remit.agreement.plan.acronym %></td>

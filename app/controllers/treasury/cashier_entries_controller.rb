@@ -35,11 +35,14 @@ class Treasury::CashierEntriesController < ApplicationController
   def index
     @entry = Treasury::CashierEntry.new
 
-    if params[:or_number].present?
-      @entries = Treasury::CashierEntry.where(or_no: params[:or_number])
-    else
-      @entries = Treasury::CashierEntry.all.order(created_at: :desc)
-    end
+    # if params[:or_number].present?
+    #   @entries = Treasury::CashierEntry.where(or_no: params[:or_number])
+    # else
+    #   @entries = Treasury::CashierEntry.all.order(created_at: :desc)
+    # end
+
+    @q = Treasury::CashierEntry.ransack(params[:q])
+    @entries = @q.result.order(created_at: :desc)
 
     @pagy, @entries = pagy(@entries, items: 10)
   end

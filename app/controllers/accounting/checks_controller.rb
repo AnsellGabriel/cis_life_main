@@ -90,7 +90,7 @@ class Accounting::ChecksController < ApplicationController
 
   # GET /accounting/checks/new
   def new
-    last_voucher = Accounting::Check.maximum(:voucher)
+    last_voucher = Accounting::Check.pluck(:voucher).last.to_i
     initiate_voucher = last_voucher ? last_voucher + 1 : 1
 
     if params[:rid].present?
@@ -98,9 +98,9 @@ class Accounting::ChecksController < ApplicationController
       @amount = claim_request.amount
       @coop = claim_request.requestable.cooperative
 
-      @check = Accounting::Check.new(voucher: initiate_voucher, payable: @coop, amount: @amount, date_voucher: Date.today)
+      @check = Accounting::Check.new(voucher: sprintf("%05d", initiate_voucher), payable: @coop, amount: @amount, date_voucher: Date.today)
     else
-      @check = Accounting::Check.new(voucher: initiate_voucher, date_voucher: Date.today)
+      @check = Accounting::Check.new(voucher: sprintf("%05d", initiate_voucher), date_voucher: Date.today)
     end
   end
 
@@ -128,7 +128,7 @@ class Accounting::ChecksController < ApplicationController
         @amount = claim_request.amount
         @coop = claim_request.requestable.cooperative
       end
-      
+
       render :new, status: :unprocessable_entity
     end
   end

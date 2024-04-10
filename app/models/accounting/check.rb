@@ -1,5 +1,7 @@
 class Accounting::Check < Accounting::Voucher
   validates_presence_of :treasury_account_id, :amount#, :voucher
+  before_save :format_cv_no
+
 
   # belongs_to :treasury_account, class_name: "Treasury::Account", foreign_key: :treasury_account_id
   # belongs_to :claim_request_for_payment, optional: true
@@ -20,5 +22,11 @@ class Accounting::Check < Accounting::Voucher
 
   def total_amount
     amount
+  end
+
+  private
+
+  def format_cv_no
+    self.voucher = sprintf("%05d", self.voucher.to_i) # "00001"
   end
 end

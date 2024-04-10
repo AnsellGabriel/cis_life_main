@@ -98,8 +98,9 @@ class Treasury::CashierEntry < ApplicationRecord
   # end
 
   private
+  
   def format_or_no
-    self.or_no = sprintf("%06d", self.or_no) # "00001"
+    self.or_no = sprintf("%06d", self.or_no.to_i) # "00001"
   end
 
   # def service_fee(payment_type)
@@ -120,4 +121,7 @@ class Treasury::CashierEntry < ApplicationRecord
   #   end
   # end
 
+  def self.ransackable_attributes(auth_object = nil)
+    ["or_no"]
+  end
 end

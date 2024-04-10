@@ -10,10 +10,10 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2024_04_05_030842) do
+ActiveRecord::Schema[7.0].define(version: 2024_04_10_054530) do
   create_table "accounting_vouchers", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.date "date_voucher"
-    t.integer "voucher"
+    t.string "voucher"
     t.string "payable_type", null: false
     t.bigint "payable_id", null: false
     t.bigint "treasury_account_id"
@@ -428,7 +428,7 @@ ActiveRecord::Schema[7.0].define(version: 2024_04_05_030842) do
     t.index ["process_claim_id"], name: "index_claim_coverages_on_process_claim_id"
   end
 
-  create_table "claim_documents", charset: "utf8mb4", force: :cascade do |t|
+  create_table "claim_documents", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.bigint "process_claim_id", null: false
     t.string "document"
     t.integer "document_type"
@@ -437,7 +437,7 @@ ActiveRecord::Schema[7.0].define(version: 2024_04_05_030842) do
     t.index ["process_claim_id"], name: "index_claim_documents_on_process_claim_id"
   end
 
-  create_table "claim_payments", charset: "utf8mb4", force: :cascade do |t|
+  create_table "claim_payments", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.string "beneficiary"
     t.decimal "amount", precision: 15, scale: 2
     t.bigint "process_claim_id", null: false
@@ -770,7 +770,7 @@ ActiveRecord::Schema[7.0].define(version: 2024_04_05_030842) do
     t.string "type"
     t.integer "batch_remit_id"
     t.date "date_submitted"
-    t.integer "official_receipt"
+    t.string "official_receipt"
     t.boolean "mis_entry", default: false
     t.decimal "refund_amount", precision: 15, scale: 2
     t.boolean "refunded", default: false
@@ -1029,7 +1029,7 @@ ActiveRecord::Schema[7.0].define(version: 2024_04_05_030842) do
     t.boolean "dependable", default: false
   end
 
-  create_table "process_claims", charset: "utf8mb4", force: :cascade do |t|
+  create_table "process_claims", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.bigint "cooperative_id", null: false
     t.bigint "agreement_id", null: false
     t.date "date_incident"
@@ -1133,7 +1133,7 @@ ActiveRecord::Schema[7.0].define(version: 2024_04_05_030842) do
     t.index ["benefit_id"], name: "index_product_benefits_on_benefit_id"
   end
 
-  create_table "progress_trackers", charset: "utf8mb4", force: :cascade do |t|
+  create_table "progress_trackers", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.float "progress"
     t.string "trackable_type", null: false
     t.bigint "trackable_id", null: false
@@ -1142,7 +1142,7 @@ ActiveRecord::Schema[7.0].define(version: 2024_04_05_030842) do
     t.index ["trackable_type", "trackable_id"], name: "index_progress_trackers_on_trackable"
   end
 
-  create_table "proposals", charset: "utf8mb4", force: :cascade do |t|
+  create_table "proposals", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.bigint "cooperative_id", null: false
     t.integer "ave_age"
     t.decimal "total_premium", precision: 10, scale: 2
@@ -1155,7 +1155,7 @@ ActiveRecord::Schema[7.0].define(version: 2024_04_05_030842) do
     t.index ["cooperative_id"], name: "index_proposals_on_cooperative_id"
   end
 
-  create_table "reinsurance_batches", charset: "utf8mb4", force: :cascade do |t|
+  create_table "reinsurance_batches", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.bigint "batch_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
@@ -1433,6 +1433,7 @@ ActiveRecord::Schema[7.0].define(version: 2024_04_05_030842) do
   add_foreign_key "treasury_billing_statements", "treasury_cashier_entries", column: "cashier_entry_id"
   add_foreign_key "treasury_business_checks", "accounting_vouchers", column: "voucher_id"
   add_foreign_key "treasury_cashier_entries", "treasury_accounts"
+  add_foreign_key "treasury_cashier_entries", "treasury_payment_types"
   add_foreign_key "treasury_payments", "treasury_accounts", column: "account_id"
   add_foreign_key "treasury_payments", "treasury_cashier_entries", column: "cashier_entry_id"
 end

@@ -1,6 +1,8 @@
 <div class="<%= flex_justify_align('between', 'center') %> gap-1 mb-3">
   <%= content_tag :h4, "Audit Check Vouchers", class: 'text-primary mb-0' %>
-  <%== pagy_bootstrap_nav(@pagy) %>
+  <% if @pagy.pages > 1 %>
+    <%== pagy_bootstrap_nav(@pagy) %>
+  <% end %>
 </div>
 
 <table class="table table-bordered table-hover bg-white table-sm">
@@ -18,7 +20,6 @@
 
     <tbody id="batches_body">
       <% if @vouchers.present? %> 
-
         <% @vouchers.each do |voucher| %>
           <tr>
             <td class="text-center">CV<%= voucher.voucher %></td>
@@ -31,15 +32,13 @@
                 <%= voucher.decorate.audit_text %>
               </span>
             </td>
-            <td>
-              <%= link_to accounting_check_path(voucher), class: small_btn('primary'), title: 'Show' do %>
+            <td class="text-center">
+              <%= link_to accounting_check_path(voucher), class: small_btn('outline-primary'), title: 'Show' do %>
                 <i class="bi bi-eye-fill"></i>
               <% end %>
             </td>
           </tr>
-
         <% end %>
-
       <% else %>
         <tr>
           <td colspan="6" class="text-center">No requests found</td>
