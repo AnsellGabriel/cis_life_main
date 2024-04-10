@@ -15,6 +15,14 @@ class Treasury::CashierEntryDecorator < ApplicationDecorator
   #     end
   #   end
 
+  def status_badge
+    case object.status
+       when "pending" then "badge bg-warning text-dark"
+       when "cancelled" then "badge bg-danger"
+       when "posted" then "badge bg-success"
+    end
+   end
+
   def show_path(origin: nil)
     if remittance?
       payment_entry_path(object.entriable, object, origin: origin)

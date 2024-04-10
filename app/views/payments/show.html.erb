@@ -1,8 +1,7 @@
 <% if current_user.is_treasurer? %>
   <div class="mb-1">
-    <%= link_to payments_path, class: small_btn("outline-secondary") do %>
-      <i class="bi bi-arrow-left-square"></i>
-      Back
+    <%= link_to payments_path, class: small_btn("outline-secondary"), title: 'Back' do %>
+      <i class="bi bi-chevron-left"></i>
     <% end %>
   </div>
 <% end %>

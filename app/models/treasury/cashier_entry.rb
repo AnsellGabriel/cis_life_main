@@ -120,4 +120,7 @@ class Treasury::CashierEntry < ApplicationRecord
   #   end
   # end
 
+  def self.ransackable_attributes(auth_object = nil)
+    ["or_no"]
+  end
 end

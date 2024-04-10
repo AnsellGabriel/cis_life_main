@@ -1,23 +1,41 @@
 
 <div class="<%= flex_justify_align('', 'center') %> gap-1 mb-3">
   <%= content_tag :h4, "Cashier Entries", class: 'text-primary mb-0' %>
-  <%= link_to new_treasury_cashier_entry_path, class: 'btn btn-sm btn-primary', data: {turbo_frame: 'modal'} do %>
-    New Entry
+  <%= link_to new_treasury_cashier_entry_path, class: small_btn('outline-primary'), data: {turbo_frame: 'modal'}, title: 'New' do %>
+    <i class="bi bi-plus-lg"></i>
   <% end %>  
 </div>
 
-<div class="<%= flex_justify_align('between','center') %> gap-3 mb-3">   
-  <%== pagy_bootstrap_nav(@pagy) %>
+<div class="<%= flex_justify_align('between','center') %> gap-3 mb-3"> 
+  <!--  
+    <div class="d-flex gap-1">
+      <%= render 'layouts/partials/search_bar', path: treasury_cashier_entries_path, type: :number, param_name: 'or_number',placeholder: 'OR Number', button_name: 'Search', btn_css: 'btn btn-sm btn-outline-primary' %>
+      <%= link_to 'All', treasury_cashier_entries_path, class: "#{small_btn('outline-primary')} pt-2", style: "width: 50px;" %>
+    </div>
+  -->
 
-  <div class="d-flex gap-1">
-    <%= render 'layouts/partials/search_bar', path: treasury_cashier_entries_path, type: :number, param_name: 'or_number',placeholder: 'OR Number', button_name: 'Search', btn_css: 'btn btn-sm btn-outline-primary' %>
-    <%= link_to 'All', treasury_cashier_entries_path, class: "#{small_btn('outline-primary')} pt-2", style: "width: 50px;" %>
+  <div class="">
+    <%= search_form_for @q do |f| %>
+      <div class="<%= flex_justify_align('','center') %> gap-1">
+        <%= f.search_field :or_no_cont, class: 'form-control', placeholder: 'Search OR' %>
+        <%= button_tag(type: 'submit', class: "btn btn-warning text-dark") do %>
+          <i class="bi bi-search"></i>
+        <% end %>
+        <%= link_to treasury_cashier_entries_path, class: "btn btn-secondary", title: "Reload" do %>
+          <i class="bi bi-arrow-clockwise"></i>
+        <% end %>
+      </div>
+    <% end %>
   </div>
+
+  <% if @pagy.pages > 1 %>
+    <%== pagy_bootstrap_nav(@pagy) %>
+  <% end %>
 </div>
 
 <div class="">
-    <table class="table table-striped table-bordered table-hover">
-      <thead>
+    <table class="table table-bordered table-hover bg-white table-sm">
+      <thead class="table-dark">
         <tr>
           <th class="text-center">OR #</th>
           <th class="text-center">Date</th>
@@ -35,7 +53,9 @@
               <td class="text-center"><%= month_day_year(entry.or_date) %></td>
               <td><%= entry.entriable %></td>
               <td class="text-end"><%= to_curr(entry.amount) %></td>
-              <td class="text-center text-<%= entry.decorate.status_color %>"><%= entry.status.titleize %></td>
+              <td class="text-center">
+                <span class="<%= entry.decorate.status_badge %>"><%= entry.decorate.status.titleize %></span>
+              </td>
             </tr>
           <% end %>
         <% else %>
