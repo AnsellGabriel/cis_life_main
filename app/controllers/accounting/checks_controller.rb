@@ -95,14 +95,13 @@ class Accounting::ChecksController < ApplicationController
 
     if params[:rid].present?
       claim_request = Accounting::CheckVoucherRequest.find(params[:rid])
-      amount = claim_request.amount
-      coop = claim_request.requestable.cooperative
+      @amount = claim_request.amount
+      @coop = claim_request.requestable.cooperative
 
-      @check = Accounting::Check.new(voucher: initiate_voucher, payable: coop, amount: amount, date_voucher: Date.today)
+      @check = Accounting::Check.new(voucher: initiate_voucher, payable: @coop, amount: @amount, date_voucher: Date.today)
     else
       @check = Accounting::Check.new(voucher: initiate_voucher, date_voucher: Date.today)
     end
-
   end
 
   # GET /accounting/checks/1/edit
@@ -124,6 +123,12 @@ class Accounting::ChecksController < ApplicationController
 
       redirect_to @check, notice: "Check voucher created."
     else
+      if params[:rid].present?
+        claim_request = Accounting::CheckVoucherRequest.find(params[:rid])
+        @amount = claim_request.amount
+        @coop = claim_request.requestable.cooperative
+      end
+      
       render :new, status: :unprocessable_entity
     end
   end
@@ -165,7 +170,7 @@ class Accounting::ChecksController < ApplicationController
 
   # Only allow a list of trusted parameters through.
   def check_params
-    params.require(:accounting_check).permit(:date_voucher, :voucher, :global_payable, :particulars, :treasury_account_id, :amount)
+    params.require(:accounting_check).permit(:date_voucher, :voucher, :global_payable, :particulars, :treasury_account_id, :amount, :payable_id)
   end
 
   # convert the string amount to float

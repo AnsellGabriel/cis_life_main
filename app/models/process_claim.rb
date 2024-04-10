@@ -1,5 +1,6 @@
 class ProcessClaim < ApplicationRecord
   attr_accessor :batch_id
+  before_destroy :remove_from_loan_batch
 
   validates_presence_of :cooperative_id, :agreement_id, :entry_type, :claimant_name, :claimant_email, :claimant_contact_no, :date_incident
 
@@ -79,6 +80,13 @@ class ProcessClaim < ApplicationRecord
     age
   end
 
+  def remove_from_loan_batch
+    if self.loan_batch.present?
+      self.loan_batch.process_claim_id = nil
+      self.loan_batch.save
+    end
+  end
+
   belongs_to :claimable, polymorphic: true
   belongs_to :cooperative
   belongs_to :agreement
@@ -92,11 +100,12 @@ class ProcessClaim < ApplicationRecord
   has_many :claim_remarks, dependent: :destroy
   has_many :claim_attachments, dependent: :destroy
   has_many :claim_confinements, dependent: :destroy
+  has_one :loan_batch, class_name: "LoanInsurance::Batch"
   # has_one :claim_request_for_payment, dependent: :destroy
   has_one :check_voucher_request, as: :requestable, dependent: :destroy, class_name: "Accounting::CheckVoucherRequest"
   accepts_nested_attributes_for :claim_cause
   # belongs_to :batch
-  has_many :claim_documents, dependent: :destroy
+  has_many :claim_documents
   accepts_nested_attributes_for :claim_documents
 
 end

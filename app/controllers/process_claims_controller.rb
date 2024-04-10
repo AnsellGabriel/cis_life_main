@@ -62,9 +62,12 @@ class ProcessClaimsController < ApplicationController
   end
 
   def new_coop
+    if params[:lb].present?
+      @loan_batch = LoanInsurance::Batch.find(params[:lb])
+    end
     @process_claim = ProcessClaim.new
-    @process_claim.agreement = Agreement.find(params[:a])
-    @process_claim.agreement_benefit = AgreementBenefit.find(params[:ab])
+    @process_claim.agreement = Agreement.find(params[:a]) if params[:a].present?
+    @process_claim.agreement_benefit = AgreementBenefit.find(params[:ab]) if params[:ab].present?
     @coop_member = CoopMember.find(params[:cm])
     @process_claim.claimable = @coop_member
     @process_claim.cooperative = @coop_member.cooperative
@@ -87,6 +90,9 @@ class ProcessClaimsController < ApplicationController
   end
 
   def create_coop
+    if params[:lb].present?
+      @loan_batch = LoanInsurance::Batch.find(params[:lb])
+    end
     @process_claim = ProcessClaim.new(process_claim_params)
     @process_claim.entry_type = :coop
     @process_claim.claim_route = :file_claim
@@ -99,6 +105,10 @@ class ProcessClaimsController < ApplicationController
 
     respond_to do |format|
       if @process_claim.save
+        if @loan_batch.present?
+          @loan_batch.process_claim_id = @process_claim.id
+          @loan_batch.save!
+        end
 
         @process_claim.process_track.create(route_id: 0, user: current_user)
         format.html { redirect_to show_coop_process_claim_path(@process_claim), notice: "Claims was successfully added." }
@@ -320,14 +330,17 @@ class ProcessClaimsController < ApplicationController
 
   # DELETE /process_claims/1
   def destroy
+    @coop_member = @process_claim.claimable
+
     @process_claim.destroy
-    redirect_to process_claims_url, notice: "Process claim was successfully destroyed."
+    redirect_to show_insurance_coop_member_path(@coop_member), alert: "Claim cancelled"
   end
 
   private
   # Use callbacks to share common setup or constraints between actions.
   def set_process_claim
     @process_claim = ProcessClaim.find(params[:id])
+    @loan_batch = @process_claim.loan_batch if @process_claim.loan_batch.present?
   end
 
   # Only allow a list of trusted parameters through.
