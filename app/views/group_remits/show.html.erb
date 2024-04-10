@@ -201,7 +201,7 @@
       <div class="form-group d-flex justify-content-end gap-1 mb-1">
         <%= text_field_tag 'batch_filter', 
           nil, 
-          placeholder: 'Member\'s name', 
+          placeholder: "Search member", 
           class: "form-control", 
           style: "width: auto"
         %>
@@ -249,7 +249,11 @@
     <tbody id="batches_body">
 
       <% if @group_remit.batches.exists? %>
-        <%= render @batches.includes([coop_member: :member], :batch_beneficiaries), group_remit: @group_remit, agreement: @agreement %>
+        <% if @group_remit.is_batch_remit? %>
+          <%= render @batches.order(:last_name).includes([coop_member: :member], :batch_beneficiaries), group_remit: @group_remit, agreement: @agreement %>
+        <% else %>
+          <%= render @batches.includes([coop_member: :member], :batch_beneficiaries), group_remit: @group_remit, agreement: @agreement %>
+        <% end %>
       <% elsif @group_remit.is_batch_remit? %>
         <tr>
           <td colspan="6" class="text-center">No enrolled members.</td>

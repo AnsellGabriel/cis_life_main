@@ -20,6 +20,7 @@ class Accounting::RemarksController < ApplicationController
   def create
     @remark = @voucher.remarks.build(remark_params.merge(user: current_user))
 
+    binding.pry
     if @remark.save
       if current_user.is_auditor?
         @voucher.pending_audit!

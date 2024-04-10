@@ -32,7 +32,9 @@
               </span>
             </td>
             <td>
-              <%= link_to "Show", accounting_check_path(voucher), class: small_btn('outline-primary') %>
+              <%= link_to accounting_check_path(voucher), class: small_btn('primary'), title: 'Show' do %>
+                <i class="bi bi-eye-fill"></i>
+              <% end %>
             </td>
           </tr>
 
