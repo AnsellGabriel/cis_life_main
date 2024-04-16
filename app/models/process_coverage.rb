@@ -292,7 +292,7 @@ class ProcessCoverage < ApplicationRecord
     end
   end
 
-  def self.get_reports(type, date_from, date_to, user_id)
+  def self.get_reports(type, date_from, date_to, user_id=nil)
     case type
     when 0 # ALL status
       where(created_at: date_from..date_to).order(:created_at) 
