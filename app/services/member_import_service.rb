@@ -82,8 +82,15 @@ class MemberImportService
         # check if member is already a coop member
         coop_member = member.coop_members.find_or_initialize_by(cooperative_id: @cooperative.id)
         member.update(member_hash)
+
+        if coop_member.persisted?
+          updated_members_counter += 1
+          create_denied_enrollee(row["First Name"], row["Middle Name"], row["Last Name"], "Member information updated")
+        else
+          created_members_counter += 1
+        end
+
         coop_member.update(coop_member_hash)
-        updated_members_counter += 1
       else
         # If a member does not exist, create a new record
         new_member = Member.create(member_hash)
@@ -98,7 +105,6 @@ class MemberImportService
           update_progress(total_members, progress_counter)
           next
         end
-
       end
 
       progress_counter += 1

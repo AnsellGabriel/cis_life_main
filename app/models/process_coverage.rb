@@ -11,6 +11,7 @@ class ProcessCoverage < ApplicationRecord
   belongs_to :who_processed, class_name: "Employee", optional: true
   belongs_to :who_approved, class_name: "Employee", optional: true
   has_many :process_remarks
+  has_many :notifications
   has_one :check_voucher_request, as: :requestable, dependent: :destroy, class_name: "Accounting::CheckVoucherRequest"
 
   delegate :cooperative, to: :group_remit
@@ -34,6 +35,8 @@ class ProcessCoverage < ApplicationRecord
     reassess: 10 # Reaassessment
   }
   FILTERED_STATUSES = statuses.select { |key, value| [0, 2, 3, 10].include?(value) }.keys
+
+  STATUSES = [["All", 0], ["FOR PROCESS", 1], ["PROCESSED", 3]]
 
   enum und_route: {
     for_analyst_review: 0,
@@ -118,6 +121,27 @@ class ProcessCoverage < ApplicationRecord
 
   def sum_batches_loan_amount
     self.group_remit.batches.where(insurance_status: :approved).sum(:loan_amount)
+  end
+
+  def sum_batches_service_fee
+    group_remit.batches.where(insurance_status: :approved).sum(:coop_sf_amount) 
+  end
+
+  def sum_denied_batches_prem
+    group_remit.batches.where(insurance_status: :denied).sum(:premium).to_f
+  end
+
+  def sum_denied_batches_sf
+    group_remit.batches.where(insurance_status: :denied).sum(:coop_sf_amount).to_f
+  end
+
+  def sum_denied_cov(denied_batches)
+    case group_remit.type
+    when "LoanInsurance::GroupRemit"
+      group_remit.batches.where(insurance_status: :denied).sum(:loan_amount)
+    else
+      ProductBenefit.joins(agreement_benefit: :batches).where("batches.id IN (?)", denied_batches.pluck(:id)).where("product_benefits.benefit_id = ?", 1).sum(:coverage_amount)
+    end
   end
 
   def sum_batches_gross_prem(klass)
@@ -222,6 +246,17 @@ class ProcessCoverage < ApplicationRecord
     where(status: status, created_at: date_range)
   end
 
+  def self.cov_list_analyst(user, status=nil, type=nil)
+    case type
+    when nil
+      where(processor: user, status: status)
+    when "eval"
+      where(processor: user, status: ["approved", "denied"])
+    when "process"
+      where(processor: user, status: ["for_head_approval", "for_vp_approval"])
+    end
+  end
+
   def self.for_head_approvals(user)
     case user.rank
     when "head"
@@ -244,5 +279,29 @@ class ProcessCoverage < ApplicationRecord
   #     batch.update_attribute(:insurance_status, :for_review)
   #   end
   # end
+
+  def self.to_csv
+    attributes = %w{id cooperative plan marketing gross_premium coop_service_fee agent_commission net_premium region processor}
+
+    CSV.generate(headers: true) do |csv|
+      csv << attributes
+
+      all.each do |pc|
+        csv << attributes.map{ |attr| pc.send(attr) }
+      end
+    end
+  end
+
+  def self.get_reports(type, date_from, date_to, user_id=nil)
+    case type
+    when 0 # ALL status
+      where(created_at: date_from..date_to).order(:created_at) 
+    when 1 # UNPROCESSED
+      where(status: :for_process, created_at: date_from..date_to).order(:created_at)
+    when 2 # PROCESSED
+      where(status: [:approved, :denied], created_at: date_from..date_to).order(:created_at)
+    end
+
+  end
 
 end

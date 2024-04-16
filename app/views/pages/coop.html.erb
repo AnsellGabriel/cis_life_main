@@ -1,6 +1,5 @@
 <div class="container">
-
-  <%= content_tag :h3, @coop_name %>
+  <%= content_tag :h3, @cooperative %>
 
   <div class="mb-2">
     <%#= link_to "Premium per Gender", modal_charts_path(q: "pg", chart_data: @pie_chart_gender.to_json, c_id: "gen-chart"), class: "btn btn-lg btn-outline-primary", data: { turbo_frame: "reg_form_modal_xl" } %>
@@ -34,7 +33,7 @@
 
 
   <div class="row mb-2">
-    <%= render "pages/graphs/benefit_chart", chart_data: @benefits_chart, c_id: "chart-ben" %>
+    <%= render "pages/graphs/benefit_chart", chart_data: @coop_claim_per_benefits, c_id: "chart-ben" %>
   </div>
 
   <!-- <div class="row mb-2">
@@ -47,7 +46,7 @@
   </div> -->
 
   <div class="row mb-2">
-    <%= column_chart @gr_chart, title: "Premium & Claims per Group Remit", colors: ["#0DD823", "#EE2525"] %>
+    <%= column_chart @gr_chart, title: "Premium & Claims per Listings", colors: ["#0DD823", "#EE2525"] %>
   </div>
 
   <div class="row mb-2">

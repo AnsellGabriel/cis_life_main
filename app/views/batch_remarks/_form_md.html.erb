@@ -10,7 +10,7 @@
       <%= f.input :status, input_html: { value: @rem_status }, as: :hidden %>
       <%#= f.association :user %>
       <%= f.input :batch_status, input_html: { value: @batch_status }, as: :hidden %>
-      <%= f.input :process_coverage, input_html: { value: @process_coverage }, as: :hidden %>
+      <%= f.input :process_coverage, input_html: { value: @process_coverage.id }, as: :hidden %>
     </div>
 
     <div class="form-actions text-end">

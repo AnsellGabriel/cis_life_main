@@ -40,7 +40,7 @@ class ClaimRemarksController < ApplicationController
     @claim_remarks = ClaimRemark.where(process_claim: @process_claim, coop: 1)
     # raise "error"
     # @claim_remark.coop = params[:c]
-    set_dummy_param
+    set_dummy_param if Rails.env.development?
   end
 
   def set_dummy_param

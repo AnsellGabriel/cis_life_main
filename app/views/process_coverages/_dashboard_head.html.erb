@@ -1,80 +1,142 @@
 <div class="row">
   <% current_date = Time.now %>
   <div class="col-3 mb-2">
-    <div class="card text-dark bg-light">
-      <div class="card-header">
-        For Process Coverages
-      </div>
-      <div class="card-body">
-      Year: <%= link_to pluralize(@for_process_coverages.where(created_at: current_date.beginning_of_year..current_date.end_of_year).count, "Coverage"), cov_list_process_coverages_path(cov_type: "For Process", current_date: current_date, date_type: "yearly", title: "For Process PCs (Yearly)"), class: "link-dark", data: { turbo_frame: "remote_modal" } %> <br>
-      Month: <%= link_to pluralize(@for_process_coverages.where(created_at: start_month(current_date)..end_month(current_date)).count, "Coverage"), cov_list_process_coverages_path(cov_type: "For Process", current_date: current_date, date_type: "monthly", title: "For Process PCs (Monthly)"), class: "link-dark", data: { turbo_frame: "remote_modal" } %> <br>
-      Week: <%= link_to pluralize(@for_process_coverages.where(created_at: start_week(current_date)..end_week(current_date)).count, "Coverage"), cov_list_process_coverages_path(cov_type: "For Process", current_date: current_date, date_type: "weekly", title: "For Process PCs (Weekly)"), class: "link-dark", data: { turbo_frame: "remote_modal" } %>
-      </div>
-    </div>
-  </div>
-
-  <div class="col-3 mb-2">
-    <div class="card text-white bg-success">
-      <div class="card-header">
-        Approved Process Coverages
-      </div>
-      <div class="card-body">
-      Year: <%= link_to pluralize(@approved_process_coverages.where(created_at: current_date.beginning_of_year..current_date.end_of_year).count, "Coverage"), cov_list_process_coverages_path(cov_type: "Approved", current_date: current_date, date_type: "yearly", title: "Approved PCs (Yearly)"), class: "link-light", data: { turbo_frame: "remote_modal" } %> <br>
-      Month: <%= link_to pluralize(@approved_process_coverages.where(created_at: start_month(current_date)..end_month(current_date)).count, "Coverage"), cov_list_process_coverages_path(cov_type: "Approved", current_date: current_date, date_type: "monthly", title: "Approved PCs (Monthly)"), class: "link-light", data: { turbo_frame: "remote_modal" } %> <br>
-      Week: <%= link_to pluralize(@approved_process_coverages.where(created_at: start_week(current_date)..end_week(current_date)).count, "Coverage"), cov_list_process_coverages_path(cov_type: "Approved", current_date: current_date, date_type: "weekly", title: "Approved PCs (Weekly)"), class: "link-light", data: { turbo_frame: "remote_modal" } %>
-      </div>
-    </div>
-  </div>
-
-<!-- 
-  <div class="col-3 mb-2">
-    <div class="card text-dark bg-warning">
-      <div class="card-header">
-        Reprocess Coverages
-      </div>
-      <div class="card-body">
-      Year: <%= link_to pluralize(@reprocess_coverages.where(created_at: current_date.beginning_of_year..current_date.end_of_year).count, "Coverage"), cov_list_process_coverages_path(cov_type: "Reconsider", title: "Reconsidered PCs (Yearly)", current_date: current_date, date_type: "yearly"), class: "link-dark", data: { turbo_frame: "remote_modal" } %> <br>
-      Month: <%= link_to pluralize(@reprocess_coverages.where(created_at: start_month(current_date)..end_month(current_date)).count, "Coverage"), cov_list_process_coverages_path(cov_type: "Reconsider", title: "Reprocessed PCs (Monthly)", current_date: current_date, date_type: "monthly"), class: "link-dark", data: { turbo_frame: "remote_modal" } %> <br>
-      Week: <%= link_to pluralize(@reprocess_coverages.where(created_at: start_week(current_date)..end_week(current_date.end_of_year)).count, "Coverage"), cov_list_process_coverages_path(cov_type: "Reconsider", title: "Reprocessed PCs (Weekly)", current_date: current_date, date_type: "weekly"), class: "link-dark", data: { turbo_frame: "remote_modal" } %>
-      </div>
-    </div>
-  </div> -->
-
-  <div class="col-3 mb-2">
-    <div class="card text-white bg-danger">
-      <div class="card-header">
-        Denied Process Coverages
-      </div>
-      <div class="card-body">
-      Year: <%= link_to pluralize(@denied_process_coverages.where(created_at: current_date.beginning_of_year..current_date.end_of_year).count, "Coverage"), cov_list_process_coverages_path(cov_type: "Denied", title: "Denied PCs (Yearly)", current_date: current_date, date_type: "yearly"), class: "link-light", data: { turbo_frame: "remote_modal" } %> <br>
-      Month: <%= link_to pluralize(@denied_process_coverages.where(created_at: start_month(current_date)..end_month(current_date)).count, "Coverage"), cov_list_process_coverages_path(cov_type: "Denied", title: "Denied PCs (Monthly)", current_date: current_date, date_type: "monthly"), class: "link-light", data: { turbo_frame: "remote_modal" } %> <br>
-      Week: <%= link_to pluralize(@denied_process_coverages.where(created_at: start_week(current_date)..end_week(current_date.end_of_year)).count, "Coverage"), cov_list_process_coverages_path(cov_type: "Denied", title: "Denied PCs (Weekly)", current_date: current_date, date_type: "weekly"), class: "link-light", data: { turbo_frame: "remote_modal" } %>
-      </div>
-    </div>
-  </div>
-
-  <div class="col-3 mb-2">
-    <div class="card text-light bg-primary">
-      <div class="card-header">
-        For Re-assessment Coverages
-      </div>
-      <div class="card-body">
-      Year: <%= link_to pluralize(@reassess_coverages.where(created_at: current_date.beginning_of_year..current_date.end_of_year).count, "Coverage"), cov_list_process_coverages_path(cov_type: "Reassess", title: "Re-assessment PCs (Yearly)", current_date: current_date, date_type: "yearly"), class: "link-light", data: { turbo_frame: "remote_modal" } %> <br>
-      Month: <%= link_to pluralize(@reassess_coverages.where(created_at: start_month(current_date)..end_month(current_date)).count, "Coverage"), cov_list_process_coverages_path(cov_type: "Reassess", title: "Re-assessment PCs (Monthly)", current_date: current_date, date_type: "monthly"), class: "link-light", data: { turbo_frame: "remote_modal" } %> <br>
-      Week: <%= link_to pluralize(@reassess_coverages.where(created_at: start_week(current_date)..end_week(current_date.end_of_year)).count, "Coverage"), cov_list_process_coverages_path(cov_type: "Reassess", title: "Re-assessment PCs (Weekly)", current_date: current_date, date_type: "weekly"), class: "link-light", data: { turbo_frame: "remote_modal" } %>
-      </div>
-    </div>
-  </div>
-
-</div>
-<div class="row">
-  <div class="col-<%= current_user.head? ? 3 : 6 %> mb-2">
     
-    <% if current_user.rank == "head" %>
-      <%= render "process_coverages/partials/head_approval", process_coverages: @process_coverages, vp: false %>
-    <% else %>
-      <%= render "process_coverages/partials/vp_approval", process_coverages: @process_coverages %>
-    <% end %>
-    
+    <div class="row">
+      <div class="col">
+        <div class="card text-dark bg-light">
+          <div class="card-header">
+            For Process Coverages
+          </div>
+          <div class="card-body">
+          Year: <%= link_to pluralize(@for_process_coverages.where(created_at: current_date.beginning_of_year..current_date.end_of_year).count, "Coverage"), cov_list_process_coverages_path(cov_type: "For Process", current_date: current_date, date_type: "yearly", title: "For Process PCs (Yearly)"), class: "link-dark", data: { turbo_frame: "remote_modal" } %> <br>
+          Month: <%= link_to pluralize(@for_process_coverages.where(created_at: start_month(current_date)..end_month(current_date)).count, "Coverage"), cov_list_process_coverages_path(cov_type: "For Process", current_date: current_date, date_type: "monthly", title: "For Process PCs (Monthly)"), class: "link-dark", data: { turbo_frame: "remote_modal" } %> <br>
+          Week: <%= link_to pluralize(@for_process_coverages.where(created_at: start_week(current_date)..end_week(current_date)).count, "Coverage"), cov_list_process_coverages_path(cov_type: "For Process", current_date: current_date, date_type: "weekly", title: "For Process PCs (Weekly)"), class: "link-dark", data: { turbo_frame: "remote_modal" } %>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col">
+        <div class="card text-white bg-success">
+          <div class="card-header">
+            Approved Process Coverages
+          </div>
+          <div class="card-body">
+          Year: <%= link_to pluralize(@approved_process_coverages.where(created_at: current_date.beginning_of_year..current_date.end_of_year).count, "Coverage"), cov_list_process_coverages_path(cov_type: "Approved", current_date: current_date, date_type: "yearly", title: "Approved PCs (Yearly)"), class: "link-light", data: { turbo_frame: "remote_modal" } %> <br>
+          Month: <%= link_to pluralize(@approved_process_coverages.where(created_at: start_month(current_date)..end_month(current_date)).count, "Coverage"), cov_list_process_coverages_path(cov_type: "Approved", current_date: current_date, date_type: "monthly", title: "Approved PCs (Monthly)"), class: "link-light", data: { turbo_frame: "remote_modal" } %> <br>
+          Week: <%= link_to pluralize(@approved_process_coverages.where(created_at: start_week(current_date)..end_week(current_date)).count, "Coverage"), cov_list_process_coverages_path(cov_type: "Approved", current_date: current_date, date_type: "weekly", title: "Approved PCs (Weekly)"), class: "link-light", data: { turbo_frame: "remote_modal" } %>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col">
+        <div class="card text-white bg-danger">
+          <div class="card-header">
+            Denied Process Coverages
+          </div>
+          <div class="card-body">
+          Year: <%= link_to pluralize(@denied_process_coverages.where(created_at: current_date.beginning_of_year..current_date.end_of_year).count, "Coverage"), cov_list_process_coverages_path(cov_type: "Denied", title: "Denied PCs (Yearly)", current_date: current_date, date_type: "yearly"), class: "link-light", data: { turbo_frame: "remote_modal" } %> <br>
+          Month: <%= link_to pluralize(@denied_process_coverages.where(created_at: start_month(current_date)..end_month(current_date)).count, "Coverage"), cov_list_process_coverages_path(cov_type: "Denied", title: "Denied PCs (Monthly)", current_date: current_date, date_type: "monthly"), class: "link-light", data: { turbo_frame: "remote_modal" } %> <br>
+          Week: <%= link_to pluralize(@denied_process_coverages.where(created_at: start_week(current_date)..end_week(current_date.end_of_year)).count, "Coverage"), cov_list_process_coverages_path(cov_type: "Denied", title: "Denied PCs (Weekly)", current_date: current_date, date_type: "weekly"), class: "link-light", data: { turbo_frame: "remote_modal" } %>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col">
+        <div class="card text-light bg-primary">
+          <div class="card-header">
+            For Re-assessment Coverages
+          </div>
+          <div class="card-body">
+          Year: <%= link_to pluralize(@reassess_coverages.where(created_at: current_date.beginning_of_year..current_date.end_of_year).count, "Coverage"), cov_list_process_coverages_path(cov_type: "Reassess", title: "Re-assessment PCs (Yearly)", current_date: current_date, date_type: "yearly"), class: "link-light", data: { turbo_frame: "remote_modal" } %> <br>
+          Month: <%= link_to pluralize(@reassess_coverages.where(created_at: start_month(current_date)..end_month(current_date)).count, "Coverage"), cov_list_process_coverages_path(cov_type: "Reassess", title: "Re-assessment PCs (Monthly)", current_date: current_date, date_type: "monthly"), class: "link-light", data: { turbo_frame: "remote_modal" } %> <br>
+          Week: <%= link_to pluralize(@reassess_coverages.where(created_at: start_week(current_date)..end_week(current_date.end_of_year)).count, "Coverage"), cov_list_process_coverages_path(cov_type: "Reassess", title: "Re-assessment PCs (Weekly)", current_date: current_date, date_type: "weekly"), class: "link-light", data: { turbo_frame: "remote_modal" } %>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <% if current_user.rank == "head" %>
+        <div class="col">
+          <%= render "process_coverages/partials/head_approval", process_coverages: @process_coverages, vp: false %>
+        </div>
+      <% else %>
+        <div class="col">
+          <%= render "process_coverages/partials/vp_approval", process_coverages: @process_coverages %>
+        </div>
+      <% end %>
+    </div>
+  </div>
+  <div class="col-9">
+    <div class="row">
+      <div class="col-8">
+        <div class="accordion" id="accordionExample">
+          <div class="accordion-item">
+            <h2 class="accordion-header" id="headingTwo">
+              <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+                Search by UA with Dates
+              </button>
+            </h2>
+            <div id="collapseTwo" class="accordion-collapse collapse" aria-labelledby="headingTwo" data-bs-parent="#accordionExample">
+              <div class="accordion-body">
+                <%= form_with url: process_coverages_path, builder: SimpleForm::FormBuilder, method: :get do |f| %>
+                  <%# if current_user.senior_officer? %>
+                    <% analysts = Employee::ANALYSTS.map { |analyst| [analyst.signed_fullname, analyst.id] } %>
+                  <%# else %>
+                    <%# analysts = Employee::ANALYSTS.joins(:emp_approver).where(emp_approver: { approver: current_user.userable_id }) %>
+                  <%# end %>
+                  <% process_types = ProcessCoverage::FILTERED_STATUSES %>
+                  <div class="row">
+                    <%= f.input :emp_id, as: :select, label: "Select UA", collection: analysts, input_html: { class: "form-select" }, wrapper_html: { class: "col-md-3" } %>
+                    <%= f.input :date_from, as: :string, label: "From", input_html: { data: { controller: "flatpickr",
+                        flatpickr_max_date: Time.zone.now,
+                        flatpickr_next_arrow: "Next",
+                        flatpickr_prev_arrow: "Prev",
+                        flatpickr_date_format: "m-d-Y" } }, wrapper_html: { class: "col-md-3" } %>
+                    <%= f.input :date_to, as: :string, label: "To", input_html: { data: { controller: "flatpickr",
+                        flatpickr_max_date: Time.zone.now,
+                        flatpickr_next_arrow: "Next",
+                        flatpickr_prev_arrow: "Prev",
+                        flatpickr_date_format: "m-d-Y" } }, wrapper_html: { class: "col-md-3" } %>
+                    <%= f.input :process_type, as: :select, collection: process_types, wrapper_html: { class: "col-md-3" } %>
+                  </div>
+                  <%= f.button :submit, "Filter", class: small_btn('outline-primary') %>
+                <% end %>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      
+      <%= render "process_coverages/analysts_inventory" %>
+    </div>
+    <div class="row mt-3">
+      <div class="col-12">
+        <%= form_with url: process_coverages_path, method: :get do %>
+        <%#= form_with url: product_csv_path, method: :get do %>
+          <div class="d-flex justify-content-between align-items-center mb-3">
+            <div class="d-flex gap-3 text-center">
+              <%= text_field_tag 'search', nil, placeholder: 'Search...', class: "form-control", style: "width: auto", required: true %>
+              <%= submit_tag 'Search', class: "btn btn-success" %>
+              <%= link_to "View All", process_coverages_path, class: "btn btn-secondary" %>
+              <%= link_to "Generate CSV", gen_csv_process_coverages_path, class: "btn btn-primary", data: { turbo_frame: "remote_modal" } %>
+              <%= content_tag :a, "Analyst Inventory", 
+                  class: reg_btn('outline-success'), 
+                  data: {bs_toggle: "modal",
+                    bs_target: "#benefitsModal"
+                  }
+              %>
+            </div>
+          </div>
+        <% end %>
+      </div>
+    </div>
+    <div class="row">
+      <%= render "process_coverages/table_index", process_coverages: @filtered_pc %>
+    </div>
   </div>
 </div>

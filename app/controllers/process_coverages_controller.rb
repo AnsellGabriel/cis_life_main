@@ -1,4 +1,6 @@
 class ProcessCoveragesController < ApplicationController
+  include CsvGenerator
+  
   before_action :authenticate_user!
   before_action :check_emp_department
   before_action :set_process_coverage,
@@ -26,8 +28,8 @@ class ProcessCoveragesController < ApplicationController
 
       if params[:emp_id].present?
         # raise 'errors'
-        date_from = params[:date_from]
-        date_to = params[:date_to]
+        date_from = Date.strptime(params[:date_from], "%m-%d-%Y")
+        date_to = Date.strptime(params[:date_to], "%m-%d-%Y")
         @process_coverages = @process_coverages_x.where(processor_id: params[:emp_id], status: :for_process, created_at: date_from..date_to)
       end
 
@@ -49,21 +51,26 @@ class ProcessCoveragesController < ApplicationController
       else
         @process_coverages = @process_coverages_x
       end
-      # raise 'errors'
+
       if params[:emp_id].present?
-        # raise 'errors'
-        # date_from = Date.strptime(params[:date_from], "%m-%d-%Y")
-        date_from = Date.strptime(params[:date_from], "%Y-%m-%d")
-        # date_to = Date.strptime(params[:date_to], "%m-%d-%Y")
-        date_to = Date.strptime(params[:date_to], "%Y-%m-%d")
-
-
+        date_from = Date.strptime(params[:date_from], "%m-%d-%Y")
+        date_to = Date.strptime(params[:date_to], "%m-%d-%Y")
+        # @process_coverages = @process_coverages_x.where(processor_id: params[:emp_id], status: params[:process_type], created_at: params[:date_from]..params[:date_to])
         @process_coverages = @process_coverages_x.where(processor_id: params[:emp_id], status: params[:process_type], created_at: date_from..date_to)
       end
 
     elsif current_user.analyst?
       # @process_coverages_x = ProcessCoverage.joins(group_remit: { agreement: :emp_agreements }).where( emp_agreements: { employee_id: current_user.userable_id, active: true })
       @process_coverages_x = ProcessCoverage.joins(group_remit: {agreement: :plan}).where(processor: current_user.userable_id)
+      @for_process_coverages = @process_coverages_x.where(status: :for_process)
+      @approved_process_coverages = @process_coverages_x.where(status: :approved)
+      # @pending_process_coverages = ProcessCoverage.where(status: :pending)
+      @reprocess_coverages = @process_coverages_x.where(status: :reprocess)
+      @reassess_coverages = @process_coverages_x.where(status: :reassess)
+      @denied_process_coverages = @process_coverages_x.where(status: :denied)
+      @evaluated_process_coverages = @process_coverages_x.where(status: [:for_head_approval, :for_vp_approval])
+
+      @coverages_total_processed = ProcessCoverage.where(status: [:approved, :denied, :reprocess])
 
       if params[:search].present?
         @process_coverages = @process_coverages_x.joins("INNER JOIN cooperatives ON cooperatives.id = agreements.cooperative_id").where(
@@ -73,12 +80,11 @@ class ProcessCoveragesController < ApplicationController
       end
 
       if params[:emp_id].present?
-        # raise 'errors'
          # date_from = Date.strptime(params[:date_from], "%m-%d-%Y")
          date_from = Date.strptime(params[:date_from], "%Y-%m-%d")
          # date_to = Date.strptime(params[:date_to], "%m-%d-%Y")
          date_to = Date.strptime(params[:date_to], "%Y-%m-%d")
-        @process_coverages = @process_coverages_x.where(processor_id: params[:emp_id], status: params[:process_type], created_at: date_from..date_to)
+        @process_coverages = @process_coverages_x.where(status: params[:process_type], created_at: params[:date_from]..params[:date_to])
       end
 
     else
@@ -93,8 +99,8 @@ class ProcessCoveragesController < ApplicationController
       # @analysts = @analysts_x.joins(:emp_approver).where(emp_approver: { approver: current_user.userable_id })
     end
 
-    @pagy_pc, @filtered_pc = pagy(@process_coverages, items: 10, page_param: :process_coverage, link_extra: 'data-turbo-frame="pro_cov_pagination"')
-
+    @pagy_pc, @filtered_pc = pagy(@process_coverages, items: 5, page_param: :process_coverage, link_extra: 'data-turbo-frame="pro_cov_pagination"')
+    @notifications = current_user.userable.notifications.where(created_at: @current_date.beginning_of_week..@current_date.end_of_week)
     # if params[:search].present?
     #   @process_coverages = @process_coverages_x.joins(group_remit: {agreement: :cooperative}).where("group_remits.name LIKE ? OR group_remits.description LIKE ? OR agreements.moa_no LIKE ? OR cooperatives.name LIKE ?", "%#{params[:search]}%", "%#{params[:search]}%", "%#{params[:search]}%", "%#{params[:search]}%")
     # else
@@ -124,7 +130,31 @@ class ProcessCoveragesController < ApplicationController
     send_data(pdf.render,
       filename: "hello.pdf",
       type: "application/pdf")
+  end
 
+  def gen_csv
+
+  end
+
+  def product_csv
+        
+    date_from = Date.strptime(params[:date_from], "%m-%d-%Y")
+    date_to = Date.strptime(params[:date_to], "%m-%d-%Y")
+
+    case params[:emp_id]
+    when "0" then
+      emp = "PROCESS COVERAGES"
+      @process_coverages = ProcessCoverage.get_reports(params[:process_type].to_i, date_from, date_to)
+    else
+      emp = Employee.find(params[:emp_id])
+      @process_coverages = ProcessCoverage.where(processor_id: params[:emp_id], status: params[:process_type], created_at: date_from..date_to).order(:created_at)
+    end
+
+    if @process_coverages.nil? || @process_coverages.empty? 
+      redirect_back fallback_location: process_coverages_path, alert: "No record(s) found."
+    else
+      generate_csv(@process_coverages, "#{emp} - #{date_from} to #{date_to}")
+    end
   end
 
   def pdf
@@ -142,6 +172,12 @@ class ProcessCoveragesController < ApplicationController
       filename: "#{@process_coverage.group_remit.agreement.plan.acronym}-#{@process_coverage.group_remit.name}.pdf",
       type: "application/pdf",
       disposition: "inline")
+  end
+
+  def und
+    @notifications = current_user.userable.notifications
+    @process_coverages = ProcessCoverage.all
+    @pagy_pc, @filtered_pc = pagy(@process_coverages, items: 5, page_param: :process_coverage, link_extra: 'data-turbo-frame="pro_cov_pagination"')
   end
 
 
@@ -168,6 +204,19 @@ class ProcessCoveragesController < ApplicationController
           ProcessCoverage.index_cov_list(current_user.userable_id, :for_process, start_date..end_date)
         elsif current_user.senior_officer?
           ProcessCoverage.where(status: :for_process, created_at: start_date..end_date)
+        elsif current_user.analyst?
+          puts "#{self}**"
+          ProcessCoverage.cov_list_analyst(current_user.userable, :for_process)
+        end
+
+      when "Evaluated"
+        if current_user.analyst?
+          ProcessCoverage.cov_list_analyst(current_user.userable, "", "eval")
+        end
+
+      when "Processed"
+        if current_user.analyst?
+          ProcessCoverage.cov_list_analyst(current_user.userable, "", "process")
         end
 
       when "Approved"
@@ -528,8 +577,11 @@ class ProcessCoveragesController < ApplicationController
 
   def reassess
     @process_coverage = ProcessCoverage.find_by(id: params[:process_coverage_id])
+    @group_remit = @process_coverage.group_remit
+    
     respond_to do |format|
       if @process_coverage.update_attribute(:status, "reassess")
+        @group_remit.update_attribute(:status, "under_review")
         format.html { redirect_to process_coverage_path(@process_coverage), notice: "Process Coverage For Reassessment!" }
       end
     end
@@ -548,6 +600,7 @@ class ProcessCoveragesController < ApplicationController
         # if @process_coverage.update_attribute(:status, "for_review")
         if @process_coverage.update_attribute(:status, "reprocess_approved")
           @process_coverage.update(reprocess: true)
+          @process_coverage.group_remit.update(status: :under_review)
           format.html { redirect_to process_coverage_path(@process_coverage), notice: "Reprocess Coverage approved!" }
         end
       else

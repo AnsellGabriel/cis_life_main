@@ -1,5 +1,5 @@
 class GeneralLedger < ApplicationRecord
-  validates_presence_of :ledger_type, :account_id, :amount
+  validates_presence_of :ledger_type, :account_id, :amount, :description
 
   belongs_to :ledgerable, polymorphic: true
   belongs_to :account, class_name: "Treasury::Account", foreign_key: "account_id"
@@ -8,6 +8,7 @@ class GeneralLedger < ApplicationRecord
 
   scope :debits , -> { where(ledger_type: 0) }
   scope :credits, -> { where(ledger_type: 1) }
+  scope :with_transaction_date, ->(date_from, date_to) { where(transaction_date: date_from..date_to) }
 
   def self.total_debit
     debits.sum(:amount)
@@ -15,6 +16,14 @@ class GeneralLedger < ApplicationRecord
 
   def self.total_credit
     credits.sum(:amount)
+  end
+
+  def self.to_csv(employee_id, account_id, date_from, date_to)
+    Reports::AccountLedgerCsvJob.perform_async(employee_id, account_id, date_from, date_to)
+  end
+
+  def self.to_pdf(employee_id, account_id, date_from, date_to)
+    Reports::AccountLedgerPdfJob.perform_async(employee_id, account_id, date_from, date_to)
   end
 
   def self.autofill(ledgerable_type, ledgerable)
@@ -69,8 +78,10 @@ class GeneralLedger < ApplicationRecord
   def payee
     case ledgerable_type
     when "Treasury::CashierEntry"
-      if self.ledgerable.entriable == "Payment"
-        self.ledgerable.entriable.payable.agreement.cooperative
+      if self.ledgerable.entriable_type == "Payment"
+        self.ledgerable.entriable.payable.agreement.cooperative.name
+      elsif self.ledgerable.entriable_type == "Cooperative"
+        self.ledgerable.entriable.name
       end
     when "Accounting::Check"
       self.ledgerable.payable

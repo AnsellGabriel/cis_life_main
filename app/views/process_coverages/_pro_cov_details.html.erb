@@ -60,7 +60,6 @@
     <% end %>
     <%# if process_coverage.status == "pending" || process_coverage.status == "for_process" %>
     <div class="btn-group">
-      <!--div class="<%#= show_approve_button_pc(current_user.rank, @process_coverage) %>"-->
       <div class="<%= button_show_pc(current_user.rank, @process_coverage, @total_net_prem, "approve") %>">
         <%= link_to new_process_remark_path(ref: process_coverage, pro_status: "Approve", rem_status: "approved", max_amount: session[:max_amount], total_life_cov: @total_life_cov, total_gross_prem: @total_gross_prem), title: "Approve", class: "btn btn-sm btn-success mb-2 me-2", data: { turbo_frame: "remote_modal" } do %>
           <%= bootstrap_icon "check-lg" %> Approve
@@ -85,13 +84,13 @@
         <% end %>
       </div>
     </div>
-      <div class="<%= button_show_pc(current_user.rank, @process_coverage, @total_net_prem, "reassessment") %>">
-      <%# if current_user.head? && process_coverage.for_head_approval? %>
-        <%= link_to new_process_remark_path(ref: process_coverage, pro_status: "Reassess", rem_status: "reassess"), title: "Reassess", class: "btn btn-sm btn-primary mb-2", data: { turbo_frame: "remote_modal" } do %>
-          <%= bootstrap_icon "pencil-square" %> Re-assessment
-        <% end %>
-      <%# end %>
-      </div>
+    <div class="<%= button_show_pc(current_user.rank, @process_coverage, @total_net_prem, "reassessment") %>">
+    <%# if current_user.head? && process_coverage.for_head_approval? %>
+      <%= link_to new_process_remark_path(ref: process_coverage, pro_status: "Reassess", rem_status: "reassess"), title: "Reassess", class: "btn btn-sm btn-primary mb-2", data: { turbo_frame: "remote_modal" } do %>
+        <%= bootstrap_icon "pencil-square" %> Re-assessment
+      <% end %>
+    <%# end %>
+    </div>
     <% if current_user.analyst? && (process_coverage.approved? || process_coverage.denied?) %>
       <%= link_to new_process_remark_path(ref: process_coverage, pro_status: "Reprocess", rem_status: "reprocess"), title: "Reprocess", class: "btn btn-sm btn-warning mb-2", data: { turbo_frame: "remote_modal" } do %>
         <%= bootstrap_icon "arrow-repeat" %> Reprocess

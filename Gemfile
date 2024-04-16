@@ -66,6 +66,7 @@ gem "jquery-rails"
 gem "cocoon"
 gem "sidekiq"
 gem "sidekiq-scheduler"
+gem 'sidekiq-status'
 gem "bullet", group: "development"
 gem "carrierwave", "~> 3.0"
 gem "humanize"
@@ -152,3 +153,4 @@ gem 'wicked_pdf'
 gem 'wkhtmltopdf-binary-edge'
 gem 'numbers_and_words'
 # gem 'pdf-reader'
+gem 'spreadsheet'

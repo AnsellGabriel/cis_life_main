@@ -9,13 +9,13 @@ class Payment < ApplicationRecord
   enum status: { for_review: 0, approved: 1, rejected: 2 }
 
   def to_s
-    coop
+    coop.name
   end
 
   def reject
     self.rejected!
     self.payable.reupload_payment!
-    Notification.create(notifiable: self.coop, message: "#{self.payable.name} payment rejected. Please re-upload proof of payment.")
+    Notification.create(notifiable: self.coop, message: "#{self.payable.name} payment rejected. Please see remarks and re-upload proof of payment.")
   end
 
   # def paid

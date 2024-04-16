@@ -22,7 +22,7 @@ class Payments::RemarksController < ApplicationController
         @payment.transaction do
           @payment.reject
           @payment.entries.map(&:cancelled!)
-          @payment.general_ledgers.update_all(transaction_date: nil)
+          # @payment.general_ledgers.update_all(transaction_date: nil)
         end
 
         redirect_to payment_remarks_path(@payment), alert: "Payment rejected."

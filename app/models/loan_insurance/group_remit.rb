@@ -24,6 +24,32 @@ batch_status: "terminated")
     self.coop_commission = approved_coop_commissions
     self.agent_commission = approved_agent_commissions
     self.net_premium = approved_premium_due - approved_coop_commissions - approved_agent_commissions
+    
+    unless self.type == "BatchRemit"
+
+      if self.process_coverage.status == "approved"
+        if self.mis_entry?
+          self.status = :paid
+          self.update_batch_remit
+          self.update_batch_coverages
+
+          # net_prem = initial_gross_premium - (denied_principal_premiums + denied_dependent_premiums)
+
+          if self.gross_premium > approved_premiums
+            self.refund_amount = (self.gross_premium - approved_premiums) - ((self.gross_premium - approved_premiums) * (agreement.coop_sf / 100))
+          end
+
+        else
+          self.status = :for_payment
+          # Notification.create(notifiable: self.agreement.cooperative, message: "#{self.name} is approved and now for payment.")
+          Notification.create(notifiable: self.agreement.cooperative, message: "#{self.name} is approved and now for payment.", process_coverage: self.process_coverage)
+        end
+      else
+        self.status.nil? ? "under_review" : self.status
+      end
+      # self.status = :for_payment
+      # Notification.create(notifiable: self.agreement.cooperative, message: "#{self.name} is approved and now for payment.")
+    end
     self.save!
   end
 
@@ -49,6 +75,10 @@ batch_status: "terminated")
 
   def total_gross_premium
     batches.sum(:premium)
+  end
+
+  def total_excess_premium
+    batches.sum(:excess)
   end
 
   def total_loan_amount

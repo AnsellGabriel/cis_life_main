@@ -18,19 +18,19 @@ class GeneralLedgersController < ApplicationController
         pay_service = PaymentService.new(@entry.entriable, current_user, @entry)
         result = pay_service.post_payment
       elsif params[:e_t] == 'cv'
-        @entry.update(post_date: Date.current, certified_by: current_user.id)
+        @entry.update(post_date: Date.current, certified_by: current_user.userable.id)
         claim_track = @entry.check_voucher_request.requestable.process_track.build
         claim_track.route_id = 14
         claim_track.user_id = current_user.id
         claim_track.save
         result = 'Voucher posted.'
       elsif params[:e_t] == 'jv'
-        @entry.update(post_date: Date.current, certified_by: current_user.id)
+        @entry.update(post_date: Date.current, certified_by: current_user.userable.id)
         result = 'Journal posted.'
       end
 
       @entry.general_ledgers.update_all(transaction_date: Date.current)
-      
+
       redirect_to entry_path, notice: result
     end
   end
@@ -73,6 +73,12 @@ class GeneralLedgersController < ApplicationController
 
   def create
     @ledger = @ledgers.new(general_ledger_params)
+
+    if params[:e_t] == 'ce'
+      @ledger.description = @ledger.ledgerable.treasury_payment_type.name
+    else
+      @ledger.description = @ledger.ledgerable.particulars
+    end
 
     if @ledger.save
       redirect_to entry_path, notice: "Entry added."

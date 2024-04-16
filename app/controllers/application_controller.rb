@@ -14,11 +14,15 @@ class ApplicationController < ActionController::Base
         redirect_to med_directors_home_path
       else
         case current_user.userable.department_id
-        when 26 then redirect_to treasury_dashboard_path
-        when 27 then redirect_to audit_dashboard_path
-        when 11 then redirect_to accounting_dashboard_path
+        # when 26 then redirect_to treasury_dashboard_path
+        when 26 then redirect_to payments_path
+        # when 27 then redirect_to audit_dashboard_path
+        when 27 then redirect_to audit_check_vouchers_path
+        # when 11 then redirect_to accounting_dashboard_path
+        when 11 then redirect_to requests_accounting_checks_path
         when 17, 13 then redirect_to process_coverages_path
         when 15 then redirect_to mis_dashboard_path
+        when 14 then redirect_to reinsurances_path
         else redirect_to employees_path
         end
       end
@@ -70,6 +74,12 @@ class ApplicationController < ActionController::Base
 
   def check_emp_department
     unless (current_user.userable_type == "Employee" && current_user.userable.department_id == 17) || current_user.senior_officer? # check if underwriting
+      render file: "#{Rails.root}/public/404.html", status: :not_found
+    end
+  end
+
+  def check_actuarial_reinsurance
+    unless (current_user.userable_type == "Employee" && current_user.userable.department_id == 14) || current_user.senior_officer? # check if underwriting
       render file: "#{Rails.root}/public/404.html", status: :not_found
     end
   end

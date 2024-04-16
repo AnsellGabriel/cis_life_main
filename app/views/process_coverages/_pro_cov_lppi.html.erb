@@ -45,8 +45,8 @@
             <% if process_coverage.group_remit.batches.where(insurance_status: [:pending, :for_review]).count > 0 %>
               <div class="text-end">
                 <%#= link_to "Approve All", approve_all_group_remit_batches_path(@group_remit,group_remit: process_coverage.group_remit, process_coverage: process_coverage), class: "btn btn-success", onclick: "return confirm('Are you sure?')", method: :get %>
-                <%= link_to "Approve All Eligible", approve_all_loan_insurance_batches_path(@group_remit,group_remit: process_coverage.group_remit, process_coverage: process_coverage), class: "btn btn-success", onclick: "return confirm('Are you sure?')", method: :get %>
-                <%= submit_tag 'Approve Selected', name: 'approve', onclick: "return confirm('Are you sure?')", class: "btn btn-primary" %>
+                <%= link_to "Accept All Eligible", approve_all_loan_insurance_batches_path(@group_remit,group_remit: process_coverage.group_remit, process_coverage: process_coverage), class: "btn btn-success", onclick: "return confirm('Are you sure?')", method: :get %>
+                <%= submit_tag 'Accept Selected', name: 'approve', onclick: "return confirm('Are you sure?')", class: "btn btn-primary" %>
                 <%= button_tag 'Deny Selected', name: 'deny', type: "submit", onclick: "return confirm('Are you sure?')", class: "btn btn-danger" %>
               </div>
             <% end %>
@@ -85,7 +85,7 @@
                 </td>
                 <td>
                   <!-- <%= link_to batch.coop_member.member, show_insurance_coop_member_path(batch.coop_member, pro_cov: true), class: "link-primary", data: { turbo_frame: "modal-xl" } %> <br>-->
-                  <%= link_to batch.coop_member.member, show_coverages_member_path(batch.coop_member.member, pro_cov: true), class: "link-primary", data: { turbo_frame: "modal-xl" } %> <br>
+                  <%= link_to batch.coop_member.member, show_coverages_member_path(batch.coop_member.member, pro_cov: true), class: "link-primary", data: { turbo: true, turbo_frame: "modal-xl" } %> <br>
                   <%= content_tag :small, "Age: #{mem_bday.nil? ? "0" : batch.age}" %> <br>
                   <%= content_tag :small, mem_bday.nil? ? "No Birthday" : "Birthday: #{mem_bday.strftime('%b-%d-%Y')}", class: "text-secondary" %> <br>
                   <%= batch_status(batch.status) %> <%= batch.substandard? ? substandard(batch.substandard) : "" %>
@@ -137,14 +137,19 @@
                   </td>
                 <% end %>
                 <td>
-                  <% unless process_coverage.approved? || process_coverage.reprocess_approved? %>
-                    <div class="<%= batch_buttons(current_user.rank, batch.insurance_status, process_coverage.status) %>">
-                      <%= link_to approve_batch_process_coverage_path(batch: batch, batch_type: batch.class.name), onclick: "return confirm('Are you sure?')", method: :get, title: "Approve", class: "btn btn-sm btn-success mb-1" do %>
+                  <% unless process_coverage.approved? %>
+                    <!--div class="<%#= batch_buttons(current_user.rank, batch.insurance_status, process_coverage.status) %>" -->
+                    <div class="<%= batch_buttons(current_user.rank, "approve", batch.insurance_status, process_coverage.status) %>">
+                      <%= link_to approve_batch_process_coverage_path(batch: batch, batch_type: batch.class.name), onclick: "return confirm('Are you sure?')", method: :get, title: "Accept", class: "btn btn-sm btn-success mb-1" do %>
                         <%= bootstrap_icon "check-lg" %>
                       <% end %>
+                    </div>
+                    <div class="<%= batch_buttons(current_user.rank, "pending", batch.insurance_status, process_coverage.status) %>">
                       <%= link_to new_batch_remark_path(ref: batch, pro_cov: process_coverage, batch_status: "Pending", batch_type: batch.class.name), title: "Pending", class: "btn btn-sm btn-secondary mb-1", data: { turbo_frame: "reg_form_modal", turbo: true } do %>
                         <%= bootstrap_icon "arrow-clockwise" %>
                       <% end %>
+                    </div>
+                    <div class="<%= batch_buttons(current_user.rank, "deny", batch.insurance_status, process_coverage.status) %>">
                       <%= link_to new_batch_remark_path(ref: batch, pro_cov: process_coverage, batch_status: "Deny", batch_type: batch.class.name), title: "Deny", class: "btn btn-sm btn-danger mb-1", data: { turbo_frame: "reg_form_modal", turbo: true } do %>
                         <%= bootstrap_icon "x-lg" %>
                       <% end %>
@@ -176,7 +181,7 @@
                     <% if batch.valid_health_dec == false %>
                       <% unless batch.for_md == true %>
                         <% unless batch.insurance_status == "approved" || batch.insurance_status == "denied" %>
-                          <%= link_to transfer_to_md_process_coverage_path(batch: batch, batch_type: batch.class.name), onclick: "return confirm('Are you sure?')", method: :get, class: "btn btn-sm btn-warning mb-1" do %>
+                          <%= link_to transfer_to_md_process_coverage_path(batch: batch, batch_type: batch.class.name), onclick: "return confirm('Are you sure?')", title: "For M.D. Review", method: :get, class: "btn btn-sm btn-warning mb-1" do %>
                             <%= bootstrap_icon "arrow-up-right" %>
                           <% end %>
                         <% end %>

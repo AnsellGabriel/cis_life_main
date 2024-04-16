@@ -10,6 +10,7 @@ class LoanInsurance::Batch < Batch
   belongs_to :loan, class_name: "LoanInsurance::Loan", foreign_key: "loan_insurance_loan_id", optional: true
   belongs_to :rate, class_name: "LoanInsurance::Rate", foreign_key: "loan_insurance_rate_id"
 
+  belongs_to :process_claim, optional: true
   # belongs_to :retention, class_name: 'LoanInsurance::Retention', foreign_key: 'loan_insurance_retention_id'
   has_many :details, class_name: "LoanInsurance::Detail"
   has_many :batch_health_decs, as: :healthdecable, dependent: :destroy
@@ -224,6 +225,15 @@ class LoanInsurance::Batch < Batch
 
   def previous_loan
     LoanInsurance::Batch.find(unused_loan_id)
+  end
+
+  def call_for_private_meth(type, agreement, percentage, premium)
+    case type
+    when "rate"
+      find_loan_rate(agreement)
+    when "sf"
+      calculate_service_fee(percentage, premium)
+    end
   end
 
   private

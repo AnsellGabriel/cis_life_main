@@ -242,6 +242,7 @@ Rails.application.routes.draw do
 
   # treasury
   namespace :treasury do
+    resources :payment_types
     resources :business_checks, as: 'checks', path: 'checks', only: %w[index edit update] do
       get :requests, on: :collection
       get :search, on: :collection
@@ -256,7 +257,11 @@ Rails.application.routes.draw do
       # get :autofill, on: :member
     end
 
-    resources :accounts
+    resources :accounts do
+      get :show_report, on: :collection
+      get :show_pdf, on: :collection
+    end
+
     get "dashboard", to: "dashboard#index"
   end
 
@@ -342,8 +347,12 @@ Rails.application.routes.draw do
     get :cov_list, on: :collection
     patch :update_batch_selected, on: :collection
     get :transfer_to_md, on: :member
+    get :und, on: :collection
+    get :gen_csv, on: :collection
   end
-
+  
+  get "product_csv", to: "process_coverages#product_csv"
+  get "ri_csv", to: "reinsurances#ri_csv"
   get "preview", to: "process_coverages#preview"
   get "download", to: "process_coverages#download"
   get "process_coverages/pdf/:id", to: "process_coverages#pdf", as: "pc_pdf"
@@ -388,6 +397,8 @@ Rails.application.routes.draw do
 
   #* Reports Module Routes
   namespace :reports do
-    resources :accounts, only: [:index, :show]
+    resources :accounts, only: [:index, :show] do
+      get :trial_balance, on: :collection
+    end
   end
 end

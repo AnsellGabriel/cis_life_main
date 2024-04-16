@@ -6,7 +6,7 @@ class Treasury::CashierEntriesController < ApplicationController
     @receipt = Treasury::CashierEntry.find(params[:id])
     @entry = @receipt.entriable.instance_of?(Payment) ? @receipt.entriable.payable.agreement.cooperative : @receipt.entriable
     @amount_in_words = amount_to_words(@receipt.amount)
-    @payment_type = payment_type(@receipt.payment_type)
+    @payment_type = @receipt.treasury_payment_type.name
     @vat = @receipt.vat
     respond_to do |format|
       format.pdf do
@@ -20,7 +20,7 @@ class Treasury::CashierEntriesController < ApplicationController
     @receipt = Treasury::CashierEntry.find(params[:id])
     @entry = @receipt.entriable.instance_of?(Payment) ? @receipt.entriable.payable.agreement.cooperative : @receipt.entriable
     @amount_in_words = amount_to_words(@receipt.amount)
-    @payment_type = payment_type(@receipt.payment_type)
+    @payment_type = @receipt.treasury_payment_type.name
     @vat = @receipt.vat
     # @positions = analyze_pdf("app/assets/pdfs/or_format.pdf", @receipt)
 
@@ -35,11 +35,14 @@ class Treasury::CashierEntriesController < ApplicationController
   def index
     @entry = Treasury::CashierEntry.new
 
-    if params[:or_number].present?
-      @entries = Treasury::CashierEntry.where(or_no: params[:or_number])
-    else
-      @entries = Treasury::CashierEntry.all.order(created_at: :desc)
-    end
+    # if params[:or_number].present?
+    #   @entries = Treasury::CashierEntry.where(or_no: params[:or_number])
+    # else
+    #   @entries = Treasury::CashierEntry.all.order(created_at: :desc)
+    # end
+
+    @q = Treasury::CashierEntry.ransack(params[:q])
+    @entries = @q.result.order(created_at: :desc)
 
     @pagy, @entries = pagy(@entries, items: 10)
   end
@@ -57,7 +60,8 @@ class Treasury::CashierEntriesController < ApplicationController
   end
 
   def new
-    @entry = Treasury::CashierEntry.new(or_no: Treasury::CashierEntry.last&.or_no.to_i + 1, or_date: Date.today)
+    last_series = Treasury::CashierEntry.all.present? ? Treasury::CashierEntry.last.or_no.to_i + 1 : 1
+    @entry = Treasury::CashierEntry.new(or_no: last_series, or_date: Date.today)
 
     if params[:gr_id].present?
       @group_remit = GroupRemit.find(params[:gr_id])
@@ -109,8 +113,6 @@ class Treasury::CashierEntriesController < ApplicationController
     end
   end
 
-
-
   private
   # Use callbacks to share common setup or constraints between actions.
   def set_entry
@@ -123,7 +125,7 @@ class Treasury::CashierEntriesController < ApplicationController
 
   # Only allow a list of trusted parameters through.
   def entry_params
-    params.require(:treasury_cashier_entry).permit(:or_no, :or_date, :global_entriable, :payment_type, :treasury_account_id, :amount)
+    params.require(:treasury_cashier_entry).permit(:or_no, :or_date, :global_entriable, :treasury_payment_type_id, :treasury_account_id, :amount)
   end
 
   def amount_to_words(amount)

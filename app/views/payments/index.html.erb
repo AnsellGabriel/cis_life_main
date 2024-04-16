@@ -1,13 +1,12 @@
 <div class="<%= flex_justify_align('between', 'center') %> gap-1 mb-3">
-  <%= content_tag :h4, "Remittances", class: 'text-primary mb-0' %>
+  <%= content_tag :h4, "For ORs", class: 'text-primary mb-0' %>
   <%== pagy_bootstrap_nav(@pagy) %>
 </div>
 
-<table class="table table-bordered table-hover bg-white">
+<table class="table table-bordered table-hover bg-white table-sm">
     <thead class="table-dark">
       <tr>
-        <th class="text-center" scope="col">ID</th>
-        <th class="text-center" scope="col">Date</th>
+        <th class="text-center" scope="col" style="width: 8%; min-width: 110px">Date</th>
         <th class="text-center" scope="col">Payee</th>
         <th class="text-center" scope="col">Payment</th>
         <th class="text-center" scope="col">Net Premium</th>
@@ -23,7 +22,6 @@
           <% group_remit = payment.payable %>
           <% payment = payment.decorate %>
           <tr>
-            <td class="text-center"><%=payment.id %></td>
             <td class="text-center"><%= month_day_year(payment.created_at) %></td>
             <td><%= group_remit.agreement.cooperative %></td>
             <td class="text-center"><%= group_remit.agreement.plan.acronym %></td>
@@ -32,7 +30,9 @@
               <span class="<%= payment.status_badge %>"><%= payment.status.titleize %></span>
             </td>
             <td class="text-center">
-              <%= link_to "show", payment_path(payment), class: small_btn("primary") %>
+              <%= link_to payment_path(payment), class: small_btn("outline-primary"), title: "Show" do %>
+                <i class="bi bi-eye-fill"></i>
+              <% end %>
             </td>
           </tr>
         <% end %>

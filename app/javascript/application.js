@@ -10,9 +10,10 @@ import "controllers"
 // import "bootstrap"
 import "@nathanvda/cocoon"
 // import 'cocoon-js'
-
 import "chartkick"
 import "Chart.bundle"
+import "./channels"
+
 
 Turbo.session.drive = true
 window.bootstrap = bootstrap
@@ -28,7 +29,10 @@ document.addEventListener("turbo:load", function () {
   });
 
   // initialize bs toast
-  var toastEl = document.querySelector('.toast')
-  var toast = new bootstrap.Toast(toastEl)
-  toast.show()
+  var toastEle = document.getElementById('notificationToast')
+  
+  if(toastEle) {
+    var toast = new bootstrap.Toast(toastEle)
+    toast.show()
+  }
 });

@@ -11,7 +11,7 @@
     <%= f.input :status, input_html: { value: @rem_status }, as: :hidden %>
     <%#= f.association :user %>
     <%= f.input :batch_status, input_html: { value: @batch_status }, as: :hidden %>
-    <%= f.input :process_coverage, input_html: { value: @process_coverage }, as: :hidden %>
+    <%= f.input :process_coverage, input_html: { value: @process_coverage.id }, as: :hidden %>
     <%# <%= f.input :batch_type, input_html: { value: @batch_type } %> 
   </div>
   <div class="form-actions text-end">
@@ -43,9 +43,8 @@
       <%= f.button :submit, "Add Remarks", class: small_btn('success') %>
     <% else %>
       <%# <%= link_to "Remarks", batch_remarks_path, class: 'btn btn-secondary' %> 
-      <%= link_to "Remarks", modal_remarks_process_coverage_path(@process_coverage, batch: @batch), class: 'btn btn-secondary', data: { turbo_frame: "reg_form_modal" } %>
+      <%#= link_to "Remarks", modal_remarks_process_coverage_path(@process_coverage, batch: @batch), class: 'btn btn-secondary', data: { turbo_frame: "reg_form_modal" } %>
       <%= f.button :submit, "Add Remarks", class: 'btn-success' %>
     <% end %>
   </div>
 <% end %>
-

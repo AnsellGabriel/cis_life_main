@@ -4,9 +4,14 @@ module DateHelper
     date.strftime("%B %d")
   end
 
-  # "MM/DD/YYYY"
+  # "January 01, 2020"
   def date_as_month_day_year(date)
     date.present? ? date.strftime("%B %d, %Y") : "Tentative"
+  end
+
+  # "Jan 01, 2020"
+  def short_month_day_year(date)
+    date.present? ? date.strftime('%b %d, %Y') : "-"
   end
 
   def month_day_year(date)

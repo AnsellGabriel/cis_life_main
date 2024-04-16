@@ -91,12 +91,12 @@ class BatchesController < ApplicationController
         for_approved_count += 1
         # if (18..65).include?(batch.age)
         if (batch.agreement_benefit.min_age..batch.agreement_benefit.max_age).include?(batch.age)
-          if batch.valid_health_dec
+          # if batch.valid_health_dec
             # batch.update_attribute(:insurance_status, "approved") if batch.valid_health_dec
-            batch.update_attribute(:insurance_status, "approved")
-            @process_coverage.increment!(:approved_count)
-            approved_count += 1
-          end
+          batch.update_attribute(:insurance_status, "approved")
+          @process_coverage.increment!(:approved_count)
+          approved_count += 1
+          # end
         end
       end
     end
@@ -150,7 +150,7 @@ class BatchesController < ApplicationController
     rescue NoMethodError => e # if member is not found
       return redirect_to group_remit_path(@group_remit), alert: "Member not found"
     end
-    
+
     # if @agreement.plan.acronym == "SII"
     #   Batch.process_batch(
     #     @batch,
@@ -170,7 +170,7 @@ class BatchesController < ApplicationController
     begin
 
       # unless @agreement.plan.acronym == "SII"
-      
+
       if member.age(@group_remit.effectivity_date) < @batch.agreement_benefit.min_age or member.age(@group_remit.effectivity_date) > @batch.agreement_benefit.max_age
 
         # return redirect_to group_remit_path(@group_remit), alert: "Member age must be between #{@batch.agreement_benefit.min_age.to_i} and #{@batch.agreement_benefit.max_age.to_i} years old."
@@ -183,7 +183,7 @@ class BatchesController < ApplicationController
       end
 
       # end
-  
+
 
       # raise 'errors'
       respond_to do |format|

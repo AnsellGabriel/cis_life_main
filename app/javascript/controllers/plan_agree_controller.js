@@ -1,18 +1,21 @@
 import { Controller } from "@hotwired/stimulus"
 import { get } from "@rails/request.js"
 
-// Connects to data-controller="group-plan"
 export default class extends Controller {
-  static targets = ["lppi", "gyrt", "sii", "prem", "planSelect", "benSelect"]
+  static targets = ["lppi", "gyrt", "prem", "planSelect", "benSelect"]
 
   connect() {
-    console.log("konek")
+    // console.log("konek123")
 
     let plan_id = this.planSelectTarget.selectedOptions[0].value
 
     if (plan_id == "2") {
       this.lppiTarget.hidden = false
-      console.log(plan_id)
+      this.gyrtTarget.hidden = true
+    }
+    else if (plan_id == "1" || plan_id == "3" || plan_id == "4") {
+      this.lppiTarget.hidden = true
+      this.gyrtTarget.hidden = false
     }
 
   }
@@ -21,7 +24,7 @@ export default class extends Controller {
 
     let plan_id = event.target.value
 
-    console.log(plan_id)
+    // console.log(`id-${plan_id}`)
     if (plan_id == "2") { // for LPPI 
       this.lppiTarget.hidden = false
       this.gyrtTarget.hidden = true
@@ -45,15 +48,5 @@ export default class extends Controller {
       responseKind: "turbo-stream"
     })
 
-  }
-
-  toggleTargets2(event) {
-    let ben_id = event.target.value;
-
-    if (ben_id == "1") { // for Life Benefit 
-      this.premTarget.hidden = false
-    } else {
-      this.premTarget.hidden = true
-    }
   }
 }

@@ -18,7 +18,7 @@ class CoopMember < ApplicationRecord
   has_many :agreements_coop_members
   has_many :agreements, through: :agreements_coop_members
   has_many :process_claims, as: :claimable
- 
+
   def to_s
     "#{full_name.titleize}"
   end
@@ -64,13 +64,13 @@ class CoopMember < ApplicationRecord
   def with_coverages?
     # Retrieve all batches of the coop_member
     member_batches = self.batches
+    loan_batches = self.loan_batches
 
     # Retrieve all group_remits associated with the member_batches
-    group_remits = GroupRemit.joins(:batches).where(batches: { id: member_batches })
-
+    group_remits = GroupRemit.joins(:batches).where(batches: { id: member_batches }).where(status: ["paid", "expired"]).distinct
+    loan_remits =  GroupRemit.joins(:loan_batches).where(loan_batches: { id: loan_batches }).where(status: ["paid", "expired"]).distinct
+    paid_group_remits = group_remits + loan_remits
     # Filter the group_remits with a status of "paid"
-    paid_group_remits = group_remits.where(status: ["paid", "expired"]).distinct
-
     paid_group_remits.present?
   end
 end

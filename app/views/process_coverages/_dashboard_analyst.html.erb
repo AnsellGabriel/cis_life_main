@@ -1,1 +1,91 @@
-<h1>Underwriting Analyst</h1>
+<div class="row">
+  <%= content_tag :h2, "Monitoring" %>
+  <div class="col-4">
+    <div class="row">
+      <table class="table">
+        <thead>
+          <th></th>
+          <th>Count</th>
+          <th></th>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="text-secondary">UNPROCESSED</td>
+            <td><%= @for_process_coverages.count %></td>
+            <td>
+              <%= link_to "View", cov_list_process_coverages_path(cov_type: "For Process", current_date: @current_date, date_type: "yearly", title: "UNPROCESSED"), class: "btn btn-primary btn-sm", data: { turbo_frame: "remote_modal" } %>
+            </td>
+          </tr>
+          <tr>
+            <td class="text-primary">EVALUATED</td>
+            <td><%= @evaluated_process_coverages.count %></td>
+            <td>
+              <%= link_to "View", cov_list_process_coverages_path(cov_type: "Processed", current_date: @current_date, date_type: "yearly", title: "EVALUATED"), class: "btn btn-primary btn-sm", data: { turbo_frame: "remote_modal" } %>
+            </td>
+          </tr>
+          <tr>
+            <td>PROCESSED</td>
+            <td><%= @approved_process_coverages.count %></td>
+            <td>
+              <%= link_to "View", cov_list_process_coverages_path(cov_type: "Evaluated", current_date: @current_date, date_type: "yearly", title: "PROCESSED"), class: "btn btn-primary btn-sm", data: { turbo_frame: "remote_modal" } %>
+            </td>
+          </tr>
+          <tr>
+            <td class="text-warning">REFUND</td>
+            <td>0</td>
+            <td><%= link_to "View", "#", class: "btn btn-primary btn-sm" %></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="row">
+      <div class="col">
+        <div class="card">
+          <div class="card-header text-primary">
+            <%= content_tag :h6, 'Notification Board', class: 'mb-0' %>
+          </div>
+          <div class="card-body <%= flex_justify_align('between','center') %>">
+            <% if @notifications.present? %>
+            <ul>
+              <% @notifications.limit(10).order(created_at: :desc).each do |notice| %>
+                <li>
+                  <%= link_to notice.message, notice.process_coverage, class: "text-secondary sm-secondary-text mb-1" %>
+                </li>
+                <%#= content_tag :li, notice.message, class: 'text-secondary sm-secondary-text mb-1' %>
+              <% end %>
+            </ul>
+            <% else %>
+              <%= content_tag :span, 'No notifications', class: 'text-secondary sm-secondary-text mb-1' %>
+            <% end %>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+  </div>
+
+  <div class="col-8">
+    <div class="ms-5">
+      <div class="row">
+        <%= form_with(url: process_coverages_path, method: :get, authenticty_token: :false) do |f| %>
+          <div class="input-group mb-3">
+            <%= f.text_field :search, placeholder: 'Search by Cooperative, OR No., Batch Name and/or Plan', label: false, aria: { label: "Search", describedby: "button-addon2"}, class: "form-control" %>
+            <%#= f.submit as: :button, class: "btn btn-outline-success", id: "button-addon2" do %>
+            <%#= button_to "View All", process_coverages_path, class: "btn btn-outline-secondary btn-sm" %>
+            <%= button_tag type: 'submit', class: "btn btn-outline-success", id: "button-addon2" do %>
+              <%= bootstrap_icon "search" %>
+            <% end %>
+            <%= link_to process_coverages_path, class: "btn btn-outline-secondary" do %>
+              <%= bootstrap_icon "eye" %>
+            <% end %>
+          </div>
+        <% end %>
+      </div>
+      <div class="row">
+        <%= render "process_coverages/table_index", process_coverages: @filtered_pc %>
+      </div>
+    </div>
+  </div>
+</div>

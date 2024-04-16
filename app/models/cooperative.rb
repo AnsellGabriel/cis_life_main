@@ -9,7 +9,11 @@ class Cooperative < ApplicationRecord
 
   has_many :agreements
   has_many :plans, through: :agreements
-  has_many :group_remits
+  has_many :agreements
+  has_many :group_remits, through: :agreements
+  has_many :batches, through: :group_remits
+  has_many :process_claims
+  has_many :claim_coverages, through: :process_claims
   has_many :denied_enrollees
   has_many :notifications, as: :notifiable, dependent: :destroy
 
@@ -22,6 +26,26 @@ class Cooperative < ApplicationRecord
   belongs_to :geo_province, optional: true
   belongs_to :geo_municipality, optional: true
   belongs_to :geo_barangay, optional: true
+
+  def get_claims_per_benefit
+    process_claims.includes(claim_benefits: :benefit).where(claim_filed: :true).group(:name).sum(:amount).to_a
+  end
+
+  def get_age_demo(type)
+    case type
+    when "regular"
+      eighteen_years_ago = 18.years.ago.to_date - 1.day
+      sixty_five_years_ago = 65.years.ago.to_date - 1.day
+      members.where(birth_date: ..eighteen_years_ago).where(birth_date: sixty_five_years_ago..).count
+    when "overage"
+      overage_ago = 66.years.ago.to_date
+      members.where(birth_date: ..overage_ago).count
+    end
+  end
+
+  def get_job_demo
+    members.group(:occupation).count.to_a
+  end
 
   def to_s
     name

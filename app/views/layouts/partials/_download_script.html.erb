@@ -1,0 +1,18 @@
+<script>
+  let toastContainer = document.getElementById("downloader");
+  let toastElem = document.getElementById("downloaderToast");
+  let toastTitle = document.getElementById("downloadTitle");
+  let toastLink = document.getElementById("downloadLink");
+
+  toastTitle.textContent = "<%= title %>"
+  toastLink.href = "<%= link_path %>"
+  toastContainer.classList.remove('d-none')
+
+  if(toastElem) {
+    var downloader_toast = new bootstrap.Toast(toastElem)
+    downloader_toast.show()
+  }
+
+  localStorage.setItem("downloadTitle", toastTitle.textContent);
+  localStorage.setItem("downloadLink", toastLink.href);
+</script>

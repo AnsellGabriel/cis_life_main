@@ -1,0 +1,31 @@
+<div class="container w-100 <%= flex_justify_align('center', 'center', true) %>" >
+  <%= content_tag :h3, 'Generate Trial Balance', class: 'text-primary' %>
+  <div class="card" style="max-width: 500px" data-controller="report-checker">
+    <div class="card-body" >
+      <%= form_with url: trial_balance_reports_accounts_path, method: :get do |form| %>
+        <div class="<%= flex_justify_align('center', 'center') %> gap-1">
+          <%= form.text_field :date_from, as: :string, data: {
+              controller: "flatpickr",
+              flatpickr_max_date: Date.today,
+              flatpickr_next_arrow: "Next",
+              flatpickr_prev_arrow: "Prev" },
+              placeholder: 'Date From',
+              error: '*Required',
+              class: 'form-control'
+            %> 
+          <span>to</span>
+          <%= form.text_field :date_to, as: :string, data: {
+              controller: "flatpickr",
+              flatpickr_max_date: Date.today,
+              flatpickr_next_arrow: "Next",
+              flatpickr_prev_arrow: "Prev" },
+              placeholder: 'Date To',
+              error: '*Required',
+              class: 'form-control'
+            %> 
+          <%= form.submit "Generate", class: small_btn('success'), data: {turbo: false, action: "click->report-checker#clearDownload"} %>
+        </div>
+      <% end %>
+    </div>
+  </div>
+</div>

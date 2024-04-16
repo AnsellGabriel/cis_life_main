@@ -1,1 +1,10 @@
- <%= column_chart chart_data, id: c_id, title: "Claims per Benefit", thousands: "," %>
+<div class="col">
+  <div class="card">
+    <div class="card-header">
+      Claims per Benefit
+    </div>
+    <div class="card-body">
+      <%= column_chart chart_data, id: c_id, title: "Claims per Benefit", thousands: ",", empty: "Currently no data available" %>
+    </div>
+  </div>
+</div>

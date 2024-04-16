@@ -105,6 +105,7 @@ module ApplicationHelper
       when "for_reconsideration" then content_tag(:span, "FOR RECONSIDER", class: "badge bg-info")
       when "reloan" then content_tag(:span, "RELOAN", class: "badge bg-warning text-dark")
       when "terminated" then content_tag(:span, "TERMINATED", class: "badge bg-danger")
+      when "expired" then content_tag(:span, "EXPIRED", class: "badge bg-danger")
     end
   end
 

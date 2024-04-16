@@ -16,7 +16,9 @@ class GroupRemit < ApplicationRecord
   has_many :remarks, as: :remarkable, dependent: :destroy
   has_many :batch_group_remits
   has_many :batches, through: :batch_group_remits
+  has_many :claim_coverages, through: :batches
   has_many :denied_members, dependent: :destroy
+  has_many :notifications, through: :process_coverage
   has_many :payments, as: :payable, dependent: :destroy
   has_many :loan_batches, dependent: :destroy, class_name: "LoanInsurance::Batch"
   has_many :cashier_entries, as: :entriable, class_name: "Treasury::CashierEntry", dependent: :destroy
@@ -42,7 +44,7 @@ class GroupRemit < ApplicationRecord
   }
 
   enum refund_status: {
-    not_refunded: 0,
+    unrefunded: 0,
     ready_for_refund: 1,
     refunded: 2
   }
@@ -146,10 +148,13 @@ class GroupRemit < ApplicationRecord
       group_remit.name = "#{group_remit.effectivity_date.strftime('%B').upcase} BATCH"
     else
       # group_remit.name = "#{extract_from_substring(agreement.moa_no, ('GYRT' or 'LPPI'))} REMITTANCE #{agreement.group_remits.where(type: 'Remittance').size + 1}"
-      group_remit.name = "ENROLLMENT LIST #{agreement.group_remits.where(type: 'Remittance').size + 1}"
-
+      group_remit.name = "#{group_remit.agreement.plan.acronym.include?('GYRT') ? 'GYRT' : group_remit.agreement.plan.acronym} List #{agreement.group_remits.where(type: 'Remittance').size + 1}"
     end
+  end
 
+  def create_notification
+    employee = agreement.emp_agreements.find_by(active: true).employee
+    Notification.create(notifiable: employee, process_coverage: process_coverage, message: "#{self.cooperative.name} - #{self.name} submitted a checklist")
   end
 
   def set_for_payment_status
@@ -200,7 +205,7 @@ class GroupRemit < ApplicationRecord
     self.gross_premium = commisionable_premium
     self.coop_commission = total_coop_commissions
     self.agent_commission = total_agent_commissions
-    self.net_premium = net_premium
+    self.net_premium = computed_net_premium
 
     unless self.type == "BatchRemit"
 
@@ -218,7 +223,8 @@ class GroupRemit < ApplicationRecord
 
         else
           self.status = :for_payment
-          Notification.create(notifiable: self.agreement.cooperative, message: "#{self.name} is approved and now for payment.")
+          # Notification.create(notifiable: self.agreement.cooperative, message: "#{self.name} is approved and now for payment.")
+          Notification.create(notifiable: self.agreement.cooperative, message: "#{self.name} is approved and now for payment.", process_coverage: self.process_coverage)
         end
       else
         self.status.nil? ? "under_review" : self.status
@@ -344,7 +350,7 @@ class GroupRemit < ApplicationRecord
     commisionable_premium - (total_coop_commissions)
   end
 
-  def net_premium
+  def computed_net_premium
     (commisionable_premium - (total_coop_commissions + total_agent_commissions) ) - (denied_principal_premiums + denied_dependent_premiums)
   end
 

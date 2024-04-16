@@ -8,63 +8,111 @@
 
   <%= render @treasury_account %>
 
-  <div class="mb-2">
-    <%= form_with(url: treasury_account_path(@treasury_account), method: :get) do |f| %>
-      <div class="<%= flex_justify_align('','center') %> gap-1" style="width: 500px;">
-        <%= f.date_field :date_from, as: :string, data: {
-          controller: "flatpickr",
-          flatpickr_min_date: Date.new(Date.today.year, 1, 1),
-          flatpickr_max_date: Date.today,
-          flatpickr_next_arrow: "Next",
-          flatpickr_prev_arrow: "Prev"}, label: 'From Date',
-          class: 'text-center form-control',
-          placeholder: 'From'
-        %> 
-        <span> - </span>
-        <%= f.date_field :date_to, as: :string, data: {
-          controller: "flatpickr",
-          flatpickr_min_date: Date.new(Date.today.year, 1, 1),
-          flatpickr_max_date: Date.today,
-          flatpickr_next_arrow: "Next",
-          flatpickr_prev_arrow: "Prev"}, label: 'To Date',
-          class: 'text-center form-control',
-          placeholder: 'To'
-        %> 
-        <%= f.submit "Generate ledger", class: 'btn-sm btn btn-success' %>
+  <div class="mb-2 <%= flex_justify_align('between', 'end') %>">
+    <div class="<%= flex_justify_align('', 'center') %> gap-1" data-controller="report-checker">
+      <%= form_with(url: treasury_account_path(@treasury_account), method: :get) do |f| %>
+        <div class="<%= flex_justify_align('','center') %> gap-1 small">
+          <%= f.date_field :date_from, as: :string, data: {
+            controller: "flatpickr",
+            flatpickr_min_date: Date.new(Date.today.year, 1, 1),
+            flatpickr_max_date: Date.today,
+            flatpickr_next_arrow: "Next",
+            flatpickr_prev_arrow: "Prev"}, label: 'From Date',
+            class: 'text-center form-control',
+            placeholder: 'Date From',
+            value: params[:date_from]
+          %> 
+          <span> to </span>
+          <%= f.date_field :date_to, as: :string, data: {
+            controller: "flatpickr",
+            flatpickr_min_date: Date.new(Date.today.year, 1, 1),
+            flatpickr_max_date: Date.today,
+            flatpickr_next_arrow: "Next",
+            flatpickr_prev_arrow: "Prev"}, label: 'To Date',
+            class: 'text-center form-control small',
+            placeholder: 'Date To',
+            value: params[:date_to]
+          %> 
+          <%= f.submit "Generate ledger", class: 'btn-sm btn btn-success', data: {turbo: false, action: "click->report-checker#clearDownload"} %>
+        </div>
+      <% end %>
+
+      <% if @searched_ledgers.present? and params[:download].nil? %>
+        <%= link_to "Generate CSV", treasury_account_path(@treasury_account, download_csv: 'true', date_from: params[:date_from], date_to: params[:date_to]), 
+          class: 'btn-sm btn btn-warning', 
+          method: :get,
+          data: {turbo: false, action: "click->report-checker#clearDownload"}
+        %>
+        <%= link_to "Print PDF", treasury_account_path(@treasury_account, download_pdf: 'true', date_from: params[:date_from], date_to: params[:date_to] ), 
+          class: 'btn-sm btn btn-warning', 
+          method: :get,
+          data: {turbo: false, action: "click->report-checker#clearDownload"}
+        %>
+      <% end %>
+
+    </div>
+
+    <% if params[:date_from].present? %>
+      <div class="card mb-0 p-0" style="height: 40px">
+        <div class="d-flex card-body p-1 mb-0 gap-1 ">
+          <p class="text-muted mb-0 p-1">Initial Balance: </p>
+          <p class="text-end mb-0 p-1" style="background-color: #f0f2f5"><%= to_curr @initial_balance %></p>
+        </div>
       </div>
     <% end %>
   </div>
 
-  <table class="table table-sm table-striped table-bordered table-hover" style="font-size: .8rem">
+  <table class="table table-sm table-striped table-bordered table-hover mb-2" style="font-size: .8rem">
     <thead>
       <tr class="text-center table-dark">
-        <th style="width: 10%">Reference</th>
-        <th style="width: 10%">Date</th>
+        <th>Reference</th>
+        <th>Date</th>
         <th>Payee</th>
         <th>Description</th>
-        <th style="width: 10%">Debit</th>
-        <th style="width: 10%">Credit</th>
-        <th style="width: 10%">Balance</th>
+        <th>Debit</th>
+        <th>Credit</th>
+        <th>Balance</th>
       </tr>
     </thead>
     <tbody>
-      <% if @ledger.empty? %>
+      <% if @view_ledger.empty? %>
         <tr>
           <td colspan="7" class="text-center">No records found</td>
         </tr>
       <% else %>
-        <% @ledger.each do |entry| %>
+        <% @view_ledger.each do |entry| %>
+          <% debit = entry.debit? ? entry.amount : 0 %>
+          <% credit = entry.credit? ? entry.amount : 0 %>
           <tr class="text-center">
             <td class="text-start"><%= entry.ledgerable.reference %></td>
             <td class="text-end"><%= date_as_month_day_year(entry.transaction_date) %></td>
             <td class="text-start"><%= entry.payee %></td>
             <td class="text-start"><%= entry.description %></td>
-            <td class="text-end"><%= to_curr(entry.debit? ? entry.amount : 0) %></td>
-            <td class="text-end"><%= to_curr(entry.credit? ? entry.amount : 0) %></td>
-            <td class="text-end"><%= to_curr(0) %></td>
+            <td class="text-end"><%= to_curr(debit) %></td>
+            <td class="text-end"><%= to_curr(credit) %></td>
+            <td class="text-end"><%= to_curr(@initial_balance += debit - credit) %></td>
           </tr>
+          <% if entry == @searched_ledgers.last %>
+            <tr class="text-center">
+              <td colspan="4" class="text-end fw-bolder">Total</td>
+              <td class="text-end fw-bolder"><%= to_curr(@total_debit) %></td>
+              <td class="text-end fw-bolder"><%= to_curr(@total_credit) %></td>
+              <td class="text-end fw-bolder"><%= to_curr(@initial_balance) %></td>
+            </tr>
+          <% end %>
         <% end %>
       <% end %>
-    </tbody>
+    </tbody>      
   </table>
+  <div class="<%= flex_justify_align('between') %>">
+    <%== pagy_bootstrap_nav(@pagy) %>
+    <% if params[:date_from].present? %>
+      <div class="card mb-0 p-0" style="height: 40px">
+        <div class="d-flex card-body p-1 mb-0 gap-1 ">
+          <p class="text-muted mb-0 p-1">End Balance: </p>
+          <p class="text-end mb-0 p-1" style="background-color: #f0f2f5"><%= to_curr @initial_balance %></p>
+        </div>
+      </div>
+    <% end %>
+  </div>
 </div>

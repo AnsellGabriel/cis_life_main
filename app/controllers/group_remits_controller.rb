@@ -100,6 +100,9 @@ class GroupRemitsController < InheritedResources::Base
 
     respond_to do |format|
       if @group_remit.save!
+        # if @group_remit.plan.acronym == "LPPI"
+        #   @group_remit.create_notification
+        # end
 
         if params[:type] == "BatchRemit"
           batch_remit = @agreement.group_remits.build(type: "BatchRemit")
@@ -114,7 +117,7 @@ class GroupRemitsController < InheritedResources::Base
         end
 
         if current_user.is_mis?
-          @group_remit.update!(mis_entry: true)
+          @group_remit.update!(mis_entry: true, mis_user: current_user.id)
         end
 
         format.html { redirect_to coop_agreement_group_remit_path(@agreement, @group_remit), notice: "Group remit was successfully created." }
@@ -196,5 +199,6 @@ class GroupRemitsController < InheritedResources::Base
     @process_coverage.processor_id  = group_remit.agreement.emp_agreements.find_by(agreement: group_remit.agreement, active: true).employee_id
     @process_coverage.approver_id  = group_remit.agreement.emp_agreements.find_by(agreement: group_remit.agreement, active: true).employee.emp_approver.approver_id
     @process_coverage.set_default_attributes
+    group_remit.create_notification
   end
 end

@@ -32,6 +32,7 @@ class LoanInsurance::GroupRemitsController < ApplicationController
 
         respond_to do |format|
           if @group_remit.save!
+            @group_remit.create_notification
             @process_coverage = @group_remit.build_process_coverage
             @process_coverage.effectivity = @group_remit.effectivity_date
             @process_coverage.expiry = @group_remit.expiry_date
@@ -78,17 +79,19 @@ class LoanInsurance::GroupRemitsController < ApplicationController
   end
 
   def create
-    @group_remit = @agreement.group_remits.new(group_remit_params)
+    @group_remit = @agreement.group_remits.new
     @group_remit.type = "LoanInsurance::GroupRemit"
+    @group_remit.name = @agreement.plan.acronym == "LPPI" ? "LPPI-#{Date.today.day}#{Date.today.strftime("%B").upcase}#{Date.today.year}" : "#{@agreement.plan.acronym.upcase}-#{Date.today.day}#{Date.today.strftime("%B").upcase}#{Date.today.year}"
 
     if current_user.is_mis?
       @group_remit.mis_entry = true
+      @group_remit.mis_user = current_user.id
     end
 
     begin
       if @group_remit.save!
         if @group_remit.agreement.plan.acronym == "LPPI"
-          redirect_to loan_insurance_group_remits_path, notice: "New batch created"
+          redirect_to loan_insurance_group_remit_path(@group_remit), notice: "New batch created"
         else
           redirect_to sii_index_loan_insurance_group_remits_path(p: "sii"), notice: "New batch created"
         end

@@ -2,9 +2,8 @@
 
 <% if current_user.is_mis? %>
   <div class="mb-3">
-    <%= link_to cooperative_path(@cooperative), class: small_btn('outline-secondary') do %>
-      <i class="bi bi-arrow-left-square"></i>
-      Back
+    <%= link_to cooperative_path(@cooperative), class: small_btn('outline-secondary'), title: 'Back' do %>
+      <i class="bi bi-chevron-left"></i>
     <% end %>
   </div>
 <% end %>

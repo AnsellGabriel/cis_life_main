@@ -1,0 +1,15 @@
+<% if current_user.userable.report_url.present? %>
+  <%= turbo_stream.replace 'downloader' do %>
+    <div class="toast-container position-fixed bottom-0 end-0 p-3" id="downloader" data-controller="report-checker">
+      <div class="toast" role="alert" aria-live="assertive" aria-atomic="true" id="downloaderToast" data-bs-autohide="false">
+        <div class="toast-header text-white">
+          <strong class="me-auto text-dark d-flex gap-1">
+            <div class="span" id="downloadTitle"><%= @report_name %> </div>
+            <%= link_to 'Download', current_user.userable.report.url, id: 'downloadLink', target: '_blank', data: {action: "click->report-checker#clearDownload" } %>
+          </strong>
+          <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close" data-action="click->report-checker#clearDownload"></button>
+        </div>
+      </div>
+    </div>
+  <% end %>
+<% end %>
