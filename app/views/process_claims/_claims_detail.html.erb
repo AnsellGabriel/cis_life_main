@@ -9,7 +9,10 @@
       <dt class="col-sm-4">Insurance:</dt>
       <dd class="col-sm-8"><%= @process_claim.agreement.plan %></dd>
       <dt class="col-sm-4">Name:</dt>
-      <dd class="col-sm-8 text-primary"><%= @process_claim.claimable.get_fullname %></dd>
+      <%# <dd class="col-sm-8 text-primary"><%= @process_claim.claimable.get_fullname %>
+      <%# </dd> %>
+      <% coop_mem = @process_claim.claimable %>
+      <dd class="col-sm-8"> <%= link_to coop_mem.get_fullname, coop_mem, class: "text-primary", data: {turbo_frame: 'modal-xl'}, title: 'Show' %></dd>
       <dt class="col-sm-4">Birthdate</dt>
       <dd class="col-sm-8"> <%= to_shortdate(@process_claim.claimable.member.birth_date) %></dd>
       <dt class="col-sm-4">Age:</dt>

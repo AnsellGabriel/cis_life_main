@@ -20,7 +20,7 @@ class ProcessClaimsController < ApplicationController
   # end
 
   def index
-    @process_claims = ProcessClaim.where(claim_route: :submitted)
+    @process_claims = ProcessClaim.all
   end
 
   def index_coop

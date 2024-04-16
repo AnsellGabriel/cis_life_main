@@ -13,6 +13,11 @@ class ClaimRemarksController < ApplicationController
     @process_claims = ProcessClaim.where(cooperative: @cooperative)
   end
 
+  def message_history
+    @process_claim = ProcessClaim.find(params[:v])
+    @claim_remarks = ClaimRemark.where(process_claim: @process_claim)
+  end
+
   def new_status
     @process_claim = ProcessClaim.find(params[:v])
     @claim_remark = @process_claim.claim_remarks.build
