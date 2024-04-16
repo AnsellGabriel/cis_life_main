@@ -1,5 +1,8 @@
 class ReinsurancesController < ApplicationController
-  before_action :set_reinsurance, only: %i[ show edit update destroy ]
+  include CsvGenerator
+  before_action :check_actuarial_reinsurance
+  before_action :set_reinsurance, only: %i[ show edit update destroy ri_csv ]
+
 
   # GET /reinsurances
   def index
@@ -8,6 +11,15 @@ class ReinsurancesController < ApplicationController
 
   # GET /reinsurances/1
   def show
+    @ri_members = @reinsurance.get_members
+    @pagy_ri_members, @filtered_ri_members = pagy(@ri_members, items: 5, page_param: :ri_mem, link_extra: 'data-turbo-frame="ri_mem_pagination"')
+  end
+
+  def ri_csv
+    @ri_batches = @reinsurance.get_members
+
+    # generate_csv(@ri_batches, "#{@reinsurance.date_from} to #{@reinsurance.date_to}-reinsurance")
+    ri_generate_csv(@ri_batches, "#{@reinsurance.date_from} to #{@reinsurance.date_to}-reinsurance", @reinsurance.date_from, @reinsurance.date_to)
   end
 
   # GET /reinsurances/new
@@ -28,36 +40,24 @@ class ReinsurancesController < ApplicationController
     # @batches = LoanInsurance::Batch.get_ri_batches(@reinsurance.date_from..@reinsurance.date_to)
     @members = Member.get_ri(@reinsurance.date_from, @reinsurance.date_to)
 
-    if @members.empty?
-      redirect_to reinsurances_path, alert: "No for reinsurance for that period."
+    if @reinsurance.check_ri_terms <= 0
+      redirect_to reinsurances_path, alert: "Reinsurance Term must be greater than zero."
     else
-      if @reinsurance.save
-        @reinsurance.add_members(@members, @retention_limit)
-        # @reinsurance.set_total_prem_and_amount
-        # @reinsurance.set_batches_ri_date
-        redirect_to @reinsurance, notice: "Reinsurance was successfully created."
+
+      if @members.empty?
+        redirect_to reinsurances_path, alert: "No for reinsurance for that period."
       else
-        render :new, status: :unprocessable_entity
+        if @reinsurance.save
+          @reinsurance.add_members(@members, @retention_limit)
+          @reinsurance.set_total_prem_and_amount
+          # @reinsurance.set_batches_ri_date
+          redirect_to @reinsurance, notice: "Reinsurance was successfully created."
+        else
+          render :new, status: :unprocessable_entity
+        end
       end
+    
     end
-    # raise 'errors'
-    # @members.each do |member|
-    #   member.get_for_ri_sum(@reinsurance)
-    # end
-
-    # if @reinsurance.batches.empty?
-    #   redirect_to reinsurances_path, alert: "No for reinsurance for that period."
-    # else
-
-    #   if @reinsurance.save
-    #     @reinsurance.set_total_prem_and_amount
-    #     # @reinsurance.set_batches_ri_date
-    #     redirect_to @reinsurance, notice: "Reinsurance was successfully created."
-    #   else
-    #     render :new, status: :unprocessable_entity
-    #   end
-
-    # end
 
   end
 
