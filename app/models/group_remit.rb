@@ -445,6 +445,10 @@ class GroupRemit < ApplicationRecord
     batches.where(insurance_status: :approved).count
   end
 
+  def count_batches
+    batches.count
+  end
+
   def sum_approved_batches_net_prem
     case agreement.plan.acronym
     when "LPPI"

@@ -1,8 +1,9 @@
 class LoanInsurance::GroupRemitsController < ApplicationController
   include BatchesLoader
+  include CsvGenerator
 
   before_action :set_agreement, only: %i[index new create show sii_index]
-  before_action :set_group_remit, only: %i[submit show destroy]
+  before_action :set_group_remit, only: %i[submit show destroy lppi_summary]
 
   def index
     @q = @agreement.group_remits.loan_remits.order(created_at: :desc).ransack(params[:q])
@@ -15,6 +16,13 @@ class LoanInsurance::GroupRemitsController < ApplicationController
     @group_remits = @agreement.group_remits.loan_remits.order(created_at: :desc)
     @group_remit_size = @group_remits.size
     @pagy, @group_remits = pagy(@group_remits, items: 10)
+  end
+
+  def lppi_summary
+    @batches = @group_remit.batches
+
+    lppi_summary_csv(@batches, "#{@group_remit.name}-#{@group_remit.agreement.plan.acronym}")
+    # generate_csv(data, filename, balance = nil)
   end
 
   def submit

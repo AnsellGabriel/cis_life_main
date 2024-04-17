@@ -206,6 +206,7 @@ Rails.application.routes.draw do
       get :submit, on: :member
       get :edit_or, on: :member
       get :sii_index, on: :collection
+      get "lppi_summary", on: :member
     end
 
     resources :history, only: [:index]
