@@ -39,7 +39,7 @@ class AgreementBenefitsController < ApplicationController
     @agreement_benefit = @agreement.agreement_benefits.build(agreement_benefit_params)
 
     if @agreement_benefit.save
-      redirect_to @agreement_benefit, notice: "Agreement benefit was successfully created."
+      redirect_to @agreement_benefit.agreement, notice: "Agreement benefit was successfully created."
     else
       render :new, status: :unprocessable_entity
       format.turbo_stream { render :form_update, status: :unprocessable_entity }
@@ -49,7 +49,7 @@ class AgreementBenefitsController < ApplicationController
   # PATCH/PUT /agreement_benefits/1
   def update
     if @agreement_benefit.update(agreement_benefit_params)
-      redirect_to @agreement_benefit, notice: "Agreement benefit was successfully updated."
+      redirect_to @agreement_benefit.agreement, notice: "Agreement benefit was successfully updated."
     else
       render :edit, status: :unprocessable_entity
       format.turbo_stream { render :form_update, status: :unprocessable_entity }
