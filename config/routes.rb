@@ -235,7 +235,20 @@ Rails.application.routes.draw do
       get :print, on: :member
     end
 
+
     resources :check_voucher_requests, only: %i[show]
+
+    resources :general_disbursement_book, only: %i[index] do
+      get :pdf, on: :collection
+    end
+
+    resources :journal_book, only: %i[index] do
+      get :pdf, on: :collection
+    end
+
+    resources :receipt_book, only: %i[index] do
+      get :pdf, on: :collection
+    end
 
     get "dashboard", to: "dashboard#index"
   end
@@ -349,7 +362,7 @@ Rails.application.routes.draw do
     get :und, on: :collection
     get :gen_csv, on: :collection
   end
-  
+
   get "product_csv", to: "process_coverages#product_csv"
   get "preview", to: "process_coverages#preview"
   get "download", to: "process_coverages#download"

@@ -39,7 +39,11 @@
         <%= f.association :treasury_account, label: 'Bank', error: '*Required', input_html: {data: {controller: 'ts--select'}} %>
       </div>
       <div class="col-5">
-        <%= f.input :amount, as: :string, error: '*Required', input_html: {data: {number_formatter_target: 'input'}, readonly: true}%>
+        <% if params[:rid].present? %>
+          <%= f.input :amount, as: :string, error: '*Required', input_html: {data: {number_formatter_target: 'input'}, readonly: true  } %>
+        <% else %>
+          <%= f.input :amount, as: :string, error: '*Required', input_html: {data: {number_formatter_target: 'input'} } %>
+        <% end %>
       </div>
     </div>
     <%= f.input :particulars, error: '*Required' %>

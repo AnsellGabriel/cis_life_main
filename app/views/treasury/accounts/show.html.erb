@@ -22,7 +22,7 @@
             placeholder: 'Date From',
             value: params[:date_from]
           %> 
-          <span> to </span>
+          <span>-</span>
           <%= f.date_field :date_to, as: :string, data: {
             controller: "flatpickr",
             flatpickr_min_date: Date.new(Date.today.year, 1, 1),

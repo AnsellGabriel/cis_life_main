@@ -43,7 +43,7 @@ class Accounting::JournalsController < ApplicationController
   # GET /accounting/journals/new
   def new
     last_voucher = Accounting::Journal.maximum(:voucher)
-    initiate_voucher = last_voucher ? last_voucher + 1 : 0
+    initiate_voucher = last_voucher.to_i ? last_voucher.to_i + 1 : 0
 
     @journal = Accounting::Journal.new(voucher: initiate_voucher)
   end

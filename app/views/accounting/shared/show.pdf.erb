@@ -1,0 +1,64 @@
+<%= render 'layouts/pdf_partials/html_template' do %>
+  <div class="row mb-5">
+    <%= image_tag wicked_pdf_asset_base64("1cisp_logo.png"), style: "height: 150px; width: auto;", class: '' %>
+    <div class="">
+      <p>1 COOPERATIVE INSURANCE SYSTEM OF THE PHILIPPINES</p>
+      <p>LIFE AND GENERAL INSURANCE</p>
+      <p class="mb-5"></p>
+      <p><%= @title %></p>
+      <p>Date Period of <%= "(#{month_day_year(@date_from)} to #{month_day_year(@date_to)})" %></p>
+    </div>
+  </div>
+
+  <% @vouchers.each do |voucher| %>
+    <% case voucher.class.name %>
+    <% when "Accounting::Check" %>
+      <% voucher_number = "CV#{voucher.voucher}" %>
+    <% when "Accounting::Journal" %>
+      <% voucher_number = voucher.formatted_voucher %>
+    <% else %>
+      <% voucher_number = voucher.voucher %>
+    <% end %>
+    <div class="pt-1 mt-3" style="border-top: 1px solid black">
+      <div class="row">
+        <div class="col-1"><%= voucher_number %></div>
+        <div class="col-2 text-end pe-3"><%= date_as_month_day_year(voucher.post_date) %></div>
+        <div class="col-5"><%= voucher.payable %></div>
+      </div>
+      <div class="row mb-3">
+        <div class="col-1"></div>
+        <div class="col-2"></div>
+        <% accountant = User.find(voucher.accountant_id) %>
+        <div class="col-5"><%= accountant.userable.branch.humanize.titleize %></div>
+      </div>
+      <% voucher.general_ledgers.debits.each do |ledger| %>
+        <div class="row mb-3">
+          <div class="col-1"><%= ledger.account.code %></div>
+          <div class="col-2"></div>
+          <div class="col-5"><%= ledger.account.name %></div>
+          <div class="col-2 text-end"><%= to_curr(ledger.amount) %></div>
+          <div class="col-2 text-end">0.00</div>
+        </div>
+      <% end %>
+      <% voucher.general_ledgers.credits.each do |ledger| %>
+        <div class="row mb-3">
+          <div class="col-1"></div>
+          <div class="col-2"><%= ledger.account.code %></div>
+          <div class="col-5"><%= ledger.account.name %></div>
+          <div class="col-2 text-end">0.00</div>
+          <div class="col-2 text-end"><%= to_curr(ledger.amount) %></div>
+        </div>
+      <% end %>
+      <div class="row">
+        <div class="col-8"></div>
+        <div class="col-2 text-end" style="border-bottom: 1px solid black"></div>
+        <div class="col-2 text-end" style="border-bottom: 1px solid black"></div>
+      </div>
+      <div class="row mt-2">
+        <div class="col-8"></div>
+        <div class="col-2 text-end"><%= to_curr(voucher.general_ledgers.debits.sum(:amount)) %></div>
+        <div class="col-2 text-end"><%= to_curr(voucher.general_ledgers.credits.sum(:amount)) %></div>
+      </div>
+    </div>
+  <% end %>
+<% end %>

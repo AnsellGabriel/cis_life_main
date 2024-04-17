@@ -12,6 +12,10 @@ class Accounting::Check < Accounting::Voucher
 
   # enum status: { pending: 0, posted: 1, cancelled: 2, for_approval: 3}
 
+  def self.disbursement_book_pdf(employee_id, date_from, date_to, type)
+    Reports::BooksPdfJob.perform_async(employee_id, date_from, date_to, type)
+  end
+
   def reference
     "CV#{self.voucher}"
   end
