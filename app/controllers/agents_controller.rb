@@ -14,7 +14,11 @@ class AgentsController < ApplicationController
 
   # GET /agents/new
   def new
-    @agent = Agent.new(last_name: FFaker::Name.last_name, first_name: FFaker::Name.first_name, middle_name: FFaker::Name.last_name, mobile_number: FFaker::PhoneNumber)
+    if Rails.env.development?
+      @agent = Agent.new(last_name: FFaker::Name.last_name, first_name: FFaker::Name.first_name, middle_name: FFaker::Name.last_name, mobile_number: FFaker::PhoneNumber)
+    else
+      @agent = Agent.new
+    end
 
     # new instance of the "User" class associated with the "Agent" instance.
     @agent.build_user
@@ -41,8 +45,12 @@ class AgentsController < ApplicationController
     respond_to do |format|
       if @agent.save
         format.html {
-          redirect_to unauthenticated_root_path,
-          notice: "Account created successfully. Please wait for the admin to approve your account."
+          if current_user.present?
+            redirect_to agents_path, notice: "Agent created successfully."
+          else
+            redirect_to unauthenticated_root_path,
+            notice: "Account created successfully. Please wait for the admin to approve your account."
+          end
         }
       else
         format.html { render 'devise/registrations/new', status: :unprocessable_entity }

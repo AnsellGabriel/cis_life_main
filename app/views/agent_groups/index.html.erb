@@ -29,9 +29,9 @@
         <td><%= agent_group.description %></td>
     
           <td>
-            <%= link_to 'View', agent_group, class: 'btn' %>
-            <%= link_to 'Edit', edit_agent_group_path(agent_group), class: 'btn' %>
-            <%= link_to 'Delete', agent_group, method: :delete, data: { confirm: 'Are you sure?' }, class: 'btn' %>
+            <%= link_to 'View', agent_group, class: 'btn btn-sm btn-primary' %>
+            <%= link_to 'Edit', edit_agent_group_path(agent_group), class: 'btn btn-sm btn-success' %>
+            <%= link_to 'Delete', agent_group, method: :delete, data: { confirm: 'Are you sure?' }, class: 'btn btn-sm btn-danger' %>
           </td>
 
         </tr>
