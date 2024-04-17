@@ -97,6 +97,7 @@
               <% end %>
             <% when 17 %>
               <%= render 'layouts/partials/nav_dropdown', title: 'Underwriting' do %>
+                <%= link_to "Agreement", agreements_path, class: "dropdown-item" %>
                 <%= link_to "Process", process_coverages_path, class: "dropdown-item" %>
                 <%#= link_to "Generate CSV", gen_csv_process_coverages_path, class: "dropdown-item", data: { turbo_frame: "remote_modal" } %>
                 <% if current_user.medical_director? %>
