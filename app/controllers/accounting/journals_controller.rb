@@ -61,6 +61,7 @@ class Accounting::JournalsController < ApplicationController
     @journal = Accounting::Journal.new(journal_params)
     @journal.voucher = voucher_series
     @journal.accountant_id = current_user.userable.id
+    @journal.branch = current_user.userable.branch_before_type_cast
 
     if @journal.save
       redirect_to @journal, notice: "Journal was successfully created."

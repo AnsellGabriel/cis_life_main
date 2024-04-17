@@ -12,9 +12,11 @@ class Reports::BooksPdfJob
 
     case type
     when "general_disbursement_book"
-      vouchers = Accounting::Check.where(post_date: @search_date, status: :posted)
+      entries = Accounting::Check.where(post_date: @search_date, status: :posted)
     when "journal_book"
-      vouchers = Accounting::Journal.where(post_date: @search_date, status: :posted)
+      entries = Accounting::Journal.where(post_date: @search_date, status: :posted)
+    when "receipt_book"
+      entries = Treasury::CashierEntry.where(or_date: @search_date, status: :posted)
     end
 
     begin
@@ -25,7 +27,7 @@ class Reports::BooksPdfJob
         assigns: {
           date_from: date_from.to_date,
           date_to: date_to.to_date,
-          vouchers: vouchers,
+          entries: entries,
           title: type.humanize.upcase
         }
       )

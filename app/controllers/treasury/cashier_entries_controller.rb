@@ -76,6 +76,7 @@ class Treasury::CashierEntriesController < ApplicationController
 
   def create
     @entry = Treasury::CashierEntry.new(entry_params)
+    @entry.branch = current_user.userable.branch_before_type_cast # assign employee branch to entry
 
     if @entry.entriable_type == "Remittance"
       @group_remit = @entry.entriable

@@ -19,10 +19,14 @@ class GeneralLedgersController < ApplicationController
         result = pay_service.post_payment
       elsif params[:e_t] == 'cv'
         @entry.update(post_date: Date.current, certified_by: current_user.userable.id)
-        claim_track = @entry.check_voucher_request.requestable.process_track.build
-        claim_track.route_id = 14
-        claim_track.user_id = current_user.id
-        claim_track.save
+
+        if @entry.check_voucher_request.presnet?
+          claim_track = @entry.check_voucher_request.requestable.process_track.build
+          claim_track.route_id = 14
+          claim_track.user_id = current_user.id
+          claim_track.save
+        end
+
         result = 'Voucher posted.'
       elsif params[:e_t] == 'jv'
         @entry.update(post_date: Date.current, certified_by: current_user.userable.id)

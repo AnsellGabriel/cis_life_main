@@ -93,7 +93,17 @@
           <div class="row">
             <p class="col-4">OSCA/PWD ID No.</p>
             <p class="col-4">Signature</p>
-            <p class="col-4 fw-bolder" style="font-size: 1rem">No. <span style="color: maroon"><%= @receipt.or_no %></span></p>
+            <% case @receipt.branch %>
+            <% when 'head_office' %>
+              <% branch_code = 'HO' %>
+            <% when 'cagayan_de_oro' %>
+              <% branch_code = 'CDO' %>
+            <% when 'davao' %>
+              <% branch_code = 'DAV' %>
+            <% when 'iloilo' %>
+              <% branch_code = 'ILO' %>
+            <% end %>
+            <p class="col-4 fw-bolder" style="font-size: 1rem">No. <span style="color: maroon"><%= "#{branch_code}-#{@receipt.or_no}" %></span></p>
           </div>
         </div>
       </div>
