@@ -37,7 +37,16 @@
               <%= render 'layouts/partials/nav_dropdown', title: 'For Audit' do %>
                 <%= link_to "Check Vouchers", audit_check_vouchers_path	, class: "dropdown-item" %>
               <% end %>
-            <% else %>
+            <% when 17 %>
+              <%= render 'layouts/partials/nav_dropdown', title: 'Underwriting' do %>
+                <%= link_to "Agreement", agreements_path, class: "dropdown-item" %>
+                <%= link_to "Process", process_coverages_path, class: "dropdown-item" %>
+                <%#= link_to "Generate CSV", gen_csv_process_coverages_path, class: "dropdown-item", data: { turbo_frame: "remote_modal" } %>
+                <% if current_user.medical_director? %>
+                  <%= link_to "Medical Director", med_directors_home_path, class: "dropdown-item" %>
+                <% end %>
+              <% end %>
+            <% when 19 %>
               <%= render 'layouts/partials/nav_dropdown', title: 'Claims' do %>
                 <%= link_to "Submitted", index_show_process_claims_path(p: 1), class: "dropdown-item" %>
                 <%= link_to "Claims Filed", index_show_process_claims_path(p: 2), class: "dropdown-item" %>
@@ -50,14 +59,12 @@
                 <%= link_to "Claim Type", claim_types_path, class: "dropdown-item" %>
                 <%= link_to "Claims Message", claim_remarks_path, class: "dropdown-item" %>
               <% end %>
-
-              <%= render 'layouts/partials/nav_dropdown', title: 'Underwriting' do %>
-                <%= link_to "Process", process_coverages_path, class: "dropdown-item" %>
-                <%#= link_to "Generate CSV", gen_csv_process_coverages_path, class: "dropdown-item", data: { turbo_frame: "remote_modal" } %>
-                <% if current_user.medical_director? %>
-                  <%= link_to "Medical Director", med_directors_home_path, class: "dropdown-item" %>
-                <% end %>
+            <% when 14 %>
+              <%= render 'layouts/partials/nav_dropdown', title: "A&R" do %>
+                <%= link_to "Life Reinsurance", reinsurances_path, class: "dropdown-item" %>
+                <%= link_to "Life Reserves", actuarial_reserves_path, class: "dropdown-item" %>
               <% end %>
+            <% else %>
 
               <% if current_user.senior_officer? %>
                 <%= render 'layouts/partials/nav_dropdown', title: "Dashboard" do %>

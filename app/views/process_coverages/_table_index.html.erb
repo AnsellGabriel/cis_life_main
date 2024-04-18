@@ -41,27 +41,28 @@
               <% end %>
             </td>
             <td>
-              <% if current_user.userable_type == "Employee" %>
-                <% if current_user.userable.designation == "Medical Director" %>
-                  <%= link_to "MD", all_health_decs_group_remit_batches_path(pc.group_remit), class: "btn btn-secondary" %>
-                <% end %>
-              <% end %>
-              <%= link_to 'View', pc, data: { turbo: false }, class: 'btn btn-secondary btn-sm' %>
-              <%#= link_to "Preview", preview_path %>
-              <%#= link_to "Download", download_path %>
-              <% if pc.status == "approved" && pc.group_remit.or_number.present? %>
-                <%#= link_to "View PDF", pc_pdf_path(pc), class: "btn btn-warning btn-sm mt-2" %>
-                <%= link_to psheet_process_coverage_path(pc, format: :pdf), class: "btn btn-warning btn-sm" do %>
-                  <%= bootstrap_icon "filetype-pdf" %>
-                <% end %>
-        
-                <%= link_to psheet_process_coverage_path(pc, format: :html), class: "btn btn-warning btn-sm mt-2" do %>
-                  <%= bootstrap_icon "eye" %>
-                <% end %>
-                
-              <% end %>
-              <%#= link_to 'Edit', edit_process_coverage_path(process_coverage), class: 'btn btn-secondary btn-sm' %>
-              <%#= link_to "Delete", process_coverage, class: "btn btn-danger btn-sm", method: :delete, data: { "turbo-method": :delete, turbo_confirm: "Are you sure?" } %>
+              <div class="row">
+                <div class="col">
+
+
+                  <% if current_user.userable_type == "Employee" %>
+                    <% if current_user.userable.designation == "Medical Director" %>
+                      <%= link_to "MD", all_health_decs_group_remit_batches_path(pc.group_remit), class: "btn btn-secondary" %>
+                    <% end %>
+                  <% end %>
+                  <%= link_to 'View', pc, data: { turbo: false }, class: 'btn btn-secondary btn-sm' %>
+                  <% if pc.status == "approved" && pc.group_remit.or_number.present? %>
+                    <%= link_to psheet_process_coverage_path(pc, format: :pdf), class: "btn btn-warning btn-sm" do %>
+                      <%= bootstrap_icon "filetype-pdf" %>
+                    <% end %>
+            
+                    <%#= link_to psheet_process_coverage_path(pc, format: :html), class: "btn btn-warning btn-sm mt-2" do %>
+                      <%#= bootstrap_icon "eye" %>
+                    <%# end %>
+                    
+                  <% end %>
+                </div>
+              </div>
             </td>
           </tr>
         <% end %>

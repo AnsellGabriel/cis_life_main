@@ -199,4 +199,11 @@
 
 <%= turbo_frame_tag "computation" do %>
   <%= render "computation", group_remit: @group_remit, agreement: @agreement %>
-<% end %>  
+<% end %>
+
+<% if @group_remit.under_review? || @group_remit.paid? %>
+  <div class="float-end">
+    <%= link_to "Download Summary Report", lppi_summary_loan_insurance_group_remit_path, class: "btn btn-success" %>
+  </div>
+<% end %>
+

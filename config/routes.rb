@@ -206,6 +206,7 @@ Rails.application.routes.draw do
       get :submit, on: :member
       get :edit_or, on: :member
       get :sii_index, on: :collection
+      get "lppi_summary", on: :member
     end
 
     resources :history, only: [:index]
@@ -364,6 +365,7 @@ Rails.application.routes.draw do
   end
 
   get "product_csv", to: "process_coverages#product_csv"
+  get "ri_csv", to: "reinsurances#ri_csv"
   get "preview", to: "process_coverages#preview"
   get "download", to: "process_coverages#download"
   get "process_coverages/pdf/:id", to: "process_coverages#pdf", as: "pc_pdf"
