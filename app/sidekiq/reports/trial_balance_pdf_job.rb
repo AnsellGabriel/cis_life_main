@@ -3,15 +3,18 @@ class Reports::TrialBalancePdfJob
 
   def perform(employee_id, date_from, date_to)
     employee = Employee.find(employee_id)
-    save_path = Rails.root.join("public/uploads/employee/report/#{employee_id}", "trial_balance_#{date_from}_#{date_to}.pdf")
+    save_path = Rails.root.join("public/uploads/employee/report/#{employee_id}", "trial_balance.pdf")
 
-    if File.exist?(save_path)
-      broadcast_download(employee)
-      return
-    else
-      employee.delete_uploaded_report
-      FileUtils.mkdir_p(File.dirname(save_path))
-    end
+    # if File.exist?(save_path)
+    #   broadcast_download(employee)
+    #   return
+    # else
+    #   employee.delete_uploaded_report
+    #   FileUtils.mkdir_p(File.dirname(save_path))
+    # end
+
+    employee.delete_uploaded_report
+    FileUtils.mkdir_p(File.dirname(save_path))
 
     date_range = date_from&.to_date..date_to&.to_date
     initialize_variables
@@ -19,7 +22,7 @@ class Reports::TrialBalancePdfJob
     begin
       # Render template as PDF
       pdf_contents = ApplicationController.render(
-        pdf: "trial_balance_#{date_from}_#{date_to}.pdf",
+        pdf: "trial_balance.pdf",
         template: "reports/accounts/download_trial_balance",
         assigns: {
           date_from: date_from.to_date,
@@ -39,6 +42,7 @@ class Reports::TrialBalancePdfJob
         employee.update!(report: file)
       }
 
+      sleep 2 # wait for the file to be saved before broadcasting
       broadcast_download(employee)
     rescue => e
       # Handle errors (e.g., log the error, send a notification, etc.)

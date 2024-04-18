@@ -78,6 +78,9 @@ class Accounting::ChecksController < ApplicationController
       @checks = Accounting::Check.all.order(created_at: :desc)
     end
 
+    @q = @checks.ransack(params[:q])
+    @checks = @q.result
+
     @pagy, @checks = pagy(@checks, items: 10)
   end
 
@@ -113,6 +116,7 @@ class Accounting::ChecksController < ApplicationController
   def create
     @check = Accounting::Check.new(modified_check_params)
     @check.accountant_id = current_user.userable.id
+    @check.branch = current_user.userable.branch_before_type_cast
 
     if @check.save
       if params[:rid].present?
