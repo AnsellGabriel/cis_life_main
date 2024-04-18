@@ -32,7 +32,7 @@
 
   <div class="mb-0 gap-1 <%= flex_justify_align('', 'center') %>">
     <% if @group_remit.is_batch_remit? %>
-      <% unless @group_remit.expired?%>
+      <% unless @group_remit.expired? || @group_remit.for_renewal? %>
         <%= button_to "Enroll Members", group_remits_path, 
           method: :post, 
           params: { 
@@ -166,21 +166,7 @@
 
 
 
-  <% if ['GYRTBR','GYRTFR','KOOPamilya'].include?(plan_acronym) %>
-    <div class="<%= flex_justify_align('between', 'center') %> gap-1">
-      <div class="d-flex gap-2">
-
-        <% @group_remit.agreement.agreement_benefits.where.not(insured_type: 2..5).each do |a_benefit| %>
-          <%= link_to group_remit_path(@group_remit, rank_filter: a_benefit), class: "btn btn-sm btn-primary position-relative" do %>
-            <%= a_benefit.name %>
-          <% end %>
-        <% end %>
-
-      </div>
-  <% else %>
-    <div class="<%= flex_justify_align('between', 'center') %> gap-1">
-  <% end %>
-
+<div class="<%= flex_justify_align('between', 'center') %> gap-1">
   <% if @group_remit.instance_of?(Remittance)%>
     <div class="d-flex gap-2">
       <% @group_remit.status_mappings.each do |status, attributes| %>

@@ -1175,6 +1175,8 @@ ActiveRecord::Schema[7.0].define(version: 2024_04_17_062939) do
     t.decimal "total_loan_amount", precision: 20, scale: 2
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.decimal "ri_amount", precision: 10, scale: 2
+    t.decimal "ri_prem", precision: 10, scale: 2
     t.index ["member_id"], name: "index_reinsurance_members_on_member_id"
     t.index ["reinsurance_id"], name: "index_reinsurance_members_on_reinsurance_id"
   end

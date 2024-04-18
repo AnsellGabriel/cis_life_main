@@ -78,6 +78,9 @@ class Accounting::ChecksController < ApplicationController
       @checks = Accounting::Check.all.order(created_at: :desc)
     end
 
+    @q = @checks.ransack(params[:q])
+    @checks = @q.result
+
     @pagy, @checks = pagy(@checks, items: 10)
   end
 

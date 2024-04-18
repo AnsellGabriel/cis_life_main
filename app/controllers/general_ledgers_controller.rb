@@ -20,7 +20,7 @@ class GeneralLedgersController < ApplicationController
       elsif params[:e_t] == 'cv'
         @entry.update(post_date: Date.current, certified_by: current_user.userable.id)
 
-        if @entry.check_voucher_request.presnet?
+        if @entry.check_voucher_request.present?
           claim_track = @entry.check_voucher_request.requestable.process_track.build
           claim_track.route_id = 14
           claim_track.user_id = current_user.id

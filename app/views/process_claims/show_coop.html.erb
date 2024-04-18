@@ -132,7 +132,7 @@
               </tr>
             </thead>
             <tbody>
-              <% @process_claim.check_voucher_request.check_vouchers.posted.last.business_checks.each do |check| %>
+              <% @process_claim.check_voucher_request&.check_vouchers&.posted&.last&.business_checks&.each do |check| %>
                 <tr>
                   <td class='text-center' >
                     <%= check.check_number %>
