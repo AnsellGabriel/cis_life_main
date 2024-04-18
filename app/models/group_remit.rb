@@ -84,9 +84,7 @@ class GroupRemit < ApplicationRecord
       Batch.process_batch(
         new_batch,
         new_group_remit,
-        b_rank,
-        new_group_remit.terms
-      )
+        b_rank)
 
       new_group_remit.batches << new_batch
 
@@ -145,7 +143,9 @@ class GroupRemit < ApplicationRecord
 
     if (anniv_type.downcase == "12 months" or anniv_type.nil?) && group_remit.instance_of?(BatchRemit)
       # group_remit.name = "#{extract_from_substring(agreement.moa_no, ('GYRT' or 'LPPI'))} #{group_remit.effectivity_date.strftime('%B').upcase} BATCH"
-      group_remit.name = "#{group_remit.effectivity_date.strftime('%B').upcase} BATCH"
+      group_remit.name = "#{group_remit.effectivity_date.strftime('%B').upcase} GYRT MASTERLIST"
+    elsif group_remit.instance_of?(BatchRemit)
+      group_remit.name = "GYRT MASTERLIST"
     else
       # group_remit.name = "#{extract_from_substring(agreement.moa_no, ('GYRT' or 'LPPI'))} REMITTANCE #{agreement.group_remits.where(type: 'Remittance').size + 1}"
       group_remit.name = "#{group_remit.agreement.plan.acronym.include?('GYRT') ? 'GYRT' : group_remit.agreement.plan.acronym} List #{agreement.group_remits.where(type: 'Remittance').size + 1}"
@@ -443,6 +443,10 @@ class GroupRemit < ApplicationRecord
 
   def count_approved_batches
     batches.where(insurance_status: :approved).count
+  end
+
+  def count_batches
+    batches.count
   end
 
   def sum_approved_batches_net_prem

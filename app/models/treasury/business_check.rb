@@ -8,4 +8,9 @@ class Treasury::BusinessCheck < ApplicationRecord
 
   belongs_to :voucher, class_name: "Accounting::Check"
 
+  private
+
+  def self.ransackable_attributes(auth_object = nil)
+    ["check_number"]
+  end
 end

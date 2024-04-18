@@ -10,7 +10,7 @@
   <div class="d-flex gap-1">
     <%= search_form_for @q, url: coop_agreement_group_remit_remittances_path(@batch_remit.agreement, @batch_remit), method: :get do |f| %>
       <div class="form-group d-flex gap-1">
-        <%= f.search_field :official_receipt_or_name_cont, placeholder: "Search remittance or OR #", class: "form-control" %>
+        <%= f.search_field :official_receipt_or_name_cont, placeholder: "Search list name or OR #", class: "form-control" %>
         <%= button_tag(type: 'submit', class: small_btn('warning text-dark'), style: 'width: 40px') do %>
           <i class='bi bi-search'></i>
         <% end %>

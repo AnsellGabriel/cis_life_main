@@ -10,8 +10,8 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2024_04_16_023403) do
-  create_table "accounting_vouchers", charset: "utf8mb4", force: :cascade do |t|
+ActiveRecord::Schema[7.0].define(version: 2024_04_17_062939) do
+  create_table "accounting_vouchers", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.date "date_voucher"
     t.string "voucher"
     t.string "payable_type", null: false
@@ -31,6 +31,7 @@ ActiveRecord::Schema[7.0].define(version: 2024_04_16_023403) do
     t.integer "certified_by"
     t.bigint "check_voucher_request_id"
     t.string "type"
+    t.integer "branch"
     t.index ["check_voucher_request_id"], name: "index_accounting_vouchers_on_check_voucher_request_id"
     t.index ["payable_type", "payable_id"], name: "index_accounting_vouchers_on_payable"
     t.index ["treasury_account_id"], name: "index_accounting_vouchers_on_treasury_account_id"
@@ -1319,7 +1320,7 @@ ActiveRecord::Schema[7.0].define(version: 2024_04_16_023403) do
     t.decimal "withholding_tax", precision: 15, scale: 2, default: "0.0"
     t.boolean "vatable", default: false
     t.bigint "treasury_payment_type_id", null: false
-    t.string "branch"
+    t.integer "branch"
     t.index ["entriable_type", "entriable_id"], name: "index_treasury_cashier_entries_on_entriable"
     t.index ["treasury_account_id"], name: "index_treasury_cashier_entries_on_treasury_account_id"
     t.index ["treasury_payment_type_id"], name: "index_treasury_cashier_entries_on_treasury_payment_type_id"
