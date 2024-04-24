@@ -1,0 +1,109 @@
+<div class="d-flex gap-3">
+  <div class="card" style="width: 60%;">
+    <div class="card-header <%= flex_justify_align('between', '') %>">
+      <div class="" style="width: 100%">
+        <div class="<%= flex_justify_align('between','center') %>">
+          <div class="<%= flex_justify_align('','center') %> gap-1">
+            <p class="text-muted"><small>Debit Advice</small></p>
+            <p class="badge bg-<%= debit_advice.decorate.status_badge %>"><%= debit_advice.status.humanize %></p>
+          </div>
+          <div class="">
+            <% if current_user.is_accountant? %>
+              <% if current_user.head? and debit_advice.for_approval? %>
+                <%= link_to post_entry_ledgers_path(debit_advice, e_t: debit_advice.entry_type), class: 'btn btn-sm btn-success mt-1', data: {turbo_confirm: "IMPORTANT: This process is not reversible. Post voucher?", turbo_method: :get}, title: 'Post' do %>
+                  <i class="bi bi-debit_advice-circle-fill"></i>
+                  <span> Post</span>  
+                <% end %>
+                <%= link_to new_accounting_debit_advice_remark_path(debit_advice, e_t: debit_advice.entry_type), data: {turbo_frame: 'reg_form_modal' }, class: 'btn btn-sm btn-danger mt-1', title: 'Cancel Voucher' do %>
+                  <i class="bi bi-x-circle-fill"></i><span> Cancel</span>
+                <% end %>
+              <% else %>
+                <% if debit_advice.pending? %>
+                  <%= link_to for_approval_entry_ledgers_path(debit_advice, e_t: debit_advice.entry_type), class: 'btn btn-sm btn-success mt-1', data: {turbo_confirm: "Submit voucher for approval?", turbo_method: :get}, title: 'Submit' do %>
+                    <i class="bi bi-debit_advice-circle-fill"></i>
+                    <span> Submit</span>
+                  <% end %>
+                  <%= link_to edit_accounting_debit_advice_path(debit_advice, e_t: debit_advice.entry_type), class: 'btn btn-sm btn-primary mt-1', data: {turbo_frame: 'modal'}, title: 'Edit receipt' do %> 
+                    <i class="bi bi-pencil-fill"></i><span> Edit</span>
+                  <% end %>
+                  <%= link_to new_accounting_check_remark_path(debit_advice, e_t: debit_advice.entry_type), data: {turbo_frame: 'reg_form_modal' }, class: 'btn btn-sm btn-danger mt-1', title: 'Cancel Voucher' do %>
+                    <i class="bi bi-x-circle-fill"></i><span> Cancel</span>
+                  <% end %>
+                <% end %>
+              <% end %>
+              <% if debit_advice.cancelled? or debit_advice.pending_audit? %>
+                <%= link_to accounting_check_remarks_path(debit_advice, e_t: debit_advice.entry_type), class: 'btn btn-sm btn-danger mt-1', data: {turbo_frame: 'reg_form_modal'} do %>
+                  <i class="bi bi-card-list"></i> Remarks
+                <% end %>
+              <% end%>
+            <% end %>
+          </div>
+        </div>
+        <h3 class="text-primary"><%= "#{debit_advice.voucher}" %></h3>
+        <div class="<%= flex_justify_align('between', 'center') %>">
+          <p><small><strong>DA date:</strong> <span><%= month_day_year(debit_advice.date_voucher) %></span></small></p>
+          <% if debit_advice.post_date? %>
+            <p><small><strong>Post date:</strong> <span><%= month_day_year(debit_advice.post_date) %></span></small></p>
+          <% end %>
+        </div>
+        <% if current_user.is_auditor? %>
+          <div class="<%= flex_justify_align('between','center') %> gap-1">
+            <div class="<%= flex_justify_align('','center') %> gap-1">
+              <p>
+                <small><strong>Audit:</strong> <p class="<%= debit_advice.decorate.audit_badge %>"><%= debit_advice.decorate.audit_text.humanize %></p></small>
+              </p>
+            </div>
+            <% if debit_advice.audited_by.present? %>
+              <div class="<%= flex_justify_align('','center') %> gap-1">
+                <p>
+                  <small><strong>Audited by:</strong> <p><%= User.find(debit_advice.audited_by).to_s %></p></small>
+                </p>
+              </div>
+            <% end %>
+          </div>
+        <% end %>
+      </div>
+      
+    </div>
+    <div class="card-body">
+
+      <div class="row mb-3">
+        <span class="small fw-bold col-2">Payee: </span>
+        <span class="small col-10"><%= debit_advice.payable %></span>
+      </div>
+
+      <div class="row mb-3">
+        <span class="small fw-bold col-2">Bank: </span>
+        <span class="small col-10"><%= debit_advice.treasury_account %></span>
+      </div>
+
+      <div class="row mb-3">
+        <span class="small fw-bold col-2">Particulars: </span>
+        <span class="small col-10"><%= debit_advice.particulars %></span>
+      </div>
+
+    </div>
+  </div>
+    
+    <div class="card" style="width: 40%;">
+      <div class="card-body">
+        <div class="<%= flex_justify_align('between') %>">
+          <span class="small fw-bold">Details</span>
+          <span class="small fw-bold">Amount</span>
+        </div>
+        <hr style="opacity: 1; border-color: black !important">
+        <div class="<%= flex_justify_align('between') %>">
+          <span class="small">Amount</span>
+          <span class="small"><%= to_curr(debit_advice.amount) %></span>
+        </div>
+  
+        <hr style="opacity: 1; border-color: black !important">
+        <div class="<%= flex_justify_align('between') %>">
+          <span class="small">Deposit</span>
+          <span class="small"><%= to_curr(debit_advice.amount) %></span>
+        </div>
+      </div>
+    </div>
+
+</div>
+

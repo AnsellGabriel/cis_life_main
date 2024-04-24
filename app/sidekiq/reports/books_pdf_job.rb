@@ -18,7 +18,7 @@ class Reports::BooksPdfJob
     when "receipt_book"
       entries = Treasury::CashierEntry.where(or_date: @search_date, status: :posted)
     end
-
+    
     begin
       # Render template as PDF
       pdf_contents = ApplicationController.render(

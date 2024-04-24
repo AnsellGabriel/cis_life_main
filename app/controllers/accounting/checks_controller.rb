@@ -117,7 +117,7 @@ class Accounting::ChecksController < ApplicationController
     @check = Accounting::Check.new(modified_check_params)
     @check.accountant_id = current_user.userable.id
     @check.branch = current_user.userable.branch_before_type_cast
-
+    
     if @check.save
       if params[:rid].present?
         claim_request = Accounting::CheckVoucherRequest.find(params[:rid])

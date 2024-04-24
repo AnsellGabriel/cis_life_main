@@ -3,16 +3,22 @@
     <i class="bi bi-chevron-left"></i>
   <% end %>
   
-  <% if @checks.first.cancelled? %>
-    <%= link_to new_accounting_check_path(rid: params[:id]), class: 'btn btn-sm btn-primary', data: {turbo_frame: 'modal'}, title: "Generate Check Voucher" do %>
-      <i class="bi bi-receipt-cutoff"></i>
-      Generate
+  <% if @requests.first.cancelled? %>
+    <% if @requests.first.type == "Accounting::Check" %>
+      <%= link_to new_accounting_check_path(rid: params[:id]), class: 'btn btn-sm btn-primary', data: {turbo_frame: 'modal'}, title: "Generate Check Voucher" do %>
+        <i class="bi bi-receipt-cutoff"></i>
+        Generate
+      <% end %>
+    <% elsif %>
+      <%= link_to new_accounting_debit_advice_path(rid: params[:id]), class: 'btn btn-sm btn-primary', data: {turbo_frame: 'modal'}, title: "Generate Check Voucher" do %>
+        <i class="bi bi-receipt-cutoff"></i>
+        Generate
+      <% end %>
     <% end %>
   <% end %>
 </div>
 
 <div class="<%= flex_justify_align('between', 'center') %> gap-1 mb-1">
-  <%= content_tag :h4, "Generated Vouchers", class: 'text-primary mb-0' %>
   <% if @pagy.pages > 1 %>
     <%== pagy_bootstrap_nav(@pagy) %>
   <% end %>
@@ -20,7 +26,7 @@
   <table class="table table-bordered table-hover bg-white table-sm">
     <thead class="table-dark">
       <tr>
-        <th>Voucher</th>
+        <th><%= @requests.first.type == "Accounting::Check" ? "Check Voucher" : "Debit Advice" %></th>
         <th class="text-center" style="width: 8%; min-width: 110px">Date</th>
         <th>Payee</th>
         <th class="text-center">Amount</th>
@@ -29,23 +35,23 @@
     </thead>
 
     <tbody>
-      <% if @checks.present? %>
-        <% @checks.each do |check| %>
+      <% if @requests.present? %>
+        <% @requests.each do |request| %>
           <tr>
             <td>
-              <%= link_to "CV#{check.voucher}", check, class: 'text-primary', title: 'View'%>
+              <%= link_to "#{request.type == "Accounting::Check" ? 'CV' : ''}#{request.voucher}", request, class: 'text-primary', title: 'View'%>
             </td>
-            <td class="text-center"><%= month_day_year(check.date_voucher) %></td>
-            <td><%= check.payable %></td>
-            <td class="text-end"><%= to_curr(check.amount) %></td>
+            <td class="text-center"><%= month_day_year(request.date_voucher) %></td>
+            <td><%= request.payable %></td>
+            <td class="text-end"><%= to_curr(request.amount) %></td>
             <td class="text-center">
-              <span class="text-center <%= check.decorate.status_badge %>"><%= check.status.titleize %></span>
+              <span class="text-center <%= request.decorate.status_badge %>"><%= request.status.titleize %></span>
             </td>
           </tr>
         <% end %>
       <% else %>
         <tr>
-          <td colspan="7" class="text-center">No check vouchers found.</td>
+          <td colspan="7" class="text-center">No  found.</td>
         </tr>
       <% end %>
     </tbody>
