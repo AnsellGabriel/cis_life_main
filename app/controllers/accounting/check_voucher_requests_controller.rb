@@ -4,8 +4,13 @@ class Accounting::CheckVoucherRequestsController < ApplicationController
   end
 
   def show
-    @checks = Accounting::CheckVoucherRequest.find(params[:id]).check_vouchers.order(created_at: :desc)
-    @pagy, @check_vouchers = pagy(@checks, items: 10)
+    if params[:pt] == "check_voucher"
+      @requests = Accounting::CheckVoucherRequest.find(params[:id]).check_vouchers.order(created_at: :desc)
+    elsif params[:pt] == "debit_advice"
+      @requests = Accounting::CheckVoucherRequest.find(params[:id]).debit_advices.order(created_at: :desc)
+    end
+
+    @pagy, @check_vouchers = pagy(@requests, items: 10)
   end
 
   def new

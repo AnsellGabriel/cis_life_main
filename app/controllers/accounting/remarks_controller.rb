@@ -40,7 +40,7 @@ class Accounting::RemarksController < ApplicationController
         @voucher.transaction do
           @voucher.general_ledgers.update_all(transaction_date: nil)
           @voucher.cancelled!
-          @voucher.check_voucher_request.pending! if params[:e_t] == 'cv' and @voucher&.check_voucher_request&.present?
+          @voucher.check_voucher_request.pending! if (params[:e_t] == 'cv' || params[:e_t] == 'da')  and @voucher&.check_voucher_request&.present?
         end
       end
 
@@ -62,6 +62,7 @@ class Accounting::RemarksController < ApplicationController
     case params[:e_t]
     when 'cv' then klass = Accounting::Check
     when 'jv' then klass = Accounting::Journal
+    when 'da' then klass = Accounting::DebitAdvice
     end
 
     @voucher = klass.find(params[:check_id])

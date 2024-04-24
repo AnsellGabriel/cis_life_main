@@ -2,7 +2,9 @@ class Cooperative < ApplicationRecord
   before_save :upcase_name
 
   has_many :coop_users
-  has_many :coop_branches
+  has_many :coop_branches, dependent: :destroy
+  has_many :coop_banks
+  has_many :treasury_accounts, through: :coop_banks
 
   has_many :coop_members, dependent: :destroy
   has_many :members, through: :coop_members

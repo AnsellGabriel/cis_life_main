@@ -1,0 +1,34 @@
+<%= content_tag :h1, "List of Accounting Debit Advices" %>
+
+
+<div class="text-end mb-3">
+  <%= link_to new_accounting_debit_advice_path, class: 'btn btn-primary' do %>
+    New Debit Advice
+  <% end %>
+</div>
+
+
+  <table class="table table-striped table-bordered table-hover">
+    <thead>
+      <tr>
+      <th>#</th>
+            <th></th>
+        </tr>
+    </thead>
+
+    <tbody>
+      <% @accounting_debit_advices.each do |accounting_debit_advice| %>
+        <tr>
+
+        <th scope="row"><%= accounting_debit_advice.id %></th>
+    
+          <td>
+            <%= link_to 'View', accounting_debit_advice, class: 'btn btn-secondary btn-sm' %>
+            <%= link_to 'Edit', edit_accounting_debit_advice_path(accounting_debit_advice), class: 'btn btn-secondary btn-sm' %>
+            <%= link_to "Delete", accounting_debit_advice, class: "btn btn-danger btn-sm", method: :delete, data: { "turbo-method": :delete, turbo_confirm: "Are you sure?" } %>
+          </td>
+
+        </tr>
+      <% end %>
+    </tbody>
+  </table>

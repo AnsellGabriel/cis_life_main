@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2024_04_17_062939) do
+ActiveRecord::Schema[7.0].define(version: 2024_04_24_031118) do
   create_table "accounting_vouchers", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.date "date_voucher"
     t.string "voucher"
@@ -372,6 +372,8 @@ ActiveRecord::Schema[7.0].define(version: 2024_04_17_062939) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.integer "payment_type"
+    t.integer "payout_type"
+    t.integer "bank_id"
     t.index ["requestable_type", "requestable_id"], name: "index_check_voucher_requests_on_requestable"
   end
 
@@ -498,7 +500,16 @@ ActiveRecord::Schema[7.0].define(version: 2024_04_17_062939) do
     t.datetime "updated_at", null: false
   end
 
-  create_table "coop_branches", charset: "utf8mb4", force: :cascade do |t|
+  create_table "coop_banks", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+    t.bigint "cooperative_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.bigint "treasury_account_id"
+    t.index ["cooperative_id"], name: "index_coop_banks_on_cooperative_id"
+    t.index ["treasury_account_id"], name: "index_coop_banks_on_treasury_account_id"
+  end
+
+  create_table "coop_branches", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.string "name"
     t.string "contact_details"
     t.bigint "cooperative_id", null: false
@@ -1069,6 +1080,7 @@ ActiveRecord::Schema[7.0].define(version: 2024_04_17_062939) do
     t.boolean "payment"
     t.bigint "claim_type_id"
     t.integer "status"
+    t.integer "payout_type"
     t.index ["agreement_benefit_id"], name: "index_process_claims_on_agreement_benefit_id"
     t.index ["agreement_id"], name: "index_process_claims_on_agreement_id"
     t.index ["cause_id"], name: "index_process_claims_on_cause_id"
@@ -1274,6 +1286,8 @@ ActiveRecord::Schema[7.0].define(version: 2024_04_17_062939) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.string "code"
+    t.integer "account_category"
+    t.string "account_number"
   end
 
   create_table "treasury_billing_statements", charset: "utf8mb4", force: :cascade do |t|
@@ -1406,6 +1420,8 @@ ActiveRecord::Schema[7.0].define(version: 2024_04_17_062939) do
   add_foreign_key "claim_remarks", "process_claims"
   add_foreign_key "claim_remarks", "users"
   add_foreign_key "claim_request_for_payments", "process_claims"
+  add_foreign_key "coop_banks", "cooperatives"
+  add_foreign_key "coop_banks", "treasury_accounts"
   add_foreign_key "coop_branches", "cooperatives"
   add_foreign_key "coop_members", "coop_branches"
   add_foreign_key "coop_members", "cooperatives"
