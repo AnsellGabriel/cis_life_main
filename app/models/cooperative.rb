@@ -42,6 +42,22 @@ class Cooperative < ApplicationRecord
     when "overage"
       overage_ago = 66.years.ago.to_date
       members.where(birth_date: ..overage_ago).count
+    when "66"
+      age1 = 66.years.ago.to_date - 1.day
+      age2 = 70.years.ago.to_date - 1.day
+      members.where(birth_date: ..age1).where(birth_date: age2..).count
+    when "71"
+      age1 = 71.years.ago.to_date - 1.day
+      age2 = 75.years.ago.to_date - 1.day
+      members.where(birth_date: ..age1).where(birth_date: age2..).count
+    when "76"
+      age1 = 75.years.ago.to_date - 1.day
+      age2 = 80.years.ago.to_date - 1.day
+      members.where(birth_date: ..age1).where(birth_date: age2..).count
+    when "81"
+      age1 = 81.years.ago.to_date - 1.day
+      age2 = 85.years.ago.to_date - 1.day
+      members.where(birth_date: ..age1).where(birth_date: age2..).count
     end
   end
 

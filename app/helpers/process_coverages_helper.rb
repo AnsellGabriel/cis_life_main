@@ -113,10 +113,9 @@ module ProcessCoveragesHelper
         end
       end
     end
-  
   end
   
-  def batch_buttons(rank, type, b_status, p_status)
+  def batch_buttons(rank, type, b_status=nil, p_status=nil)
     case type
     when "approve", "deny", "pending"
       case rank

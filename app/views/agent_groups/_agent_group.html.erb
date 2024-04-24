@@ -9,4 +9,10 @@
     <%= agent_group.description %>
   </p>
 
+  <ul class="list-group col-5 mb-3">
+    <% @agents.each do |agent| %>
+      <li class="list-group-item"><%= agent %></li>
+    <% end %>
+  </ul>
+
 </div>
