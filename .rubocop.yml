@@ -31,7 +31,6 @@ Layout/LeadingCommentSpace:
 
 Style/StringLiterals:
   Enabled: true
-  EnforcedStyle: double_quotes
 
 Layout/IndentationStyle:
   Enabled: true

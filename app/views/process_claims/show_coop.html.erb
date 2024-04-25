@@ -145,6 +145,24 @@
           </table>
         </div>
       </div>
+    <% elsif @process_claim.debit_advice? %>
+      <div class="card">
+        <div class="card-body small">
+          <h4 class="text-primary">Debit Advice - Bank Details</h4>
+          <dl class="row mt-3">
+            <dt class="col-sm-3">Account Name:</dt>
+            <dd class="col-sm-9"><%= @bank.name %></dd>
+          </dl>
+          <dl class="row mt-3">
+            <dt class="col-sm-3">Account Number:</dt>
+            <dd class="col-sm-9"><%= @bank.account_number %></dd>
+          </dl>
+          <dl class="row mt-3">
+            <dt class="col-sm-3">Address:</dt>
+            <dd class="col-sm-9"><%= @bank.address %></dd>
+          </dl>
+        </div>
+      </div>
     <% end %>
   </div>
   <%# <div class="card">

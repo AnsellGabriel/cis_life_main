@@ -17,7 +17,7 @@ class GeneralLedgersController < ApplicationController
       if params[:e_t] == 'ce' && @entry.remittance?
         pay_service = PaymentService.new(@entry.entriable, current_user, @entry)
         result = pay_service.post_payment
-      elsif params[:e_t] == 'cv'
+      elsif params[:e_t] == 'cv' && params[:e_t] == 'da'
         @entry.update(post_date: Date.current, certified_by: current_user.userable.id)
 
         if @entry.check_voucher_request.present?
@@ -119,6 +119,7 @@ class GeneralLedgersController < ApplicationController
     # Use callbacks to share common setup or constraints between actions.
   def set_entry_and_ledgers
     case params[:e_t]
+    when 'da' then klass = Accounting::DebitAdvice
     when 'ce' then klass = Treasury::CashierEntry
     when 'cv' then klass = Accounting::Check
     when 'jv' then klass = Accounting::Journal

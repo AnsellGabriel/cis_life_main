@@ -13,30 +13,32 @@ class CoopBanksController < ApplicationController
   # GET /coop_banks/new
   def new
     @coop = Cooperative.find(params[:cooperative_id])
-    @coop_bank = Treasury::Account.new
+    @account = Treasury::Account.new
   end
 
   # GET /coop_banks/1/edit
   def edit
-    
+
   end
 
   # POST /coop_banks
   def create
     @coop = Cooperative.find(params[:cooperative_id])
-    @coop_bank = Treasury::Account.bank.find_or_initialize_by(name: coop_bank_params[:name], account_number: coop_bank_params[:account_number])
+    @account = Treasury::Account.bank.find_or_initialize_by(account_number: coop_bank_params[:account_number])
 
     ActiveRecord::Base.transaction do
-      if @coop_bank.new_record?
-        @coop_bank.address = coop_bank_params[:address]
-        @coop_bank.account_type = :assets
-        @coop_bank.account_category = :bank
+      if @account.new_record?
+        @account.add_bank(coop_bank_params[:name], coop_bank_params[:address])
       end
 
-      if @coop_bank.save
-        @coop.treasury_accounts << @coop_bank
+      if @account.save
+        begin
+          @coop_bank = CoopBank.create!(cooperative: @coop, treasury_account: @account)
 
-        redirect_to approve_claim_debit_process_claim_path(params[:pc_id]), notice: "Bank successfully added"
+          redirect_to approve_claim_debit_process_claim_path(params[:pc_id]), notice: "Bank successfully added"
+        rescue ActiveRecord::RecordInvalid => e
+          redirect_to approve_claim_debit_process_claim_path(params[:pc_id])
+        end
       else
         render :new, status: :unprocessable_entity
       end

@@ -14,7 +14,7 @@
                   <i class="bi bi-debit_advice-circle-fill"></i>
                   <span> Post</span>  
                 <% end %>
-                <%= link_to new_accounting_debit_advice_remark_path(debit_advice, e_t: debit_advice.entry_type), data: {turbo_frame: 'reg_form_modal' }, class: 'btn btn-sm btn-danger mt-1', title: 'Cancel Voucher' do %>
+                <%= link_to new_accounting_check_remark_path(debit_advice, e_t: debit_advice.entry_type), data: {turbo_frame: 'reg_form_modal' }, class: 'btn btn-sm btn-danger mt-1', title: 'Cancel Voucher' do %>
                   <i class="bi bi-x-circle-fill"></i><span> Cancel</span>
                 <% end %>
               <% else %>
@@ -68,18 +68,28 @@
     <div class="card-body">
 
       <div class="row mb-3">
-        <span class="small fw-bold col-2">Payee: </span>
-        <span class="small col-10"><%= debit_advice.payable %></span>
+        <span class="small fw-bold col-3">Payee: </span>
+        <span class="small col-9"><%= debit_advice.payable %></span>
       </div>
 
       <div class="row mb-3">
-        <span class="small fw-bold col-2">Bank: </span>
-        <span class="small col-10"><%= debit_advice.treasury_account %></span>
+        <span class="small fw-bold col-3">Account Name: </span>
+        <span class="small col-9"><%= @bank.name %></span>
       </div>
 
       <div class="row mb-3">
-        <span class="small fw-bold col-2">Particulars: </span>
-        <span class="small col-10"><%= debit_advice.particulars %></span>
+        <span class="small fw-bold col-3">Account Number: </span>
+        <span class="small col-9"><%= @bank.account_number %></span>
+      </div>
+
+      <div class="row mb-3">
+        <span class="small fw-bold col-3">Address: </span>
+        <span class="small col-9"><%= @bank.address %></span>
+      </div>
+
+      <div class="row mb-3">
+        <span class="small fw-bold col-3">Particulars: </span>
+        <span class="small col-9"><%= debit_advice.particulars %></span>
       </div>
 
     </div>

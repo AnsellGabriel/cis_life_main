@@ -1,5 +1,7 @@
 class Accounting::DebitAdvicesController < ApplicationController
   before_action :set_debit_advice, only: %i[ show edit update destroy ]
+  before_action :set_payables, only: %i[ new edit create update]
+
 
   # GET /accounting/debit_advices
   def index
@@ -10,18 +12,19 @@ class Accounting::DebitAdvicesController < ApplicationController
   def show
     @ledgers = @debit_advice.general_ledgers
     @claim = @debit_advice.check_voucher_request.requestable if @debit_advice.check_voucher_request.present?
+    @bank = @debit_advice.treasury_account
   end
 
   # GET /accounting/debit_advices/new
   def new
     if params[:rid].present?
-      claim_request = Accounting::CheckVoucherRequest.find(params[:rid])
-      @amount = claim_request.amount
-      @coop = claim_request.requestable.cooperative
-
-      @debit_advice = Accounting::DebitAdvice.new(voucher: set_series, payable: @coop, amount: @amount, date_voucher: Date.today)
+      @claim_request = Accounting::CheckVoucherRequest.find(params[:rid])
+      @amount = @claim_request.amount
+      @bank = Treasury::Account.find(@claim_request.bank_id)
+      @coop = @claim_request.requestable.cooperative
+      @debit_advice = Accounting::DebitAdvice.new(voucher: Accounting::DebitAdvice.generate_series, payable: @coop, amount: @amount, date_voucher: Date.today)
     else
-      @debit_advice = Accounting::DebitAdvice.new(voucher: set_series, date_voucher: Date.today)
+      @debit_advice = Accounting::DebitAdvice.new(voucher: Accounting::DebitAdvice.generate_series, date_voucher: Date.today)
     end
   end
 
@@ -37,17 +40,18 @@ class Accounting::DebitAdvicesController < ApplicationController
 
     if @debit_advice.save
       if params[:rid].present?
-        claim_request = Accounting::CheckVoucherRequest.find(params[:rid])
-        claim_request.voucher_generated!
-        @debit_advice.update(check_voucher_request: claim_request)
+        @claim_request = Accounting::CheckVoucherRequest.find(params[:rid])
+        @claim_request.voucher_generated!
+        @debit_advice.update(check_voucher_request: @claim_request)
       end
 
       redirect_to @debit_advice, notice: "Debit advice created."
     else
       if params[:rid].present?
-        claim_request = Accounting::CheckVoucherRequest.find(params[:rid])
-        @amount = claim_request.amount
-        @coop = claim_request.requestable.cooperative
+        @claim_request = Accounting::CheckVoucherRequest.find(params[:rid])
+        @bank = Treasury::Account.find(@claim_request.bank_id)
+        @amount = @claim_request.amount
+        @coop = @claim_request.requestable.cooperative
       end
 
       render :new, status: :unprocessable_entity
@@ -57,7 +61,7 @@ class Accounting::DebitAdvicesController < ApplicationController
   # PATCH/PUT /accounting/debit_advices/1
   def update
     if @debit_advice.update(modified_da_params)
-      redirect_to @check, notice: "Debit advice updated."
+      redirect_to @debit_advice, notice: "Debit advice updated."
     else
       render :edit, status: :unprocessable_entity
     end
@@ -77,23 +81,16 @@ class Accounting::DebitAdvicesController < ApplicationController
 
   # Only allow a list of trusted parameters through.
   def da_params
-    params.require(:accounting_debit_advice).permit(:date_voucher, :voucher, :global_payable, :particulars, :treasury_account_id, :amount, :payable_id)
-  end
-
-  def set_series
-    last_da_series = Accounting::DebitAdvice.latest_da_for_current_year_and_month
-
-    if last_da_series.present?
-      series = last_da_series[0..7] + sprintf("%03d", last_da_series[-3..-1].to_i + 1)
-    else
-      series = Time.now.strftime("%Y-%m") + "-001"
-    end
-
-    series
+    params.require(:accounting_debit_advice).permit(:treasury_account, :date_voucher, :voucher, :global_payable, :particulars, :treasury_account_id, :amount, :payable_id)
   end
 
   def modified_da_params
     da_params[:amount] = da_params[:amount].to_f
     da_params
+  end
+
+  # collection of payees
+  def set_payables
+    @payables = (Cooperative.all + Payee.all).sort_by(&:name)
   end
 end

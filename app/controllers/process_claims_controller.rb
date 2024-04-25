@@ -45,6 +45,10 @@ class ProcessClaimsController < ApplicationController
     @required_documents = @claim_type_document.where.not(id: @claim_type_document_ids)
     @check = @process_claim.check_voucher_request&.check_vouchers&.where(audit: [:pending_audit, :for_audit])&.last
     @audit_remarks = @check&.remarks
+
+    if @process_claim.debit_advice?
+      @bank = Treasury::Account.find(@process_claim.check_voucher_request.bank_id)
+    end
   end
   # GET /process_claims/new
   def new

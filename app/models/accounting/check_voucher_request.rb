@@ -1,4 +1,7 @@
 class Accounting::CheckVoucherRequest < ApplicationRecord
+  validates_presence_of :requestable_type, :requestable_id, :amount, :status, :analyst, :description, :payment_type, :payout_type
+  validates_presence_of :bank_id, if: :debit_advice?
+
   self.table_name = "check_voucher_requests"
 
   belongs_to :requestable, polymorphic: true
