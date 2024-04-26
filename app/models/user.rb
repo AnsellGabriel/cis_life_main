@@ -58,6 +58,10 @@ class User < ApplicationRecord
     userable_type == "Employee" && userable.department_id == 19
   end
 
+  def is_und?
+    userable_type == "Employee" && userable.department_id == 17
+  end
+
   def is_auditor?
     userable_type == "Employee" && userable.department_id == 27
   end

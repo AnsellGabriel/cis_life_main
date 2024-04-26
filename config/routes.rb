@@ -2,6 +2,7 @@
 require "sidekiq/web"
 
 Rails.application.routes.draw do
+  resources :transmittals
   resources :special_arrangements
   resources :sip_pbs
   resources :sip_abs
