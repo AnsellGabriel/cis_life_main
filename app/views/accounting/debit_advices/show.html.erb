@@ -1,7 +1,13 @@
 <% if current_user.is_accountant? %>
   <div class="mb-1">
-    <%= link_to  :back, class: small_btn("secondary") do %>
-      <i class="bi bi-chevron-left"></i>
+    <% if @request.present? %>
+      <%= link_to accounting_check_voucher_request_path(@request, pt: @request.payout_type), class: small_btn("secondary") do %>
+        <i class="bi bi-chevron-left"></i>
+      <% end %>
+    <% else %>
+      <%= link_to accounting_debit_advices_path, class: small_btn("secondary") do %>
+        <i class="bi bi-chevron-left"></i>
+      <% end %>
     <% end %>
 
     <% if @debit_advice.posted? %>
@@ -16,13 +22,13 @@
   
 <% elsif current_user.is_auditor? %>
   <div class="mb-1">
-    <%= link_to  audit_check_vouchers_path, class: small_btn("secondary"), title: 'Back' do %>
+    <%= link_to  audit_for_audits_path, class: small_btn("secondary"), title: 'Back' do %>
       <i class="bi bi-chevron-left"></i>
     <% end %>
     <%= link_to "MOA", show_details_agreement_path(@debit_advice.check_voucher_request.requestable.agreement), class: small_btn('primary'), title: "Voucher", target: "_blank" %>
     <%= link_to "Claim details", claim_process_process_claim_path(@debit_advice.check_voucher_request.requestable), class: small_btn('primary'), title: "Claim Details", target: "_blank" %>
     <% unless @debit_advice.approved? %>
-      <%=  link_to approve_audit_check_voucher_path(@debit_advice), class: small_btn('success'), data: {turbo_confirm: "Finish audit and approve voucher?", turbo_method: :get} do  %>
+      <%=  link_to approve_audit_for_audit_path(@debit_advice), class: small_btn('success'), data: {turbo_confirm: "Finish audit and approve voucher?", turbo_method: :get} do  %>
         <i class="bi bi-check-circle-fill"></i> Approve
       <% end %>
       <%=  link_to new_accounting_check_remark_path(@debit_advice, e_t: @debit_advice.entry_type, audit: true), data: {turbo_frame: 'reg_form_modal' }, class: 'btn btn-sm btn-warning', title: 'Pending Voucher' do %>

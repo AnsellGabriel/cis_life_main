@@ -1,0 +1,17 @@
+<% if loan.present? %>
+  <div class="card">
+    <div class="card-body small">
+      <h4 class="text-primary">Loan Details</h4>
+      <dl class="row mt-3">
+        <dt class="col-sm-3">Loan amount:</dt>
+        <dd class="col-sm-2"><%= to_curr loan.loan_amount %></dd>
+      </dl>
+      <div class="row">
+        <dt class="col-sm-3">Effectivity:</dt>
+        <dd class="col-sm-3"><%= to_shortdate loan.effectivity_date %></dd>
+        <dt class="col-sm-3">Expiry:</dt>
+        <dd class="col-sm-3"><%= to_shortdate loan.expiry_date %></dd>
+      </div>
+    </div>
+  </div>
+<% end %>

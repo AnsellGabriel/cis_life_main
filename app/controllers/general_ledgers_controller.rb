@@ -11,29 +11,31 @@ class GeneralLedgersController < ApplicationController
     # if (@ledgers.total_debit != @entry.total_amount) || (@ledgers.total_credit != @entry.total_amount)
     #   return redirect_to entry_path, alert: "Unable to post ledger, credit and debit total not equal to total amount"
     # end
+    ActiveRecord::Base.transaction do
+      if @entry.update(status: :posted)
+        # params[:e_t] = entry type
+        if params[:e_t] == 'ce' && @entry.remittance?
+          pay_service = PaymentService.new(@entry.entriable, current_user, @entry)
+          result = pay_service.post_payment
+        elsif params[:e_t] == 'cv' || params[:e_t] == 'da'
+          @entry.update(post_date: Date.current, certified_by: current_user.userable.id)
 
-    if @entry.update(status: :posted)
-      # params[:e_t] = entry type
-      if params[:e_t] == 'ce' && @entry.remittance?
-        pay_service = PaymentService.new(@entry.entriable, current_user, @entry)
-        result = pay_service.post_payment
-      elsif params[:e_t] == 'cv'
-        @entry.update(post_date: Date.current, certified_by: current_user.userable.id)
+          if @entry.check_voucher_request.present?
+            @entry.check_voucher_request.update(status: :posted)
+            claim_track = @entry.check_voucher_request.requestable.process_track.build
+            claim_track.route_id = 14
+            claim_track.user_id = current_user.id
+            claim_track.save
+          end
 
-        if @entry.check_voucher_request.present?
-          claim_track = @entry.check_voucher_request.requestable.process_track.build
-          claim_track.route_id = 14
-          claim_track.user_id = current_user.id
-          claim_track.save
+          result = "#{params[:e_t] == 'da' ? ' Debit advice posted.' : 'Check voucher posted.'}"
+        elsif params[:e_t] == 'jv'
+          @entry.update(post_date: Date.current, certified_by: current_user.userable.id)
+          result = 'Journal posted.'
         end
 
-        result = 'Voucher posted.'
-      elsif params[:e_t] == 'jv'
-        @entry.update(post_date: Date.current, certified_by: current_user.userable.id)
-        result = 'Journal posted.'
+        @entry.general_ledgers.update_all(transaction_date: Date.current)
       end
-
-      @entry.general_ledgers.update_all(transaction_date: Date.current)
 
       redirect_to entry_path, notice: result
     end
@@ -119,6 +121,7 @@ class GeneralLedgersController < ApplicationController
     # Use callbacks to share common setup or constraints between actions.
   def set_entry_and_ledgers
     case params[:e_t]
+    when 'da' then klass = Accounting::DebitAdvice
     when 'ce' then klass = Treasury::CashierEntry
     when 'cv' then klass = Accounting::Check
     when 'jv' then klass = Accounting::Journal

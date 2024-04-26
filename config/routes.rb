@@ -303,7 +303,8 @@ Rails.application.routes.draw do
   #* Audit Module Routes
   namespace :audit do
     get 'dashboard', to: 'dashboard#index'
-    resources :check_vouchers, only: [:index] do
+    
+    resources :for_audits do
       get :approve, on: :member
     end
   end

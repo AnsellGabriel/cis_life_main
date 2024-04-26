@@ -1,9 +1,9 @@
 
-<%= simple_form_for(@coop_bank, url: cooperative_coop_banks_path(coop, pc_id: params[:pc_id])) do |f| %>
+<%= simple_form_for(@account, url: cooperative_coop_banks_path(coop, pc_id: params[:pc_id])) do |f| %>
   <div class="form-inputs mb-3">
-    <%= f.input :name, error: '*Required', label: 'Account Name' %>
+    <%= f.input :name, label: 'Account Name' %>
     <%= f.input :account_number %>
-    <%= f.input :address, error: '*Required' %>
+    <%= f.input :address %>
   </div>
 
   <div class="form-actions text-center">

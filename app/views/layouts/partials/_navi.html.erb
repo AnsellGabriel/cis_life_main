@@ -36,8 +36,8 @@
                 <%= link_to "Transmittal", transmittals_path, class: "dropdown-item" %>
               <% end %>
             <% when 27 %>
-              <%= render 'layouts/partials/nav_dropdown', title: 'For Audit' do %>
-                <%= link_to "Check Vouchers", audit_check_vouchers_path	, class: "dropdown-item" %>
+              <%= render 'layouts/partials/nav_dropdown', title: 'Audit' do %>
+                <%= link_to "For Audit", audit_for_audits_path, class: "dropdown-item" %>
               <% end %>
             <% when 17 %>
               <%= render 'layouts/partials/nav_dropdown', title: 'Underwriting' do %>

@@ -1,4 +1,7 @@
 class Accounting::CheckVoucherRequest < ApplicationRecord
+  validates_presence_of :requestable_type, :requestable_id, :amount, :status, :analyst, :description, :payment_type, :payout_type
+  validates_presence_of :bank_id, if: :debit_advice?
+
   self.table_name = "check_voucher_requests"
 
   belongs_to :requestable, polymorphic: true
@@ -10,7 +13,8 @@ class Accounting::CheckVoucherRequest < ApplicationRecord
   enum status: {
     pending: 0,
     voucher_generated: 1,
-    denied: 2
+    denied: 2,
+    posted: 3
   }
 
   enum payment_type: {

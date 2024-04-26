@@ -36,7 +36,7 @@ class Accounting::ChecksController < ApplicationController
   end
 
   def requests
-    @claim_requests = Accounting::CheckVoucherRequest.all.order(created_at: :desc)
+    @claim_requests = Accounting::CheckVoucherRequest.where.not(status: :posted).order(created_at: :desc)
     @pagy, @claim_requests = pagy(@claim_requests, items: 10)
   end
 
@@ -72,12 +72,7 @@ class Accounting::ChecksController < ApplicationController
 
   # GET /accounting/checks
   def index
-    if params[:check_number].present?
-      @checks = Accounting::Check.where(voucher: params[:check_number]).order(created_at: :desc)
-    else
-      @checks = Accounting::Check.all.order(created_at: :desc)
-    end
-
+    @checks = Accounting::Check.all.order(created_at: :desc)
     @q = @checks.ransack(params[:q])
     @checks = @q.result
 
@@ -88,7 +83,11 @@ class Accounting::ChecksController < ApplicationController
   def show
     @business_checks = @check.business_checks.where.not(id: nil).order(created_at: :desc)
     @ledgers = @check.general_ledgers
-    @claim = @check.check_voucher_request.requestable if @check.check_voucher_request.present?
+
+    if @check.check_voucher_request.present?
+      @request = @check.check_voucher_request
+      @claim = @request.requestable
+    end
   end
 
   # GET /accounting/checks/new
@@ -117,7 +116,7 @@ class Accounting::ChecksController < ApplicationController
     @check = Accounting::Check.new(modified_check_params)
     @check.accountant_id = current_user.userable.id
     @check.branch = current_user.userable.branch_before_type_cast
-    
+
     if @check.save
       if params[:rid].present?
         claim_request = Accounting::CheckVoucherRequest.find(params[:rid])
@@ -139,7 +138,7 @@ class Accounting::ChecksController < ApplicationController
 
   # PATCH/PUT /accounting/checks/1
   def update
-    if @check.update(modified_check_params)
+    if @check.update!(modified_check_params)
       redirect_to @check, notice: "Check voucher updated."
     else
       render :edit, status: :unprocessable_entity

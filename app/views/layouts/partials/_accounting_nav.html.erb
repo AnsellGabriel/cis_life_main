@@ -1,16 +1,28 @@
 <%= link_to "Claim Requests", requests_accounting_checks_path, class: "nav-link" %>
-<%= render 'layouts/partials/nav_dropdown', title: 'Check Vouchers' do %>
+
+<% if current_user.head? %>
+  <%= link_to "For Approvals", for_approval_index_accounting_checks_path, class: "nav-link" %>
+<% end %>
+
+<%= render 'layouts/partials/nav_dropdown', title: 'Vouchers' do %>
+  <%= link_to "Checks", accounting_checks_path, class: "dropdown-item" %>
+  <%= link_to "Debit Advices", accounting_debit_advices_path, class: "dropdown-item" %>
+  <%= link_to "Journals", accounting_journals_path, class: "dropdown-item" %>
+<% end %>
+
+<!--
+<%= render 'layouts/partials/nav_dropdown', title: 'Debit Advices' do %>
   <% if current_user.head? %>
     <%= link_to "For Approval", for_approval_index_accounting_checks_path, class: "dropdown-item" %>
   <% end %>
-  <%= link_to "Index", accounting_checks_path, class: "dropdown-item" %>
 <% end %>
 <%= render 'layouts/partials/nav_dropdown', title: 'Journal Vouchers' do %>
   <% if current_user.head? %>
     <%= link_to "For Approval", for_approval_index_accounting_journals_path, class: "dropdown-item" %>
   <% end %>
-  <%= link_to "Index", accounting_journals_path, class: "dropdown-item" %>
 <% end %>
+-->
+
 <%= link_to "Accounts", treasury_accounts_path, class: "nav-link" %>
 <%= render 'layouts/partials/nav_dropdown', title: 'Reports' do %>
   <%= link_to "Trial Balance", trial_balance_reports_accounts_path, class: 'nav-link' %>

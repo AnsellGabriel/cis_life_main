@@ -8,19 +8,20 @@
           flatpickr_max_date: Date.today,
           flatpickr_next_arrow: "Next",
           flatpickr_prev_arrow: "Prev"}
-          }, label: 'DA date', 
+          }, label: 'DA Date', 
           error: '*Required'
         %>
       </div>
       <div class="col-5">
         <label class="form-label integer required" for="accounting_check_voucher">DA no. <abbr title="required">*</abbr></label>
         <div class="input-group mb-3">
-          <%= f.input :voucher, wrapper: false, label: false, placeholder: '00000', error: '*Required' %>
+          <%= f.input :voucher, wrapper: false, label: false, placeholder: '0000-00-000', error: '*Required' %>
         </div>
       </div>
     </div>
 
     <% if params[:rid].present? %>
+      <% console %>
       <%= f.label 'Payee', class: 'mb-1' %>
       <%= f.select :global_payable, [[@coop.name, @coop.to_global_id]], {}, { class: 'form-control mb-3', readonly: true } %>
     <% else %>
@@ -35,7 +36,12 @@
     <% end %>
     <div class="row">
       <div class="col-7">
-        <%= f.association :treasury_account, label: 'Bank', error: '*Required', input_html: {data: {controller: 'ts--select'}} %>
+        <% if params[:rid].present? %>
+          <%= f.label 'Bank', class: 'mb-1' %>
+          <%= f.select :treasury_account_id, [[@bank.name, @bank.id]], {}, { class: 'form-control mb-3', readonly: true } %>
+        <% else %>
+          <%= f.association :treasury_account, label: 'Bank', error: '*Required', input_html: {data: {controller: 'ts--select'}} %>
+        <% end %>
       </div>
       <div class="col-5">
         <% if params[:rid].present? %>
