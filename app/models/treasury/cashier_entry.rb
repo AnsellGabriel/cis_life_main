@@ -6,6 +6,7 @@ class Treasury::CashierEntry < ApplicationRecord
 
   # enum payment_type: { gyrt: 1, lppi: 2, others: 3 }
   enum status: { pending: 0, posted: 1, cancelled: 2, for_approval: 3}
+  enum branch: { head_office: 0, cagayan_de_oro: 1, iloilo: 2, davao: 3}
 
   belongs_to :treasury_account, class_name: "Treasury::Account"
   belongs_to :treasury_payment_type, class_name: "Treasury::PaymentType"
@@ -26,6 +27,9 @@ class Treasury::CashierEntry < ApplicationRecord
 
   def for_transmittal
     "#{self.or_no} - #{entriable}"
+    
+  def self.receipt_book_pdf(employee_id, date_from, date_to, type)
+    Reports::BooksPdfJob.perform_async(employee_id, date_from, date_to, type)
   end
 
   def reference
@@ -107,7 +111,7 @@ class Treasury::CashierEntry < ApplicationRecord
   # end
 
   private
-  
+
   def format_or_no
     self.or_no = sprintf("%06d", self.or_no.to_i) # "00001"
   end

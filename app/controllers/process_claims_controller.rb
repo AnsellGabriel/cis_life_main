@@ -1,5 +1,5 @@
 class ProcessClaimsController < ApplicationController
-  before_action :set_process_claim, only: %i[ show edit update destroy show_coop claim_route claims_file claim_process update_status edit_ca update_ca ]
+  before_action :set_process_claim, only: %i[ show edit update destroy show_coop claim_route claims_file claim_process update_status edit_ca update_ca approve_claim_debit ]
   # GET /process_claims
 
   # def claimable
@@ -168,6 +168,11 @@ class ProcessClaimsController < ApplicationController
   def claim_process
     @check = @process_claim.check_voucher_request&.check_vouchers&.where(audit: [:pending_audit, :for_audit])&.last
     @audit_remarks = @check&.remarks
+    @cooperative = @process_claim.cooperative
+  end
+
+  def approve_claim_debit
+    @cooperative  = @process_claim.cooperative
   end
 
   # POST /process_claims
@@ -226,8 +231,9 @@ class ProcessClaimsController < ApplicationController
     # @process_claim.claim_track = ProcessTrack.build
     # @claim_track = ProcessTrack.new
     @claim_track = @process_claim.process_track.build
-    @claim_track.route_id = params[:p]
+    @claim_track.route_id = params[:p].to_i
     @claim_track.user_id = current_user.id
+
     respond_to do |format|
       if @claim_track.save
         if @claim_track.route_id == 2
@@ -246,7 +252,8 @@ class ProcessClaimsController < ApplicationController
 
         elsif @claim_track.route_id == 8
           ActiveRecord::Base.transaction do
-            @process_claim.update!(claim_route: @claim_track.route_id, status: :approved, approval: 1)
+            @process_claim.update!(claim_route: @claim_track.route_id, status: :approved, approval: 1, payout_type: params[:pt].to_sym)
+
             # request = @process_claim.create_claim_request_for_payment(
             #   amount: @process_claim.get_benefit_claim_total,
             #   status: :pending,
@@ -264,7 +271,11 @@ class ProcessClaimsController < ApplicationController
               #* put the check voucher to pending here
               @process_claim.check_voucher_request.check_vouchers.pending_audit.last.update(audit: :for_audit)
             else
-              request = CheckVoucherRequestService.new(@process_claim, @process_claim.get_benefit_claim_total, :claims_payment, current_user)
+              if params[:pt] == "debit_advice" && params[:process_claim].nil?
+                return redirect_to show_coop_process_claim_path(@process_claim), alert: "Please choose a bank account for debit advice"
+              end
+
+              request = CheckVoucherRequestService.new(@process_claim, @process_claim.get_benefit_claim_total, :claims_payment, current_user, params[:pt].to_sym, params[:process_claim].nil? ? nil : params[:process_claim][:coop_bank])
 
               if request.create_request
                 format.html { redirect_to show_coop_process_claim_path(@process_claim), notice: "#{@process_claim.claim_route.to_s.humanize.titleize} by #{current_user}"  }

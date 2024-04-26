@@ -37,7 +37,7 @@ class BatchDependentsController < InheritedResources::Base
 
     # ! dependent agreement benefits' prefix must be principal agreement benefit's name
     dependent_agreement_benefits = agreement.agreement_benefits
-                                    .with_name_like(@batch.agreement_benefit.name)
+                                    .with_name_like(@batch.agreement_benefit.name.split(" - ").first)
                                     .find_by(insured_type: insured_type)
 
     unless dependent_agreement_benefits.present?

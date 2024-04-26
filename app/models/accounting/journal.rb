@@ -5,6 +5,10 @@ class Accounting::Journal < Accounting::Voucher
 
   # has_many :general_ledgers, as: :ledgerable
 
+  def self.journal_book_pdf(employee_id, date_from, date_to, type)
+    Reports::BooksPdfJob.perform_async(employee_id, date_from, date_to, type)
+  end
+
   def reference
     formatted_voucher
   end

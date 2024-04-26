@@ -9,9 +9,8 @@ class Reports::AccountsController < ApplicationController
       if params[:date_from].present? && params[:date_to].present?
         Treasury::Account.trial_balance_pdf(current_user.userable.id, params[:date_from], params[:date_to])
 
-        redirect_to trial_balance_reports_accounts_path, notice: "Generating PDF..."
+        redirect_to trial_balance_reports_accounts_path, notice: "Report is being generated. Please wait for a moment."
       else
-
         redirect_to trial_balance_reports_accounts_path, alert: "Please select date range"
       end
     end

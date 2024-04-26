@@ -110,6 +110,7 @@ Rails.application.routes.draw do
     get :selected, on: :member
     get :details, on: :member
     get :get_plan, on: :member
+    resources :coop_banks
   end
   resources :coop_branches
 
@@ -221,6 +222,7 @@ Rails.application.routes.draw do
   # * Finance Module Routes
   # accounting
   namespace :accounting do
+    resources :debit_advices
     resources :journals do
       get :download, on: :member
       get :for_approval_index, on: :collection
@@ -237,7 +239,20 @@ Rails.application.routes.draw do
       get :print, on: :member
     end
 
+
     resources :check_voucher_requests, only: %i[show]
+
+    resources :general_disbursement_book, only: %i[index] do
+      get :pdf, on: :collection
+    end
+
+    resources :journal_book, only: %i[index] do
+      get :pdf, on: :collection
+    end
+
+    resources :receipt_book, only: %i[index] do
+      get :pdf, on: :collection
+    end
 
     get "dashboard", to: "dashboard#index"
   end
@@ -316,6 +331,7 @@ Rails.application.routes.draw do
     get :edit_ca, to: "process_claims#edit_ca", on: :member
     post :create_ca, to: "process_claims#create_ca", on: :collection
     patch :update_ca, to: "process_claims#update_ca", on: :member
+    get :approve_claim_debit, on: :member
     # get :claimable, on: :collection
   end
   resources :underwriting_routes
@@ -351,7 +367,7 @@ Rails.application.routes.draw do
     get :und, on: :collection
     get :gen_csv, on: :collection
   end
-  
+
   get "product_csv", to: "process_coverages#product_csv"
   get "ri_csv", to: "reinsurances#ri_csv"
   get "preview", to: "process_coverages#preview"

@@ -97,7 +97,12 @@
           <div class="col-sm-3 ">
             <%= to_curr(batch.premium) %>
           </div>
-          
+          <div class="col-sm-3">
+            <span class="mb-0 text-secondary">Terms</span>
+          </div>
+          <div class="col-sm-3 ">
+            <%= @group_remit.terms %>
+          </div>
         </div>
       </div>
     </div>
@@ -226,7 +231,7 @@
           <hr>
           <% if @dependents.present? %>
             <div class="row">
-              <div class="col-sm-4 text-center">
+              <div class="col-sm-3 text-center">
                 <%= content_tag :span, 'Name', 
                   class: 'text-center', 
                   style: 'font-size: .8rem' 
@@ -250,8 +255,14 @@
                   style: 'font-size: .8rem' 
                 %>
               </div>
+              <div class="col-sm-2 text-center">
+                <%= content_tag :span, 'Terms', 
+                  class: 'text-center', 
+                  style: 'font-size: .8rem' 
+                %>
+              </div>
               <% unless @group_remit.instance_of?(BatchRemit) %>
-                <div class="col-sm-3 text-center">
+                <div class="col-sm-2 text-center">
                   <%= content_tag :span, 'Actions', 
                     class: 'text-center', 
                     style: 'font-size: .8rem' 
@@ -265,7 +276,7 @@
             <% d_presenter = DependentPresenter.new(d) %>
             <div class="row mb-1">
               <div class="d-flex align-items-center text-center">
-                <div class="col-sm-4 text-secondary <%= flex_justify_align('start', 'baseline') %> gap-1">
+                <div class="col-sm-3 text-secondary <%= flex_justify_align('start', 'baseline', true) %> gap-1">
                   <%= content_tag :span, "#{d.insurance_status.titleize}", class: d_presenter.status_badge %>
                   <%= content_tag :span, "#{d.full_name.upcase}", 
                     class: "mb-0", 
@@ -295,7 +306,13 @@
                     <% end %>
                   <% end %>
                 </div>
-                <div class="col-sm-3 <%= flex_justify_align('end', 'center') %> gap-1">
+                <div class="col-sm-2 text-secondary text-center">
+                  <%= content_tag :span, @group_remit.terms, 
+                    class: "mb-0 text-center", 
+                    style: "font-size: .8rem" 
+                  %>
+                </div>
+                <div class="col-sm-2 <%= flex_justify_align('end', 'center') %> gap-1">
                   <%= render 'dependent_buttons', group_remit: @group_remit, batch: @batch, dependent: d %>
                 </div>
               </div>

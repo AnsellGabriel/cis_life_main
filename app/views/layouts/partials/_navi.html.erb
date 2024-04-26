@@ -18,77 +18,20 @@
         <% if current_user %>
           <%= link_to "Home", authenticated_root_path, class: "nav-link" %>
           <% if coop_user?(current_user) %>
-            <%= render 'layouts/partials/nav_dropdown', title: 'Cooperative' do %>
-              <%= link_to "Members", coop_members_path, class: "dropdown-item" %>
-              <%= link_to "Claims Filed", index_coop_process_claims_path, class: "dropdown-item" %>
-              <%= link_to "Claims Message", claim_remarks_path, class: "dropdown-item" %>
-              <%= link_to "Graph", pages_coop_path, class: "dropdown-item", data: {turbo: false} %>
-            <% end %>
-            <%= render 'layouts/partials/nav_dropdown', title: 'Insurance' do %>
-              <% @cooperative.agreements.includes(:plan).each do |a| %>
-                <% case a.plan.acronym %>
-                <% when 'LPPI' %>
-                <%= link_to "LPPI", loan_insurance_group_remits_path, class: "dropdown-item" %>
-                <% when "SII" %>
-                  <%= link_to "SII", sii_index_loan_insurance_group_remits_path(p: "sii"), class: "dropdown-item" %>
-                <% else %>
-                  <%#= link_to "GYRT", coop_agreement_path(a), class: "dropdown-item" %>
-                  <%= link_to a.plan.acronym, coop_agreement_path(a), class: "dropdown-item" %>
-                <% end %>
-              <% end %>
-            <% end %>
-
-            <%= link_to '#', class: "nav-link position-relative" do  %>
-              <i class="bi bi-bell-fill"></i>
-              <% unless @cooperative.notifications.unread.size == 0%>
-                <span class="position-absolute top-1 start-90 translate-middle badge rounded-pill bg-warning text-dark">
-                  <%= @cooperative.notifications.unread.size < 100 ? @cooperative.notifications.unread.size : '99+'%>
-                </span>
-              <% end %>
-            <% end %>
-
+            <%= render 'layouts/partials/coop_nav' %>
           <% elsif agent_user?(current_user) %>
             <%= render 'layouts/partials/nav_dropdown', title: "Agent" do %>
               <%= link_to "Group Proposals", group_proposals_path, class: "dropdown-item" %>
             <% end %>
-
           <% else %>
             <% case current_user.userable.department_id %>
             <% when 11 %>
-              <%= render 'layouts/partials/nav_dropdown', title: 'Check Vouchers' do %>
-                <% if current_user.head? %>
-                  <%= link_to "For Approval", for_approval_index_accounting_checks_path, class: "dropdown-item" %>
-                <% end %>
-                <%= link_to "Index", accounting_checks_path, class: "dropdown-item" %>
-                <%= link_to "Requests", requests_accounting_checks_path, class: "dropdown-item" %>
-              <% end %>
-              <%= render 'layouts/partials/nav_dropdown', title: 'Journal Vouchers' do %>
-                <% if current_user.head? %>
-                  <%= link_to "For Approval", for_approval_index_accounting_journals_path, class: "dropdown-item" %>
-                <% end %>
-                <%= link_to "Index", accounting_journals_path, class: "dropdown-item" %>
-              <% end %>
-              <%= link_to "Accounts", treasury_accounts_path, class: "nav-link" %>
-              <%= render 'layouts/partials/nav_dropdown', title: 'Reports' do %>
-                <%= link_to "Trial Balance", trial_balance_reports_accounts_path, class: 'nav-link' %>
-              <% end %>
+              <%= render 'layouts/partials/accounting_nav' %>
             <% when 26 %>
-                <%= render 'layouts/partials/nav_dropdown', title: 'Business Checks' do %>
-                  <%= link_to "Index", treasury_checks_path	, class: "dropdown-item" %>
-                  <%= link_to "Requests", requests_treasury_checks_path	, class: "dropdown-item" %>
-                <% end %>
-                <%= render 'layouts/partials/nav_dropdown', title: 'Cashier Entries' do %>
-                  <%= link_to "Index", treasury_cashier_entries_path	, class: "dropdown-item" %>
-                  <% if current_user.head? %>
-                    <%= link_to "For Approval", for_approval_index_treasury_cashier_entries_path	, class: "dropdown-item" %>
-                  <% end %>
-                <% end %>
-                <%= link_to "For ORs", payments_path	, class: "nav-link" %>
-                <%= render 'layouts/partials/nav_dropdown', title: 'Encoding' do %>
-                  <%= link_to "Payment Types", treasury_payment_types_path	, class: "dropdown-item" %>
-                <% end %>
+              <%= render 'layouts/partials/treasury_nav' %>
             <% when 15 %>
               <%= render 'layouts/partials/nav_dropdown', title: 'Data Entries' do %>
+                <%= link_to "Agreements", agreements_path, class: "dropdown-item" %>
                 <%= link_to "Cooperative", cooperatives_path, class: "dropdown-item" %>
                 <%= link_to "Transmittal", transmittals_path, class: "dropdown-item" %>
               <% end %>

@@ -1,13 +1,7 @@
 <% if current_user.is_accountant? %>
   <div class="mb-1">
-    <% if @check.check_voucher_request.present? %>
-      <%= link_to accounting_check_voucher_request_path(@check.check_voucher_request), class: small_btn('secondary') do %>
-        <i class="bi bi-chevron-left"></i>
-      <% end%>
-    <% else %>
-      <%= link_to  :back, class: small_btn("secondary") do %>
-        <i class="bi bi-chevron-left"></i>
-      <% end %>
+    <%= link_to  :back, class: small_btn("secondary") do %>
+      <i class="bi bi-chevron-left"></i>
     <% end %>
 
     <% if @check.posted? %>

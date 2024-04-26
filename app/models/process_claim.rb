@@ -1,5 +1,5 @@
 class ProcessClaim < ApplicationRecord
-  attr_accessor :batch_id
+  attr_accessor :batch_id, :coop_bank
   before_destroy :remove_from_loan_batch
 
   validates_presence_of :cooperative_id, :agreement_id, :entry_type, :claimant_name, :claimant_email, :claimant_contact_no, :date_incident
@@ -11,6 +11,11 @@ class ProcessClaim < ApplicationRecord
     AD: 3, # Accidental Dismemberment
     TPD: 4, # Total & Permanent Disability
     ADD: 5 # Accidental Death & Dismemberment
+  }
+
+  enum payout_type: {
+    check_voucher: 0,
+    debit_advice: 1
   }
 
   enum entry_type: {

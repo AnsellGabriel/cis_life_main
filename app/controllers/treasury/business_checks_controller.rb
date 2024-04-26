@@ -1,10 +1,13 @@
 class Treasury::BusinessChecksController < ApplicationController
   def index
-    if params[:check_number].present?
-      @checks = Treasury::BusinessCheck.where(check_number: params[:check_number])
-    else
-      @checks = Treasury::BusinessCheck.all.order(created_at: :desc)
-    end
+    # if params[:check_number].present?
+    #   @checks = Treasury::BusinessCheck.where(check_number: params[:check_number])
+    # else
+    #   @checks = Treasury::BusinessCheck.all.order(created_at: :desc)
+    # end
+
+    @q = Treasury::BusinessCheck.ransack(params[:q])
+    @checks = @q.result
 
     @pagy, @checks = pagy(@checks, items: 10)
   end
