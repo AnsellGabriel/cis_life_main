@@ -1,0 +1,49 @@
+
+<%= simple_form_for(@transmittal) do |f| %>
+  <%= f.error_notification %>
+  <%= f.error_notification message: f.object.errors[:base].to_sentence if f.object.errors[:base].present? %>
+
+  <div class="form-inputs mb-3">
+    <%#= f.input :code %>
+    <%= f.input :description %>
+    <%#= f.input :transmittal_type, as: :select, collection: Transmittal.transmittal_types.keys.map { |type| [type.upcase, type] } %>
+  </div>
+  <div id="transmittal_ors">
+    <%= f.simple_fields_for :transmittal_ors do |to| %>
+      <%= render 'transmittal_or_fields', f: to %>
+    <% end %>
+    <div class="links">
+      <%= link_to_add_association 'add OR', f, :transmittal_ors %>
+    </div>
+  </div>
+
+  <div class="form-actions text-end">
+    <%= link_to "Back", transmittals_path, class: 'btn btn-secondary' %>
+    <%= f.button :submit, class: 'btn-success' %>
+  </div>
+<% end %>
+
+<script>
+  $(function() {
+  // limits the number of categories
+    $('#transmittal_ors').on('cocoon:after-insert', function() {
+      console.log('insert');
+      check_to_hide_or_show_add_link();
+    });
+
+    $('#transmittal_ors').on('cocoon:after-remove', function() {
+      console.log('remove');
+      check_to_hide_or_show_add_link();
+    });
+
+    check_to_hide_or_show_add_link();
+
+    function check_to_hide_or_show_add_link() {
+      if ($('#transmittal_ors .nested-fields:visible').length == 20) {
+        $('.links a').hide();
+      } else {
+        $('.links a').show();
+      }
+    }
+  })
+</script>

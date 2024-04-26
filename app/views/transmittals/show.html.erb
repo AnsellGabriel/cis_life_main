@@ -1,0 +1,9 @@
+
+<%= render @transmittal %>
+
+<div>
+  <%= link_to "Edit", edit_transmittal_path(@transmittal), class: 'btn btn-primary' %> |
+  <%= link_to "Back", transmittals_path, class: 'btn btn-primary' %>
+
+  <%= button_to "Delete", @transmittal, method: :delete, class: 'btn btn-danger' %>
+</div>

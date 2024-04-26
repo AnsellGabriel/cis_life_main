@@ -15,11 +15,19 @@ class Treasury::CashierEntry < ApplicationRecord
   has_many :payments, class_name: "Treasury::Payment", dependent: :destroy
   has_many :bills, class_name: "Treasury::BillingStatement", dependent: :destroy
   has_many :general_ledgers, as: :ledgerable
+  has_many :transmittable_ors, as: :transmittable, inverse_of: :transmittable 
+  has_many :transmittals, through: :transmittable_ors
+
+
+  ORS = Treasury::CashierEntry.all.to_a
 
   def to_s
     self.or_no
   end
 
+  def for_transmittal
+    "#{self.or_no} - #{entriable}"
+    
   def self.receipt_book_pdf(employee_id, date_from, date_to, type)
     Reports::BooksPdfJob.perform_async(employee_id, date_from, date_to, type)
   end

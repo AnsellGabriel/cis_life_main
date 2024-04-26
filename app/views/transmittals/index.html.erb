@@ -1,0 +1,42 @@
+<%= content_tag :h1, "List of Transmittals" %>
+
+
+<div class="text-end mb-3">
+  <%= link_to new_transmittal_path, class: 'btn btn-primary' do %>
+    New Transmittal
+  <% end %>
+</div>
+
+
+  <table class="table table-striped table-bordered table-hover">
+    <thead>
+      <tr>
+      <th>#</th>
+            <th>Code</th>
+            <th>Description</th>
+            <th>ORs/PCs Count</th>
+            <th>Type</th>
+            <th></th>
+        </tr>
+    </thead>
+
+    <tbody>
+      <% @transmittals.each do |transmittal| %>
+        <tr>
+
+        <th scope="row"><%= transmittal.id %></th>
+        <td><%= transmittal.code %></td>
+        <td><%= transmittal.description %></td>
+        <td><%= transmittal.transmittal_ors.count %></td>
+        <td><%= transmittal_type(transmittal.transmittal_type) %></td>
+    
+          <td>
+            <%= link_to 'View', transmittal, class: 'btn btn-secondary btn-sm' %>
+            <%= link_to 'Edit', edit_transmittal_path(transmittal), class: 'btn btn-secondary btn-sm' %>
+            <%= link_to "Delete", transmittal, class: "btn btn-danger btn-sm", method: :delete, data: { "turbo-method": :delete, turbo_confirm: "Are you sure?" } %>
+          </td>
+
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
