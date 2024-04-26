@@ -27,7 +27,8 @@ class Treasury::CashierEntry < ApplicationRecord
 
   def for_transmittal
     "#{self.or_no} - #{entriable}"
-    
+  end
+  
   def self.receipt_book_pdf(employee_id, date_from, date_to, type)
     Reports::BooksPdfJob.perform_async(employee_id, date_from, date_to, type)
   end

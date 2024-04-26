@@ -1,8 +1,8 @@
 class Transmittal < ApplicationRecord
-  has_many :transmittal_ors
+  has_many :transmittal_ors, dependent: :destroy
   has_many :transmittables, through: :transmittal_ors
   
-  # validates_presence_of :code, :description, :transmittal_type
+  validates_presence_of :code, :transmittal_type
 
   accepts_nested_attributes_for :transmittal_ors, reject_if: :all_blank, allow_destroy: true
 

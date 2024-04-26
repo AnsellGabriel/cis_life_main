@@ -1,1 +1,35 @@
 <h1>MIS Dashboard</h1>
+
+<div class="col-6">
+  <div class="card">
+    <div class="card-header">
+      <h5 class="lead">Monitoring</h5>
+    </div>
+    <div class="card-body">
+      <table class="table">
+        <thead>
+          <th>ORS</th>
+          <th>Count</th>
+          <th></th>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Encoded</td>
+            <td><%= @encoded.count %></td>
+            <td><%= link_to "View", "#", class: "btn btn-sm btn-outline-primary" %></td>
+          </tr>
+          <tr>
+            <td>Transmitted</td>
+            <td><%= @transmitted.count %></td>
+            <td><%= link_to "View", "#", class: "btn btn-sm btn-outline-primary" %></td>
+          </tr>
+          <tr>
+            <td>Not Transmitted</td>
+            <td><%= @encoded.count - @transmitted.count %></td>
+            <td><%= link_to "View", "#", class: "btn btn-sm btn-outline-primary" %></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>

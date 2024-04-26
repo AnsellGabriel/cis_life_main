@@ -12,7 +12,6 @@
 
 ActiveRecord::Schema[7.0].define(version: 2024_04_25_011023) do
   create_table "accounting_vouchers", charset: "utf8mb4", force: :cascade do |t|
-
     t.date "date_voucher"
     t.string "voucher"
     t.string "payable_type", null: false
@@ -501,7 +500,7 @@ ActiveRecord::Schema[7.0].define(version: 2024_04_25_011023) do
     t.datetime "updated_at", null: false
   end
 
-  create_table "coop_banks", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+  create_table "coop_banks", charset: "utf8mb4", force: :cascade do |t|
     t.bigint "cooperative_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
@@ -510,7 +509,7 @@ ActiveRecord::Schema[7.0].define(version: 2024_04_25_011023) do
     t.index ["treasury_account_id"], name: "index_coop_banks_on_treasury_account_id"
   end
 
-  create_table "coop_branches", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+  create_table "coop_branches", charset: "utf8mb4", force: :cascade do |t|
     t.string "name"
     t.string "contact_details"
     t.bigint "cooperative_id", null: false
