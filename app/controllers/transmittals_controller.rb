@@ -41,11 +41,19 @@ class TransmittalsController < ApplicationController
 
     @transmittal.set_code_and_type(@transmittal.transmittal_type, current_user)
     
-    if @transmittal.save
-      @transmittal.save_items(params[:transmittal][:transmittal_ors_attributes])
-      redirect_to @transmittal, notice: "Transmittal was successfully created."
+    if params[:transmittal][:transmittal_ors_attributes].nil?
+      # flash.now[:alert] = 
+      # redirect_to :new, alert: "Please add ORs/PCs before saving transmittal."
+      redirect_back fallback_location: { action: "new" }, alert: "Please add ORs/PCs before saving transmittal."
     else
-      render :new, status: :unprocessable_entity
+
+      if @transmittal.save
+          @transmittal.save_items(params[:transmittal][:transmittal_ors_attributes])
+          redirect_to @transmittal, notice: "Transmittal was successfully created."
+      else
+        render :new, status: :unprocessable_entity
+      end
+
     end
   end
 

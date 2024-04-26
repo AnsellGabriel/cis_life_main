@@ -12,8 +12,8 @@
     <%= f.simple_fields_for :transmittal_ors do |to| %>
       <%= render 'transmittal_or_fields', f: to %>
     <% end %>
-    <div class="links">
-      <%= link_to_add_association 'add OR', f, :transmittal_ors %>
+    <div class="links mb-3">
+      <%= link_to_add_association 'Add', f, :transmittal_ors, class: "btn btn-sm btn-primary" %>
     </div>
   </div>
 
