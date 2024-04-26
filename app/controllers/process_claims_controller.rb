@@ -173,6 +173,10 @@ class ProcessClaimsController < ApplicationController
     @check = @process_claim.check_voucher_request&.check_vouchers&.where(audit: [:pending_audit, :for_audit])&.last
     @audit_remarks = @check&.remarks
     @cooperative = @process_claim.cooperative
+
+    if @process_claim.debit_advice?
+      @bank = Treasury::Account.find(@process_claim.check_voucher_request.bank_id)
+    end
   end
 
   def approve_claim_debit

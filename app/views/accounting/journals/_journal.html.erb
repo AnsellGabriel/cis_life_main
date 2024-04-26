@@ -6,7 +6,7 @@
           <p class="text-muted"><small>Journal Voucher</small></p>
           <p class="badge bg-<%= journal.decorate.status_color %>"><%= journal.status.humanize %></p>
         </div>
-        <h3 class="text-primary"><%= "#{journal.formatted_voucher}" %></h3>
+        <h3 class="text-primary"><%= "#{journal.voucher}" %></h3>
         <p><small><strong>Voucher date:</strong> <span><%= month_day_year(journal.date_voucher) %></span></small></p>
         <% if journal.post_date? %>
           <p><small><strong>Post date:</strong> <span><%= month_day_year(journal.post_date) %></span></small></p>

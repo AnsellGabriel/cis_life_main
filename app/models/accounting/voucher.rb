@@ -1,6 +1,6 @@
 class Accounting::Voucher < ApplicationRecord
-  validates_presence_of :date_voucher, :particulars, :voucher, :payable_type, :payable_id, :treasury_account_id,
-                        :particulars, :amount, :status, :audit, :accountant_id, :type, :branch
+  validates_presence_of :date_voucher, :particulars, :voucher, :payable_type, :payable_id,
+                        :particulars, :status, :audit, :accountant_id, :type, :branch, :global_payable
 
   belongs_to :payable, polymorphic: true
   belongs_to :treasury_account, class_name: "Treasury::Account", foreign_key: :treasury_account_id, optional: true
@@ -13,6 +13,13 @@ class Accounting::Voucher < ApplicationRecord
 
   def to_s
     self.voucher
+  end
+
+  def self.pending_for_audit
+    where(status: [:posted, :pending])
+    .where(audit: [:for_audit, :pending_audit, :approved])
+    .where.not(post_date: nil)
+    .order(created_at: :desc)
   end
 
   def global_payable

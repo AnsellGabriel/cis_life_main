@@ -1,6 +1,4 @@
 RSpec.describe Accounting::DebitAdvice, type: :model do
-  subject { build(:debit_advice) }
-
   describe 'validations' do
     it { should validate_presence_of(:date_voucher) }
     it { should validate_presence_of(:voucher) }

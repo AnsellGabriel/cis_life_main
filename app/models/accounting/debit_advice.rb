@@ -1,4 +1,7 @@
 class Accounting::DebitAdvice < Accounting::Voucher
+  validates_presence_of :treasury_account_id, :amount
+
+  belongs_to :treasury_account, class_name: "Treasury::Account", foreign_key: :treasury_account_id
   belongs_to :check_voucher_request, optional: true
 
   def entry_type
@@ -11,8 +14,7 @@ class Accounting::DebitAdvice < Accounting::Voucher
 
   def self.generate_series
     current_year_and_month = Time.now.strftime("%Y-%m")
-    last_series = self.posted
-                  .where("voucher LIKE ?", "#{current_year_and_month}%")
+    last_series = self.where("voucher LIKE ?", "#{current_year_and_month}%")
                   .order(:voucher).last&.voucher
 
     if last_series.present?
@@ -22,5 +24,11 @@ class Accounting::DebitAdvice < Accounting::Voucher
     end
 
     series
+  end
+
+  private
+
+  def self.ransackable_attributes(auth_object = nil)
+    ["voucher"]
   end
 end

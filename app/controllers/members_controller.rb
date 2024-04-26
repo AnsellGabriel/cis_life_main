@@ -74,12 +74,20 @@ class MembersController < InheritedResources::Base
     )
 
     if @member.persisted?
-      persisted = true
+      coop_member = @cooperative.coop_members.find_or_initialize_by(member_id: @member.id)
+      coop_member.new_record? ? persisted = false : persisted = true
     end
 
     respond_to do |format|
-      if @member.persisted?
-        format.html { redirect_to coop_members_path(cooperative_id: @cooperative.id), alert: "Member already exist: #{@member.first_name} #{@member.middle_name} #{@member.last_name}"  }
+      if persisted
+        format.html {
+          if current_user.userable_type == "CoopUser"
+            redirect_to coop_members_path(cooperative_id: @cooperative.id),
+            alert: "#{'Member already enrolled.'}"
+          elsif current_user.userable_type == "Employee"
+            redirect_to cooperative_path(@cooperative), alert: "#{'Member already enrolled.'}"
+          end
+        }
       else
         @member.assign_attributes(member_params)
 
@@ -87,11 +95,11 @@ class MembersController < InheritedResources::Base
 
           format.html {
             if current_user.userable_type == "CoopUser"
-              coop_member = @member.coop_members.find_by(cooperative_id: @cooperative.id)
+              # coop_member = @member.coop_members.find_by(cooperative_id: @cooperative.id)
               redirect_to coop_members_path(cooperative_id: @cooperative.id),
-              notice: "#{persisted ? 'Member is already enrolled. Updated member\'s details instead.' : 'Member enrolled.'}"
+              notice: "#{'Member enrolled.'}"
             elsif current_user.userable_type == "Employee"
-              redirect_to cooperative_path(@cooperative), notice: "#{persisted ? 'Member already enrolled. Updated member\'s details' : 'Member enrolled.'}"
+              redirect_to cooperative_path(@cooperative), notice: "#{'Member enrolled.'}"
             end
           }
         else

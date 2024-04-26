@@ -13,7 +13,8 @@ class Accounting::CheckVoucherRequest < ApplicationRecord
   enum status: {
     pending: 0,
     voucher_generated: 1,
-    denied: 2
+    denied: 2,
+    posted: 3
   }
 
   enum payment_type: {

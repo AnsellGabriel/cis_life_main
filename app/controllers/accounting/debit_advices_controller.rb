@@ -5,14 +5,22 @@ class Accounting::DebitAdvicesController < ApplicationController
 
   # GET /accounting/debit_advices
   def index
-    @accounting_debit_advices = Accounting::DebitAdvice.all
+    @debit_advices = Accounting::DebitAdvice.all.order(created_at: :desc)
+    @q = @debit_advices.ransack(params[:q])
+    @debit_advices = @q.result
+
+    @pagy, @debit_advices = pagy(@debit_advices, items: 10)
   end
 
   # GET /accounting/debit_advices/1
   def show
     @ledgers = @debit_advice.general_ledgers
-    @claim = @debit_advice.check_voucher_request.requestable if @debit_advice.check_voucher_request.present?
     @bank = @debit_advice.treasury_account
+
+    if @debit_advice.check_voucher_request.present?
+      @request = @debit_advice.check_voucher_request
+      @claim = @request.requestable
+    end
   end
 
   # GET /accounting/debit_advices/new

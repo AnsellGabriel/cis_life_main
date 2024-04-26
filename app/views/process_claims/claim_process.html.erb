@@ -22,20 +22,23 @@
     </div>
     <div class="col-md-6">
       <%= render 'show_coop' %>
-      <% if @loan_batch.present? %>
+      <%= render 'process_claims/loan_details', loan: @loan_batch %>
+      <% if @process_claim.debit_advice? %>
         <div class="card">
           <div class="card-body small">
-            <h4 class="text-primary">Loan Details</h4>
+            <h4 class="text-primary">Debit Advice - Bank Details</h4>
             <dl class="row mt-3">
-              <dt class="col-sm-3">Loan amount:</dt>
-              <dd class="col-sm-2"><%= to_curr @loan_batch.loan_amount %></dd>
+              <dt class="col-sm-3">Account Name:</dt>
+              <dd class="col-sm-9"><%= @bank.name %></dd>
             </dl>
-            <div class="row">
-              <dt class="col-sm-3">Effectivity:</dt>
-              <dd class="col-sm-3"><%= to_shortdate @loan_batch.effectivity_date %></dd>
-              <dt class="col-sm-3">Expiry:</dt>
-              <dd class="col-sm-3"><%= to_shortdate @loan_batch.expiry_date %></dd>
-            </div>
+            <dl class="row mt-3">
+              <dt class="col-sm-3">Account Number:</dt>
+              <dd class="col-sm-9"><%= @bank.account_number %></dd>
+            </dl>
+            <dl class="row mt-3">
+              <dt class="col-sm-3">Address:</dt>
+              <dd class="col-sm-9"><%= @bank.address %></dd>
+            </dl>
           </div>
         </div>
       <% end %>
