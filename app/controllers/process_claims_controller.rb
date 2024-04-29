@@ -43,8 +43,14 @@ class ProcessClaimsController < ApplicationController
     @claim_type_document = ClaimTypeDocument.where(claim_type: @process_claim.claim_type)
     @claim_type_document_ids = @process_claim.claim_attachments.pluck(:claim_type_document_id)
     @required_documents = @claim_type_document.where.not(id: @claim_type_document_ids)
-    @check = @process_claim.check_voucher_request&.check_vouchers&.where(audit: [:pending_audit, :for_audit])&.last
-    @audit_remarks = @check&.remarks
+
+    if @process_claim.check_voucher?
+      @payout_type = @process_claim.check_voucher_request&.check_vouchers&.where(audit: [:pending_audit, :for_audit])&.last
+    elsif @process_claim.debit_advice?
+      @payout_type = @process_claim.check_voucher_request&.debit_advices&.where(audit: [:pending_audit, :for_audit])&.last
+    end
+    
+    @audit_remarks = @payout_type&.remarks
 
     if @process_claim.debit_advice?
       @bank = Treasury::Account.find(@process_claim.check_voucher_request.bank_id)

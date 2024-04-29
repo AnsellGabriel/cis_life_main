@@ -9,8 +9,9 @@
     <thead class="table-dark">
       <tr>
         <th class="text-center" scope="col">Date</th>
-        <th class="text-center" scope="col">Payee</th>
         <th class="text-center" scope="col">Type</th>
+        <th class="text-center" scope="col">Payee</th>
+        <th class="text-center" scope="col">Particulars</th>
         <th class="text-center" scope="col">Requested by</th>
         <th class="text-center" scope="col">Amount</th>
         <th class="text-center" scope="col"></th>
@@ -22,9 +23,10 @@
 
         <% @claim_requests.each do |request| %>
           <tr>
-            <td class="text-center"><%= short_month_day_year(request.created_at) %></td>
+            <td class="text-center cell-125"><%= short_month_day_year(request.created_at) %></td>
+            <td class="text-center cell-125"><%= request.payout_type.humanize.upcase %></td>
             <td class=""><%= request.requestable.cooperative %></td>
-            <td class="text-center"><%= request.payout_type.humanize.upcase %></td>
+            <td><%= request.description %></td>
             <td class="text-center"><%= to_curr request.analyst %></td>
             <td class="text-end"><%= to_curr request.amount %></td>
             <td class="text-center">

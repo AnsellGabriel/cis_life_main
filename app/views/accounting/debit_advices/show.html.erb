@@ -1,13 +1,9 @@
 <% if current_user.is_accountant? %>
   <div class="mb-1">
     <% if @request.present? %>
-      <%= link_to accounting_check_voucher_request_path(@request, pt: @request.payout_type), class: small_btn("secondary") do %>
-        <i class="bi bi-chevron-left"></i>
-      <% end %>
+      <%= render 'back_btn', link: accounting_check_voucher_request_path(@request, pt: @request.payout_type) %>
     <% else %>
-      <%= link_to accounting_debit_advices_path, class: small_btn("secondary") do %>
-        <i class="bi bi-chevron-left"></i>
-      <% end %>
+      <%= render 'back_btn', link: accounting_debit_advices_path %>
     <% end %>
 
     <% if @debit_advice.posted? %>
@@ -19,24 +15,36 @@
       <% end %>
     <% end %>
   </div>
-  
 <% elsif current_user.is_auditor? %>
   <div class="mb-1">
-    <%= link_to  audit_for_audits_path, class: small_btn("secondary"), title: 'Back' do %>
-      <i class="bi bi-chevron-left"></i>
-    <% end %>
+    <%= render 'back_btn', link: audit_for_audits_path %>
     <%= link_to "MOA", show_details_agreement_path(@debit_advice.check_voucher_request.requestable.agreement), class: small_btn('primary'), title: "Voucher", target: "_blank" %>
     <%= link_to "Claim details", claim_process_process_claim_path(@debit_advice.check_voucher_request.requestable), class: small_btn('primary'), title: "Claim Details", target: "_blank" %>
     <% unless @debit_advice.approved? %>
-      <%=  link_to approve_audit_for_audit_path(@debit_advice), class: small_btn('success'), data: {turbo_confirm: "Finish audit and approve voucher?", turbo_method: :get} do  %>
+      <%=  link_to approve_audit_for_audit_path(@debit_advice, e_t: @debit_advice.entry_type), class: small_btn('success'), data: {turbo_confirm: "Finish audit and approve voucher?", turbo_method: :get} do  %>
         <i class="bi bi-check-circle-fill"></i> Approve
       <% end %>
       <%=  link_to new_accounting_check_remark_path(@debit_advice, e_t: @debit_advice.entry_type, audit: true), data: {turbo_frame: 'reg_form_modal' }, class: 'btn btn-sm btn-warning', title: 'Pending Voucher' do %>
         <i class="bi bi-hourglass-split"></i> Pending
       <% end %>
     <% end %>
+
     <% if @debit_advice.remarks.present? %>
       <%= link_to accounting_check_remarks_path(@debit_advice, e_t: @debit_advice.entry_type, audit: true), class: 'btn btn-sm btn-danger', data: {turbo_frame: 'reg_form_modal'} do %>
+        <i class="bi bi-card-list"></i> Remarks
+      <% end %>
+    <% end %>
+  </div>
+<% elsif current_user.is_treasurer? %>
+  <div class="mb-1">
+    <%= render 'back_btn', link: treasury_debit_advices_path %>
+
+    <% if @debit_advice.pending_payout? %>
+      <%=  link_to new_accounting_check_remark_path(@debit_advice, e_t: @debit_advice.entry_type), data: {turbo_frame: 'reg_form_modal' }, class: small_btn('success'), title: 'Paid' do %>
+        <i class="bi bi-check-circle-fill"></i> Paid
+      <% end %>
+    <% else %>
+      <%= link_to accounting_check_remarks_path(@debit_advice, e_t: @debit_advice.entry_type), class: 'btn btn-sm btn-warning', data: {turbo_frame: 'reg_form_modal'} do %>
         <i class="bi bi-card-list"></i> Remarks
       <% end %>
     <% end %>
@@ -45,20 +53,17 @@
 
 <%= render @debit_advice %>
 
-<div class="card">
-  <ul class="nav nav-tabs" id="myTab" role="tablist">
-    <% if current_user.is_accountant? || current_user.is_auditor? %>
+<% if current_user.is_accountant? || current_user.is_auditor? %>
+  <div class="card">
+    <ul class="nav nav-tabs" id="myTab" role="tablist">
       <li class="nav-item" role="presentation">
         <button class="nav-link active" id="ledger-tab" data-bs-toggle="tab" data-bs-target="#ledger" type="button" role="tab" aria-controls="ledger" aria-selected="true">Ledger</button>
       </li>
-    <% end %>
-  </ul>
-  <div class="tab-content" id="myTabContent">
-
-    <% if current_user.is_accountant? || current_user.is_auditor? %>
+    </ul>
+    <div class="tab-content" id="myTabContent">
       <div class="tab-pane fade show active" id="ledger" role="tabpanel" aria-labelledby="ledger-tab">
         <%= render 'payments/entries/ledger', ledgers: @ledgers, entry: @debit_advice  %>
       </div>
-    <% end %>
+    </div>
   </div>
-</div>
+<% end %>

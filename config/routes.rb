@@ -279,6 +279,8 @@ Rails.application.routes.draw do
     end
 
     get "dashboard", to: "dashboard#index"
+
+    resources :debit_advices, only: %i[index]
   end
 
   resources :payments, only: %i[index create show] do
@@ -302,7 +304,7 @@ Rails.application.routes.draw do
   #* Audit Module Routes
   namespace :audit do
     get 'dashboard', to: 'dashboard#index'
-    
+
     resources :for_audits do
       get :approve, on: :member
     end

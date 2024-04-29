@@ -8,6 +8,9 @@
     <%= link_to "For Approval", for_approval_index_treasury_cashier_entries_path	, class: "dropdown-item" %>
   <% end %>
 <% end %>
+<%= render 'layouts/partials/nav_dropdown', title: 'Debit Advices' do %>
+  <%= link_to "Index", treasury_debit_advices_path	, class: "dropdown-item" %>
+<% end %>
 <%= link_to "For ORs", payments_path	, class: "nav-link" %>
 <%= render 'layouts/partials/nav_dropdown', title: 'Encoding' do %>
   <%= link_to "Payment Types", treasury_payment_types_path	, class: "dropdown-item" %>

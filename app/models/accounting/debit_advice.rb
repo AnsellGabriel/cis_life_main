@@ -4,6 +4,11 @@ class Accounting::DebitAdvice < Accounting::Voucher
   belongs_to :treasury_account, class_name: "Treasury::Account", foreign_key: :treasury_account_id
   belongs_to :check_voucher_request, optional: true
 
+  enum payout_status: {
+    pending_payout: 0,
+    paid: 1
+  }
+
   def entry_type
     'da'
   end

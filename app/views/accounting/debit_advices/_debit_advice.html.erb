@@ -73,23 +73,8 @@
       </div>
 
       <div class="row mb-3">
-        <span class="small fw-bold col-3">Account Name: </span>
-        <span class="small col-9"><%= @bank.name %></span>
-      </div>
-
-      <div class="row mb-3">
-        <span class="small fw-bold col-3">Account Number: </span>
-        <span class="small col-9"><%= @bank.account_number %></span>
-      </div>
-
-      <div class="row mb-3">
-        <span class="small fw-bold col-3">Address: </span>
-        <span class="small col-9"><%= @bank.address %></span>
-      </div>
-
-      <div class="row mb-3">
         <span class="small fw-bold col-3">Particulars: </span>
-        <span class="small col-9"><%= debit_advice.particulars %></span>
+        <span class="small col-9"><%= simple_format debit_advice.particulars %></span>
       </div>
 
     </div>

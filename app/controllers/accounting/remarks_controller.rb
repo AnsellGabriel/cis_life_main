@@ -42,6 +42,8 @@ class Accounting::RemarksController < ApplicationController
           @voucher.cancelled!
           @voucher.check_voucher_request.pending! if (params[:e_t] == 'cv' || params[:e_t] == 'da')  and @voucher&.check_voucher_request&.present?
         end
+      elsif current_user.is_treasurer?
+        @voucher.paid!
       end
 
       redirect_to accounting_check_remarks_path(@voucher, e_t: @voucher.entry_type), Notification: "Voucher updated"

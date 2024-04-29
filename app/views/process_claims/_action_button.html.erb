@@ -12,7 +12,7 @@
     <% elsif current_user.userable_type == "Employee"%>
         <%= link_to '<i class="bi bi-chevron-left"></i>'.html_safe, index_show_process_claims_path(p: @process_claim.claim_route), class: 'btn btn-outline-secondary btn-sm'  %>
         <% if @audit_remarks.present? %>
-            <%= link_to accounting_check_remarks_path(@check, e_t: 'cv'), class: 'btn btn-sm btn-outline-danger', data: {turbo_frame: 'reg_form_modal'} do %>
+            <%= link_to accounting_check_remarks_path(@payout_type, e_t: @payout_type.entry_type), class: 'btn btn-sm btn-outline-danger', data: {turbo_frame: 'reg_form_modal'} do %>
                 <i class="bi bi-card-list"></i> Audit Remarks
             <% end %>
         <% end %>
