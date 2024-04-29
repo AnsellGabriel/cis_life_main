@@ -12,7 +12,8 @@ class Treasury::CashierEntry < ApplicationRecord
   belongs_to :treasury_payment_type, class_name: "Treasury::PaymentType"
   belongs_to :entriable, polymorphic: true
 
-  has_many :payments, class_name: "Treasury::Payment", dependent: :destroy
+  # has_many :payments, class_name: "Treasury::Payment", dependent: :destroy
+  has_many :payments, dependent: :destroy
   has_many :bills, class_name: "Treasury::BillingStatement", dependent: :destroy
   has_many :general_ledgers, as: :ledgerable
   has_many :transmittable_ors, as: :transmittable, inverse_of: :transmittable 

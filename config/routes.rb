@@ -379,6 +379,7 @@ Rails.application.routes.draw do
   namespace :mis do
     get "dashboard", to: "dashboard#index"
     get "cooperatives", to: "cooperatives#index"
+    get "view_ors", to: "dashboard#view_ors"
 
     resources :members do
       get :update_table, on: :collection

@@ -23,6 +23,10 @@ class LoanInsurance::Batch < Batch
   has_many :reserve_batches, class_name: "Actuarial::ReserveBatch", as: :batchable, dependent: :destroy
   has_many :reserves, through: :reserve_batches, class_name: "Actuarial::Reserve"
 
+  def self.get_lppi_batches_count
+    includes(group_remit: { agreement: :plan}).where(plan: {id: 2}).count
+  end
+
   def sii_skip_validation
     group_remit.agreement.plan.acronym == "SII"
   end

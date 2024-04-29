@@ -458,6 +458,11 @@ class GroupRemit < ApplicationRecord
     end
   end
 
+  def get_or_date
+    official_rec_date = payments&.first&.entries&.find_by(treasury_cashier_entries: { or_no: official_receipt})&.or_date
+    # payments&.first&.entries&.find_by(treasury_cashier_entries: { or_no: group_remit.official_receipt}).or_date
+    official_rec_date = nil ? "-" : official_rec_date
+  end
 
   # def posted_or
   #   approved_payment.entries.posted.last
