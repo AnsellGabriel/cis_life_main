@@ -294,13 +294,15 @@ class LoanInsurance::Batch < Batch
   # end
 
   def compute_terms(expiry_date, effectivity_date)
-    (expiry_date.year - effectivity_date.year) * 12 + (expiry_date.month - effectivity_date.month) + (expiry_date.day > effectivity_date.day ? 1 : 0)
+    # (expiry_date.year - effectivity_date.year) * 12 + (expiry_date.month - effectivity_date.month) + (expiry_date.day > effectivity_date.day ? 1 : 0)
+    ((expiry_date - effectivity_date) / 30).to_f.round
   end
 
   def expiry_and_today_month_diff(expiry_date)
     today = Date.today
 
     month_difference = ((today.year * 12 + today.month) - (expiry_date.year * 12 + expiry_date.month)) + (expiry_date.day > today.day ? 1 : 0)
+    # month_difference = ((today - effectivity_date) / 30).to_f.round
   end
 
 

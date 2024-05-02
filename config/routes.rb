@@ -265,7 +265,7 @@ Rails.application.routes.draw do
       get :search, on: :collection
     end
 
-    resources :payments
+    # resources :payments
     resources :cashier_entries do
       get :print, on: :member
       get :download, on: :member
