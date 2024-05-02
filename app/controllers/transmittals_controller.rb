@@ -12,12 +12,21 @@ class TransmittalsController < ApplicationController
     # @transmittals = Transmittal.all
     
     if current_user.is_mis?
-      @transmittals = Transmittal.where(transmittal_type: :mis)
+      type = :mis
+      @transmittals = Transmittal.where(transmittal_type: type)
     elsif current_user.is_und?
-      @transmittals = Transmittal.where(transmittal_type: :und)
+      type = :und
+      @transmittals = Transmittal.where(transmittal_type: type)
     else 
       @transmittals = Transmittal.all
     end
+
+    if params[:search].present?
+      payment = Payment.includes(:group_remit).find_by(group_remit: { official_receipt: params[:search]})
+      cashier_entry = Treasury::CashierEntry.find_by(entriable: payment)
+      @transmittals = Transmittal.includes(:transmittal_ors).where(transmittal_ors: { transmittable: cashier_entry}, transmittal_type: type)
+    end
+
   end
 
   # GET /transmittals/1

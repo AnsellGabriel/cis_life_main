@@ -3,7 +3,7 @@ class Payment < ApplicationRecord
 
   belongs_to :payable, polymorphic: true
   # belongs_to :group_remit, -> { includes(:payments).where(payments: { payable_type: ["Remittance", "LoanInsurance::GroupRemit"]})}, foreign_key: :payable_id
-  belongs_to :group_remit, -> { where(group_remits: { type: ["Remittance", "LoanInsurance::GroupRemit"]}).includes(:payments)}, foreign_key: 'payable_id'
+  belongs_to :group_remit, -> { where(group_remit: { type: ["Remittance", "LoanInsurance::GroupRemit"]}).includes(:payments)}, foreign_key: 'payable_id'
 
   has_many :remarks, as: :remarkable, dependent: :destroy
   has_many :entries, class_name: "Treasury::CashierEntry", as: :entriable, dependent: :destroy

@@ -62,6 +62,14 @@
           css_class: 'col-md-6' 
         %>
       </div>
+      <% if current_user.is_mis? %>
+        <div class="row">
+          <div class="form-floating mb-3 col-md-12" data-controller="number-formatter">
+            <%= f.input :encoded_premium, as: :text, label: false, placeholder: 'Premium', class: 'form-control', wrapper: false, input_html: {class: 'text-primary', data: {number_formatter_target: 'input'}}%>
+            <%= f.label :encoded_premium, 'Premium', class: 'ps-4' %>
+          </div>
+      </div>
+      <% end %>
     </div>
   </div>
   <div class="mb-3 ">
