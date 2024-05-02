@@ -1,4 +1,4 @@
-<%= simple_form_for(@coop_user) do |f| %>
+<%= simple_form_for @coop_user do |f| %>
   <div class="" data-controller="password-strength">
     <%# fields for User model associated with Coop_user %>
     <% unless current_user %>
@@ -92,7 +92,7 @@
                 placeholder: 'Confirm password' %>
           </div>
         </div>
-        <%= u.hidden_field :userable_type, value: "Coop" %>
+        <%= u.hidden_field :userable_type, value: "CoopUser" %>
         <%= u.hidden_field :userable_id, value: @coop_user.id %>
       <% end %>
       <hr>

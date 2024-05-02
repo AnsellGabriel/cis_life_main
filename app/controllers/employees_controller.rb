@@ -78,6 +78,6 @@ mobile_number: FFaker::PhoneNumber, designation: FFaker::String)
   # Only allow a list of trusted parameters through.
   def employee_params
     params.require(:employee).permit(:last_name, :first_name, :middle_name, :branch, :birthdate, :employee_number, :mobile_number, :designation, :department_id,
-user_attributes: [:email, :password, :password_confirmation, :userable_type, :userable_id])
+    user_attributes: [:email, :password, :password_confirmation, :userable_type, :userable_id])
   end
 end
