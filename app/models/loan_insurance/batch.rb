@@ -1,4 +1,5 @@
 class LoanInsurance::Batch < Batch
+  attr_accessor :encoded_premium
   include CoverageStatus
   self.table_name = "loan_insurance_batches"
 

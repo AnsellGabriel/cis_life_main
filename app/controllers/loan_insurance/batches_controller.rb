@@ -92,7 +92,7 @@ class LoanInsurance::BatchesController < ApplicationController
     if agreement.plan.acronym == "SII"
       result = @batch.sii_process_batch
     else
-      result = @batch.process_batch
+      result = @batch.process_batch(params[:loan_insurance_batch][:encoded_premium])
     end
 
     respond_to do |format|

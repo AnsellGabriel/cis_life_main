@@ -11,8 +11,8 @@ class Treasury::CashierEntry < ApplicationRecord
   belongs_to :treasury_account, class_name: "Treasury::Account"
   belongs_to :treasury_payment_type, class_name: "Treasury::PaymentType"
   belongs_to :entriable, polymorphic: true
-  #magic for entriable
-  # belongs_to :payment, ->{includes(:treasury_cashier_entries).where(treasury_cashier_entries: {entriable_type: "Payment"})}, foreign_key: "entriable_id"
+  belongs_to :payment, -> { includes(:treasury_cashier_entries).where(treasury_cashier_entries: { entriable_type: "Payment" }) }, foreign_key: :entriable_id
+
   # has_many :payments, class_name: "Treasury::Payment", dependent: :destroy
   # has_many :payments, dependent: :destroy
   has_many :bills, class_name: "Treasury::BillingStatement", dependent: :destroy
