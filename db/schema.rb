@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2024_05_06_052816) do
+ActiveRecord::Schema[7.0].define(version: 2024_05_06_083517) do
   create_table "accounting_debit_advice_journals", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.bigint "debit_advice_id", null: false
     t.bigint "journal_voucher_id", null: false
@@ -18,6 +18,17 @@ ActiveRecord::Schema[7.0].define(version: 2024_05_06_052816) do
     t.datetime "updated_at", null: false
     t.index ["debit_advice_id"], name: "index_accounting_debit_advice_journals_on_debit_advice_id"
     t.index ["journal_voucher_id"], name: "index_accounting_debit_advice_journals_on_journal_voucher_id"
+  end
+
+  create_table "accounting_journal_voucher_requests", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+    t.string "requestable_type", null: false
+    t.bigint "requestable_id", null: false
+    t.decimal "amount", precision: 10
+    t.integer "status"
+    t.text "particulars"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["requestable_type", "requestable_id"], name: "index_accounting_journal_voucher_requests_on_requestable"
   end
 
   create_table "accounting_vouchers", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|

@@ -15,10 +15,11 @@ class Accounting::DebitAdvicesController < ApplicationController
   def show
     @ledgers = @debit_advice.general_ledgers
     @bank = @debit_advice.treasury_account
+    @request = @debit_advice.check_voucher_request
 
-    if @debit_advice.check_voucher_request.present?
-      @request = @debit_advice.check_voucher_request
+    if @request.present?
       @claim = @request.requestable
+      @claim_type_documents = ClaimTypeDocument.where(claim_type: @request.requestable.claim_type)
     end
   end
 

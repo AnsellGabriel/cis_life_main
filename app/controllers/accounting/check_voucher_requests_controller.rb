@@ -4,13 +4,13 @@ class Accounting::CheckVoucherRequestsController < ApplicationController
   end
 
   def show
-    @cvr = Accounting::CheckVoucherRequest.find(params[:id])
-    @claim_type_documents = ClaimTypeDocument.where(claim_type: @cvr.requestable.claim_type)
+    @request = Accounting::CheckVoucherRequest.find(params[:id])
+    @claim_type_documents = ClaimTypeDocument.where(claim_type: @request.requestable.claim_type)
 
     if params[:pt] == "check_voucher"
-      @requests = @cvr.check_vouchers.order(created_at: :desc)
+      @requests = @request.check_vouchers.order(created_at: :desc)
     elsif params[:pt] == "debit_advice"
-      @requests = @cvr.debit_advices.order(created_at: :desc)
+      @requests = @request.debit_advices.order(created_at: :desc)
     end
 
     @pagy, @check_vouchers = pagy(@requests, items: 10)

@@ -42,12 +42,14 @@ class GeneralLedgersController < ApplicationController
     when 'da' then entry = 'debit advice'
     end
 
-    if (@ledgers.total_debit != @ledgers.total_credit) || @ledgers.empty?
-      return redirect_to entry_path, alert: "Unable to submit #{entry}, #{@ledgers.empty? ? 'no entry.' : 'credit and debit total not equal.'}"
-    end
+    unless entry == 'debit advice'
+      if (@ledgers.total_debit != @ledgers.total_credit) || @ledgers.empty?
+        return redirect_to entry_path, alert: "Unable to submit #{entry}, #{@ledgers.empty? ? 'no entry.' : 'credit and debit total not equal.'}"
+      end
 
-    if params[:e_t] != 'jv' and ((@ledgers.total_debit != @entry.total_amount) || (@ledgers.total_credit != @entry.total_amount))
-      return redirect_to entry_path, alert: "Unable to submit #{entry}, credit and debit total not equal to total amount"
+      if params[:e_t] != 'jv' and ((@ledgers.total_debit != @entry.total_amount) || (@ledgers.total_credit != @entry.total_amount))
+        return redirect_to entry_path, alert: "Unable to submit #{entry}, credit and debit total not equal to total amount"
+      end
     end
 
     if @entry.update(status: :for_approval)

@@ -1,0 +1,28 @@
+<div class="mb-1">
+  <%= render 'back_btn', link: treasury_debit_advices_path %>
+
+  <% if @debit_advice.attachment.present? %>
+    <%= link_to @debit_advice.attachment.receipt.url, class: 'btn btn-sm btn-primary', target: "_blank" do %>
+      <i class="bi bi-eye-fill"></i> View Payment
+    <% end %>
+    <% if @debit_advice.pending_payout? %>
+      <%= link_to new_receipt_accounting_debit_advice_path(@debit_advice), class: 'btn btn-sm btn-primary', data: {turbo_frame: 'modal'} do %>
+        <i class="bi bi-upload"></i> Re-upload Payment
+      <% end %>
+    <% end %>
+  <% else %>
+    <%= link_to new_receipt_accounting_debit_advice_path(@debit_advice), class: 'btn btn-sm btn-outline-primary', data: {turbo_frame: 'modal'} do %>
+      <i class="bi bi-upload"></i> Upload Payment
+    <% end %>
+  <% end %>
+
+  <% if @debit_advice.pending_payout?  %>
+    <%=  link_to new_accounting_check_remark_path(@debit_advice, e_t: @debit_advice.entry_type), data: {turbo_frame: 'reg_form_modal' }, class: small_btn('success'), title: 'Paid' do %>
+      <i class="bi bi-check-circle-fill"></i> Tag as Paid
+    <% end %>
+  <% else %>
+    <%= link_to accounting_check_remarks_path(@debit_advice, e_t: @debit_advice.entry_type), class: 'btn btn-sm btn-warning', data: {turbo_frame: 'reg_form_modal'} do %>
+      <i class="bi bi-card-list"></i> Remarks
+    <% end %>
+  <% end %>
+</div>

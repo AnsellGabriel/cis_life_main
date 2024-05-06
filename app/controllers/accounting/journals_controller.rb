@@ -46,7 +46,7 @@ class Accounting::JournalsController < ApplicationController
       @da = Accounting::DebitAdvice.find(params[:da])
     end
 
-    @journal = Accounting::Journal.new(voucher: Accounting::Journal.generate_series, date_voucher: Date.today, treasury_account: @da&.treasury_account, global_payable: @da&.payable&.to_global_id, particulars: @da&.particulars)
+    @journal = Accounting::Journal.new(voucher: Accounting::Journal.generate_series, date_voucher: Date.today, global_payable: @da&.payable&.to_global_id, particulars: @da&.particulars)
 
     # if @da.present?
     #   @journal.debit_advices << @da
