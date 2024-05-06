@@ -56,6 +56,6 @@ class Accounting::BusinessChecksController < ApplicationController
 
   # Only allow a list of trusted parameters through.
   def check_params
-    params.require(:treasury_business_check).permit(:check_number, :check_date, :amount, :check_type)
+    params.require(:treasury_business_check).permit(:check_number, :check_date, :amount, :check_type, :payee)
   end
 end

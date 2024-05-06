@@ -10,7 +10,16 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2024_04_29_080820) do
+ActiveRecord::Schema[7.0].define(version: 2024_05_06_010113) do
+  create_table "accounting_debit_advice_journals", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+    t.bigint "debit_advice_id", null: false
+    t.bigint "journal_voucher_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["debit_advice_id"], name: "index_accounting_debit_advice_journals_on_debit_advice_id"
+    t.index ["journal_voucher_id"], name: "index_accounting_debit_advice_journals_on_journal_voucher_id"
+  end
+
   create_table "accounting_vouchers", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.date "date_voucher"
     t.string "voucher"
@@ -1264,6 +1273,24 @@ ActiveRecord::Schema[7.0].define(version: 2024_04_29_080820) do
     t.index ["agreement_id"], name: "index_special_arrangements_on_agreement_id"
   end
 
+  create_table "transmittal_ors", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+    t.bigint "transmittal_id"
+    t.string "transmittable_type"
+    t.bigint "transmittable_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["transmittable_type", "transmittable_id"], name: "index_transmittal_ors_on_transmittable"
+    t.index ["transmittal_id"], name: "index_transmittal_ors_on_transmittal_id"
+  end
+
+  create_table "transmittals", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+    t.string "code"
+    t.string "description"
+    t.integer "transmittal_type"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
   create_table "treasury_accounts", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.string "name"
     t.integer "account_type"
@@ -1296,6 +1323,7 @@ ActiveRecord::Schema[7.0].define(version: 2024_04_29_080820) do
     t.datetime "updated_at", null: false
     t.integer "status", default: 0
     t.text "notes"
+    t.string "payee"
     t.index ["voucher_id"], name: "index_treasury_business_checks_on_voucher_id"
   end
 
@@ -1383,6 +1411,8 @@ ActiveRecord::Schema[7.0].define(version: 2024_04_29_080820) do
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
   end
 
+  add_foreign_key "accounting_debit_advice_journals", "accounting_vouchers", column: "debit_advice_id"
+  add_foreign_key "accounting_debit_advice_journals", "accounting_vouchers", column: "journal_voucher_id"
   add_foreign_key "accounting_vouchers", "check_voucher_requests"
   add_foreign_key "accounting_vouchers", "treasury_accounts"
   add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"

@@ -2,7 +2,6 @@ class Accounting::DebitAdvicesController < ApplicationController
   before_action :set_debit_advice, only: %i[ show edit update destroy ]
   before_action :set_payables, only: %i[ new edit create update]
 
-
   # GET /accounting/debit_advices
   def index
     @debit_advices = Accounting::DebitAdvice.all.order(created_at: :desc)

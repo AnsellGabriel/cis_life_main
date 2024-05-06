@@ -225,6 +225,7 @@ Rails.application.routes.draw do
     resources :journals do
       get :download, on: :member
       get :for_approval_index, on: :collection
+      get :for_jv, on: :collection
     end
 
     resources :checks do
