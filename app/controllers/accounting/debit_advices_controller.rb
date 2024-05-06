@@ -1,5 +1,5 @@
 class Accounting::DebitAdvicesController < ApplicationController
-  before_action :set_debit_advice, only: %i[ show edit update destroy ]
+  before_action :set_debit_advice, only: %i[ show edit update destroy new_receipt upload_receipt]
   before_action :set_payables, only: %i[ new edit create update]
 
   # GET /accounting/debit_advices
@@ -79,6 +79,28 @@ class Accounting::DebitAdvicesController < ApplicationController
     @accounting_debit_advice.destroy
     redirect_to accounting_debit_advices_url, notice: "Debit advice was successfully destroyed.", status: :see_other
   end
+
+  def new_receipt
+  end
+
+  def upload_receipt
+    file = params[:file]
+
+    if file.nil?
+      redirect_to accounting_debit_advice_path(@debit_advice), alert: 'Unable to upload an empty file'
+      return
+    end
+
+    @debit_advice.attachment ||= @debit_advice.build_attachment
+    @debit_advice.attachment.receipt = file
+
+    if @debit_advice.attachment.save
+      redirect_to accounting_debit_advice_path(@debit_advice), notice: 'File uploaded'
+    else
+      redirect_to accounting_debit_advice_path(@debit_advice), alert: 'Failed to upload file'
+    end
+  end
+
 
   private
   # Use callbacks to share common setup or constraints between actions.

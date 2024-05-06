@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2024_05_06_010113) do
+ActiveRecord::Schema[7.0].define(version: 2024_05_06_052816) do
   create_table "accounting_debit_advice_journals", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.bigint "debit_advice_id", null: false
     t.bigint "journal_voucher_id", null: false
@@ -601,6 +601,14 @@ ActiveRecord::Schema[7.0].define(version: 2024_05_06_010113) do
     t.index ["geo_municipality_id"], name: "index_cooperatives_on_geo_municipality_id"
     t.index ["geo_province_id"], name: "index_cooperatives_on_geo_province_id"
     t.index ["geo_region_id"], name: "index_cooperatives_on_geo_region_id"
+  end
+
+  create_table "debit_advice_receipts", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+    t.string "receipt"
+    t.bigint "debit_advice_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["debit_advice_id"], name: "index_debit_advice_receipts_on_debit_advice_id"
   end
 
   create_table "denied_dependents", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|

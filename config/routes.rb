@@ -221,7 +221,11 @@ Rails.application.routes.draw do
   # * Finance Module Routes
   # accounting
   namespace :accounting do
-    resources :debit_advices
+    resources :debit_advices do
+      get :new_receipt, on: :member
+      post :upload_receipt, on: :member
+    end
+    
     resources :journals do
       get :download, on: :member
       get :for_approval_index, on: :collection

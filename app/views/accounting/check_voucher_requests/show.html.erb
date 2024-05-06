@@ -1,3 +1,5 @@
+<%= render 'attachments' %>
+
 <div class="">
   <%= link_to requests_accounting_checks_path, class: small_btn('secondary'), title: 'black' do %>
     <i class="bi bi-chevron-left"></i>
@@ -16,6 +18,12 @@
       <% end %>
     <% end %>
   <% end %>
+  <%= content_tag :button, "Claim Attachments", 
+    class: small_btn('outline-primary'), 
+    data: {bs_toggle: "modal",
+      bs_target: "#claimAttachmentsModal"
+    }
+  %>
 </div>
 
 <div class="<%= flex_justify_align('between', 'center') %> gap-1 mb-1">
