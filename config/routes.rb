@@ -2,7 +2,9 @@
 require "sidekiq/web"
 
 Rails.application.routes.draw do
-  resources :transmittals
+  resources :transmittals do
+    get :remove_or, on: :member
+  end
   resources :special_arrangements
   resources :sip_pbs
   resources :sip_abs

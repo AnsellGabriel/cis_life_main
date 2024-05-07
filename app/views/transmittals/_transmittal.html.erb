@@ -19,6 +19,7 @@
       <th>OR Number</th>
       <th>OR Date</th>
       <th>Cooperative</th>
+      <th></th>
     </thead>
     <tbody>
       <% @transmittables.each do |val| %>
@@ -27,14 +28,24 @@
             <td><%= val.transmittable %></td>
             <td><%= val.transmittable.or_date %></td>
             <td><%= val.transmittable.entriable %></td>
+            <td>
+              <%= link_to remove_or_transmittal_path(or: val), class: "btn btn-outline-danger", onclick: "return confirm('Are you sure?')" do %>
+                <%= bootstrap_icon "x-lg" %>
+              <% end %>
+            </td>
           </tr>
         <% else %>
           <tr>
             <td>
-              <% val.transmittable.get_or_number %>
+              <%= val.transmittable.get_or_number %>
             </td>
             <td><%= val.transmittable.get_or_date %></td>
             <td><%= val.transmittable.group_remit.cooperative %></td>
+            <td>
+              <%= link_to remove_or_transmittal_path(or: val), class: "btn btn-sm btn-outline-danger", title: "Remove", onclick: "return confirm('Are you sure?')" do %>
+                <%= bootstrap_icon "x-lg" %>
+              <% end %>
+            </td>
           </tr>
         <% end %>
       <% end %>
