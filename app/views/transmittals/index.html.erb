@@ -1,6 +1,8 @@
 <%= content_tag :h1, "List of Transmittals" %>
 
-
+<div class="float-start mb-3 col-6">
+  <%== pagy_bootstrap_nav(@pagy) if @pagy.pages > 1 %>
+</div>
 <div class="float-end mb-3 col-6">
 
   <%= form_with(url: transmittals_path, method: :get, authenticty_token: :false) do |f| %>

@@ -1,5 +1,5 @@
 class TransmittalsController < ApplicationController
-  before_action :set_transmittal, only: %i[ show edit update destroy ]
+  before_action :set_transmittal, only: %i[ show edit update destroy remove_or ]
 
   # GET /transmittals
   def index
@@ -22,11 +22,20 @@ class TransmittalsController < ApplicationController
     end
 
     if params[:search].present?
-      payment = Payment.includes(:group_remit).find_by(group_remit: { official_receipt: params[:search]})
-      cashier_entry = Treasury::CashierEntry.find_by(entriable: payment)
-      @transmittals = Transmittal.includes(:transmittal_ors).where(transmittal_ors: { transmittable: cashier_entry}, transmittal_type: type)
+      if current_user.is_mis?
+        payment = Payment.includes(:group_remit).find_by(group_remit: { official_receipt: params[:search]})
+        cashier_entry = Treasury::CashierEntry.find_by(entriable: payment)
+        # @transmittals = Transmittal.includes(:transmittal_ors).where(transmittal_ors: { transmittable: cashier_entry}, transmittal_type: type)
+        @transmittals = @transmittals.includes(:transmittal_ors).where(transmittal_ors: { transmittable: cashier_entry})
+      else 
+        process_coverage = ProcessCoverage.includes(:group_remit).find_by(group_remit: { official_receipt: params[:search]})
+        # @transmittals = Transmittal.includes(:transmittal_ors).where(transmittal_ors: { transmittable: process_coverage}, transmittal_type: type)
+        @transmittals = @transmittals.includes(:transmittal_ors).where(transmittal_ors: { transmittable: process_coverage})
+      end
     end
 
+
+    @pagy, @transmittals = pagy(@transmittals, items: 2)
   end
 
   # GET /transmittals/1
@@ -46,8 +55,9 @@ class TransmittalsController < ApplicationController
 
   # POST /transmittals
   def create
+    # raise 'errors'
     @transmittal = Transmittal.new(transmittal_params)
-
+    @transmittal.transmittal_type = current_user.is_mis? ? "mis" : "und"
     @transmittal.set_code_and_type(@transmittal.transmittal_type, current_user)
     
     if params[:transmittal][:transmittal_ors_attributes].nil?
@@ -79,6 +89,11 @@ class TransmittalsController < ApplicationController
   def destroy
     @transmittal.destroy
     redirect_to transmittals_url, notice: "Transmittal was successfully destroyed.", status: :see_other
+  end
+
+  def remove_or
+    @transmittal_or = TransmittalOr.find(params[:or]).destroy
+    redirect_to @transmittal, notice: "OR removed in the transmittal.", status: :see_other
   end
 
   private
