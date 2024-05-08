@@ -1,0 +1,62 @@
+<%= content_tag :h1, "List of Transmittals" %>
+
+<div class="float-start mb-3 col-6">
+  <%== pagy_bootstrap_nav(@pagy) if @pagy.pages > 1 %>
+</div>
+<div class="float-end mb-3 col-6">
+
+  <%= form_with(url: transmittals_path, method: :get, authenticty_token: :false) do |f| %>
+    <div class="input-group mb-3">
+      <%= f.text_field :search, placeholder: 'Search OR Number', label: false, aria: { label: "Search", describedby: "button-addon2"}, class: "form-control" %>
+      <%= button_tag type: 'submit', class: "btn btn-outline-success", id: "button-addon2" do %>
+        <%= bootstrap_icon "search" %>
+      <% end %>
+      <%= link_to transmittals_path, class: "btn btn-outline-secondary" do %>
+        <%= bootstrap_icon "arrow-counterclockwise" %>
+      <% end %>
+      <%= link_to new_transmittal_path, class: 'btn btn-primary' do %>
+      New
+      <% end %>
+    </div>
+  <% end %>
+</div>
+
+
+<table class="table table-striped table-bordered table-hover">
+  <thead>
+    <tr>
+      <th>#</th>
+      <th>Code</th>
+      <th>Description</th>
+      <th>ORs/PCs Count</th>
+      <th>Type</th>
+      <th></th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% unless @transmittals.empty? %>
+      <% @transmittals.each do |transmittal| %>
+        <tr>
+
+        <th scope="row"><%= transmittal.id %></th>
+        <td><%= transmittal.code %></td>
+        <td><%= transmittal.description %></td>
+        <td><%= transmittal.transmittal_ors.count %></td>
+        <td><%= transmittal_type(transmittal.transmittal_type) %></td>
+    
+          <td>
+            <%= link_to 'View', transmittal, class: 'btn btn-secondary btn-sm' %>
+            <%= link_to 'Edit', edit_transmittal_path(transmittal), class: 'btn btn-secondary btn-sm' %>
+            <%= link_to "Delete", transmittal, class: "btn btn-danger btn-sm", method: :delete, data: { "turbo-method": :delete, turbo_confirm: "Are you sure?" } %>
+          </td>
+
+        </tr>
+      <% end %>
+    <% else %>
+      <tr>
+        <td colspan=6 class="lead text-center">NO RECORD(S).</td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>

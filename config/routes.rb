@@ -2,6 +2,9 @@
 require "sidekiq/web"
 
 Rails.application.routes.draw do
+  resources :transmittals do
+    get :remove_or, on: :member
+  end
   resources :special_arrangements
   resources :sip_pbs
   resources :sip_abs
@@ -272,7 +275,7 @@ Rails.application.routes.draw do
       get :search, on: :collection
     end
 
-    resources :payments
+    # resources :payments
     resources :cashier_entries do
       get :print, on: :member
       get :download, on: :member
@@ -388,6 +391,7 @@ Rails.application.routes.draw do
   namespace :mis do
     get "dashboard", to: "dashboard#index"
     get "cooperatives", to: "cooperatives#index"
+    get "view_ors", to: "dashboard#view_ors"
 
     resources :members do
       get :update_table, on: :collection

@@ -14,6 +14,9 @@ class ProcessCoverage < ApplicationRecord
   has_many :notifications
   has_one :check_voucher_request, as: :requestable, dependent: :destroy, class_name: "Accounting::CheckVoucherRequest"
 
+  has_many :transmittable_ors, as: :transmittable, inverse_of: :transmittable 
+  has_many :transmittals, through: :transmittable_ors
+
   delegate :cooperative, to: :group_remit
 
 
@@ -38,6 +41,8 @@ class ProcessCoverage < ApplicationRecord
 
   STATUSES = [["All", 0], ["FOR PROCESS", 1], ["PROCESSED", 3]]
 
+  PCS = ProcessCoverage.where(status: :approved)
+
   enum und_route: {
     for_analyst_review: 0,
     for_head_review: 1,
@@ -46,6 +51,14 @@ class ProcessCoverage < ApplicationRecord
     pc_denied: 4,
     pc_reprocessed: 5
   }
+
+  def to_s
+    self.group_remit.name
+  end
+
+  def for_transmittal
+    "#{group_remit.agreement.plan.acronym}#{id} - #{group_remit.agreement.cooperative}"
+  end
 
   def set_default_attributes
     self.status = :for_process

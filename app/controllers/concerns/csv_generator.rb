@@ -3,7 +3,6 @@
 module CsvGenerator
   extend ActiveSupport::Concern
   def generate_csv(data, filename, balance = nil)
-    raise "errors"
     case data.first.class.name
     when "GeneralLedger"
       csv_data = account_ledger(data, balance)
@@ -71,8 +70,8 @@ module CsvGenerator
           record.id,
           record.group_remit&.cooperative,
           record.group_remit&.agreement&.plan,
-          record.agent,
-          record.group_remit.count_batches,
+          record&.agent,
+          record.group_remit&.count_batches,
           record.group_remit&.gross_premium,
           record.group_remit&.coop_commission,
           record.group_remit&.agent_commission,
@@ -142,16 +141,21 @@ module CsvGenerator
       csv << header_row
 
       data.each_with_index do |record, index|
+        last_name = record.last_name.nil? ? record.coop_member.member.last_name : record.last_name
+        first_name = record.first_name.nil? ? record.coop_member.member.first_name : record.first_name
+        middle_name = record.middle_name.nil? ? record.coop_member.member.middle_name : record.middle_name
+
         gross = record.premium
         unuse = record.unused
         coop_sf = record.coop_sf_amount
         net = gross - (unuse + coop_sf)
+        
         total_net += net
         csv << [
           index + 1,
-          record.last_name,
-          record.first_name,
-          record.middle_name,
+          last_name,
+          first_name,
+          middle_name,
           record.coop_member.member.suffix,
           record.birthdate,
           record.age,

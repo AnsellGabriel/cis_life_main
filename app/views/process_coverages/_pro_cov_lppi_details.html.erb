@@ -100,6 +100,12 @@
         <%= bootstrap_icon "arrow-repeat" %> Approve Reprocess
       <% end %>
     </div>
+
+    <% if process_coverage.approved? %>
+      <%= link_to  lppi_summary_loan_insurance_group_remit_path(process_coverage.group_remit), class: "btn btn-sm btn-secondary mb-2" do %>
+        <%= bootstrap_icon "box-arrow-down" %> Download Summary Report
+      <% end %>
+    <% end %>
     <%# end %>
     <%# end %>
     <%# unless process_coverage.group_remit.batches.where(insurance_status: "for_review").count == 0 %>

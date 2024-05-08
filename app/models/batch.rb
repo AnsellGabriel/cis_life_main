@@ -109,6 +109,10 @@ class Batch < ApplicationRecord
     joins(coop_member: :member).where(expiry_date: date.., insurance_status: :approved)
   end
 
+  def self.get_gyrt_encoded
+    includes(group_remits: { agreement: :plan}).where(plan: {id: [1,3,4]}).count
+  end
+
 
   def self.process_batch(batch, group_remit, rank = nil, premium = nil, savings_amount = nil)
     agreement = group_remit.agreement
