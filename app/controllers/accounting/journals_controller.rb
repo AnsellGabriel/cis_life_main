@@ -29,10 +29,11 @@ class Accounting::JournalsController < ApplicationController
     @pagy, @journals = pagy(@journals, items: 10)
   end
 
-  def for_jv
-    @q = Accounting::DebitAdvice.where(payout_status: :paid).order(created_at: :desc).ransack(params[:q])
-    @for_jv = @q.result
-    @pagy, @for_jv = pagy(@for_jv, items: 10)
+  def requests
+    # @q = Accounting::DebitAdvice.where(payout_status: :paid).order(created_at: :desc).ransack(params[:q])
+    @q = Accounting::JournalVoucherRequest.all.order(created_at: :desc).ransack(params[:q])
+    @requests = @q.result
+    @pagy, @requests = pagy(@requests, items: 10)
   end
 
   # GET /accounting/journals/1

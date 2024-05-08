@@ -225,11 +225,12 @@ Rails.application.routes.draw do
       get :new_receipt, on: :member
       post :upload_receipt, on: :member
     end
-    
+
     resources :journals do
       get :download, on: :member
       get :for_approval_index, on: :collection
-      get :for_jv, on: :collection
+      # get :for_jv, on: :collection
+      get :requests, on: :collection
     end
 
     resources :checks do
@@ -245,6 +246,8 @@ Rails.application.routes.draw do
 
 
     resources :check_voucher_requests, only: %i[show]
+    resources :journal_voucher_requests, only: %i[show]
+
 
     resources :general_disbursement_book, only: %i[index] do
       get :pdf, on: :collection

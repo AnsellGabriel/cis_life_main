@@ -25,17 +25,27 @@ class Accounting::RemarksController < ApplicationController
         @voucher.pending_audit!
 
         if params[:remark][:category] == "incorrect_claim_details"
-          process_claim = @voucher.check_voucher_request.requestable
-          claim_track = process_claim.process_track.build
-          claim_track.route_id = 16
-          claim_track.user_id = current_user.id
-          claim_track.save
-          process_claim.update!(claim_route: 1, status: :process, claim_filed: 0, processing: 0, approval: 0, payment: 0)
+          ActiveRecord::Base.transaction do
+            process_claim = @voucher.check_voucher_request.requestable
+            claim_track = process_claim.process_track.build
+            claim_track.route_id = 16
+            claim_track.user_id = current_user.id
+            claim_track.save!
+            process_claim.update!(
+              claim_route: 1,
+              status: :process,
+              claim_filed: 0,
+              processing: 0,
+              approval: 0,
+              payment: 0
+            )
+          end
         elsif params[:remark][:category] == "incorrect_voucher_details"
-          @voucher.pending!
-          @voucher.check_voucher_request.pending!
+          @voucher.transaction do
+            @voucher.pending!
+            @voucher.check_voucher_request.pending!
+          end
         end
-
       elsif current_user.is_accountant?
         @voucher.transaction do
           @voucher.general_ledgers.update_all(transaction_date: nil)
@@ -43,7 +53,16 @@ class Accounting::RemarksController < ApplicationController
           @voucher.check_voucher_request.pending! if (params[:e_t] == 'cv' || params[:e_t] == 'da')  and @voucher&.check_voucher_request&.present?
         end
       elsif current_user.is_treasurer?
-        @voucher.paid!
+        ActiveRecord::Base.transaction do
+          @voucher.paid!
+          jv_request = Accounting::JournalVoucherRequest.create!(
+            requestable: @voucher,
+            amount: @voucher.amount,
+            particulars: @voucher.particulars,
+            status: :pending,
+            request_type: @voucher.voucher_type
+          )
+        end
       end
 
       redirect_to accounting_check_remarks_path(@voucher, e_t: @voucher.entry_type), Notification: "Voucher updated"

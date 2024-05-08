@@ -16,6 +16,10 @@ class Accounting::DebitAdvice < Accounting::Voucher
     'da'
   end
 
+  def voucher_type
+    :debit_advice
+  end
+
   def total_amount
     amount
   end

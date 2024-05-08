@@ -1,5 +1,5 @@
 <div class="<%= flex_justify_align('between', 'center') %> gap-1 mb-3">
-  <%= content_tag :h4, "Check Voucher / Debit Advice Requests", class: 'text-primary mb-0' %>
+  <%= content_tag :h4, "Journal Voucher Requests", class: 'text-primary mb-0' %>
 
   <% if @pagy.pages > 1 %>
     <%== pagy_bootstrap_nav(@pagy) %>
@@ -12,25 +12,23 @@
         <th class="text-center" scope="col">Type</th>
         <th class="text-center" scope="col">Payee</th>
         <th class="text-center" scope="col">Particulars</th>
-        <th class="text-center" scope="col">Requested by</th>
         <th class="text-center" scope="col">Amount</th>
         <th class="text-center" scope="col"></th>
       </tr>
     </thead>
 
     <tbody id="batches_body">
-      <% if @claim_requests.present? %> 
+      <% if @requests.present? %> 
 
-        <% @claim_requests.each do |request| %>
+        <% @requests.each do |request| %>
           <tr>
             <td class="text-center cell-125"><%= short_month_day_year(request.created_at) %></td>
-            <td class="text-center cell-125"><%= request.payout_type.humanize.upcase %></td>
-            <td class=""><%= request.requestable.cooperative %></td>
-            <td><%= request.description %></td>
-            <td class="text-center"><%= to_curr request.analyst %></td>
+            <td class="text-center cell-125"><%= request.request_type.humanize.upcase %></td>
+            <td class=""><%= request.requestable.payable %></td>
+            <td><%= request.particulars %></td>
             <td class="text-end"><%= to_curr request.amount %></td>
             <td class="text-center">
-              <%= link_to accounting_check_voucher_request_path(request, pt: request.payout_type), class: small_btn('outline-primary'), title: 'view' do %>
+              <%= link_to accounting_journal_voucher_request_path(request), class: small_btn('outline-primary'), title: 'view' do %>
                 <i class="bi bi-eye-fill"></i>
               <% end%>
             </td>
