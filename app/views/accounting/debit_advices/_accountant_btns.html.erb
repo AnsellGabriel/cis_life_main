@@ -1,0 +1,28 @@
+<div class="mb-1">
+  <% if @request.present? %>
+    <%= render 'back_btn', link: accounting_check_voucher_request_path(@request, pt: @request.payout_type) %>
+  <% else %>
+    <%= render 'back_btn', link: accounting_debit_advices_path %>
+  <% end %>
+
+  <% if @debit_advice.posted? %>
+    <%= link_to print_accounting_check_path(@debit_advice, format: :pdf), class: small_btn('warning'), target: '_blank', title: 'Print' do %>
+      <i class="bi bi-printer"></i>
+    <% end %>
+    <%= link_to download_accounting_check_path(@debit_advice, format: :pdf), class: small_btn('primary'), target: '_blank', title: 'Download' do %>
+      <i class="bi bi-download"></i>
+    <% end %>
+  <% end %>
+
+  <% if @debit_advice.attachment.present? %>
+    <%= link_to @debit_advice.attachment.receipt.url, class: 'btn btn-sm btn-outline-primary', target: "_blank" do %>
+      <i class="bi bi-eye-fill"></i> View Payment
+    <% end %>
+  <% end %>
+
+  <% if @debit_advice.paid? %>
+    <%= link_to new_accounting_journal_path(da: @debit_advice.id), class: 'btn btn-sm btn-outline-primary', data: {turbo_frame: 'modal'} do %>
+      <i class="bi bi-plus-lg"></i> Journal Voucher
+    <% end %>
+  <% end %>
+</div>

@@ -21,7 +21,6 @@
     </div>
 
     <% if params[:rid].present? %>
-      <% console %>
       <%= f.label 'Payee', class: 'mb-1' %>
       <%= f.select :global_payable, [[@coop.name, @coop.to_global_id]], {}, { class: 'form-control mb-3', readonly: true } %>
     <% else %>

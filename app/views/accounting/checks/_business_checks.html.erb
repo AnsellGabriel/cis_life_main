@@ -18,22 +18,29 @@
   <table class="table table-bordered table-hover bg-white">
     <thead style="border-bottom: 10px;">
       <tr>
-        <% if current_user.is_treasurer? && !voucher.claimable?  %>
-          <th></th>
-        <% end %>
-        
-        <th class="text-center">Check No.</th>
-        <th class="text-center">Date</th>
+        <th class="text-center" style="width: 120px">Date</th>
+        <th class="text-center" style="width: 120px">Check No.</th>
+        <th class="text-center">Payee</th>
         <th class="text-center">Type</th>
         <th class="text-center">Amount</th>
         <th class="text-center">Status</th>
-        <th class="text-center">Notes</th>
-      </tr>
+
+        <% if current_user.is_treasurer? && !voucher.claimable?  %>
+          <th style="width: 90px"></th>
+        <% end %>      </tr>
     </thead>
     <tbody>
       <% if business_checks.present? %>
         <% business_checks.each do |check| %>
           <tr>
+            <td class='text-center' ><%= month_day_year check.check_date %></td>
+            <td class='text-center' >
+              <%= check.check_number %>
+            </td>
+            <td><%= check.payee %></td>
+            <td class='text-center'><%= check.check_type&.humanize %></td>
+            <td class="text-end"><%= to_curr check.amount %></td>
+            <td class="text-center"><span class="<%= check.decorate.check_badge %>"><%= check.decorate.check_text %></span></td>
             <% if !voucher.cancelled? && current_user.is_treasurer? && !voucher.claimable? %>
               <td class="text-center">
                 <%= link_to edit_accounting_check_business_path(voucher, check), 
@@ -49,19 +56,6 @@
                 <% end %>
               </td>
             <% end %>
-            <td class='text-center' >
-              <%= check.check_number %>
-            </td>
-            <td class='text-center' ><%= month_day_year check.check_date %></td>
-            <td class='text-center'><%= check.check_type&.humanize %></td>
-            <td class="text-end"><%= to_curr check.amount %></td>
-            <td class="text-center"><span class="<%= check.decorate.check_badge %>"><%= check.decorate.check_text %></span></td>
-            <td class="text-center">
-              <%= check.notes %>
-              <%= link_to edit_treasury_check_path(check), data: {turbo_frame: 'modal'}, title: 'Edit' do %>
-                <i class="bi bi-pencil-square"></i>
-              <% end %>
-            </td>
           </tr>
         <% end %>
       <% else %>

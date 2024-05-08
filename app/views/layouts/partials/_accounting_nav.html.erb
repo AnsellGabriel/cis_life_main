@@ -1,5 +1,3 @@
-<%= link_to "Claim Requests", requests_accounting_checks_path, class: "nav-link" %>
-
 <% if current_user.head? %>
   <%= link_to "For Approvals", for_approval_index_accounting_checks_path, class: "nav-link" %>
 <% end %>
@@ -8,6 +6,11 @@
   <%= link_to "Checks", accounting_checks_path, class: "dropdown-item" %>
   <%= link_to "Debit Advices", accounting_debit_advices_path, class: "dropdown-item" %>
   <%= link_to "Journals", accounting_journals_path, class: "dropdown-item" %>
+<% end %>
+
+<%= render 'layouts/partials/nav_dropdown', title: 'Requests' do %>
+  <%= link_to "CV / DA", requests_accounting_checks_path, class: "dropdown-item" %>
+  <%= link_to "Journal Vouchers", requests_accounting_journals_path, class: "dropdown-item" %>
 <% end %>
 
 <!--

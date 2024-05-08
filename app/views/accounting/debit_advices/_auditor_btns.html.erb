@@ -1,0 +1,26 @@
+<div class="mb-1">
+  <%= render 'back_btn', link: audit_for_audits_path %>
+  <%= link_to "MOA", show_details_agreement_path(@debit_advice.check_voucher_request.requestable.agreement), class: small_btn('outline-primary'), title: "Voucher", target: "_blank" %>
+  <%= link_to "Claim details", claim_process_process_claim_path(@debit_advice.check_voucher_request.requestable), class: small_btn('outline-primary'), title: "Claim Details", target: "_blank" %>
+  <%= render 'accounting/check_voucher_requests/attachments' %>
+  <%= content_tag :button, "Claim Attachments", 
+    class: small_btn('outline-primary'), 
+    data: {bs_toggle: "modal",
+      bs_target: "#claimAttachmentsModal"
+    }
+  %>
+  <% unless @debit_advice.approved? %>
+    <%=  link_to approve_audit_for_audit_path(@debit_advice, e_t: @debit_advice.entry_type), class: small_btn('success'), data: {turbo_confirm: "Finish audit and approve voucher?", turbo_method: :get} do  %>
+      <i class="bi bi-check-circle-fill"></i> Approve
+    <% end %>
+    <%=  link_to new_accounting_check_remark_path(@debit_advice, e_t: @debit_advice.entry_type, audit: true), data: {turbo_frame: 'reg_form_modal' }, class: 'btn btn-sm btn-warning', title: 'Pending Voucher' do %>
+      <i class="bi bi-hourglass-split"></i> Pending
+    <% end %>
+  <% end %>
+
+  <% if @debit_advice.remarks.present? %>
+    <%= link_to accounting_check_remarks_path(@debit_advice, e_t: @debit_advice.entry_type, audit: true), class: 'btn btn-sm btn-danger', data: {turbo_frame: 'reg_form_modal'} do %>
+      <i class="bi bi-card-list"></i> Remarks
+    <% end %>
+  <% end %>
+</div>

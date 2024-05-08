@@ -3,9 +3,21 @@ class Accounting::DebitAdvice < Accounting::Voucher
 
   belongs_to :treasury_account, class_name: "Treasury::Account", foreign_key: :treasury_account_id
   belongs_to :check_voucher_request, optional: true
+  has_many :debit_advice_journals, class_name: "Accounting::DebitAdviceJournal"
+  has_many :journals, through: :debit_advice_journals
+  has_one :attachment, class_name: 'Accounting::DebitAdviceReceipt'
+
+  enum payout_status: {
+    pending_payout: 0,
+    paid: 1
+  }
 
   def entry_type
     'da'
+  end
+
+  def voucher_type
+    :debit_advice
   end
 
   def total_amount

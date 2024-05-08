@@ -4,13 +4,6 @@ class GeneralLedgersController < ApplicationController
   before_action :set_entry_and_ledgers, only: %i[new create destroy edit update post autofill for_approval]
 
   def post
-    # if (@ledgers.total_debit != @ledgers.total_credit) || @ledgers.empty?
-    #   return redirect_to entry_path, alert: "Unable to post ledger, #{@ledgers.empty? ? 'no entry.' : 'credit and debit total not equal.'}"
-    # end
-
-    # if (@ledgers.total_debit != @entry.total_amount) || (@ledgers.total_credit != @entry.total_amount)
-    #   return redirect_to entry_path, alert: "Unable to post ledger, credit and debit total not equal to total amount"
-    # end
     ActiveRecord::Base.transaction do
       if @entry.update(status: :posted)
         # params[:e_t] = entry type
@@ -46,14 +39,17 @@ class GeneralLedgersController < ApplicationController
     when 'ce' then entry = 'OR'
     when 'cv' then entry = 'check voucher'
     when 'jv' then entry = 'journal voucher'
+    when 'da' then entry = 'debit advice'
     end
 
-    if (@ledgers.total_debit != @ledgers.total_credit) || @ledgers.empty?
-      return redirect_to entry_path, alert: "Unable to submit #{entry}, #{@ledgers.empty? ? 'no entry.' : 'credit and debit total not equal.'}"
-    end
+    unless entry == 'debit advice'
+      if (@ledgers.total_debit != @ledgers.total_credit) || @ledgers.empty?
+        return redirect_to entry_path, alert: "Unable to submit #{entry}, #{@ledgers.empty? ? 'no entry.' : 'credit and debit total not equal.'}"
+      end
 
-    if params[:e_t] != 'jv' and ((@ledgers.total_debit != @entry.total_amount) || (@ledgers.total_credit != @entry.total_amount))
-      return redirect_to entry_path, alert: "Unable to submit #{entry}, credit and debit total not equal to total amount"
+      if params[:e_t] != 'jv' and ((@ledgers.total_debit != @entry.total_amount) || (@ledgers.total_credit != @entry.total_amount))
+        return redirect_to entry_path, alert: "Unable to submit #{entry}, credit and debit total not equal to total amount"
+      end
     end
 
     if @entry.update(status: :for_approval)
@@ -93,11 +89,11 @@ class GeneralLedgersController < ApplicationController
     end
   end
 
-  def autofill
-    GeneralLedger.autofill(params[:e_t], @entry)
+  # def autofill
+  #   GeneralLedger.autofill(params[:e_t], @entry)
 
-    redirect_to entry_path, notice: "Ledger entries autofilled."
-  end
+  #   redirect_to entry_path, notice: "Ledger entries autofilled."
+  # end
 
   def update
     @ledger = @ledgers.find(params[:id])

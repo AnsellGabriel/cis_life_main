@@ -1,5 +1,5 @@
 class Treasury::BusinessCheck < ApplicationRecord
-  validates_presence_of :check_number, :check_date, :amount, :voucher_id
+  validates_presence_of :check_number, :check_date, :amount, :voucher_id, :payee
 
   alias_attribute :number, :check_number
 

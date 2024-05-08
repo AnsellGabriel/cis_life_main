@@ -26,6 +26,13 @@ class Accounting::VoucherDecorator < ApplicationDecorator
     end
   end
 
+  def payout_status_badge
+    case object.payout_status
+      when "pending_payout" then "badge bg-warning text-dark"
+      when "paid" then "badge bg-success"
+    end
+  end
+
   def audit_text
     object.audit.titleize
   end

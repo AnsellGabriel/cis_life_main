@@ -24,10 +24,16 @@ class Accounting::JournalsController < ApplicationController
 
   # GET /accounting/journals
   def index
-    @journals = Accounting::Journal.all.order(created_at: :desc)
-    @q = @journals.ransack(params[:q])
+    @q = Accounting::Journal.all.order(created_at: :desc).ransack(params[:q])
     @journals = @q.result
     @pagy, @journals = pagy(@journals, items: 10)
+  end
+
+  def requests
+    # @q = Accounting::DebitAdvice.where(payout_status: :paid).order(created_at: :desc).ransack(params[:q])
+    @q = Accounting::JournalVoucherRequest.all.order(created_at: :desc).ransack(params[:q])
+    @requests = @q.result
+    @pagy, @requests = pagy(@requests, items: 10)
   end
 
   # GET /accounting/journals/1
@@ -37,7 +43,15 @@ class Accounting::JournalsController < ApplicationController
 
   # GET /accounting/journals/new
   def new
-    @journal = Accounting::Journal.new(voucher: Accounting::Journal.generate_series, date_voucher: Date.today)
+    if params[:da].present?
+      @da = Accounting::DebitAdvice.find(params[:da])
+    end
+
+    @journal = Accounting::Journal.new(voucher: Accounting::Journal.generate_series, date_voucher: Date.today, global_payable: @da&.payable&.to_global_id, particulars: @da&.particulars)
+
+    # if @da.present?
+    #   @journal.debit_advices << @da
+    # end
   end
 
   # GET /accounting/journals/1/edit

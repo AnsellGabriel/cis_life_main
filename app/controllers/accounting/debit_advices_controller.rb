@@ -1,7 +1,6 @@
 class Accounting::DebitAdvicesController < ApplicationController
-  before_action :set_debit_advice, only: %i[ show edit update destroy ]
+  before_action :set_debit_advice, only: %i[ show edit update destroy new_receipt upload_receipt]
   before_action :set_payables, only: %i[ new edit create update]
-
 
   # GET /accounting/debit_advices
   def index
@@ -16,10 +15,11 @@ class Accounting::DebitAdvicesController < ApplicationController
   def show
     @ledgers = @debit_advice.general_ledgers
     @bank = @debit_advice.treasury_account
+    @request = @debit_advice.check_voucher_request
 
-    if @debit_advice.check_voucher_request.present?
-      @request = @debit_advice.check_voucher_request
+    if @request.present?
       @claim = @request.requestable
+      @claim_type_documents = ClaimTypeDocument.where(claim_type: @request.requestable.claim_type)
     end
   end
 
@@ -30,7 +30,7 @@ class Accounting::DebitAdvicesController < ApplicationController
       @amount = @claim_request.amount
       @bank = Treasury::Account.find(@claim_request.bank_id)
       @coop = @claim_request.requestable.cooperative
-      @debit_advice = Accounting::DebitAdvice.new(voucher: Accounting::DebitAdvice.generate_series, payable: @coop, amount: @amount, date_voucher: Date.today)
+      @debit_advice = Accounting::DebitAdvice.new(voucher: Accounting::DebitAdvice.generate_series, payable: @coop, amount: @amount, date_voucher: Date.today, particulars: "#{@claim_request.description} \n\nBank: #{@bank.name}\nAccount Number: #{@bank.account_number}\nAddress: #{@bank.address}")
     else
       @debit_advice = Accounting::DebitAdvice.new(voucher: Accounting::DebitAdvice.generate_series, date_voucher: Date.today)
     end
@@ -80,6 +80,28 @@ class Accounting::DebitAdvicesController < ApplicationController
     @accounting_debit_advice.destroy
     redirect_to accounting_debit_advices_url, notice: "Debit advice was successfully destroyed.", status: :see_other
   end
+
+  def new_receipt
+  end
+
+  def upload_receipt
+    file = params[:file]
+
+    if file.nil?
+      redirect_to accounting_debit_advice_path(@debit_advice), alert: 'Unable to upload an empty file'
+      return
+    end
+
+    @debit_advice.attachment ||= @debit_advice.build_attachment
+    @debit_advice.attachment.receipt = file
+
+    if @debit_advice.attachment.save
+      redirect_to accounting_debit_advice_path(@debit_advice), notice: 'File uploaded'
+    else
+      redirect_to accounting_debit_advice_path(@debit_advice), alert: 'Failed to upload file'
+    end
+  end
+
 
   private
   # Use callbacks to share common setup or constraints between actions.

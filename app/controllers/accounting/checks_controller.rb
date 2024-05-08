@@ -36,7 +36,7 @@ class Accounting::ChecksController < ApplicationController
   end
 
   def requests
-    @claim_requests = Accounting::CheckVoucherRequest.where.not(status: :posted).order(created_at: :desc)
+    @claim_requests = Accounting::CheckVoucherRequest.all.order(created_at: :desc)
     @pagy, @claim_requests = pagy(@claim_requests, items: 10)
   end
 

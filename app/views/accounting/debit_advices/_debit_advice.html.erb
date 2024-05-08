@@ -6,6 +6,7 @@
           <div class="<%= flex_justify_align('','center') %> gap-1">
             <p class="text-muted"><small>Debit Advice</small></p>
             <p class="badge bg-<%= debit_advice.decorate.status_badge %>"><%= debit_advice.status.humanize %></p>
+            <p class="badge bg-<%= debit_advice.decorate.payout_status_badge %>"><%= debit_advice.payout_status.humanize %></p>
           </div>
           <div class="">
             <% if current_user.is_accountant? %>
@@ -46,7 +47,7 @@
             <p><small><strong>Post date:</strong> <span><%= month_day_year(debit_advice.post_date) %></span></small></p>
           <% end %>
         </div>
-        <% if current_user.is_auditor? %>
+        <% if debit_advice.approved? %>
           <div class="<%= flex_justify_align('between','center') %> gap-1">
             <div class="<%= flex_justify_align('','center') %> gap-1">
               <p>
@@ -73,23 +74,8 @@
       </div>
 
       <div class="row mb-3">
-        <span class="small fw-bold col-3">Account Name: </span>
-        <span class="small col-9"><%= @bank.name %></span>
-      </div>
-
-      <div class="row mb-3">
-        <span class="small fw-bold col-3">Account Number: </span>
-        <span class="small col-9"><%= @bank.account_number %></span>
-      </div>
-
-      <div class="row mb-3">
-        <span class="small fw-bold col-3">Address: </span>
-        <span class="small col-9"><%= @bank.address %></span>
-      </div>
-
-      <div class="row mb-3">
         <span class="small fw-bold col-3">Particulars: </span>
-        <span class="small col-9"><%= debit_advice.particulars %></span>
+        <span class="small col-9"><%= simple_format debit_advice.particulars %></span>
       </div>
 
     </div>
