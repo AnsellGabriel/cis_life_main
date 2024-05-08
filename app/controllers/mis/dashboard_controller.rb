@@ -1,6 +1,7 @@
 class Mis::DashboardController < ApplicationController
   def index
     @encoded = GroupRemit.where(mis_entry: true)
+    # @not_encoded =
     @transmitted = TransmittalOr.joins(:transmittal).where(transmittal: { transmittal_type: :mis })
     @with_ors = GroupRemit.where.not(official_receipt: nil).where(mis_entry: true)
 
