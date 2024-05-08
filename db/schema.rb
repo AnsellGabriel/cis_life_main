@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2024_05_06_083517) do
+ActiveRecord::Schema[7.0].define(version: 2024_05_08_050504) do
   create_table "accounting_vouchers", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.date "date_voucher"
     t.string "voucher"
@@ -29,12 +29,13 @@ ActiveRecord::Schema[7.0].define(version: 2024_05_06_083517) do
     t.integer "accountant_id"
     t.integer "approved_by"
     t.integer "certified_by"
-    t.bigint "check_voucher_request_id"
     t.string "type"
     t.integer "branch"
     t.integer "payout_status", default: 0
-    t.index ["check_voucher_request_id"], name: "index_accounting_vouchers_on_check_voucher_request_id"
+    t.string "requestable_type"
+    t.bigint "requestable_id"
     t.index ["payable_type", "payable_id"], name: "index_accounting_vouchers_on_payable"
+    t.index ["requestable_type", "requestable_id"], name: "index_accounting_vouchers_on_requestable"
     t.index ["treasury_account_id"], name: "index_accounting_vouchers_on_treasury_account_id"
   end
 
@@ -501,7 +502,7 @@ ActiveRecord::Schema[7.0].define(version: 2024_05_06_083517) do
     t.datetime "updated_at", null: false
   end
 
-  create_table "coop_banks", charset: "utf8mb4", force: :cascade do |t|
+  create_table "coop_banks", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.bigint "cooperative_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
@@ -510,7 +511,7 @@ ActiveRecord::Schema[7.0].define(version: 2024_05_06_083517) do
     t.index ["treasury_account_id"], name: "index_coop_banks_on_treasury_account_id"
   end
 
-  create_table "coop_branches", charset: "utf8mb4", force: :cascade do |t|
+  create_table "coop_branches", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.string "name"
     t.string "contact_details"
     t.bigint "cooperative_id", null: false
@@ -1422,7 +1423,6 @@ ActiveRecord::Schema[7.0].define(version: 2024_05_06_083517) do
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
   end
 
-  add_foreign_key "accounting_vouchers", "check_voucher_requests"
   add_foreign_key "accounting_vouchers", "treasury_accounts"
   add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
   add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
