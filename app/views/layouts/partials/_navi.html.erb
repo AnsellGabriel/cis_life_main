@@ -51,16 +51,18 @@
             <% end %>
             <% when 19 %>
             <%= render 'layouts/partials/nav_dropdown', title: 'Claims' do %>
-              <%= link_to "Submitted", index_show_process_claims_path(p: 1), class: "dropdown-item" %>
-              <%= link_to "Claims Filed", index_show_process_claims_path(p: 2), class: "dropdown-item" %>
-              <%= link_to "Processing", index_show_process_claims_path(p: 3), class: "dropdown-item" %>
-              <%= link_to "Evaluation", index_show_process_claims_path(p: 4), class: "dropdown-item" %>
-              <%= link_to "VP Evaluation", index_show_process_claims_path(p: 5), class: "dropdown-item" %>
-              <%= link_to "President Evaluation", index_show_process_claims_path(p: 6), class: "dropdown-item" %>
+              <%= link_to "Claim index", claims_process_claims_path, class: "dropdown-item" %>
+              <%= link_to "Submitted", index_show_claims_process_claims_path(p: 1), class: "dropdown-item" %>
+              <%= link_to "Claims Filed", index_show_claims_process_claims_path(p: 2), class: "dropdown-item" %>
+              <%= link_to "Processing", index_show_claims_process_claims_path(p: 3), class: "dropdown-item" %>
+              <%= link_to "Evaluation", index_show_claims_process_claims_path(p: 4), class: "dropdown-item" %>
+              <%= link_to "VP Evaluation", index_show_claims_process_claims_path(p: 5), class: "dropdown-item" %>
+              <%= link_to "President Evaluation", index_show_claims_process_claims_path(p: 6), class: "dropdown-item" %>
               <li><hr class="dropdown-divider"></li>
-              <%= link_to "Documents", documents_path, class: "dropdown-item" %>
+              <%= link_to "Documents", claim_documents_path, class: "dropdown-item" %>
               <%= link_to "Claim Type", claim_types_path, class: "dropdown-item" %>
               <%= link_to "Claims Message", claim_remarks_path, class: "dropdown-item" %>
+              <%= link_to "User Levels", user_levels_path, class: "dropdown-item" %>
             <% end %>
             <% when 14 %>
             <%= render 'layouts/partials/nav_dropdown', title: "A&R" do %>

@@ -49,7 +49,7 @@ class ApplicationController < ActionController::Base
   end
 
   def set_authority_level
-    user_levels = current_user.user_levels.where(active: 1)
+    user_levels = current_user.user_levels.where(active: 1) if current_user
     if current_user.nil? || user_levels.empty?
       session[:max_amount] = 0
       session[:claims_max_amount]
