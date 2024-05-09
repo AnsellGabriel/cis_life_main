@@ -19,7 +19,7 @@ class VoucherRequestService
         request_type: @request_type,
         requester: @current_user.userable.signed_fullname,
         payment_type: @payment_type,
-        bank_id: @bank_id.present? ? Treasury::Account.find(@bank_id) : nil
+        account: @bank_id.present? ? Treasury::Account.find(@bank_id) : nil
       )
     else
       @requestable.create_voucher_request!(

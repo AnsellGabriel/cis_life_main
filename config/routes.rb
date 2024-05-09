@@ -261,7 +261,7 @@ Rails.application.routes.draw do
 
     resources :voucher_requests, only: %i[index show] do
     end
-    
+
     get "dashboard", to: "dashboard#index"
   end
 
@@ -406,7 +406,6 @@ Rails.application.routes.draw do
 
   devise_scope :user do
     authenticated :user do
-      # mount Sidekiq::Web in your Rails app
       root "application#root", as: :authenticated_root
     end
 

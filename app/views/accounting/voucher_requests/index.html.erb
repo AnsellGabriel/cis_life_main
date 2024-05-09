@@ -17,7 +17,7 @@
         <th class="text-center" scope="col"></th>
       </tr>
     </thead>
-
+    
     <tbody id="batches_body">
       <% if @requests.present? %> 
 
@@ -32,7 +32,9 @@
               <span class="<%= request.decorate.status_badge %>"><%= request.status.humanize %></span>
             </td>
             <td class="text-center align-middle">
-              <%= link_to 'View', accounting_voucher_request_path(request), class: small_btn('outline-primary') %>
+              <%= link_to accounting_voucher_request_path(request), class: small_btn('outline-primary'), title: 'Show'  do %>
+                <i class="bi bi-eye-fill"></i>
+              <% end %>
             </td>
           </tr>
 

@@ -29,7 +29,7 @@ class ProcessClaimsController < ApplicationController
     @audit_remarks = @payout_type&.remarks
 
     if @process_claim.debit_advice?
-      @bank = Treasury::Account.find(@process_claim.voucher_request.bank_id)
+      @bank = @process_claim.voucher_request.account
     end
   end
   # GET /process_claims/new
@@ -155,6 +155,8 @@ class ProcessClaimsController < ApplicationController
     @check = @process_claim.voucher_request&.vouchers&.where(audit: [:pending_audit, :for_audit])&.last
     @audit_remarks = @check&.remarks
     @cooperative = @process_claim.cooperative
+    @payout_type = @process_claim.voucher_request&.vouchers&.where(audit: [:pending_audit, :for_audit])&.last
+    @audit_remarks = @payout_type&.remarks
 
     if @process_claim.debit_advice?
       @bank = @process_claim.voucher_request.account
