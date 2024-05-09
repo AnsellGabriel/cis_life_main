@@ -1,0 +1,22 @@
+<div class="card">
+  <div class="card-header">
+    <strong>Insured Details</strong>
+  </div>
+  <div class="card-body">
+    <dl class="row">
+      <dt class="col-sm-4">Name:</dt>
+      <% coop_mem = @process_claim.claimable %>
+      <dd class="col-sm-8"> <%= link_to coop_mem.get_fullname, coop_mem, class: "text-primary", data: {turbo_frame: 'modal-xl'}, title: 'Show' %></dd>
+      <dt class="col-sm-4">Birthdate</dt>
+      <dd class="col-sm-8"> <%= to_shortdate(@process_claim.claimable.member.birth_date) %>, Age: <%= @process_claim.age %></dd>
+      <dt class="col-sm-4">Gender:</dt>
+      <dd class="col-sm-8"><%= @process_claim.claimable.member.gender %></dd>
+      <dt class="col-sm-4">Cooperative:</dt>
+      <dd class="col-sm-8"><%= @process_claim.cooperative %> </dd>
+      <dt class="col-sm-4">Branch:</dt>
+      <dd class="col-sm-8"><%= @process_claim.claimable.coop_branch %></dd>
+      <dt class="col-sm-4">Address:</dt>
+      <dd class="col-sm-8"><strong><%= @process_claim.cooperative.geo_region %></strong> <%= @process_claim.cooperative.get_fulladdress %></dd>
+    </dl>
+  </div>
+</div>

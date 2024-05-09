@@ -1,0 +1,7 @@
+<div class="card">
+  <h5 class="card-header">New claim type</h5>
+  <div class="card-body">
+    <%#= render "form", claim_type: @claim_type %>
+    <%= render "form", url: claims_claim_types_url, meth: 'post' %>
+  </div>
+</div>

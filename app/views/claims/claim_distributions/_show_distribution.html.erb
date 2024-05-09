@@ -1,0 +1,40 @@
+<div class="row">
+  <div class="col-md-6">
+    <%= content_tag :h5, 'Claim Distribution', class:"text-primary" %>
+  </div>
+  <div class="col-md-6">
+    <div class="text-end">
+      <%= link_to '<i class="bi bi-plus-square"></i> Add Beneficiary'.html_safe, new_claims_claim_distribution_path(v: @process_claim), class: "btn btn-primary btn-sm mb-3", data: { turbo_frame: "remote_modal" } if @process_claim.claim_filed? || @process_claim.file_claim? %>
+    </div>
+  </div>
+</div>
+<table class="table table-borderless table-hover">
+  <thead>
+    <tr class="border-top border-bottom border-primary">
+      <%# <th class="text-primary">ID</th> %>
+      <th class="text-primary">Beneficiary</th>
+      <th class="text-end text-primary">Amount</th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @process_claim.claim_distributions.each do |cd| %>
+      <tr>
+        <%# <td>= benefit_claim.id</td> %>
+        <td> <%= cd.name %> <small class="text-muted"><%= cd.relationship %></small></td>
+        <td class="text-end"><%= to_curr(cd.amount) %></td>
+        <% unless params[:action] == 'show_coop' %>
+          <td class="text-end">
+            <%#= link_to 'View', benefit_claim, class: 'btn' %>
+            <%= link_to '<i class="bi bi-pencil-square"></i>'.html_safe, edit_claims_claim_distribution_path(cd), class: 'btn btn-outline-primary btn-sm', data: { turbo_frame: "remote_modal" } if @process_claim.claim_filed? %>
+            <%= link_to '<i class="bi bi-trash3"></i>'.html_safe, cd,  data: { turbo_method: :delete, turbo_confirm: 'Are you sure?' }, class: 'btn btn-danger btn-sm' if @process_claim.claim_filed? %>
+          </td>
+        <% end %>
+      </tr>
+    <% end %>
+  </tbody>
+  <tfoot class="fw-bold border-top border-primary">
+    <td>TOTAL</td>
+    <%# <td class="text-end"><%= to_curr(@process_claim.claim_benefits.where.not(status: "Denied").sum(:amount)) %></td>
+  <td class="text-end"><%= to_currency(@process_claim.claim_distributions.sum(:amount)) %></td>
+</tfoot>
+</table>

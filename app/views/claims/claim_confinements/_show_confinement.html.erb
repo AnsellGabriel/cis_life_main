@@ -1,0 +1,39 @@
+<div class="row">
+  <div class="col-md-6">
+    <%= content_tag :h5, 'Confinement Details', class:"text-primary" %>
+  </div>
+  <div class="col-md-6">
+    <div class="text-end">
+      <%= link_to '<i class="bi bi-plus-square"></i> Add Confinement'.html_safe, new_claims_claim_confinement_path(v: @process_claim), class: "btn btn-primary btn-sm mb-3", data: { turbo_frame: "remote_modal" } if @process_claim.claim_filed? || @process_claim.file_claim? %>
+    </div>
+  </div>
+</div>
+<table class="table table-borderless table-hover">
+  <thead>
+    <tr class="border-top border-bottom border-primary">
+      <%# <th class="text-primary">ID</th> %>
+      <th class="text-primary">Date admit</th>
+      <th class="text-primary">Date discharge</th>
+      <th class="text-primary">Days</th>
+      <th class="text-end text-primary">Amount</th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @process_claim.claim_confinements.each do |cc| %>
+      <tr>
+        <%# <td>= benefit_claim.id</td> %>
+        <td> <%= cc.date_admit %></td>
+        <td> <%= cc.date_discharge %></td>
+        <td> <%= cc.terms %></td>
+        <td class="text-end"><%= to_curr(cc.amount) %></td>
+        <% unless params[:action] == 'show' %>
+          <td class="text-end">
+            <%#= link_to 'View', benefit_claim, class: 'btn' %>
+            <%= link_to '<i class="bi bi-pencil-square"></i>'.html_safe, edit_claims_claim_confinement_path(cc), class: 'btn btn-outline-primary btn-sm', data: { turbo_frame: "remote_modal" } if @process_claim.claim_filed? %>
+            <%= link_to '<i class="bi bi-trash3"></i>'.html_safe, claims_claim_confinement_path(cc),  data: { turbo_method: :delete, turbo_confirm: 'Are you sure?' }, class: 'btn btn-danger btn-sm' if @process_claim.file_claim? || @process_claim.claim_filed? %>
+          </td>
+        <% end %>
+      </tr>
+    <% end %>
+  </tbody>
+</table>

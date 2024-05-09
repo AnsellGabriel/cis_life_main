@@ -1,0 +1,7 @@
+<div class="card">
+  <h5 class="card-header">Edit cause</h5>
+  <div class="card-body">
+    <%#= render "form", cause: @cause %>
+    <%= render "form", url: claims_cause_url, meth: 'patch' %>
+  </div>
+</div>

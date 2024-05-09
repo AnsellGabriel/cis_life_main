@@ -1,0 +1,14 @@
+<%#= simple_form_for(cause, url: cause.persisted? ? claims_cause_path : claims_cause_create_cause_path)  do |f| %>
+  <%#= simple_form_for(claims_cause_path(@cause)) do |f| %>
+    <%= simple_form_for(@cause, url: url, method: meth) do |f| %>
+      <%= f.error_notification %>
+      <%= f.error_notification message: f.object.errors[:base].to_sentence if f.object.errors[:base].present? %>
+      <div class="form-inputs mb-3">
+        <%= f.input :name %>
+        <%= f.input :description %>
+      </div>
+      <div class="form-actions text-end">
+        <%= link_to "Back", claims_causes_path, class: 'btn btn-secondary' %>
+        <%= f.button :submit, class: 'btn-success' %>
+      </div>
+    <% end %>

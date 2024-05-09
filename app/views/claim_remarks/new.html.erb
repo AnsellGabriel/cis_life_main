@@ -1,8 +1,0 @@
-<% if @claim_remark.coop? %>
-  <% @title = "Message us" %>
-<% else %>
-  <% @title = "Remark" %>
-<% end %>
-<%= render "remote_modal", title: @title.to_s do %>
-  <%= render "form", url: claim_remarks_path(v: @process_claim, s: @change_status), meth: 'post' %>
-<% end %>
