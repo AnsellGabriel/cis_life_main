@@ -9,22 +9,10 @@
 <% end %>
 
 <%= render 'layouts/partials/nav_dropdown', title: 'Requests' do %>
-  <%= link_to "CV / DA", requests_accounting_checks_path, class: "dropdown-item" %>
-  <%= link_to "Journal Vouchers", requests_accounting_journals_path, class: "dropdown-item" %>
+  <%= link_to "Check Voucher", accounting_voucher_requests_path(pt: :check_voucher), class: "dropdown-item" %>
+  <%= link_to "Debit Advice", accounting_voucher_requests_path(pt: :debit_advice), class: "dropdown-item" %>
+  <%= link_to "Journal Voucher", accounting_voucher_requests_path(pt: :journal_voucher), class: "dropdown-item" %>
 <% end %>
-
-<!--
-<%= render 'layouts/partials/nav_dropdown', title: 'Debit Advices' do %>
-  <% if current_user.head? %>
-    <%= link_to "For Approval", for_approval_index_accounting_checks_path, class: "dropdown-item" %>
-  <% end %>
-<% end %>
-<%= render 'layouts/partials/nav_dropdown', title: 'Journal Vouchers' do %>
-  <% if current_user.head? %>
-    <%= link_to "For Approval", for_approval_index_accounting_journals_path, class: "dropdown-item" %>
-  <% end %>
-<% end %>
--->
 
 <%= link_to "Accounts", treasury_accounts_path, class: "nav-link" %>
 <%= render 'layouts/partials/nav_dropdown', title: 'Reports' do %>

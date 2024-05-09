@@ -2,7 +2,6 @@ class Accounting::Check < Accounting::Voucher
   validates_presence_of :treasury_account_id, :amount
   before_save :format_cv_no
 
-  belongs_to :check_voucher_request, optional: true
   has_many :business_checks, class_name: "Treasury::BusinessCheck", foreign_key: :voucher_id, dependent: :destroy
 
   def self.disbursement_book_pdf(employee_id, date_from, date_to, type)

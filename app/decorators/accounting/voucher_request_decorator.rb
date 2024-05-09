@@ -1,4 +1,4 @@
-class Accounting::CheckVoucherRequestDecorator < ApplicationDecorator
+class Accounting::VoucherRequestDecorator < ApplicationDecorator
   delegate_all
 
   # Define presentation-specific methods here. Helpers are accessed through
@@ -10,4 +10,11 @@ class Accounting::CheckVoucherRequestDecorator < ApplicationDecorator
   #     end
   #   end
 
+  def status_badge
+    case object.status
+      when "pending", "voucher_generated" then "badge bg-warning text-dark"
+      when "posted" then "badge bg-success"
+      when "cancelled" then "badge bg-danger"
+    end
+  end
 end

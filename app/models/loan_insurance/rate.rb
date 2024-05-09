@@ -1,4 +1,5 @@
 class LoanInsurance::Rate < ApplicationRecord
+  validates_presence_of :min_age, :max_age, :annual_rate, :min_amount, :max_amount, :coop_sf, :agent_sf, :nel, :nml, :contestability
 
   belongs_to :agreement
   has_many :batches, class_name: "LoanInsurance::Batch", foreign_key: "loan_insurance_rate_id"

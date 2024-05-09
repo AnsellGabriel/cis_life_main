@@ -5,6 +5,7 @@ class Accounting::JournalVoucherRequest < ApplicationRecord
 
   belongs_to :requestable, polymorphic: true
   has_many :debit_advices, class_name: "Accounting::DebitAdvice"
+  has_many :vouchers, as: :requestable, class_name: "Accounting::Voucher"
 
   enum status: {
     pending: 0,

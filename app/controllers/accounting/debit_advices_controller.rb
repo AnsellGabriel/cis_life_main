@@ -15,7 +15,7 @@ class Accounting::DebitAdvicesController < ApplicationController
   def show
     @ledgers = @debit_advice.general_ledgers
     @bank = @debit_advice.treasury_account
-    @request = @debit_advice.check_voucher_request
+    @request = @debit_advice.voucher_request
 
     if @request.present?
       @claim = @request.requestable
@@ -26,11 +26,10 @@ class Accounting::DebitAdvicesController < ApplicationController
   # GET /accounting/debit_advices/new
   def new
     if params[:rid].present?
-      @claim_request = Accounting::CheckVoucherRequest.find(params[:rid])
-      @amount = @claim_request.amount
-      @bank = Treasury::Account.find(@claim_request.bank_id)
-      @coop = @claim_request.requestable.cooperative
-      @debit_advice = Accounting::DebitAdvice.new(voucher: Accounting::DebitAdvice.generate_series, payable: @coop, amount: @amount, date_voucher: Date.today, particulars: "#{@claim_request.description} \n\nBank: #{@bank.name}\nAccount Number: #{@bank.account_number}\nAddress: #{@bank.address}")
+      @request = Accounting::CheckVoucherRequest.find(params[:rid])
+      @bank = Treasury::Account.find(@request.bank_id)
+      @coop = @request.requestable.cooperative
+      @debit_advice = Accounting::DebitAdvice.new(voucher: Accounting::DebitAdvice.generate_series, payable: @coop, amount: @request.amount, date_voucher: Date.today, particulars: "#{@request.description} \n\nBank: #{@bank.name}\nAccount Number: #{@bank.account_number}\nAddress: #{@bank.address}")
     else
       @debit_advice = Accounting::DebitAdvice.new(voucher: Accounting::DebitAdvice.generate_series, date_voucher: Date.today)
     end
@@ -50,7 +49,7 @@ class Accounting::DebitAdvicesController < ApplicationController
       if params[:rid].present?
         @claim_request = Accounting::CheckVoucherRequest.find(params[:rid])
         @claim_request.voucher_generated!
-        @debit_advice.update(check_voucher_request: @claim_request)
+        @debit_advice.update(voucher_request: @claim_request)
       end
 
       redirect_to @debit_advice, notice: "Debit advice created."
