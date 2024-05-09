@@ -1,0 +1,13 @@
+
+<%= simple_form_for(@treasury_debit_advice) do |f| %>
+  <%= f.error_notification %>
+  <%= f.error_notification message: f.object.errors[:base].to_sentence if f.object.errors[:base].present? %>
+
+  <div class="form-inputs mb-3">
+  </div>
+
+  <div class="form-actions text-end">
+    <%= link_to "Back", treasury_debit_advices_path, class: 'btn btn-secondary' %>
+    <%= f.button :submit, class: 'btn-success' %>
+  </div>
+<% end %>

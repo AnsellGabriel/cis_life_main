@@ -1,0 +1,9 @@
+<% if current_user.is_accountant? %>
+  <%= render 'accountant_btns' %>
+<% elsif current_user.is_auditor? %>
+  <%= render 'auditor_btns' %>
+<% elsif current_user.is_treasurer? %>
+  <%= render 'treasurer_btns' %>
+<% end %>
+
+<%= render @debit_advice %>

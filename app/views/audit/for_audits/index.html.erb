@@ -22,7 +22,7 @@
       <% if @vouchers.present? %> 
         <% @vouchers.each do |voucher| %>
           <tr>
-            <td class="text-center">CV<%= voucher.voucher %></td>
+            <td class="text-center"><%= (voucher.type == "Accounting::Check" ? "CV" : "") + voucher.voucher %></td>
             <td class="text-center"><%= voucher.payable %></td>
             <td class="text-center"><%= voucher.check_voucher_request.payment_type.humanize %></td>
             <td class="text-center"><%= voucher.check_voucher_request.analyst %></td>
@@ -33,8 +33,14 @@
               </span>
             </td>
             <td class="text-center">
-              <%= link_to accounting_check_path(voucher), class: small_btn('outline-primary'), title: 'Show' do %>
-                <i class="bi bi-eye-fill"></i>
+              <% if voucher.type == "Accounting::Check" %>
+                <%= link_to accounting_check_path(voucher), class: small_btn('outline-primary'), title: 'Show' do %>
+                  <i class="bi bi-eye-fill"></i>
+                <% end %>
+              <% elsif voucher.type == "Accounting::DebitAdvice" %>
+                <%= link_to accounting_debit_advice_path(voucher), class: small_btn('outline-primary'), title: 'Show' do %>
+                  <i class="bi bi-eye-fill"></i>
+                <% end %>
               <% end %>
             </td>
           </tr>

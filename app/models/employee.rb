@@ -2,7 +2,7 @@ class Employee < ApplicationRecord
   mount_uploader :report, ReportUploader
 
   belongs_to :department
-  has_one :emp_approver
+  has_one :emp_approver 
   has_many :emp_agreements
   has_many :agreements, through: :emp_agreements
   has_one :user, as: :userable, dependent: :destroy

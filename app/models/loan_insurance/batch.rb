@@ -1,4 +1,5 @@
 class LoanInsurance::Batch < Batch
+  attr_accessor :encoded_premium
   include CoverageStatus
   self.table_name = "loan_insurance_batches"
 
@@ -22,6 +23,10 @@ class LoanInsurance::Batch < Batch
 
   has_many :reserve_batches, class_name: "Actuarial::ReserveBatch", as: :batchable, dependent: :destroy
   has_many :reserves, through: :reserve_batches, class_name: "Actuarial::Reserve"
+
+  def self.get_lppi_batches_count
+    includes(group_remit: { agreement: :plan}).where(plan: {id: 2}).count
+  end
 
   def sii_skip_validation
     group_remit.agreement.plan.acronym == "SII"
@@ -290,13 +295,15 @@ class LoanInsurance::Batch < Batch
   # end
 
   def compute_terms(expiry_date, effectivity_date)
-    (expiry_date.year - effectivity_date.year) * 12 + (expiry_date.month - effectivity_date.month) + (expiry_date.day > effectivity_date.day ? 1 : 0)
+    # (expiry_date.year - effectivity_date.year) * 12 + (expiry_date.month - effectivity_date.month) + (expiry_date.day > effectivity_date.day ? 1 : 0)
+    ((expiry_date - effectivity_date) / 30).to_f.round
   end
 
   def expiry_and_today_month_diff(expiry_date)
     today = Date.today
 
     month_difference = ((today.year * 12 + today.month) - (expiry_date.year * 12 + expiry_date.month)) + (expiry_date.day > today.day ? 1 : 0)
+    # month_difference = ((today - effectivity_date) / 30).to_f.round
   end
 
 

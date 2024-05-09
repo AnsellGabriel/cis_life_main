@@ -2,6 +2,9 @@
 require "sidekiq/web"
 
 Rails.application.routes.draw do
+  resources :transmittals do
+    get :remove_or, on: :member
+  end
   resources :special_arrangements
   resources :sip_pbs
   resources :sip_abs
@@ -145,6 +148,7 @@ Rails.application.routes.draw do
     get :selected, on: :member
     get :details, on: :member
     get :get_plan, on: :member
+    resources :coop_banks
   end
   resources :coop_branches
 
@@ -256,9 +260,16 @@ Rails.application.routes.draw do
   # * Finance Module Routes
   # accounting
   namespace :accounting do
+    resources :debit_advices do
+      get :new_receipt, on: :member
+      post :upload_receipt, on: :member
+    end
+
     resources :journals do
       get :download, on: :member
       get :for_approval_index, on: :collection
+      # get :for_jv, on: :collection
+      get :requests, on: :collection
     end
 
     resources :checks do
@@ -274,6 +285,8 @@ Rails.application.routes.draw do
 
 
     resources :check_voucher_requests, only: %i[show]
+    resources :journal_voucher_requests, only: %i[show]
+
 
     resources :general_disbursement_book, only: %i[index] do
       get :pdf, on: :collection
@@ -298,7 +311,7 @@ Rails.application.routes.draw do
       get :search, on: :collection
     end
 
-    resources :payments
+    # resources :payments
     resources :cashier_entries do
       get :print, on: :member
       get :download, on: :member
@@ -313,6 +326,8 @@ Rails.application.routes.draw do
     end
 
     get "dashboard", to: "dashboard#index"
+
+    resources :debit_advices, only: %i[index]
   end
 
   resources :payments, only: %i[index create show] do
@@ -336,7 +351,8 @@ Rails.application.routes.draw do
   #* Audit Module Routes
   namespace :audit do
     get 'dashboard', to: 'dashboard#index'
-    resources :check_vouchers, only: [:index] do
+
+    resources :for_audits do
       get :approve, on: :member
     end
   end
@@ -391,6 +407,7 @@ Rails.application.routes.draw do
   namespace :mis do
     get "dashboard", to: "dashboard#index"
     get "cooperatives", to: "cooperatives#index"
+    get "view_ors", to: "dashboard#view_ors"
 
     resources :members do
       get :update_table, on: :collection

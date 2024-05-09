@@ -1,0 +1,30 @@
+<% ors = @type == "enc" ? @encoded : @with_ors %>
+<div class="mb-2">
+  <%= link_to :back, class: "btn btn-sm btn-outline-secondary" do %>
+    <%= bootstrap_icon "chevron-left" %>
+  <% end %>
+</div>
+<table class="table">
+  <thead>
+    <th>id</th>
+    <th>OR #</th>
+    <th>OR Date</th>
+    <th>Cooperative</th>
+    <th>Total</th>
+    <th>Plan</th>
+    <th>Remarks</th>
+  </thead>
+  <tbody>
+    <% ors.each do |group_remit| %>
+      <tr>
+        <td><%= group_remit.id %></td>
+        <td><%= group_remit.official_receipt %></td>
+        <td><%= group_remit.get_or_date %></td>
+        <td><%= group_remit.agreement.cooperative %></td>
+        <td><%= group_remit.count_batches %></td>
+        <td><%= group_remit.agreement.plan.acronym %></td>
+        <td></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>

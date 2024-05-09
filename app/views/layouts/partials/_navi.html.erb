@@ -31,38 +31,36 @@
             <%= render 'layouts/partials/treasury_nav' %>
             <% when 15 %>
             <%= render 'layouts/partials/nav_dropdown', title: 'Data Entries' do %>
+              <%= link_to "Agreements", agreements_path, class: "dropdown-item" %>
               <%= link_to "Cooperative", cooperatives_path, class: "dropdown-item" %>
+              <%= link_to "Transmittal", transmittals_path, class: "dropdown-item" %>
             <% end %>
             <% when 27 %>
-            <%= render 'layouts/partials/nav_dropdown', title: 'For Audit' do %>
-              <%= link_to "Check Vouchers", audit_check_vouchers_path	, class: "dropdown-item" %>
+            <%= render 'layouts/partials/nav_dropdown', title: 'Audit' do %>
+              <%= link_to "For Audit", audit_for_audits_path, class: "dropdown-item" %>
             <% end %>
             <% when 17 %>
             <%= render 'layouts/partials/nav_dropdown', title: 'Underwriting' do %>
               <%= link_to "Agreement", agreements_path, class: "dropdown-item" %>
               <%= link_to "Process", process_coverages_path, class: "dropdown-item" %>
+              <%= link_to "Transmittal", transmittals_path, class: "dropdown-item" %>
               <%#= link_to "Generate CSV", gen_csv_process_coverages_path, class: "dropdown-item", data: { turbo_frame: "remote_modal" } %>
               <% if current_user.medical_director? %>
                 <%= link_to "Medical Director", med_directors_home_path, class: "dropdown-item" %>
               <% end %>
             <% end %>
-            <% when 8 %>
+            <% when 19 %>
             <%= render 'layouts/partials/nav_dropdown', title: 'Claims' do %>
-              <%= link_to "Claims Index", claims_process_claims_path, class: "dropdown-item" %>
-              <%= link_to "Submitted", index_show_claims_process_claims_path(p: 1), class: "dropdown-item" %>
-              <%= link_to "Claims Filed", index_show_claims_process_claims_path(p: 2), class: "dropdown-item" %>
-              <%= link_to "Processing", index_show_claims_process_claims_path(p: 3), class: "dropdown-item" %>
-              <%= link_to "Evaluation", index_show_claims_process_claims_path(p: 4), class: "dropdown-item" %>
-              <%= link_to "VP Evaluation", index_show_claims_process_claims_path(p: 5), class: "dropdown-item" %>
-              <%= link_to "President Evaluation", index_show_claims_process_claims_path(p: 6), class: "dropdown-item" %>
+              <%= link_to "Submitted", index_show_process_claims_path(p: 1), class: "dropdown-item" %>
+              <%= link_to "Claims Filed", index_show_process_claims_path(p: 2), class: "dropdown-item" %>
+              <%= link_to "Processing", index_show_process_claims_path(p: 3), class: "dropdown-item" %>
+              <%= link_to "Evaluation", index_show_process_claims_path(p: 4), class: "dropdown-item" %>
+              <%= link_to "VP Evaluation", index_show_process_claims_path(p: 5), class: "dropdown-item" %>
+              <%= link_to "President Evaluation", index_show_process_claims_path(p: 6), class: "dropdown-item" %>
               <li><hr class="dropdown-divider"></li>
-              <%= link_to "Documents", claims_claim_documents_path, class: "dropdown-item" %>
-              <%= link_to "Causes", claims_causes_url, class: "dropdown-item" %>
-              <%= link_to "Claim Type", claims_claim_types_path, class: "dropdown-item" %>
-              <%= link_to "Claims Message", claims_claim_remarks_path, class: "dropdown-item" %>
-              <%= link_to "Cooperative", cooperatives_path, class: "dropdown-item" %>
-              <%= link_to "Authority Levels", authority_levels_path, class: "dropdown-item" %>
-              <%= link_to "User Levels", user_levels_path, class: "dropdown-item" %>
+              <%= link_to "Documents", documents_path, class: "dropdown-item" %>
+              <%= link_to "Claim Type", claim_types_path, class: "dropdown-item" %>
+              <%= link_to "Claims Message", claim_remarks_path, class: "dropdown-item" %>
             <% end %>
             <% when 14 %>
             <%= render 'layouts/partials/nav_dropdown', title: "A&R" do %>

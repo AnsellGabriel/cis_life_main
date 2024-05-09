@@ -1,0 +1,7 @@
+<div class="nested-fields">
+  <%#= f.input :global_transmittable, collection: Treasury::CashierEntry::ORS + ProcessCoverage::PCS, label: "OR/PC Name", value_method: :to_global_id %>
+  <%= f.input :global_transmittable, collection: @transmittal.transmittable_collection(current_user), label_method: :for_transmittal, label: "OR/PC Name", value_method: :to_global_id, input_html: { data: { controller: "ts--select" } } %>
+  <div class="text-end">
+    <%= link_to_remove_association "Remove", f, class: "btn btn-sm btn-danger" %>
+  </div>
+</div>

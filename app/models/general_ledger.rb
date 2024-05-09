@@ -1,5 +1,5 @@
 class GeneralLedger < ApplicationRecord
-  validates_presence_of :ledger_type, :account_id, :amount, :description
+  validates_presence_of :ledger_type, :account_id, :amount, :description, :ledgerable_id, :ledgerable_type
 
   belongs_to :ledgerable, polymorphic: true
   belongs_to :account, class_name: "Treasury::Account", foreign_key: "account_id"

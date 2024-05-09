@@ -1,5 +1,6 @@
 class CoopUsersController < ApplicationController
   before_action :set_coop_user, only: %i[ show edit update destroy ]
+  before_action :authenticate_user!, only: %i[ index show edit update destroy ]
 
   def home
   end
@@ -37,7 +38,7 @@ class CoopUsersController < ApplicationController
   def create
     @form = :coop
     @coop_user = CoopUser.new(coop_user_params)
-    @branches = @coop_user&.cooperative.nil? ? [] : @coop_user&.cooperative&.coop_branches.order(:name)
+    # @branches = @coop_user&.cooperative.nil? ? [] : @coop_user&.cooperative&.coop_branches.order(:name)
 
     # initialize other forms for bootstrap tabs
     # new agent
@@ -48,6 +49,7 @@ class CoopUsersController < ApplicationController
     @employee.build_user
 
     respond_to do |format|
+            
       if @coop_user.save
         format.html { redirect_to unauthenticated_root_path, notice: "Account was successfully created. Please contact the administrator to activate your account." }
       else
@@ -90,9 +92,9 @@ class CoopUsersController < ApplicationController
       user_attributes: [:email, :password, :password_confirmation, :userable_type, :userable_id])
   end
 
-  def check_userable_type
-    unless current_user.userable_type == "CoopUser"
-      render file: "#{Rails.root}/public/404.html", status: :not_found
-    end
-  end
+  # def check_userable_type
+  #   unless current_user.userable_type == "CoopUser"
+  #     render file: "#{Rails.root}/public/404.html", status: :not_found
+  #   end
+  # end
 end

@@ -1,0 +1,9 @@
+
+<%= render @treasury_debit_advice %>
+
+<div>
+  <%= link_to "Edit", edit_treasury_debit_advice_path(@treasury_debit_advice), class: 'btn btn-primary' %> |
+  <%= link_to "Back", treasury_debit_advices_path, class: 'btn btn-primary' %>
+
+  <%= button_to "Delete", @treasury_debit_advice, method: :delete, class: 'btn btn-danger' %>
+</div>

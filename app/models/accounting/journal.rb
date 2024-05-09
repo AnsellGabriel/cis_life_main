@@ -1,7 +1,8 @@
 class Accounting::Journal < Accounting::Voucher
-  attr_accessor :voucher_year, :voucher_month, :voucher_series
+  validates_presence_of :voucher
 
-  validates_presence_of :voucher_year, :voucher_month, :voucher_series, if: :no_voucher_number
+  has_many :debit_advice_journals, class_name: "Accounting::DebitAdviceJournal"
+  has_many :debit_advices, through: :debit_advice_journals
 
   # has_many :general_ledgers, as: :ledgerable
 
@@ -10,12 +11,7 @@ class Accounting::Journal < Accounting::Voucher
   end
 
   def reference
-    formatted_voucher
-  end
-
-  def formatted_voucher
-    string_voucher = voucher.to_s
-    "#{string_voucher[0..2]}-#{string_voucher[3..4]}-#{string_voucher[5..7]}"
+    voucher
   end
 
   def entry_type
@@ -24,7 +20,21 @@ class Accounting::Journal < Accounting::Voucher
 
   private
 
-  def no_voucher_number
-    self.voucher.nil?
+  def self.generate_series
+    formatted_year_and_month = Time.now.strftime("%Y-%m")[0, 1] + Time.now.strftime("%Y-%m")[1 + 1..-1]
+    last_series = self.where("voucher LIKE ?", "#{formatted_year_and_month}%")
+                  .order(:voucher).last&.voucher
+
+    if last_series.present?
+      series = last_series[0..6] + sprintf("%03d", last_series[-3..-1].to_i + 1)
+    else
+      series = formatted_year_and_month + "-001"
+    end
+
+    series
+  end
+
+  def self.ransackable_attributes(auth_object = nil)
+    ["voucher"]
   end
 end

@@ -1,0 +1,42 @@
+<%= content_tag :h1, "List of Coop Banks" %>
+
+
+<div class="text-end mb-3">
+  <%= link_to new_coop_bank_path, class: 'btn btn-primary' do %>
+    New Coop Bank
+  <% end %>
+</div>
+
+
+  <table class="table table-striped table-bordered table-hover">
+    <thead>
+      <tr>
+      <th>#</th>
+            <th>Account Name</th>
+            <th>Account Number</th>
+            <th>Address</th>
+            <th>Cooperative</th>
+            <th></th>
+        </tr>
+    </thead>
+
+    <tbody>
+      <% @coop_banks.each do |coop_bank| %>
+        <tr>
+
+        <th scope="row"><%= coop_bank.id %></th>
+        <td><%= coop_bank.account_name %></td>
+        <td><%= coop_bank.account_number %></td>
+        <td><%= coop_bank.address %></td>
+        <td><%= coop_bank.cooperative %></td>
+    
+          <td>
+            <%= link_to 'View', coop_bank, class: 'btn btn-secondary btn-sm' %>
+            <%= link_to 'Edit', edit_coop_bank_path(coop_bank), class: 'btn btn-secondary btn-sm' %>
+            <%= link_to "Delete", coop_bank, class: "btn btn-danger btn-sm", method: :delete, data: { "turbo-method": :delete, turbo_confirm: "Are you sure?" } %>
+          </td>
+
+        </tr>
+      <% end %>
+    </tbody>
+  </table>

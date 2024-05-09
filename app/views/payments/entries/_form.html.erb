@@ -19,7 +19,7 @@
     <%= f.input :dummy_payee, label: 'Payee', input_html: {value: @payment.coop}, readonly: true  %>
     <%= f.association :treasury_account, label: 'Account', error: '*Required', input_html: { data: { controller: "ts--select" } }  %>
     <%= f.association :treasury_payment_type, label: 'Entry type', error: '*Required', input_html: { data: { controller: "ts--select" } } %>
-    <%= f.input :amount, input_html: {value: @payment.amount}, readonly: true, error: '*Required' %>
+    <%= f.input :amount, input_html: {value: @payment.amount}, error: '*Required' %>
   </div>
 
   <div class="form-actions text-center">

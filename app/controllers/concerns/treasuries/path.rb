@@ -15,6 +15,8 @@ module Treasuries::Path
         accounting_check_path(@entry)
       when 'jv'
         accounting_journal_path(@entry)
+      when 'da'
+        accounting_debit_advice_path(@entry)
       end
     end
   end

@@ -1,0 +1,70 @@
+<div class="">
+  <%= link_to requests_accounting_journals_path, class: small_btn('secondary'), title: 'black' do %>
+    <i class="bi bi-chevron-left"></i>
+  <% end %>
+  
+  <% if @requests.empty? || @requests.first.cancelled? %>
+    <% if params[:pt] == "check_voucher" %>
+      <%= link_to new_accounting_check_path(rid: params[:id]), class: 'btn btn-sm btn-primary', data: {turbo_frame: 'modal'}, title: "Generate Check Voucher" do %>
+        <i class="bi bi-receipt-cutoff"></i>
+        Generate
+      <% end %>
+    <% elsif params[:pt] == "debit_advice" %>
+      <%= link_to new_accounting_debit_advice_path(rid: params[:id]), class: 'btn btn-sm btn-primary', data: {turbo_frame: 'modal'}, title: "Generate Check Voucher" do %>
+        <i class="bi bi-receipt-cutoff"></i>
+        Generate
+      <% end %>
+    <% end %>
+  <% end %>
+  <%= content_tag :button, "Claim Attachments", 
+    class: small_btn('outline-primary'), 
+    data: {bs_toggle: "modal",
+      bs_target: "#claimAttachmentsModal"
+    }
+  %>
+</div>
+
+<div class="<%= flex_justify_align('between', 'center') %> gap-1 mb-1">
+  <% if @pagy.pages > 1 %>
+    <%== pagy_bootstrap_nav(@pagy) %>
+  <% end %>
+</div>
+  <table class="table table-bordered table-hover bg-white table-sm">
+    <thead class="table-dark">
+      <tr>
+        <th class="text-center" style="width: 125px;"><%= params[:pt] == "check_voucher" ? "CV No." : "DA No." %></th>
+        <th class="text-center" style="width: 125px">Date</th>
+        <th>Payee</th>
+        <th class="text-center">Amount</th>
+        <th class="text-center">Status</th>
+        <th></th>
+      </tr>
+    </thead>
+
+    <tbody>
+      <% if @requests.present? %>
+        <% @requests.each do |request| %>
+          <tr>
+            <td class="text-center">
+              <%= (request.type == "Accounting::Check" ? 'CV' : '') + request.voucher %>
+            </td>
+            <td class="text-center"><%= short_month_day_year(request.date_voucher) %></td>
+            <td><%= request.payable %></td>
+            <td class="text-end"><%= to_curr(request.amount) %></td>
+            <td class="text-center">
+              <span class="text-center <%= request.decorate.status_badge %>"><%= request.status.titleize %></span>
+            </td>
+            <td class="text-center">
+              <%= link_to request, class: small_btn('outline-primary'), title: 'View' do %>
+                <i class="bi bi-eye-fill"></i>
+              <% end %>
+            </td>
+          </tr>
+        <% end %>
+      <% else %>
+        <tr>
+          <td colspan="7" class="text-center">No records found.</td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
