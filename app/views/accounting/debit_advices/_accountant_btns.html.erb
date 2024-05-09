@@ -1,6 +1,6 @@
 <div class="mb-1">
   <% if @request.present? %>
-    <%= render 'back_btn', link: accounting_check_voucher_request_path(@request, pt: @request.payout_type) %>
+    <%= render 'back_btn', link: accounting_voucher_request_path(@request, pt: @request.payout_type) %>
   <% else %>
     <%= render 'back_btn', link: accounting_debit_advices_path %>
   <% end %>

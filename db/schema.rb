@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2024_05_08_050504) do
+ActiveRecord::Schema[7.0].define(version: 2024_05_09_015019) do
   create_table "accounting_vouchers", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.date "date_voucher"
     t.string "voucher"
@@ -32,10 +32,9 @@ ActiveRecord::Schema[7.0].define(version: 2024_05_08_050504) do
     t.string "type"
     t.integer "branch"
     t.integer "payout_status", default: 0
-    t.string "requestable_type"
-    t.bigint "requestable_id"
+    t.bigint "request_id"
     t.index ["payable_type", "payable_id"], name: "index_accounting_vouchers_on_payable"
-    t.index ["requestable_type", "requestable_id"], name: "index_accounting_vouchers_on_requestable"
+    t.index ["request_id"], name: "index_accounting_vouchers_on_request_id"
     t.index ["treasury_account_id"], name: "index_accounting_vouchers_on_treasury_account_id"
   end
 
@@ -1423,7 +1422,24 @@ ActiveRecord::Schema[7.0].define(version: 2024_05_08_050504) do
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
   end
 
+  create_table "voucher_requests", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+    t.string "requestable_type", null: false
+    t.bigint "requestable_id", null: false
+    t.decimal "amount", precision: 10
+    t.integer "status"
+    t.string "requester"
+    t.text "particulars"
+    t.integer "payment_type"
+    t.integer "request_type"
+    t.bigint "account_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["account_id"], name: "index_voucher_requests_on_account_id"
+    t.index ["requestable_type", "requestable_id"], name: "index_voucher_requests_on_requestable"
+  end
+
   add_foreign_key "accounting_vouchers", "treasury_accounts"
+  add_foreign_key "accounting_vouchers", "voucher_requests", column: "request_id"
   add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
   add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
   add_foreign_key "agreements_coop_members", "agreements"
@@ -1495,4 +1511,5 @@ ActiveRecord::Schema[7.0].define(version: 2024_05_08_050504) do
   add_foreign_key "treasury_cashier_entries", "treasury_payment_types"
   add_foreign_key "treasury_payments", "treasury_accounts", column: "account_id"
   add_foreign_key "treasury_payments", "treasury_cashier_entries", column: "cashier_entry_id"
+  add_foreign_key "voucher_requests", "treasury_accounts", column: "account_id"
 end

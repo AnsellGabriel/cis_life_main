@@ -1,0 +1,24 @@
+<div class="modal fade" id="attachmentsModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+  <div class="modal-dialog modal-md">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title text-center" id="staticBackdropLabel">Attachments</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <% if @claim_type_documents.present? %>
+          <% @claim_type_documents.each do |doc| %>
+            <div>
+              <% @claim_attach = ClaimAttachment.find_by(process_claim_id: @request.requestable, claim_type_document: doc) %>
+              <%= link_to doc.document, rails_blob_url(@claim_attach.doc), target: :_blank, class: 'btn btn-outline-primary btn-sm' if @claim_attach.doc.attached?  %>
+            </div>
+          <% end %>
+        <% end %>
+
+        <% if @receipt.present? %>
+          <%= link_to 'Receipt', @receipt.receipt.url, target: :_blank, class: 'btn btn-outline-primary btn-sm' %>
+        <% end %>
+      </div>
+    </div>
+  </div>
+</div>

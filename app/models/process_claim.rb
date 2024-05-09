@@ -107,7 +107,7 @@ class ProcessClaim < ApplicationRecord
   has_many :claim_confinements, dependent: :destroy
   has_one :loan_batch, class_name: "LoanInsurance::Batch"
   # has_one :claim_request_for_payment, dependent: :destroy
-  has_one :check_voucher_request, as: :requestable, dependent: :destroy, class_name: "Accounting::CheckVoucherRequest"
+  has_one :voucher_request, as: :requestable, dependent: :destroy, class_name: "Accounting::VoucherRequest"
   accepts_nested_attributes_for :claim_cause
   # belongs_to :batch
   has_many :claim_documents

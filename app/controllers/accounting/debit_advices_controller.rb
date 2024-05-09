@@ -15,7 +15,7 @@ class Accounting::DebitAdvicesController < ApplicationController
   def show
     @ledgers = @debit_advice.general_ledgers
     @bank = @debit_advice.treasury_account
-    @request = @debit_advice.check_voucher_request
+    @request = @debit_advice.voucher_request
 
     if @request.present?
       @claim = @request.requestable
@@ -49,7 +49,7 @@ class Accounting::DebitAdvicesController < ApplicationController
       if params[:rid].present?
         @claim_request = Accounting::CheckVoucherRequest.find(params[:rid])
         @claim_request.voucher_generated!
-        @debit_advice.update(check_voucher_request: @claim_request)
+        @debit_advice.update(voucher_request: @claim_request)
       end
 
       redirect_to @debit_advice, notice: "Debit advice created."

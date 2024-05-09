@@ -1,34 +1,35 @@
-class CheckVoucherRequestService
-  def initialize(requestable, amount, payment_type, current_user, payout_type, bank_id = nil)
+class VoucherRequestService
+  def initialize(requestable, amount, request_type, current_user, payment_type, bank_id = nil)
     @requestable = requestable
     @amount = amount
     @current_user = current_user
+    @request_type = request_type
     @payment_type = payment_type
-    @payout_type = payout_type
     @bank_id = bank_id
   end
 
   def create_request
-    request = @requestable.check_voucher_request
+    request = @requestable.voucher_request
+
     if request.present?
       request.update!(
         amount: @amount,
         status: :posted,
-        description: description,
+        particulars: particulars,
+        request_type: @request_type,
+        requester: @current_user.userable.signed_fullname,
         payment_type: @payment_type,
-        analyst: @current_user.userable.signed_fullname,
-        payout_type: @payout_type,
-        bank_id: @bank_id
+        bank_id: @bank_id.present? ? Treasury::Account.find(@bank_id) : nil
       )
     else
-      @requestable.create_check_voucher_request!(
+      @requestable.create_voucher_request!(
         amount: @amount,
         status: :pending,
-        description: description,
+        particulars: particulars,
+        request_type: @request_type,
+        requester: @current_user.userable.signed_fullname,
         payment_type: @payment_type,
-        analyst: @current_user.userable.signed_fullname,
-        payout_type: @payout_type,
-        bank_id: @bank_id
+        account: @bank_id.present? ? Treasury::Account.find(@bank_id) : nil
       )
     end
 
@@ -37,7 +38,7 @@ class CheckVoucherRequestService
 
   private
 
-  def description
+  def particulars
     if @requestable.is_a?(ProcessCoverage)
       "Refund for #{@requestable.group_remit.agreement.plan.acronym} with OR # #{@requestable.group_remit.official_receipt}"
     elsif @requestable.is_a?(ProcessClaim)
