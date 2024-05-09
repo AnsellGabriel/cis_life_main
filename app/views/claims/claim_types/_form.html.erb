@@ -1,0 +1,13 @@
+<%#= simple_form_for(@claim_type) do |f| %>
+  <%= simple_form_for(@claim_type, url: url, method: meth) do |f| %>
+    <%= f.error_notification %>
+    <%= f.error_notification message: f.object.errors[:base].to_sentence if f.object.errors[:base].present? %>
+    <div class="form-inputs mb-3">
+      <%= f.input :name %>
+      <%= f.input :description %>
+    </div>
+    <div class="form-actions text-end">
+      <%= link_to "Back", claims_claim_types_path, class: 'btn btn-secondary' %>
+      <%= f.button :submit, class: 'btn-success' %>
+    </div>
+  <% end %>

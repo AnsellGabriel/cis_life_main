@@ -255,6 +255,7 @@ ActiveRecord::Schema[7.0].define(version: 2024_05_09_015019) do
     t.decimal "maxAmount", precision: 10, scale: 2
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.integer "entry_type"
   end
 
   create_table "batch_beneficiaries", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
@@ -421,24 +422,37 @@ ActiveRecord::Schema[7.0].define(version: 2024_05_09_015019) do
   end
 
   create_table "claim_coverages", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
-    t.bigint "process_claim_id"
-    t.string "coverageable_type", null: false
-    t.bigint "coverageable_id", null: false
-    t.decimal "amount_benefit", precision: 12, scale: 2
+    t.string "orno"
+    t.date "or_date"
+    t.string "bsno"
+    t.date "bs_date"
+    t.date "effectivity"
+    t.date "expiry"
+    t.decimal "amount", precision: 18, scale: 2
+    t.decimal "amount_cover", precision: 18, scale: 2
     t.string "coverage_type"
+    t.string "status"
+    t.bigint "process_claim_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["coverageable_type", "coverageable_id"], name: "index_claim_coverages_on_coverageable"
     t.index ["process_claim_id"], name: "index_claim_coverages_on_process_claim_id"
   end
 
-  create_table "claim_documents", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
-    t.bigint "process_claim_id", null: false
-    t.string "document"
-    t.integer "document_type"
+  create_table "claim_distributions", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+    t.bigint "process_claim_id"
+    t.string "name"
+    t.string "relationship"
+    t.decimal "amount", precision: 10, scale: 2
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["process_claim_id"], name: "index_claim_documents_on_process_claim_id"
+    t.index ["process_claim_id"], name: "index_claim_distributions_on_process_claim_id"
+  end
+
+  create_table "claim_documents", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+    t.string "name"
+    t.string "description"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
   end
 
   create_table "claim_payments", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
@@ -486,12 +500,22 @@ ActiveRecord::Schema[7.0].define(version: 2024_05_09_015019) do
 
   create_table "claim_type_documents", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.bigint "claim_type_id"
-    t.bigint "document_id"
     t.boolean "required"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.string "name"
+    t.bigint "claim_document_id"
+    t.index ["claim_document_id"], name: "index_claim_type_documents_on_claim_document_id"
     t.index ["claim_type_id"], name: "index_claim_type_documents_on_claim_type_id"
-    t.index ["document_id"], name: "index_claim_type_documents_on_document_id"
+  end
+
+  create_table "claim_type_natures", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+    t.bigint "claim_type_id", null: false
+    t.string "name"
+    t.string "description"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["claim_type_id"], name: "index_claim_type_natures_on_claim_type_id"
   end
 
   create_table "claim_types", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
@@ -663,13 +687,6 @@ ActiveRecord::Schema[7.0].define(version: 2024_05_09_015019) do
     t.bigint "userable_id", null: false
     t.index ["batch_dependent_id"], name: "index_dependent_remarks_on_batch_dependent_id"
     t.index ["userable_type", "userable_id"], name: "index_dependent_remarks_on_userable"
-  end
-
-  create_table "documents", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
-    t.string "name"
-    t.text "description"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
   end
 
   create_table "emp_agreements", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
@@ -1071,7 +1088,6 @@ ActiveRecord::Schema[7.0].define(version: 2024_05_09_015019) do
     t.datetime "updated_at", null: false
     t.string "claimant_email"
     t.string "claimant_contact_no"
-    t.integer "nature_of_claim"
     t.bigint "agreement_benefit_id"
     t.string "claimant_name"
     t.string "relationship"
@@ -1088,10 +1104,12 @@ ActiveRecord::Schema[7.0].define(version: 2024_05_09_015019) do
     t.bigint "claim_type_id"
     t.integer "status"
     t.integer "payout_type"
+    t.bigint "claim_type_nature_id"
     t.index ["agreement_benefit_id"], name: "index_process_claims_on_agreement_benefit_id"
     t.index ["agreement_id"], name: "index_process_claims_on_agreement_id"
     t.index ["cause_id"], name: "index_process_claims_on_cause_id"
     t.index ["claim_type_id"], name: "index_process_claims_on_claim_type_id"
+    t.index ["claim_type_nature_id"], name: "index_process_claims_on_claim_type_nature_id"
     t.index ["claimable_type", "claimable_id"], name: "index_process_claims_on_claimable"
     t.index ["cooperative_id"], name: "index_process_claims_on_cooperative_id"
   end
@@ -1457,11 +1475,11 @@ ActiveRecord::Schema[7.0].define(version: 2024_05_09_015019) do
   add_foreign_key "claim_attachments", "claim_type_documents"
   add_foreign_key "claim_attachments", "process_claims"
   add_foreign_key "claim_causes", "process_claims"
-  add_foreign_key "claim_documents", "process_claims"
   add_foreign_key "claim_payments", "process_claims"
   add_foreign_key "claim_remarks", "process_claims"
   add_foreign_key "claim_remarks", "users"
   add_foreign_key "claim_request_for_payments", "process_claims"
+  add_foreign_key "claim_type_natures", "claim_types"
   add_foreign_key "coop_banks", "cooperatives"
   add_foreign_key "coop_banks", "treasury_accounts"
   add_foreign_key "coop_branches", "cooperatives"

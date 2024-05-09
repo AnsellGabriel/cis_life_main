@@ -1,0 +1,22 @@
+<dl class="row">
+  <dt class="col-sm-2">Cause</dt>
+  <dd class="col-sm-10"><%= @process_claim.cause %></dd>
+  <% unless @process_claim.claim_cause.nil? %>
+    <% unless @process_claim.claim_cause.acd == "" %>
+      <%= content_tag :dt, 'ACD', class: "col-sm-2" %>
+      <%= content_tag :dd, @process_claim.claim_cause.acd, class: "col-sm-10" %>
+    <% end %>
+    <% unless @process_claim.claim_cause.ucd == "" %>
+      <%= content_tag :dt, 'UCD', class: "col-sm-2" %>
+      <%= content_tag :dd, @process_claim.claim_cause.ucd, class: "col-sm-10" %>
+    <% end %>
+    <% unless @process_claim.claim_cause.osccd == "" %>
+      <%= content_tag :dt, 'OSCCD', class: "col-sm-2" %>
+      <%= content_tag :dd, @process_claim.claim_cause.osccd, class: "col-sm-10" %>
+    <% end %>
+    <% unless @process_claim.claim_cause.icd == "" %>
+      <%= content_tag :dt, 'ICD', class: "col-sm-2" %>
+      <%= content_tag :dd, @process_claim.claim_cause.icd, class: "col-sm-10" %>
+    <% end %>
+  <% end %>
+</dl>

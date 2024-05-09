@@ -83,7 +83,7 @@ class Cooperative < ApplicationRecord
   end
 
   def get_fulladdress
-    "#{street}, #{municipality}, #{province}, #{region}"
+    "#{street}, #{geo_municipality}, #{geo_province}"
   end
 
   def coop_member_details

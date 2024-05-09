@@ -14,7 +14,7 @@
             flatpickr_next_arrow: "Next",
             flatpickr_prev_arrow: "Prev"}}, wrapper_html: { class: "col-md-2" } %>
         <%= f.input :birth_place, wrapper_html: { class: "col-md-4" } %>
-        <%= f.input :gender, collection: [['Male', 'MALE'], ['Female', 'FEMALE']] , error: '*Required', class: 'form-select mb-3', label: "Gender", wrapper_html: { class: "col-md-2" }%>
+        <%= f.input :gender, collection: [['Male', 'MALE'], ['Female', 'FEMALE'], ['Others', 'OTHERS']] , error: '*Required', class: 'form-select mb-3', label: "Gender", wrapper_html: { class: "col-md-2" }%>
         <%= f.input :height, label: "Height (cm)", wrapper_html: { class: "col-md-2" }  %>
         <%= f.input :weight, label: "Weight (kg)", wrapper_html: { class: "col-md-2" } %>
       </div>

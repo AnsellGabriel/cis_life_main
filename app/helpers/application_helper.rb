@@ -18,7 +18,7 @@ module ApplicationHelper
   end
 
   def to_shortdate(date)
-    date&.strftime("%b %d, %Y")
+    date&.strftime("%b-%d-%Y")
   end
   def start_month(val)
     val.beginning_of_month
