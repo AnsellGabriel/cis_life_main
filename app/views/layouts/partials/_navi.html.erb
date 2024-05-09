@@ -26,95 +26,94 @@
           <% else %>
             <% case current_user.userable.department_id %>
             <% when 11 %>
-              <%= render 'layouts/partials/accounting_nav' %>
+            <%= render 'layouts/partials/accounting_nav' %>
             <% when 26 %>
-              <%= render 'layouts/partials/treasury_nav' %>
+            <%= render 'layouts/partials/treasury_nav' %>
             <% when 15 %>
-              <%= render 'layouts/partials/nav_dropdown', title: 'Data Entries' do %>
-                <%= link_to "Agreements", agreements_path, class: "dropdown-item" %>
-                <%= link_to "Cooperative", cooperatives_path, class: "dropdown-item" %>
-                <%= link_to "Transmittal", transmittals_path, class: "dropdown-item" %>
-              <% end %>
+            <%= render 'layouts/partials/nav_dropdown', title: 'Data Entries' do %>
+              <%= link_to "Agreements", agreements_path, class: "dropdown-item" %>
+              <%= link_to "Cooperative", cooperatives_path, class: "dropdown-item" %>
+              <%= link_to "Transmittal", transmittals_path, class: "dropdown-item" %>
+            <% end %>
             <% when 27 %>
-              <%= render 'layouts/partials/nav_dropdown', title: 'Audit' do %>
-                <%= link_to "For Audit", audit_for_audits_path, class: "dropdown-item" %>
-              <% end %>
+            <%= render 'layouts/partials/nav_dropdown', title: 'Audit' do %>
+              <%= link_to "For Audit", audit_for_audits_path, class: "dropdown-item" %>
+            <% end %>
             <% when 17 %>
-              <%= render 'layouts/partials/nav_dropdown', title: 'Underwriting' do %>
-                <%= link_to "Agreement", agreements_path, class: "dropdown-item" %>
-                <%= link_to "Process", process_coverages_path, class: "dropdown-item" %>
-                <%= link_to "Transmittal", transmittals_path, class: "dropdown-item" %>
-                <%#= link_to "Generate CSV", gen_csv_process_coverages_path, class: "dropdown-item", data: { turbo_frame: "remote_modal" } %>
-                <% if current_user.medical_director? %>
-                  <%= link_to "Medical Director", med_directors_home_path, class: "dropdown-item" %>
-                <% end %>
+            <%= render 'layouts/partials/nav_dropdown', title: 'Underwriting' do %>
+              <%= link_to "Agreement", agreements_path, class: "dropdown-item" %>
+              <%= link_to "Process", process_coverages_path, class: "dropdown-item" %>
+              <%= link_to "Transmittal", transmittals_path, class: "dropdown-item" %>
+              <%#= link_to "Generate CSV", gen_csv_process_coverages_path, class: "dropdown-item", data: { turbo_frame: "remote_modal" } %>
+              <% if current_user.medical_director? %>
+                <%= link_to "Medical Director", med_directors_home_path, class: "dropdown-item" %>
               <% end %>
+            <% end %>
             <% when 19 %>
-              <%= render 'layouts/partials/nav_dropdown', title: 'Claims' do %>
-                <%= link_to "Submitted", index_show_process_claims_path(p: 1), class: "dropdown-item" %>
-                <%= link_to "Claims Filed", index_show_process_claims_path(p: 2), class: "dropdown-item" %>
-                <%= link_to "Processing", index_show_process_claims_path(p: 3), class: "dropdown-item" %>
-                <%= link_to "Evaluation", index_show_process_claims_path(p: 4), class: "dropdown-item" %>
-                <%= link_to "VP Evaluation", index_show_process_claims_path(p: 5), class: "dropdown-item" %>
-                <%= link_to "President Evaluation", index_show_process_claims_path(p: 6), class: "dropdown-item" %>
-                <li><hr class="dropdown-divider"></li>
-                <%= link_to "Documents", documents_path, class: "dropdown-item" %>
-                <%= link_to "Claim Type", claim_types_path, class: "dropdown-item" %>
-                <%= link_to "Claims Message", claim_remarks_path, class: "dropdown-item" %>
-              <% end %>
+            <%= render 'layouts/partials/nav_dropdown', title: 'Claims' do %>
+              <%= link_to "Claim index", claims_process_claims_path, class: "dropdown-item" %>
+              <%= link_to "Submitted", index_show_claims_process_claims_path(p: 1), class: "dropdown-item" %>
+              <%= link_to "Claims Filed", index_show_claims_process_claims_path(p: 2), class: "dropdown-item" %>
+              <%= link_to "Processing", index_show_claims_process_claims_path(p: 3), class: "dropdown-item" %>
+              <%= link_to "Evaluation", index_show_claims_process_claims_path(p: 4), class: "dropdown-item" %>
+              <%= link_to "VP Evaluation", index_show_claims_process_claims_path(p: 5), class: "dropdown-item" %>
+              <%= link_to "President Evaluation", index_show_claims_process_claims_path(p: 6), class: "dropdown-item" %>
+              <li><hr class="dropdown-divider"></li>
+              <%= link_to "Documents", claim_documents_path, class: "dropdown-item" %>
+              <%= link_to "Claim Type", claim_types_path, class: "dropdown-item" %>
+              <%= link_to "Claims Message", claim_remarks_path, class: "dropdown-item" %>
+              <%= link_to "User Levels", user_levels_path, class: "dropdown-item" %>
+            <% end %>
             <% when 14 %>
-              <%= render 'layouts/partials/nav_dropdown', title: "A&R" do %>
-                <%= link_to "Life Reinsurance", reinsurances_path, class: "dropdown-item" %>
-                <%= link_to "Life Reserves", actuarial_reserves_path, class: "dropdown-item" %>
+            <%= render 'layouts/partials/nav_dropdown', title: "A&R" do %>
+              <%= link_to "Life Reinsurance", reinsurances_path, class: "dropdown-item" %>
+              <%= link_to "Life Reserves", actuarial_reserves_path, class: "dropdown-item" %>
+            <% end %>
+          <% else %>
+            <% if current_user.senior_officer? %>
+              <%= render 'layouts/partials/nav_dropdown', title: "Dashboard" do %>
+                <%#= link_to "Cooperative", pages_coop_path, class: "dropdown-item", data: { turbo: false } %>
+                <%= link_to "C.O.S.O.", pages_coso_path, class: "dropdown-item", data: { turbo: false } %>
+                <%= link_to "President", pages_president_path, class: "dropdown-item", data: { turbo: false } %>
               <% end %>
-            <% else %>
-
-              <% if current_user.senior_officer? %>
-                <%= render 'layouts/partials/nav_dropdown', title: "Dashboard" do %>
-                  <%#= link_to "Cooperative", pages_coop_path, class: "dropdown-item", data: { turbo: false } %>
-                  <%= link_to "C.O.S.O.", pages_coso_path, class: "dropdown-item", data: { turbo: false } %>
-                  <%= link_to "President", pages_president_path, class: "dropdown-item", data: { turbo: false } %>
-                <% end %>
+            <% end %>
+            <%= render 'layouts/partials/nav_dropdown', title: 'Data Entries' do %>
+              <% if current_user.head? %>
+                <%= link_to "Agreement", agreements_path, class: "dropdown-item" %>
+                <%= link_to "EmpAgreement", emp_agreements_path, class: "dropdown-item" %>
+                <%= link_to "Approver", emp_approvers_path, class: "dropdown-item" %>
+                <%= link_to "Authority Levels", authority_levels_path, class: "dropdown-item" %>
+                <%= link_to "Plans", plans_path, class: "dropdown-item" %>
+                <%= link_to "Benefits", benefits_path, class: "dropdown-item" %>
+                <li><hr class="dropdown-divider"></li>
               <% end %>
-              
-              <%= render 'layouts/partials/nav_dropdown', title: 'Data Entries' do %>
-                <% if current_user.head? %>
-                  <%= link_to "Agreement", agreements_path, class: "dropdown-item" %>
-                  <%= link_to "EmpAgreement", emp_agreements_path, class: "dropdown-item" %>
-                  <%= link_to "Approver", emp_approvers_path, class: "dropdown-item" %>
-                  <%= link_to "Authority Levels", authority_levels_path, class: "dropdown-item" %>
-                  <%= link_to "Plans", plans_path, class: "dropdown-item" %>
-                  <%= link_to "Benefits", benefits_path, class: "dropdown-item" %>
-                  <li><hr class="dropdown-divider"></li>
-                <% end %>
-                <%= link_to "Cooperative", cooperatives_path, class: "dropdown-item" %>
-                <% if current_user.head? %>
-                  <li><hr class="dropdown-divider"></li>
-                  <%= link_to "Employees", employees_path, class: "dropdown-item" %>
-                  <%= link_to "User Levels", user_levels_path, class: "dropdown-item" %>
-                  <%= link_to "Cooperative User", coop_users_path, class: "dropdown-item" %>
-                  <%= link_to "Agents", agents_path, class: "dropdown-item" %>
-                  <%= link_to "Pending Users", user_index_path, class: "dropdown-item" %>
-                <% end %>
+              <%= link_to "Cooperative", cooperatives_path, class: "dropdown-item" %>
+              <% if current_user.head? %>
+                <li><hr class="dropdown-divider"></li>
+                <%= link_to "Employees", employees_path, class: "dropdown-item" %>
+                <%= link_to "User Levels", user_levels_path, class: "dropdown-item" %>
+                <%= link_to "Cooperative User", coop_users_path, class: "dropdown-item" %>
+                <%= link_to "Agents", agents_path, class: "dropdown-item" %>
+                <%= link_to "Pending Users", user_index_path, class: "dropdown-item" %>
               <% end %>
             <% end %>
           <% end %>
-          
-          <%= render 'layouts/partials/nav_dropdown', title: "<i class=\"bi bi-person-circle\"></i> <small> Hi, #{current_user.userable.first_name}</small>".html_safe do %>
-            <li class="nav-item"> <a class="nav-link" href="#"><%= current_user.email %></a> </li>
-            <li class="nav-item"> <%= link_to "Change Password", edit_user_registration_path, class: "nav-link" %></li>
-            <% if current_user.userable_type == "Employee" and !current_user.is_mis? %>
-              <%= content_tag :li, class:"nav-item"  do %>
-                <%= link_to "Authority Level: #{to_currency(session[:max_amount])}", "#", class: "nav-link" %>
-              <% end %>
-            <% end %>
-            <li class="nav-item"> <%= button_to "Sign Out", destroy_user_session_path, method: :delete, class: "btn btn-sm btn-primary mx-2" %></li>
-          <% end %>
-
-        <% elsif request.path.include?('password') %>
-            <li class="nav-item"> <%= link_to "Homepage", unauthenticated_root_path, class: "nav-link"  %></li>
         <% end %>
-      </ul>
-    </div>
+        <%= render 'layouts/partials/nav_dropdown', title: "<i class=\"bi bi-person-circle\"></i> <small> Hi, #{current_user.userable.first_name}</small>".html_safe do %>
+          <li class="nav-item"> <a class="nav-link" href="#"><%= current_user.email %></a> </li>
+          <li class="nav-item"> <%= link_to "Change Password", edit_user_registration_path, class: "nav-link" %></li>
+          <% if current_user.userable_type == "Employee" and !current_user.is_mis? %>
+            <%= content_tag :li, class:"nav-item"  do %>
+              <%= link_to "Claims Authority Level: #{to_currency(session[:claims_max_amount])}", "#", class: "nav-link" unless session[:claims_max_amount].nil? %>
+              <%= link_to "Underwriting Authority Level: #{to_currency(session[:max_amount])}", "#", class: "nav-link" unless session[:max_amount].nil? %>
+            <% end %>
+          <% end %>
+          <li class="nav-item"> <%= button_to "Sign Out", destroy_user_session_path, method: :delete, class: "btn btn-sm btn-primary mx-2" %></li>
+        <% end %>
+      <% elsif request.path.include?('password') %>
+        <li class="nav-item"> <%= link_to "Homepage", unauthenticated_root_path, class: "nav-link"  %></li>
+      <% end %>
+    </ul>
   </div>
+</div>
 </nav>

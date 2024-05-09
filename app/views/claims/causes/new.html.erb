@@ -1,0 +1,8 @@
+<div class="card">
+  <h5 class="card-header">New cause</h5>
+  <div class="card-body">
+    <%#= render "form", cause: @cause %>
+    <%#= render 'claims/causes/form', locals: { cause: @cause } %>
+    <%= render "form", url: claims_causes_url, meth: 'post' %>
+  </div>
+</div>

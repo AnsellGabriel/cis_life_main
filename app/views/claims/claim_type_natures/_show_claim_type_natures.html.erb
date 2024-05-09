@@ -1,0 +1,27 @@
+<table class="table table-borderless table-hover">
+  <thead>
+    <tr class="border-top border-bottom border-primary">
+      <%# <th class="text-primary">ID</th> %>
+      <th>Nature</th>
+      <th>
+        <div class="text-end">
+          <%= link_to '<i class="bi bi-plus-square"></i> Add Nature'.html_safe, new_claims_claim_type_nature_path(p: @claim_type), class: "btn btn-primary btn-sm", data: { turbo_frame: "remote_modal" } %>
+        </div>
+      </th>
+      <%# <th></th> %>
+    </tr>
+  </thead>
+  <tbody>
+    <% @claim_type.claim_type_natures.each do |nat| %>
+      <tr>
+        <%# <td>= benefit_claim.id</td> %>
+        <td><%= nat.name %></td>
+        <td class="text-end">
+          <%#= link_to 'View', benefit_claim, class: 'btn' %>
+          <%= link_to '<i class="bi bi-pencil-square"></i>'.html_safe, edit_claims_claim_type_nature_path(nat), class: 'btn btn-outline-primary btn-sm', data: { turbo_frame: "remote_modal" }  %>
+          <%= link_to '<i class="bi bi-trash3"></i>'.html_safe, claims_claim_type_nature_path(nat),  data: { turbo_method: :delete, turbo_confirm: 'Are you sure?' }, class: 'btn btn-danger btn-sm' %>
+        </td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>

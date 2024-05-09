@@ -1,0 +1,30 @@
+<div class="card">
+  <div class="card-body">
+    <dl class="row">
+      <dt class="col-sm-4">Plan:</dt>
+      <%# coop_mem = @process_claim.claimable %>
+      <dd class="col-sm-8"> <%= link_to @process_claim.agreement.plan, @process_claim.agreement, class: "text-primary", target: '_blank' %></dd>
+      <dt class="col-sm-4">Agreement Benefit</dt>
+      <dd class="col-sm-8"> <%= @process_claim.agreement_benefit %></dd>
+      <%#= content_tag :strong, 'Benefits', class: "" %>
+    </dl>
+    <% unless @process_claim.agreement_benefit.nil? %>
+      <table class="table table-hover">
+        <thead>
+          <tr>
+            <th>Benefits</th>
+            <th class="text-end">Amount</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% @process_claim.agreement_benefit.product_benefits.each do |pb| %>
+            <tr>
+              <td><%= pb.benefit %></td>
+              <td class="text-end"><%= to_curr(pb.coverage_amount) %></td>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
+    <% end %>
+  </div>
+</div>

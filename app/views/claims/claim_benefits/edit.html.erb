@@ -1,0 +1,3 @@
+<%= render "remote_modal", title: "Edit benefit" do %>
+  <%= render "form", url: claims_claim_benefit_path(@claim_benefit), meth: 'patch' %>
+<% end %>

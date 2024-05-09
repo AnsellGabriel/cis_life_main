@@ -1,0 +1,89 @@
+<div class="row">
+  <div class="col-md-6">
+    <%= content_tag :h5, 'Coverage', class:"text-primary" %>
+  </div>
+  <div class="col-md-6">
+    <div class="text-end">
+      <% if current_user.userable_type == "Employee" %>
+        <%= link_to '<i class="bi bi-plus-square"></i> Add Coverage'.html_safe, new_claims_claim_coverage_path(v: @process_claim), class: "btn btn-primary btn-sm mb-3", data: { turbo_frame: "remote_modal" } if @process_claim.claim_filed? || @process_claim.file_claim? %>
+      <% end %>
+    </div>
+  </div>
+</div>
+<table class="table table-border table-hover">
+  <thead class="border-top border-bottom border-primary">
+    <tr>
+      <th class="text-primary">ORNO</th>
+      <%# <th class="text-primary">BSNO</th> %>
+      <th class="text-primary">Effectivity</th>
+      <th class="text-primary">Expiry</th>
+      <th class="text-end text-primary">Insured</th>
+      <th class="text-end text-primary">Covered</th>
+      <th class="text-primary">Status</th>
+      <th class="text-primary"></th>
+    </tr>
+  </thead>
+  <tbody>
+    <% current = @process_claim.claim_coverages.where(coverage_type: "Current") %>
+    <% unless current.empty? %>
+      <tr>
+        <td colspan="6" class="text-primary"> <strong>Current</strong> </td>
+      </tr>
+      <% current.each do |cc| %>
+        <tr>
+          <td><%= cc.orno %> <br>
+            <small><%= to_shortdate(cc.or_date) %></small></td>
+          <td><small><%= to_shortdate(cc.effectivity) %></small> </td>
+          <td><small><%= to_shortdate(cc.expiry) %></small></td>
+          <td class="text-end"> <small><%= to_curr(cc.amount) %></small> </td>
+          <td class="text-end"> <small><%= to_curr(cc.amount_cover) %></small> </td>
+          <td><small><%= cc.status %></small>  </td>
+          <td class="text-end">
+            <%#= link_to 'View', benefit_claim, class: 'btn' %>
+            <% unless params[:action] == 'evaluate' %>
+              <%= link_to '<i class="bi bi-pencil-square"></i>'.html_safe, edit_claims_claim_coverage_path(cc), class: 'btn btn-outline-primary btn-sm', data: { turbo_frame: "remote_modal" } %>
+              <%= link_to '<i class="bi bi-trash3"></i>'.html_safe, cc, method: :delete, data: { confirm: 'Are you sure?' }, class: 'btn btn-danger btn-sm' %>
+            <% end %>
+          </td>
+        </tr>
+      <% end %>
+      <tr>
+        <td colspan="3" class="table-active border-top border-primary"> <small>Total</small> </td>
+        <td class="text-end text-primary border-top border-primary"><small><%= to_curr(@process_claim.claim_coverages.where(coverage_type: "Current").sum(:amount)) %></small></td>
+        <td class="text-end text-primary border-top border-primary"><small><%= to_curr(@process_claim.claim_coverages.where(coverage_type: "Current").sum(:amount_cover)) %></small></td>
+      </tr>
+    <% end %>
+    <% previous = @process_claim.claim_coverages.where(coverage_type: "Previous") %>
+    <% unless previous.empty? %>
+      <tr>
+        <td colspan="6" class="text-primary"> <strong>Previous</strong> </td>
+      </tr>
+      <% previous.each do |cc| %>
+        <tr>
+          <td><%= cc.orno %> <br>
+            <small><%= to_shortdate(cc.or_date) %></small></td>
+          <td><small><%= to_shortdate(cc.effectivity) %></small> </td>
+          <td><small><%= to_shortdate(cc.expiry) %></small></td>
+          <td class="text-end"> <small><%= to_curr(cc.amount) %></small> </td>
+          <td class="text-end"> <small><%= to_curr(cc.amount_cover) %></small> </td>
+          <td><small><%= cc.status %></small>  </td>
+          <% unless params[:action] == 'show_coop' %>
+            <td class="text-end">
+              <%#= link_to 'View', benefit_claim, class: 'btn' %>
+              <% unless params[:action] == 'evaluate' %>
+                <%= link_to '<i class="bi bi-pencil-square"></i>'.html_safe, edit_claims_claim_coverage_path(cc), class: 'btn btn-outline-primary btn-sm', data: { turbo_frame: "remote_modal" } %>
+                <%= link_to '<i class="bi bi-trash3"></i>'.html_safe, cc, method: :delete, data: { confirm: 'Are you sure?' }, class: 'btn btn-danger btn-sm' %>
+              <% end %>
+            </td>
+          <% end %>
+        </tr>
+      <% end %>
+    <% end %>
+    <%# <tr> %>
+    <%# <td colspan="4" class="table-active border-top border-primary"> <small>Total</small> </td> %>
+    <%# <td class="text-end text-primary border-top border-primary">
+        <%= to_curr(@process_claim.claim_coverages.where(coverage_type: "Prior").sum(:amount)) %>
+    <%# </td>  %>
+  </tr>
+</tbody>
+</table>

@@ -49,12 +49,19 @@ class ApplicationController < ActionController::Base
   end
 
   def set_authority_level
-    if current_user.nil? || current_user.user_levels.count == 0
+    user_levels = current_user.user_levels.where(active: 1) if current_user
+    if current_user.nil? || user_levels.empty?
       session[:max_amount] = 0
+      session[:claims_max_amount]
     else
-      @cur_user_max_amount = current_user.user_levels.find_by(active: true).authority_level.maxAmount
+      user_levels.each do |ul|
+        if ul.authority_level.claim?
+          session[:claims_max_amount] = ul.authority_level.maxAmount
+        elsif ul.authority_level.underwriting?
+          session[:max_amount] = ul.authority_level.maxAmount
+        end
+      end
       # raise "error"
-      session[:max_amount] = @cur_user_max_amount.nil? ? 0 : @cur_user_max_amount
     end
   end
 

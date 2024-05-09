@@ -1,0 +1,3 @@
+  <%= render "remote_modal", title: "New attachment" do %>
+  <%= render "form", url: claims_claim_attachments_path(v: @process_claim), meth: 'post' %>
+<% end %>
