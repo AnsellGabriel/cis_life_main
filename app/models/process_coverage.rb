@@ -12,9 +12,9 @@ class ProcessCoverage < ApplicationRecord
   belongs_to :who_approved, class_name: "Employee", optional: true
   has_many :process_remarks
   has_many :notifications
-  has_one :check_voucher_request, as: :requestable, dependent: :destroy, class_name: "Accounting::CheckVoucherRequest"
+  has_one :voucher_request, as: :requestable, dependent: :destroy, class_name: "Accounting::VoucherRequest"
 
-  has_many :transmittable_ors, as: :transmittable, inverse_of: :transmittable 
+  has_many :transmittable_ors, as: :transmittable, inverse_of: :transmittable
   has_many :transmittals, through: :transmittable_ors
 
   delegate :cooperative, to: :group_remit
@@ -137,7 +137,7 @@ class ProcessCoverage < ApplicationRecord
   end
 
   def sum_batches_service_fee
-    group_remit.batches.where(insurance_status: :approved).sum(:coop_sf_amount) 
+    group_remit.batches.where(insurance_status: :approved).sum(:coop_sf_amount)
   end
 
   def sum_denied_batches_prem
@@ -308,7 +308,7 @@ class ProcessCoverage < ApplicationRecord
   def self.get_reports(type, date_from, date_to, user_id=nil)
     case type
     when 0 # ALL status
-      where(created_at: date_from..date_to).order(:created_at) 
+      where(created_at: date_from..date_to).order(:created_at)
     when 1 # UNPROCESSED
       where(status: :for_process, created_at: date_from..date_to).order(:created_at)
     when 2 # PROCESSED

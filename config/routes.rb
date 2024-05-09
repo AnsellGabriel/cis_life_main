@@ -283,11 +283,6 @@ Rails.application.routes.draw do
       get :print, on: :member
     end
 
-
-    resources :check_voucher_requests, only: %i[show]
-    resources :journal_voucher_requests, only: %i[show]
-
-
     resources :general_disbursement_book, only: %i[index] do
       get :pdf, on: :collection
     end
@@ -300,6 +295,9 @@ Rails.application.routes.draw do
       get :pdf, on: :collection
     end
 
+    resources :voucher_requests, only: %i[index show] do
+    end
+    
     get "dashboard", to: "dashboard#index"
   end
 

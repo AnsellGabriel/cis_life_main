@@ -6,9 +6,7 @@ class Accounting::CheckVoucherRequest < ApplicationRecord
 
   belongs_to :requestable, polymorphic: true
   belongs_to :check_voucher_request, optional: true
-  has_many :check_vouchers, class_name: "Accounting::Check"
-  has_many :debit_advices, class_name: "Accounting::DebitAdvice"
-
+  has_many :vouchers, as: :requestable, class_name: "Accounting::Voucher"
 
   enum status: {
     pending: 0,
@@ -22,9 +20,10 @@ class Accounting::CheckVoucherRequest < ApplicationRecord
     refund: 1
   }
 
-  enum payout_type: {
+  enum request_type: {
     check_voucher: 0,
-    debit_advice: 1
+    debit_advice: 1,
+    journal_voucher: 2
   }
 
 end

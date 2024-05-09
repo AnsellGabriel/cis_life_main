@@ -2,7 +2,6 @@ class Accounting::DebitAdvice < Accounting::Voucher
   validates_presence_of :treasury_account_id, :amount
 
   belongs_to :treasury_account, class_name: "Treasury::Account", foreign_key: :treasury_account_id
-  belongs_to :check_voucher_request, optional: true
   has_many :debit_advice_journals, class_name: "Accounting::DebitAdviceJournal"
   has_many :journals, through: :debit_advice_journals
   has_one :attachment, class_name: 'Accounting::DebitAdviceReceipt'

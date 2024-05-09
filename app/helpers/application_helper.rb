@@ -237,4 +237,8 @@ module ApplicationHelper
     end
   end
 
+  def table_sm_hoverable
+    'table table-bordered table-hover bg-white table-sm sm-secondary-text'
+  end
+
 end

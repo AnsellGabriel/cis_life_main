@@ -43,15 +43,11 @@ class Accounting::JournalsController < ApplicationController
 
   # GET /accounting/journals/new
   def new
-    if params[:da].present?
-      @da = Accounting::DebitAdvice.find(params[:da])
+    if params[:rid].present?
+      @request = Accounting::JournalVoucherRequest.find(params[:rid])
     end
 
-    @journal = Accounting::Journal.new(voucher: Accounting::Journal.generate_series, date_voucher: Date.today, global_payable: @da&.payable&.to_global_id, particulars: @da&.particulars)
-
-    # if @da.present?
-    #   @journal.debit_advices << @da
-    # end
+    @journal = Accounting::Journal.new(voucher: Accounting::Journal.generate_series, date_voucher: Date.today, global_payable: @request&.requestable&.payable&.to_global_id, particulars: @request&.requestable&.particulars)
   end
 
   # GET /accounting/journals/1/edit
@@ -101,6 +97,6 @@ class Accounting::JournalsController < ApplicationController
 
   # Only allow a list of trusted parameters through.
   def journal_params
-    params.require(:accounting_journal).permit(:date_voucher, :voucher, :global_payable, :particulars)
+    params.require(:accounting_journal).permit(:date_voucher, :voucher, :global_payable, :particulars, :requestable_type, :requestable_id)
   end
 end

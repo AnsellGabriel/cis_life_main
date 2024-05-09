@@ -1,0 +1,48 @@
+<div class="<%= flex_justify_align('between', 'center') %> gap-1 mb-3">
+  <%= content_tag :h4, "#{params[:pt].humanize.upcase} REQUESTS" , class: 'text-primary mb-0' %>
+
+  <% if @pagy.pages > 1 %>
+    <%== pagy_bootstrap_nav(@pagy) %>
+  <% end %>
+</div>
+<table class="<%= table_sm_hoverable %>">
+    <thead class="table-dark">
+      <tr>
+        <th class="text-center" scope="col">Date</th>
+        <th class="text-center" scope="col">Payee</th>
+        <th class="text-center" scope="col">Particulars</th>
+        <th class="text-center" scope="col">Requester</th>
+        <th class="text-center" scope="col">Amount</th>
+        <th class="text-center" scope="col">Status</th>
+        <th class="text-center" scope="col"></th>
+      </tr>
+    </thead>
+
+    <tbody id="batches_body">
+      <% if @requests.present? %> 
+
+        <% @requests.each do |request| %>
+          <tr>
+            <td class="text-center w-125 align-middle"><%= short_month_day_year(request.created_at) %></td>
+            <td class="align-middle"><%= request.requestable.cooperative %></td>
+            <td><%= request.particulars %></td>
+            <td class="text-center w-150 align-middle"><%= request.requester %></td>
+            <td class="text-end w-125 align-middle"><%= to_curr request.amount %></td>
+            <td class="text-center w-125 align-middle">
+              <span class="<%= request.decorate.status_badge %>"><%= request.status.humanize %></span>
+            </td>
+            <td class="text-center align-middle">
+              <%= link_to 'View', accounting_voucher_request_path(request), class: small_btn('outline-primary') %>
+            </td>
+          </tr>
+
+        <% end %>
+
+      <% else %>
+        <tr>
+          <td colspan="6" class="text-center">No requests found</td>
+        </tr>
+      <% end %>
+
+    </tbody>
+  </table>
