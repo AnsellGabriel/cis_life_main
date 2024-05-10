@@ -237,6 +237,13 @@ module ApplicationHelper
     end
   end
 
+  def coop_with_moa(value)
+    case value
+    when true
+      content_tag(:span, "w/ Agreement", class: "badge rounded-pill bg-success")
+    else
+      content_tag(:span, "w/o Agreement", class: "badge rounded-pill bg-danger")
+    end
   def table_sm_hoverable
     'table table-bordered table-hover bg-white table-sm sm-secondary-text'
   end

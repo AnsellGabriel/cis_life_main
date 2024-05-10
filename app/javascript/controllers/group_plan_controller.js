@@ -5,7 +5,9 @@ import { get } from "@rails/request.js"
 export default class extends Controller {
   static targets = ["unitSelect", "benefitTable"]
 
-
+  connect() {
+    console.log("Connected to group-plan controller")
+  }
 
   search_units(event) {
     console.log("Connected sa group-plan");
