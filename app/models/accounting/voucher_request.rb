@@ -22,4 +22,13 @@ class Accounting::VoucherRequest < ApplicationRecord
     claims_payment: 0,
     refund: 1
   }
+
+  def payee
+    case requestable
+    when Claims::ProcessClaim
+      requestable.cooperative
+    when Accounting::DebitAdvice
+      requestable.payable
+    end
+  end
 end

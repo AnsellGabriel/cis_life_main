@@ -6,7 +6,7 @@ class Accounting::VoucherRequestsController < ApplicationController
 
   def show
     @request = Accounting::VoucherRequest.find(params[:id])
-    @claim_type_documents = ClaimTypeDocument.where(claim_type: @request.requestable.claim_type)
+    @claim_type_documents = Claims::ClaimTypeDocument.where(claim_type: @request.requestable.try(:claim_type))
     @receipt = Accounting::DebitAdviceReceipt.find_by(debit_advice_id: @request.requestable.id)
     @vouchers = @request.vouchers
     @pagy, @vouchers = pagy(@vouchers, items: 10)

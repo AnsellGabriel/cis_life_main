@@ -24,7 +24,7 @@
         <% @requests.each do |request| %>
           <tr>
             <td class="text-center w-125 align-middle"><%= short_month_day_year(request.created_at) %></td>
-            <td class="align-middle"><%= request.requestable.cooperative %></td>
+            <td class="align-middle"><%= request.payee %></td>
             <td><%= request.particulars %></td>
             <td class="text-center w-150 align-middle"><%= request.requester %></td>
             <td class="text-end w-125 align-middle"><%= to_curr request.amount %></td>

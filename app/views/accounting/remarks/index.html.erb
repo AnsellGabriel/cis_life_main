@@ -3,7 +3,7 @@
     <div class="d-flex gap-1">
       <%= content_tag :h5, 'Remarks', class: "modal-title", id: "staticBackdropLabel" %>
     </div>
-    <% if current_user.is_auditor? or current_user.is_accountant? %>
+    <% if current_user.is_auditor? or current_user.is_accountant? or current_user.is_treasurer? %>
       <%= link_to '', @voucher_path, class: 'btn-close', data: {turbo: false}%>
     <% else %>
       <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>

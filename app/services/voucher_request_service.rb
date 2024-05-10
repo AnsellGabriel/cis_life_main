@@ -10,12 +10,12 @@ class VoucherRequestService
 
   def create_request
     request = @requestable.voucher_request
-
+    
     if request.present?
       request.update!(
         amount: @amount,
         status: :posted,
-        particulars: particulars,
+        particulars: @requestable.particulars.present? ? @requestable.particulars : particulars,
         request_type: @request_type,
         requester: @current_user.userable.signed_fullname,
         payment_type: @payment_type,
@@ -25,7 +25,7 @@ class VoucherRequestService
       @requestable.create_voucher_request!(
         amount: @amount,
         status: :pending,
-        particulars: particulars,
+        particulars: @requestable.particulars.present? ? @requestable.particulars : particulars,
         request_type: @request_type,
         requester: @current_user.userable.signed_fullname,
         payment_type: @payment_type,

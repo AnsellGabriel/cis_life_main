@@ -1,24 +1,6 @@
 
 class Claims::ProcessClaimsController < ApplicationController
   before_action :set_process_claim, only: %i[ show edit update destroy show_coop show_ca claim_route claims_file claim_process update_status edit_ca update_ca print_sheet ]
-  # GET /process_claims
-
-  # def claimable
-  #   voucher = Accounting::Check.find(params[:v])
-  #   claim = voucher.check_voucher_request.requestable
-  #   total_business_checks = voucher.business_checks.sum(:amount)
-
-  #   if voucher.amount != total_business_checks
-  #     return redirect_to accounting_check_path(voucher), alert: "Claim cannot proceed. Total amount of business checks is not equal to the voucher amount."
-  #   end
-
-  #   ActiveRecord::Base.transaction do
-  #     claim.update!(claim_route: 12, payment: 1)
-  #     voucher.update!(claimable: true)
-  #   end
-
-  #   redirect_to accounting_check_path(voucher), notice: "Checks ready for claim"
-  # end
 
   def index
     @process_claims = Claims::ProcessClaim.all
@@ -63,7 +45,7 @@ class Claims::ProcessClaimsController < ApplicationController
     @claim_type_document = Claims::ClaimTypeDocument.where(claim_type: @process_claim.claim_type)
     @claim_type_document_ids = @process_claim.claim_attachments.pluck(:claim_type_document_id)
     @required_documents = @claim_type_document.where.not(id: @claim_type_document_ids)
-    @check = @process_claim.check_voucher_request&.check_vouchers&.where(audit: [:pending_audit, :for_audit])&.last
+    @check = @process_claim.voucher_request&.check_vouchers&.where(audit: [:pending_audit, :for_audit])&.last
     @audit_remarks = @check&.remarks
   end
 
@@ -192,7 +174,7 @@ class Claims::ProcessClaimsController < ApplicationController
   end
 
   def claim_process
-    @check = @process_claim.check_voucher_request&.check_vouchers&.where(audit: [:pending_audit, :for_audit])&.last
+    @check = @process_claim.voucher_request&.check_vouchers&.where(audit: [:pending_audit, :for_audit])&.last
     @audit_remarks = @check&.remarks
     @cooperative = @process_claim.cooperative
     @payout_type = @process_claim.voucher_request&.vouchers&.where(audit: [:pending_audit, :for_audit])&.last
@@ -284,24 +266,12 @@ class Claims::ProcessClaimsController < ApplicationController
         elsif @claim_track.route_id == 8
           ActiveRecord::Base.transaction do
             @process_claim.update!(claim_route: @claim_track.route_id, status: :approved, approval: 1)
-            # request = @process_claim.create_claim_request_for_payment(
-            #   amount: @process_claim.get_benefit_claim_total,
-            #   status: :pending,
-            #   description: "Claim Request for Payment",
-            #   analyst: current_user.userable.signed_fullname
-            # )
-            # request = @process_claim.create_check_voucher_request(
-            #   amount: @process_claim.get_benefit_claim_total,
-            #   status: :pending,
-            #   description: "Claim Request for Payment",
-            #   analyst: current_user.userable.signed_fullname
-            # )
 
-            if @process_claim.check_voucher_request&.check_vouchers&.pending_audit.present?
+            if @process_claim.voucher_request&.check_vouchers&.pending_audit.present?
               #* put the check voucher to pending here
-              @process_claim.check_voucher_request.check_vouchers.pending_audit.last.update(audit: :for_audit)
+              @process_claim.voucher_request.check_vouchers.pending_audit.last.update(audit: :for_audit)
             else
-              request = CheckVoucherRequestService.new(@process_claim, @process_claim.get_benefit_claim_total, :claims_payment, current_user)
+              request = VoucherRequestService.new(@process_claim, @process_claim.get_benefit_claim_total, :claims_payment, current_user)
 
               if request.create_request
                 format.html { redirect_to show_coop_process_claim_path(@process_claim), notice: "#{@process_claim.claim_route.to_s.humanize.titleize} by #{current_user}"  }
