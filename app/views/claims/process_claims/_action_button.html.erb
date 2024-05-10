@@ -2,7 +2,7 @@
   <div class="col-md-8">
     <% if current_user.userable_type == "CoopUser" %>
       <%= link_to '<i class="bi bi-arrow-left-square"></i> Back'.html_safe, show_coop_claims_process_claim_path(@process_claim.claimable), class: 'btn btn-outline-secondary btn-sm' %>
-      <%= link_to "Submit Claims", claim_route_process_claim_path(@process_claim, p: 1), class: "btn btn-success btn-sm", data: {turbo_confirm: "Make sure all documents are uploaded. Submit claim?", turbo_method: :get} if @process_claim.file_claim? %>
+      <%= link_to "Submit Claims", claim_route_claims_process_claim_path(@process_claim, p: 1), class: "btn btn-success btn-sm", data: {turbo_confirm: "Make sure all documents are uploaded. Submit claim?", turbo_method: :get} if @process_claim.file_claim? %>
     <% elsif current_user.is_auditor? %>
       <%= link_to '<i class="bi bi-arrow-left-square"></i> Back'.html_safe, accounting_check_path(@process_claim.voucher_request.vouchers.last), class: 'btn btn-outline-secondary btn-sm' %>
     <% elsif current_user.userable_type == "Employee"%>
@@ -18,7 +18,7 @@
         <%= link_to claim_route_claims_process_claim_path(@process_claim, p: 1), class: "btn btn-success btn-sm", data: {turbo_confirm: "Make sure all documents are uploaded. Submit claim?", turbo_method: :get}  do %>
           <i class="bi bi-check-circle-fill"></i> Submit
         <% end %>
-        <%= link_to process_claim_path(@process_claim), class: "btn btn-danger btn-sm", data: {turbo_confirm: "Cancel claim?", turbo_method: :delete} do %>
+        <%= link_to claims_process_claim_path(@process_claim), class: "btn btn-danger btn-sm", data: {turbo_confirm: "Cancel claim?", turbo_method: :delete} do %>
           <i class="bi bi-x-circle-fill"></i> Cancel
         <% end %>
       <% end %>
