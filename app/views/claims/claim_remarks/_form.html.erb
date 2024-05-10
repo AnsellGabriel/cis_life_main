@@ -1,0 +1,26 @@
+<%#= render 'message_his' if @claim_remark.coop? %>
+<%= simple_form_for(@claim_remark, url: url, method: meth) do |f| %>
+  <%= f.error_notification %>
+  <%#= f.error_notification message: f.object.errors[:base].to_sentence if f.object.errors[:base].present? %>
+  <div class="form-inputs">
+    <%#= f.label :status unless current_user.userable_type == 'CoopUser' %>
+    <%= f.hidden_field :coop %>
+    <% if @claim_remark.coop? %>
+      <% label = "Leave your message here" %>
+    <% else %>
+      <% label = "Recommendation/Remarks" %>
+    <% end %>
+    <%= f.input :remark, label: label ,:input_html => {:rows => 3} %>
+    <div class="row">
+      <div class="col-md-6">
+        <%= f.select :status, options_for_select(Claims::ClaimRemark.statuses.keys.map { |key| [key.humanize, key] }), { prompt: 'Select Status' }, { class: 'form-control' } unless @claim_remark.coop? %>
+      </div>
+      <div class="col-md-6">
+        <div class="text-end">
+          <%= f.button :submit, value: "Submit", class: "btn btn-success" %>
+        </div>
+      </div>
+    </div>
+  </div>
+  <%= render 'claims/claim_remarks/show_coop_remark' if @claim_remark.coop? %>
+<% end %>

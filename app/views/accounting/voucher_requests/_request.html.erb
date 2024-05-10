@@ -1,0 +1,32 @@
+<div class="card" style="width: 50%;">
+  <div class="card-header <%= flex_justify_align('between', '') %>">
+    <div class="" style="width: 100%">
+      <h3 class="text-primary"><%= "#{request.payment_type.humanize.upcase} REQUEST" %></h3>
+      <div class="<%= flex_justify_align('between','start') %>">
+        <div class="<%= flex_justify_align('','', true) %> gap-1">
+          <p><small><strong>Date:</strong> <span><%= short_month_day_year(request.created_at) %></span></small></p>
+          <p><small><strong>Requester:</strong> <span><%= request.requester %></span></small></p>
+        </div>
+        <div class="<%= flex_justify_align('','center') %> gap-1">
+          <p><small><strong>Status:</strong></small></p>
+          <p class="<%= request.decorate.status_badge %>"><%= request.status.humanize %></p>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="card-body">
+    <div class="row mb-3">
+      <span class="small fw-bold col-2">Payee: </span>
+      <span class="small col-10"><%= request.payee %></span>
+    </div>
+    <div class="row mb-3">
+      <span class="small fw-bold col-2">Amount: </span>
+      <span class="small col-10"><%= to_curr request.amount %></span>
+    </div>
+    <div class="row mb-3">
+      <span class="small fw-bold col-2">Particulars: </span>
+      <span class="small col-10"><%= request.particulars %></span>
+    </div>
+  </div>
+</div>
+

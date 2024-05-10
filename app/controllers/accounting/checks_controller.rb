@@ -35,10 +35,10 @@ class Accounting::ChecksController < ApplicationController
     end
   end
 
-  def requests
-    @claim_requests = Accounting::CheckVoucherRequest.all.order(created_at: :desc)
-    @pagy, @claim_requests = pagy(@claim_requests, items: 10)
-  end
+  # def requests
+  #   @claim_requests = Accounting::CheckVoucherRequest.all.order(created_at: :desc)
+  #   @pagy, @claim_requests = pagy(@claim_requests, items: 10)
+  # end
 
   def claimable
     total_business_checks = @check.business_checks.sum(:amount)
@@ -47,7 +47,7 @@ class Accounting::ChecksController < ApplicationController
       return redirect_to accounting_check_path(@check), alert: "Total amount of business checks is not equal to the voucher amount"
     end
 
-    claim = @check.check_voucher_request.requestable
+    claim = @check.request.requestable
 
     ActiveRecord::Base.transaction do
       @check.update!(claimable: true)
@@ -84,8 +84,8 @@ class Accounting::ChecksController < ApplicationController
     @business_checks = @check.business_checks.where.not(id: nil).order(created_at: :desc)
     @ledgers = @check.general_ledgers
 
-    if @check.check_voucher_request.present?
-      @request = @check.check_voucher_request
+    if @check.request.present?
+      @request = @check.request
       @claim = @request.requestable
     end
   end
@@ -96,11 +96,11 @@ class Accounting::ChecksController < ApplicationController
     initiate_voucher = last_voucher ? last_voucher + 1 : 1
 
     if params[:rid].present?
-      claim_request = Accounting::CheckVoucherRequest.find(params[:rid])
-      @amount = claim_request.amount
-      @coop = claim_request.requestable.cooperative
+      request = Accounting::VoucherRequest.find(params[:rid])
+      @amount = request.amount
+      @coop = request.requestable.cooperative
 
-      @check = Accounting::Check.new(voucher: sprintf("%05d", initiate_voucher), payable: @coop, amount: @amount, date_voucher: Date.today)
+      @check = Accounting::Check.new(voucher: sprintf("%05d", initiate_voucher), payable: @coop, amount: @amount, date_voucher: Date.today, particulars: request.particulars)
     else
       @check = Accounting::Check.new(voucher: sprintf("%05d", initiate_voucher), date_voucher: Date.today)
     end
@@ -119,17 +119,17 @@ class Accounting::ChecksController < ApplicationController
 
     if @check.save
       if params[:rid].present?
-        claim_request = Accounting::CheckVoucherRequest.find(params[:rid])
-        claim_request.voucher_generated!
-        @check.update(check_voucher_request: claim_request)
+        request = Accounting::VoucherRequest.find(params[:rid])
+        request.voucher_generated!
+        @check.update(request: request)
       end
 
       redirect_to @check, notice: "Check voucher created."
     else
       if params[:rid].present?
-        claim_request = Accounting::CheckVoucherRequest.find(params[:rid])
-        @amount = claim_request.amount
-        @coop = claim_request.requestable.cooperative
+        request = Accounting::VoucherRequest.find(params[:rid])
+        @amount = request.amount
+        @coop = request.requestable.cooperative
       end
 
       render :new, status: :unprocessable_entity
@@ -150,15 +150,6 @@ class Accounting::ChecksController < ApplicationController
     @check.destroy
     redirect_to accounting_checks_path, notice: "Check voucher deleted.", status: :see_other
   end
-
-  # def cancel
-  #   @check.transaction do
-  #     @check.cancelled!
-  #     @check.check_voucher_request.pending! if @check.check_voucher_request.present?
-  #   end
-
-  #   redirect_to @check, alert: "Voucher cancelled."
-  # end
 
   private
   # Use callbacks to share common setup or constraints between actions.

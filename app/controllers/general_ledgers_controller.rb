@@ -5,25 +5,27 @@ class GeneralLedgersController < ApplicationController
 
   def post
     ActiveRecord::Base.transaction do
-      if @entry.update(status: :posted)
+      if @entry.update!(status: :posted)
         # params[:e_t] = entry type
         if params[:e_t] == 'ce' && @entry.remittance?
           pay_service = PaymentService.new(@entry.entriable, current_user, @entry)
           result = pay_service.post_payment
         elsif params[:e_t] == 'cv' || params[:e_t] == 'da'
-          @entry.update(post_date: Date.current, certified_by: current_user.userable.id)
+          @entry.update!(post_date: Date.current, certified_by: current_user.userable.id)
 
-          if @entry.check_voucher_request.present?
-            @entry.check_voucher_request.update(status: :posted)
-            claim_track = @entry.check_voucher_request.requestable.process_track.build
-            claim_track.route_id = 14
-            claim_track.user_id = current_user.id
-            claim_track.save
+          if @entry.voucher_request.present?
+            @entry.voucher_request.update!(status: :posted)
+            if @entry.voucher_request.requestable.is_a?(Claims::ProcessClaim)
+              claim_track = @entry.voucher_request.requestable.process_track.build
+              claim_track.route_id = 14
+              claim_track.user_id = current_user.id
+              claim_track.save
+            end
           end
 
           result = "#{params[:e_t] == 'da' ? ' Debit advice posted.' : 'Check voucher posted.'}"
         elsif params[:e_t] == 'jv'
-          @entry.update(post_date: Date.current, certified_by: current_user.userable.id)
+          @entry.update!(post_date: Date.current, certified_by: current_user.userable.id)
           result = 'Journal posted.'
         end
 

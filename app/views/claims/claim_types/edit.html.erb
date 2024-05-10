@@ -1,0 +1,7 @@
+<div class="card">
+  <h5 class="card-header">Edit claim type</h5>
+  <div class="card-body">
+    <%#= render "form", claim_type: @claim_type %>
+    <%= render "form", url: claims_claim_type_url, meth: 'patch' %>
+  </div>
+</div>

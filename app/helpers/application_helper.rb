@@ -18,7 +18,7 @@ module ApplicationHelper
   end
 
   def to_shortdate(date)
-    date&.strftime("%b %d, %Y")
+    date&.strftime("%b-%d-%Y")
   end
   def start_month(val)
     val.beginning_of_month
@@ -244,6 +244,8 @@ module ApplicationHelper
     else
       content_tag(:span, "w/o Agreement", class: "badge rounded-pill bg-danger")
     end
+  def table_sm_hoverable
+    'table table-bordered table-hover bg-white table-sm sm-secondary-text'
   end
 
 end

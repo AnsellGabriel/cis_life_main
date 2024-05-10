@@ -29,9 +29,45 @@ Rails.application.routes.draw do
   resources :reinsurances do
     get :reserves_index, on: :collection
   end
-  resources :claim_types, :claim_type_documents, :claim_type_benefits, :claim_attachments, :claim_confinements, :claim_benefits, :claim_coverages
+  namespace :claims do 
+    resources :claim_types, :claim_type_documents, :claim_type_benefits, :claim_confinements, :claim_benefits, :claim_coverages, :claim_distributions, :claim_type_natures, :claim_documents
+    resources :causes do
+      post 'create_cause', to: "causes#create"
+    end
+    resources :claim_attachments do
+      get :attach_new_doc, on: :collection
+    end
+
+    resources :process_claims do
+      get :new_coop, to: "process_claims#new_coop", on: :collection
+      post :create_coop, to: "process_claims#create_coop", on: :collection
+      get :index_coop, to: "process_claims#index_coop", on: :collection
+      get :index_show, on: :collection
+      get :show_coop, on: :member
+      get :claim_route, on: :member
+      get :claims_file, on: :member
+      get :claim_process, on: :member
+      get :update_status, on: :member
+      get :new_ca, to: "process_claims#new_ca", on: :collection
+      get :edit_ca, to: "process_claims#edit_ca", on: :member
+      post :create_ca, to: "process_claims#create_ca", on: :collection
+      patch :update_ca, to: "process_claims#update_ca", on: :member
+      get :print_sheet, to: "process_claims#print_sheet", on: :member
+      # get :claimable, on: :collection
+    end
+
+    resources :claim_remarks do
+      get :new_status, to: "claim_remarks#new_status", on: :collection
+      post :create_status, to: "claim_remarks#create_status", on: :collection
+      get :message_history, to: "claim_remarks#message_history", on: :collection
+      get :read_message, on: :member
+    end
+  end
+
+
+
+  
   resources :documents
-  resources :causes
   resources :emp_approvers
   get "med_directors/home"
   get "med_director/index"
@@ -249,11 +285,6 @@ Rails.application.routes.draw do
       get :print, on: :member
     end
 
-
-    resources :check_voucher_requests, only: %i[show]
-    resources :journal_voucher_requests, only: %i[show]
-
-
     resources :general_disbursement_book, only: %i[index] do
       get :pdf, on: :collection
     end
@@ -264,6 +295,9 @@ Rails.application.routes.draw do
 
     resources :receipt_book, only: %i[index] do
       get :pdf, on: :collection
+    end
+
+    resources :voucher_requests, only: %i[index show] do
     end
 
     get "dashboard", to: "dashboard#index"
@@ -326,29 +360,9 @@ Rails.application.routes.draw do
   # * Underwriting Module Routes
   resources :user_levels
   resources :authority_levels
-  resources :claim_remarks do
-    get :new_status, to: "claim_remarks#new_status", on: :collection
-    post :create_status, to: "claim_remarks#create_status", on: :collection
-    get :read_message, on: :member
-  end
+  
 
-  resources :process_claims do
-    get :new_coop, to: "process_claims#new_coop", on: :collection
-    post :create_coop, to: "process_claims#create_coop", on: :collection
-    get :index_coop, to: "process_claims#index_coop", on: :collection
-    get :index_show, on: :collection
-    get :show_coop, on: :member
-    get :claim_route, on: :member
-    get :claims_file, on: :member
-    get :claim_process, on: :member
-    get :update_status, on: :member
-    get :new_ca, to: "process_claims#new_ca", on: :collection
-    get :edit_ca, to: "process_claims#edit_ca", on: :member
-    post :create_ca, to: "process_claims#create_ca", on: :collection
-    patch :update_ca, to: "process_claims#update_ca", on: :member
-    get :approve_claim_debit, on: :member
-    # get :claimable, on: :collection
-  end
+  
   resources :underwriting_routes
   resources :batch_remarks do
     get :form_md, on: :member
@@ -410,7 +424,6 @@ Rails.application.routes.draw do
 
   devise_scope :user do
     authenticated :user do
-      # mount Sidekiq::Web in your Rails app
       root "application#root", as: :authenticated_root
     end
 

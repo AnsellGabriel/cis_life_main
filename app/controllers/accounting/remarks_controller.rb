@@ -26,7 +26,7 @@ class Accounting::RemarksController < ApplicationController
 
         if params[:remark][:category] == "incorrect_claim_details"
           ActiveRecord::Base.transaction do
-            process_claim = @voucher.check_voucher_request.requestable
+            process_claim = @voucher.request.requestable
             claim_track = process_claim.process_track.build
             claim_track.route_id = 16
             claim_track.user_id = current_user.id
@@ -43,25 +43,20 @@ class Accounting::RemarksController < ApplicationController
         elsif params[:remark][:category] == "incorrect_voucher_details"
           @voucher.transaction do
             @voucher.pending!
-            @voucher.check_voucher_request.pending!
+            @voucher.request.pending!
           end
         end
       elsif current_user.is_accountant?
         @voucher.transaction do
           @voucher.general_ledgers.update_all(transaction_date: nil)
           @voucher.cancelled!
-          @voucher.check_voucher_request.pending! if (params[:e_t] == 'cv' || params[:e_t] == 'da')  and @voucher&.check_voucher_request&.present?
+          @voucher.voucher_request.pending! if @voucher&.voucher_request&.present?
         end
       elsif current_user.is_treasurer?
         ActiveRecord::Base.transaction do
           @voucher.paid!
-          jv_request = Accounting::JournalVoucherRequest.create!(
-            requestable: @voucher,
-            amount: @voucher.amount,
-            particulars: @voucher.particulars,
-            status: :pending,
-            request_type: @voucher.voucher_type
-          )
+          jv_request = VoucherRequestService.new(@voucher, @voucher.amount, :claims_payment, current_user, :journal_voucher)
+          jv_request.create_request
         end
       end
 

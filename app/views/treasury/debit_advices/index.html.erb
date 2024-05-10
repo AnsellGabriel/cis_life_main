@@ -24,7 +24,7 @@
 </div>
 
 
-  <table class="table table-striped table-bordered table-hover">
+  <table class="<%= table_sm_hoverable %>">
     <thead class="table-dark">
       <tr>
         <th class="text-center" style="min-width: 125px;">DA No.</th>
@@ -43,13 +43,13 @@
             <td class="text-center">
               <%= da.voucher %>
             </td>
-            <td class="text-center"><%= short_month_day_year(da.date_voucher) %></td>
-            <td><%= da.payable %></td>
-            <td class="text-end"><%= to_curr(da.amount) %></td>
-            <td class="text-center">
+            <td class="text-center align-middle"><%= short_month_day_year(da.date_voucher) %></td>
+            <td class="align-middle"><%= da.payable %></td>
+            <td class="text-end align-middle"><%= to_curr(da.amount) %></td>
+            <td class="text-center align-middle">
               <span class="<%= da.decorate.payout_status_badge %>"><%= da.payout_status.titleize %></span>
             </td>    
-            <td class="text-center">
+            <td class="text-center align-middle">
               <%= link_to da, class: small_btn('outline-primary'), title: 'View' do %>
                 <i class="bi bi-eye-fill"></i>
               <% end %>

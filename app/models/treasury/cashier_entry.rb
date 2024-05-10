@@ -15,11 +15,12 @@ class Treasury::CashierEntry < ApplicationRecord
   belongs_to :plan, optional: true
   # belongs_to :payment, -> { includes(:cashier_entrentrieies).where(treasury_cashier_entries: { entriable_type: "Payment" }) }, foreign_key: :entriable_id
 
+  # belongs_to :payment, -> { includes(:treasury_cashier_entries).where(treasury_cashier_entries: { entriable_type: "Payment" }) }, foreign_key: :entriable_id
   # has_many :payments, class_name: "Treasury::Payment", dependent: :destroy
   # has_many :payments, dependent: :destroy
   has_many :bills, class_name: "Treasury::BillingStatement", dependent: :destroy
   has_many :general_ledgers, as: :ledgerable
-  has_many :transmittable_ors, as: :transmittable, inverse_of: :transmittable 
+  has_many :transmittable_ors, as: :transmittable, inverse_of: :transmittable
   has_many :transmittals, through: :transmittable_ors
 
 
@@ -32,7 +33,7 @@ class Treasury::CashierEntry < ApplicationRecord
   def for_transmittal
     "#{self.or_no} - #{entriable}"
   end
-  
+
   def self.receipt_book_pdf(employee_id, date_from, date_to, type)
     Reports::BooksPdfJob.perform_async(employee_id, date_from, date_to, type)
   end

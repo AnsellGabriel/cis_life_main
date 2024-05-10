@@ -1,39 +1,31 @@
 <%= content_tag :h1, "List of User Levels" %>
-
-
 <div class="text-end mb-3">
   <%= link_to new_user_level_path, class: 'btn btn-primary' do %>
     New User Level
   <% end %>
 </div>
-
 <table class ="table table-striped">
   <table class="table table-striped table-bordered table-hover">
     <thead>
       <tr>
-
-      <th>#</th>
+        <th>#</th>
         <th>Authority Level</th>
         <th></th>
-
       </tr>
     </thead>
-
     <tbody>
       <% @user_levels.each do |user_level| %>
         <tr>
-
-        <th scope="row"><%= user_level.id %></th>
-        <td><%= user_level.user.userable.signed_fullname %> <br> <small><%= user_level.user.userable.designation %></small> <br>
-        <small><%= user_level.authority_level.name %> - <%= to_currency(user_level.authority_level.maxAmount) %></small> <br>
-        <small><%= badge_pill(user_level.active) %></small></td>
-    
+          <th scope="row"><%= user_level.id %></th>
+          <td><%= user_level.user.userable.signed_fullname %> <br>
+ <small><%= user_level.user.userable.designation %></small> <br>
+            <small><%= user_level.authority_level.name %> - <%= to_currency(user_level.authority_level.maxAmount) %></small> <br>
+            <small><%= badge_pill(user_level.active) %></small></td>
           <td>
-            <%= link_to 'View', user_level, class: 'btn btn-secondary btn-sm' %>
+            <%#= link_to 'View', user_level, class: 'btn btn-secondary btn-sm' %>
             <%= link_to 'Edit', edit_user_level_path(user_level), class: 'btn btn-secondary btn-sm' %>
             <%= link_to "Delete", user_level, class: "btn btn-danger btn-sm", method: :delete, data: { "turbo-method": :delete, turbo_confirm: "Are you sure?" } %>
           </td>
-
         </tr>
       <% end %>
     </tbody>

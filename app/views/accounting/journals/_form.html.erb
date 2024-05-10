@@ -1,5 +1,5 @@
 
-<%= simple_form_for(journal) do |f| %>
+<%= simple_form_for(journal, url: params[:rid].present? ? accounting_journals_path(rid: params[:rid]) : '') do |f| %>
   <div class="form-inputs mb-3">
     <div class="row">
       <div class="col-6">
@@ -18,15 +18,23 @@
         <%= f.input :voucher, wrapper: false, label: false, placeholder: '000-00-000', input_html: {class: 'text-center'}, error: '*Required' %>
       </div>
     </div>
-    <%= f.input :global_payable, 
-      collection: @payables, 
-      label_method: :to_s, 
-      value_method: :to_global_id, 
-      label: 'Payee',
-      input_html: {data: {controller: 'ts--select'}},
-      error: '*Required'
-     %>
+
+    <% if params[:rid].present? %>
+      <%= f.label 'Payee', class: 'mb-1' %>
+      <%= f.select :global_payable, [[@coop.name, @coop.to_global_id]], {}, { class: 'form-control mb-3', readonly: true } %>
+    <% else %>
+      <%= f.input :global_payable, 
+        collection: @payables, 
+        label_method: :to_s, 
+        value_method: :to_global_id, 
+        label: 'Payee',
+        input_html: {data: {controller: 'ts--select'}},
+        error: '*Required'
+      %>
+    <% end %>
+    <%= f.input :amount, error: '*Required' %>
     <%= f.input :particulars, error: '*Required' %>
+
   </div>
 
   <div class="form-actions text-center">

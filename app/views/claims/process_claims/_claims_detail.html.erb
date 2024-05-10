@@ -1,0 +1,39 @@
+<div class="card">
+  <div class="card-header">
+    <strong>Claim Details</strong>  <%= link_to '<i class="bi bi-pencil-square"></i> Edit'.html_safe, edit_ca_claims_process_claim_path(@process_claim), class: "text-muted" %>
+  </div>
+  <div class="card-body">
+    <dl class="row">
+      <dt class="col-sm-4">Route:</dt>
+      <dd class="col-sm-8"><%= @process_claim.claim_route.humanize.titleize %></dd>
+      <dt class="col-sm-4">Status</dt>
+      <dd class="col-sm-8"><%= @process_claim.status.humanize unless @process_claim.status.nil? %></dd>
+      <dt class="col-sm-4">Date Incident:</dt>
+      <dd class="col-sm-8"><%= to_shortdate(@process_claim.date_incident) %> </dd>
+      <dt class="col-sm-4">Nature of Claim:</dt>
+      <dd class="col-sm-8"><%= @process_claim.claim_type_nature %> </dd>
+      <%#= render 'show_cause' %>
+      <dt class="col-sm-4">Cause</dt>
+      <dd class="col-sm-8"><%= @process_claim.cause %></dd>
+      <% unless @process_claim.claim_cause.nil? %>
+        <% unless @process_claim.claim_cause.acd == "" %>
+          <%= content_tag :dt, 'ACD', class: "col-sm-4" %>
+          <%= content_tag :dd, @process_claim.claim_cause.acd, class: "col-sm-8" %>
+        <% end %>
+        <% unless @process_claim.claim_cause.ucd == "" %>
+          <%= content_tag :dt, 'UCD', class: "col-sm-4" %>
+          <%= content_tag :dd, @process_claim.claim_cause.ucd, class: "col-sm-8" %>
+        <% end %>
+        <% unless @process_claim.claim_cause.osccd == "" %>
+          <%= content_tag :dt, 'OSCCD', class: "col-sm-4" %>
+          <%= content_tag :dd, @process_claim.claim_cause.osccd, class: "col-sm-8" %>
+        <% end %>
+        <% unless @process_claim.claim_cause.icd == "" %>
+          <%= content_tag :dt, 'ICD', class: "col-sm-4" %>
+          <%= content_tag :dd, @process_claim.claim_cause.icd, class: "col-sm-8" %>
+        <% end %>
+      <% end %>
+    </dl>
+  </div>
+</div>
+<%# ##### Revisions %>

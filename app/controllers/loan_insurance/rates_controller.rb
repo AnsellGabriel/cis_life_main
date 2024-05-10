@@ -28,9 +28,10 @@ class LoanInsurance::RatesController < ApplicationController
     @agreement = Agreement.find(params[:agreement])
     @rate = @agreement.loan_rates.build(rate_params)
     # raise 'errors'
-    @rate.set_rate
+    # @rate.set_rate
 
     if @rate.save
+      @rate.set_rate
       redirect_back fallback_location: @agreement, notice: "LPPI Rate was successfully added."
       # redirect_to @rate, notice: "Rate was successfully created."
     else
@@ -42,7 +43,7 @@ class LoanInsurance::RatesController < ApplicationController
   def update
     @rate.monthly_rate = rate_params[:annual_rate].to_d / 12
     @rate.daily_rate = rate_params[:annual_rate].to_d / 365
-    
+
     if @rate.update(rate_params)
       # redirect_to @rate, notice: "Rate was successfully updated."
       redirect_back fallback_location: @agreement, notice: "LPPI Rate was successfully updated."
