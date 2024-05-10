@@ -3,7 +3,7 @@ class MemberImportService
     @spreadsheet = spreadsheet
     @cooperative = cooperative
     @current_user = current_user
-    @required_headers = ["First Name", "Middle Name", "Last Name", "Birthdate"]
+    @required_headers = ["First Name", "Middle Name", "Last Name", "Birthdate", "Gender"]
     @progress = @current_user.create_progress_tracker(progress: 0.0)
   end
 
@@ -33,7 +33,7 @@ class MemberImportService
         first_name: row["First Name"] == nil ? nil : row["First Name"].strip,
         middle_name: row["Middle Name"] == nil ? nil : row["Middle Name"].strip,
         birth_date: row["Birthdate"],
-        # gender: row["Gender"],
+        gender: row["Gender"] == nil ? nil : row["Gender"].strip
         # civil_status: row["Civil Status"]
         # suffix: row["Suffix"] == nil ? nil : row["Suffix"].strip,
         # birth_place: row["Birth Place"],
