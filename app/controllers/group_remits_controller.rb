@@ -116,6 +116,10 @@ class GroupRemitsController < InheritedResources::Base
           @group_remit.update!(batch_remit_id: params[:batch_remit_id])
         end
 
+        if params[:or_no].present?
+          @group_remit.update!(official_receipt: params[:or_no])
+        end
+
         if current_user.is_mis?
           @group_remit.update!(mis_entry: true, mis_user: current_user.id)
         end

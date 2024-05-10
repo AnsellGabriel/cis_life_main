@@ -63,6 +63,7 @@ Rails.application.routes.draw do
 
   resources :agreements do
     get :show_details, on: :member
+    post :update_ors, on: :member
   end
 
   # resources :agreement_benefits
@@ -110,6 +111,7 @@ Rails.application.routes.draw do
 
   resources :cooperatives do
     get :selected, on: :member
+    get :select_agreement, on: :member
     get :details, on: :member
     get :get_plan, on: :member
     resources :coop_banks

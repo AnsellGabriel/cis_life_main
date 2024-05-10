@@ -23,7 +23,9 @@ class TransmittalsController < ApplicationController
 
     if params[:search].present?
       if current_user.is_mis?
-        payment = Payment.includes(:group_remit).find_by(group_remit: { official_receipt: params[:search]})
+        group_remit = GroupRemit.find_by(official_receipt: params[:search])
+        payment = Payment.find_by(payable: group_remit)
+        # payment = Payment.includes(:group_remit).find_by(group_remit: { official_receipt: params[:search]})
         cashier_entry = Treasury::CashierEntry.find_by(entriable: payment)
         # @transmittals = Transmittal.includes(:transmittal_ors).where(transmittal_ors: { transmittable: cashier_entry}, transmittal_type: type)
         @transmittals = @transmittals.includes(:transmittal_ors).where(transmittal_ors: { transmittable: cashier_entry})

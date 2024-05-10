@@ -161,7 +161,7 @@ module CsvGenerator
           record.age,
           record.coop_member.member.gender,
           record.loan_amount.to_f,
-          record.loan.name,
+          record&.loan&.name,
           record.effectivity_date,
           record.expiry_date,
           record.terms,

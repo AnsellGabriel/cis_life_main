@@ -11,6 +11,8 @@ class GroupRemit < ApplicationRecord
   scope :remittances, -> { where(:type => "Remittance")}
 
   belongs_to :agreement
+  # has_one :agreement
+  # has_one :cashier_entry, through: :agreement, class_name: "Treasury::CashierEntry"
   belongs_to :anniversary, optional: true
 
   has_many :remarks, as: :remarkable, dependent: :destroy

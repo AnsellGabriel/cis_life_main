@@ -26,7 +26,7 @@ export default class extends Controller {
   //       let toastTitle = document.getElementById("downloadTitle");
   //       let toastLink = document.getElementById("downloadLink");
   //       let toast = new bootstrap.Toast(toastEl);
-        
+
   //       toast.show();
   //       // set local storage
   //       localStorage.setItem("downloadTitle", toastTitle.textContent);
@@ -47,7 +47,7 @@ export default class extends Controller {
     toastLink.href = localStorage.getItem("downloadLink");
     toast.show();
     // set local storage
-  } 
+  }
 
   clearDownload() {
     let toastElem = document.getElementById("downloaderToast");

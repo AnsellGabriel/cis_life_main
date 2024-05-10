@@ -27,15 +27,23 @@
         value_method: :to_global_id, 
         label: 'Payee', 
         error: '*Required',
-        input_html: { data: { controller: "ts--select" } }
+        input_html: { data: { controller: "ts--select", action: "change->coop#search_agreement" } }
       %>
     <% end %>
-    <%= f.association :treasury_account, label: 'Account', error: '*Required', input_html: { data: { controller: "ts--select" } }  %>
-    <%= f.association :treasury_payment_type, label: 'Entry type', error: '*Required', input_html: { data: { controller: "ts--select" } } %>
-    <div class="row">
-      <div class="col-6">
-        <%= f.input :amount, error: '*Required' %>
+    <div data-controller="hider">
+      <%= f.input :product_check, as: :boolean, label: "Product?", input_html: { name: "someid", id: "someid", data: { action: "input->hider#toggle", hider_target: "input" } } %>
+      <%= f.association :treasury_account, label: 'Account', error: '*Required', input_html: { data: { controller: "ts--select" } }  %>
+      <%= f.association :treasury_payment_type, label: 'Entry type', error: '*Required', input_html: { data: { controller: "ts--select" } } %>
+      <div class="row">
+        <div class="col-6">
+          <%= f.input :amount, error: '*Required' %>
+        </div>
+        <div class="col-6" id="to_hide_agreement" data-hider-target="hideme">
+          <%#= f.association :agreement, label: "Plan", input_html: { id: "agreement_id", data: { coop_target: "agreementSelect" } } %>
+          <%= f.association :plan, label: "Plan" %>
+        </div>
       </div>
+      
     </div>
   </div>
 

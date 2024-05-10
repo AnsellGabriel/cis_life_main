@@ -87,7 +87,11 @@ class LoanInsurance::GroupRemitsController < ApplicationController
   end
 
   def create
+    if params[:or_no].present?
+      @agreement = Agreement.find(params[:agreement_id])
+    end
     @group_remit = @agreement.group_remits.new
+    @group_remit.official_receipt = params[:or_no] if params[:or_no].present?
     @group_remit.type = "LoanInsurance::GroupRemit"
     @group_remit.name = @agreement.plan.acronym == "LPPI" ? "LPPI-#{Date.today.day}#{Date.today.strftime("%B").upcase}#{Date.today.year}" : "#{@agreement.plan.acronym.upcase}-#{Date.today.day}#{Date.today.strftime("%B").upcase}#{Date.today.year}"
 

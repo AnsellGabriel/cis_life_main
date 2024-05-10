@@ -51,6 +51,13 @@
           <% end %>
           <strong class="text-primary">Special Arrangements</strong>
           <%= render 'special_arrangements/show_special_arrangements', a: agreement %>
+          <% if Treasury::CashierEntry.check_ors_agreement(agreement) > 0 %>
+            <div class="card col-6">
+              <div class="card-body text-center">
+                <%= link_to "Update ORs", update_ors_agreement_path, data: { turbo_method: :post }, class: "btn btn-outline-warning", onclick: "return confirm('Are you sure?')" %>
+              </div>
+            </div>
+          <% end %>
         </div>
       </div>
     </div>

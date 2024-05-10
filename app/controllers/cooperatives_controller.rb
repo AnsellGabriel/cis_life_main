@@ -96,6 +96,14 @@ class CooperativesController < ApplicationController
     end
   end
 
+  def select_agreement
+    @target = params[:target]
+    @agreements = Agreement.where(cooperative_id: params[:id])
+    respond_to do |format|
+      format.turbo_stream
+    end
+  end
+
   def get_plan
     @target = params[:target]
     @coop = Cooperative.find(params[:id])

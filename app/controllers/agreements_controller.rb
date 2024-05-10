@@ -1,7 +1,7 @@
 class AgreementsController < ApplicationController
   before_action :authenticate_user!
   # before_action :check_employee
-  before_action :set_agreement, only: %i[ show edit update destroy show_details ]
+  before_action :set_agreement, only: %i[ show edit update destroy show_details update_ors ]
 
   # GET /agreements
   def index
@@ -27,6 +27,16 @@ class AgreementsController < ApplicationController
   end
 
   def show_details
+  end
+
+  def update_ors
+    @ors = Treasury::CashierEntry.get_ors(@agreement)
+    if @ors.update(agreement: @agreement)
+      redirect_to @agreement, notice: "O.Rs agreement updated!"
+    else
+      redirect_to @agreement, alert: "No O.Rs to be updated!"
+    end
+
   end
 
   # GET /agreements/new
