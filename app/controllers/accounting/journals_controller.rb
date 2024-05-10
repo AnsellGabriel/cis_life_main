@@ -31,7 +31,7 @@ class Accounting::JournalsController < ApplicationController
 
   def requests
     # @q = Accounting::DebitAdvice.where(payout_status: :paid).order(created_at: :desc).ransack(params[:q])
-    @q = Accounting::JournalVoucherRequest.all.order(created_at: :desc).ransack(params[:q])
+    @q = Accounting::VoucherRequest.all.order(created_at: :desc).ransack(params[:q])
     @requests = @q.result
     @pagy, @requests = pagy(@requests, items: 10)
   end
@@ -44,10 +44,17 @@ class Accounting::JournalsController < ApplicationController
   # GET /accounting/journals/new
   def new
     if params[:rid].present?
-      @request = Accounting::JournalVoucherRequest.find(params[:rid])
+      @request = Accounting::VoucherRequest.find(params[:rid])
     end
 
-    @journal = Accounting::Journal.new(voucher: Accounting::Journal.generate_series, date_voucher: Date.today, global_payable: @request&.requestable&.payable&.to_global_id, particulars: @request&.requestable&.particulars)
+    if params[:rid].present?
+      request = Accounting::VoucherRequest.find(params[:rid])
+      @coop = request.payee
+
+      @journal = Accounting::Journal.new(voucher: Accounting::Journal.generate_series, date_voucher: Date.today, global_payable: request&.requestable&.payable&.to_global_id, particulars: request&.requestable&.particulars)
+    else
+      @journal = Accounting::Journal.new(voucher: Accounting::Journal.generate_series, date_voucher: Date.today)
+    end
   end
 
   # GET /accounting/journals/1/edit
@@ -62,8 +69,20 @@ class Accounting::JournalsController < ApplicationController
     @journal.branch = current_user.userable.branch_before_type_cast
 
     if @journal.save
-      redirect_to @journal, notice: "Journal was successfully created."
+      if params[:rid].present?
+        request = Accounting::VoucherRequest.find(params[:rid])
+        request.voucher_generated!
+        @journal.update(voucher_request: request)
+      end
+
+      redirect_to @journal, notice: "Journal voucher created."
     else
+      if params[:rid].present?
+        request = Accounting::VoucherRequest.find(params[:rid])
+        @amount = request.amount
+        @coop = request.requestable.cooperative
+      end
+
       render :new, status: :unprocessable_entity
     end
   end
@@ -97,6 +116,6 @@ class Accounting::JournalsController < ApplicationController
 
   # Only allow a list of trusted parameters through.
   def journal_params
-    params.require(:accounting_journal).permit(:date_voucher, :voucher, :global_payable, :particulars, :requestable_type, :requestable_id)
+    params.require(:accounting_journal).permit(:date_voucher, :voucher, :global_payable, :particulars)
   end
 end

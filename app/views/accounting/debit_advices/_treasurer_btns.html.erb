@@ -16,13 +16,13 @@
     <% end %>
   <% end %>
 
-  <% if @debit_advice.pending_payout?  %>
-    <%=  link_to new_accounting_check_remark_path(@debit_advice, e_t: @debit_advice.entry_type), data: {turbo_frame: 'reg_form_modal' }, class: small_btn('success'), title: 'Paid' do %>
-      <i class="bi bi-check-circle-fill"></i> Tag as Paid
-    <% end %>
-  <% else %>
+  <% if @debit_advice.paid? %>
     <%= link_to accounting_check_remarks_path(@debit_advice, e_t: @debit_advice.entry_type), class: 'btn btn-sm btn-warning', data: {turbo_frame: 'reg_form_modal'} do %>
       <i class="bi bi-card-list"></i> Remarks
+    <% end %>
+  <% elsif @debit_advice.pending_payout? && @debit_advice.attachment.present? %>
+    <%=  link_to new_accounting_check_remark_path(@debit_advice, e_t: @debit_advice.entry_type), data: {turbo_frame: 'reg_form_modal' }, class: small_btn('success'), title: 'Paid' do %>
+      <i class="bi bi-check-circle-fill"></i> Tag as Paid
     <% end %>
   <% end %>
 </div>

@@ -55,13 +55,8 @@ class Accounting::RemarksController < ApplicationController
       elsif current_user.is_treasurer?
         ActiveRecord::Base.transaction do
           @voucher.paid!
-          jv_request = Accounting::JournalVoucherRequest.create!(
-            requestable: @voucher,
-            amount: @voucher.amount,
-            particulars: @voucher.particulars,
-            status: :pending,
-            request_type: @voucher.voucher_type
-          )
+          jv_request = VoucherRequestService.new(@voucher, @voucher.amount, :claims_payment, current_user, :journal_voucher)
+          jv_request.create_request
         end
       end
 

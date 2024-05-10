@@ -17,19 +17,19 @@ class Accounting::DebitAdvicesController < ApplicationController
     @bank = @debit_advice.treasury_account
     @request = @debit_advice.voucher_request
 
-    if @request.present?
+    if @request.requestable.present? && @request.requestable.is_a?(Claims::ProcessClaim)
       @claim = @request.requestable
-      @claim_type_documents = ClaimTypeDocument.where(claim_type: @request.requestable.claim_type)
+      @claim_type_documents = Claims::ClaimTypeDocument.where(claim_type: @request.requestable.claim_type)
     end
   end
 
   # GET /accounting/debit_advices/new
   def new
     if params[:rid].present?
-      @request = Accounting::CheckVoucherRequest.find(params[:rid])
-      @bank = Treasury::Account.find(@request.bank_id)
+      @request = Accounting::VoucherRequest.find(params[:rid])
+      @bank = @request.account
       @coop = @request.requestable.cooperative
-      @debit_advice = Accounting::DebitAdvice.new(voucher: Accounting::DebitAdvice.generate_series, payable: @coop, amount: @request.amount, date_voucher: Date.today, particulars: "#{@request.description} \n\nBank: #{@bank.name}\nAccount Number: #{@bank.account_number}\nAddress: #{@bank.address}")
+      @debit_advice = Accounting::DebitAdvice.new(voucher: Accounting::DebitAdvice.generate_series, payable: @coop, amount: @request.amount, date_voucher: Date.today, particulars: "#{@request.particulars} \n\nBank: #{@bank.name}\nAccount Number: #{@bank.account_number}\nAddress: #{@bank.address}")
     else
       @debit_advice = Accounting::DebitAdvice.new(voucher: Accounting::DebitAdvice.generate_series, date_voucher: Date.today)
     end
@@ -45,23 +45,25 @@ class Accounting::DebitAdvicesController < ApplicationController
     @debit_advice.accountant_id = current_user.userable.id
     @debit_advice.branch = current_user.userable.branch_before_type_cast
 
-    if @debit_advice.save
-      if params[:rid].present?
-        @claim_request = Accounting::CheckVoucherRequest.find(params[:rid])
-        @claim_request.voucher_generated!
-        @debit_advice.update(voucher_request: @claim_request)
-      end
+    ActiveRecord::Base.transaction do
+      if @debit_advice.save
+        if params[:rid].present?
+          @request = Accounting::VoucherRequest.find(params[:rid])
+          @request.voucher_generated!
+          @debit_advice.update(request: @request)
+        end
 
-      redirect_to @debit_advice, notice: "Debit advice created."
-    else
-      if params[:rid].present?
-        @claim_request = Accounting::CheckVoucherRequest.find(params[:rid])
-        @bank = Treasury::Account.find(@claim_request.bank_id)
-        @amount = @claim_request.amount
-        @coop = @claim_request.requestable.cooperative
-      end
+        redirect_to @debit_advice, notice: "Debit advice created."
+      else
+        if params[:rid].present?
+          @request = Accounting::VoucherRequest.find(params[:rid])
+          @bank = @request.account
+          @amount = @request.amount
+          @coop = @request.requestable.cooperative
+        end
 
-      render :new, status: :unprocessable_entity
+        render :new, status: :unprocessable_entity
+      end
     end
   end
 

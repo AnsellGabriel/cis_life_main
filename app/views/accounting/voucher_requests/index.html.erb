@@ -17,14 +17,14 @@
         <th class="text-center" scope="col"></th>
       </tr>
     </thead>
-
+    
     <tbody id="batches_body">
       <% if @requests.present? %> 
 
         <% @requests.each do |request| %>
           <tr>
             <td class="text-center w-125 align-middle"><%= short_month_day_year(request.created_at) %></td>
-            <td class="align-middle"><%= request.requestable.cooperative %></td>
+            <td class="align-middle"><%= request.payee %></td>
             <td><%= request.particulars %></td>
             <td class="text-center w-150 align-middle"><%= request.requester %></td>
             <td class="text-end w-125 align-middle"><%= to_curr request.amount %></td>
@@ -32,7 +32,9 @@
               <span class="<%= request.decorate.status_badge %>"><%= request.status.humanize %></span>
             </td>
             <td class="text-center align-middle">
-              <%= link_to 'View', accounting_voucher_request_path(request), class: small_btn('outline-primary') %>
+              <%= link_to accounting_voucher_request_path(request), class: small_btn('outline-primary'), title: 'Show'  do %>
+                <i class="bi bi-eye-fill"></i>
+              <% end %>
             </td>
           </tr>
 

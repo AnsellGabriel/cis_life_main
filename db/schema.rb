@@ -449,10 +449,12 @@ ActiveRecord::Schema[7.0].define(version: 2024_05_09_015019) do
   end
 
   create_table "claim_documents", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
-    t.string "name"
-    t.string "description"
+    t.bigint "process_claim_id", null: false
+    t.string "document"
+    t.integer "document_type"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.index ["process_claim_id"], name: "index_claim_documents_on_process_claim_id"
   end
 
   create_table "claim_payments", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
@@ -1475,6 +1477,7 @@ ActiveRecord::Schema[7.0].define(version: 2024_05_09_015019) do
   add_foreign_key "claim_attachments", "claim_type_documents"
   add_foreign_key "claim_attachments", "process_claims"
   add_foreign_key "claim_causes", "process_claims"
+  add_foreign_key "claim_documents", "process_claims"
   add_foreign_key "claim_payments", "process_claims"
   add_foreign_key "claim_remarks", "process_claims"
   add_foreign_key "claim_remarks", "users"

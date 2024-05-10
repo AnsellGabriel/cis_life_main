@@ -12,7 +12,7 @@ class Audit::ForAuditsController < ApplicationController
 
     ActiveRecord::Base.transaction do
       @voucher.update!(audit: :approved, audited_by: current_user.id)
-      claim_track = @voucher.voucher_request.requestable.process_track.build
+      claim_track = @voucher.request.requestable.process_track.build
       claim_track.route_id = 15
       claim_track.user_id = current_user.id
       claim_track.save!
