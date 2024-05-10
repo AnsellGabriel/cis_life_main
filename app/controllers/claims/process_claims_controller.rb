@@ -119,7 +119,7 @@ class Claims::ProcessClaimsController < ApplicationController
         end
 
         @process_claim.process_track.create(route_id: 0, user: current_user)
-        format.html { redirect_to show_coop_process_claim_path(@process_claim), notice: "Claims was successfully added." }
+        format.html { redirect_to show_coop_claims_process_claim_path(@process_claim), notice: "Claims was successfully added." }
         format.json { render :show, status: :created, location: @anniversary }
       else
         format.html { render :new_coop, status: :unprocessable_entity }

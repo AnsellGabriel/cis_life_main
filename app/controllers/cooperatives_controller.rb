@@ -60,7 +60,7 @@ class CooperativesController < ApplicationController
 
     respond_to do |format|
       if @cooperative.save
-        format.html { redirect_to cooperative_url(@cooperative), notice: "Account created successfully. Please wait for the admin to approve your account." }
+        format.html { redirect_to cooperative_url(@cooperative), notice: "Cooperative added" }
       else
         format.html { render :new, status: :unprocessable_entity }
       end

@@ -1,6 +1,4 @@
 class Accounting::Journal < Accounting::Voucher
-  validates_presence_of :voucher
-
   has_many :debit_advice_journals, class_name: "Accounting::DebitAdviceJournal"
   has_many :debit_advices, through: :debit_advice_journals
 

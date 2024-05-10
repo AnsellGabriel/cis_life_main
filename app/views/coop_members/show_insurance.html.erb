@@ -107,7 +107,7 @@
                     <% if lppi.process_claim.present? %>
                       <%= link_to 'View Claims', show_coop_process_claim_path(lppi.process_claim), class: 'btn btn-sm btn-warning' %>
                     <% else %>
-                      <%= link_to 'File Claims', new_coop_process_claims_path(cm: @coop_member, a: lppi.group_remit.agreement.id, lb: lppi.id), class: 'btn btn-sm btn-warning' %>
+                      <%= link_to 'File Claims', new_coop_claims_process_claims_path(cm: @coop_member, a: lppi.group_remit.agreement.id, lb: lppi.id), class: 'btn btn-sm btn-warning' %>
                     <% end %>
                     <%= link_to 'Terminate', terminate_loan_insurance_batch_path(lppi), class: small_btn('danger'), data: {turbo_frame: '_top', turbo_confirm: 'Terminate loan?', turbo_method: :get}  %>
                   <% end %>

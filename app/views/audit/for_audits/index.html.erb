@@ -24,8 +24,8 @@
           <tr>
             <td class="text-center align-middle"><%= (voucher.type == "Accounting::Check" ? "CV" : "") + voucher.voucher %></td>
             <td class="text-center align-middle"><%= voucher.payable %></td>
-            <td class="text-center align-middle"><%= voucher.request.payment_type.humanize %></td>
-            <td class="text-center align-middle"><%= voucher.request.requester %></td>
+            <td class="text-center align-middle"><%= voucher.voucher_request&.payment_type&.humanize %></td>
+            <td class="text-center align-middle"><%= voucher.voucher_request&.requester %></td>
             <td class="text-end align-middle"><%= to_curr voucher.amount %></td>
             <td class="text-center align-middle">
               <span class="<%= voucher.decorate.audit_badge %>">

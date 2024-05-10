@@ -46,7 +46,7 @@ class Accounting::JournalsController < ApplicationController
     if params[:rid].present?
       @request = Accounting::VoucherRequest.find(params[:rid])
     end
-
+    binding.pry
     if params[:rid].present?
       request = Accounting::VoucherRequest.find(params[:rid])
       @coop = request.payee
@@ -67,7 +67,7 @@ class Accounting::JournalsController < ApplicationController
     @journal = Accounting::Journal.new(journal_params)
     @journal.accountant_id = current_user.userable.id
     @journal.branch = current_user.userable.branch_before_type_cast
-
+    binding.pry
     if @journal.save
       if params[:rid].present?
         request = Accounting::VoucherRequest.find(params[:rid])
@@ -80,7 +80,7 @@ class Accounting::JournalsController < ApplicationController
       if params[:rid].present?
         request = Accounting::VoucherRequest.find(params[:rid])
         @amount = request.amount
-        @coop = request.requestable.cooperative
+        @coop = request.requestable.payable
       end
 
       render :new, status: :unprocessable_entity
@@ -116,6 +116,6 @@ class Accounting::JournalsController < ApplicationController
 
   # Only allow a list of trusted parameters through.
   def journal_params
-    params.require(:accounting_journal).permit(:date_voucher, :voucher, :global_payable, :particulars)
+    params.require(:accounting_journal).permit(:date_voucher, :voucher, :global_payable, :particulars, :amount)
   end
 end
