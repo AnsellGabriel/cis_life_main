@@ -50,7 +50,7 @@ class Accounting::RemarksController < ApplicationController
         @voucher.transaction do
           @voucher.general_ledgers.update_all(transaction_date: nil)
           @voucher.cancelled!
-          @voucher.request.pending! if (params[:e_t] == 'cv' || params[:e_t] == 'da')  and @voucher&.request&.present?
+          @voucher.voucher_request.pending! if @voucher&.voucher_request&.present?
         end
       elsif current_user.is_treasurer?
         ActiveRecord::Base.transaction do
