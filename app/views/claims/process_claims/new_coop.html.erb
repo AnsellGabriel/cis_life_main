@@ -1,5 +1,3 @@
-
-  
-  <div class="col-md-6" style="margin: auto">
-    <%= render "form_coop", url: create_coop_process_claims_path(v: @process_claim, cm: @coop_member, lb: @loan_batch.present? ? @loan_batch.id : '') %>
-  </div>
+<div class="col-md-6" style="margin: auto">
+  <%= render "form_coop", url: create_coop_claims_process_claims_path(v: @process_claim, cm: @coop_member, lb: @loan_batch.present? ? @loan_batch.id : '') %>
+</div>

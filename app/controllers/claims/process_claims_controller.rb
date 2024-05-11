@@ -85,9 +85,9 @@ class Claims::ProcessClaimsController < ApplicationController
   end
 
   def new_coop
-    if params[:lb].present?
-      @loan_batch = LoanInsurance::Batch.find(params[:lb])
-    end
+    # if params[:lb].present?
+    #   @loan_batch = LoanInsurance::Batch.find(params[:lb])
+    # end
     @process_claim = Claims::ProcessClaim.new
     @process_claim.agreement = Agreement.find(params[:a]) if params[:a].present?
     @process_claim.agreement_benefit = AgreementBenefit.find(params[:ab]) if params[:ab].present?
