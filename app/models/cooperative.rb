@@ -11,7 +11,7 @@ class Cooperative < ApplicationRecord
 
   has_many :agreements
   has_many :plans, through: :agreements
-  has_many :agreements
+  # has_many :agreements
   has_many :group_remits, through: :agreements
   has_many :batches, through: :group_remits
   has_many :process_claims
