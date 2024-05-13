@@ -252,12 +252,12 @@ ul.timeline:before {
   z-index: 400;
 }
 
-ul.timeline > li {
+ul.timeline>li {
   // margin: 25px 0;
   padding-left: 25px;
 }
 
-ul.timeline > li:before {
+ul.timeline>li:before {
   content: " ";
   background: #226cff;
   display: inline-block;
@@ -324,12 +324,16 @@ ul.timeline > li:before {
 }
 
 .pdf-bottom-border {
-  border-bottom: 2px solid black; 
+  border-bottom: 2px solid black;
   padding-bottom: 5px;
 }
 
 .w-125 {
   width: 125px;
+}
+
+#to_hide_agreement {
+  display: none;
 }
 
 .w-150 {

@@ -1,5 +1,5 @@
 class Treasury::CashierEntry < ApplicationRecord
-  attr_accessor :dummy_payee, :dummy_entry_type
+  attr_accessor :dummy_payee, :dummy_entry_type, :product_check
   before_save :format_or_no
 
   validates_presence_of :or_no, :or_date, :treasury_account_id, :global_entriable, :amount
@@ -11,6 +11,10 @@ class Treasury::CashierEntry < ApplicationRecord
   belongs_to :treasury_account, class_name: "Treasury::Account"
   belongs_to :treasury_payment_type, class_name: "Treasury::PaymentType"
   belongs_to :entriable, polymorphic: true
+  belongs_to :agreement, optional: true
+  belongs_to :plan, optional: true
+  # belongs_to :payment, -> { includes(:cashier_entrentrieies).where(treasury_cashier_entries: { entriable_type: "Payment" }) }, foreign_key: :entriable_id
+
   # belongs_to :payment, -> { includes(:treasury_cashier_entries).where(treasury_cashier_entries: { entriable_type: "Payment" }) }, foreign_key: :entriable_id
   # has_many :payments, class_name: "Treasury::Payment", dependent: :destroy
   # has_many :payments, dependent: :destroy
@@ -77,6 +81,30 @@ class Treasury::CashierEntry < ApplicationRecord
 
   def remittance?
     self.entriable_type == 'Payment'
+  end
+
+  def check_if_mis_encoded
+    agreement&.group_remits&.find_by(group_remits: { official_receipt: self.or_no})
+  end
+
+  def self.check_ors_agreement(agreement)
+    where(entriable: agreement.cooperative, plan: agreement.plan, agreement: nil).count
+  end
+
+  def self.get_ors(agreement)
+    where(entriable: agreement.cooperative, plan: agreement.plan, agreement: nil)
+  end
+
+  def check_agreement
+    
+    binding.pry
+    
+    if plan.present?
+      moa = Agreement.find_by(cooperative: entriable, plan: plan)
+      if moa.present?
+        self.agreement = moa
+      end
+    end
   end
 
   private

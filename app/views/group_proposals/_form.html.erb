@@ -4,7 +4,7 @@
   <%= f.error_notification message: f.object.errors[:base].to_sentence if f.object.errors[:base].present? %>
 
   <div class="form-inputs mb-3">
-    <%= f.association :cooperative %>
+    <%= f.association :cooperative, input_html: { data: { controller: "ts--select"}} %>
     <div class="row" data-controller="group-plan">
       <% sz = current_user.userable_type == "Agent" ? 4 : 3 %>
       <%= f.association :plan, collection: Plan::GROUP_PLANS, input_html: { data: { action: "change->group-plan#search_units" } }, wrapper_html: { class: "col-md-#{sz}" } %>
