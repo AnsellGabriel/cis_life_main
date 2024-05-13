@@ -1,29 +1,12 @@
 <div class="row">
   <div class="col-md-8">
-    <% if current_user.userable_type == "CoopUser" %>
-      <%= link_to '<i class="bi bi-arrow-left-square"></i> Back'.html_safe, show_coop_claims_process_claim_path(@process_claim.claimable), class: 'btn btn-outline-secondary btn-sm' %>
-      <%= link_to "Submit Claims", claim_route_claims_process_claim_path(@process_claim, p: 1), class: "btn btn-success btn-sm", data: {turbo_confirm: "Make sure all documents are uploaded. Submit claim?", turbo_method: :get} if @process_claim.file_claim? %>
-    <% elsif current_user.is_auditor? %>
-      <%= link_to '<i class="bi bi-arrow-left-square"></i> Back'.html_safe, accounting_check_path(@process_claim.voucher_request.vouchers.last), class: 'btn btn-outline-secondary btn-sm' %>
-    <% elsif current_user.userable_type == "Employee"%>
-      <%= link_to '<i class="bi bi-chevron-left"></i>'.html_safe, index_show_claims_process_claims_path(p: @process_claim.claim_route), class: 'btn btn-outline-secondary btn-sm'  %>
-      <% if @audit_remarks.present? %>
-        <%= link_to accounting_check_remarks_path(@check, e_t: 'cv'), class: 'btn btn-sm btn-outline-danger', data: {turbo_frame: 'reg_form_modal'} do %>
-          <i class="bi bi-card-list"></i> Audit Remarks
-        <% end %>
-      <% end %>
-    <% end %>
     <% if current_user.userable_type == 'CoopUser' %>
-      <% if @process_claim.file_claim? %>
-        <%= link_to claim_route_claims_process_claim_path(@process_claim, p: 1), class: "btn btn-success btn-sm", data: {turbo_confirm: "Make sure all documents are uploaded. Submit claim?", turbo_method: :get}  do %>
-          <i class="bi bi-check-circle-fill"></i> Submit
-        <% end %>
-        <%= link_to claims_process_claim_path(@process_claim), class: "btn btn-danger btn-sm", data: {turbo_confirm: "Cancel claim?", turbo_method: :delete} do %>
-          <i class="bi bi-x-circle-fill"></i> Cancel
-        <% end %>
-      <% end %>
+      <%= link_to '<i class="bi bi-chevron-left"></i>'.html_safe, show_insurance_coop_member_path(@process_claim.claimable), class: 'btn btn-secondary btn-sm' %>
+      <%= link_to '<i class="bi bi-check-circle-fill"></i> Submit'.html_safe, claim_route_claims_process_claim_path(@process_claim, p: 1), class: "btn btn-success btn-sm", data: {turbo_confirm: "Make sure all documents are uploaded. Submit claim?", turbo_method: :get} if @process_claim.file_claim? %>
+      <%= link_to '<i class="bi bi-x-circle-fill"></i> Cancel'.html_safe, claims_process_claim_path(@process_claim), class: "btn btn-danger btn-sm", data: {turbo_confirm: "Cancel claim?", turbo_method: :delete} if @process_claim.file_claim? %>
     <% elsif current_user.is_auditor? %>
     <% elsif current_user.userable_type == 'Employee' %>
+      <%= link_to '<i class="bi bi-card-list"></i> Audit Remarks'.html_safe, accounting_check_remarks_path(@check, e_t: 'cv'), class: 'btn btn-sm btn-outline-danger', data: {turbo_frame: 'reg_form_modal'} if @audit_remarks.present? %>
       <%= link_to "Return to Coop", claim_route_claims_process_claim_path(@process_claim, p: 0), class: "btn btn-warning btn-sm", data: {turbo_confirm: "Return this claim to coop?", turbo_method: :get} if @process_claim.submitted? %>
       <%= link_to "Claims Filed", claim_route_claims_process_claim_path(@process_claim, p: 2), class: "btn btn-primary btn-sm" if @process_claim.submitted? %>
       <%= link_to "Process Claims", claim_route_claims_process_claim_path(@process_claim, p: 3), class: "btn btn-primary btn-sm" if @process_claim.claim_filed? %>
@@ -33,8 +16,9 @@
       <%= link_to '<i class="bi bi-clipboard-plus"></i> For VP Evaluation'.html_safe, claim_route_claims_process_claim_path(p: 5), class: "btn btn-primary btn-sm" if @process_claim.evaluation? %>
       <%= link_to '<i class="bi bi-printer"></i> Processing Sheet'.html_safe, print_sheet_claims_process_claim_path(@process_claim), class: "btn btn-warning btn-sm", target: '_blank' %>
       <% if @process_claim.processing? %>
-        <%= link_to '<i class="bi bi-check-circle"></i> Approve'.html_safe, claim_route_claims_process_claim_path(p: 8), class: "btn btn-success btn-sm", data: {turbo_confirm: "Approve claim and request check voucher?", turbo_method: :get}  %>
-        <%= link_to '<i class="bi bi-x-square"></i> Denied'.html_safe, new_status_claims_claim_remarks_path(v: @process_claim, s: 1), class: "btn btn-danger btn-sm", data: { turbo_frame: "remote_modal" }   %>
+          <%= link_to '<i class="bi bi-check-circle"></i> Approve - Check Voucher'.html_safe, claim_route_claims_process_claim_path(p: 8, pt: "check_voucher"), class: "btn btn-success btn-sm", data: {turbo_confirm: "Approve claim and request check voucher?", turbo_method: :get}  %>
+          <%= link_to '<i class="bi bi-check-circle"></i> Approve - Debit Advice'.html_safe, approve_claim_debit_claims_process_claim_path(@process_claim), class: "btn btn-success btn-sm", data: {turbo_frame: "reg_form_modal", turbo_method: :get}  %>
+          <%= link_to '<i class="bi bi-x-square"></i> Denied'.html_safe, new_status_claims_claim_remarks_path(v: @process_claim, s: 1), class: "btn btn-danger btn-sm", data: { turbo_frame: "remote_modal" }   %>  
       <% end %>
       <%= link_to '<i class="bi bi-sign-stop-lights"></i> Pending'.html_safe, new_status_claims_claim_remarks_path(v: @process_claim, s: 2), class: "btn btn-warning btn-sm", data: { turbo_frame: "remote_modal" } if @process_claim.claim_filed?  %>
       <%= link_to '<i class="bi bi-bootstrap-reboot"></i> Reconsider'.html_safe, new_status_claims_claim_remarks_path(v: @process_claim, s: 3), class: "btn btn-warning btn-sm", data: { turbo_frame: "remote_modal" } if @process_claim.denied?  %>

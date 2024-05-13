@@ -35,9 +35,9 @@ class CoopBanksController < ApplicationController
         begin
           @coop_bank = CoopBank.create!(cooperative: @coop, treasury_account: @account)
 
-          redirect_to approve_claim_debit_process_claim_path(params[:pc_id]), notice: "Bank successfully added"
+          redirect_to approve_claim_debit_claims_process_claim_path(params[:pc_id]), notice: "Bank successfully added"
         rescue ActiveRecord::RecordInvalid => e
-          redirect_to approve_claim_debit_process_claim_path(params[:pc_id])
+          redirect_to approve_claim_debit_claims_process_claim_path(params[:pc_id])
         end
       else
         render :new, status: :unprocessable_entity

@@ -105,4 +105,6 @@
   <%# </div>
   </div>  %>
 </div>
-<%= render 'tabs' %>
+<% unless current_user.is_coop_user? %>
+  <%= render 'tabs' %>
+<% end %>

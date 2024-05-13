@@ -9,29 +9,39 @@ class VoucherRequestService
   end
 
   def create_request
-    request = @requestable.voucher_request
-    
-    if request.present?
-      request.update!(
-        amount: @amount,
-        status: :posted,
-        particulars: @requestable.particulars.present? ? @requestable.particulars : particulars,
-        request_type: @request_type,
-        requester: @current_user.userable.signed_fullname,
-        payment_type: @payment_type,
-        account: @bank_id.present? ? Treasury::Account.find(@bank_id) : nil
-      )
-    else
-      @requestable.create_voucher_request!(
-        amount: @amount,
-        status: :pending,
-        particulars: @requestable.particulars.present? ? @requestable.particulars : particulars,
-        request_type: @request_type,
-        requester: @current_user.userable.signed_fullname,
-        payment_type: @payment_type,
-        account: @bank_id.present? ? Treasury::Account.find(@bank_id) : nil
-      )
-    end
+    request = Accounting::VoucherRequest.find_or_initialize_by(requestable: @requestable)
+
+    request.update!(
+      amount: @amount,
+      status: request.new_record? ? :pending : :posted,
+      particulars: @requestable.try(:particulars).present? ? @requestable.particulars : particulars,
+      request_type: @request_type,
+      requester: @current_user.userable.signed_fullname,
+      payment_type: @payment_type,
+      account: @bank_id.present? ? Treasury::Account.find(@bank_id) : nil
+    )
+
+    # if request.present?
+      # request.update!(
+      #   amount: @amount,
+      #   status: :posted,
+      #   particulars: @requestable.try(:particulars).present? ? @requestable.particulars : particulars,
+      #   request_type: @request_type,
+      #   requester: @current_user.userable.signed_fullname,
+      #   payment_type: @payment_type,
+      #   account: @bank_id.present? ? Treasury::Account.find(@bank_id) : nil
+      # )
+    # else
+    #   @requestable.create_voucher_request!(
+    #     amount: @amount,
+    #     status: :pending,
+    #     particulars: @requestable.try(:particulars).present? ? @requestable.particulars : particulars,
+    #     request_type: @request_type,
+    #     requester: @current_user.userable.signed_fullname,
+    #     payment_type: @payment_type,
+    #     account: @bank_id.present? ? Treasury::Account.find(@bank_id) : nil
+    #   )
+    # end
 
     true
   end
@@ -41,7 +51,7 @@ class VoucherRequestService
   def particulars
     if @requestable.is_a?(ProcessCoverage)
       "Refund for #{@requestable.group_remit.agreement.plan.acronym} with OR # #{@requestable.group_remit.official_receipt}"
-    elsif @requestable.is_a?(ProcessClaim)
+    elsif @requestable.is_a?(Claims::ProcessClaim)
       "Payment for #{@requestable.agreement.plan.acronym} #{benefit_names} benefit of #{@requestable.claimable.full_name} as per claim date filed #{@requestable.date_file.strftime("%m/%d/%Y")}. Incident Date #{@requestable.date_incident.strftime("%m/%d/%Y")}"
     end
   end

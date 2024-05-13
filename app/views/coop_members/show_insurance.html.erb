@@ -30,7 +30,7 @@
                 <%= agreement_benefit.name %> <br>
                 <%# add view claims button %>
                 <% if @coop_member.process_claims.present? %>
-                  <%= link_to 'View Claims', show_coop_process_claim_path(@coop_member.process_claims.last), class: 'btn btn-sm btn-warning' %>
+                  <%= link_to 'View Claims', show_coop_claims_process_claim_path(@coop_member.process_claims.last), class: 'btn btn-sm btn-warning' %>
                 <% else %>
                   <%= link_to 'File Claims', new_coop_process_claims_path(cm: @coop_member, ab: agreement_benefit, a: agreement_benefit.agreement), class: 'btn btn-sm btn-warning' %>
                 <% end %>
@@ -105,7 +105,7 @@
                   <% end %>
                   <% unless lppi.terminated? || lppi.expired? %>
                     <% if lppi.process_claim.present? %>
-                      <%= link_to 'View Claims', show_coop_process_claim_path(lppi.process_claim), class: 'btn btn-sm btn-warning' %>
+                      <%= link_to 'View Claims', show_coop_claims_process_claim_path(lppi.process_claim), class: 'btn btn-sm btn-warning' %>
                     <% else %>
                       <%= link_to 'File Claims', new_coop_claims_process_claims_path(cm: @coop_member, a: lppi.group_remit.agreement.id, lb: lppi.id), class: 'btn btn-sm btn-warning' %>
                     <% end %>

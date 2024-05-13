@@ -3,7 +3,7 @@ class Accounting::Voucher < ApplicationRecord
                         :particulars, :status, :audit, :accountant_id, :type, :branch, :global_payable, :amount
 
   belongs_to :payable, polymorphic: true
-  belongs_to :voucher_request, class_name: "Accounting::VoucherRequest", optional: true, foreign_key: :request_id
+  belongs_to :voucher_request, class_name: "Accounting::VoucherRequest", foreign_key: :request_id, optional: true
   belongs_to :treasury_account, class_name: "Treasury::Account", foreign_key: :treasury_account_id, optional: true
 
   has_many :general_ledgers, as: :ledgerable
