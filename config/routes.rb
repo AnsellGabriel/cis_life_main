@@ -100,6 +100,7 @@ Rails.application.routes.draw do
 
   resources :agreements do
     get :show_details, on: :member
+    post :update_ors, on: :member
   end
 
   # resources :agreement_benefits
@@ -147,6 +148,7 @@ Rails.application.routes.draw do
 
   resources :cooperatives do
     get :selected, on: :member
+    get :select_agreement, on: :member
     get :details, on: :member
     get :get_plan, on: :member
     resources :coop_banks
@@ -298,7 +300,7 @@ Rails.application.routes.draw do
 
     resources :voucher_requests, only: %i[index show] do
     end
-    
+
     get "dashboard", to: "dashboard#index"
   end
 
@@ -423,7 +425,6 @@ Rails.application.routes.draw do
 
   devise_scope :user do
     authenticated :user do
-      # mount Sidekiq::Web in your Rails app
       root "application#root", as: :authenticated_root
     end
 

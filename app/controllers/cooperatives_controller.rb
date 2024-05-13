@@ -60,7 +60,7 @@ class CooperativesController < ApplicationController
 
     respond_to do |format|
       if @cooperative.save
-        format.html { redirect_to cooperative_url(@cooperative), notice: "Account created successfully. Please wait for the admin to approve your account." }
+        format.html { redirect_to cooperative_url(@cooperative), notice: "Cooperative added" }
       else
         format.html { render :new, status: :unprocessable_entity }
       end
@@ -91,6 +91,14 @@ class CooperativesController < ApplicationController
   def selected
     @target = params[:target]
     @coop_branches = CoopBranch.where(cooperative_id: params[:id])
+    respond_to do |format|
+      format.turbo_stream
+    end
+  end
+
+  def select_agreement
+    @target = params[:target]
+    @agreements = Agreement.where(cooperative_id: params[:id])
     respond_to do |format|
       format.turbo_stream
     end

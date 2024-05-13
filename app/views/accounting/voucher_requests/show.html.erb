@@ -6,17 +6,7 @@
   <% end %>
 
   <% if @vouchers.empty? || @vouchers.all?(&:cancelled?) %>
-    <% if @request.check_voucher? %>
-      <%= link_to new_accounting_check_path(rid: params[:id]), class: 'btn btn-sm btn-primary', data: {turbo_frame: 'modal'}, title: "Generate Check Voucher" do %>
-        <i class="bi bi-receipt-cutoff"></i>
-        Generate
-      <% end %>
-    <% elsif @request.debit_advice? %>
-      <%= link_to new_accounting_debit_advice_path(rid: params[:id]), class: 'btn btn-sm btn-primary', data: {turbo_frame: 'modal'}, title: "Generate Check Voucher" do %>
-        <i class="bi bi-receipt-cutoff"></i>
-        Generate
-      <% end %>
-    <% end %>
+    <%= render 'new_voucher_btn' %>
   <% end %>
   <%= content_tag :button, "Attachments", 
     class: small_btn('outline-primary'), 
@@ -25,10 +15,8 @@
     }
   %>
 </div>
-
 <div class="d-flex gap-3">
   <%= render 'request', request: @request %>
-
   <div class="" style="width: 50%;">
     <div class="<%= flex_justify_align('between', 'center') %> gap-1 mb-1">
       <% if @pagy.pages > 1 %>

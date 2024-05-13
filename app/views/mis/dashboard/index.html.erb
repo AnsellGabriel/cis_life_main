@@ -23,6 +23,11 @@
                 <td><%= link_to "View", mis_view_ors_path(t: "enc"), class: "btn btn-sm btn-outline-primary" %></td>
               </tr>
               <tr>
+                <td>Not Encoded</td>
+                <td><%= @not_encoded.count %></td>
+                <td><%= link_to "View", mis_view_ors_path(t: "ne"), class: "btn btn-sm btn-outline-primary" %></td>
+              </tr>
+              <tr>
                 <td>Transmitted</td>
                 <td><%= @transmitted.count %></td>
                 <td><%= link_to "View", transmittals_path, class: "btn btn-sm btn-outline-primary" %></td>

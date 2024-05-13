@@ -119,17 +119,17 @@ class Accounting::ChecksController < ApplicationController
 
     if @check.save
       if params[:rid].present?
-        claim_request = Accounting::VoucherRequest.find(params[:rid])
-        claim_request.voucher_generated!
-        @check.update(request: claim_request)
+        request = Accounting::VoucherRequest.find(params[:rid])
+        request.voucher_generated!
+        @check.update(request: request)
       end
 
       redirect_to @check, notice: "Check voucher created."
     else
       if params[:rid].present?
-        claim_request = Accounting::VoucherRequest.find(params[:rid])
-        @amount = claim_request.amount
-        @coop = claim_request.requestable.cooperative
+        request = Accounting::VoucherRequest.find(params[:rid])
+        @amount = request.amount
+        @coop = request.requestable.cooperative
       end
 
       render :new, status: :unprocessable_entity

@@ -12,9 +12,7 @@ class PaymentService
       @payment.approved!
       group_remit.paid!
       Notification.create!(notifiable: group_remit.agreement.cooperative, message: "#{group_remit.name} payment verified.")
-    end
 
-    group_remit.transaction do
       if group_remit.type == "LoanInsurance::GroupRemit"
         group_remit.update_members_total_loan
         group_remit.update_batch_coverages
@@ -24,7 +22,7 @@ class PaymentService
         group_remit.update_batch_coverages
       end
 
-      group_remit.update(official_receipt: @entry.or_no)
+      group_remit.update!(official_receipt: @entry.or_no)
     end
 
     "Payment posted."
