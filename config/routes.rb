@@ -2,6 +2,7 @@
 require "sidekiq/web"
 
 Rails.application.routes.draw do
+  resources :demo_schedules
   resources :transmittals do
     get :remove_or, on: :member
   end
