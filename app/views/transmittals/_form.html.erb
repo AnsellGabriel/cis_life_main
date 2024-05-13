@@ -6,16 +6,23 @@
   <div class="form-inputs mb-3">
     <%#= f.input :code %>
     <%= f.input :description %>
+    <% if @type == "mis" %>
+      <%= f.input :group_remit_ids, input_html: { value: @group_remit_ids }, as: :hidden %>
+    <% end %>
     <%#= f.input :transmittal_type, as: :select, collection: Transmittal.transmittal_types.keys.map { |type| [type.upcase, type] } %>
   </div>
-  <div id="transmittal_ors">
-    <%= f.simple_fields_for :transmittal_ors do |to| %>
-      <%= render 'transmittal_or_fields', f: to %>
-    <% end %>
-    <div class="links mb-3">
-      <%= link_to_add_association 'Add', f, :transmittal_ors, class: "btn btn-sm btn-primary" %>
+  
+  <% unless @type == "mis" %>
+    <div id="transmittal_ors">
+      <%= f.simple_fields_for :transmittal_ors do |to| %>
+        <%= render 'transmittal_or_fields', f: to %>
+      <% end %>
+      <div class="links mb-3">
+        <%= link_to_add_association 'Add', f, :transmittal_ors, class: "btn btn-sm btn-primary" %>
+      </div>
     </div>
-  </div>
+  <% end %>
+  
 
   <div class="form-actions text-end">
     <%= link_to "Back", transmittals_path, class: 'btn btn-secondary' %>

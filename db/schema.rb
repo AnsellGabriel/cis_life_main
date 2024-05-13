@@ -10,8 +10,8 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2024_05_11_132813) do
-  create_table "accounting_vouchers", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+ActiveRecord::Schema[7.0].define(version: 2024_05_09_015019) do
+  create_table "accounting_vouchers", charset: "utf8mb4", force: :cascade do |t|
     t.date "date_voucher"
     t.string "voucher"
     t.string "payable_type", null: false
@@ -421,7 +421,7 @@ ActiveRecord::Schema[7.0].define(version: 2024_05_11_132813) do
     t.index ["process_claim_id"], name: "index_claim_confinements_on_process_claim_id"
   end
 
-  create_table "claim_coverages", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+  create_table "claim_coverages", charset: "utf8mb4", force: :cascade do |t|
     t.string "orno"
     t.date "or_date"
     t.string "bsno"
@@ -438,7 +438,7 @@ ActiveRecord::Schema[7.0].define(version: 2024_05_11_132813) do
     t.index ["process_claim_id"], name: "index_claim_coverages_on_process_claim_id"
   end
 
-  create_table "claim_distributions", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+  create_table "claim_distributions", charset: "utf8mb4", force: :cascade do |t|
     t.bigint "process_claim_id"
     t.string "name"
     t.string "relationship"
@@ -448,7 +448,7 @@ ActiveRecord::Schema[7.0].define(version: 2024_05_11_132813) do
     t.index ["process_claim_id"], name: "index_claim_distributions_on_process_claim_id"
   end
 
-  create_table "claim_documents", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+  create_table "claim_documents", charset: "utf8mb4", force: :cascade do |t|
     t.bigint "process_claim_id", null: false
     t.string "document"
     t.integer "document_type"
@@ -511,7 +511,8 @@ ActiveRecord::Schema[7.0].define(version: 2024_05_11_132813) do
     t.index ["claim_type_id"], name: "index_claim_type_documents_on_claim_type_id"
   end
 
-  create_table "claim_type_natures", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+  create_table "claim_type_natures", charset: "utf8mb4", force: :cascade do |t|
+    t.bigint "claim_type_id", null: false
     t.string "name"
     t.string "description"
     t.datetime "created_at", null: false
@@ -525,7 +526,7 @@ ActiveRecord::Schema[7.0].define(version: 2024_05_11_132813) do
     t.datetime "updated_at", null: false
   end
 
-  create_table "coop_banks", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+  create_table "coop_banks", charset: "utf8mb4", force: :cascade do |t|
     t.bigint "cooperative_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
@@ -534,7 +535,7 @@ ActiveRecord::Schema[7.0].define(version: 2024_05_11_132813) do
     t.index ["treasury_account_id"], name: "index_coop_banks_on_treasury_account_id"
   end
 
-  create_table "coop_branches", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+  create_table "coop_branches", charset: "utf8mb4", force: :cascade do |t|
     t.string "name"
     t.string "contact_details"
     t.bigint "cooperative_id", null: false
@@ -701,13 +702,6 @@ ActiveRecord::Schema[7.0].define(version: 2024_05_11_132813) do
     t.bigint "userable_id", null: false
     t.index ["batch_dependent_id"], name: "index_dependent_remarks_on_batch_dependent_id"
     t.index ["userable_type", "userable_id"], name: "index_dependent_remarks_on_userable"
-  end
-
-  create_table "documents", charset: "utf8mb4", force: :cascade do |t|
-    t.string "name"
-    t.text "description"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
   end
 
   create_table "emp_agreements", charset: "utf8mb4", force: :cascade do |t|
@@ -1479,7 +1473,7 @@ ActiveRecord::Schema[7.0].define(version: 2024_05_11_132813) do
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
   end
 
-  create_table "voucher_requests", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+  create_table "voucher_requests", charset: "utf8mb4", force: :cascade do |t|
     t.string "requestable_type", null: false
     t.bigint "requestable_id", null: false
     t.decimal "amount", precision: 10
