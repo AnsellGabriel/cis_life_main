@@ -1,0 +1,45 @@
+<div class= <%="container" unless current_user %>>
+  <div class="mt-5">
+    <div class="card">
+      <div class="row g-0">
+        <%# <div class="card-header">Schedule a meeting</div> %>
+        <div class="col-md-6">
+          <%= image_tag 'demo_2.png', width: "80%", class: "img-fluid rounded-start" %>
+        </div>
+        <div class="col-md-6">
+          <div class="card-body">
+            <strong class="text-primary">Pick Your Moment</strong>
+            <p>Choose a date and time below that fits your schedule::</p>
+            <%= simple_form_for(@demo_schedule) do |f| %>
+              <%= f.error_notification %>
+              <%= f.error_notification message: f.object.errors[:base].to_sentence if f.object.errors[:base].present? %>
+              <div class="form-inputs mb-3">
+                <div class="row">
+                  <%= f.input :demo_date, label: "Preferred Date", as: :string, wrapper_html: { class: "col-md-6" }, 
+                  input_html: { data: { controller: "flatpickr",
+                  flatpickr_max_date: Time.zone.now,
+                  flatpickr_next_arrow: "Next",
+                  flatpickr_prev_arrow: "Prev" } } %>
+                  <%= f.input :time_slot, label: "Preferred Time", wrapper_html: { class: 'col-md-6' } %>
+                  <%# <p class="text-primary">To make sure we connect at the right time, please share a few details:</p> %>
+                  <%= f.input :cooperative %>
+                  <%= f.input :name %>
+                  <%= f.input :contact_no, wrapper_html: { class: 'col-md-6'  }%>
+                  <%= f.input :email, wrapper_html: { class: 'col-md-6' } %>
+                  <%#= f.input :demo_date, wrapper_html: { class: 'col-md-6' } %>
+                </div>
+                <%= f.input :method, label: "Preferred Method", as: :select, collection: DemoSchedule.methods.keys.map { |status| [status.humanize, status] } %>
+                <%= f.input :remarks, label: "Got Questions or Just Want to Say Hi?" %>
+              </div>
+              <div class="form-actions text-end">
+                <%# <p class="text-primary">Hit submit, and we'll handle the rest! We're excited to chat with you soon.</p> %>
+                <%= link_to "Back", demo_schedules_path, class: 'btn btn-secondary' %>
+                <%= f.button :submit, value: "Submit", class: 'btn-success' %>
+              </div>
+            <% end %>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

@@ -4,6 +4,7 @@
   <%#= link_to "Claims Message", claim_remarks_path, class: "dropdown-item" %>
   <%= link_to "Graph", pages_coop_path, class: "dropdown-item", data: {turbo: false} %>
 <% end %>
+<% @cooperative = current_user.userable.cooperative %>
 <%= render 'layouts/partials/nav_dropdown', title: 'Insurance' do %>
   <% @cooperative.agreements.includes(:plan).each do |a| %>
     <% case a.plan.acronym %>
