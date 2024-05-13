@@ -34,6 +34,17 @@
               <% end %>
             </td>
           </tr>
+        <% elsif ["Remittance", "LoanInsurance::GroupRemit", "BatchRemit"].include?(val.transmittable_type)  %>
+          <tr>
+            <td><%= val.transmittable.official_receipt %></td>
+            <td><%= val.transmittable.get_or_date %></td>
+            <td><%= val.transmittable.cooperative %></td>
+            <td>
+              <%= link_to remove_or_transmittal_path(or: val), class: "btn btn-outline-danger", onclick: "return confirm('Are you sure?')" do %>
+                <%= bootstrap_icon "x-lg" %>
+              <% end %>
+            </td>
+          </tr>
         <% else %>
           <tr>
             <td>

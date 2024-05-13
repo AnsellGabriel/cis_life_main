@@ -25,6 +25,9 @@ class GroupRemit < ApplicationRecord
   has_many :loan_batches, dependent: :destroy, class_name: "LoanInsurance::Batch"
   has_many :cashier_entries, as: :entriable, class_name: "Treasury::CashierEntry", dependent: :destroy
 
+  has_many :transmittable_ors, as: :transmittable, inverse_of: :transmittable
+  has_many :transmittals, through: :transmittable_ors
+
   has_one :process_coverage, dependent: :destroy
   # has_one :group_import_tracker, dependent: :destroy
   has_one :progress_tracker, as: :trackable, dependent: :destroy
