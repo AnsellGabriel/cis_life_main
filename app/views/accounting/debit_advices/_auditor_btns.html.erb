@@ -1,12 +1,11 @@
 <div class="mb-1">
   <%= render 'back_btn', link: audit_for_audits_path %>
-  <% console %>
   <% if @debit_advice.voucher_request.requestable.is_a?(Claims::ProcessClaim) %>
     <%= link_to "MOA", show_details_agreement_path(@debit_advice.voucher_request.requestable.agreement), class: small_btn('outline-primary'), title: "Voucher", target: "_blank" %>
     <%= link_to "Claim details", claim_process_claims_process_claim_path(@debit_advice.voucher_request.requestable), class: small_btn('outline-primary'), title: "Claim Details", target: "_blank" %>
-    <%= render 'accounting/voucher_requests/attachments' %>
+    <%#= render 'accounting/voucher_requests/attachments' %>
   <% end %>
-  <%= content_tag :button, "Claim Attachments", 
+  <%#= content_tag :button, "Claim Attachments", 
     class: small_btn('outline-primary'), 
     data: {bs_toggle: "modal",
       bs_target: "#claimAttachmentsModal"

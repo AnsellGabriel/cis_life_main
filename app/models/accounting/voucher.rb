@@ -12,14 +12,19 @@ class Accounting::Voucher < ApplicationRecord
   enum audit: { for_audit: 0, approved: 1, pending_audit: 2 }
   enum status: { pending: 0, posted: 1, cancelled: 2, for_approval: 3}
 
+  scope :checks, -> { where(type: "Accounting::Check") }
+  scope :journals, -> { where(type: "Accounting::Journal") }
+  scope :debit_advices, -> { where(type: "Accounting::DebitAdvice") }
+
+
   def to_s
     self.voucher
   end
 
   def self.pending_for_audit
-    where(status: [:posted, :pending])
-    .where(audit: [:for_audit, :pending_audit, :approved])
+    where.not(type: 'Accounting::Journal')
     .where.not(post_date: nil)
+    .where(status: [:posted, :pending])
     .order(created_at: :desc)
   end
 

@@ -1,6 +1,4 @@
 <div class="mb-1">
-  <% console %>
-
   <% if @request.present? %>
     <%= render 'back_btn', link: accounting_voucher_request_path(@request, pt: @request.payment_type) %>
   <% else %>
@@ -19,12 +17,6 @@
   <% if @debit_advice.attachment.present? %>
     <%= link_to @debit_advice.attachment.receipt.url, class: 'btn btn-sm btn-outline-primary', target: "_blank" do %>
       <i class="bi bi-eye-fill"></i> View Payment
-    <% end %>
-  <% end %>
-
-  <% if @debit_advice.paid? %>
-    <%= link_to new_accounting_journal_path(da: @debit_advice.id), class: 'btn btn-sm btn-outline-primary', data: {turbo_frame: 'modal'} do %>
-      <i class="bi bi-plus-lg"></i> Journal Voucher
     <% end %>
   <% end %>
 </div>

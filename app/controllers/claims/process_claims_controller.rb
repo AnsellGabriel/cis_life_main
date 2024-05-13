@@ -45,7 +45,7 @@ class Claims::ProcessClaimsController < ApplicationController
     @claim_type_document = Claims::ClaimTypeDocument.where(claim_type: @process_claim.claim_type)
     @claim_type_document_ids = @process_claim.claim_attachments.pluck(:claim_type_document_id)
     @required_documents = @claim_type_document.where.not(id: @claim_type_document_ids)
-    @check = @process_claim.voucher_request&.vouchers&.where(audit: [:pending_audit, :for_audit])&.last
+    @voucher = @process_claim.voucher_request&.vouchers&.where(audit: [:pending_audit, :for_audit])&.last
     @audit_remarks = @check&.remarks
   end
 
