@@ -1,0 +1,9 @@
+
+<%= render @demo_schedule %>
+
+<div>
+  <%= link_to "Edit", edit_demo_schedule_path(@demo_schedule), class: 'btn btn-primary' %> |
+  <%= link_to "Back", demo_schedules_path, class: 'btn btn-primary' %>
+
+  <%= button_to "Delete", @demo_schedule, method: :delete, class: 'btn btn-danger' %>
+</div>
