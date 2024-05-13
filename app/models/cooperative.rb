@@ -14,7 +14,7 @@ class Cooperative < ApplicationRecord
   # has_many :agreements
   has_many :group_remits, through: :agreements
   has_many :batches, through: :group_remits
-  has_many :process_claims
+  has_many :process_claims, class_name: "Claims::ProcessClaim"
   has_many :claim_coverages, through: :process_claims
   has_many :denied_enrollees
   has_many :notifications, as: :notifiable, dependent: :destroy

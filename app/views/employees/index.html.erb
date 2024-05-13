@@ -1,32 +1,31 @@
 <%= content_tag :h1, "List of Employees" %>
 <div class="text-end mb-3">
-  <%= link_to new_employee_path, class: 'btn btn-primary' do %>
-    New Employee
-  <% end %>
-</div>
-<%== pagy_bootstrap_nav(@pagy) %>
-<table class="table table-bordered table-hover">
-  <thead>
-    <tr>
-    
-    </tr>
-  </thead>
-  <tbody>
-    <% @employees.order(id: :asc).each do |employee| %>
+  <%#= link_to new_employee_path, class: 'btn btn-primary' do %>
+    <%# New Employee %>
+    <%# end %>
+  </div>
+  <%== pagy_bootstrap_nav(@pagy) %>
+  <table class="table table-bordered table-hover">
+    <thead>
       <tr>
-        <th scope="row"><%= employee.id %></th>
-        <td>
-          <%= content_tag :span, employee.get_fullname, class: "lead, fw-bold" %> - <%= content_tag :small, employee.designation %>
-          <br>
-          <%= content_tag :small, link_to(employee.department.name, employee.department) %>
-        </td>
-        <td>
-          <%= link_to 'View', employee, class: 'btn btn-secondary btn-sm' %>
-          <%= link_to 'Edit', edit_employee_path(employee), class: 'btn btn-secondary btn-sm' %>
-          <%= link_to "Delete", employee, class: "btn btn-danger btn-sm", method: :delete, data: { "turbo-method": :delete, turbo_confirm: "Are you sure?" } %>
-        </td>
       </tr>
-    <% end %>
-  </tbody>
-</table>
+    </thead>
+    <tbody>
+      <% @employees.order(id: :asc).each do |employee| %>
+        <tr>
+          <th scope="row"><%= employee.id %></th>
+          <td>
+            <%= content_tag :span, employee.get_fullname, class: "lead, fw-bold" %> - <%= content_tag :small, employee.designation %>
+            <br>
+            <%= content_tag :small, link_to(employee.department.name, employee.department) %>
+          </td>
+          <td>
+            <%= link_to 'View', employee, class: 'btn btn-secondary btn-sm' %>
+            <%= link_to 'Edit', edit_employee_path(employee), class: 'btn btn-secondary btn-sm' %>
+            <%= link_to "Delete", employee, class: "btn btn-danger btn-sm", method: :delete, data: { "turbo-method": :delete, turbo_confirm: "Are you sure?" } %>
+          </td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
 </div>

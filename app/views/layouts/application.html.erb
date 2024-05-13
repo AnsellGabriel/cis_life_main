@@ -17,62 +17,21 @@
     <%= javascript_include_tag "jquery" %>
     <%= javascript_include_tag "//www.google.com/jsapi", "chartkick" %>
   </head>
-  <body class="d-flex flex-column" style="background-color: #f0f2f5;">
+  <body class="d-flex flex-column" style=<%="background-color: #f0f2f5;" if current_user %>>
     <%= turbo_stream_from ["downloader", current_user] if user_signed_in? && current_user.is_employee? %>
     <%= turbo_frame_tag "download_cont_#{current_user.id}" if user_signed_in? %>
-    <%= render 'layouts/partials/downloader' %>
-    <%= render 'layouts/partials/navi' %>
-    <div class="container">
+    <%= render 'layouts/partials/downloader' if current_user %>
+    <%= render 'layouts/partials/navi' if current_user %>
+    <div class=<%= "container" if current_user %>>
       <div class="row d-flex justify-content-center">
         <div id="flash" style="width: auto" remote_modal>
           <%= render "layouts/partials/notification" %>
         </div>
-      </div>
-    </div>
-    <div class="container mb-3">
-      <%= yield %>
-      <%= turbo_frame_tag "remote_modal", target: "_top" %>
-    </div>
-    <!-- New form Modal -->
-    <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true" data-controller="modal"
-      data-action="turbo:frame-load->modal#open turbo:submit-end->modal#close" data-bs-focus="false">
-      <div class="modal-dialog">
-        <div class="modal-content">
-          <%= turbo_frame_tag "modal" %>
-        </div>
-      </div>
-    </div>
-    <div class="modal fade" id="memberEnrollment" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true" data-controller="modal" data-action="turbo:frame-load->modal#open turbo:submit-end->modal#close" data-bs-focus="false">
-      <div class="modal-dialog modal-xl">
-        <div class="modal-content">
-          <%= turbo_frame_tag "modal-xl" %>
-        </div>
-      </div>
-    </div>
-    <div class="modal fade" id="memberEnrollment" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true" data-controller="modal" data-action="turbo:frame-load->modal#open turbo:submit-end->modal#close" data-bs-focus="false">
-      <div class="modal-dialog modal-lg">
-        <div class="modal-content">
-          <%= turbo_frame_tag "modal-lg" %>
-        </div>
-      </div>
-    </div>
-    <!-- registration forms modal -->
-    <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true" data-controller="modal"
-      data-action="turbo:frame-load->modal#open" data-bs-focus="false">
-      <div class="modal-dialog">
-        <div class="modal-content">
-          <%= turbo_frame_tag "reg_form_modal" %>
-        </div>
-      </div>
-    </div>
-    <div class="modal fade" id="memberEnrollment" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true" data-controller="modal" data-action="turbo:frame-load->modal#open" data-bs-focus="false">
-      <div class="modal-dialog modal-xl">
-        <div class="modal-content">
-          <%= turbo_frame_tag "reg_form_modal_xl" %>
-        </div>
-      </div>
-    </div>
   </div>
-  <%= render 'layouts/partials/footer' %>
+  <%= yield %>
+  <%= turbo_frame_tag "remote_modal", target: "_top" %>
+</div>
+<%= render 'layouts/partials/modal' %>
+<%= render 'layouts/partials/footer' %>
 </body>
 </html>

@@ -56,6 +56,6 @@ class Claims::ClaimTypeDocumentsController < ApplicationController
 
   # Only allow a list of trusted parameters through.
   def claim_type_document_params
-    params.require(:claim_type_document).permit(:claim_type_id, :claim_document_id, :required, :name)
+    params.require(:claims_claim_type_document).permit(:claim_type_id, :claim_document_id, :required, :name)
   end
 end
