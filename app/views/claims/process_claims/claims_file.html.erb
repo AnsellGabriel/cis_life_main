@@ -2,7 +2,7 @@
   <%= f.error_notification %>
   <%= f.error_notification message: f.object.errors[:base].to_sentence if f.object.errors[:base].present? %>
   <div class="text-end mb-3">
-    <%= link_to "Back", index_show_process_claims_path(p: 2), class: "btn btn-secondary btn-lg" %>
+    <%= link_to "Back", index_show_claims_process_claims_path(p: 2), class: "btn btn-secondary btn-lg" %>
     <%= f.button :submit, 'Save Claim', class: 'btn-success btn-lg' %>
   </div>
   <div class="row">
@@ -12,7 +12,7 @@
         <h5 class="card-header">Cause of Claims</h5>
         <div class="card-body">
           <div class="row">
-            <%= f.association :cause, prompt: "Select a cause", collection: Cause.order(:name), wrapper_html: { class: 'col-md-6' } %>
+            <%= f.association :cause, prompt: "Select a cause", collection: Claims::Cause.order(:name), wrapper_html: { class: 'col-md-6' } %>
             <%= f.input :date_file, label: "Date Filed", as: :string, wrapper_html: { class: "col-md-6" }, 
               input_html: { data: { controller: "flatpickr",
                   flatpickr_max_date: Time.zone.now,
@@ -51,17 +51,17 @@
                 </div>
               </div>
             </div>
-            <%= render 'claim_confinements/show_confinement'  %>
+            <%= render 'claims/claim_confinements/show_confinement'  %>
           </div>
         </div>
       <% end %>
       <div class="card mb-3">
         <div class="card-body">
-          <%= render 'claim_benefits/show_benefit' %>
+          <%= render 'claims/claim_benefits/show_benefit' %>
           <hr>
-          <%= render 'claim_coverages/show_coverages' %>
+          <%= render 'claims/claim_coverages/show_coverages' %>
           <hr>
-          <%= render 'claim_distributions/show_distribution' %>
+          <%= render 'claims/claim_distributions/show_distribution' %>
         </div>
       </div>
     </div>

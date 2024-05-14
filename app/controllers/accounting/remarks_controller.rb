@@ -26,7 +26,7 @@ class Accounting::RemarksController < ApplicationController
 
         if params[:remark][:category] == "incorrect_claim_details"
           ActiveRecord::Base.transaction do
-            process_claim = @voucher.request.requestable
+            process_claim = @voucher.voucher_request.requestable
             claim_track = process_claim.process_track.build
             claim_track.route_id = 16
             claim_track.user_id = current_user.id
@@ -43,7 +43,7 @@ class Accounting::RemarksController < ApplicationController
         elsif params[:remark][:category] == "incorrect_voucher_details"
           @voucher.transaction do
             @voucher.pending!
-            @voucher.request.pending!
+            @voucher.voucher_request.pending!
           end
         end
       elsif current_user.is_accountant?

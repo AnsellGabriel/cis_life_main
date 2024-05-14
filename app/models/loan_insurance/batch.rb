@@ -89,6 +89,7 @@ class LoanInsurance::Batch < Batch
     set_terms_and_details
     loan_rate = find_loan_rate(agreement)
     previous_coverage = agreement.agreements_coop_members.find_by(coop_member_id: coop_member.id)
+
     if previous_coverage.present?
       month_difference = expiry_and_today_month_diff(previous_coverage.expiry)
 
@@ -295,8 +296,8 @@ class LoanInsurance::Batch < Batch
   # end
 
   def compute_terms(expiry_date, effectivity_date)
-    # (expiry_date.year - effectivity_date.year) * 12 + (expiry_date.month - effectivity_date.month) + (expiry_date.day > effectivity_date.day ? 1 : 0)
-    ((expiry_date - effectivity_date) / 30).to_f.round
+    (expiry_date.year - effectivity_date.year) * 12 + (expiry_date.month - effectivity_date.month) + (expiry_date.day > effectivity_date.day ? 1 : 0)
+    # ((expiry_date - effectivity_date) / 30).to_f.round
   end
 
   def expiry_and_today_month_diff(expiry_date)

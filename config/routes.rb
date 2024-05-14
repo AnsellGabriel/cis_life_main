@@ -30,7 +30,7 @@ Rails.application.routes.draw do
   resources :reinsurances do
     get :reserves_index, on: :collection
   end
-  namespace :claims do 
+  namespace :claims do
     resources :claim_types, :claim_type_documents, :claim_type_benefits, :claim_confinements, :claim_benefits, :claim_coverages, :claim_distributions, :claim_type_natures, :claim_documents
     resources :causes do
       post 'create_cause', to: "causes#create"
@@ -54,6 +54,7 @@ Rails.application.routes.draw do
       post :create_ca, to: "process_claims#create_ca", on: :collection
       patch :update_ca, to: "process_claims#update_ca", on: :member
       get :print_sheet, to: "process_claims#print_sheet", on: :member
+      get :approve_claim_debit, on: :member
       # get :claimable, on: :collection
     end
 
@@ -67,7 +68,7 @@ Rails.application.routes.draw do
 
 
 
-  
+
   resources :documents
   resources :emp_approvers
   get "med_directors/home"
@@ -361,9 +362,9 @@ Rails.application.routes.draw do
   # * Underwriting Module Routes
   resources :user_levels
   resources :authority_levels
-  
 
-  
+
+
   resources :underwriting_routes
   resources :batch_remarks do
     get :form_md, on: :member

@@ -99,9 +99,9 @@
             <% if current_user.is_coop_user? and coop_member.with_coverages? %>
               <%= link_to '<i class="bi bi-shield-check"></i>'.html_safe, show_insurance_coop_member_path(coop_member), class: small_btn('outline-primary'), title: 'Coverages' %>
             <% end %>
-            <%#  if current_user.is_claims? %>
-            <%= link_to '<i class="bi bi-clipboard-pulse"></i>'.html_safe, new_ca_claims_process_claims_path(cm: coop_member), class: small_btn('outline-primary'), title: 'File Claims' if current_user.userable == 'Employee' %>
-            <%# end  %>
+            <%  if current_user.is_claims? %>
+              <%= link_to '<i class="bi bi-clipboard-pulse"></i>'.html_safe, new_ca_claims_process_claims_path(cm: coop_member), class: small_btn('outline-primary'), title: 'File Claims' %>
+            <% end  %>
             <%# end %>
             <%# <% if coop_member.batches.joins(:group_remits).where(group_remits: { type: 'BatchRemit' }).exists? %>
             <%# <%= link_to 'Insurance', member_agreements_coop_member_path(coop_member), class: 'btn btn-sm btn-primary' %>
