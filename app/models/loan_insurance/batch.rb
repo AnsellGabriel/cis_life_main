@@ -296,6 +296,7 @@ class LoanInsurance::Batch < Batch
   # end
 
   def compute_terms(expiry_date, effectivity_date)
+    # ! revert the formula to the original formula due to incorrect terms computation
     (expiry_date.year - effectivity_date.year) * 12 + (expiry_date.month - effectivity_date.month) + (expiry_date.day > effectivity_date.day ? 1 : 0)
     # ((expiry_date - effectivity_date) / 30).to_f.round
   end
