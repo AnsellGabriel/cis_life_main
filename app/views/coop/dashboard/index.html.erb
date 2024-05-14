@@ -26,7 +26,6 @@
         </div>
       </div>
     </div>
-
     <div class="card mb-3">
       <div class="card-header text-primary">
         <%= content_tag :h6, 'Insurance Plans', class: 'mb-0' %>
@@ -43,11 +42,10 @@
                     <%= content_tag :p, "(#{a.plan.description})", class: 'text-muted mb-0', style: 'font-size: .8rem' %>
                   </div>
                   <div class="<%= flex_justify_align('center', '', true) %> ps-3 col-md-12 sm-secondary-text">
-
                     <% if ['single', 'multiple'].include?(a.anniversary_type) %>
                       <div class="d-flex gap-2">
                         <%= content_tag :span, "Anniversary day#{a.anniversary_type.downcase == 'multiple' ? '(s)' : '' }: ", class: 'card-text' %>
-                          <%= content_tag :span, presenter.anniversary_dates, class: 'card-text' %>
+                        <%= content_tag :span, presenter.anniversary_dates, class: 'card-text' %>
                       </div>
                     <% end %>
                     <div class="row <%= flex_justify_align('center') %>">
@@ -67,7 +65,6 @@
       </div>
     </div>
   </div>
-
   <div class="col-md-6">
     <div class="col-md-11 d-flex gap-3" style="margin: auto" >
       <%= render 'counter_box', title: 'Total members', count: @cooperative.coop_members.size %>
@@ -76,7 +73,6 @@
         <%= render 'counter_box', title: agreement.plan_acronym.upcase == "LPPI" ? "Insured Loans" : "Enrolled in #{agreement.plan_acronym}", count: agreement.active_batches_count %>
       <% end %>
     </div>
-
     <div class="card col-md-11" style="margin: auto">
       <div class="card-header text-primary">
         <%= content_tag :h6, 'Message Board', class: 'mb-0' %>
@@ -86,13 +82,12 @@
           <ul>
             <% @notifications.limit(10).order(created_at: :desc).each do |notice| %>
               <% if notice.process_coverage.nil? %>
-                  <%= content_tag :li, notice.message, class: 'text-secondary sm-secondary-text mb-1' %>
+                <%= content_tag :li, notice.message, class: 'text-secondary sm-secondary-text mb-1' %>
               <% else %>
                 <%= link_to notice.process_coverage.group_remit.type == "LoanInsurance::GroupRemit" ? loan_insurance_group_remits_path(notice.process_coverage.group_remit) : group_remit_path(notice.process_coverage.group_remit) do %>
                   <%= content_tag :li, notice.message, class: 'text-primary sm-secondary-text mb-1' %>
                 <% end %>
               <% end %>
-              
             <% end %>
           </ul>
         <% else %>
@@ -102,7 +97,6 @@
     </div>
   </div>
 </div>
-
 <div class="row mb-2">
   <div class="col-6">
     <%= pie_chart @age_bracket, title: "Age Demographic" %>

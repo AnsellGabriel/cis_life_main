@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2024_05_09_015019) do
+ActiveRecord::Schema[7.0].define(version: 2024_05_11_132813) do
   create_table "accounting_vouchers", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.date "date_voucher"
     t.string "voucher"
@@ -512,12 +512,10 @@ ActiveRecord::Schema[7.0].define(version: 2024_05_09_015019) do
   end
 
   create_table "claim_type_natures", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
-    t.bigint "claim_type_id", null: false
     t.string "name"
     t.string "description"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["claim_type_id"], name: "index_claim_type_natures_on_claim_type_id"
   end
 
   create_table "claim_types", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
@@ -626,6 +624,20 @@ ActiveRecord::Schema[7.0].define(version: 2024_05_09_015019) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["debit_advice_id"], name: "index_debit_advice_receipts_on_debit_advice_id"
+  end
+
+  create_table "demo_schedules", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+    t.string "cooperative"
+    t.string "name"
+    t.string "contact_no"
+    t.string "email"
+    t.date "demo_date"
+    t.integer "time_slot"
+    t.text "remarks"
+    t.integer "satus"
+    t.integer "method"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
   end
 
   create_table "denied_dependents", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
@@ -1486,7 +1498,6 @@ ActiveRecord::Schema[7.0].define(version: 2024_05_09_015019) do
   add_foreign_key "claim_remarks", "process_claims"
   add_foreign_key "claim_remarks", "users"
   add_foreign_key "claim_request_for_payments", "process_claims"
-  add_foreign_key "claim_type_natures", "claim_types"
   add_foreign_key "coop_banks", "cooperatives"
   add_foreign_key "coop_banks", "treasury_accounts"
   add_foreign_key "coop_branches", "cooperatives"

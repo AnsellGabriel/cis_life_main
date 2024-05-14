@@ -2,18 +2,26 @@
 class Claims::ClaimTypeNaturesController < ApplicationController
     before_action :set_claim_type_nature, only: %i[ show edit update destroy ]
 
+    def index 
+      @claim_type_nature = Claims::ClaimTypeNature.all
+    end
+
     def show 
 
     end
     def new
-        @claim_type = Claims::ClaimType.find(params[:p])
-        @claim_type_nature = @claim_type.claim_type_natures.build
+        # @claim_type = Claims::ClaimType.find(params[:p])
+        # @claim_type_nature = @claim_type.claim_type_natures.build
+        @claim_type_nature = Claims::ClaimTypeNature.new
         # @claim_distribution.name = FFaker::NamePH.name if Rails.env.development?
     end
     
     def create 
-        @claim_type = Claims::ClaimType.find(params[:p])
-        @claim_type_nature = @claim_type.claim_type_natures.build(claim_type_nature_params)
+        # @claim_type = Claims::ClaimType.find(params[:p])
+        # @claim_type_nature = @claim_type.claim_type_natures.build(claim_type_nature_params)
+
+        @cause = Claims::ClaimTypeNature.new(claim_type_nature_params)
+
         # @claim_benefit = ClaimBenefit.new(claim_benefit_params)
         respond_to do |format|
             if @claim_type_nature.save

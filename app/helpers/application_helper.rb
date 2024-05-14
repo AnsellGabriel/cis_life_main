@@ -250,4 +250,15 @@ module ApplicationHelper
     'table table-bordered table-hover bg-white table-sm sm-secondary-text'
   end
 
+  def view_ors_title(val)
+    case val
+    when "enc"
+      "List of Encoded ORs"
+    when "nt"
+      "List of Not Tranmistted ORs"
+    when "ne"
+      "List of ORs for Encoding"
+    end
+  end
+
 end

@@ -62,6 +62,11 @@
               <%= link_to "Documents", claims_claim_documents_path, class: "dropdown-item" %>
               <%= link_to "Claim Type", claims_claim_types_path, class: "dropdown-item" %>
               <%= link_to "Claims Message", claims_claim_remarks_path, class: "dropdown-item" %>
+              <%= link_to "Benefits", benefits_path, class: "dropdown-item" %>
+              <%= link_to "Claim Type", claims_claim_types_path, class: "dropdown-item" %>
+              <%= link_to "Medical Code", claims_causes_path, class: "dropdown-item" %>
+              <%= link_to "Claim Nature", claims_claim_type_natures_path, class: "dropdown-item" %>
+              <%#= link_to "Claims Message", claim_remarks_path, class: "dropdown-item" %>
               <%= link_to "User Levels", user_levels_path, class: "dropdown-item" %>
             <% end %>
             <% when 14 %>
@@ -78,7 +83,7 @@
               <% end %>
             <% end %>
             <%= render 'layouts/partials/nav_dropdown', title: 'Data Entries' do %>
-              <% if current_user.head? %>
+              <% if current_user.admin? %>
                 <%= link_to "Agreement", agreements_path, class: "dropdown-item" %>
                 <%= link_to "EmpAgreement", emp_agreements_path, class: "dropdown-item" %>
                 <%= link_to "Approver", emp_approvers_path, class: "dropdown-item" %>
@@ -86,10 +91,9 @@
                 <%= link_to "Plans", plans_path, class: "dropdown-item" %>
                 <%= link_to "Benefits", benefits_path, class: "dropdown-item" %>
                 <li><hr class="dropdown-divider"></li>
-              <% end %>
-              <%= link_to "Cooperative", cooperatives_path, class: "dropdown-item" %>
-              <% if current_user.head? %>
+                <%= link_to "Cooperative", cooperatives_path, class: "dropdown-item" %>
                 <li><hr class="dropdown-divider"></li>
+                <%= link_to "Meeting Schedule", demo_schedules_path, class: "dropdown-item" %>
                 <%= link_to "Employees", employees_path, class: "dropdown-item" %>
                 <%= link_to "User Levels", user_levels_path, class: "dropdown-item" %>
                 <%= link_to "Cooperative User", coop_users_path, class: "dropdown-item" %>
