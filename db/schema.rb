@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2024_05_09_015019) do
+ActiveRecord::Schema[7.0].define(version: 2024_05_11_132813) do
   create_table "accounting_vouchers", charset: "utf8mb4", force: :cascade do |t|
     t.date "date_voucher"
     t.string "voucher"
@@ -512,7 +512,6 @@ ActiveRecord::Schema[7.0].define(version: 2024_05_09_015019) do
   end
 
   create_table "claim_type_natures", charset: "utf8mb4", force: :cascade do |t|
-    t.bigint "claim_type_id", null: false
     t.string "name"
     t.string "description"
     t.datetime "created_at", null: false
@@ -627,7 +626,7 @@ ActiveRecord::Schema[7.0].define(version: 2024_05_09_015019) do
     t.index ["debit_advice_id"], name: "index_debit_advice_receipts_on_debit_advice_id"
   end
 
-  create_table "demo_schedules", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+  create_table "demo_schedules", charset: "utf8mb4", force: :cascade do |t|
     t.string "cooperative"
     t.string "name"
     t.string "contact_no"
@@ -641,7 +640,7 @@ ActiveRecord::Schema[7.0].define(version: 2024_05_09_015019) do
     t.datetime "updated_at", null: false
   end
 
-  create_table "denied_dependents", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+  create_table "denied_dependents", charset: "utf8mb4", force: :cascade do |t|
     t.string "name"
     t.string "age"
     t.string "reason"
