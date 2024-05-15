@@ -269,6 +269,8 @@ Rails.application.routes.draw do
     resources :debit_advices do
       get :new_receipt, on: :member
       post :upload_receipt, on: :member
+      get :download, on: :member
+      get :print, on: :member
     end
 
     resources :journals do
@@ -301,8 +303,7 @@ Rails.application.routes.draw do
       get :pdf, on: :collection
     end
 
-    resources :voucher_requests, only: %i[index show] do
-    end
+    resources :voucher_requests, only: %i[index show]
 
     get "dashboard", to: "dashboard#index"
   end

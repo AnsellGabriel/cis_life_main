@@ -430,11 +430,14 @@ ActiveRecord::Schema[7.0].define(version: 2024_05_15_012117) do
     t.date "expiry"
     t.decimal "amount", precision: 18, scale: 2
     t.decimal "amount_cover", precision: 18, scale: 2
-    t.string "coverage_type"
     t.string "status"
     t.bigint "process_claim_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.string "coverage_type"
+    t.string "coverageable_type", null: false
+    t.bigint "coverageable_id", null: false
+    t.index ["coverageable_type", "coverageable_id"], name: "index_claim_coverages_on_coverageable"
     t.index ["process_claim_id"], name: "index_claim_coverages_on_process_claim_id"
   end
 

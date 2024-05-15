@@ -96,9 +96,6 @@ class Treasury::CashierEntry < ApplicationRecord
   end
 
   def check_agreement
-    
-    binding.pry
-    
     if plan.present?
       moa = Agreement.find_by(cooperative: entriable, plan: plan)
       if moa.present?

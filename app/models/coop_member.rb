@@ -17,7 +17,7 @@ class CoopMember < ApplicationRecord
   has_many :batches
   has_many :agreements_coop_members
   has_many :agreements, through: :agreements_coop_members
-  has_many :process_claims, as: :claimable
+  has_many :process_claims, as: :claimable, class_name: "Claims::ProcessClaim",  dependent: :destroy
 
   def to_s
     "#{full_name.titleize}"

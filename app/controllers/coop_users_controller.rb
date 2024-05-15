@@ -49,12 +49,13 @@ class CoopUsersController < ApplicationController
     @employee.build_user
 
     respond_to do |format|
-            
+
       if @coop_user.save
         format.html { redirect_to unauthenticated_root_path, notice: "Account was successfully created. Please contact the administrator to activate your account." }
       else
         # re-initialize the cooperative and branches
         @cooperatives = Cooperative.all.pluck(:name, :id)
+        @branches = @coop_user&.cooperative.nil? ? [] : @coop_user&.cooperative&.coop_branches.order(:name)
         format.html { render 'devise/registrations/new', status: :unprocessable_entity }
       end
     end

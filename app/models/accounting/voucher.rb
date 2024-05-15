@@ -11,6 +11,8 @@ class Accounting::Voucher < ApplicationRecord
 
   enum audit: { for_audit: 0, approved: 1, pending_audit: 2 }
   enum status: { pending: 0, posted: 1, cancelled: 2, for_approval: 3}
+  enum branch: { head_office: 0, cagayan_de_oro: 1, iloilo: 2, davao: 3}
+
 
   scope :checks, -> { where(type: "Accounting::Check") }
   scope :journals, -> { where(type: "Accounting::Journal") }

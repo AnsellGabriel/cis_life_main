@@ -250,6 +250,10 @@ module ApplicationHelper
     'table table-bordered table-hover bg-white table-sm sm-secondary-text'
   end
 
+  def centered_cell
+    'text-center align-middle'
+  end
+
   def view_ors_title(val)
     case val
     when "enc"

@@ -1,13 +1,6 @@
 <%= turbo_frame_tag "reg_form_modal" do %>
   <div class="modal-header">
-    <% if params[:audit].present? && params[:audit].to_s == "true" %>
-      <h5 class="card-header">Pending Audit</h5>
-    <% elsif current_user.is_treasurer? %>
-      <h5 class="card-header">Mark as Paid</h5>
-    <% else %>
-      <h5 class="card-header">Cancel Voucher</h5>
-    <% end %>
-
+    <%= render 'header'%>
     <%= link_to '', @voucher_path, class: 'btn-close', data: {turbo: false}%>
   </div>
   
