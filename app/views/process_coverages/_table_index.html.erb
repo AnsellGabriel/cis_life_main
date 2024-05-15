@@ -30,7 +30,8 @@
               <% sum_prem = pc.group_remit.batches.sum(:premium) %>
               <small>Premium <%= to_curr(sum_prem) %></small> <br>
               <small>Net <%= to_curr(sum_prem - pc.group_remit.batches.sum(:coop_sf_amount)) %></small>
-              <%= content_tag :strong, pc.get_or_number %> <br>
+              <%#= content_tag :strong, pc.get_or_number %> <!--br-->
+              <%= content_tag :strong, pc.group_remit&.official_receipt %> <br>
               <%= content_tag :small, month_day_year(pc.get_or_date) %>
             </td>
             <td>
