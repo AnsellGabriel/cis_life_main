@@ -43,7 +43,7 @@ class Claims::ClaimBenefitsController < ApplicationController
     @claim_benefit.destroy
 
     respond_to do |format|
-      format.html { redirect_to claim_benefits_url, notice: "Claim benefit was successfully destroyed." }
+      format.html { redirect_to claims_claim_benefits_path, notice: "Claim benefit was successfully destroyed." }
       format.json { head :no_content }
     end
   end

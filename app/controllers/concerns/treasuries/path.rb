@@ -17,6 +17,8 @@ module Treasuries::Path
         accounting_journal_path(@entry)
       when 'da'
         accounting_debit_advice_path(@entry)
+      when 'request'
+        accounting_voucher_request_path(@entry)
       end
     end
   end

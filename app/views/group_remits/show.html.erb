@@ -125,12 +125,12 @@
   <div class="card">
     <div class="card-body <%= flex_justify_align('between', 'center') %>">
       <div class="<%=  flex_justify_align('', 'center') %> gap-2  ">
-        <%= content_tag :span, @group_remit.status.titleize, class: @group_remit.status_badge %>
-        <%= content_tag :h3, class: 'mb-0 text-primary' do %>
-            <%= @group_remit %>    
-        <% end %>
-        
-        <div class="<%= flex_justify_align('between') %> mt-2">
+        <div class="<%= flex_justify_align('between', '', true) %> mt-2">
+          <div class="<%=  flex_justify_align('', 'center') %> gap-2 ">
+            <%= content_tag :span, @group_remit.status.titleize, class: @group_remit.status_badge %>
+            <%= content_tag :h3, @group_remit, class: 'mb-0 text-primary' %>
+          </div>
+
           <div style="width: 100%">
 
             <% if(@group_remit.is_for_payment? || @group_remit.is_for_reupload?) && (@group_remit.process_coverage.approved?) %>
@@ -138,13 +138,13 @@
             <% end %>
 
             <% if @group_remit.is_pending_or_renewal? && @group_remit.is_remittance? %>
-                <%= turbo_frame_tag "batch_import_form" do %>
-                  <%= turbo_frame_tag "batch_form" do %>   
-                      <div class="d-flex gap-3 mb-2">
-                        <%= render 'group_remits/add_member' %>
-                      </div>
-                  <% end %>
+              <%= turbo_frame_tag "batch_import_form" do %>
+                <%= turbo_frame_tag "batch_form" do %>   
+                    <div class="d-flex gap-3 mb-2">
+                      <%= render 'group_remits/add_member' %>
+                    </div>
                 <% end %>
+              <% end %>
             <% end%>
 
           </div>

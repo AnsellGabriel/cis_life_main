@@ -53,7 +53,7 @@ class Claims::ProcessClaim < ApplicationRecord
     payment_procedure: 8, # payment
     denied_claim: 9, # denied
     reconsider_review: 10,
-    pending_claim: 11,
+    payment_rejected: 11, # if accounting reject the request for payment
     claimable: 12,
     paid: 13, # paid
     voucher_generated: 14,

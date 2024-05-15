@@ -1,20 +1,9 @@
 <%= render 'attachments' %>
 
 <div class="mb-1">
-  <%= link_to accounting_voucher_requests_path(pt: @request.payment_type.to_s), class: small_btn('secondary'), title: 'black' do %>
-    <i class="bi bi-chevron-left"></i>
-  <% end %>
-
-  <% if @vouchers.empty? || @vouchers.all?(&:cancelled?) %>
-    <%= render 'new_voucher_btn' %>
-  <% end %>
-  <%= content_tag :button, "Attachments", 
-    class: small_btn('outline-primary'), 
-    data: {bs_toggle: "modal",
-      bs_target: "#attachmentsModal"
-    }
-  %>
+  <%= render 'header_btns' %>
 </div>
+
 <div class="d-flex gap-3">
   <%= render 'request', request: @request %>
   <div class="" style="width: 50%;">

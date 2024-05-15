@@ -48,7 +48,7 @@ class Batch < ApplicationRecord
   # has_many :batch_remarks, source: :remarkable, source_type: "Batch", dependent: :destroy
   has_many :batch_remarks, as: :remarkable, dependent: :destroy
   alias_attribute :remarks, :batch_remarks
-  has_many :process_claims, as: :claimable, class_name: "Claims::ProcessClaim",  dependent: :destroy
+  # has_many :process_claims, as: :claimable, class_name: "Claims::ProcessClaim",  dependent: :destroy
   # has_many :claim_coverages, as: :coverageable, class_name: 'Claims::ClaimCoverage', dependent: :destroy
 
   has_many :reserve_batches, as: :batchable, dependent: :destroy, class_name: "Actuarial::ReserveBatch"

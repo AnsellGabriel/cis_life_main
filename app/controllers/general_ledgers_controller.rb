@@ -7,9 +7,12 @@ class GeneralLedgersController < ApplicationController
     ActiveRecord::Base.transaction do
       if @entry.update!(status: :posted)
         # params[:e_t] = entry type
-        if params[:e_t] == 'ce' && @entry.remittance?
-          pay_service = PaymentService.new(@entry.entriable, current_user, @entry)
-          result = pay_service.post_payment
+        if params[:e_t] == 'ce'
+          if @entry.remittance?
+            pay_service = PaymentService.new(@entry.entriable, current_user, @entry)
+          end
+
+          result = "Cashier entry posted"
         else
           @entry.update!(post_date: Date.current, certified_by: current_user.userable.id)
 

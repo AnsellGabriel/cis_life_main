@@ -11,7 +11,7 @@ class LoanInsurance::Batch < Batch
   belongs_to :loan, class_name: "LoanInsurance::Loan", foreign_key: "loan_insurance_loan_id", optional: true
   belongs_to :rate, class_name: "LoanInsurance::Rate", foreign_key: "loan_insurance_rate_id"
 
-  belongs_to :process_claim, class_name: "Claims::ProcessClaim", optional: true
+  # belongs_to :process_claim, class_name: "Claims::ProcessClaim", optional: true
   # belongs_to :retention, class_name: 'LoanInsurance::Retention', foreign_key: 'loan_insurance_retention_id'
   has_many :details, class_name: "LoanInsurance::Detail"
   has_many :batch_health_decs, as: :healthdecable, dependent: :destroy
