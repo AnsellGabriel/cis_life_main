@@ -82,9 +82,6 @@ class Accounting::DebitAdvicesController < ApplicationController
     redirect_to accounting_debit_advices_url, notice: "Debit advice was successfully destroyed.", status: :see_other
   end
 
-  def new_receipt
-  end
-
   def upload_receipt
     file = params[:file]
 
@@ -103,6 +100,37 @@ class Accounting::DebitAdvicesController < ApplicationController
     end
   end
 
+  def download
+    @ledger_entries = @check.general_ledgers
+    @accountant = Employee.find(@check.accountant_id)
+    @approver = Employee.find(@check.approved_by) if @check.approved_by.present?
+    @certifier = Employee.find(@check.certified_by) if @check.certified_by.present?
+    @auditor = Employee.find(@check.audited_by) if @check.audited_by.present?
+    @amount_in_words = amount_to_words(@check.amount)
+
+    respond_to do |format|
+      format.pdf do
+        render pdf: "Check voucher ##{@check.voucher}",
+               page_size: "A4"
+      end
+    end
+  end
+
+  def print
+    @ledger_entries = @check.general_ledgers
+    @accountant = Employee.find(@check.accountant_id)
+    @approver = Employee.find(@check.approved_by) if @check.approved_by.present?
+    @certifier = Employee.find(@check.certified_by) if @check.certified_by.present?
+    @auditor = Employee.find(@check.audited_by) if @check.audited_by.present?
+    @amount_in_words = amount_to_words(@check.amount)
+
+    respond_to do |format|
+      format.pdf do
+        render pdf: "Check voucher ##{@check.voucher}",
+               page_size: "A4"
+      end
+    end
+  end
 
   private
   # Use callbacks to share common setup or constraints between actions.
@@ -122,6 +150,6 @@ class Accounting::DebitAdvicesController < ApplicationController
 
   # collection of payees
   def set_payables
-    @payables = (Cooperative.all + Payee.all).sort_by(&:name)
+    @payables = (Cooperative.select(:name, :id) + Payee.select(:name, :id)).sort_by(&:name)
   end
 end

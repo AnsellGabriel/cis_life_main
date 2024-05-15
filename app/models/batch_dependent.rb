@@ -16,7 +16,7 @@ class BatchDependent < ApplicationRecord
   belongs_to :agreement_benefit
   has_many :batch_health_decs, as: :healthdecable, dependent: :destroy
   alias_attribute :health_declaration, :batch_health_decs
-  has_many :process_claims, as: :claimable, dependent: :destroy
+  # has_many :process_claims, as: :claimable, dependent: :destroy
   has_many :batch_remarks, as: :remarkable, dependent: :destroy
   alias_attribute :remarks, :batch_remarks
 

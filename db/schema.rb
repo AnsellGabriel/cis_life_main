@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2024_05_11_132813) do
+ActiveRecord::Schema[7.0].define(version: 2024_05_15_014645) do
   create_table "accounting_vouchers", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.date "date_voucher"
     t.string "voucher"
@@ -430,11 +430,14 @@ ActiveRecord::Schema[7.0].define(version: 2024_05_11_132813) do
     t.date "expiry"
     t.decimal "amount", precision: 18, scale: 2
     t.decimal "amount_cover", precision: 18, scale: 2
-    t.string "coverage_type"
     t.string "status"
     t.bigint "process_claim_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.string "coverage_type"
+    t.string "coverageable_type", null: false
+    t.bigint "coverageable_id", null: false
+    t.index ["coverageable_type", "coverageable_id"], name: "index_claim_coverages_on_coverageable"
     t.index ["process_claim_id"], name: "index_claim_coverages_on_process_claim_id"
   end
 

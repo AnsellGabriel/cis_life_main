@@ -8,12 +8,6 @@
   </div>
 
   <div class="form-actions text-center">
-    <% if params[:audit].present? && params[:audit].to_s == "true" %>
-      <%= f.button :submit, "Pending", class: "btn-warning", data: {turbo_confirm: "Double check category before submitting the form", turbo_method: :post} %>
-    <% elsif current_user.is_treasurer? %>
-      <%= f.button :submit, "Paid", class: "btn-success", data: {turbo_confirm: "Mark DA as paid?", turbo_method: :post} %>
-    <% else %>
-      <%= f.button :submit, "Cancel Voucher", class: "btn-danger", data: {turbo_confirm: "Add remark and cancel voucher", turbo_method: :post} %>
-    <% end %>
+    <%= render 'submit_btn', f: f %>
   </div>
 <% end %>

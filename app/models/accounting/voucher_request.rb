@@ -4,11 +4,12 @@ class Accounting::VoucherRequest < ApplicationRecord
   belongs_to :requestable, polymorphic: true
   belongs_to :account, class_name: "Treasury::Account", optional: true
   has_many :vouchers, class_name: "Accounting::Voucher", foreign_key: :request_id, dependent: :destroy
+  has_many :remarks, as: :remarkable, dependent: :destroy
 
   enum status: {
     pending: 0,
     voucher_generated: 1,
-    cancelled: 2,
+    rejected: 2,
     posted: 3
   }
 
@@ -22,6 +23,10 @@ class Accounting::VoucherRequest < ApplicationRecord
     claims_payment: 0,
     refund: 1
   }
+
+  def entry_type
+    'request'
+  end
 
   def payee
     case requestable

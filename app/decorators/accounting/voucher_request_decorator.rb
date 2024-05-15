@@ -14,7 +14,7 @@ class Accounting::VoucherRequestDecorator < ApplicationDecorator
     case object.status
       when "pending", "voucher_generated" then "badge bg-warning text-dark"
       when "posted" then "badge bg-success"
-      when "cancelled" then "badge bg-danger"
+      when "rejected" then "badge bg-danger"
     end
   end
 end
