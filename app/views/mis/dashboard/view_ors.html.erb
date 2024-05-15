@@ -8,7 +8,7 @@
 </div>
 
 <% unless @type == "ne" %>
-  <%= form_tag new_transmittal_path(b_ids: []), method: :get, data: { turbo: false } do %>
+  <%= form_tag new_transmittal_path(b_ids: []), method: :get, data: { turbo_frame: "modal" } do %>
     <%= submit_tag 'Transmit selected', name: 'transmit', onclick: "return confirm('Are you sure?')", class: "btn btn-primary mb-2" %>
     <table class="table">
       <thead>

@@ -64,6 +64,9 @@ class TransmittalsController < ApplicationController
 
   # POST /transmittals
   def create
+    
+    binding.pry
+    
     @transmittal = Transmittal.new(transmittal_params)
     @transmittal.transmittal_type = current_user.is_mis? ? "mis" : "und"
     @transmittal.set_code_and_type(current_user)
