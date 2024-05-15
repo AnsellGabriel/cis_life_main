@@ -5,4 +5,16 @@ class Team < ApplicationRecord
   def to_s
     name
   end
+
+  def get_team_head(val=nil)
+    if val == "name"
+      employee_teams.find_by(head: true).employee
+    elsif val == "pos"
+      employee_teams.find_by(head: true).employee.designation
+    end
+  end
+
+  def get_team_members
+    employee_teams.where.not(head: true)
+  end
 end
