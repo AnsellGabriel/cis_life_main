@@ -19,10 +19,4 @@
       <i class="bi bi-eye-fill"></i> View Payment
     <% end %>
   <% end %>
-
-  <% if @debit_advice.paid? %>
-    <%= link_to new_accounting_journal_path(da: @debit_advice.id), class: 'btn btn-sm btn-outline-primary', data: {turbo_frame: 'modal'} do %>
-      <i class="bi bi-plus-lg"></i> Journal Voucher
-    <% end %>
-  <% end %>
 </div>

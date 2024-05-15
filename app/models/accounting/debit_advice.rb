@@ -5,7 +5,7 @@ class Accounting::DebitAdvice < Accounting::Voucher
   has_many :debit_advice_journals, class_name: "Accounting::DebitAdviceJournal"
   has_many :journals, through: :debit_advice_journals
   has_one :attachment, class_name: 'Accounting::DebitAdviceReceipt'
-  has_one :voucher_request, as: :requestable, dependent: :destroy, class_name: "Accounting::VoucherRequest"
+  has_one :jv_request, as: :requestable, dependent: :destroy, class_name: "Accounting::VoucherRequest"
 
   enum payout_status: {
     pending_payout: 0,

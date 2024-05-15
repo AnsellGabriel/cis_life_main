@@ -17,7 +17,7 @@ class Accounting::DebitAdvicesController < ApplicationController
     @bank = @debit_advice.treasury_account
     @request = @debit_advice.voucher_request
 
-    if @request.requestable.present? && @request.requestable.is_a?(Claims::ProcessClaim)
+    if @request&.requestable.present? && @request&.requestable.is_a?(Claims::ProcessClaim)
       @claim = @request.requestable
       @claim_type_documents = Claims::ClaimTypeDocument.where(claim_type: @request.requestable.claim_type)
     end

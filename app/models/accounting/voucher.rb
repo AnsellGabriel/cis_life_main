@@ -3,7 +3,7 @@ class Accounting::Voucher < ApplicationRecord
                         :particulars, :status, :audit, :accountant_id, :type, :branch, :global_payable, :amount
 
   belongs_to :payable, polymorphic: true
-  belongs_to :voucher_request, class_name: "Accounting::VoucherRequest", optional: true, foreign_key: :request_id
+  belongs_to :voucher_request, class_name: "Accounting::VoucherRequest", foreign_key: :request_id, optional: true
   belongs_to :treasury_account, class_name: "Treasury::Account", foreign_key: :treasury_account_id, optional: true
 
   has_many :general_ledgers, as: :ledgerable
@@ -12,14 +12,19 @@ class Accounting::Voucher < ApplicationRecord
   enum audit: { for_audit: 0, approved: 1, pending_audit: 2 }
   enum status: { pending: 0, posted: 1, cancelled: 2, for_approval: 3}
 
+  scope :checks, -> { where(type: "Accounting::Check") }
+  scope :journals, -> { where(type: "Accounting::Journal") }
+  scope :debit_advices, -> { where(type: "Accounting::DebitAdvice") }
+
+
   def to_s
     self.voucher
   end
 
   def self.pending_for_audit
-    where(status: [:posted, :pending])
-    .where(audit: [:for_audit, :pending_audit, :approved])
+    where.not(type: 'Accounting::Journal')
     .where.not(post_date: nil)
+    .where(status: [:posted, :pending])
     .order(created_at: :desc)
   end
 
