@@ -1,0 +1,41 @@
+<%= content_tag :h1, "List of Teams" %>
+
+
+<div class="text-end mb-3">
+  <%= link_to new_team_path, class: 'btn btn-primary' do %>
+    New Team
+  <% end %>
+</div>
+
+
+  <table class="table table-striped table-bordered table-hover">
+    <thead>
+      <tr>
+      <th>#</th>
+            <th>Name</th>
+            <th>Description</th>
+            <th></th>
+        </tr>
+    </thead>
+
+    <tbody>
+      <% @teams.each do |team| %>
+        <tr>
+
+        <th scope="row"><%= team.id %></th>
+        <td>
+          <%= team.name %> <br>
+          <p><i>Members: </i> <b><%= team.employees.count %></b> </p>
+        </td>
+        <td><%= team.description %></td>
+    
+          <td>
+            <%= link_to 'View', team, class: 'btn btn-secondary btn-sm' %>
+            <%= link_to 'Edit', edit_team_path(team), class: 'btn btn-secondary btn-sm' %>
+            <%= link_to "Delete", team, class: "btn btn-danger btn-sm", method: :delete, data: { "turbo-method": :delete, turbo_confirm: "Are you sure?" } %>
+          </td>
+
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
