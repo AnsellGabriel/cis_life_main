@@ -87,6 +87,7 @@ class LoanInsurance::GroupRemitsController < ApplicationController
   end
 
   def create
+    # raise 'errors'
     if params[:or_no].present?
       @agreement = Agreement.find(params[:agreement_id])
     end

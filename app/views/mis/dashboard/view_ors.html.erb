@@ -69,7 +69,7 @@
             <% else %>
 
               <% if payment&.agreement&.plan&.acronym == "LPPI" %>
-                <%= link_to "Encode", loan_insurance_group_remits_path(or_no: payment.or_no, agreement_id: payment.agreement), data: { turbo_method: :post }, class: "btn btn-sm btn-primary", onclick: "return confirm('Are you sure?')" %>
+                <%= link_to "Encode", loan_insurance_group_remits_path(or_no: payment.or_no, agreement_id: payment.agreement.id), data: { turbo_method: :post }, class: "btn btn-sm btn-primary", onclick: "return confirm('Are you sure?')" %>
               <% elsif ["GYRT", "GYRTFR", "GYRTBR"].include?(payment&.agreement&.plan&.acronym) %>
                 <% if payment.agreement.anniversary_type.nil? or payment.agreement.anniversary_type.downcase == '12 months' %>
                   <% current_batch_remit = payment.agreement.group_remits.find_by(type: 'BatchRemit', effectivity_date: Date.today.beginning_of_month) %>
