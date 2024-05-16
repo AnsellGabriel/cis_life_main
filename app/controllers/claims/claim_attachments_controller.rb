@@ -48,11 +48,11 @@ class Claims::ClaimAttachmentsController < ApplicationController
   end
 
   def destroy
-    @claim_attachment.destroy
+    @claim_attachment.destroy!
 
     respond_to do |format|
       format.html { redirect_to show_coop_claims_process_claim_path(@process_claim), notice: "Document removed" }
-      format.json { head :no_content }
+      # format.json { head :no_content }
     end
   end
   private
