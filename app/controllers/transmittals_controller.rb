@@ -50,7 +50,11 @@ class TransmittalsController < ApplicationController
     # raise 'errors'
     @type = params[:b_ids].present? ? "mis" : nil
     @group_remit_ids = GroupRemit.where(id: params[:b_ids]).pluck(:id)
-    @transmittal = Transmittal.new(description: FFaker::Lorem.phrase)
+    if Rails.env.development?
+      @transmittal = Transmittal.new(description: FFaker::Lorem.phrase)
+    else
+      @transmittal = Transmittal.new
+    end
     # @transmittal.transmittal_ors.build
   end
 
@@ -60,6 +64,9 @@ class TransmittalsController < ApplicationController
 
   # POST /transmittals
   def create
+    
+    binding.pry
+    
     @transmittal = Transmittal.new(transmittal_params)
     @transmittal.transmittal_type = current_user.is_mis? ? "mis" : "und"
     @transmittal.set_code_and_type(current_user)

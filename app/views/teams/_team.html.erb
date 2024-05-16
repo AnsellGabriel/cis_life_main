@@ -1,0 +1,31 @@
+<div id="<%= dom_id team %>">
+  <p>
+    <strong>Name:</strong>
+    <%= team.name %>
+  </p>
+
+  <p>
+    <strong>Description:</strong>
+    <%= team.description %>
+  </p>
+
+  <%= content_tag :h3, "List of employees under this team", class: "mb-3" %>
+
+  <h5>Headed by: <%= team.get_team_head("name") %> - <%= team.get_team_head("pos") %></h5>
+
+  <table class="table">
+    <thead>
+      <th>Name</th>
+      <th>Position</th>
+    </thead>
+    <tbody>
+      <% team.get_team_members.each do |et| %>
+        <tr>
+          <td><%= et.employee %></td>
+          <td><%= et.employee.designation %></td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+
+</div>

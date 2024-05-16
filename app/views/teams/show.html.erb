@@ -1,0 +1,9 @@
+
+<%= render @team %>
+
+<div>
+  <%= link_to "Edit", edit_team_path(@team), class: 'btn btn-primary' %> |
+  <%= link_to "Back", teams_path, class: 'btn btn-primary' %>
+
+  <%= button_to "Delete", @team, method: :delete, class: 'btn btn-danger' %>
+</div>
