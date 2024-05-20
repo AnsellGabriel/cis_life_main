@@ -97,6 +97,9 @@ class ApplicationController < ActionController::Base
     end
   end
 
+  def initialize_or_select
+    session[:or_selected] ||= []
+  end
   # def set_retention_limit
   #   @retention_limit = Retention.find_by(active: true)
   # end

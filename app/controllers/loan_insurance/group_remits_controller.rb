@@ -91,6 +91,7 @@ class LoanInsurance::GroupRemitsController < ApplicationController
     if params[:or_no].present?
       @agreement = Agreement.find(params[:agreement_id])
     end
+
     @group_remit = @agreement.group_remits.new
     @group_remit.official_receipt = params[:or_no] if params[:or_no].present?
     @group_remit.type = "LoanInsurance::GroupRemit"

@@ -85,6 +85,9 @@ GEM
     afm (0.2.2)
     airbrussh (1.5.1)
       sshkit (>= 1.6.1, != 1.7.0)
+    ajax-datatables-rails (1.5.0)
+      rails (>= 6.0)
+      zeitwerk
     arbre (1.7.0)
       activesupport (>= 3.0.0)
       ruby2_keywords (>= 0.0.2)
@@ -539,6 +542,7 @@ PLATFORMS
 
 DEPENDENCIES
   activeadmin
+  ajax-datatables-rails
   asset_ram
   audited (~> 5.3)
   bcrypt_pbkdf
