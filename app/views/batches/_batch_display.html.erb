@@ -33,17 +33,23 @@
         </div>
         <hr>
         <div class="row">
-          <div class="col-sm-3">
-            <span class="mb-0 text-secondary">Civil Status</span>
+          <div class="col-sm-2">
+            <span class="mb-0 text-secondary">Birthdate</span>
           </div>
-          <div class="col-sm-3">
-            <%= batch.civil_status %>
+          <div class="col-sm-2">
+            <%= month_day_year(batch.coop_member.member.birth_date) %>
           </div>
-          <div class="col-sm-3">
+          <div class="col-sm-2">
             <span class="mb-0 text-secondary">Age</span>
           </div>
-          <div class="col-sm-3">
+          <div class="col-sm-2">
             <%= batch.age %>
+          </div>
+          <div class="col-sm-2">
+            <span class="mb-0 text-secondary">Gender</span>
+          </div>
+          <div class="col-sm-2">
+            <%= batch.coop_member.member.gender %>
           </div>
         </div>
         <hr>
@@ -72,23 +78,6 @@
             <%= month_day_year(@expiry_date)%>
           </div>
         </div>
-        <% if @agreement.plan.acronym == 'PMFC' %>
-        <hr class="mb-3">
-          <div class="row">
-            <div class="col-sm">
-              <span class="mb-0">Coop residency</span>
-            </div>
-            <div class="col-sm text-secondary">
-              <%= months_to_years_months(batch.residency) %>
-            </div>
-            <div class="col-sm">
-              <span class="mb-0">Term duration</span>
-            </div>
-            <div class="col-sm text-secondary">
-              <%= "#{batch.duration} months"%>
-            </div>
-          </div>
-        <% end %>
         <hr class="mb-3">
         <div class="row">
           <div class="col-sm-3">
