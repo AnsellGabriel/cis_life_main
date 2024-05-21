@@ -68,7 +68,7 @@
     <% if business_checks.present? %>
       <tfoot>
         <tr>
-          <th class="text-end" colspan="<%= current_user.is_treasurer? && !voucher.claimable? ? '4' : '3' %>">Total</th>
+          <th class="text-end" colspan="<%= current_user.is_treasurer? && !voucher.claimable? ? '4' : '4' %>">Total</th>
           <th class="text-end"><%= to_curr voucher.business_checks.sum(:amount) %></th>
         </tr>
       </tfoot>

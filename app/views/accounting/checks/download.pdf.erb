@@ -69,7 +69,7 @@
           <div class="col-8">
             <div class="text-center fw-bolder pt-1" style="height: 20px; border-bottom: 1px solid black">ACCOUNT</div>
             <% @ledger_entries.each do |entry| %>
-              <div class="ps-1 pt-1"><%= entry.account %></div>
+              <div class="<%= entry.debit? ? 'ps-1' : 'ps-5' %> pt-1"><%= entry.account %></div>
             <% end %>
           </div>
         </div>

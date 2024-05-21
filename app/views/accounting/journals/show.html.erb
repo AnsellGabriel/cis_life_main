@@ -9,9 +9,10 @@
       <% end %>
     <% end %>
 
-    <%#= link_to  'Download Voucher', download_accounting_check_path(@check, format: :pdf), class: small_btn('success'), target: '_blank'%>
-     <% if @journal.posted? %>
-      <%= link_to  'Download', download_accounting_journal_path(@journal, format: :pdf), class: small_btn('warning'), target: '_blank'%>
+    <% if @journal.posted? %>
+      <%= link_to download_accounting_journal_path(@journal, format: :pdf), class: small_btn('primary'), target: '_blank', title: 'Download' do %>
+        <i class="bi bi-download"></i>
+      <% end %>
     <% end %>
   </div>
 
