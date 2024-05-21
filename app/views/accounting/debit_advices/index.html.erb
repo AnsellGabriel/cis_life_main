@@ -21,9 +21,7 @@
     <% end %>
   </div>
 
-  <% if @pagy.pages > 1 %>
-    <%== pagy_bootstrap_nav(@pagy) %>
-  <% end %>
+  <%== pagy_bootstrap_nav(@pagy) if @pagy.pages > 1 %>
 </div>
 
 
@@ -35,7 +33,6 @@
         <th class="text-center">Payee</th>
         <th class="text-center">Amount</th>
         <th class="text-center">Status</th>
-        <th></th>
       </tr>
     </thead>
 
@@ -44,7 +41,7 @@
         <% @debit_advices.each do |da| %>
           <tr>
             <td class="<%= centered_cell %>">
-              <%= da.voucher %>
+              <%= link_to da.voucher, da %>
             </td>
             <td class="<%= centered_cell %>"><%= short_month_day_year(da.date_voucher) %></td>
             <td class="align-middle"><%= da.payable %></td>
@@ -52,11 +49,6 @@
             <td class="<%= centered_cell %>">
               <span class="<%= da.decorate.status_badge %>"><%= da.status.titleize %></span>
             </td>    
-            <td class="<%= centered_cell %>">
-              <%= link_to da, class: small_btn('outline-primary'), title: 'View' do %>
-                <i class="bi bi-eye-fill"></i>
-              <% end %>
-            </td>
           </tr> 
         <% end %>
       <% else %>

@@ -1,0 +1,61 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset='utf-8' />
+    <%= wicked_pdf_stylesheet_link_tag "application" %>
+    <%= wicked_pdf_stylesheet_link_tag "bootstrap" %>
+  </head>
+  <body style="font-size: .9rem">
+    <%= render 'layouts/pdf_partials/cisp_header', title: "DEBIT ADVICE" %>
+    <div class="row">
+      <div class="col-10"></div>
+      <div class="text-center mb-5 mt-4 col-2 pdf-bottom-border"><%= @debit_advice.date_voucher.strftime("%m/%d/%Y")%></div>
+    </div>
+    <div class="row mb-5">
+      <div class="col-12">
+        <div class="row mb-2">
+          <div class="col-2">DA No.</div>
+          <div class="col-1 text-end">:</div>
+          <div class="ms-2 col-4 pdf-bottom-border"><%= @debit_advice.voucher %></div>
+        </div>
+        <div class="row mb-2">
+          <div class="col-2">TO</div>
+          <div class="col-1 text-end">:</div>
+          <div class="ms-2 col-4 pdf-bottom-border" >Treasury Department</div>
+        </div>
+        <div class="row mb-2">
+          <div class="col-2">FROM</div>
+          <div class="col-1 text-end">:</div>
+          <div class="ms-2 col-4 pdf-bottom-border" >Accounting Department</div>
+        </div>
+      </div>
+    </div>
+    <div class="row mb-3">
+      <div class="col-6">Please issue debit advice to</div>
+      <div class="col-6"><%= @debit_advice.payable %></div>
+    </div>
+    <div class="row" style="border: 2px solid black">
+      <div class="p-1 text-center fw-bolder col-9" style="">PARTICULARS</div>
+      <div class="p-1 text-center fw-bolder col-3" style="border-left: 2px solid black">Amount (in PHP)</div>
+    </div>
+    <div class="row" style="border: 2px solid black; border-top: 0 !important; display: flex; align-items:">
+      <div class="ps-1 fw-bolder col-9" style="height: 200px; padding-top: 80px"><%= @debit_advice.particulars %></div>
+      <div class="pe-1 text-end fw-bolder col-3" style="border-left: 2px solid black; height: 200px; padding-top: 80px">P <%= to_curr @debit_advice.amount %></div>
+    </div>
+    <div class="row mt-5">
+      <div class="col-3">
+        <div class="fw-bolder mb-2"><%= @accountant&.signed_fullname %></div>
+        <div class="">Accountant</div>
+      </div>
+      <div class="col-3"></div>
+      <div class="col-3 text-center pe-1">
+        <div class="fw-bolder mb-2 pdf-bottom-border "></div>
+        <div class="">Authorizer 1</div>
+      </div>
+      <div class="col-3 text-center ps-1">
+        <div class="fw-bolder mb-2 pdf-bottom-border "></div>
+        <div class="">Authorizer 2</div>
+      </div>
+    </div>
+  </body>
+</html>
