@@ -3,7 +3,7 @@ class BatchRemit < GroupRemit
     # if approved_batches.renewal.present?
     #   batch_remit.batch_group_remits.destroy_all
     # end
-    batch_remit.batch_group_remits.expired.destroy_all
+    # batch_remit.batch_group_remits.expired.destroy_all
     batch_remit.batches << approved_batches
     batch_remit.set_total_premiums_and_fees
     batch_remit.status = :paid
