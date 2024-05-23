@@ -1,3 +1,3 @@
 <%= render "remote_modal", title: @claim_remark.status.to_s.humanize do %>
-    <%= render "form_status", url: create_status_claim_remarks_path(v: @process_claim, s: @status), meth: 'post' %>
+  <%= render "form_status", url: create_status_claims_claim_remarks_path(v: @process_claim, s: @status), meth: 'post' %>
 <% end %>

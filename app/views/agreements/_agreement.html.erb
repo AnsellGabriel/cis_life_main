@@ -51,6 +51,7 @@
           <% end %>
           <strong class="text-primary">Special Arrangements</strong>
           <%= render 'special_arrangements/show_special_arrangements', a: agreement %>
+          <%= render 'claims/claim_type_agreements/show_claim_type_agreement', a: agreement %>
           <% if Treasury::CashierEntry.check_ors_agreement(agreement) > 0 %>
             <div class="card col-6">
               <div class="card-body text-center">

@@ -1,12 +1,34 @@
 <%= turbo_frame_tag "modal-xl" do %>
-    <div class="modal-body <%=  flex_justify_align('center', 'center', true)%> gap-3">
-      <div class="<%= flex_justify_align('between', 'center')%> w-100" >
-        <h5 class="text-primary mb-0">Member Information</h6>
-        <button type="button" class="<%= small_btn('danger')%>" data-bs-dismiss="modal" aria-label="Close" style="align-self: end;">
+  <%# <div class="modal-body <%=  flex_justify_align('center', 'center', true)%>
+  <%# <div class="<%= flex_justify_align('between', 'center')%>
+  <div class="modal-header">
+    <h4 class="modal-title" id="newItemRemoteModalLabel">Member Details</h4>
+    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+  </div>
+  <%# <button type="button" class=" %>
+  <%#= small_btn('danger')%>
+  <%# " data-bs-dismiss="modal" aria-label="Close" style="align-self: end;">
           Close
-        </button>
+        </button> %>
+  <%# </div> %>
+  <div class="modal-body remote_modal_body" id="remote_modal_body">
+    <div class="card">
+      <ul class="nav nav-tabs">
+        <li class="nav-item" role="presentation">
+          <button class="nav-link active" data-bs-toggle="tab" id="current-tab" type="button" data-bs-target="#current" role="tab" aria-controls="current" aria-current="page">Member's Information</button>
+        </li>
+        <li class="nav-item" role="presentation">
+          <button class="nav-link" data-bs-toggle="tab" id="insurance-tab" type="button" data-bs-target="#insurance" role="tab" aria-controls="insurance">Insurance Details</button>
+        </li>
+      </ul>
+      <div class="tab-content container mt-3" id="myTabControl2">
+        <div class="tab-pane fade show active" role="tabpanel" id="current" aria-labelledby="current-tab">
+          <%= render partial: 'coop_member', locals: { member: @member, coop_member: @coop_member } %>
+        </div>
+        <div class="tab-pane fade show" role="tabpanel" id="insurance" aria-labelledby="insurance-tab">
+          <%= render  partial: 'show_coverages', locals: { member: @member, coop_member: @coop_member } %>
+        </div>
       </div>
-      <%= render partial: 'coop_member', locals: { member: @member, coop_member: @coop_member } %>
     </div>
+  </div>
 <% end %>
-

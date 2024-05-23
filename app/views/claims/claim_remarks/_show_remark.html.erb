@@ -6,7 +6,14 @@
           <td>
             <figure>
               <blockquote class="blockquote text-primary">
-                <small><%= claim_remark.user %> <span class="badge rounded-pill bg-warning text-dark"><%= claim_remark.status.to_s.humanize %></span></small>
+                <% unless claim_remark.status.nil? %>
+                  <% if claim_remark.denied? %>
+                    <small><%= claim_remark.user %> <span class="badge rounded-pill bg-danger text-light"><%= claim_remark.status.to_s.humanize %></span></small>
+                  <% elsif claim_remark.approved? %>
+                    <small><%= claim_remark.user %> <span class="badge rounded-pill bg-success text-light"><%= claim_remark.status.to_s.humanize %></span></small>
+                  <% end %>
+                <% end %>
+                <%# console %>
               </blockquote>
               <figcaption class="blockquote-footer">
                 <cite title="Source Title"><%= claim_remark.created_at %></cite>

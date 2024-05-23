@@ -1,6 +1,8 @@
 
 class Claims::ClaimDocumentsController < ApplicationController
-    before_action :set_document, only: %i[ show edit update destroy ]
+    before_action :set_document, only: %i[ show edit update destroy document_request ]
+    
+    
     
     def index 
         @claim_documents = Claims::ClaimDocument.all

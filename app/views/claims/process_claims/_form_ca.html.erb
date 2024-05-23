@@ -54,19 +54,15 @@
                   flatpickr_max_date: Time.zone.now,
                   flatpickr_next_arrow: "Next",
                   flatpickr_prev_arrow: "Prev" } } %>
-            <%= f.association :claim_type, prompt: "Select claim type", collection: ClaimType.order(:name), wrapper_html: { class: 'col-md-6' } %>
+            <%= f.association :claim_type, prompt: "Select claim type", collection: Claims::ClaimType.order(:name), wrapper_html: { class: 'col-md-6' } %>
             <%= f.association :cause, prompt: "Select a cause", collection: Claims::Cause.order(:name), wrapper_html: { class: 'col-md-6' } %>
             <%= f.association :claim_type_nature, label: "Nature of claim", prompt: "Select a nature of claim", collection: Claims::ClaimTypeNature.order(:name) %>
             <%#= f.association :agreement, prompt: "Select agreement", collection: Agreement.where(cooperative: @process_claim.cooperative) %>
             <%#= f.association :agreement, prompt: "Select agreement", collection: @agreement %>
-            <div class="row" data-controller="geography">
-              <%#= f.association :agreement, prompt: "Select agreement", collection: @process_claim.cooperative.agreements %>
-              <%= f.association :agreement, label: "Agreement", prompt: "Select a Agreement", input_html: { class: 'form-select', data: { action: "change->agreements#search_agreement" } } %>
-              <%= f.association :agreement_benefit, label: "Agreement Benefit", input_html: { class: 'form-select', id: 'agreement_id', data: { agreements_target: "agreementSelect" } }  %>
-            </div>
             <div data-controller="agreements">
-              <%#= f.association  %>
-              <%#= f.association :agreement_benefit, label: "Agreement Benefit", wrapper_html: { class: "col col-md-3" }, input_html: { class: 'form-select', id: 'barangay_id', data: { geographs_target: "agreementSelect" } }  %>
+              <%#= f.association :agreement, prompt: "Select agreement", collection: @process_claim.cooperative.agreements %>
+              <%= f.association :agreement, label: "Agreement", prompt: "Select a Agreement",collection: Agreement.where(cooperative_id: @process_claim.cooperative_id), input_html: { class: 'form-select', data: { action: "change->agreements#search_agreement" } } %>
+              <%= f.association :agreement_benefit, label: "Agreement Benefit", input_html: { class: 'form-select', id: 'agreement_id', data: { agreements_target: "agreementSelect" } }  %>
             </div>
           </div>
           <%= f.simple_fields_for :claim_cause do |cc| %>

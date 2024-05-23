@@ -1,4 +1,4 @@
-<%= link_to 'New attachment', attach_new_doc_claims_claim_attachments_path(p: @process_claim), class: "btn btn-primary btn-sm mb-3", data: { turbo_frame: "remote_modal" } if @process_claim.claim_filed? || @process_claim.file_claim? %>
+<%= link_to 'New attachment', attach_new_doc_claims_claim_attachments_path(p: @process_claim), class: "btn btn-primary btn-sm mb-3", data: { turbo_frame: "remote_modal" } if @process_claim.claim_filed? || @process_claim.coop_file? %>
 <table class="table table-borderless table-hover">
   <thead>
     <tr class="border-top border-bottom border-primary">

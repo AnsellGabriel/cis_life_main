@@ -193,8 +193,8 @@ class ClaimsPdf < Prawn::Document
 
   def processing_steps(cur)
     y_position = cur - 20
-    bounding_box([310, y_position], width: 220, height: 300) do
-      # transparent(0.5) { stroke_bounds }
+    bounding_box([310, y_position], width: 220) do
+      transparent(0.5) { stroke_bounds }
       y_position = y_position
       gap = 20
       text "VII. Processing Steps", size: 10, style: :bold
@@ -266,7 +266,7 @@ class ClaimsPdf < Prawn::Document
         #   data += [[ "#{cr.user.userable.get_fullname}", "#{cr.status.titleize}", "#{cr.remark}" ]]
         # end
         indent(10) do
-          @pc.claim_remarks.each do |cr|
+          @pc.claim_remarks.where(coop: 0).each do |cr|
             status = ""
             status += "(#{cr.status.titleize})" unless cr.status.nil?
             

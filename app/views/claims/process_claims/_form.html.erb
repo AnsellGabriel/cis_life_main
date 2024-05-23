@@ -10,19 +10,19 @@
     <% claimable = @batch%>
   <% end %>
   <div class="form-inputs mb-3 " data-controller="toggler">
-    <%= f.hidden_field :claimable_id, value: claimable.id %>
+    <%#= f.hidden_field :claimable_id, value: claimable.id %>
     <%= f.hidden_field :claimable_type, value: claimable.class.name %>
     <%= f.hidden_field :cooperative_id, value: @cooperative.id %>
-    <%= f.hidden_field :agreement_id, value: @agreement.id %>
-    <%= f.hidden_field :batch_id, value: @batch.id %>
+    <%#= f.hidden_field :agreement_id, value: @agreement.id %>
+    <%#= f.hidden_field :batch_id, value: @batch.id %>
     <%= f.hidden_field :agreement_benefit_id, value: batch_presenter.present_agreement_benefit.id %>
     <%= f.hidden_field :claim_route, value: :cooperative_filed  %>
     <%= f.hidden_field :entry_type, value: "coop" %>
     <div class="row <%= flex_justify_align('between', 'center') %>">
       <div class="d-flex gap-2 col-md-6">
-        <%= content_tag :p, "Insured Member :" %>
-        <%= content_tag :span, batch_presenter.present_full_name.titleize, class: "text-primary" %>
-        <%= content_tag :span, " (#{batch_presenter.capitalized_insured_type.titleize})", class: "text-muted" %>
+        <%#= content_tag :p, "Insured Member :" %>
+        <%#= content_tag :span, batch_presenter.present_full_name.titleize, class: "text-primary" %>
+        <%#= content_tag :span, " (#{batch_presenter.capitalized_insured_type.titleize})", class: "text-muted" %>
       </div>
       <div class="col-md-6">
         <%= f.input :date_incident, as: :string, input_html: {data: {

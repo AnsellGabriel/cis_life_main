@@ -25,7 +25,12 @@
     <%#= render 'show_coop' %>
     <div class="card">
       <div class="card-body">
-        <%= render 'claims/claim_attachments/show_attachment' %>
+        <% if @process_claim.incomplete_document? || @process_claim.analyst_file? %>
+          <% @claim_type_document = Claims::ClaimTypeDocument.where(claim_type: @process_claim.claim_type) %>
+          <%= render 'claims/claim_attachments/show_attach_document' %>
+        <% else %>
+          <%= render 'claims/claim_attachments/show_attachment' %>
+        <% end %>
       </div>
     </div>
   </div>

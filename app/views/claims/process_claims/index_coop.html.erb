@@ -3,8 +3,7 @@
   <table class="table table-striped table-bordered table-hover align-middle">
     <thead>
       <tr>
-
-      <th>#</th>
+        <th>#</th>
         <th>Claims Details</th>
         <th>Claimant</th>
         <%# <th>Batch</th> %>
@@ -14,22 +13,27 @@
     <tbody>
       <% @process_claims.each do |process_claim| %>
         <tr>
-
-        <td class="text-center" scope="row"><%= process_claim.id %>
-        </td>
-        <td><strong><%= process_claim.claimable %></strong> <br>
-        <%= process_claim.agreement.plan %> <%= content_tag :small, process_claim.agreement_benefit %> <br>
-        <small>Date Incident <%= to_shortdate(process_claim.date_incident) %></small> <br>
-        <small class="text-primary"><%= process_claim.display_route(process_claim.claim_route) %></small> </td>
-        <td> <%= process_claim.claim_type %> <br>
-        <%= process_claim.claimant_name %> <br>
-        <small><%= process_claim.relationship %></small> <br>
-        <small><%= process_claim.claimant_email %> | <%= process_claim.claimant_contact_no %></small> </td>
-        <%# <td><%= process_claim.batch %>
-
-    
+          <td class="text-center" scope="row"><%= process_claim.id %>
+          </td>
+          <td><strong><%= process_claim.claimable %></strong> <br>
+            <%= process_claim.agreement.plan %> <%= content_tag :small, process_claim.agreement_benefit %> <br>
+            <small>Date Incident <%= to_shortdate(process_claim.date_incident) %></small> <br>
+            <small class="text-primary"><%= process_claim.display_route(process_claim.claim_route) %>
+              <% if process_claim.denied? %>
+                <span class="badge rounded-pill bg-danger text-light"><%= process_claim.status.humanize %></span>
+              <% elsif process_claim.approved? %>
+                <span class="badge rounded-pill bg-success text-light"><%= process_claim.status.humanize %></span>
+              <% else %>
+                <span class="badge rounded-pill bg-primary text-light"><%= process_claim.status.humanize %></span>
+              <% end %>
+            </small> </td>
+          <td> <%= process_claim.claim_type %> <br>
+            <%= process_claim.claimant_name %> <br>
+            <small><%= process_claim.relationship %></small> <br>
+            <small><%= process_claim.claimant_email %> | <%= process_claim.claimant_contact_no %></small> </td>
+          <%# <td><%= process_claim.batch %>
           <td>
-            <%= link_to "View", show_coop_process_claim_path(process_claim), class: "btn btn-warning btn-sm" %>
+            <%= link_to "View", show_coop_claims_process_claim_path(process_claim), class: "btn btn-warning btn-sm" %>
             <%#= link_to 'Edit', claims_file_process_claim_path(process_claim), class: 'btn btn-secondary btn-sm' if process_claim.submitted? %>
             <%#= link_to 'Edit', edit_process_claim_path(process_claim), class: 'btn' %>
             <%#= link_to 'Delete', process_claim, method: :delete, data: { confirm: 'Are you sure?' }, class: 'btn' %>

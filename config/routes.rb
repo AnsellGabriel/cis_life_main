@@ -31,12 +31,16 @@ Rails.application.routes.draw do
     get :reserves_index, on: :collection
   end
   namespace :claims do 
-    resources :claim_types, :claim_type_documents, :claim_type_benefits, :claim_confinements, :claim_benefits, :claim_coverages, :claim_distributions, :claim_type_natures, :claim_documents
+    resources :claim_types, :claim_documents, :claim_type_benefits, :claim_confinements, :claim_benefits, :claim_coverages, :claim_distributions, :claim_type_natures, :claim_type_agreements
     resources :causes do
       post 'create_cause', to: "causes#create"
     end
     resources :claim_attachments do
       get :attach_new_doc, on: :collection
+    end
+
+    resources :claim_type_documents do 
+      get :document_request, to: "claim_type_documents#document_request", on: :member
     end
 
     resources :process_claims do
@@ -51,8 +55,10 @@ Rails.application.routes.draw do
       get :update_status, on: :member
       get :new_ca, to: "process_claims#new_ca", on: :collection
       get :edit_ca, to: "process_claims#edit_ca", on: :member
+      get :edit_coop, to: "process_claims#edit_coop", on: :member
       post :create_ca, to: "process_claims#create_ca", on: :collection
       patch :update_ca, to: "process_claims#update_ca", on: :member
+      patch :update_coop, to: "process_claims#update_coop", on: :member
       get :print_sheet, to: "process_claims#print_sheet", on: :member
       # get :claimable, on: :collection
     end

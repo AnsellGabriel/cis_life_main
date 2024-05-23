@@ -24,6 +24,7 @@ class ApplicationController < ActionController::Base
         when 15 then redirect_to mis_dashboard_path
         when 14 then redirect_to reinsurances_path
         else redirect_to employees_path
+          
         end
       end
 
@@ -55,8 +56,12 @@ class ApplicationController < ActionController::Base
       session[:claims_max_amount]
     else
       user_levels.each do |ul|
+        
         if ul.authority_level.claim?
           session[:claims_max_amount] = ul.authority_level.maxAmount
+          @claims_user_authority_level = ul.authority_level
+        elsif ul.authority_level.reconsider?
+          session[:reconsider_limit] = ul.authority_level.maxAmount
         elsif ul.authority_level.underwriting?
           session[:max_amount] = ul.authority_level.maxAmount
         end

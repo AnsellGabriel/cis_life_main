@@ -1,6 +1,6 @@
 
 class Claims::ProcessClaimsController < ApplicationController
-  before_action :set_process_claim, only: %i[ show edit update destroy show_coop show_ca claim_route claims_file claim_process update_status edit_ca update_ca print_sheet ]
+  before_action :set_process_claim, only: %i[ show edit update destroy show_coop show_ca claim_route claims_file claim_process update_status edit_ca update_ca print_sheet edit_coop update_coop ]
 
   def index
     @process_claims = Claims::ProcessClaim.all
@@ -94,16 +94,17 @@ class Claims::ProcessClaimsController < ApplicationController
     @process_claim.cooperative = @coop_member.cooperative
     @claim_cause = @process_claim.build_claim_cause
     @agreement = Agreement.where(cooperative: @process_claim.cooperative)
-    set_dummy_value
+    set_dummy_value if Rails.env.development?
   end
 
   def create_coop
-    if params[:lb].present?
-      @loan_batch = LoanInsurance::Batch.find(params[:lb])
-    end
+    # raise "errors"
+    # if params[:lb].present?
+    #   @loan_batch = LoanInsurance::Batch.find(params[:lb])
+    # end
     @process_claim = Claims::ProcessClaim.new(process_claim_params)
     @process_claim.entry_type = :coop
-    @process_claim.claim_route = :file_claim
+    @process_claim.claim_route = :coop_file
     @rel_css = process_claim_params[:relationship].empty? ? "is-invalid" : "is-valid"
     @coop_member = CoopMember.find(process_claim_params[:claimable_id])
 
@@ -132,14 +133,15 @@ class Claims::ProcessClaimsController < ApplicationController
   def create_ca
     @process_claim = Claims::ProcessClaim.new(process_claim_params)
     @process_claim.entry_type = :claim
-    @process_claim.claim_route = :filed_by_analyst
+    @process_claim.claim_route = :analyst_file if @process_claim.id.nil?
+    @process_claim.status = :pending
     @process_claim.age = @process_claim.get_age.to_i
-
+    # raise "errors"
     respond_to do |format|
       if @process_claim.save
         @process_claim.process_track.create(route_id: 17, user: current_user)
         format.html { redirect_to claim_process_claims_process_claim_path(@process_claim), notice: "Claims was successfully added." }
-        format.json { render :show, status: :created, location: @anniversary }
+        format.json { render :show, status: :created, location: @process_claim }
       else
         format.html { render :new_ca, status: :unprocessable_entity }
         format.json { render json: @process_claim.errors, status: :unprocessable_entity }
@@ -149,19 +151,30 @@ class Claims::ProcessClaimsController < ApplicationController
   end
 
   def update_ca
-    if @process_claim.update(process_claim_params)
-
-        redirect_to index_show_claims_process_claims_path(p: 17), notice: "Process claim was successfully updated."
-    else
-      render :edit, status: :unprocessable_entity
-    end
+    # if @process_claim.claim_cause.nil?
+    #   if @process_claim.claim_cause.save
+    #     redirect_to claim_process_claims_process_claim_path(@process_claim), notice: "Claims was successfully added."
+    #   else
+    #     render :edit, status: :unprocessable_entity
+    #   end
+    # else
+      if @process_claim.update(process_claim_params)
+          redirect_to claim_process_claims_process_claim_path(@process_claim), notice: "Process claim was successfully updated."
+      else
+        render :edit, status: :unprocessable_entity
+      end
+    # end
   end
 
   # GET /process_claims/1/edit
   def edit
+    @coop_member = @process_claim.claimable
   end
 
   def edit_ca
+    if @process_claim.claim_cause.nil?
+      @claim_cause = @process_claim.build_claim_cause
+    end
   end
 
   def claims_file
@@ -180,9 +193,9 @@ class Claims::ProcessClaimsController < ApplicationController
     @payout_type = @process_claim.voucher_request&.vouchers&.where(audit: [:pending_audit, :for_audit])&.last
     @audit_remarks = @payout_type&.remarks
 
-    if @process_claim.debit_advice?
-      @bank = @process_claim.voucher_request.account
-    end
+    # if @process_claim.debit_advice?
+    #   @bank = @process_claim.voucher_request.account
+    # end
   end
 
   def approve_claim_debit
@@ -246,65 +259,68 @@ class Claims::ProcessClaimsController < ApplicationController
     # @claim_track = ProcessTrack.new
     @claim_track = @process_claim.process_track.build
     @claim_track.route_id = params[:p]
+    unless params[:s].nil?
+      @claim_track.status = params[:s].to_i 
+      @process_claim.update(status: :denied) if @claim_track.denied?
+      @process_claim.update(status: :approved) if @claim_track.approved?
+    end
     @claim_track.user_id = current_user.id
+    
+    #CHECK THE ATTACH DOCUMENTS
+    if @process_claim.coop_file? || @process_claim.analyst_file? || @process_claim.incomplete_document? 
+      document_status = @process_claim.attach_document_status
+      @status_message = document_status[:status_message]
+      status = document_status[:status]
+      return redirect_to show_coop_claims_process_claim_path(@process_claim), alert: @status_message if status && current_user.userable_type == "CoopUser"
+      return redirect_to claim_process_claims_process_claim_path(@process_claim), alert: @status_message if status && current_user.userable_type == "Employee"
+    end
+    
+
+    # raise "errors"
     respond_to do |format|
       if @claim_track.save
-        if @claim_track.route_id == 2
-          # raise "error"
-          import_product_benefit if @process_claim.submitted?
-          @process_claim.update!(claim_route: @claim_track.route_id, status: :process, claim_filed: 1, processing: 0, approval: 0, payment: 0)
-          format.html { redirect_to claims_file_process_claim_path(@process_claim), notice: "#{@process_claim.claim_route.to_s.humanize.titleize} by #{current_user}"  }
-        elsif @claim_track.route_id == 3
-          @process_claim.update!(claim_route: @claim_track.route_id, processing: 1)
-          format.html { redirect_to claim_process_process_claim_path(@process_claim), notice: "#{@process_claim.claim_route.to_s.humanize.titleize} by #{current_user}"  }
-          # ClaimsMailer.with(process_claim: @process_claim).new_claim_email.deliver_later
-        elsif @claim_track.route_id == 5
-          # RegisterMailer.with(registration: @registration, event_hub: @event_hub).register_created.deliver_later
-          @process_claim.update!(claim_route: @claim_track.route_id, processing: 1)
-          format.html { redirect_to claim_process_process_claim_path(@process_claim), notice: "#{@process_claim.claim_route.to_s.humanize.titleize} by #{current_user}"  }
-
-        elsif @claim_track.route_id == 8
+        case @claim_track.route_id
+        when 1
+          @process_claim.update!(claim_route: @claim_track.route_id, status: :process, claim_filed: 0, processing: 0, approval: 0, payment: 0)
+        when 2
+          import_product_benefit if @process_claim.documentation_review?
+          @process_claim.update!(claim_route: @claim_track.route_id, status: :process, claim_filed: 1, processing: 0)
+        when 3
+          @process_claim.update!(claim_route: @claim_track.route_id, status: :process, processing: 1)
+        when 8
+          @process_claim.update!(claim_route: @claim_track.route_id, status: :approved, payment: 1)
           ActiveRecord::Base.transaction do
-            @process_claim.update!(claim_route: @claim_track.route_id, status: :approved, approval: 1)
-
             if @process_claim.voucher_request&.check_vouchers&.pending_audit.present?
               #* put the check voucher to pending here
               @process_claim.voucher_request.check_vouchers.pending_audit.last.update(audit: :for_audit)
             else
               request = VoucherRequestService.new(@process_claim, @process_claim.get_benefit_claim_total, :claims_payment, current_user)
-
               if request.create_request
-                format.html { redirect_to show_coop_process_claim_path(@process_claim), notice: "#{@process_claim.claim_route.to_s.humanize.titleize} by #{current_user}"  }
+                format.html { redirect_to claims_process_claims_path(@process_claim), notice: "#{@process_claim.claim_route.to_s.humanize.titleize} status"  }
               else
-                format.html { redirect_to show_coop_process_claim_path(@process_claim), alert: "Something went wrong" }
+                format.html { redirect_to claim_process_claims_process_claim_path(@process_claim), alert: "Something went wrong" }
               end
-            end
+            end         
           end
+        when 18
+          @process_claim.update!(claim_route: @claim_track.route_id, status: :denied_due_to_non_compliance)
+        when 19
+          @process_claim.update!(claim_route: @claim_track.route_id, status: :pending)
         else
-          @required_docs = @process_claim.claim_type.claim_type_documents.where(required: true)
-          @uploaded_docs = @process_claim.claim_attachments
-
-          missing_docs = @required_docs.pluck(:id) - @uploaded_docs.pluck(:claim_type_document_id)
-
-          if missing_docs.empty?
-            @process_claim.update_attribute(:claim_route, @claim_track.route_id)
-            format.html { redirect_to show_coop_process_claim_path(@process_claim), notice: "#{@process_claim.claim_route.to_s.humanize.titleize} by #{current_user}"  }
-          else
-            format.html { redirect_to show_coop_process_claim_path(@process_claim), alert: "Please upload the required documents" }
-          end
+          @process_claim.update!(claim_route: @claim_track.route_id)
         end
-
-        format.json { render :show, status: :ok, location: @process_claim }
-      else
-        format.html { render :new, status: :unprocessable_entity }
-        format.json { render json: @process_claim.errors, status: :unprocessable_entity }
+        
+        if current_user.userable_type == "Employee"
+          return redirect_to claim_process_claims_process_claim_path(@process_claim), notice: "#{@process_claim.claim_route.to_s.humanize.titleize} status"
+        else
+          return redirect_to show_coop_claims_process_claim_path(@process_claim), notice: "#{@process_claim.claim_route.to_s.humanize.titleize} status"
+        end
       end
     end
   end
 
-
   def import_product_benefit
-    if @process_claim.claim_type == ClaimType.find_by(name: "Hospital Confinement Claim")
+    if @process_claim.claim_type == Claims::ClaimType.find_by(name: "Hospital Confinement Claim")
       @benefit = Benefit.find_by(name: "Hospital Income Benefit")
       @process_claim.claim_benefits.create(process_claim_id: @process_claim.id, benefit: @benefit, amount: @process_claim.claim_confinements.sum(:amount))
     else
@@ -329,6 +345,19 @@ class Claims::ProcessClaimsController < ApplicationController
         redirect_to index_show_process_claims_path(p: 2), notice: "Process claim was successfully updated."
       else
         redirect_to index_show_process_claims_path(p: 3), notice: "Process claim was successfully updated."
+      end
+    else
+      render :edit, status: :unprocessable_entity
+    end
+  end
+
+  def edit_coop 
+
+  end
+  def update_coop 
+    if @process_claim.update(process_claim_params)
+      if @process_claim.coop_file?
+        redirect_to show_coop_claims_process_claim_path(@process_claim), notice: "Process claim was successfully updated."
       end
     else
       render :edit, status: :unprocessable_entity

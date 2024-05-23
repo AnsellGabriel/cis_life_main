@@ -41,7 +41,7 @@
   </div>
   <div class="col-md-6">
     <%= render 'insured_details' %>
-    <% if @process_claim.file_claim? || @process_claim.filed_by_analyst? || @process_claim.claim_filed? %>
+    <% if @process_claim.coop_file? || @process_claim.analyst_file? || @process_claim.claim_filed? || @process_claim.incomplete_document? %>
       <%= render 'claims/claim_attachments/show_attach_document' %>
     <% else %>
       <div class="card">
@@ -50,7 +50,7 @@
         </div>
       </div>
     <% end %>
-    <% if @process_claim.claim_type && @process_claim.claim_type == ClaimType.find_by(name: 'Hospital Confinement Claim') %>
+    <% if @process_claim.claim_type && @process_claim.claim_type == Claims::ClaimType.find_by(name: 'Hospital Confinement Claim') %>
       <div class="card">
         <%= content_tag :h5, 'Confinement', class: "card-header" %>
         <div class="card-body">
@@ -105,4 +105,5 @@
   <%# </div>
   </div>  %>
 </div>
-<%= render 'tabs' %>
+<%= render 'tabs' if @process_claim.processing %>
+<%#= console %>

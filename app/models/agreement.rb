@@ -15,6 +15,7 @@ class Agreement < ApplicationRecord
   belongs_to :cooperative, optional: true
 
   has_many :agreement_benefits
+  has_many :claim_type_agreements, class_name: "Claims::ClaimTypeAgreement"
   has_many :product_benefits, through: :agreement_benefits
   has_many :benefits, through: :product_benefits
   has_many :emp_agreements

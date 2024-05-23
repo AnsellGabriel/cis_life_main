@@ -1,0 +1,10 @@
+<%= turbo_frame_tag "modal" do %>
+  <div class="modal-header">
+    <h4 class="modal-title" id="newItemRemoteModalLabel">Add claim type</h4>
+    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+  </div>
+  <div class="modal-body remote_modal_body" id="remote_modal_body">
+    <%= render "form", url: claims_claim_type_agreements_path(v: @agreement), meth: 'post' %>
+  </div>
+</div>
+<% end %>

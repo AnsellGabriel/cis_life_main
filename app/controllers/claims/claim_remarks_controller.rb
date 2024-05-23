@@ -70,16 +70,16 @@ class Claims::ClaimRemarksController < ApplicationController
     respond_to do |format|
       if @claim_remark.save
         if @claim_remark.denied?
-          pt = Claims::ProcessTrack.create(route_id: 9, user: current_user, trackable: @process_claim)
-          @process_claim.update(status: :denied)
+          pt = ProcessTrack.create(route_id: 4, user: current_user, trackable: @process_claim, status: :denied)
+          @process_claim.update!(claim_route: pt.route_id)
         elsif @claim_remark.pending?
-          pt = Claims::ProcessTrack.create!(route_id: 11, user: current_user, trackable: @process_claim)
+          pt = ProcessTrack.create!(route_id: 11, user: current_user, trackable: @process_claim)
           @process_claim.update(status: :pending, claim_route: pt.route_id)
         elsif @claim_remark.reconsider?
-          pt = Claims::ProcessTrack.create!(route_id: 10, user: current_user, trackable: @process_claim)
+          pt = ProcessTrack.create!(route_id: 10, user: current_user, trackable: @process_claim)
           @process_claim.update(status: :reconsider, claim_route: pt.route_id)
         end
-        format.html { redirect_back fallback_location: claim_process_process_claim_path(@process_claim), notice: "Claim remark was successfully created." }
+        format.html { redirect_back fallback_location: claim_process_claims_process_claim_path(@process_claim), notice: "Claim remark was successfully created." }
         format.json { render :show, status: :created, location: @claim_remark }
       else
         format.html { render :new, status: :unprocessable_entity }

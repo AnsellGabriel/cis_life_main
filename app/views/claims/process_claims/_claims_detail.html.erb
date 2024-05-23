@@ -1,6 +1,16 @@
 <div class="card">
   <div class="card-header">
-    <strong>Claim Details</strong>  <%= link_to '<i class="bi bi-pencil-square"></i> Edit'.html_safe, edit_ca_claims_process_claim_path(@process_claim), class: "text-muted" %>
+    <strong>Claim Details</strong>
+    <% if current_user.userable_type == "Employee" %>
+      <%# if @process_claim.claim_cause.nil? %>
+      <%#= link_to '<i class="bi bi-pencil-square"></i> Edit'.html_safe, new_ca_claims_process_claims_path(cm: @process_claim.claimable_id), class: "text-muted" %>
+      <%# else %>
+      <%#= link_to '<i class="bi bi-pencil-square"></i> Edit'.html_safe, edit_ca_claims_process_claim_path(@process_claim), class: "text-muted" %>
+      <%# end %>
+      <%= link_to '<i class="bi bi-pencil-square"></i> Edit'.html_safe, edit_ca_claims_process_claim_path(@process_claim), class: "text-muted" %>
+    <% else %>
+      <%= link_to '<i class="bi bi-pencil-square"></i> Edit'.html_safe, edit_coop_claims_process_claim_path(@process_claim), class: "text-muted" if @process_claim.coop_file? %>
+    <% end %>
   </div>
   <div class="card-body">
     <dl class="row">

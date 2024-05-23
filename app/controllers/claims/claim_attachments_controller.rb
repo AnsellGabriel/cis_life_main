@@ -2,6 +2,10 @@
 class Claims::ClaimAttachmentsController < ApplicationController
   before_action :set_claim_attachment, only: %i[ edit update destroy ]
 
+  def document_request 
+    
+  end
+  
   def new
     @process_claim = Claims::ProcessClaim.find(params[:p])
     @claim_type_document = Claims::ClaimTypeDocument.find(params[:d])
@@ -58,7 +62,7 @@ class Claims::ClaimAttachmentsController < ApplicationController
   private
   # Use callbacks to share common setup or constraints between actions.
   def set_claim_attachment
-    @claim_attachment = ClaimAttachment.find(params[:id])
+    @claim_attachment = Claims::ClaimAttachment.find(params[:id])
     @process_claim = @claim_attachment.process_claim
   end
 
