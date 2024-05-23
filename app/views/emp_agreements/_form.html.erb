@@ -4,8 +4,9 @@
   <%= f.error_notification message: f.object.errors[:base].to_sentence if f.object.errors[:base].present? %>
 
   <div class="form-inputs mb-3">
-    <%= f.association :employee, collection: Employee::ANALYSTS %>
-    <%= f.association :agreement, label_method: :coop_name, order: :coop_name, disabled: val %>
+    <%#= f.association :employee, collection: Employee::ANALYSTS %>
+    <%= f.association :team, input_html: { data: { controller: "ts--select" }} %>
+    <%= f.association :agreement, input_html: { data: { controller: "ts--select" }}, label_method: :coop_name, order: :coop_name, disabled: val %>
     <% if val == true %>
       <%= f.association :agreement, label_method: :coop_name, order: :coop_name, as: :hidden %>
       <%= f.input :old_emp_agreement, input_html: { value: @old_emp_agreement.id }, as: :hidden %>

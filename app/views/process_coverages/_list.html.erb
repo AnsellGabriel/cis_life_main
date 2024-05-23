@@ -21,13 +21,17 @@
               <% unless pc.group_remit.agreement.plan.acronym == "LPPI" %>
                 <small>Effectivity: <%= pc.effectivity %> / Expiry: <%= pc.expiry %></small> <br>
               <% end %>
-              <small>Status: <%= process_status(pc.status) %></small>
+              <small>Status: <%= process_status(pc.status) %></small> <br>
+              <small>Processor: <%= pc.processor %></small>
             </td>
             <td>
-              <% if pc.for_process? %>
-                <%= link_to "Process", pc, data: {turbo: false}, class: "btn btn-sm btn-outline-success" %>
+              <% if pc.for_process? && pc.processor.nil? %>
+                <%#= link_to "Process", pc, data: {turbo: false}, class: "btn btn-sm btn-outline-success" %>
+                <%= button_to "Process", set_processor_process_coverage_path(pc), method: :post, data: { turbo: false }, class: "btn btn-sm btn-outline-success", onclick: "return confirm('Are you sure you want to process this?')" %>
               <% else %>
-                <%= link_to "View", pc, data: {turbo: false}, class: "btn btn-sm btn-outline-primary" %>
+                <% if pc.processor == current_user.userable %>
+                  <%= link_to "View", pc, data: {turbo: false}, class: "btn btn-sm btn-outline-primary" %>
+                <% end %>
               <% end %>
             </td>
           </tr>

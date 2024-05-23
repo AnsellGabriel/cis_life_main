@@ -5,6 +5,7 @@ class EmpAgreementsController < ApplicationController
 
   # GET /emp_agreements
   def index
+    @teams = Team.all
     @emp_agreements = EmpAgreement.all
   end
 
@@ -116,6 +117,6 @@ class EmpAgreementsController < ApplicationController
 
   # Only allow a list of trusted parameters through.
   def emp_agreement_params
-    params.require(:emp_agreement).permit(:employee_id, :agreement_id, :active, :category_type)
+    params.require(:emp_agreement).permit(:employee_id, :agreement_id, :active, :category_type, :team_id)
   end
 end

@@ -1,6 +1,8 @@
 class Team < ApplicationRecord
   has_many :employee_teams
   has_many :employees, through: :employee_teams
+  has_many :emp_agreements
+  has_many :agreements, through: :emp_agreements
 
   def to_s
     name

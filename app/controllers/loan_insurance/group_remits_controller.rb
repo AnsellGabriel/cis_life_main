@@ -44,8 +44,9 @@ class LoanInsurance::GroupRemitsController < ApplicationController
             @process_coverage = @group_remit.build_process_coverage
             @process_coverage.effectivity = @group_remit.effectivity_date
             @process_coverage.expiry = @group_remit.expiry_date
-            @process_coverage.processor_id  = @group_remit.agreement.emp_agreements.find_by(agreement: @group_remit.agreement, active: true).employee_id
-            @process_coverage.approver_id  = @group_remit.agreement.emp_agreements.find_by(agreement: @group_remit.agreement, active: true).employee.emp_approver.approver_id
+            # @process_coverage.processor_id  = @group_remit.agreement.emp_agreements.find_by(agreement: @group_remit.agreement, active: true).employee_id
+            # @process_coverage.approver_id  = @group_remit.agreement.emp_agreements.find_by(agreement: @group_remit.agreement, active: true).employee.emp_approver.approver_id
+            @process_coverage.team_id = @group_remit.agreement.emp_agreements.find_by(agreement: @group_remit.agreement, active: true).team_id
             @process_coverage.set_default_attributes
             @process_coverage.save!
             # raise 'errors'

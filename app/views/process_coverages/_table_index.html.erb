@@ -29,9 +29,9 @@
               <%= pluralize(pc.group_remit.batches.count, "Members") %> <br>
               <% sum_prem = pc.group_remit.batches.sum(:premium) %>
               <small>Premium <%= to_curr(sum_prem) %></small> <br>
-              <small>Net <%= to_curr(sum_prem - pc.group_remit.batches.sum(:coop_sf_amount)) %></small>
+              <small>Net <%= to_curr(sum_prem - pc.group_remit.batches.sum(:coop_sf_amount)) %></small> <br>
               <%#= content_tag :strong, pc.get_or_number %> <!--br-->
-              <%= content_tag :strong, pc.group_remit&.official_receipt %> <br>
+              O.R. Number: <%= content_tag :strong, pc.group_remit&.official_receipt %> <br>
               <%= content_tag :small, month_day_year(pc.get_or_date) %>
             </td>
             <td>
@@ -51,7 +51,9 @@
                       <%= link_to "MD", all_health_decs_group_remit_batches_path(pc.group_remit), class: "btn btn-secondary" %>
                     <% end %>
                   <% end %>
-                  <%= link_to 'View', pc, data: { turbo: false }, class: 'btn btn-secondary btn-sm' %>
+                  <% if pc.processor == current_user.userable %>
+                    <%= link_to 'View', pc, data: { turbo: false }, class: 'btn btn-secondary btn-sm' %>
+                  <% end %>
                   <% if pc.status == "approved" && pc.group_remit.or_number.present? %>
                     <%= link_to psheet_process_coverage_path(pc, format: :pdf), class: "btn btn-warning btn-sm" do %>
                       <%= bootstrap_icon "filetype-pdf" %>

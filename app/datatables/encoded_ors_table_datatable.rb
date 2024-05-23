@@ -16,7 +16,7 @@ class EncodedOrsTableDatatable < AjaxDatatablesRails::ActiveRecord
   end
 
   def data
-    raise 'errors'
+    # raise 'errors'
     records.map do |record|
       {
         id: record.id,

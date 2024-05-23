@@ -11,7 +11,9 @@
 
   <%= content_tag :h3, "List of employees under this team", class: "mb-3" %>
 
-  <h5>Headed by: <%= team.get_team_head("name") %> - <%= team.get_team_head("pos") %></h5>
+  <% if team.employees.present? %>
+    <h5>Headed by: <%= team.get_team_head("name") %> - <%= team.get_team_head("pos") %></h5>
+  <% end %>
 
   <table class="table">
     <thead>
@@ -19,12 +21,43 @@
       <th>Position</th>
     </thead>
     <tbody>
-      <% team.get_team_members.each do |et| %>
-        <tr>
-          <td><%= et.employee %></td>
-          <td><%= et.employee.designation %></td>
-        </tr>
+      <% if team.employee_teams.where(head: false).present? %>
+        <% team.get_team_members.each do |et| %>
+          <tr>
+            <td><%= et.employee %></td>
+            <td><%= et.employee.designation %></td>
+          </tr>
+        <% end %>
+      <% else %>
+        <td colspan=2 class="lead text-center">NO MEMBER(S).</td>
       <% end %>
+    </tbody>
+  </table>
+
+  <hr>
+
+  <%= content_tag :h3, "List of Agreements", class: "mb-3" %>
+
+  <table class="table table-stripped">
+    <thead>
+      <th>Cooperative</th>
+      <th>Plan</th>
+    </thead>
+    <tbody>
+      
+      <% if team.emp_agreements.count > 0 %>
+        <% team.emp_agreements.where(active: true).each do |ea| %>
+          <tr>
+            <td><%= ea.agreement.cooperative %></td>
+            <td><%= ea.agreement.plan %></td>
+          </tr>
+        <% end %>
+      <% else %>
+        <tr>
+          <td colspan=2 class="text-center lead">NO RECORD(S).</td>
+        </tr>      
+      <% end %>
+      
     </tbody>
   </table>
 
