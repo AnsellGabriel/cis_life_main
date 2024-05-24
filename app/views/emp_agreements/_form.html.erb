@@ -4,13 +4,26 @@
   <%= f.error_notification message: f.object.errors[:base].to_sentence if f.object.errors[:base].present? %>
 
   <div class="form-inputs mb-3">
-    <%= f.association :employee, collection: Employee::ANALYSTS %>
-    <%= f.association :agreement, label_method: :coop_name, order: :coop_name, disabled: val %>
-    <% if val == true %>
-      <%= f.association :agreement, label_method: :coop_name, order: :coop_name, as: :hidden %>
-      <%= f.input :old_emp_agreement, input_html: { value: @old_emp_agreement.id }, as: :hidden %>
-    <% end %>
-    <%= f.input :category_type, collection: EmpAgreement.category_types.keys.map { |type| [type.humanize.titleize, type] }, disabled: val %>
+    <div class="row" data-controller="team">
+      <div class="col-6">
+        <%= f.association :team, input_html: { data: { action: "change->team#search_employee", controller: "ts--select" }} %>
+      </div>
+      <div class="col-6">
+        <%= f.association :employee, label_id: "ito", input_html: { data: { id: "employee_id", team_target: "employeeSelect" } } %>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-6">
+        <%= f.association :agreement, input_html: { data: { controller: "ts--select" }}, label_method: :coop_name, order: :coop_name, disabled: val %>
+        <% if val == true %>
+          <%= f.association :agreement, label_method: :coop_name, order: :coop_name, as: :hidden %>
+          <%= f.input :old_emp_agreement, input_html: { value: @old_emp_agreement.id }, as: :hidden %>
+        <% end %>
+      </div>
+      <div class="col-6">
+        <%= f.input :category_type, collection: EmpAgreement.category_types.keys.map { |type| [type.humanize.titleize, type] }, disabled: val %>
+      </div>
+    </div>
     <div class="form-check form-switch">
       <%= f.input :active, label: "Active?", disabled: val %>
     </div>

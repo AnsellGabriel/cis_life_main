@@ -28,6 +28,10 @@ class Employee < ApplicationRecord
     "#{first_name} #{middle_name[0]} #{last_name}".titleize
   end
 
+  def get_approver
+    team.employee_teams.find_by(head: true).employee
+  end
+
   def initials_name
     "#{first_name[0]}#{middle_name[0].upcase} #{last_name.titleize}"
   end

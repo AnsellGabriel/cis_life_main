@@ -4,10 +4,11 @@ class ProcessCoveragesController < ApplicationController
   before_action :authenticate_user!
   before_action :check_emp_department
   before_action :set_process_coverage,
-  only: %i[ show edit update destroy approve_batch deny_batch pending_batch reconsider_batch pdf set_premium_batch update_batch_prem transfer_to_md update_batch_cov adjust_lppi_cov refund psheet ]
+  only: %i[ show edit update destroy approve_batch deny_batch pending_batch reconsider_batch pdf set_premium_batch update_batch_prem transfer_to_md update_batch_cov adjust_lppi_cov refund psheet set_processor set_processor]
 
   # GET /process_coverages
   def index
+    @arel_pcs = ProcessCoverage.arel_table
     if current_user.rank == "senior_officer"
 
       @process_coverages_x = ProcessCoverage.all
@@ -61,20 +62,24 @@ class ProcessCoveragesController < ApplicationController
 
     elsif current_user.analyst?
       # @process_coverages_x = ProcessCoverage.joins(group_remit: { agreement: :emp_agreements }).where( emp_agreements: { employee_id: current_user.userable_id, active: true })
-      @process_coverages_x = ProcessCoverage.joins(group_remit: {agreement: :plan}).where(processor: current_user.userable_id)
-      @for_process_coverages = @process_coverages_x.where(status: :for_process)
-      @approved_process_coverages = @process_coverages_x.where(status: :approved)
+      # @process_coverages_x = ProcessCoverage.joins(group_remit: {agreement: :plan}).where(processor: current_user.userable_id)
+      @process_coverages_x = ProcessCoverage.joins(group_remit: { agreement: :plan }).where(team: current_user.userable.team)
+      @for_process_coverages = @process_coverages_x.where(status: :for_process, processor: nil)
+      # @for_process_coverages = @process_coverages_x.where(processor: nil)
+      # @approved_process_coverages = @process_coverages_x.where(status: :approved, who_approved: current_user.userable)
+      @approved_process_coverages = @process_coverages_x.where(status: :approved).where(@arel_pcs[:who_approved_id].eq(current_user.userable_id).or(@arel_pcs[:who_processed_id].eq(current_user.userable_id).and(@arel_pcs[:who_approved_id].not_eq(nil))))
       # @pending_process_coverages = ProcessCoverage.where(status: :pending)
       @reprocess_coverages = @process_coverages_x.where(status: :reprocess)
       @reassess_coverages = @process_coverages_x.where(status: :reassess)
       @denied_process_coverages = @process_coverages_x.where(status: :denied)
       @evaluated_process_coverages = @process_coverages_x.where(status: [:for_head_approval, :for_vp_approval])
+      @selected_process_coverages = @process_coverages_x.where(processor: current_user.userable, status: [:pending, :for_process])
 
       @coverages_total_processed = ProcessCoverage.where(status: [:approved, :denied, :reprocess])
 
       if params[:search].present?
         @process_coverages = @process_coverages_x.joins("INNER JOIN cooperatives ON cooperatives.id = agreements.cooperative_id").where(
-        "group_remits.name LIKE ? OR group_remits.description LIKE ? OR agreements.moa_no LIKE ? OR cooperatives.name LIKE ? OR agreements.description LIKE ? OR plans.name LIKE ? OR plans.acronym LIKE ? OR cooperatives.acronym LIKE ?", "%#{params[:search]}%", "%#{params[:search]}%", "%#{params[:search]}%", "%#{params[:search]}%", "%#{params[:search]}%", "%#{params[:search]}%", "%#{params[:search]}%", "%#{params[:search]}%")
+        "group_remits.name LIKE ? OR group_remits.description LIKE ? OR agreements.moa_no LIKE ? OR cooperatives.name LIKE ? OR agreements.description LIKE ? OR plans.name LIKE ? OR plans.acronym LIKE ? OR cooperatives.acronym LIKE ? OR group_remits.official_receipt LIKE ?", "%#{params[:search]}%", "%#{params[:search]}%", "%#{params[:search]}%", "%#{params[:search]}%", "%#{params[:search]}%", "%#{params[:search]}%", "%#{params[:search]}%", "%#{params[:search]}%", "%#{params[:search]}%")
       else
         @process_coverages = @process_coverages_x
       end
@@ -99,8 +104,8 @@ class ProcessCoveragesController < ApplicationController
       # @analysts = @analysts_x.joins(:emp_approver).where(emp_approver: { approver: current_user.userable_id })
     end
 
-    @pagy_pc, @filtered_pc = pagy(@process_coverages, items: 5, page_param: :process_coverage, link_extra: 'data-turbo-frame="pro_cov_pagination"')
-    @notifications = current_user.userable.notifications.where(created_at: @current_date.beginning_of_week..@current_date.end_of_week)
+    @pagy_pc, @filtered_pc = pagy(@process_coverages.order(@arel_pcs[:processor_id].eq(current_user.userable_id).desc), items: 5, page_param: :process_coverage, link_extra: 'data-turbo-frame="pro_cov_pagination"')
+    @notifications = current_user.userable.team.notifications.where(created_at: @current_date.beginning_of_week..@current_date.end_of_week)
     # if params[:search].present?
     #   @process_coverages = @process_coverages_x.joins(group_remit: {agreement: :cooperative}).where("group_remits.name LIKE ? OR group_remits.description LIKE ? OR agreements.moa_no LIKE ? OR cooperatives.name LIKE ?", "%#{params[:search]}%", "%#{params[:search]}%", "%#{params[:search]}%", "%#{params[:search]}%")
     # else
@@ -180,6 +185,18 @@ class ProcessCoveragesController < ApplicationController
     @pagy_pc, @filtered_pc = pagy(@process_coverages, items: 5, page_param: :process_coverage, link_extra: 'data-turbo-frame="pro_cov_pagination"')
   end
 
+  def set_processor
+    respond_to do |format|
+      if @process_coverage.processor.nil?
+        @process_coverage.update(processor: current_user.userable, approver: current_user.userable.get_approver)
+        format.html { redirect_to @process_coverage, notice: "Processor has been set." }
+      else
+        format.html { redirect_to @process_coverage }
+      end
+      
+    end
+  end
+
 
   def cov_list
     # raise 'errors'
@@ -212,6 +229,11 @@ class ProcessCoveragesController < ApplicationController
       when "Evaluated"
         if current_user.analyst?
           ProcessCoverage.cov_list_analyst(current_user.userable, "", "eval")
+        end
+
+      when "Selected"
+        if current_user.analyst?
+          ProcessCoverage.cov_list_analyst(current_user.userable, "", "selected")
         end
 
       when "Processed"

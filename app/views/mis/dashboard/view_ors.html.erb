@@ -1,5 +1,3 @@
-<% ors = @type == "enc" ? @encoded : @with_ors %>
-
 <div class="mb-2">
   <%= link_to mis_dashboard_path , class: "btn btn-sm btn-outline-secondary" do %>
     <%= bootstrap_icon "chevron-left" %>
@@ -7,10 +5,34 @@
   <h1><%= view_ors_title(@type) %></h1>
 </div>
 
+<div class="<%= flex_justify_align('between', 'center') %> mb-0">
+  <%= form_with url: mis_view_ors_path, method: :get do %>
+    <div class="form-group d-flex justify-content-end gap-1">
+      <%= text_field_tag 'search', 
+        nil, 
+        placeholder: 'O.R. Number', 
+        class: "form-control", 
+        style: "width: auto"
+      %>
+      <%= hidden_field_tag :t, @type %>
+      <%= button_tag(type: 'submit', class: small_btn('warning'), style: "width: 40px") do %>
+        <i class='bi bi-search'></i>
+      <% end %>
+      <%= link_to mis_view_ors_path(t: @type), class: "btn btn-secondary", title: "Reload" do %>
+        <i class="bi bi-arrow-clockwise"></i>
+      <% end %>
+    </div>
+  <% end %>
+</div>
+
 <% unless @type == "ne" %>
   <%= form_tag new_transmittal_path(b_ids: []), method: :get, data: { turbo_frame: "modal" } do %>
-    <%= submit_tag 'Transmit selected', name: 'transmit', onclick: "return confirm('Are you sure?')", class: "btn btn-primary mb-2" %>
-    <table class="table">
+    <% if @type == "nt" %>
+      <div class="float-end">
+        <%= submit_tag 'Transmit selected', name: 'transmit', onclick: "return confirm('Are you sure?')", class: "btn btn-primary mb-2" %>
+      </div>
+    <% end %>
+    <table class="table" data-controller="retain-checkbox">
       <thead>
         <% if @type == "nt" %>
           <th></th>
@@ -24,19 +46,29 @@
         <th>Remarks</th>
       </thead>
       <tbody>
-        <% @ors.each do |group_remit| %>
+        <% if @filtered_ors.count <= 0 %>
           <tr>
             <% if @type == "nt" %>
-              <td><%= check_box_tag "b_ids[]", group_remit.id, false, data: { checkbox_select_all_target: "child", action: "change->checkbox-select-all#toggleParent" } %></td>
+              <td colspan=8 class="lead text-center">NO RECORD(S).</td>
+            <% else %>
+              <td colspan=7 class="lead text-center">NO RECORD(S).</td>
             <% end %>
-            <td><%= group_remit.id %></td>
-            <td><%= group_remit.official_receipt %></td>
-            <td><%= group_remit.get_or_date %></td>
-            <td><%= group_remit.agreement.cooperative %></td>
-            <td><%= group_remit.count_batches %></td>
-            <td><%= group_remit.agreement.plan.acronym %></td>
-            <td></td>
           </tr>
+        <% else %>
+          <% @filtered_ors.each do |group_remit| %>
+            <tr>
+              <% if @type == "nt" %>
+                <td><%= check_box_tag "b_ids[]", group_remit.id, false, id: "b_ids[#{group_remit.id}]", data: { checkbox_select_all_target: "child", action: "change->checkbox-select-all#toggleParent" } %></td>
+              <% end %>
+              <td><%= group_remit.id %></td>
+              <td><%= group_remit.official_receipt %></td>
+              <td><%= group_remit.get_or_date %></td>
+              <td><%= group_remit.agreement.cooperative %></td>
+              <td><%= group_remit.count_batches %></td>
+              <td><%= group_remit.agreement.plan.acronym %></td>
+              <td></td>
+            </tr>
+          <% end %>
         <% end %>
       </tbody>
     </table>
@@ -53,97 +85,106 @@
       <th></th>
     </thead>
     <tbody>
-      <% @ors.each do |payment| %>
+      
+      <% if @filtered_ors.count <= 0 %>
         <tr>
-          <td><%= payment.id %></td>
-          <td><%= payment.or_no %></td>
-          <td><%= payment.or_date %></td>
-          <td>
-            <%= payment.entriable %> <br>
-            <%= coop_with_moa(payment.agreement.present?) %>
-          </td>
-          <td><%= payment&.plan %></td>
-          <td>
-            <% unless payment&.check_if_mis_encoded.nil? %>
-              <p>O.R. already encoded.</p>
-            <% else %>
+          <td colspan=6 class="lead text-center">NO RECORD(S).</td>
+        </tr>
+      <% else %>
+        <% @filtered_ors.each do |payment| %>
+          <tr>
+            <td><%= payment.id %></td>
+            <td><%= payment.or_no %></td>
+            <td><%= payment.or_date %></td>
+            <td>
+              <%= payment.entriable %> <br>
+              <%= coop_with_moa(payment.agreement.present?) %>
+            </td>
+            <td><%= payment&.plan %></td>
+            <td>
+              <% unless payment&.check_if_mis_encoded.nil? %>
+                <p>O.R. already encoded.</p>
+              <% else %>
 
-              <% if payment&.agreement&.plan&.acronym == "LPPI" %>
-                <%= link_to "Encode", loan_insurance_group_remits_path(or_no: payment.or_no, agreement_id: payment.agreement.id), data: { turbo_method: :post }, class: "btn btn-sm btn-primary", onclick: "return confirm('Are you sure?')" %>
-              <% elsif ["GYRT", "GYRTFR", "GYRTBR"].include?(payment&.agreement&.plan&.acronym) %>
-                <% if payment.agreement.anniversary_type.nil? or payment.agreement.anniversary_type.downcase == '12 months' %>
-                  <% current_batch_remit = payment.agreement.group_remits.find_by(type: 'BatchRemit', effectivity_date: Date.today.beginning_of_month) %>
-        
-                  <% unless current_batch_remit.present? %>
-                    <%= button_to "New Batch", group_remits_path, 
-                      method: :post, 
-                      params: { 
-                        agreement_id: payment.agreement.id, 
-                        anniversary_id: nil,
-                        anniv_type: 'none',
-                        type: 'BatchRemit',
-                        or_no: payment.or_no
-                      }, 
-                      class: small_btn('outline-primary'), 
-                      data: { turbo: false }, onclick: "return confirm('Are you sure?')" 
-                    %>
-                  <% else %>
-                    <%= button_to "Enroll Members", group_remits_path, 
-                      method: :post, 
-                      params: { 
-                        agreement_id: payment.agreement.id, 
-                        anniversary_id: payment.agreement.anniversaries[0].id, 
-                        anniv_type: payment.agreement.anniversary_type,
-                        type: 'Remittance',
-                        batch_remit_id: current_batch_remit.id,
-                        or_no: payment.or_no
-                      }, 
-                      class: small_btn('success'), 
-                      data: { turbo: false } 
-                    %>
-                  <% end %>
+                <% if payment&.agreement&.plan&.acronym == "LPPI" %>
+                  <%= link_to "Encode", loan_insurance_group_remits_path(or_no: payment.or_no, agreement_id: payment.agreement.id), data: { turbo_method: :post }, class: "btn btn-sm btn-primary", onclick: "return confirm('Are you sure?')" %>
+                <% elsif ["GYRT", "GYRTFR", "GYRTBR"].include?(payment&.agreement&.plan&.acronym) %>
+                  <% if payment.agreement.anniversary_type.nil? or payment.agreement.anniversary_type.downcase == '12 months' %>
+                    <% current_batch_remit = payment.agreement.group_remits.find_by(type: 'BatchRemit', effectivity_date: Date.today.beginning_of_month) %>
+          
+                    <% unless current_batch_remit.present? %>
+                      <%= button_to "New Batch", group_remits_path, 
+                        method: :post, 
+                        params: { 
+                          agreement_id: payment.agreement.id, 
+                          anniversary_id: nil,
+                          anniv_type: 'none',
+                          type: 'BatchRemit',
+                          or_no: payment.or_no
+                        }, 
+                        class: small_btn('outline-primary'), 
+                        data: { turbo: false }, onclick: "return confirm('Are you sure?')" 
+                      %>
+                    <% else %>
+                      <%= button_to "Enroll Members", group_remits_path, 
+                        method: :post, 
+                        params: { 
+                          agreement_id: payment.agreement.id, 
+                          anniversary_id: payment.agreement.anniversaries[0].id, 
+                          anniv_type: payment.agreement.anniversary_type,
+                          type: 'Remittance',
+                          batch_remit_id: current_batch_remit.id,
+                          or_no: payment.or_no
+                        }, 
+                        class: small_btn('success'), 
+                        data: { turbo: false } 
+                      %>
+                    <% end %>
 
-                <% elsif payment.agreement.anniversary_type.downcase == 'single' %>
-                  <% current_batch_remit = payment.agreement.group_remits.find_by(type: 'BatchRemit')%>
+                  <% elsif payment.agreement.anniversary_type.downcase == 'single' %>
+                    <% current_batch_remit = payment.agreement.group_remits.find_by(type: 'BatchRemit')%>
 
-                  <% unless current_batch_remit.present? %>
-                    <%= button_to "Enroll Members", group_remits_path, 
-                      method: :post, 
-                      params: { 
-                        agreement_id: payment.agreement.id, 
-                        anniversary_id: payment.agreement.anniversaries[0].id,
-                        anniv_type: 'single',
-                        type: 'BatchRemit',
-                        or_no: payment.or_no
-                      }, 
-                      class: small_btn('outline-primary'), 
-                      data: { turbo: false } 
-                    %>
-                  <% else %>
-                    <%= button_to "Enroll Members", group_remits_path, 
-                      method: :post, 
-                      params: { 
-                        agreement_id: payment.agreement.id, 
-                        anniversary_id: payment.agreement.anniversaries[0].id, 
-                        anniv_type: payment.agreement.anniversary_type,
-                        type: 'Remittance',
-                        batch_remit_id: current_batch_remit.id,
-                        or_no: payment.or_no
-                      }, 
-                      class: small_btn('success'), 
-                      data: { turbo: false } 
-                    %>
+                    <% unless current_batch_remit.present? %>
+                      <%= button_to "Enroll Members", group_remits_path, 
+                        method: :post, 
+                        params: { 
+                          agreement_id: payment.agreement.id, 
+                          anniversary_id: payment.agreement.anniversaries[0].id,
+                          anniv_type: 'single',
+                          type: 'BatchRemit',
+                          or_no: payment.or_no
+                        }, 
+                        class: small_btn('outline-primary'), 
+                        data: { turbo: false } 
+                      %>
+                    <% else %>
+                      <%= button_to "Enroll Members", group_remits_path, 
+                        method: :post, 
+                        params: { 
+                          agreement_id: payment.agreement.id, 
+                          anniversary_id: payment.agreement.anniversaries[0].id, 
+                          anniv_type: payment.agreement.anniversary_type,
+                          type: 'Remittance',
+                          batch_remit_id: current_batch_remit.id,
+                          or_no: payment.or_no
+                        }, 
+                        class: small_btn('success'), 
+                        data: { turbo: false } 
+                      %>
+                    <% end %>
                   <% end %>
                 <% end %>
-              <% end %>
 
-            <% end %>
-            
-            
-            <%#= link_to "Encode", payment&.agreement, class: "btn btn-sm btn-primary" %>
-          </td>
-        </tr>
+              <% end %>
+              <%#= link_to "Encode", payment&.agreement, class: "btn btn-sm btn-primary" %>
+            </td>
+          </tr>
+        <% end %>
+
       <% end %>
     </tbody>
   </table>
 <% end %>
+<div class="mb-2">
+  <%== pagy_bootstrap_nav(@pagy_ors) %>
+</div>

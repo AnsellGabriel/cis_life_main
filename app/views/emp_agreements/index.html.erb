@@ -10,8 +10,24 @@
   <% end %>
 </div>
 
-<table class ="table table-striped">
-  <table class="table table-striped table-bordered table-hover">
+<table class="table table-striped">
+  <thead>
+    <th>Team Name</th>
+    <th># of Agreements</th>
+    <th></th>
+  </thead>
+  <tbody>
+    <% @teams.each do |team| %>
+    <tr>
+      <td><%= team.name %></td>
+      <td><%= team.agreements.count %></td>
+      <td><%= link_to "View", team_path(team, f: "ea"), class: "btn btn-sm btn-secondary" %></td>
+    </tr>
+    <% end %>
+  </tbody>
+</table>
+
+  <!--table class="table table-striped table-bordered table-hover">
     <thead>
       <tr>
 
@@ -42,5 +58,5 @@
         </tr>
       <% end %>
     </tbody>
-  </table>
+  </table-->
 </div>

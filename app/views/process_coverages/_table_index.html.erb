@@ -16,22 +16,25 @@
         <% process_coverages.each do |pc| %>
           <tr>
             <td scope="row" class="text-center"><small><%= pc.group_remit.agreement.plan.acronym %><%= pc.id %></small> <br>
+              <% if pc.group_remit.agreement.plan.acronym == "LPPI" %>
+                <%= content_tag :small, pc.group_remit&.name %> <br>
+              <% end %>
               <small><%= process_status(pc.status) %></small> <br>
               <small class="fw-lighter"><%= pc.created_at.strftime('%b %d, %y') %></small> 
             </td>
             <td>
               <!-- temp change process_coverage.group_remit to process_coverage.group_remit.id -->
               <strong> <%= pc.group_remit.agreement.cooperative %> </strong> <%= content_tag :small, "#{pc.group_remit.agreement.cooperative.acronym}", class: "text-primary" %> <br>
-              <%= pc.agent %> <br>
+              <%= pc.group_remit.agreement.agent %> <br>
               <%= content_tag :small, pc.group_remit.agreement.plan, class: "fw-lighter" %> <br>
               Effectivity: <%= pc.effectivity.nil? ? "-" : month_day_year(pc.effectivity) %> <br>
               Expiry: <%= pc.expiry.nil? ? "-" : month_day_year(pc.expiry) %> <br>
               <%= pluralize(pc.group_remit.batches.count, "Members") %> <br>
               <% sum_prem = pc.group_remit.batches.sum(:premium) %>
               <small>Premium <%= to_curr(sum_prem) %></small> <br>
-              <small>Net <%= to_curr(sum_prem - pc.group_remit.batches.sum(:coop_sf_amount)) %></small>
+              <small>Net <%= to_curr(sum_prem - pc.group_remit.batches.sum(:coop_sf_amount)) %></small> <br>
               <%#= content_tag :strong, pc.get_or_number %> <!--br-->
-              <%= content_tag :strong, pc.group_remit&.official_receipt %> <br>
+              O.R. Number: <%= content_tag :strong, pc.group_remit&.official_receipt %> <br>
               <%= content_tag :small, month_day_year(pc.get_or_date) %>
             </td>
             <td>
@@ -51,7 +54,9 @@
                       <%= link_to "MD", all_health_decs_group_remit_batches_path(pc.group_remit), class: "btn btn-secondary" %>
                     <% end %>
                   <% end %>
-                  <%= link_to 'View', pc, data: { turbo: false }, class: 'btn btn-secondary btn-sm' %>
+                  <% if pc.processor == current_user.userable %>
+                    <%= link_to 'View', pc, data: { turbo: false }, class: 'btn btn-secondary btn-sm' %>
+                  <% end %>
                   <% if pc.status == "approved" && pc.group_remit.or_number.present? %>
                     <%= link_to psheet_process_coverage_path(pc, format: :pdf), class: "btn btn-warning btn-sm" do %>
                       <%= bootstrap_icon "filetype-pdf" %>

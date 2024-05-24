@@ -3,7 +3,9 @@ require "sidekiq/web"
 
 Rails.application.routes.draw do
   resources :employee_teams
-  resources :teams
+  resources :teams do
+    get :selected, on: :member
+  end
   resources :demo_schedules
   resources :transmittals do
     get :remove_or, on: :member
@@ -399,6 +401,7 @@ Rails.application.routes.draw do
     get :transfer_to_md, on: :member
     get :und, on: :collection
     get :gen_csv, on: :collection
+    post :set_processor, on: :member
   end
 
   get "product_csv", to: "process_coverages#product_csv"

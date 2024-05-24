@@ -12,6 +12,7 @@ class EmployeeTeamsController < ApplicationController
 
   # GET /employee_teams/new
   def new
+    @team = Team.find_by(id: params[:team]) if params[:team].present?
     @employee_team = EmployeeTeam.new
   end
 
@@ -24,7 +25,7 @@ class EmployeeTeamsController < ApplicationController
     @employee_team = EmployeeTeam.new(employee_team_params)
 
     if @employee_team.save
-      redirect_to @employee_team, notice: "Employee team was successfully created."
+      redirect_to @employee_team.team, notice: "Employee team was successfully created."
     else
       render :new, status: :unprocessable_entity
     end

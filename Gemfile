@@ -154,3 +154,6 @@ gem 'wkhtmltopdf-binary-edge'
 gem 'numbers_and_words'
 # gem 'pdf-reader'
 gem 'spreadsheet'
+
+#gem for datatable
+gem 'ajax-datatables-rails'

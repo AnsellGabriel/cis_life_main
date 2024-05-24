@@ -14,6 +14,8 @@ import "chartkick"
 import "Chart.bundle"
 import "./channels"
 
+import 'datatables.net'
+
 
 Turbo.session.drive = true
 window.bootstrap = bootstrap
@@ -30,8 +32,8 @@ document.addEventListener("turbo:load", function () {
 
   // initialize bs toast
   var toastEle = document.getElementById('notificationToast')
-  
-  if(toastEle) {
+
+  if (toastEle) {
     var toast = new bootstrap.Toast(toastEle)
     toast.show()
   }

@@ -5,8 +5,9 @@ class ProcessCoverage < ApplicationRecord
 
   belongs_to :agent, optional: true
 
-  belongs_to :processor, class_name: "Employee"
-  belongs_to :approver, class_name: "Employee"
+  belongs_to :processor, class_name: "Employee", optional: true
+  belongs_to :approver, class_name: "Employee", optional: true
+  belongs_to :team, optional: true
 
   belongs_to :who_processed, class_name: "Employee", optional: true
   belongs_to :who_approved, class_name: "Employee", optional: true
@@ -262,11 +263,17 @@ class ProcessCoverage < ApplicationRecord
   def self.cov_list_analyst(user, status=nil, type=nil)
     case type
     when nil
-      where(processor: user, status: status)
-    when "eval"
-      where(processor: user, status: ["approved", "denied"])
+      where(processor: nil, status: status)
+      # where(team: user.team, status: status)
     when "process"
-      where(processor: user, status: ["for_head_approval", "for_vp_approval"])
+      # where(processor: user, status: ["approved", "denied"])
+      where(status: ["approved", "denied"]).where(arel_pcs[:who_approved_id].eq(user.id).or(arel_pcs[:who_processed_id].eq(user.id).and(arel_pcs[:who_approved_id].not_eq(nil))))
+      # where(team: user.team, status: ["approved", "denied"])
+    when "eval"
+      # where(processor: user, status: ["for_head_approval", "for_vp_approval"])
+      where(team: user.team, status: ["for_head_approval", "for_vp_approval"])
+    when "selected"
+      where(processor: user, status: ["for_process", "pending"])
     end
   end
 
@@ -293,6 +300,7 @@ class ProcessCoverage < ApplicationRecord
   #   end
   # end
 
+  
   def self.to_csv
     attributes = %w{id cooperative plan marketing gross_premium coop_service_fee agent_commission net_premium region processor}
 
@@ -315,6 +323,10 @@ class ProcessCoverage < ApplicationRecord
       where(status: [:approved, :denied], created_at: date_from..date_to).order(:created_at)
     end
 
+  end
+
+  def self.arel_pcs
+    arel_table
   end
 
 end
