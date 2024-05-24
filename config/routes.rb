@@ -3,7 +3,9 @@ require "sidekiq/web"
 
 Rails.application.routes.draw do
   resources :employee_teams
-  resources :teams
+  resources :teams do
+    get :selected, on: :member
+  end
   resources :demo_schedules
   resources :transmittals do
     get :remove_or, on: :member

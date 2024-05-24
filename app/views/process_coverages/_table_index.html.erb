@@ -16,13 +16,16 @@
         <% process_coverages.each do |pc| %>
           <tr>
             <td scope="row" class="text-center"><small><%= pc.group_remit.agreement.plan.acronym %><%= pc.id %></small> <br>
+              <% if pc.group_remit.agreement.plan.acronym == "LPPI" %>
+                <%= content_tag :small, pc.group_remit&.name %> <br>
+              <% end %>
               <small><%= process_status(pc.status) %></small> <br>
               <small class="fw-lighter"><%= pc.created_at.strftime('%b %d, %y') %></small> 
             </td>
             <td>
               <!-- temp change process_coverage.group_remit to process_coverage.group_remit.id -->
               <strong> <%= pc.group_remit.agreement.cooperative %> </strong> <%= content_tag :small, "#{pc.group_remit.agreement.cooperative.acronym}", class: "text-primary" %> <br>
-              <%= pc.agent %> <br>
+              <%= pc.group_remit.agreement.agent %> <br>
               <%= content_tag :small, pc.group_remit.agreement.plan, class: "fw-lighter" %> <br>
               Effectivity: <%= pc.effectivity.nil? ? "-" : month_day_year(pc.effectivity) %> <br>
               Expiry: <%= pc.expiry.nil? ? "-" : month_day_year(pc.expiry) %> <br>

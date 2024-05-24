@@ -8,6 +8,7 @@ class TeamsController < ApplicationController
 
   # GET /teams/1
   def show
+    @f = params[:f] if params[:f].present?
   end
 
   # GET /teams/new
@@ -27,6 +28,15 @@ class TeamsController < ApplicationController
       redirect_to @team, notice: "Team was successfully created."
     else
       render :new, status: :unprocessable_entity
+    end
+  end
+
+  def selected
+    @target = params[:target]
+    @emp_ids = EmployeeTeam.where(team_id: params[:id], head: false).pluck(:employee_id)
+    @employees = Employee.where(id: @emp_ids)
+    respond_to do |format|
+      format.turbo_stream
     end
   end
 

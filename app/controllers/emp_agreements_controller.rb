@@ -39,7 +39,7 @@ class EmpAgreementsController < ApplicationController
 
   # POST /emp_agreements
   def create
-    # raise 'errors'
+    raise 'errors'
     @emp_agreement = EmpAgreement.new(emp_agreement_params)
     @old_emp_agreement = EmpAgreement.find_by(id: params[:emp_agreement][:old_emp_agreement])
     if @emp_agreement.save

@@ -21,7 +21,7 @@
     <tr>
       <td><%= team.name %></td>
       <td><%= team.agreements.count %></td>
-      <td><%= link_to "View", "#", class: "btn btn-sm btn-secondary" %></td>
+      <td><%= link_to "View", team_path(team, f: "ea"), class: "btn btn-sm btn-secondary" %></td>
     </tr>
     <% end %>
   </tbody>

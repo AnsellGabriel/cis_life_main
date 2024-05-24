@@ -1,7 +1,14 @@
 
-<div class="card">
-  <h5 class="card-header">New employee team</h5>
-  <div class="card-body">
+<% if @team.present? %>
+  <%= render "remote_modal", title: "New anniversary" do %>
     <%= render "form", employee_team: @employee_team %>
+  <% end %>
+<% else %>
+  <div class="card">
+    <h5 class="card-header">New employee team</h5>
+    <div class="card-body">
+      <%= render "form", employee_team: @employee_team %>
+    </div>
   </div>
-</div>
+<% end %>
+
