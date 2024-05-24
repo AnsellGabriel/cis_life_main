@@ -37,7 +37,7 @@ class TransmittalsController < ApplicationController
     end
 
 
-    @pagy, @transmittals = pagy(@transmittals, items: 2)
+    @pagy, @transmittals = pagy(@transmittals, items: 10)
   end
 
   # GET /transmittals/1

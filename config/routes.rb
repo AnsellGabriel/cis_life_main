@@ -97,6 +97,7 @@ Rails.application.routes.draw do
 
   resources :user do
     get :approved, on: :member
+    get :admin_dashboard, on: :collection
   end
 
   resources :agreement_benefits do

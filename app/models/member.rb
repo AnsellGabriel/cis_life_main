@@ -173,7 +173,7 @@ class Member < ApplicationRecord
   end
 
   def self.coop_member_details(coop_members)
-    includes(coop_members: :coop_branch).where(coop_members: { id: coop_members.ids }).order(:last_name)
+    includes(coop_members: :coop_branch).where(coop_members: { id: coop_members&.ids }).order(:last_name)
   end
 
   def self.filter_by_coop_member_id(id)
