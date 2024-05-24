@@ -2,7 +2,7 @@
   <%= link_to "Members", coop_members_path, class: "dropdown-item" %>
   <%= link_to "Claims Filed", index_coop_claims_process_claims_url, class: "dropdown-item" %>
   <%#= link_to "Claims Message", claim_remarks_path, class: "dropdown-item" %>
-  <%= link_to "Graph", pages_coop_path, class: "dropdown-item", data: {turbo: false} %>
+  <%#= link_to "Graph", pages_coop_path, class: "dropdown-item", data: {turbo: false} %>
 <% end %>
 <% @cooperative = current_user.userable.cooperative %>
 <%= render 'layouts/partials/nav_dropdown', title: 'Insurance' do %>

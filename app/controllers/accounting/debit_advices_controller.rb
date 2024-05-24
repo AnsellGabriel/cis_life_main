@@ -1,5 +1,5 @@
 class Accounting::DebitAdvicesController < ApplicationController
-  before_action :set_debit_advice, only: %i[ show edit update destroy new_receipt upload_receipt]
+  before_action :set_debit_advice, only: %i[ show edit update destroy new_receipt upload_receipt download]
   before_action :set_payables, only: %i[ new edit create update]
 
   # GET /accounting/debit_advices
@@ -101,32 +101,14 @@ class Accounting::DebitAdvicesController < ApplicationController
   end
 
   def download
-    @ledger_entries = @check.general_ledgers
-    @accountant = Employee.find(@check.accountant_id)
-    @approver = Employee.find(@check.approved_by) if @check.approved_by.present?
-    @certifier = Employee.find(@check.certified_by) if @check.certified_by.present?
-    @auditor = Employee.find(@check.audited_by) if @check.audited_by.present?
-    @amount_in_words = amount_to_words(@check.amount)
+    @ledger_entries = @debit_advice.general_ledgers
+    @accountant = Employee.find(@debit_advice.accountant_id)
+    @approver = Employee.find(@debit_advice.approved_by) if @debit_advice.approved_by.present?
+    @certifier = Employee.find(@debit_advice.certified_by) if @debit_advice.certified_by.present?
 
     respond_to do |format|
       format.pdf do
-        render pdf: "Check voucher ##{@check.voucher}",
-               page_size: "A4"
-      end
-    end
-  end
-
-  def print
-    @ledger_entries = @check.general_ledgers
-    @accountant = Employee.find(@check.accountant_id)
-    @approver = Employee.find(@check.approved_by) if @check.approved_by.present?
-    @certifier = Employee.find(@check.certified_by) if @check.certified_by.present?
-    @auditor = Employee.find(@check.audited_by) if @check.audited_by.present?
-    @amount_in_words = amount_to_words(@check.amount)
-
-    respond_to do |format|
-      format.pdf do
-        render pdf: "Check voucher ##{@check.voucher}",
+        render pdf: "Debit Advice ##{@debit_advice.voucher}",
                page_size: "A4"
       end
     end

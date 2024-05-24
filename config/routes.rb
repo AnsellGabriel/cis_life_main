@@ -272,7 +272,6 @@ Rails.application.routes.draw do
       get :new_receipt, on: :member
       post :upload_receipt, on: :member
       get :download, on: :member
-      get :print, on: :member
     end
 
     resources :journals do

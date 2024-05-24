@@ -77,13 +77,13 @@
       <% if @batch_lppi.present? %>
         <%= content_tag :strong, "LPPI coverages" %>
         <% batch = @batch_lppi.first %>
-        <% if lppi.process_claim.present? %>
-          <%= link_to 'View Claims', show_coop_claims_process_claim_path(lppi.process_claim), class: 'btn btn-sm btn-warning' %>
+        <% if @coop_member.process_claims.present? %>
+          <%= link_to 'View Claims', show_coop_claims_process_claim_path(@coop_member.process_claims.last), class: 'btn btn-sm btn-warning' %>
         <% else %>
-          <%= link_to 'File Claims', new_coop_claims_process_claims_path(cm: @coop_member, a: lppi.group_remit.agreement.id, lb: lppi.id), class: 'btn btn-sm btn-warning' %>
+          <%= link_to 'File Claims', new_coop_claims_process_claims_path(cm: @coop_member, a: batch.group_remit.agreement.id, lb: batch.id), class: 'btn btn-sm btn-warning' %>
         <% end %>
         <br>
-        <table class="table table-bordered table-hover align-middle">
+        <table class="table table-bordered table-hover align-middle mt-1">
           <thead>
             <th>Batch Name</th>
             <th>Loan Details</th>
@@ -98,7 +98,7 @@
             <% @batch_lppi.order(created_at: :desc).each do |lppi| %>
               <tr>
                 <td><small><%= batch_status(lppi.status) %></small> <%= lppi.group_remit %></td>
-                <td><%= lppi.loan.name %></td>
+                <td><%= lppi.loan&.name %></td>
                 <td><%= short_month_day_year(lppi.effectivity_date) %></td>
                 <td><%= short_month_day_year(lppi.expiry_date) %></td>
                 <td>

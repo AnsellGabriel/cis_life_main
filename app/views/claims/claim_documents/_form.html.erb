@@ -3,7 +3,7 @@
   <%= f.error_notification message: f.object.errors[:base].to_sentence if f.object.errors[:base].present? %>
   <div class="form-inputs mb-3">
     <%= f.input :name %>
-    <%= f.input :description %>
+    <%#= f.input :description %>
   </div>
   <div class="form-actions text-end">
     <%= link_to "Back", claims_claim_documents_path, class: 'btn btn-secondary' %>

@@ -159,7 +159,7 @@ class Accounting::ChecksController < ApplicationController
 
   # collection of payees
   def set_payables
-    @payables = (Cooperative.all + Payee.all).sort_by(&:name)
+    @payables = (Cooperative.all.select(:id, :name) + Payee.all.select(:id, :name)).sort_by(&:name)
   end
 
   # Only allow a list of trusted parameters through.

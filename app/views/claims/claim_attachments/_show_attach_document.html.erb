@@ -12,7 +12,8 @@
         <% @claim_type_document.each do |doc| %>
           <tr>
             <% @claim_attach = Claims::ClaimAttachment.find_by(process_claim_id: @process_claim, claim_type_document: doc) %>
-            <td><%= doc.claim_document %>
+            <td>
+              <%= doc.claim_document %>
               <%= content_tag :span, '<i class="bi bi-asterisk"></i>'.html_safe, class: "badge rounded-pill text-bg-warning" if doc.required %>
               <br>
               <%= content_tag :small, @claim_attach.created_at, class: "text-muted" unless @claim_attach.nil? %>

@@ -13,7 +13,7 @@
     <% @claim_type.claim_type_documents.each do |doc| %>
       <tr>
         <%# <td>= benefit_claim.id</td> %>
-        <td> <%= doc.claim_document.name %> <%= content_tag :span, 'Required', class: "badge rounded-pill text-bg-warning" if doc.required %> </td>
+        <td> <%= doc.claim_document&.name %> <%= content_tag :span, 'Required', class: "badge rounded-pill text-bg-warning" if doc.required %> </td>
         <td class="text-end">
           <%#= link_to 'View', benefit_claim, class: 'btn' %>
           <%= link_to '<i class="bi bi-pencil-square"></i>'.html_safe, edit_claims_claim_type_document_path(doc), class: 'btn btn-outline-primary btn-sm', data: { turbo_frame: "remote_modal" }  %>

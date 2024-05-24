@@ -196,7 +196,7 @@ true)
           next
         end
 
-        batch_dependent.set_premium_and_service_fees(dependent_agreement_benefits, @group_remit, mis_user? ?dependent_hash[:premium] : nil)
+        batch_dependent.set_premium_and_service_fees(dependent_agreement_benefits, @group_remit, mis_user? ? dependent_hash[:premium] : nil)
 
         if batch_dependent.save!
           increment_dependents_counter
