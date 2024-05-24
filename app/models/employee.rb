@@ -17,7 +17,7 @@ class Employee < ApplicationRecord
 
   enum branch: { head_office: 0, cagayan_de_oro: 1, iloilo: 2, davao: 3}
 
-  ANALYSTS = Employee.joins(:user).where(department_id: 17, user: { rank: 1 })
+  ANALYSTS = Employee.joins(:user).where(department_id: [17, 23, 21, 20], user: { rank: 1 })
   HEADS = Employee.joins(:user).where(department_id: 17, user: { rank: 2 })
   APPROVER = Employee.where(id: [107, 54, 144, 29, 26])
 

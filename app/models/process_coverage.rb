@@ -263,7 +263,7 @@ class ProcessCoverage < ApplicationRecord
   def self.cov_list_analyst(user, status=nil, type=nil)
     case type
     when nil
-      where(processor: nil, status: status)
+      where(processor: nil, status: status, team: user.team) 
       # where(team: user.team, status: status)
     when "process"
       # where(processor: user, status: ["approved", "denied"])

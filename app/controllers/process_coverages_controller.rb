@@ -61,8 +61,6 @@ class ProcessCoveragesController < ApplicationController
       end
 
     elsif current_user.analyst?
-      # @process_coverages_x = ProcessCoverage.joins(group_remit: { agreement: :emp_agreements }).where( emp_agreements: { employee_id: current_user.userable_id, active: true })
-      # @process_coverages_x = ProcessCoverage.joins(group_remit: {agreement: :plan}).where(processor: current_user.userable_id)
       @process_coverages_x = ProcessCoverage.joins(group_remit: { agreement: :plan }).where(team: current_user.userable.team)
       @for_process_coverages = @process_coverages_x.where(status: :for_process, processor: nil)
       # @for_process_coverages = @process_coverages_x.where(processor: nil)
@@ -222,7 +220,6 @@ class ProcessCoveragesController < ApplicationController
         elsif current_user.senior_officer?
           ProcessCoverage.where(status: :for_process, created_at: start_date..end_date)
         elsif current_user.analyst?
-          puts "#{self}**"
           ProcessCoverage.cov_list_analyst(current_user.userable, :for_process)
         end
 
