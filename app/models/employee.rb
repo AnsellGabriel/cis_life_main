@@ -19,6 +19,7 @@ class Employee < ApplicationRecord
 
   ANALYSTS = Employee.joins(:user).where(department_id: 17, user: { rank: 1 })
   HEADS = Employee.joins(:user).where(department_id: 17, user: { rank: 2 })
+  APPROVER = Employee.where(id: [107, 54, 144, 29, 26])
 
   def to_s
     get_fullname

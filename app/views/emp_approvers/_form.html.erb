@@ -5,7 +5,7 @@
 
   <div class="form-inputs mb-3">
     <%= f.association :employee, collection: Employee::ANALYSTS %>
-    <%= f.association :approver, collection: Employee::HEADS %>
+    <%= f.association :approver, collection: Employee::APPROVER %>
   </div>
 
   <div class="form-actions text-end">

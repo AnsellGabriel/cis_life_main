@@ -9,6 +9,9 @@ class TeamsController < ApplicationController
   # GET /teams/1
   def show
     @f = params[:f] if params[:f].present?
+    @agreements = @team.emp_agreements.where(active: true)
+
+    @pagy_agree, @filtered_agreements = pagy(@agreements, items: 5, link_extra: 'data-turbo-frame="pagination"')
   end
 
   # GET /teams/new
