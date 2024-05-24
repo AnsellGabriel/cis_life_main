@@ -19,8 +19,8 @@ class CooperativesController < ApplicationController
     @member = Member.new
     @member.coop_members.build
 
-    @agreements = @cooperative.agreements
-    coop_members = @cooperative.coop_members
+    @agreements = @cooperative&.agreements
+    coop_members = @cooperative&.coop_members
 
     @q = Member.coop_member_details(coop_members).ransack(params[:q])
     @r = CoopBranch.where(cooperative: @cooperative).ransack(params[:q])

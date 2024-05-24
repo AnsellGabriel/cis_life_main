@@ -48,30 +48,37 @@
         <div class="card-header">
           <%= content_tag :h3, "List of Agreements".upcase %>
         </div>
-        <div class="card-body">
-          <table class="table table-stripped">
-            <thead>
-              <th>Cooperative</th>
-              <th>Plan</th>
-            </thead>
-            <tbody>
-              
-              <% if team.emp_agreements.count > 0 %>
-                <% team.emp_agreements.where(active: true).each do |ea| %>
+        <%= turbo_frame_tag 'pagination' do %>
+          <div class="card-body">
+            <table class="table table-stripped">
+              <thead>
+                <th>Cooperative</th>
+                <th>Plan</th>
+              </thead>
+              <tbody>
+                
+                <% if @agreements.count > 0 %>
+                  <% @filtered_agreements.where(active: true).each do |ea| %>
+                    <tr>
+                      <td><%= ea.agreement.cooperative %></td>
+                      <td><%= ea.agreement.plan %></td>
+                    </tr>
+                  <% end %>
+                <% else %>
                   <tr>
-                    <td><%= ea.agreement.cooperative %></td>
-                    <td><%= ea.agreement.plan %></td>
-                  </tr>
+                    <td colspan=2 class="text-center lead">NO RECORD(S).</td>
+                  </tr>      
                 <% end %>
-              <% else %>
-                <tr>
-                  <td colspan=2 class="text-center lead">NO RECORD(S).</td>
-                </tr>      
-              <% end %>
-              
-            </tbody>
-          </table>
-        </div>
+                
+              </tbody>
+            </table>
+          </div>
+          <div class="card-footer">
+            <div class="float-end mb-2">
+              <%= render PaginationComponent.new(results: @pagy_agree) %>
+            </div>
+          </div>
+        <% end %>
       </div>
     </div>
   </div>
