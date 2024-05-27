@@ -65,7 +65,7 @@
             </td>
             <td>
               <% if @batch.batch_health_decs.present? %>
-                <%= link_to health_dec_group_remit_batch_path(@group_remit, @batch, for_und: true, batch_type: @batch.class.name), class: "btn btn-sm btn-warning mb-1", data: { turbo_frame: "reg_form_modal_xl" } do %>
+                <%= link_to health_dec_group_remit_batch_path(@batch.group_remit, @batch.id, for_und: true, batch_type: @batch.class.name), class: "btn btn-sm btn-warning mb-1", data: { turbo_frame: "reg_form_modal_xl", turbo: true } do %>
                   <%= bootstrap_icon "file-earmark-medical" %>
                 <% end %>
               <% end %>

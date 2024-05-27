@@ -31,6 +31,11 @@
               <% else %>
                 <% if pc.processor == current_user.userable %>
                   <%= link_to "View", pc, data: {turbo: false}, class: "btn btn-sm btn-outline-primary" %>
+                  <% if pc.approved? %>
+                    <%= link_to lppi_summary_loan_insurance_group_remit_path(pc.group_remit), class: "btn btn-sm btn-warning", title: "Download Summary" do %>
+                      <%= bootstrap_icon "filetype-pdf" %>
+                    <% end %>
+                  <% end %>
                 <% end %>
               <% end %>
             </td>

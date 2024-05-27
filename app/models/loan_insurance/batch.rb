@@ -110,9 +110,14 @@ class LoanInsurance::Batch < Batch
       self.status = :recent
     end
 
+    binding.pry
     # requires no health declaration if loan amount is less than or equal to agreement's nel
     if self.loan_amount <= agreement.nel
       self.valid_health_dec = true
+    else
+      cm = coop_member
+      prev_cov = coop_member.loan_batches.order(effectivity_date: :desc).last
+      self.valid_health_dec = prev_cov.valid_health_dec
     end
 
     if self.rate.nil?
