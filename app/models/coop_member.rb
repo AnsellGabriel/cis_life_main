@@ -14,6 +14,7 @@ class CoopMember < ApplicationRecord
   belongs_to :coop_branch
   belongs_to :member
   has_many :loan_batches, class_name: "LoanInsurance::Batch", foreign_key: "coop_member_id"
+  has_many :batch_health_decs, through: :loan_batches
   has_many :batches
   has_many :agreements_coop_members
   has_many :agreements, through: :agreements_coop_members

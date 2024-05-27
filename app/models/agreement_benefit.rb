@@ -6,7 +6,7 @@ class AgreementBenefit < ApplicationRecord
 
   has_many :batches
   has_many :batch_dependents
-  has_many :product_benefits
+  has_many :product_benefits, dependent: :destroy
   has_many :benefits, through: :product_benefits
   has_many :prcoess_claims
   belongs_to :agreement, optional: true
