@@ -30,12 +30,12 @@
   </thead>
 
   <tbody>
-    <% @payees.each do |pt| %>
+    <% @payees.each do |payee| %>
       <tr>
-        <th scope="row"><%= pt.id %></th>
+        <th scope="row"><%= payee.id %></th>
         <td>
-          <%= pt.name %>
-          <%= link_to edit_treasury_payment_type_path(pt), class: 'btn btn-outline-primary btn-sm', title: 'Edit' do %>
+          <%= payee.name %>
+          <%= link_to edit_payee_path(payee), class: 'btn btn-outline-primary btn-sm', title: 'Edit' do %>
             <i class="bi bi-pencil"></i>
           <% end %>
         </td>
