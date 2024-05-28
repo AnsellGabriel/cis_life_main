@@ -72,10 +72,13 @@ class Accounting::ChecksController < ApplicationController
 
   # GET /accounting/checks
   def index
-    @checks = Accounting::Check.all.order(created_at: :desc)
-    @q = @checks.ransack(params[:q])
-    @checks = @q.result
+    if params[:date_from].present? && params[:date_to].present?
+      @q = Accounting::Check.where(date_voucher: params[:date_from]..params[:date_to]).order(created_at: :desc).ransack(params[:q])
+    else
+      @q = Accounting::Check.all.order(created_at: :desc).ransack(params[:q])
+    end
 
+    @checks = @q.result
     @pagy, @checks = pagy(@checks, items: 10)
   end
 
@@ -99,7 +102,6 @@ class Accounting::ChecksController < ApplicationController
       request = Accounting::VoucherRequest.find(params[:rid])
       @amount = request.amount
       @coop = request.requestable.cooperative
-
       @check = Accounting::Check.new(voucher: sprintf("%05d", initiate_voucher), payable: @coop, amount: @amount, date_voucher: Date.today, particulars: request.particulars)
     else
       @check = Accounting::Check.new(voucher: sprintf("%05d", initiate_voucher), date_voucher: Date.today)

@@ -2,7 +2,13 @@ class Accounting::VoucherRequestsController < ApplicationController
   before_action :set_request, only: %i[show reject]
 
   def index
-    @requests = Accounting::VoucherRequest.where(payment_type: params[:pt].to_sym).order(created_at: :desc)
+    if params[:date_from].present? && params[:date_to].present?
+      @requests = Accounting::VoucherRequest.where(created_at: params[:date_from]..params[:date_to], payment_type: params[:pt].to_sym).order(created_at: :desc)
+    else
+      @requests = Accounting::VoucherRequest.where(payment_type: params[:pt].to_sym).order(created_at: :desc)
+    end
+
+    binding.pry
     @pagy, @requests = pagy(@requests, items: 10)
   end
 
