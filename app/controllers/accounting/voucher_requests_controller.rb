@@ -8,7 +8,6 @@ class Accounting::VoucherRequestsController < ApplicationController
       @requests = Accounting::VoucherRequest.where(payment_type: params[:pt].to_sym).order(created_at: :desc)
     end
 
-    binding.pry
     @pagy, @requests = pagy(@requests, items: 10)
   end
 

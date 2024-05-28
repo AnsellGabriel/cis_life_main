@@ -121,9 +121,15 @@
                   <%= insurance_status(batch.insurance_status) %>
                 </td>
                 <td>
-                  <% if batch.batch_health_decs %>
+                  <% if batch.batch_health_decs.present? %>
                     <% batch.batch_health_decs.where(answerable_type: "HealthDec").each do |bhd| %>
                       <%= health_dec_answer(bhd.answerable.valid_answer, bhd.answer, bhd.answerable_type) %> <br>
+                    <% end %>
+                  <% else %>
+                    <% if batch.coop_member.batch_health_decs.present? %>
+                      <% batch.coop_member.batch_health_decs.where(answerable_type: "HealthDec").each do |bhd| %>
+                        <%= health_dec_answer(bhd.answerable.valid_answer, bhd.answer, bhd.answerable_type) %> <br>
+                      <% end %>
                     <% end %>
                   <% end %>
                 </td>
@@ -173,7 +179,7 @@
                     
 
                   <% end %>
-                  <% if batch.batch_health_decs.present? %>
+                  <% if batch.batch_health_decs.present?  || batch.coop_member.batch_health_decs.present? %>
                     <%= link_to health_dec_group_remit_batch_path(@group_remit, batch, for_und: true, batch_type: batch.class.name), class: "btn btn-sm btn-warning mb-1", data: { turbo_frame: "reg_form_modal_xl", turbo: true } do %>
                       <%= bootstrap_icon "file-earmark-medical" %>
                     <% end %>

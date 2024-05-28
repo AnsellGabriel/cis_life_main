@@ -714,8 +714,10 @@ ActiveRecord::Schema[7.0].define(version: 2024_05_21_033128) do
     t.datetime "updated_at", null: false
     t.boolean "active", default: true
     t.integer "category_type"
+    t.bigint "team_id"
     t.index ["agreement_id"], name: "index_emp_agreements_on_agreement_id"
     t.index ["employee_id"], name: "index_emp_agreements_on_employee_id"
+    t.index ["team_id"], name: "index_emp_agreements_on_team_id"
   end
 
   create_table "emp_approvers", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
@@ -1164,10 +1166,12 @@ ActiveRecord::Schema[7.0].define(version: 2024_05_21_033128) do
     t.date "evaluate_date"
     t.bigint "who_processed_id"
     t.bigint "who_approved_id"
+    t.bigint "team_id"
     t.index ["agent_id"], name: "index_process_coverages_on_agent_id"
     t.index ["approver_id"], name: "index_process_coverages_on_approver_id"
     t.index ["group_remit_id"], name: "index_process_coverages_on_group_remit_id"
     t.index ["processor_id"], name: "index_process_coverages_on_processor_id"
+    t.index ["team_id"], name: "index_process_coverages_on_team_id"
     t.index ["und_route"], name: "index_process_coverages_on_und_route"
     t.index ["who_approved_id"], name: "index_process_coverages_on_who_approved_id"
     t.index ["who_processed_id"], name: "index_process_coverages_on_who_processed_id"

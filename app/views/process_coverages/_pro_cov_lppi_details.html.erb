@@ -3,9 +3,11 @@
   <div class="card-body">
     <%= content_tag :p do %>
       <strong>Cooperative:</strong>
-      <%= process_coverage.group_remit.agreement.cooperative %> |
+      <%= process_coverage.group_remit.agreement.cooperative %>
+    <% end %>
+    <%= content_tag :p do %>
       <strong>Agent:</strong>
-      <%= process_coverage.agent %>
+      <%= process_coverage.group_remit.agreement.agent %>
     <% end %>
     <%= content_tag :p do %>
       <strong>Group remit:</strong>
@@ -102,7 +104,7 @@
     </div>
 
     <% if process_coverage.approved? %>
-      <%= link_to  lppi_summary_loan_insurance_group_remit_path(process_coverage.group_remit), class: "btn btn-sm btn-secondary mb-2" do %>
+      <%= link_to lppi_summary_loan_insurance_group_remit_path(process_coverage.group_remit), class: "btn btn-sm btn-secondary mb-2" do %>
         <%= bootstrap_icon "box-arrow-down" %> Download Summary Report
       <% end %>
     <% end %>

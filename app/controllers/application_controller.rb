@@ -5,30 +5,34 @@ class ApplicationController < ActionController::Base
   before_action :set_cooperative, :set_authority_level, :set_current_date, :set_retention_limit, :authenticate_user!
 
   def root
-    case current_user.userable_type
-    when "Agent" then redirect_to agents_path
-    when "CoopUser" then redirect_to coop_dashboard_path
-    when "Employee"
-
-      if current_user.medical_director?
-        redirect_to med_directors_home_path
-      else
-        case current_user.userable.department_id
-        # when 26 then redirect_to treasury_dashboard_path
-        when 26 then redirect_to payments_path
-        # when 27 then redirect_to audit_dashboard_path
-        when 27 then redirect_to audit_for_audits_path
-        # when 11 then redirect_to accounting_dashboard_path
-        when 11 then redirect_to accounting_dashboard_path
-        when 17, 13 then redirect_to process_coverages_path
-        when 15 then redirect_to mis_dashboard_path
-        when 14 then redirect_to reinsurances_path
-        else redirect_to employees_path
-        end
-      end
-
+    if current_user.admin?
+      redirect_to admin_dashboard_user_index_path
     else
-      super
+      case current_user.userable_type
+      when "Agent" then redirect_to agents_path
+      when "CoopUser" then redirect_to coop_dashboard_path
+      when "Employee"
+  
+        if current_user.medical_director?
+          redirect_to med_directors_home_path
+        else
+          case current_user.userable.department_id
+          # when 26 then redirect_to treasury_dashboard_path
+          when 26 then redirect_to payments_path
+          # when 27 then redirect_to audit_dashboard_path
+          when 27 then redirect_to audit_for_audits_path
+          # when 11 then redirect_to accounting_dashboard_path
+          when 11 then redirect_to accounting_dashboard_path
+          when 17, 13 then redirect_to process_coverages_path
+          when 15 then redirect_to mis_dashboard_path
+          when 14 then redirect_to reinsurances_path
+          else redirect_to employees_path
+          end
+        end
+  
+      else
+        super
+      end
     end
   end
 
@@ -97,6 +101,9 @@ class ApplicationController < ActionController::Base
     end
   end
 
+  def initialize_or_select
+    session[:or_selected] ||= []
+  end
   # def set_retention_limit
   #   @retention_limit = Retention.find_by(active: true)
   # end

@@ -1,0 +1,44 @@
+<div class="row">
+  <div class="col-8">
+    <h5>List of for Approval accounts</h5>
+    <div class="card">
+      <%= turbo_frame_tag 'pagination' do %>
+        <div class="card-body">
+          <table class="table">
+            <thead>
+              <th>Name</th>
+              <th>Email</th>
+              <th>User Type</th>
+              <th>Actions</th>
+            </thead>
+            <tbody>
+              <% @filtered_users.each do |user| %>
+                <tr>
+                  <td><%= user.userable %></td>
+                  <td><%= user.email %></td>
+                  <td><%= user.userable_type %></td>
+                  <td>
+                    <%= link_to "#", title: "Approve", class: "btn btn-sm btn-success" do %>
+                      <%= bootstrap_icon "check-circle" %>
+                    <% end %>
+                    <%= link_to "#", title: "Disapprove", class: "btn btn-sm btn-danger" do %>
+                      <%= bootstrap_icon "x-circle" %>
+                    <% end %>
+                  </td>
+                </tr>
+              <% end %>
+            </tbody>
+          </table>
+        </div>
+        <div class="card-footer">
+          <div class="float-end mb-2">
+            <%= render PaginationComponent.new(results: @pagy_users) %>
+          </div>
+        </div>
+      <% end %>
+    </div>
+  </div>
+  <div class="col-4">
+    
+  </div>
+</div>

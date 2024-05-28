@@ -2,7 +2,7 @@
   <%= content_tag :h4, "#{params[:pt].humanize.upcase} REQUESTS" , class: 'text-primary mb-0' %>
 
   <div class="d-flex gap-1">
-    <%= render 'accounting/shared/date_filter', url: accounting_voucher_requests_path, request: params[:pt] %>
+    <%= render 'accounting/shared/date_filter', url: accounting_voucher_requests_path, req_type: params[:pt] %>
     <%= link_to accounting_voucher_requests_path(pt: params[:pt]), class: "btn btn-sm btn-secondary filter_btn", title: "Reload" do %>
       <i class="bi bi-arrow-clockwise"></i>
     <% end %>

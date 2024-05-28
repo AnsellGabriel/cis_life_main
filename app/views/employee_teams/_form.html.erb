@@ -4,8 +4,14 @@
   <%= f.error_notification message: f.object.errors[:base].to_sentence if f.object.errors[:base].present? %>
 
   <div class="form-inputs mb-3">
+    
+    <% if @team.present? %>
+      <%= f.input :team, input_html: {value: @team}, disabled: true %>
+      <%= f.association :team, as: :hidden, input_html: {value: @team.id} %>
+    <% else %>
+      <%= f.association :team %>
+    <% end %>
     <%= f.association :employee, input_html: { data: { controller: "ts--select" } } %>
-    <%= f.association :team %>
     <%= f.input :head %>
   </div>
 

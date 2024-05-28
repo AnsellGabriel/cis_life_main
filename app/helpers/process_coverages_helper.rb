@@ -256,5 +256,4 @@ module ProcessCoveragesHelper
     end
   end
   
-
 end
