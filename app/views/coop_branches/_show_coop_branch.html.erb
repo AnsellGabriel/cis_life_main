@@ -36,6 +36,9 @@
             <td class="text-center">
               <%#= link_to 'View', cooperative_coop_branch_path(id: coop_branch.id), class: 'btn' %>
               <%= link_to 'Edit', edit_coop_branch_path(id: coop_branch.id), class: 'btn btn-sm btn-secondary', data: { turbo_frame: "remote_modal" } %>
+              <% if current_user.admin? %>
+                <%= link_to 'Delete', coop_branch_path(id: coop_branch.id), class: 'btn btn-sm btn-danger', data: { turbo_confirm: "Delete this branch?", turbo_method: :delete } %>
+              <% end %>
             </td>
           </tr>
         <% end %>

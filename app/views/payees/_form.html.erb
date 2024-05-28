@@ -1,0 +1,11 @@
+<%= simple_form_for(@payee) do |f| %>
+  <div class="form-inputs mb-3">
+    <%= f.input :name %>
+    <%= f.input :address %>
+    <%= f.input :contact_number %>
+  </div>
+
+  <div class="form-actions text-center">
+    <%= f.button :submit, class: 'btn-success' %>
+  </div>
+<% end %>

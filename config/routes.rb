@@ -310,6 +310,8 @@ Rails.application.routes.draw do
     get "dashboard", to: "dashboard#index"
   end
 
+  resources :payees
+
   # treasury
   namespace :treasury do
     resources :payment_types
