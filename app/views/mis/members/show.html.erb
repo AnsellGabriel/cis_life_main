@@ -1,0 +1,11 @@
+
+
+<div class="container <%= flex_justify_align('center','',true) %>">
+  <div class="mb-1">
+    <%= link_to mis_members_path, class: small_btn('secondary') do %>
+      <i class="bi bi-chevron-left"></i>
+    <% end %>
+  </div>
+  <%= render 'member_details' %>
+  <%= render 'coverages' %>
+</div>

@@ -419,9 +419,7 @@ Rails.application.routes.draw do
     get "cooperatives", to: "cooperatives#index"
     get "view_ors", to: "dashboard#view_ors"
 
-    resources :members do
-      get :update_table, on: :collection
-    end
+    resources :members, only: [:index, :show]
   end
 
   # * Authentication Routes
