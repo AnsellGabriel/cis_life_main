@@ -115,7 +115,7 @@ class LoanInsurance::Batch < Batch
     else
       cm = coop_member
       prev_cov = coop_member.loan_batches.order(effectivity_date: :desc).last
-      self.valid_health_dec = prev_cov.valid_health_dec
+      self.valid_health_dec = prev_cov.present? ? prev_cov.valid_health_dec : false
     end
 
     if self.rate.nil?
