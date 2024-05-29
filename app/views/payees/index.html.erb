@@ -2,8 +2,8 @@
 <div class="<%= flex_justify_align('between', 'end') %> mb-1">
   <div class="">
     <div class="<%= flex_justify_align('', 'end') %> gap-1">
-      <%= content_tag :h4, "Payment Types", class: 'text-primary mb-0' %>
-      <%= link_to 'New', new_treasury_payment_type_path, class: small_btn('primary')%>
+      <%= content_tag :h4, "Payees", class: 'text-primary mb-0' %>
+      <%= link_to 'New', new_payee_path, class: small_btn('primary')%>
     </div>
 
     <% if @pagy.pages > 1 %>
@@ -15,7 +15,7 @@
 
   <%= search_form_for @q do |f| %>
     <div class="d-flex gap-1">
-      <%= f.search_field :name_cont, class: 'form-control', placeholder: 'Name' %>
+      <%= f.search_field :name_cont, class: 'form-control', placeholder: 'Payee' %>
       <%= f.submit 'Search', class: 'btn-sm btn btn-warning' %>
     </div>
   <% end %>
@@ -30,12 +30,12 @@
   </thead>
 
   <tbody>
-    <% @treasury_payment_types.each do |pt| %>
+    <% @payees.each do |payee| %>
       <tr>
-        <th scope="row"><%= pt.id %></th>
+        <th scope="row"><%= payee.id %></th>
         <td>
-          <%= pt.name %>
-          <%= link_to edit_treasury_payment_type_path(pt), class: 'btn btn-outline-primary btn-sm', title: 'Edit' do %>
+          <%= payee.name %>
+          <%= link_to edit_payee_path(payee), class: 'btn btn-outline-primary btn-sm', title: 'Edit' do %>
             <i class="bi bi-pencil"></i>
           <% end %>
         </td>

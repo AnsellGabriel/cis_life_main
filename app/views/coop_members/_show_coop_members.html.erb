@@ -95,8 +95,10 @@
           <td><%= coop_member.coop_branch.name.titleize %></td>
           <td>
             <%= link_to '<i class="bi bi-eye-fill"></i>'.html_safe, coop_member, class: small_btn('outline-primary'), data: {turbo_frame: 'modal-xl'}, title: 'Show' %>
-            <%= link_to '<i class="bi bi-pencil-square"></i>'.html_safe, edit_member_path(member, cooperative_id: @cooperative.id), class: small_btn('outline-primary'), data: {turbo_frame: 'modal-xl'}, title: 'Edit' %>
-            <% if current_user.is_coop_user? and coop_member.with_coverages? %>
+            <% unless current_user.is_mis? %>
+              <%= link_to '<i class="bi bi-pencil-square"></i>'.html_safe, edit_member_path(member, cooperative_id: @cooperative.id), class: small_btn('outline-primary'), data: {turbo_frame: 'modal-xl'}, title: 'Edit' %>
+            <% end %>
+            <% if (current_user.is_coop_user? or current_user.is_mis?) and coop_member.with_coverages? %>
               <%= link_to '<i class="bi bi-shield-check"></i>'.html_safe, show_insurance_coop_member_path(coop_member), class: small_btn('outline-primary'), title: 'Coverages' %>
             <% end %>
             <%  if current_user.is_claims? %>

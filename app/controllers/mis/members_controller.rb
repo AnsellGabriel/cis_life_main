@@ -1,15 +1,20 @@
 class Mis::MembersController < ApplicationController
   def index
-    @cooperatives = Cooperative.all
+    if can? :read, Member
+      @q = Member.ransack(params[:q])
+      @members = @q.result.order(:last_name, :first_name)
+      @pagy, @members = pagy(@members, items: 10)
+    else
+      head :forbidden
+    end
   end
 
-  def update_table
-    @cooperative = Cooperative.find(params[:cooperative])
-    @coop_members = @cooperative.coop_members.includes(:member)
-    @pagy, @coop_members = pagy(@coop_members, items: 10)
-
-    respond_to do |format|
-      format.turbo_stream
+  def show
+    if can? :read, Member
+      @member = Member.find(params[:id])
+      @memberships = @member.coop_members.includes(:agreements)
+    else
+      head :forbidden
     end
   end
 

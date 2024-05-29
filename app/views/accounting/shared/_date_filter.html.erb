@@ -1,5 +1,8 @@
 <%= form_with url: url, method: :get do |form| %>
   <div class="<%= flex_justify_align('center', 'center') %> gap-1">
+    <% if req_type.present? %>
+      <%= form.hidden_field :pt, value: req_type %>
+    <% end %>
     <%= form.text_field :date_from, as: :string, data: {
         controller: "flatpickr",
         flatpickr_max_date: Date.today,

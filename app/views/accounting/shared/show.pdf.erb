@@ -29,7 +29,7 @@
       <div class="row mb-3">
         <div class="col-2"></div>
         <div class="col-2"></div>
-        <div class="col-5"><%= entry.branch.humanize.titleize %></div>
+        <div class="col-5"><%= entry.branch&.humanize&.titleize %></div>
       </div>
       <% entry.general_ledgers.debits.each do |ledger| %>
         <div class="row mb-3">
@@ -61,4 +61,11 @@
       </div>
     </div>
   <% end %>
+  <div class="pt-3 mt-5" style="border-top: 1px solid black">
+    <div class="row">
+      <div class="col-8 text-end">Total</div>
+      <div class="col-2 text-end"><%= to_curr(@total_debit) %></div>
+      <div class="col-2 text-end"><%= to_curr(@total_credit) %></div>
+    </div>
+  </div>
 <% end %>

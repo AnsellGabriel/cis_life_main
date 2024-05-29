@@ -118,6 +118,7 @@ class Batch < ApplicationRecord
     agreement = group_remit.agreement
     coop_member = batch.coop_member
     previous_coverage = agreement.agreements_coop_members.find_by(coop_member_id: coop_member.id)
+    batch.terms = group_remit.terms
     batch.expiry_date = group_remit.expiry_date
     batch.effectivity_date = ["single", "multiple"].include?(agreement.anniversary_type.downcase) ? Date.today : group_remit.effectivity_date
     batch.first_name = coop_member.member.first_name
