@@ -164,8 +164,6 @@ class LppiImportService
       end
     end
 
-    binding.pry
-
     new_batch = @group_remit.batches.new(
                   coop_member_id: coop_member.id,
                   effectivity_date: batch_hash[:effectivity_date],
