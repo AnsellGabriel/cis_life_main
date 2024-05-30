@@ -1,7 +1,7 @@
 <%= content_tag :h3, "#{current_user} - #{current_user.userable.designation}", class: 'mb-3' %>
 <div class="d-flex gap-2">
   <% if current_user.head? %>
-    <%= link_to for_approval_index_accounting_checks_path do %>
+    <%= link_to accounting_for_approval_path	 do %>
       <%= render 'coop/dashboard/counter_box', title: 'For Approvals', count: @for_approvals.size  %>
     <% end %>
   <% end %>
