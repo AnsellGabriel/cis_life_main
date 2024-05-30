@@ -12,13 +12,13 @@ class ApplicationController < ActionController::Base
       when "Agent" then redirect_to agents_path
       when "CoopUser" then redirect_to coop_dashboard_path
       when "Employee"
-  
+
         if current_user.medical_director?
           redirect_to med_directors_home_path
         else
           case current_user.userable.department_id
           # when 26 then redirect_to treasury_dashboard_path
-          when 26 then redirect_to payments_path
+          when 26 then redirect_to treasury_dashboard_path
           # when 27 then redirect_to audit_dashboard_path
           when 27 then redirect_to audit_for_audits_path
           # when 11 then redirect_to accounting_dashboard_path
@@ -29,7 +29,7 @@ class ApplicationController < ActionController::Base
           else redirect_to employees_path
           end
         end
-  
+
       else
         super
       end
