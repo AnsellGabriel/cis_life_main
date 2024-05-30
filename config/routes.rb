@@ -283,7 +283,7 @@ Rails.application.routes.draw do
     end
 
     resources :checks do
-      get :for_approval_index, on: :collection
+      # get :for_approval_index, on: :collection
       get :claimable, on: :member
       # get :cancel, on: :member
       resources :business_checks, as: 'business', except: [:index]
@@ -308,6 +308,7 @@ Rails.application.routes.draw do
     resources :voucher_requests, only: %i[index show]
 
     get "dashboard", to: "dashboard#index"
+    get "for_approval", to: "dashboard#for_approval"
   end
 
   resources :payees
