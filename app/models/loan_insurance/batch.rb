@@ -197,12 +197,14 @@ class LoanInsurance::Batch < Batch
   end
 
   def calculate_values(agreement, loan_rate, encoded_premium = nil)
-    if agreement.with_markup == true
+    if encoded_premium.present?
+      self.premium = encoded_premium
+      self.system_premium = agreement.with_markup? ?  (loan_amount / 1000 ) * (rate_with_markup * terms) : (loan_amount / 1000 ) * ((rate.annual_rate / 12) * terms)
+    elsif agreement.with_markup?
       rate_with_markup = (rate.annual_rate / 12) + (rate.markup_rate)
-      self.premium = encoded_premium ? encoded_premium : (loan_amount / 1000 ) * (rate_with_markup * terms) # use encoded premium by MIS if present
+      self.premium = (loan_amount / 1000 ) * (rate_with_markup * terms) # use encoded premium by MIS if present
     else
-      self.premium = encoded_premium ? encoded_premium : (loan_amount / 1000 ) * ((rate.annual_rate / 12) * terms) # use encoded premium by MIS if present
-
+      self.premium = (loan_amount / 1000 ) * ((rate.annual_rate / 12) * terms) # use encoded premium by MIS if present
     end
 
     if unused_loan_id

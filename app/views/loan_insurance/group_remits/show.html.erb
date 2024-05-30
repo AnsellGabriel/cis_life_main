@@ -130,6 +130,15 @@
       <% end %>
     <% end %>
 
+    <% if @batch_with_incorrect_prem.present? %>
+      <%= link_to loan_insurance_group_remit_path(@group_remit, incorrect_premiums: true), class: "mb-3 btn btn-sm btn-outline-danger position-relative" do %>
+          <%= 'Incorrect Premiums' %>
+          <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-warning text-dark">
+            <%= @batch_with_incorrect_prem.size >= 100 ? '99+' :  @batch_with_incorrect_prem.size %>
+          </span>
+      <% end %>
+    <% end %>
+
   </div>
   
   <div class="d-flex gap-1">

@@ -935,6 +935,7 @@ ActiveRecord::Schema[7.0].define(version: 2024_05_29_054314) do
     t.string "civil_status"
     t.bigint "process_claim_id"
     t.string "reference_id"
+    t.decimal "system_premium", precision: 10, scale: 2
     t.index ["coop_member_id"], name: "index_loan_insurance_batches_on_coop_member_id"
     t.index ["group_remit_id"], name: "index_loan_insurance_batches_on_group_remit_id"
     t.index ["loan_insurance_loan_id"], name: "index_loan_insurance_batches_on_loan_insurance_loan_id"

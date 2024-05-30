@@ -374,6 +374,10 @@ class GroupRemit < ApplicationRecord
     end
   end
 
+  def batches_with_incorrect_prem
+    batches.where("premium != system_premium")
+  end
+
   def all_batches_have_beneficiaries?
     batches.all? { |batch| batch.batch_beneficiaries.exists? }
   end
