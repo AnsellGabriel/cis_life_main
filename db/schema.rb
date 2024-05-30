@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2024_05_29_054314) do
+ActiveRecord::Schema[7.0].define(version: 2024_05_30_015319) do
   create_table "accounting_vouchers", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.date "date_voucher"
     t.string "voucher"
@@ -345,6 +345,7 @@ ActiveRecord::Schema[7.0].define(version: 2024_05_29_054314) do
     t.string "civil_status"
     t.date "birthdate"
     t.integer "terms"
+    t.decimal "system_premium", precision: 10, scale: 2
     t.index ["agreement_benefit_id"], name: "index_batches_on_agreement_benefit_id"
     t.index ["coop_member_id"], name: "index_batches_on_coop_member_id"
   end
@@ -935,6 +936,7 @@ ActiveRecord::Schema[7.0].define(version: 2024_05_29_054314) do
     t.string "civil_status"
     t.bigint "process_claim_id"
     t.string "reference_id"
+    t.decimal "system_premium", precision: 10, scale: 2
     t.index ["coop_member_id"], name: "index_loan_insurance_batches_on_coop_member_id"
     t.index ["group_remit_id"], name: "index_loan_insurance_batches_on_group_remit_id"
     t.index ["loan_insurance_loan_id"], name: "index_loan_insurance_batches_on_loan_insurance_loan_id"

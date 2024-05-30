@@ -9,14 +9,9 @@
   </div>
 
 <div class="<%= flex_justify_align('between', 'center') %> mb-0">
-  <%= form_with url: cooperatives_path, method: :get do %>
+  <%= search_form_for @q do |f| %>
     <div class="form-group d-flex justify-content-end gap-1">
-      <%= text_field_tag 'coop_filter', 
-        nil, 
-        placeholder: 'Coop Name', 
-        class: "form-control", 
-        style: "width: auto"
-      %>
+      <%= f.text_field :name_cont, class: 'form-control', placeholder: 'Search Cooperative' %>
       <%= button_tag(type: 'submit', class: small_btn('warning'), style: "width: 40px") do %>
         <i class='bi bi-search'></i>
       <% end %>

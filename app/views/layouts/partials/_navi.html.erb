@@ -32,6 +32,7 @@
             <% when 15 %>
               <%= link_to "Members Database", mis_members_path, class: "nav-link" %>
               <%= render 'layouts/partials/nav_dropdown', title: 'Data Entries' do %>
+                <%= link_to "Agreement", agreements_path, class: "dropdown-item" %>
                 <%= link_to "Cooperative", cooperatives_path, class: "dropdown-item" %>
                 <%= link_to "Transmittal", transmittals_path, class: "dropdown-item" %>
               <% end %>

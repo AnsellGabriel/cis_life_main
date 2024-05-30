@@ -168,7 +168,7 @@
 
 <div class="<%= flex_justify_align('between', 'center') %> gap-1">
   <% if @group_remit.instance_of?(Remittance)%>
-    <div class="d-flex gap-2">
+    <div class="<%= flex_justify_align('start', 'center') %> gap-2">
       <% @group_remit.status_mappings.each do |status, attributes| %>
         <% batches = @group_remit.batches.send(status) %>
         <%= link_to group_remit_path(@group_remit, insurance_status: status), class: "btn btn-sm btn-outline-#{status == :denied ? 'danger' : 'primary'} position-relative" do %>
@@ -180,6 +180,15 @@
             </span>
           <% end %>
 
+        <% end %>
+      <% end %>
+
+      <% if @batch_with_incorrect_prem.present? %>
+        <%= link_to group_remit_path(@group_remit, incorrect_premiums: true), class: "btn btn-sm btn-outline-danger position-relative" do %>
+            <%= 'Incorrect Premiums' %>
+            <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-warning text-dark">
+              <%= @batch_with_incorrect_prem.size >= 100 ? '99+' :  @batch_with_incorrect_prem.size %>
+            </span>
         <% end %>
       <% end %>
     </div>

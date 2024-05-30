@@ -41,11 +41,17 @@
   <td class="align-middle" >
 		<div class="<%= flex_justify_align('center') %>">
 			<div class="<%= flex_justify_align('','center',true) %> ps-6">
-				<div class="d-flex flex-column mb-1">
+				<div class="<%= flex_justify_align('center', 'center', true) %> mb-1">
 					<%= content_tag :span, 
               "#{to_curr(batch.premium)}", 
               class: "text-secondary sm-green-text"
           %>
+					<% if current_user.is_mis? and batch.system_premium != batch.premium and !batch.system_premium.nil? %>
+						<%= content_tag :span, 
+              "Correct premium: #{to_curr(batch.system_premium)}", 
+              class: "text-danger sm-green-text"
+          	%>
+					<% end %>
 				</div>
 			</div>
 		</div>

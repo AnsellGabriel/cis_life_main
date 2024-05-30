@@ -26,10 +26,14 @@
           }, label: false,
           wrapper_html: { style: "height: 38px; margin-bottom: 0 !important" } %>
       </div>
-      <div class="d-flex gap-1 align-items-center">
+      <div class="d-flex gap-1 align-items-center" data-controller="number-formatter">
 
         <% if @agreement.plan.acronym == 'GYRTBR' ||  @agreement.plan.acronym == 'GYRTFR' || @agreement.plan.acronym == "KOOPamilya" %>
           <%= f.input :rank, collection: @agreement.agreement_benefits.where.not(insured_type: 2..5), input_html: {style: "width: auto !important; font-size: .8rem; height: 38px;", }, include_blank: @agreement.plan.acronym == "KOOPamilya" ? "Residency" : "Rank", wrapper_html: {style: 'margin-bottom: 0 !important; '}, label: false %>
+        <% end %>
+
+        <% if current_user.is_mis? %>
+          <%= f.input :encoded_premium, as: :text, label: false, placeholder: 'Premium', class: 'form-control', wrapper: false, input_html: {class: 'text-primary', data: {number_formatter_target: 'input'}, style: "width: auto !important; font-size: .8rem; height: 38px;"} %>
         <% end %>
 
         <%# if @agreement.plan.acronym == "SII" %>
