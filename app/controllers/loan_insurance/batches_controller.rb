@@ -92,8 +92,8 @@ class LoanInsurance::BatchesController < ApplicationController
     if agreement.plan.acronym == "SII"
       result = @batch.sii_process_batch
     else
-      ecoded_prem = params[:loan_insurance_batch][:encoded_premium].empty? ? nil : params[:loan_insurance_batch][:encoded_premium].to_f
-      result = @batch.process_batch(ecoded_prem)
+      encoded_prem = params[:loan_insurance_batch][:encoded_premium].empty? ? nil : params[:loan_insurance_batch][:encoded_premium].to_f
+      result = @batch.process_batch(encoded_prem)
     end
 
     respond_to do |format|

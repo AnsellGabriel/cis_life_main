@@ -162,10 +162,13 @@ class BatchesController < ApplicationController
     #     params[:batch][:savings_amount]
     #   )
     # else
+    encoded_prem = params[:batch][:encoded_premium].empty? ? nil : params[:batch][:encoded_premium].to_f
+
     Batch.process_batch(
       @batch,
       @group_remit,
-      batch_params[:rank]
+      batch_params[:rank],
+      encoded_prem
     )
     # end
 

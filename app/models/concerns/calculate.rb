@@ -13,11 +13,14 @@ module Calculate
 
       self.agreement_benefit_id = agreement_benefit.id
       calculate_premium_and_fees(premium.present? ? premium : total_premium, group_remit)
-      # else #SII
-        # self.agreement_benefit_id = 0
-        # rate = group_remit.agreement.loan_rates.first
-        # calculate_premium_and_fees_sii(group_remit, savings_amount, rate)
-      # end
+
+      if premium.present?
+        if group_remit.terms <= group_remit.agreement.minimum_term
+          self.system_premium = group_remit.agreement.minimum_premium
+        else
+          self.system_premium = calculate_premium(total_premium, group_remit.terms)
+        end
+      end
     end
 
     # def set_premium_and_sf_for_reconsider(group_remit, premium)
