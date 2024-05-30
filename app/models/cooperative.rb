@@ -99,4 +99,8 @@ class Cooperative < ApplicationRecord
   def upcase_name
     self.name = name.upcase if name.present?
   end
+
+  def self.ransackable_attributes(auth_object = nil)
+    ['name']
+  end
 end
