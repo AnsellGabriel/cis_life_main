@@ -60,6 +60,7 @@ Rails.application.routes.draw do
       patch :update_ca, to: "process_claims#update_ca", on: :member
       patch :update_coop, to: "process_claims#update_coop", on: :member
       get :print_sheet, to: "process_claims#print_sheet", on: :member
+      get :claims_dashboard, to: "process_claims#claims_dashboard", on: :collection
       # get :claimable, on: :collection
     end
 
@@ -68,6 +69,7 @@ Rails.application.routes.draw do
       post :create_status, to: "claim_remarks#create_status", on: :collection
       get :message_history, to: "claim_remarks#message_history", on: :collection
       get :read_message, on: :member
+      get :unread_messages, on: :collection
     end
   end
 

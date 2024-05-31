@@ -1,6 +1,22 @@
 class Claims::ClaimCoverage < ApplicationRecord
   belongs_to :process_claim
   Coverage_status = ["Current", "Previous"]
-  Status = ["Approve", "Denied", "Pending"]
+  Status = ["Approved", "Denied", "Pending"]
+
+  def get_duration
+    years = expiry.year - effectivity.year
+    months = expiry.month - effectivity.month
+    days = expiry.day - effectivity.day
+
+    if days < 0
+      months -= 1
+      days += (expiry.prev_month.end_of_month.day - effectivity.day + expiry.day)
+    end
+    if months < 0
+      years -= 1
+      months += 12
+    end
+    return "#{years} years, #{months} months, #{days} days"
+  end
   # belongs_to :coverageable, polymorphic: true
 end

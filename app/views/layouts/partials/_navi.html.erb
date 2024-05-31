@@ -50,6 +50,8 @@
               <% end %>
             <% end %>
             <% when 19 %>
+            <%= link_to "Dashboard", claims_dashboard_claims_process_claims_path, class: "nav-link" %>
+            <%#= link_to "Cooperative", cooperatives_path, class: "nav-link" %>
             <%= render 'layouts/partials/nav_dropdown', title: 'Claims' do %>
               <%= link_to "Claim index", claims_process_claims_path, class: "dropdown-item" %>
               <%= link_to "Submitted", index_show_claims_process_claims_path(p: 1), class: "dropdown-item" %>

@@ -66,9 +66,9 @@
             </div>
           </div>
           <%= f.simple_fields_for :claim_cause do |cc| %>
+            <%= cc.input :icd, label: "ICD" %>
             <%= cc.input :acd, label: "ACD" %>
             <%= cc.input :ucd, label: "UCD" %>
-            <%= cc.input :icd, label: "ICD" %>
             <%= cc.input :osccd, label: "OSCCD" %>
             <%#= render 'question_fields', f: builder %>
           <% end %>

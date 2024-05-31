@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2024_05_22_055612) do
+ActiveRecord::Schema[7.0].define(version: 2024_05_27_020019) do
   create_table "accounting_vouchers", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.date "date_voucher"
     t.string "voucher"
@@ -1237,6 +1237,16 @@ ActiveRecord::Schema[7.0].define(version: 2024_05_22_055612) do
     t.index ["cooperative_id"], name: "index_proposals_on_cooperative_id"
   end
 
+  create_table "read_messages", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+    t.bigint "user_id", null: false
+    t.bigint "claim_remark_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["claim_remark_id"], name: "index_read_messages_on_claim_remark_id"
+    t.index ["user_id", "claim_remark_id"], name: "index_read_messages_on_user_id_and_claim_remark_id", unique: true
+    t.index ["user_id"], name: "index_read_messages_on_user_id"
+  end
+
   create_table "reinsurance_batches", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.bigint "batch_id"
     t.datetime "created_at", null: false
@@ -1555,6 +1565,8 @@ ActiveRecord::Schema[7.0].define(version: 2024_05_22_055612) do
   add_foreign_key "product_benefits", "agreement_benefits"
   add_foreign_key "product_benefits", "benefits"
   add_foreign_key "proposals", "cooperatives"
+  add_foreign_key "read_messages", "claim_remarks"
+  add_foreign_key "read_messages", "users"
   add_foreign_key "sip_pbs", "plan_units"
   add_foreign_key "treasury_billing_statements", "treasury_cashier_entries", column: "cashier_entry_id"
   add_foreign_key "treasury_business_checks", "accounting_vouchers", column: "voucher_id"

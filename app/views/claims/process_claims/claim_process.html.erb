@@ -4,24 +4,12 @@
 <div class="row">
   <div class="col-md-6">
     <%= render 'claims_detail' %>
-    <div class="card">
-      <h5 class="card-header">Claimant details</h5>
-      <div class="card-body">
-        <dl class="row">
-          <dt class="col-sm-4">Name</dt>
-          <dd class="col-sm-8"><%= @process_claim.claimant_name %></dd>
-          <dt class="col-sm-4">Relation</dt>
-          <dd class="col-sm-8"><%= @process_claim.relationship %></dd>
-          <dt class="col-sm-4">Contact</dt>
-          <dd class="col-sm-8"><%= @process_claim.claimant_contact_no %></dd>
-          <dt class="col-sm-4">Email</dt>
-          <dd class="col-sm-8"><%= @process_claim.claimant_email %></dd>
-        </dl>
-      </div>
-    </div>
+    <%= render 'insured_details' if @process_claim.incomplete_document? || @process_claim.analyst_file? %>
+    <%= render 'claimant_details' %>
+    
   </div>
   <div class="col-md-6">
-    <%= render 'insured_details' %>
+    
     <%#= render 'show_coop' %>
     <div class="card">
       <div class="card-body">
@@ -29,6 +17,7 @@
           <% @claim_type_document = Claims::ClaimTypeDocument.where(claim_type: @process_claim.claim_type) %>
           <%= render 'claims/claim_attachments/show_attach_document' %>
         <% else %>
+          <%= render 'insured_details' %>
           <%= render 'claims/claim_attachments/show_attachment' %>
         <% end %>
       </div>

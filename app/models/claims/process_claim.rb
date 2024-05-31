@@ -28,7 +28,9 @@ class Claims::ProcessClaim < ApplicationRecord
     pending: 2,
     reconsider: 3,
     process: 4,
-    denied_due_to_non_compliance: 5
+    denied_due_to_non_compliance: 5,
+    reconsider_approved: 6,
+    reconsider_denied: 7
   }
 
   enum claimant_relation: {
@@ -58,7 +60,12 @@ class Claims::ProcessClaim < ApplicationRecord
     pending_audit: 16,
     analyst_file: 17,
     non_compliant: 18,
-    incomplete_document: 19
+    incomplete_document: 19,
+    reconsider_coso: 20,
+    verify_hardcopy_document: 21,
+    issuance_denied_letter: 22,
+    payment_preparation: 23,
+    retrieval_documents: 24
   }
 
 

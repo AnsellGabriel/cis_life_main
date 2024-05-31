@@ -10,9 +10,10 @@
       </thead>
       <tbody>
         <% @claim_type_document.each do |doc| %>
+        <div data-bs-spy="scroll" class="scrollspy-example">
           <tr>
             <% @claim_attach = Claims::ClaimAttachment.find_by(process_claim_id: @process_claim, claim_type_document: doc) %>
-            <td><%= doc.claim_document %>
+            <td> <small><%= doc.claim_document %></small>
               <%= content_tag :span, '<i class="bi bi-asterisk"></i>'.html_safe, class: "badge rounded-pill text-bg-warning" if doc.required %>
               <br>
               <%= content_tag :small, @claim_attach.created_at, class: "text-muted" unless @claim_attach.nil? %>
@@ -33,6 +34,8 @@
               <% end %>
             </td>
           </tr>
+        
+        </div>
         <% end %>
       </tbody>
     </table>

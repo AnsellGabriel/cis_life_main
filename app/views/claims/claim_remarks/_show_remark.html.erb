@@ -6,13 +6,20 @@
           <td>
             <figure>
               <blockquote class="blockquote text-primary">
-                <% unless claim_remark.status.nil? %>
-                  <% if claim_remark.denied? %>
-                    <small><%= claim_remark.user %> <span class="badge rounded-pill bg-danger text-light"><%= claim_remark.status.to_s.humanize %></span></small>
-                  <% elsif claim_remark.approved? %>
-                    <small><%= claim_remark.user %> <span class="badge rounded-pill bg-success text-light"><%= claim_remark.status.to_s.humanize %></span></small>
+                <small>
+                  <%= claim_remark.user %>
+                  <% unless claim_remark.status.nil? %>
+                    <% if claim_remark.denied? %>
+                      <span class="badge rounded-pill bg-danger text-light"><%= claim_remark.status.to_s.humanize %></span>
+                    <% elsif claim_remark.approved? %>
+                      <span class="badge rounded-pill bg-success text-light"><%= claim_remark.status.to_s.humanize %></span>
+                    <% elsif claim_remark.reconsider? %>
+                      <span class="badge rounded-pill bg-warning text-dark"><%= claim_remark.status.to_s.humanize %></span>
+                    <% elsif claim_remark.pending? %>
+                      <span class="badge rounded-pill bg-warning text-dark"><%= claim_remark.status.to_s.humanize %></span>
+                    <% end %>
                   <% end %>
-                <% end %>
+                </small>
                 <%# console %>
               </blockquote>
               <figcaption class="blockquote-footer">
@@ -21,7 +28,7 @@
             </figure>
             <small> <%=  claim_remark.remark %> </small> </td>
           <td class="text-end">
-            <%#= link_to '<i class="bi bi-pencil-square"></i>'.html_safe, edit_claim_remark_path(claim_remark), class: 'btn btn-outline-primary btn-sm', data: { turbo_frame: "remote_modal" } %>
+            <%= link_to '<i class="bi bi-pencil-square"></i>'.html_safe, edit_claims_claim_remark_path(claim_remark), class: 'text-secondary', data: { turbo_frame: "remote_modal" } if current_user == claim_remark.user %>
             <%= link_to '<i class="bi bi-envelope-x"></i>'.html_safe, claim_remark, class: "text-secondary", method: :delete, data: { "turbo-method": :delete, turbo_confirm: "Do you want to delete this message?" } if current_user == claim_remark.user %>
           </td>
         </tr>

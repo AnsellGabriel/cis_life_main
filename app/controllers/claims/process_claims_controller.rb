@@ -1,5 +1,6 @@
 
 class Claims::ProcessClaimsController < ApplicationController
+  include ProcessClaimHelper
   before_action :set_process_claim, only: %i[ show edit update destroy show_coop show_ca claim_route claims_file claim_process update_status edit_ca update_ca print_sheet edit_coop update_coop ]
 
   def index
@@ -12,8 +13,17 @@ class Claims::ProcessClaimsController < ApplicationController
   end
 
   def index_show
-    @process_claims = Claims::ProcessClaim.where(claim_route: params[:p])
-    @display = Claims::ProcessClaim.get_route(params[:p].to_i).to_s.humanize.titleize
+    unless params[:p].nil?
+      @process_claims = Claims::ProcessClaim.where(claim_route: params[:p])
+      @display = Claims::ProcessClaim.get_route(params[:p].to_i).to_s.humanize.titleize
+    end
+    unless params[:s].nil?
+      @process_claims = Claims::ProcessClaim.where(status: params[:s])
+      case params[:s]
+      when 0
+        @display = "Approved Claims"
+      end
+    end
     # raise "errors"
   end
 
@@ -105,6 +115,7 @@ class Claims::ProcessClaimsController < ApplicationController
     @process_claim = Claims::ProcessClaim.new(process_claim_params)
     @process_claim.entry_type = :coop
     @process_claim.claim_route = :coop_file
+    @process_claim.status = :pending
     @rel_css = process_claim_params[:relationship].empty? ? "is-invalid" : "is-valid"
     @coop_member = CoopMember.find(process_claim_params[:claimable_id])
 
@@ -260,19 +271,31 @@ class Claims::ProcessClaimsController < ApplicationController
     @claim_track = @process_claim.process_track.build
     @claim_track.route_id = params[:p]
     unless params[:s].nil?
-      @claim_track.status = params[:s].to_i 
-      @process_claim.update(status: :denied) if @claim_track.denied?
-      @process_claim.update(status: :approved) if @claim_track.approved?
+      @claim_track.status = params[:s].to_i
+      @claim_track.route_id = approver_routes(@process_claim,@claims_user_authority_level.maxAmount, @claim_track.status)
+      if @process_claim.check_authority_level(@claims_user_authority_level.maxAmount)
+        @process_claim.update(status: :denied) if @claim_track.denied?
+        @process_claim.update(status: :approved) if @claim_track.approved?
+        @process_claim.update(status: :pending) if @claim_track.pending?
+      end
+      unless @claims_user_reconsider.nil?
+        if @process_claim.check_authority_level(@claims_user_reconsider.maxAmount) 
+          @process_claim.update(status: :reconsider_denied) if @claim_track.reconsider_denied?
+          @process_claim.update(status: :reconsider_approved, approval: 1) if @claim_track.reconsider_approved?
+        end
+      end
     end
     @claim_track.user_id = current_user.id
     
     #CHECK THE ATTACH DOCUMENTS
-    if @process_claim.coop_file? || @process_claim.analyst_file? || @process_claim.incomplete_document? 
-      document_status = @process_claim.attach_document_status
-      @status_message = document_status[:status_message]
-      status = document_status[:status]
-      return redirect_to show_coop_claims_process_claim_path(@process_claim), alert: @status_message if status && current_user.userable_type == "CoopUser"
-      return redirect_to claim_process_claims_process_claim_path(@process_claim), alert: @status_message if status && current_user.userable_type == "Employee"
+    unless current_user.userable_type == "Employee"
+      if @process_claim.coop_file? || @process_claim.analyst_file? || @process_claim.incomplete_document? 
+        document_status = @process_claim.attach_document_status
+        @status_message = document_status[:status_message]
+        status = document_status[:status]
+        return redirect_to show_coop_claims_process_claim_path(@process_claim), alert: @status_message if status && current_user.userable_type == "CoopUser"
+        return redirect_to claim_process_claims_process_claim_path(@process_claim), alert: @status_message if status && current_user.userable_type == "Employee"
+      end
     end
     
 
@@ -352,8 +375,8 @@ class Claims::ProcessClaimsController < ApplicationController
   end
 
   def edit_coop 
-
   end
+
   def update_coop 
     if @process_claim.update(process_claim_params)
       if @process_claim.coop_file?
@@ -372,11 +395,24 @@ class Claims::ProcessClaimsController < ApplicationController
     redirect_to show_insurance_coop_member_path(@coop_member), alert: "Claim cancelled"
   end
 
+  def claims_dashboard 
+    @user_levels = current_user.user_levels.where(active: 1) if current_user
+    @for_evaluation = Claims::ProcessClaim.where(claim_route: get_route_evaluators) if current_user.userable_type == "Employee" 
+    # unless @claims_user_authority_level == "Claims Evaluator" ||  @claims_user_authority_level == "COSO (Approver)" || @claims_user_authority_level == "President (Approver)"
+    #   @for_evaluation = Claims::ProcessClaim.where(claim_route: 3)
+    # end
+    @coop_messages = Claims::ClaimRemark.where(coop: 1)
+    @process_claims = Claims::ProcessClaim.all
+    # end
+    # raise "errors"
+  end
+
   private
   # Use callbacks to share common setup or constraints between actions.
   def set_process_claim
     @process_claim = Claims::ProcessClaim.find(params[:id])
     @loan_batch = @process_claim.loan_batch if @process_claim.loan_batch.present?
+    
   end
 
   # Only allow a list of trusted parameters through.

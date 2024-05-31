@@ -18,6 +18,11 @@ class Claims::ClaimRemarksController < ApplicationController
     @claim_remarks = @process_claim.claim_remarks
   end
 
+  def unread_messages
+    @messages = current_user.unread_messages
+    render :index
+  end
+  
   def new_status
     @process_claim = Claims::ProcessClaim.find(params[:v])
     @claim_remark = @process_claim.claim_remarks.build
@@ -53,7 +58,7 @@ class Claims::ClaimRemarksController < ApplicationController
     end
     @claim_remark.user = current_user
     # @claim_remark.status = params[:s]
-    @claim_remark.remark = FFaker::HealthcareIpsum.paragraph if Rails.env.development?
+    # @claim_remark.remark = FFaker::HealthcareIpsum.paragraph if Rails.env.development?
   end
 
   def edit

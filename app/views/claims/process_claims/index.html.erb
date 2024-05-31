@@ -19,12 +19,14 @@
           <%= process_claim.cooperative %> <br>
           <small><%= process_claim.agreement.agent %></small> <br>
           <small>
-            <%= content_tag :span, process_claim.entry_type.titleize, class: "badge rounded-pill text-bg-primary"  %>
-            <%= content_tag :span, process_claim.display_route(process_claim.claim_route) , class: "badge rounded-pill text-bg-secondary" %>
-            <% if process_claim.denied? %>
+            <%= content_tag :span, process_claim.entry_type.titleize, class: "badge rounded-pill text-bg-light"  %>
+            <%= content_tag :span, process_claim.display_route(process_claim.claim_route) , class: "badge rounded-pill text-bg-light" %>
+            <% if process_claim.denied? || process_claim.reconsider_denied? %>
               <span class="badge rounded-pill bg-danger text-light"><%= process_claim.status.humanize %></span>
-            <% elsif process_claim.approved? %>
+            <% elsif process_claim.approved? || process_claim.reconsider_approved? %>
               <span class="badge rounded-pill bg-success text-light"><%= process_claim.status.humanize %></span>
+            <% elsif process_claim.pending? %>
+              <span class="badge rounded-pill bg-warning text-dark"><%= process_claim.status.humanize %></span>
             <% else %>
               <span class="badge rounded-pill bg-primary text-light"><%= process_claim.status.humanize %></span>
             <% end %>
