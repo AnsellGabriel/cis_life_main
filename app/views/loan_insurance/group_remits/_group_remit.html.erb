@@ -1,5 +1,7 @@
 <tr>
   <td class="text-center"><%= group_remit.official_receipt.present? ? group_remit.official_receipt : '-' %></td>
+  <td class="text-center"><%= short_month_day_year group_remit.date_submitted %></td>
+  <td class="text-center"><%= group_remit.coop_branch %></td>
   <td><%= group_remit.name %></td>
   <td class="text-end"><%= to_curr(group_remit.total_gross_premium) %></td>
   <% if group_remit.agreement.plan.acronym == "LPPI" %>

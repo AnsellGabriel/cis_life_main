@@ -2,18 +2,18 @@ module Reports::Concerns::Downloadable
   extend ActiveSupport::Concern
 
   # The code inside the included block is evaluated
-  # in the context of the class that includes the Visible concern.
+  # in the context of the class that includes the concern.
   # You can write class macros here, and
   # any methods become instance methods of the including class.
   included do
     def delete_file_and_create_path(employee, save_path)
       employee.delete_uploaded_report
-      FileUtils.mkdir_p(File.dirname(save_path))
+      FileUtils.mkdir_p(File.dirname(save_path)) # Create the directory if it doesn't exist
     end
 
     def set_dates(date_from, date_to)
-      @search_date = date_from&.to_date..date_to&.to_date
-      @balance_date = DateTime.new(Date.today.year, 1, 1)..date_to&.to_date
+      @search_date = date_from&.to_date.beginning_of_day..date_to&.to_date.end_of_day
+      @balance_date = DateTime.new(Date.today.year, 1, 1)..date_to&.to_date.end_of_day
     end
 
     def set_ledgers
@@ -31,11 +31,5 @@ module Reports::Concerns::Downloadable
         partial: "layouts/partials/download_script",
         locals: { title: employee.report.identifier, link_path: employee.report.url}
     end
-  end
-
-  # The methods added inside the class_methods block (or, ClassMethods module)
-  # become the class methods on the including class.
-  class_methods do
-
   end
 end

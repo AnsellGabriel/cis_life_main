@@ -61,20 +61,23 @@
           </div>
         </div>
         <div class="row mb-3">
-          <div class="col-md-6">
-            <%= u.input :password, 
-                wrapper: false,
-                label: false,
-                error: '',
-                input_html: { 
-                  autocomplete: "password", 
-                  style: 'font-size: 0.8rem;', 
-                  class: 'mb-3',
-                  data: {
-                    action: "input->password-strength#change"
-                  }
-                },
-                placeholder: 'Password' %>
+          <div class="col-md-6" data-controller="password-toggle">
+            <div class="<%= flex_justify_align('','center') %> gap-1 mb-2">
+              <%= u.input :password, 
+                  wrapper: false,
+                  label: false,
+                  error: '',
+                  input_html: { 
+                    autocomplete: "password", 
+                    style: 'font-size: 0.8rem;', 
+                    data: {
+                      action: "input->password-strength#change",
+                      password_toggle_target: 'input'
+                    }
+                  },
+                  placeholder: 'Password' %>
+              <a data-action="click->password-toggle#password" class="<%= small_btn('outline-primary') %>"><i class="bi bi-eye-slash" data-password-toggle-target="icon"></i></a> 
+            </div>
             <ul class="small text-danger half-visible mb-0 ">
               <li data-password-strength-target="min_char">min 8 characters</li>
               <li data-password-strength-target="lowercase">at least one lowercase letter</li>
@@ -83,13 +86,16 @@
               <li data-password-strength-target="special">at least one special character</li>
             </ul>
           </div>
-          <div class="col-md-6">
-            <%= u.input :password_confirmation, 
-                wrapper: false,
-                label: false,
-                error: 'Passwords do not match',
-                input_html: { autocomplete: "password", style: 'font-size: 0.8rem;' },
-                placeholder: 'Confirm password' %>
+          <div class="col-md-6" data-controller="password-toggle">
+            <div class="<%= flex_justify_align('','center') %> gap-1">
+              <%= u.input :password_confirmation, 
+                  wrapper: false,
+                  label: false,
+                  error: 'Passwords do not match',
+                  input_html: { autocomplete: "password", style: 'font-size: 0.8rem;', data: { password_toggle_target: 'input' }},
+                  placeholder: 'Confirm password' %>
+              <a data-action="click->password-toggle#password" class="<%= small_btn('outline-primary') %>"><i class="bi bi-eye-slash" data-password-toggle-target="icon"></i></a> 
+            </div>
           </div>
         </div>
         <%= u.hidden_field :userable_type, value: "CoopUser" %>
