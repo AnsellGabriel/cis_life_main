@@ -32,7 +32,13 @@
 			<div class="<%= flex_justify_align('','center',true) %> ps-6">
 				<div class="d-flex flex-column mb-1">
 					<%= content_tag :span, 
-              "#{batch.terms}", class: "text-secondary sm-green-text"
+              "Effectivity: #{month_day_year(batch.effectivity_date)}", class: "text-secondary sm-green-text"
+          %>
+					<%= content_tag :span, 
+              "Expiry: #{month_day_year(batch.expiry_date)}", class: "text-secondary sm-green-text"
+          %>
+					<%= content_tag :span, 
+              "Terms: #{batch.terms}", class: "text-secondary sm-green-text"
           %>
 				</div>
 			</div>

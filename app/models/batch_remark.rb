@@ -12,7 +12,9 @@ class BatchRemark < ApplicationRecord
     denied: 1,
     md_reco: 2,
     request: 3,
-    terminated: 4
+    terminated: 4,
+    prem_adjust: 5,
+    cov_adjust: 6
   }
 
 end

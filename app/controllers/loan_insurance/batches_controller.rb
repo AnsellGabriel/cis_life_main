@@ -1,5 +1,5 @@
 class LoanInsurance::BatchesController < ApplicationController
-  before_action :set_batch, only: %i[ show edit update destroy ]
+  before_action :set_batch, only: %i[ show edit update destroy adjusted accept_adjustment cancel_coverage ]
   before_action :set_group_remit, only: %i[ new import edit]
 
   def import
@@ -92,7 +92,7 @@ class LoanInsurance::BatchesController < ApplicationController
     if agreement.plan.acronym == "SII"
       result = @batch.sii_process_batch
     else
-      result = @batch.process_batch(params[:loan_insurance_batch][:encoded_premium])
+      result = @batch.process_batch(params[:loan_insurance_batch][:encoded_premium], current_user)
     end
 
     respond_to do |format|
@@ -137,6 +137,35 @@ class LoanInsurance::BatchesController < ApplicationController
     end
   end
 
+  def adjusted
+  end
+
+  def accept_adjustment
+    @batch.adjustment(params[:type], current_user)
+    
+    respond_to do |format|
+      if @batch.save
+        msg = params[:type] == "prem" ? "Premium adjustment accepted" : "Coverage adjustment accepted"
+        format.html { redirect_to @batch.group_remit, notice: msg } 
+      else
+        format.html { redirect_to @batch.group_remit, alert: "Coverage not adjusted." } 
+      end
+    end
+  end
+
+  def cancel_coverage
+    @batch.batch_remarks.build(
+      remark: "Substandard Coverage not accepted.",
+      user: current_user.userable,
+      status: :denied
+    )
+    respond_to do |format|
+      if @batch.update(insurance_status: :denied)
+        format.html { redirect_to @batch.group_remit, alert: "Coverage not accepted." }
+      end
+    end
+  end
+
   # PATCH/PUT /loan_insurance/batches/1
   def update
     @group_remit = @batch.group_remit
@@ -146,7 +175,8 @@ class LoanInsurance::BatchesController < ApplicationController
 
         @batch.update!(batch_params)
         @batch.rate = nil
-        result = @batch.process_batch
+        # result = @batch.process_batch
+        result = @batch.process_batch(params[:loan_insurance_batch][:encoded_premium], current_user)
 
         if result == :no_rate_for_amount
           raise ActiveRecord::RangeError

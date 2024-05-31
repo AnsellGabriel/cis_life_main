@@ -23,7 +23,8 @@ class Batch < ApplicationRecord
     approved: 0,
     denied: 1,
     pending: 2,
-    for_review: 3
+    for_review: 3,
+    md_recom: 4
   }
 
   scope :filter_by_member_name, ->(name) {

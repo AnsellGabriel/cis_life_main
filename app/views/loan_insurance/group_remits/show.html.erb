@@ -12,9 +12,12 @@
       <i class="bi bi-chevron-left"></i>
     <% end %>
   <% end %>
-  <% if current_user.is_mis? %>
+  <%# if current_user.is_mis? %>
     <%= link_to "Remarks", group_remit_remarks_path(@group_remit), class: small_btn('danger'), data: {turbo_frame: 'reg_form_modal'} %>
-  <% end %>
+    <%# if @group_remit.process_coverage.process_remarks.present? %>
+      <%#= link_to "UND Remarks", view_all_process_remarks_path(process_coverage: @group_remit.process_coverage), class: "btn btn-outline-secondary mb-2 btn-sm", data: { turbo_frame: "remote_modal" } %>
+    <%# end %>
+  <%# end %>
   <div class="mb-0 gap-1 <%= flex_justify_align('', 'center') %>">
     <% if @group_remit.is_pending_or_renewal? %>
       <% if mis_user?(current_user) %>
