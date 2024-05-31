@@ -2,8 +2,9 @@ class Accounting::VoucherRequestsController < ApplicationController
   before_action :set_request, only: %i[show reject]
 
   def index
+    # binding.pry
     if params[:date_from].present? && params[:date_to].present?
-      @requests = Accounting::VoucherRequest.where(created_at: params[:date_from]..params[:date_to], payment_type: params[:pt].to_sym).order(created_at: :desc)
+      @requests = Accounting::VoucherRequest.where(created_at: params[:date_from].to_date.beginning_of_day..params[:date_to].to_date.end_of_day, payment_type: params[:pt].to_sym).order(created_at: :desc)
     else
       @requests = Accounting::VoucherRequest.where(payment_type: params[:pt].to_sym).order(created_at: :desc)
     end
