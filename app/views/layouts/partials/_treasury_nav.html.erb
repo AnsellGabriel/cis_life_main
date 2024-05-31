@@ -1,12 +1,12 @@
+<% if current_user.head? %>
+  <%= link_to "For Approval", treasury_for_approval_path, class: "nav-link" %>
+<% end %>
 <%= render 'layouts/partials/nav_dropdown', title: 'Business Checks' do %>
   <%= link_to "Index", treasury_checks_path	, class: "dropdown-item" %>
   <%= link_to "Requests", requests_treasury_checks_path	, class: "dropdown-item" %>
 <% end %>
 <%= render 'layouts/partials/nav_dropdown', title: 'Cashier Entries' do %>
   <%= link_to "Index", treasury_cashier_entries_path	, class: "dropdown-item" %>
-  <% if current_user.head? %>
-    <%= link_to "For Approval", for_approval_index_treasury_cashier_entries_path	, class: "dropdown-item" %>
-  <% end %>
 <% end %>
 <%= render 'layouts/partials/nav_dropdown', title: 'Debit Advices' do %>
   <%= link_to "Index", treasury_debit_advices_path	, class: "dropdown-item" %>

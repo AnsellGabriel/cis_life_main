@@ -336,6 +336,7 @@ Rails.application.routes.draw do
     end
 
     get "dashboard", to: "dashboard#index"
+    get "for_approval", to: "dashboard#for_approval"
 
     resources :debit_advices, only: %i[index]
   end

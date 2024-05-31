@@ -8,7 +8,6 @@
       <th class="text-center">Payee</th>
       <th class="text-center">Amount</th>
       <th class="text-center">Status</th>
-      <th></th>
     </tr>
   </thead>
 
@@ -25,11 +24,6 @@
           <td class="<%= centered_cell %>">
             <span class="<%= voucher.decorate.status_badge %>"><%= voucher.status.titleize %></span>
           </td>        
-          <td class="<%= centered_cell %>">
-            <%= link_to voucher, class: small_btn('outline-primary') do %>
-              <i class="bi bi-eye"></i>
-            <% end %>
-          </td>  
         </tr>
       <% end %>
     <% else %>

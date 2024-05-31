@@ -1,0 +1,35 @@
+<%= content_tag :h4, "For Approval", class: 'text-primary mb-3' %>
+
+<table class="<%= table_sm_hoverable %>">
+  <thead class="table-dark">
+    <tr>
+      <th class="text-center">OR #</th>
+      <th class="text-center">Date</th>
+      <th class="text-center">Payee</th>
+      <th class="text-center">Amount</th>
+      <th class="text-center">Status</th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% if @for_approvals.present? %>
+      <% @for_approvals.each do |cashier_entry| %>
+        <tr>
+          <td class="<%= centered_cell %>">
+            <%= link_to cashier_entry.or_no, cashier_entry, class: 'text-primary', title: 'View'%>
+          </td>
+          <td class="<%= centered_cell %>"><%= month_day_year(cashier_entry.or_date) %></td>
+          <td class="<%= centered_cell %>"><%= cashier_entry.entriable %></td>
+          <td class="<%= centered_cell %>"><%= to_curr(cashier_entry.amount) %></td>
+          <td class="<%= centered_cell %>">
+            <span class="<%= cashier_entry.decorate.status_badge %>"><%= cashier_entry.status.titleize %></span>
+          </td>        
+        </tr>
+      <% end %>
+    <% else %>
+      <tr>
+        <td colspan="7" class="text-center">No cashier_entryies found.</td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>

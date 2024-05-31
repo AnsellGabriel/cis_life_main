@@ -92,7 +92,7 @@ class LoanInsurance::BatchesController < ApplicationController
     if agreement.plan.acronym == "SII"
       result = @batch.sii_process_batch
     else
-      encoded_prem = params[:loan_insurance_batch][:encoded_premium].empty? ? nil : params[:loan_insurance_batch][:encoded_premium].to_f
+      encoded_prem =  params.dig(:loan_insurance_batch, :encoded_premium).presence&.to_f # convert and return the string to float and return nil if it is empty
       result = @batch.process_batch(encoded_prem)
     end
 
