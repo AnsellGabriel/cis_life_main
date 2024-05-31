@@ -162,7 +162,7 @@ class BatchesController < ApplicationController
     #     params[:batch][:savings_amount]
     #   )
     # else
-    encoded_prem = params[:batch][:encoded_premium].empty? ? nil : params[:batch][:encoded_premium].to_f
+    encoded_prem = params.dig(:batch, :encoded_premium).presence&.to_f # convert and return the string to float and return nil if it is empty
 
     Batch.process_batch(
       @batch,
