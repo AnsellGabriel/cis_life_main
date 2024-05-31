@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2024_05_30_072627) do
+ActiveRecord::Schema[7.0].define(version: 2024_05_31_065251) do
   create_table "accounting_vouchers", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.date "date_voucher"
     t.string "voucher"
@@ -845,8 +845,10 @@ ActiveRecord::Schema[7.0].define(version: 2024_05_30_072627) do
     t.boolean "refunded", default: false
     t.integer "refund_status", default: 0
     t.integer "mis_user"
+    t.bigint "coop_branch_id"
     t.index ["agreement_id"], name: "index_group_remits_on_agreement_id"
     t.index ["anniversary_id"], name: "index_group_remits_on_anniversary_id"
+    t.index ["coop_branch_id"], name: "index_group_remits_on_coop_branch_id"
   end
 
   create_table "health_dec_subquestions", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
@@ -1544,6 +1546,7 @@ ActiveRecord::Schema[7.0].define(version: 2024_05_30_072627) do
   add_foreign_key "employees", "departments"
   add_foreign_key "general_ledgers", "treasury_accounts", column: "account_id"
   add_foreign_key "group_remits", "agreements"
+  add_foreign_key "group_remits", "coop_branches"
   add_foreign_key "health_dec_subquestions", "health_decs"
   add_foreign_key "loan_insurance_batches", "coop_members"
   add_foreign_key "loan_insurance_batches", "group_remits"
