@@ -20,7 +20,6 @@ class Accounting::VoucherRequestsController < ApplicationController
     @pagy, @vouchers = pagy(@vouchers, items: 10)
   end
 
-
   private
 
   def set_request
