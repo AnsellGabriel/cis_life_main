@@ -1,13 +1,16 @@
 class Accounting::DebitAdvicesController < ApplicationController
-  before_action :set_debit_advice, only: %i[ show edit update destroy new_receipt upload_receipt]
+  before_action :set_debit_advice, only: %i[ show edit update destroy new_receipt upload_receipt download]
   before_action :set_payables, only: %i[ new edit create update]
 
   # GET /accounting/debit_advices
   def index
-    @debit_advices = Accounting::DebitAdvice.all.order(created_at: :desc)
-    @q = @debit_advices.ransack(params[:q])
-    @debit_advices = @q.result
+    if params[:date_from].present? && params[:date_to].present?
+      @q = Accounting::DebitAdvice.where(date_voucher: params[:date_from]..params[:date_to]).order(created_at: :desc).ransack(params[:q])
+    else
+      @q = Accounting::DebitAdvice.all.order(created_at: :desc).ransack(params[:q])
+    end
 
+    @debit_advices = @q.result
     @pagy, @debit_advices = pagy(@debit_advices, items: 10)
   end
 
@@ -17,7 +20,7 @@ class Accounting::DebitAdvicesController < ApplicationController
     @bank = @debit_advice.treasury_account
     @request = @debit_advice.voucher_request
 
-    if @request.requestable.present? && @request.requestable.is_a?(Claims::ProcessClaim)
+    if @request&.requestable.present? && @request&.requestable.is_a?(Claims::ProcessClaim)
       @claim = @request.requestable
       @claim_type_documents = Claims::ClaimTypeDocument.where(claim_type: @request.requestable.claim_type)
     end
@@ -82,9 +85,6 @@ class Accounting::DebitAdvicesController < ApplicationController
     redirect_to accounting_debit_advices_url, notice: "Debit advice was successfully destroyed.", status: :see_other
   end
 
-  def new_receipt
-  end
-
   def upload_receipt
     file = params[:file]
 
@@ -103,6 +103,19 @@ class Accounting::DebitAdvicesController < ApplicationController
     end
   end
 
+  def download
+    @ledger_entries = @debit_advice.general_ledgers
+    @accountant = Employee.find(@debit_advice.accountant_id)
+    @approver = Employee.find(@debit_advice.approved_by) if @debit_advice.approved_by.present?
+    @certifier = Employee.find(@debit_advice.certified_by) if @debit_advice.certified_by.present?
+
+    respond_to do |format|
+      format.pdf do
+        render pdf: "Debit Advice ##{@debit_advice.voucher}",
+               page_size: "A4"
+      end
+    end
+  end
 
   private
   # Use callbacks to share common setup or constraints between actions.
@@ -122,6 +135,6 @@ class Accounting::DebitAdvicesController < ApplicationController
 
   # collection of payees
   def set_payables
-    @payables = (Cooperative.all + Payee.all).sort_by(&:name)
+    @payables = (Cooperative.select(:name, :id) + Payee.select(:name, :id)).sort_by(&:name)
   end
 end

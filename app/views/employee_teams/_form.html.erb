@@ -1,0 +1,22 @@
+
+<%= simple_form_for(@employee_team) do |f| %>
+  <%= f.error_notification %>
+  <%= f.error_notification message: f.object.errors[:base].to_sentence if f.object.errors[:base].present? %>
+
+  <div class="form-inputs mb-3">
+    
+    <% if @team.present? %>
+      <%= f.input :team, input_html: {value: @team}, disabled: true %>
+      <%= f.association :team, as: :hidden, input_html: {value: @team.id} %>
+    <% else %>
+      <%= f.association :team %>
+    <% end %>
+    <%= f.association :employee, input_html: { data: { controller: "ts--select" } } %>
+    <%= f.input :head %>
+  </div>
+
+  <div class="form-actions text-end">
+    <%= link_to "Back", employee_teams_path, class: 'btn btn-secondary' %>
+    <%= f.button :submit, class: 'btn-success' %>
+  </div>
+<% end %>

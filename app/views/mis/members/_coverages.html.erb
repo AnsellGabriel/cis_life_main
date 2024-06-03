@@ -1,0 +1,33 @@
+<div class="card mb-3" style="min-width: 900px">
+  <div class="card-header">Memberships</div>
+  <div class="card-body sm-secondary-text">
+    <div class="accordion" id="accordionPanelsStayOpenExample">
+      <% @memberships.each do |coop_member| %>
+        <div class="accordion-item">
+          <h2 class="accordion-header" id="panelsStayOpen-heading<%= coop_member.id %>">
+            <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#panelsStayOpen-collapse<%= coop_member.id %>" aria-expanded="true" aria-controls="panelsStayOpen-collapseOne">
+              <%= coop_member.cooperative %>
+            </button>
+          </h2>
+          <div id="panelsStayOpen-collapse<%= coop_member.id %>" class="accordion-collapse collapse" aria-labelledby="panelsStayOpen-heading<%= coop_member.id %>">
+            <div class="accordion-body">
+              <% if coop_member.agreements.present? %>
+                <h6 class="text-primary">Coverages</h6>
+                <% coop_member.agreements.each do |agreement| %>
+                  <% acronym = agreement.plan.acronym%>
+                  <% if acronym.include?('GYRT') %>
+                    <%= render 'gyrt_coverages', coop_member: coop_member %>
+                  <% elsif acronym == 'LPPI' %>
+                    <%= render 'lppi_coverages', coop_member: coop_member %>
+                  <% end %>
+                <% end %>
+              <% else %>
+                <p>No coverages found.</p>
+              <% end %>
+            </div>
+          </div>
+        </div>
+      <% end %>
+    </div>
+  </div>
+</div>

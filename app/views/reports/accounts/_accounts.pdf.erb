@@ -2,13 +2,15 @@
   <td colspan="4" class="text-start" style="font-size: 1.1rem; font-weight: bold; border: 2px solid black"><%= name %></td>
 </tr>
 <% accounts.order(:name).each do |a| %>
+  <% ledgers_with_transaction_date = a.general_ledgers.with_transaction_date(@date_from, @date_to) %>
+  <% next if ledgers_with_transaction_date.empty? %>
+  <% difference = ledgers_with_transaction_date.total_debit - ledgers_with_transaction_date.total_credit %>
+
   <tr>
-    <% ledgers_with_transaction_date = a.general_ledgers.with_transaction_date(@date_from, @date_to) %>
-    <% difference = ledgers_with_transaction_date.total_debit - ledgers_with_transaction_date.total_credit %>
     <td><%= a.code %></td>
     <td><%= a.name %></td>
-    <td class="text-end"><%= difference > 0  ? number_to_currency(difference, unit: '') : '' %></td>
-    <td class="text-end"><%= difference < 0 ? number_to_currency(difference.abs, unit: '') : '' %></td>
+    <td class="text-end"><%= difference >= 0  ? number_to_currency(difference, unit: '') : '' %></td>
+    <td class="text-end"><%= difference <= 0 ? number_to_currency(difference.abs, unit: '') : '' %></td>
 
     <% @total_debit += difference if difference > 0 %>
     <% @total_credit += difference.abs if difference < 0 %>

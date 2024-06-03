@@ -1,0 +1,86 @@
+<div id="<%= dom_id team %>">
+  <p>
+    <strong>Name:</strong>
+    <%= team.name %>
+  </p>
+
+  <p>
+    <strong>Description:</strong>
+    <%= team.description %>
+  </p>
+  
+  <div class="row">
+    <div class="col-6">
+      <div class="card">
+        <div class="card-header">
+          <%= content_tag :h3, "List of employees".upcase %>
+        </div>
+        <div class="card-body">
+          <table class="table">
+            <thead>
+              <th>Name</th>
+              <th>Position</th>
+            </thead>
+            <tbody>
+              <% if team.employee_teams.where(head: false).present? %>
+                <% team.get_team_members.each do |et| %>
+                  <tr>
+                    <td><%= et.employee %></td>
+                    <td><%= et.employee.designation %></td>
+                  </tr>
+                <% end %>
+              <% else %>
+                <td colspan=2 class="lead text-center">NO MEMBER(S).</td>
+              <% end %>
+            </tbody>
+          </table>
+        </div>
+        <% if team.employees.present? %>
+          <div class="card-footer">
+            <h5>Head: <%= team.get_team_head("name") %> - <%= team.get_team_head("pos") %></h5>
+            <%= link_to "Add", new_employee_team_path(team: team), class: "btn btn-sm btn-outline-primary", data: {turbo_frame: "remote_modal"} %>
+          </div>
+        <% end %>
+      </div>
+    </div>
+    <div class="col-6">
+      <div class="card">
+        <div class="card-header">
+          <%= content_tag :h3, "List of Agreements".upcase %>
+        </div>
+        <%= turbo_frame_tag 'pagination' do %>
+          <div class="card-body">
+            <table class="table table-stripped">
+              <thead>
+                <th>Cooperative</th>
+                <th>Plan</th>
+              </thead>
+              <tbody>
+                
+                <% if @agreements.count > 0 %>
+                  <% @filtered_agreements.where(active: true).each do |ea| %>
+                    <tr>
+                      <td><%= ea.agreement.cooperative %></td>
+                      <td><%= ea.agreement.plan %></td>
+                    </tr>
+                  <% end %>
+                <% else %>
+                  <tr>
+                    <td colspan=2 class="text-center lead">NO RECORD(S).</td>
+                  </tr>      
+                <% end %>
+                
+              </tbody>
+            </table>
+          </div>
+          <div class="card-footer">
+            <div class="float-end mb-2">
+              <%= render PaginationComponent.new(results: @pagy_agree) %>
+            </div>
+          </div>
+        <% end %>
+      </div>
+    </div>
+  </div>
+
+</div>

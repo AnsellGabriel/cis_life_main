@@ -26,29 +26,30 @@
           <% else %>
             <% case current_user.userable.department_id %>
             <% when 11 %>
-            <%= render 'layouts/partials/accounting_nav' %>
+              <%= render 'layouts/partials/accounting_nav' %>
             <% when 26 %>
-            <%= render 'layouts/partials/treasury_nav' %>
+              <%= render 'layouts/partials/treasury_nav' %>
             <% when 15 %>
-            <%= render 'layouts/partials/nav_dropdown', title: 'Data Entries' do %>
-              <%= link_to "Agreements", agreements_path, class: "dropdown-item" %>
-              <%= link_to "Cooperative", cooperatives_path, class: "dropdown-item" %>
-              <%= link_to "Transmittal", transmittals_path, class: "dropdown-item" %>
-            <% end %>
-            <% when 27 %>
-            <%= render 'layouts/partials/nav_dropdown', title: 'Audit' do %>
-              <%= link_to "For Audit", audit_for_audits_path, class: "dropdown-item" %>
-            <% end %>
-            <% when 17 %>
-            <%= render 'layouts/partials/nav_dropdown', title: 'Underwriting' do %>
-              <%= link_to "Agreement", agreements_path, class: "dropdown-item" %>
-              <%= link_to "Process", process_coverages_path, class: "dropdown-item" %>
-              <%= link_to "Transmittal", transmittals_path, class: "dropdown-item" %>
-              <%#= link_to "Generate CSV", gen_csv_process_coverages_path, class: "dropdown-item", data: { turbo_frame: "remote_modal" } %>
-              <% if current_user.medical_director? %>
-                <%= link_to "Medical Director", med_directors_home_path, class: "dropdown-item" %>
+              <%= link_to "Members Database", mis_members_path, class: "nav-link" %>
+              <%= render 'layouts/partials/nav_dropdown', title: 'Data Entries' do %>
+                <%= link_to "Agreement", agreements_path, class: "dropdown-item" %>
+                <%= link_to "Cooperative", cooperatives_path, class: "dropdown-item" %>
+                <%= link_to "Transmittal", transmittals_path, class: "dropdown-item" %>
               <% end %>
-            <% end %>
+            <% when 27 %>
+              <%= render 'layouts/partials/nav_dropdown', title: 'Audit' do %>
+                <%= link_to "For Audit", audit_for_audits_path, class: "dropdown-item" %>
+              <% end %>
+            <% when 17 %>
+              <%= render 'layouts/partials/nav_dropdown', title: 'Underwriting' do %>
+                <%= link_to "Agreement", agreements_path, class: "dropdown-item" %>
+                <%= link_to "Process", process_coverages_path, class: "dropdown-item" %>
+                <%= link_to "Transmittal", transmittals_path, class: "dropdown-item" %>
+                <%#= link_to "Generate CSV", gen_csv_process_coverages_path, class: "dropdown-item", data: { turbo_frame: "remote_modal" } %>
+                <% if current_user.medical_director? %>
+                  <%= link_to "Medical Director", med_directors_home_path, class: "dropdown-item" %>
+                <% end %>
+              <% end %>
             <% when 19 %>
             <%= link_to "Dashboard", claims_dashboard_claims_process_claims_path, class: "nav-link" %>
             <%#= link_to "Cooperative", cooperatives_path, class: "nav-link" %>
@@ -62,6 +63,8 @@
               <%= link_to "President Evaluation", index_show_claims_process_claims_path(p: 6), class: "dropdown-item" %>
               <li><hr class="dropdown-divider"></li>
               <%= link_to "Documents", claims_claim_documents_path, class: "dropdown-item" %>
+              <%= link_to "Claim Type", claims_claim_types_path, class: "dropdown-item" %>
+              <%= link_to "Claims Message", claims_claim_remarks_path, class: "dropdown-item" %>
               <%= link_to "Benefits", benefits_path, class: "dropdown-item" %>
               <%= link_to "Claim Type", claims_claim_types_path, class: "dropdown-item" %>
               <%= link_to "Medical Code", claims_causes_path, class: "dropdown-item" %>
@@ -99,6 +102,8 @@
                 <%= link_to "Cooperative User", coop_users_path, class: "dropdown-item" %>
                 <%= link_to "Agents", agents_path, class: "dropdown-item" %>
                 <%= link_to "Pending Users", user_index_path, class: "dropdown-item" %>
+                <li><hr class="dropdown-divider"></li>
+                <%= link_to "Teams", teams_path, class: "dropdown-item" %>
               <% end %>
             <% end %>
           <% end %>

@@ -1,10 +1,9 @@
 class Payee < ApplicationRecord
+  validates_presence_of :name, :address
 
-  def to_s
-    name
-  end
+  private
 
-  def get_address
-    address
+  def self.ransackable_attributes(auth_object = nil)
+    ['name']
   end
 end

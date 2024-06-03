@@ -11,7 +11,7 @@ class LoanInsurance::Batch < Batch
   belongs_to :loan, class_name: "LoanInsurance::Loan", foreign_key: "loan_insurance_loan_id", optional: true
   belongs_to :rate, class_name: "LoanInsurance::Rate", foreign_key: "loan_insurance_rate_id"
 
-  belongs_to :process_claim, class_name: "Claims::ProcessClaim", optional: true
+  # belongs_to :process_claim, class_name: "Claims::ProcessClaim", optional: true
   # belongs_to :retention, class_name: 'LoanInsurance::Retention', foreign_key: 'loan_insurance_retention_id'
   has_many :details, class_name: "LoanInsurance::Detail"
   has_many :batch_health_decs, as: :healthdecable, dependent: :destroy
@@ -89,6 +89,7 @@ class LoanInsurance::Batch < Batch
     set_terms_and_details
     loan_rate = find_loan_rate(agreement)
     previous_coverage = agreement.agreements_coop_members.find_by(coop_member_id: coop_member.id)
+
     if previous_coverage.present?
       month_difference = expiry_and_today_month_diff(previous_coverage.expiry)
 
@@ -108,10 +109,13 @@ class LoanInsurance::Batch < Batch
 
       self.status = :recent
     end
-
     # requires no health declaration if loan amount is less than or equal to agreement's nel
     if self.loan_amount <= agreement.nel
       self.valid_health_dec = true
+    else
+      cm = coop_member
+      prev_cov = coop_member.loan_batches.order(effectivity_date: :desc).last
+      self.valid_health_dec = prev_cov.present? ? prev_cov.valid_health_dec : false
     end
 
     if self.rate.nil?
@@ -193,12 +197,14 @@ class LoanInsurance::Batch < Batch
   end
 
   def calculate_values(agreement, loan_rate, encoded_premium = nil)
-    if agreement.with_markup == true
+    if encoded_premium.present?
+      self.premium = encoded_premium
+      self.system_premium = agreement.with_markup? ?  (loan_amount / 1000 ) * (rate_with_markup * terms) : (loan_amount / 1000 ) * ((rate.annual_rate / 12) * terms)
+    elsif agreement.with_markup?
       rate_with_markup = (rate.annual_rate / 12) + (rate.markup_rate)
-      self.premium = encoded_premium ? encoded_premium : (loan_amount / 1000 ) * (rate_with_markup * terms) # use encoded premium by MIS if present
+      self.premium = (loan_amount / 1000 ) * (rate_with_markup * terms) # use encoded premium by MIS if present
     else
-      self.premium = encoded_premium ? encoded_premium : (loan_amount / 1000 ) * ((rate.annual_rate / 12) * terms) # use encoded premium by MIS if present
-
+      self.premium = (loan_amount / 1000 ) * ((rate.annual_rate / 12) * terms) # use encoded premium by MIS if present
     end
 
     if unused_loan_id
@@ -295,8 +301,9 @@ class LoanInsurance::Batch < Batch
   # end
 
   def compute_terms(expiry_date, effectivity_date)
-    # (expiry_date.year - effectivity_date.year) * 12 + (expiry_date.month - effectivity_date.month) + (expiry_date.day > effectivity_date.day ? 1 : 0)
-    ((expiry_date - effectivity_date) / 30).to_f.round
+    # ! revert the formula to the original formula due to incorrect terms computation
+    (expiry_date.year - effectivity_date.year) * 12 + (expiry_date.month - effectivity_date.month) + (expiry_date.day > effectivity_date.day ? 1 : 0)
+    # ((expiry_date - effectivity_date) / 30).to_f.round
   end
 
   def expiry_and_today_month_diff(expiry_date)

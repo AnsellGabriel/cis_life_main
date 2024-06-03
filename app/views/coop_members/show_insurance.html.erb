@@ -29,10 +29,12 @@
               <td colspan=5> <strong><%= agreement_benefit.agreement.plan %></strong> <br>
                 <%= agreement_benefit.name %> <br>
                 <%# add view claims button %>
-                <% if @coop_member.process_claims.present? %>
-                  <%= link_to 'View Claims', show_coop_process_claim_path(@coop_member.process_claims.last), class: 'btn btn-sm btn-warning' %>
-                <% else %>
-                  <%= link_to 'File Claims', new_coop_process_claims_path(cm: @coop_member, ab: agreement_benefit, a: agreement_benefit.agreement), class: 'btn btn-sm btn-warning' %>
+                <% unless current_user.is_mis? %>
+                  <% if @coop_member.process_claims.present? %>
+                    <%= link_to 'View Claims', show_coop_claims_process_claim_path(@coop_member.process_claims.last), class: 'btn btn-sm btn-warning' %>
+                  <% else %>
+                    <%= link_to 'File Claims', new_coop_claims_process_claims_path(cm: @coop_member, ab: agreement_benefit, a: agreement_benefit.agreement), class: 'btn btn-sm btn-warning' %>
+                  <% end %>
                 <% end %>
               </td>
               <td>
@@ -77,9 +79,16 @@
       <% if @batch_lppi.present? %>
         <%= content_tag :strong, "LPPI coverages" %>
         <% batch = @batch_lppi.first %>
-        <%= link_to 'File Claims', new_coop_claims_process_claims_path(cm: @coop_member, a: batch.group_remit.agreement.id), class: 'btn btn-sm btn-warning' %>
+
+        <% unless current_user.is_mis? %>
+          <% if @coop_member.process_claims.present? %>
+            <%= link_to 'View Claims', show_coop_claims_process_claim_path(@coop_member.process_claims.last), class: 'btn btn-sm btn-warning' %>
+          <% else %>
+            <%= link_to 'File Claims', new_coop_claims_process_claims_path(cm: @coop_member, a: batch.group_remit.agreement.id, lb: batch.id), class: 'btn btn-sm btn-warning' %>
+          <% end %>
+        <% end %>
         <br>
-        <table class="table table-bordered table-hover align-middle">
+        <table class="table table-bordered table-hover align-middle mt-1">
           <thead>
             <th>Batch Name</th>
             <th>Loan Details</th>
@@ -88,13 +97,15 @@
             <th>Terms</th>
             <th>Loan</th>
             <th>Premium</th>
-            <th class="text-center">Actions</th>
+            <% unless current_user.is_mis? %>
+              <th class="text-center">Actions</th>
+            <% end %>
           </thead>
           <tbody>
             <% @batch_lppi.order(created_at: :desc).each do |lppi| %>
               <tr>
                 <td><small><%= batch_status(lppi.status) %></small> <%= lppi.group_remit %></td>
-                <td><%= lppi.loan.name %></td>
+                <td><%= lppi.loan&.name %></td>
                 <td><%= short_month_day_year(lppi.effectivity_date) %></td>
                 <td><%= short_month_day_year(lppi.expiry_date) %></td>
                 <td>
@@ -104,21 +115,18 @@
                   <%= to_curr(lppi.loan_amount) %>
                 </td>
                 <td><%= to_curr(lppi.premium) %></td>
-                <td class="text-center">
-                  <% if lppi.remarks.exists? %>
-                    <%= link_to modal_remarks_loan_insurance_batch_path(lppi), data: { turbo_frame: "reg_form_modal" }, class: small_btn('warning'), title: 'Remarks' do %>
-                      <i class="bi bi-card-list"></i>
+                <% unless current_user.is_mis? %>
+                  <td class="text-center">
+                    <% if lppi.remarks.exists? %>
+                      <%= link_to modal_remarks_loan_insurance_batch_path(lppi), data: { turbo_frame: "reg_form_modal" }, class: small_btn('warning'), title: 'Remarks' do %>
+                        <i class="bi bi-card-list"></i>
+                      <% end %>
                     <% end %>
-                  <% end %>
-                  <% unless lppi.terminated? || lppi.expired? %>
-                    <%# if lppi.process_claim.present? %>
-                    <%#= link_to 'View Claims', show_coop_process_claim_path(lppi.process_claim), class: 'btn btn-sm btn-warning' %>
-                    <%# else %>
-                    <%#= link_to 'File Claims', new_coop_claims_process_claims_path(cm: @coop_member, a: lppi.group_remit.agreement.id, lb: lppi.id), class: 'btn btn-sm btn-warning' %>
-                    <%# end %>
-                    <%= link_to 'Terminate', terminate_loan_insurance_batch_path(lppi), class: small_btn('danger'), data: {turbo_frame: '_top', turbo_confirm: 'Terminate loan?', turbo_method: :get}  %>
-                  <% end %>
-                </td>
+                    <% unless lppi.terminated? || lppi.expired? %>
+                      <%= link_to 'Terminate', terminate_loan_insurance_batch_path(lppi), class: small_btn('danger'), data: {turbo_frame: '_top', turbo_confirm: 'Terminate loan?', turbo_method: :get}  %>
+                    <% end %>
+                  </td>
+                <% end %>
               </tr>
             <% end %>
           </tbody>

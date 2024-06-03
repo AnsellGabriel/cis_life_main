@@ -18,7 +18,15 @@ class Reports::BooksPdfJob
     when "receipt_book"
       entries = Treasury::CashierEntry.where(or_date: @search_date, status: :posted)
     end
-    
+
+    total_debit = entries.joins(:general_ledgers)
+                         .where(general_ledgers: { ledger_type: 'debit' })
+                         .sum('general_ledgers.amount')
+
+    total_credit = entries.joins(:general_ledgers)
+                          .where(general_ledgers: { ledger_type: 'credit' })
+                          .sum('general_ledgers.amount')
+
     begin
       # Render template as PDF
       pdf_contents = ApplicationController.render(
@@ -28,7 +36,9 @@ class Reports::BooksPdfJob
           date_from: date_from.to_date,
           date_to: date_to.to_date,
           entries: entries,
-          title: type.humanize.upcase
+          title: type.humanize.upcase,
+          total_debit: total_debit,
+          total_credit: total_credit
         }
       )
 

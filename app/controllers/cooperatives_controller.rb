@@ -4,11 +4,8 @@ class CooperativesController < ApplicationController
 
   # GET /cooperatives or /cooperatives.json
   def index
-    if params[:coop_filter]
-      @cooperatives = Cooperative.where("name LIKE ? OR acronym LIKE ?", "%#{params[:coop_filter]}%", "%#{params[:coop_filter]}%")
-    else
-      @cooperatives = Cooperative.all
-    end
+    @q = Cooperative.ransack(params[:q])
+    @cooperatives = @q.result(distinct: true).includes(:geo_region, :geo_province, :geo_municipality, :geo_barangay)
 
     # use pagy
     @pagy, @cooperatives = pagy(@cooperatives, items: 10, params: {active_tab: "cooperatives"})
@@ -19,8 +16,8 @@ class CooperativesController < ApplicationController
     @member = Member.new
     @member.coop_members.build
 
-    @agreements = @cooperative.agreements
-    coop_members = @cooperative.coop_members
+    @agreements = @cooperative&.agreements
+    coop_members = @cooperative&.coop_members
 
     @q = Member.coop_member_details(coop_members).ransack(params[:q])
     @r = CoopBranch.where(cooperative: @cooperative).ransack(params[:q])

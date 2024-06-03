@@ -27,11 +27,11 @@
         <div id="flash" style="width: auto" remote_modal>
           <%= render "layouts/partials/notification" %>
         </div>
-  </div>
-  <%= yield %>
-  <%= turbo_frame_tag "remote_modal", target: "_top" %>
-</div>
-<%= render 'layouts/partials/modal' %>
-<%= render 'layouts/partials/footer' %>
-</body>
+      </div>
+      <%= yield %>
+      <%= turbo_frame_tag "remote_modal", target: "_top" %>
+    </div>
+    <%= render 'layouts/partials/modal' %>
+    <%= render 'layouts/partials/footer' %>
+  </body>
 </html>

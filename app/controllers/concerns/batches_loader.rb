@@ -15,6 +15,8 @@ module BatchesLoader
         @f_batches = @group_remit.batches_without_beneficiaries.order(created_at: :desc)
       elsif params[:batch_health_dec_filter].present?
         @f_batches = @group_remit.batches_without_health_dec.order(created_at: :desc)
+      elsif params[:incorrect_premiums].present?
+        @f_batches = @group_remit.batches_with_incorrect_prem.order(created_at: :desc)
       elsif params[:rank_filter].present?
         @f_batches = @group_remit.batches.joins(:agreement_benefit).where(agreement_benefits: params[:rank_filter])
       elsif params[:insurance_status].present?

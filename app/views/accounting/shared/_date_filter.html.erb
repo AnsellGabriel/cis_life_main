@@ -1,0 +1,27 @@
+<%= form_with url: url, method: :get do |form| %>
+  <div class="<%= flex_justify_align('center', 'center') %> gap-1">
+    <% if req_type.present? %>
+      <%= form.hidden_field :pt, value: req_type %>
+    <% end %>
+    <%= form.text_field :date_from, as: :string, data: {
+        controller: "flatpickr",
+        flatpickr_max_date: Date.today,
+        flatpickr_next_arrow: "Next",
+        flatpickr_prev_arrow: "Prev" },
+        placeholder: 'Date From',
+        error: '*Required',
+        class: 'form-control text-center filter_field'
+      %> 
+    <span>-</span>
+    <%= form.text_field :date_to, as: :string, data: {
+        controller: "flatpickr",
+        flatpickr_max_date: Date.today,
+        flatpickr_next_arrow: "Next",
+        flatpickr_prev_arrow: "Prev" },
+        placeholder: 'Date To',
+        error: '*Required',
+        class: 'form-control text-center filter_field'
+      %> 
+    <%= form.submit "Filter", class: "#{small_btn('success')} filter_btn" %>
+  </div>
+<% end %>

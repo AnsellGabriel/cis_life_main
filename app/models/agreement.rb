@@ -14,18 +14,17 @@ class Agreement < ApplicationRecord
   belongs_to :agent, optional: true
   belongs_to :cooperative, optional: true
 
-  has_many :agreement_benefits
-  has_many :claim_type_agreements, class_name: "Claims::ClaimTypeAgreement"
+  has_many :agreement_benefits, dependent: :destroy
   has_many :product_benefits, through: :agreement_benefits
   has_many :benefits, through: :product_benefits
   has_many :emp_agreements
   has_many :employees, through: :emp_agreements
   has_many :group_remits
   has_many :process_claims
-  has_many :anniversaries
+  has_many :anniversaries, dependent: :destroy
   has_many :agreements_coop_members
   has_many :coop_members, through: :agreements_coop_members
-  has_many :loan_rates, class_name: "LoanInsurance::Rate"
+  has_many :loan_rates, class_name: "LoanInsurance::Rate", dependent: :destroy
   has_many :special_arrangements, dependent: :destroy
   has_one :agreement_proposal, dependent: :destroy
   has_one :group_proposal, through: :agreement_proposal

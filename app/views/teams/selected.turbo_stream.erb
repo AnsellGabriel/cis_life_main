@@ -1,0 +1,6 @@
+<%= turbo_stream.update @target do %>
+    <%= content_tag :option, "Select Underwriting Analyst" %>
+    <%= @employees.each do |emp| %>
+        <%= content_tag :option, emp, value: emp.id %>
+    <% end %>
+<% end %>

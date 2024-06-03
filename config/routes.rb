@@ -2,6 +2,10 @@
 require "sidekiq/web"
 
 Rails.application.routes.draw do
+  resources :employee_teams
+  resources :teams do
+    get :selected, on: :member
+  end
   resources :demo_schedules
   resources :transmittals do
     get :remove_or, on: :member
@@ -61,6 +65,7 @@ Rails.application.routes.draw do
       patch :update_coop, to: "process_claims#update_coop", on: :member
       get :print_sheet, to: "process_claims#print_sheet", on: :member
       get :claims_dashboard, to: "process_claims#claims_dashboard", on: :collection
+      get :approve_claim_debit, on: :member
       # get :claimable, on: :collection
     end
 
@@ -75,7 +80,7 @@ Rails.application.routes.draw do
 
 
 
-  
+
   resources :documents
   resources :emp_approvers
   get "med_directors/home"
@@ -100,6 +105,7 @@ Rails.application.routes.draw do
 
   resources :user do
     get :approved, on: :member
+    get :admin_dashboard, on: :collection
   end
 
   resources :agreement_benefits do
@@ -274,6 +280,7 @@ Rails.application.routes.draw do
     resources :debit_advices do
       get :new_receipt, on: :member
       post :upload_receipt, on: :member
+      get :download, on: :member
     end
 
     resources :journals do
@@ -284,7 +291,7 @@ Rails.application.routes.draw do
     end
 
     resources :checks do
-      get :for_approval_index, on: :collection
+      # get :for_approval_index, on: :collection
       get :claimable, on: :member
       # get :cancel, on: :member
       resources :business_checks, as: 'business', except: [:index]
@@ -306,11 +313,13 @@ Rails.application.routes.draw do
       get :pdf, on: :collection
     end
 
-    resources :voucher_requests, only: %i[index show] do
-    end
+    resources :voucher_requests, only: %i[index show]
 
     get "dashboard", to: "dashboard#index"
+    get "for_approval", to: "dashboard#for_approval"
   end
+
+  resources :payees
 
   # treasury
   namespace :treasury do
@@ -335,6 +344,7 @@ Rails.application.routes.draw do
     end
 
     get "dashboard", to: "dashboard#index"
+    get "for_approval", to: "dashboard#for_approval"
 
     resources :debit_advices, only: %i[index]
   end
@@ -369,9 +379,9 @@ Rails.application.routes.draw do
   # * Underwriting Module Routes
   resources :user_levels
   resources :authority_levels
-  
 
-  
+
+
   resources :underwriting_routes
   resources :batch_remarks do
     get :form_md, on: :member
@@ -404,6 +414,7 @@ Rails.application.routes.draw do
     get :transfer_to_md, on: :member
     get :und, on: :collection
     get :gen_csv, on: :collection
+    post :set_processor, on: :member
   end
 
   get "product_csv", to: "process_coverages#product_csv"
@@ -418,9 +429,7 @@ Rails.application.routes.draw do
     get "cooperatives", to: "cooperatives#index"
     get "view_ors", to: "dashboard#view_ors"
 
-    resources :members do
-      get :update_table, on: :collection
-    end
+    resources :members, only: [:index, :show]
   end
 
   # * Authentication Routes

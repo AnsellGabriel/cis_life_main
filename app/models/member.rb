@@ -2,18 +2,6 @@ class Member < ApplicationRecord
   before_validation :uppercase_fields
   before_validation :validate_phone_format
 
-  # VALID_PH_MOBILE_NUMBER_REGEX = /\A(09|\+639)\d{9}\z/
-  # VALID_PH_LANDLINE_NUMBER_REGEX = /\A(02|03[2-9]|042|043|044|045|046|047|048|049|052|053|054|055|056|057|058|072|074|075|076|077|078)\d{7}\z/
-
-  # validates :mobile_number, presence: true
-  # format: {
-  #   # with: VALID_PH_MOBILE_NUMBER_REGEX,
-  #   message: "must be a valid Philippine mobile number"
-  # }
-  # validates :work_phone_number, allow_blank: true, format: {
-  #   with: /\A#{VALID_PH_MOBILE_NUMBER_REGEX}|#{VALID_PH_LANDLINE_NUMBER_REGEX}\z/,
-  #   message: "must be a valid Philippine mobile or landline number"
-  # }
   belongs_to :geo_region, optional: true
   belongs_to :geo_province, optional: true
   belongs_to :geo_municipality, optional: true
@@ -173,7 +161,7 @@ class Member < ApplicationRecord
   end
 
   def self.coop_member_details(coop_members)
-    includes(coop_members: :coop_branch).where(coop_members: { id: coop_members.ids }).order(:last_name)
+    includes(coop_members: :coop_branch).where(coop_members: { id: coop_members&.ids }).order(:last_name)
   end
 
   def self.filter_by_coop_member_id(id)

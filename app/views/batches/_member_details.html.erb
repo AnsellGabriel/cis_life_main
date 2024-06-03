@@ -7,6 +7,7 @@
 		<%= content_tag :span, batch.age, class: 'text-secondary' %>
 	  <%#= content_tag :span, "(#{to_shortdate(batch.birthdate)})", class: 'text-secondary' %>
 	  <%= content_tag :span, "(#{to_shortdate(batch.birthdate)})", class: 'text-secondary' %>
+		<%= content_tag :span, batch.coop_member.member.gender, class: 'text-secondary' %>
 	</div>
 </div>
 

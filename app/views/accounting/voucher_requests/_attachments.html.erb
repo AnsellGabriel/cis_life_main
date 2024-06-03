@@ -10,7 +10,7 @@
           <% @claim_type_documents.each do |doc| %>
             <div>
               <% @claim_attach = Claims::ClaimAttachment.find_by(process_claim_id: @request.requestable, claim_type_document: doc) %>
-              <%= link_to doc.document, rails_blob_url(@claim_attach.doc), target: :_blank, class: 'btn btn-outline-primary btn-sm' if @claim_attach.doc.attached?  %>
+              <%= link_to 'Claim Documents', rails_blob_url(@claim_attach.doc), target: :_blank, class: 'btn btn-outline-primary btn-sm' if @claim_attach.doc.attached?  %>
             </div>
           <% end %>
         <% end %>

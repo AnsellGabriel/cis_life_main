@@ -46,20 +46,18 @@
             <p><small><strong>Post date:</strong> <span><%= month_day_year(check.post_date) %></span></small></p>
           <% end %>
         </div>
-        <% if current_user.is_auditor? %>
+        <% if check.audited_by.present? %>
           <div class="<%= flex_justify_align('between','center') %> gap-1">
             <div class="<%= flex_justify_align('','center') %> gap-1">
               <p>
                 <small><strong>Audit:</strong> <p class="<%= check.decorate.audit_badge %>"><%= check.decorate.audit_text.humanize %></p></small>
               </p>
             </div>
-            <% if check.audited_by.present? %>
-              <div class="<%= flex_justify_align('','center') %> gap-1">
-                <p>
-                  <small><strong>Audited by:</strong> <p><%= User.find(check.audited_by).to_s %></p></small>
-                </p>
-              </div>
-            <% end %>
+            <div class="<%= flex_justify_align('','center') %> gap-1">
+              <p>
+                <small><strong>Audited by:</strong> <p><%= User.find(check.audited_by).to_s %></p></small>
+              </p>
+            </div>
           </div>
         <% end %>
       </div>

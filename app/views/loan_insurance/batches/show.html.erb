@@ -39,17 +39,23 @@
             </div>
             <hr>
             <div class="row">
-              <div class="col-sm-3">
+              <div class="col-sm-2">
                 <span class="mb-0 text-secondary">Birthdate</span>
               </div>
-              <div class="col-sm-3 ">
+              <div class="col-sm-2">
                 <%= month_day_year(@member.birth_date) %>
               </div>
-              <div class="col-sm-3 text-secondary">
+              <div class="col-sm-2 text-secondary">
                 <span class="mb-0">Age</span>
               </div>
-              <div class="col-sm-3 ">
+              <div class="col-sm-2">
                 <%= @member.age %>
+              </div>
+              <div class="col-sm-2 text-secondary">
+                <span class="mb-0">Gender</span>
+              </div>
+              <div class="col-sm-2">
+                <%= @member.gender %>
               </div>
             </div>
             <hr class="mb-5">

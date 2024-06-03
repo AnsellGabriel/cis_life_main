@@ -125,12 +125,12 @@
   <div class="card">
     <div class="card-body <%= flex_justify_align('between', 'center') %>">
       <div class="<%=  flex_justify_align('', 'center') %> gap-2  ">
-        <%= content_tag :span, @group_remit.status.titleize, class: @group_remit.status_badge %>
-        <%= content_tag :h3, class: 'mb-0 text-primary' do %>
-            <%= @group_remit %>    
-        <% end %>
-        
-        <div class="<%= flex_justify_align('between') %> mt-2">
+        <div class="<%= flex_justify_align('between', '', true) %> mt-2">
+          <div class="<%=  flex_justify_align('', 'center') %> gap-2 ">
+            <%= content_tag :span, @group_remit.status.titleize, class: @group_remit.status_badge %>
+            <%= content_tag :h3, @group_remit, class: 'mb-0 text-primary' %>
+          </div>
+
           <div style="width: 100%">
 
             <% if(@group_remit.is_for_payment? || @group_remit.is_for_reupload?) && (@group_remit.process_coverage.approved?) %>
@@ -138,13 +138,13 @@
             <% end %>
 
             <% if @group_remit.is_pending_or_renewal? && @group_remit.is_remittance? %>
-                <%= turbo_frame_tag "batch_import_form" do %>
-                  <%= turbo_frame_tag "batch_form" do %>   
-                      <div class="d-flex gap-3 mb-2">
-                        <%= render 'group_remits/add_member' %>
-                      </div>
-                  <% end %>
+              <%= turbo_frame_tag "batch_import_form" do %>
+                <%= turbo_frame_tag "batch_form" do %>   
+                    <div class="d-flex gap-3 mb-2">
+                      <%= render 'group_remits/add_member' %>
+                    </div>
                 <% end %>
+              <% end %>
             <% end%>
 
           </div>
@@ -168,7 +168,7 @@
 
 <div class="<%= flex_justify_align('between', 'center') %> gap-1">
   <% if @group_remit.instance_of?(Remittance)%>
-    <div class="d-flex gap-2">
+    <div class="<%= flex_justify_align('start', 'center') %> gap-2">
       <% @group_remit.status_mappings.each do |status, attributes| %>
         <% batches = @group_remit.batches.send(status) %>
         <%= link_to group_remit_path(@group_remit, insurance_status: status), class: "btn btn-sm btn-outline-#{status == :denied ? 'danger' : 'primary'} position-relative" do %>
@@ -180,6 +180,15 @@
             </span>
           <% end %>
 
+        <% end %>
+      <% end %>
+
+      <% if @batch_with_incorrect_prem.present? %>
+        <%= link_to group_remit_path(@group_remit, incorrect_premiums: true), class: "btn btn-sm btn-outline-danger position-relative" do %>
+            <%= 'Incorrect Premiums' %>
+            <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-warning text-dark">
+              <%= @batch_with_incorrect_prem.size >= 100 ? '99+' :  @batch_with_incorrect_prem.size %>
+            </span>
         <% end %>
       <% end %>
     </div>
@@ -222,6 +231,7 @@
           
           <% unless @group_remit.is_batch_remit? %>
             <th class="text-center" scope="col">Premium</th>
+            <th class="text-center" scope="col">Terms</th>
           <% end %>
         <% end %>
         <th class="text-center" scope="col">Beneficiaries</th>

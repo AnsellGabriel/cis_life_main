@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2024_05_27_020019) do
+ActiveRecord::Schema[7.0].define(version: 2024_05_30_072627) do
   create_table "accounting_vouchers", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.date "date_voucher"
     t.string "voucher"
@@ -344,6 +344,8 @@ ActiveRecord::Schema[7.0].define(version: 2024_05_27_020019) do
     t.string "last_name"
     t.string "civil_status"
     t.date "birthdate"
+    t.integer "terms"
+    t.decimal "system_premium", precision: 10, scale: 2
     t.index ["agreement_benefit_id"], name: "index_batches_on_agreement_benefit_id"
     t.index ["coop_member_id"], name: "index_batches_on_coop_member_id"
   end
@@ -435,6 +437,9 @@ ActiveRecord::Schema[7.0].define(version: 2024_05_27_020019) do
     t.bigint "process_claim_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.string "coverageable_type", null: false
+    t.bigint "coverageable_id", null: false
+    t.index ["coverageable_type", "coverageable_id"], name: "index_claim_coverages_on_coverageable"
     t.index ["process_claim_id"], name: "index_claim_coverages_on_process_claim_id"
   end
 
@@ -726,8 +731,10 @@ ActiveRecord::Schema[7.0].define(version: 2024_05_27_020019) do
     t.datetime "updated_at", null: false
     t.boolean "active", default: true
     t.integer "category_type"
+    t.bigint "team_id"
     t.index ["agreement_id"], name: "index_emp_agreements_on_agreement_id"
     t.index ["employee_id"], name: "index_emp_agreements_on_employee_id"
+    t.index ["team_id"], name: "index_emp_agreements_on_team_id"
   end
 
   create_table "emp_approvers", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
@@ -737,6 +744,16 @@ ActiveRecord::Schema[7.0].define(version: 2024_05_27_020019) do
     t.datetime "updated_at", null: false
     t.index ["approver_id"], name: "index_emp_approvers_on_approver_id"
     t.index ["employee_id"], name: "index_emp_approvers_on_employee_id"
+  end
+
+  create_table "employee_teams", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+    t.bigint "employee_id"
+    t.bigint "team_id"
+    t.boolean "head"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["employee_id"], name: "index_employee_teams_on_employee_id"
+    t.index ["team_id"], name: "index_employee_teams_on_team_id"
   end
 
   create_table "employees", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
@@ -934,6 +951,8 @@ ActiveRecord::Schema[7.0].define(version: 2024_05_27_020019) do
     t.date "birthdate"
     t.string "civil_status"
     t.bigint "process_claim_id"
+    t.string "reference_id"
+    t.decimal "system_premium", precision: 10, scale: 2
     t.index ["coop_member_id"], name: "index_loan_insurance_batches_on_coop_member_id"
     t.index ["group_remit_id"], name: "index_loan_insurance_batches_on_group_remit_id"
     t.index ["loan_insurance_loan_id"], name: "index_loan_insurance_batches_on_loan_insurance_loan_id"
@@ -1166,10 +1185,12 @@ ActiveRecord::Schema[7.0].define(version: 2024_05_27_020019) do
     t.date "evaluate_date"
     t.bigint "who_processed_id"
     t.bigint "who_approved_id"
+    t.bigint "team_id"
     t.index ["agent_id"], name: "index_process_coverages_on_agent_id"
     t.index ["approver_id"], name: "index_process_coverages_on_approver_id"
     t.index ["group_remit_id"], name: "index_process_coverages_on_group_remit_id"
     t.index ["processor_id"], name: "index_process_coverages_on_processor_id"
+    t.index ["team_id"], name: "index_process_coverages_on_team_id"
     t.index ["und_route"], name: "index_process_coverages_on_und_route"
     t.index ["who_approved_id"], name: "index_process_coverages_on_who_approved_id"
     t.index ["who_processed_id"], name: "index_process_coverages_on_who_processed_id"
@@ -1340,6 +1361,13 @@ ActiveRecord::Schema[7.0].define(version: 2024_05_27_020019) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["agreement_id"], name: "index_special_arrangements_on_agreement_id"
+  end
+
+  create_table "teams", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+    t.string "name"
+    t.string "description"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
   end
 
   create_table "transmittal_ors", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|

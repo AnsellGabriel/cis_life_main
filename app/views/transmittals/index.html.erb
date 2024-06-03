@@ -36,11 +36,14 @@
 
   <tbody>
     <% unless @transmittals.empty? %>
-      <% @transmittals.each do |transmittal| %>
+      <% @transmittals.order(created_at: :asc).each do |transmittal| %>
         <tr>
 
         <th scope="row"><%= transmittal.id %></th>
-        <td><%= transmittal.code %></td>
+        <td>
+          <%= transmittal.code %> <br>
+          <%= content_tag :small, transmittal.created_at.strftime('%m/%d/%Y'), class: "fst-italic" %>
+        </td>
         <td><%= transmittal.description %></td>
         <td><%= transmittal.transmittal_ors.count %></td>
         <td><%= transmittal_type(transmittal.transmittal_type) %></td>

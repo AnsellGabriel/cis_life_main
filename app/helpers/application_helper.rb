@@ -232,6 +232,7 @@ module ApplicationHelper
       when 15 then "MANAGEMENT INFORMATION SYSTEM"
       when 11 then "ACCOUNTING"
       when 27 then "AUDIT"
+      when 26 then "TREASURY"
       end
 
     end
@@ -245,9 +246,24 @@ module ApplicationHelper
       content_tag(:span, "w/o Agreement", class: "badge rounded-pill bg-danger")
     end
   end
-  
+
   def table_sm_hoverable
     'table table-bordered table-hover bg-white table-sm sm-secondary-text'
+  end
+
+  def centered_cell
+    'text-center align-middle'
+  end
+
+  def view_ors_title(val)
+    case val
+    when "enc"
+      "List of Encoded ORs"
+    when "nt"
+      "List of Not Tranmistted ORs"
+    when "ne"
+      "List of ORs for Encoding"
+    end
   end
 
 end

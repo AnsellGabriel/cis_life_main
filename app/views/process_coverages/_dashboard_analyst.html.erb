@@ -17,17 +17,24 @@
             </td>
           </tr>
           <tr>
-            <td class="text-primary">EVALUATED</td>
-            <td><%= @evaluated_process_coverages.count %></td>
+            <td class="text-dark">TO PROCESS</td>
+            <td><%= @selected_process_coverages.count %></td>
             <td>
-              <%= link_to "View", cov_list_process_coverages_path(cov_type: "Processed", current_date: @current_date, date_type: "yearly", title: "EVALUATED"), class: "btn btn-primary btn-sm", data: { turbo_frame: "remote_modal" } %>
+              <%= link_to "View", cov_list_process_coverages_path(cov_type: "Selected", current_date: @current_date, date_type: "yearly", title: "SELECTED"), class: "btn btn-primary btn-sm", data: { turbo_frame: "remote_modal" } %>
             </td>
           </tr>
           <tr>
-            <td>PROCESSED</td>
+            <td class="text-primary">EVALUATED</td>
+            <td><%= @evaluated_process_coverages.count %></td>
+            <td>
+              <%= link_to "View", cov_list_process_coverages_path(cov_type: "Evaluated", current_date: @current_date, date_type: "yearly", title: "EVALUATED"), class: "btn btn-primary btn-sm", data: { turbo_frame: "remote_modal" } %>
+            </td>
+          </tr>
+          <tr>
+            <td class="text-success">PROCESSED</td>
             <td><%= @approved_process_coverages.count %></td>
             <td>
-              <%= link_to "View", cov_list_process_coverages_path(cov_type: "Evaluated", current_date: @current_date, date_type: "yearly", title: "PROCESSED"), class: "btn btn-primary btn-sm", data: { turbo_frame: "remote_modal" } %>
+              <%= link_to "View", cov_list_process_coverages_path(cov_type: "Processed", current_date: @current_date, date_type: "yearly", title: "PROCESSED"), class: "btn btn-primary btn-sm", data: { turbo_frame: "remote_modal" } %>
             </td>
           </tr>
           <tr>

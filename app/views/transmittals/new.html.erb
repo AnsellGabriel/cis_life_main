@@ -1,7 +1,22 @@
 
-<div class="card">
-  <h5 class="card-header">New transmittal</h5>
-  <div class="card-body">
-    <%= render "form", transmittal: @transmittal %>
+<% if @type.present? %>
+  <%= turbo_frame_tag "modal" do %>
+    <div class="modal-header">
+      <%= content_tag :h5, "New Transmittal", class: "modal-title text-center", id: "staticBackdropLabel" %>
+      <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+    </div>
+    
+    <div class="modal-body">
+     <%= render "form", transmittal: @transmittal %>
+    </div>
+  <% end %>
+<% else %>
+  <div class="card">
+    <h5 class="card-header">New transmittal</h5>
+    <div class="card-body">
+      <%= render "form", transmittal: @transmittal %>
+    </div>
   </div>
-</div>
+<% end %>
+
+

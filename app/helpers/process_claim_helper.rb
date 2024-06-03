@@ -74,7 +74,7 @@ module ProcessClaimHelper
         when "denied"
             path = 9
         when "pending"
-            path = 11
+            path = 25
         end
         case process_claim.claim_route
         # when process_claim.claim_review? 

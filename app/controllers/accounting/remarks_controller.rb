@@ -26,7 +26,7 @@ class Accounting::RemarksController < ApplicationController
 
         if params[:remark][:category] == "incorrect_claim_details"
           ActiveRecord::Base.transaction do
-            process_claim = @voucher.request.requestable
+            process_claim = @voucher.voucher_request.requestable
             claim_track = process_claim.process_track.build
             claim_track.route_id = 16
             claim_track.user_id = current_user.id
@@ -43,14 +43,21 @@ class Accounting::RemarksController < ApplicationController
         elsif params[:remark][:category] == "incorrect_voucher_details"
           @voucher.transaction do
             @voucher.pending!
-            @voucher.request.pending!
+            @voucher.voucher_request.pending!
           end
         end
       elsif current_user.is_accountant?
-        @voucher.transaction do
-          @voucher.general_ledgers.update_all(transaction_date: nil)
-          @voucher.cancelled!
-          @voucher.voucher_request.pending! if @voucher&.voucher_request&.present?
+        if params[:e_t] == 'request'
+          @voucher.transaction do
+            @voucher.rejected!
+            @voucher.requestable.payment_rejected!
+          end
+        else
+          @voucher.transaction do
+            @voucher.general_ledgers.update_all(transaction_date: nil)
+            @voucher.cancelled!
+            @voucher.voucher_request.pending! if @voucher&.voucher_request&.present?
+          end
         end
       elsif current_user.is_treasurer?
         ActiveRecord::Base.transaction do
@@ -60,7 +67,7 @@ class Accounting::RemarksController < ApplicationController
         end
       end
 
-      redirect_to accounting_check_remarks_path(@voucher, e_t: @voucher.entry_type), Notification: "Voucher updated"
+      redirect_to accounting_check_remarks_path(@voucher, e_t: @voucher.entry_type)
     else
       @voucher_path = entry_path
       render :new, status: :unprocessable_entity
@@ -79,6 +86,7 @@ class Accounting::RemarksController < ApplicationController
     when 'cv' then klass = Accounting::Check
     when 'jv' then klass = Accounting::Journal
     when 'da' then klass = Accounting::DebitAdvice
+    when 'request' then klass = Accounting::VoucherRequest
     end
 
     @voucher = klass.find(params[:check_id])

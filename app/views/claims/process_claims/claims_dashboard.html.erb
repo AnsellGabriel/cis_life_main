@@ -124,10 +124,10 @@
       <div class="card bg-warning">
         <div class="card-body">
           <p class="card-title">PENDING</p>
-          <h2><%= @process_claims.where(claim_route: 11).count %></h2>
+          <h2><%= @process_claims.where(claim_route: :pending_claim).count %></h2>
 
         </div>
-        <div class="card-footer"><small class="text-muted"> <%= link_to 'See Details <i class="bi bi-box-arrow-right"></i>'.html_safe, index_show_claims_process_claims_path(p: 11), class: "text-dark" %></small></div>
+        <div class="card-footer"><small class="text-muted"> <%= link_to 'See Details <i class="bi bi-box-arrow-right"></i>'.html_safe, index_show_claims_process_claims_path(p: 25), class: "text-dark" %></small></div>
       </div>
     </div>
   </div>

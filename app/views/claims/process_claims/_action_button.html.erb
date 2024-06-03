@@ -23,15 +23,18 @@
       <% end %>
     <% elsif current_user.is_auditor? %>
     <% elsif current_user.userable_type == 'Employee' %>
+      <%= link_to '<i class="bi bi-card-list"></i> Audit Remarks'.html_safe, accounting_check_remarks_path(@voucher, e_t: @voucher.entry_type), class: 'btn btn-sm btn-outline-danger', data: {turbo_frame: 'reg_form_modal'} if @audit_remarks.present? %>
       <%= link_to "Claims Filed", claim_route_claims_process_claim_path(@process_claim, p: 2), class: "btn btn-primary btn-sm" if @process_claim.documentation_review? || @process_claim.analyst_file? || @process_claim.retrieval_documents? %>
       <%= link_to "Retrieval of Documents", claim_route_claims_process_claim_path(@process_claim, p: 24), class: "btn btn-primary btn-sm" if @process_claim.documentation_review? || @process_claim.analyst_file? %>
       <%= link_to "Claims Review", claim_route_claims_process_claim_path(@process_claim, p: 3), class: "btn btn-primary btn-sm" if @process_claim.claim_filed? %>
       <%= link_to '<i class="bi bi-repeat"></i> Return to Claims Filed'.html_safe, claim_route_claims_process_claim_path(p: 2), class: "btn btn-primary btn-sm" if @process_claim.claim_review? || @process_claim.incomplete_document? || @process_claim.pending_claim? %>
       <% if @process_claim.processing? %>
-        <%#= link_to '<i class="bi bi-clipboard-plus"></i> Evaluation'.html_safe, claim_route_claims_process_claim_path(p: 4), class: "btn btn-primary btn-sm" if @process_claim.get_benefit_claim_total > session[:claims_max_amount] && @process_claim.claim_review? %>
-        <%#= link_to '<i class="bi bi-clipboard-plus"></i> For COSO Evaluation'.html_safe, claim_route_claims_process_claim_path(p: 5), class: "btn btn-primary btn-sm" if @process_claim.get_benefit_claim_total > session[:claims_max_amount] && @process_claim.evaluation? && current_user.user_levels.find_by(authority_level_id:  AuthorityLevel.find_by(entry_type: 0, name: 'Evaluators'))  %>
-        <%#= link_to '<i class="bi bi-clipboard-plus"></i> For President Evaluation'.html_safe, claim_route_claims_process_claim_path(p: 6), class: "btn btn-primary btn-sm" if @process_claim.get_benefit_claim_total > session[:claims_max_amount] && @process_claim.evaluation_coso? && current_user.user_levels.find_by(authority_level_id:  AuthorityLevel.find_by(entry_type: 0, name: 'Evaluators'))%>
-        <%= link_to '<i class="bi bi-printer"></i> Processing Sheet'.html_safe, print_sheet_claims_process_claim_path(@process_claim), class: "btn btn-warning btn-sm", target: '_blank' %>
+        <%  if @voucher.nil? || @voucher.is_a?(Accounting::Check)%>
+          <%= link_to '<i class="bi bi-check-circle"></i> Approve - Check Voucher'.html_safe, claim_route_claims_process_claim_path(p: 8, pt: "check_voucher"), class: "btn btn-success btn-sm", data: {turbo_confirm: "Approve claim and request check voucher?", turbo_method: :get}  %>
+        <% end %>
+        <%  if @voucher.nil? || @voucher.is_a?(Accounting::DebitAdvice)%>
+          <%= link_to '<i class="bi bi-check-circle"></i> Approve - Debit Advice'.html_safe, approve_claim_debit_claims_process_claim_path(@process_claim), class: "btn btn-success btn-sm", data: {turbo_frame: "reg_form_modal", turbo_method: :get}  %>
+        <% end %>
       <% end %>
       <%= link_to '<i class="bi bi-sign-stop-lights"></i> Pending'.html_safe, new_status_claims_claim_remarks_path(v: @process_claim, s: 2), class: "btn btn-warning btn-sm", data: { turbo_frame: "remote_modal" } if @process_claim.claim_filed?  %>
       <%= link_to '<i class="bi bi-bootstrap-reboot"></i> Reconsider'.html_safe, new_status_claims_claim_remarks_path(v: @process_claim, s: 3), class: "btn btn-warning btn-sm", data: { turbo_frame: "remote_modal" } if @process_claim.denied? && @claims_user_authority_level.name == "Evaluators" %>
@@ -40,7 +43,7 @@
       <%= link_to "Recover Claims", claim_route_claims_process_claim_path(@process_claim, p: 19), class: "btn btn-warning btn-sm", data: {turbo_confirm: "Return this claim to coop?", turbo_method: :get} if @process_claim.non_compliant? %>
     <% end %>
   </div>
-  <div class="col-md-4">
+  <div class="col-md-3">
     <div class="text-end">
       <% if @process_claim.processing? && current_user.userable_type == "Employee" %>
         <% if validate_evaluator(@process_claim) %>

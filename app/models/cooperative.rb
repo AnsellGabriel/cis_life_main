@@ -11,7 +11,7 @@ class Cooperative < ApplicationRecord
 
   has_many :agreements
   has_many :plans, through: :agreements
-  has_many :agreements
+  # has_many :agreements
   has_many :group_remits, through: :agreements
   has_many :batches, through: :group_remits
   has_many :process_claims, class_name: "Claims::ProcessClaim"
@@ -98,5 +98,9 @@ class Cooperative < ApplicationRecord
 
   def upcase_name
     self.name = name.upcase if name.present?
+  end
+
+  def self.ransackable_attributes(auth_object = nil)
+    ['name']
   end
 end

@@ -24,7 +24,12 @@ class Accounting::JournalsController < ApplicationController
 
   # GET /accounting/journals
   def index
-    @q = Accounting::Journal.all.order(created_at: :desc).ransack(params[:q])
+    if params[:date_from].present? && params[:date_to].present?
+      @q = Accounting::Journal.where(date_voucher: params[:date_from]..params[:date_to]).order(created_at: :desc).ransack(params[:q])
+    else
+      @q = Accounting::Journal.all.order(created_at: :desc).ransack(params[:q])
+    end
+
     @journals = @q.result
     @pagy, @journals = pagy(@journals, items: 10)
   end
@@ -46,7 +51,7 @@ class Accounting::JournalsController < ApplicationController
     if params[:rid].present?
       @request = Accounting::VoucherRequest.find(params[:rid])
     end
-    binding.pry
+
     if params[:rid].present?
       request = Accounting::VoucherRequest.find(params[:rid])
       @coop = request.payee
@@ -67,7 +72,7 @@ class Accounting::JournalsController < ApplicationController
     @journal = Accounting::Journal.new(journal_params)
     @journal.accountant_id = current_user.userable.id
     @journal.branch = current_user.userable.branch_before_type_cast
-    binding.pry
+
     if @journal.save
       if params[:rid].present?
         request = Accounting::VoucherRequest.find(params[:rid])

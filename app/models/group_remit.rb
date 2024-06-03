@@ -25,6 +25,9 @@ class GroupRemit < ApplicationRecord
   has_many :loan_batches, dependent: :destroy, class_name: "LoanInsurance::Batch"
   has_many :cashier_entries, as: :entriable, class_name: "Treasury::CashierEntry", dependent: :destroy
 
+  has_many :transmittable_ors, as: :transmittable, inverse_of: :transmittable
+  has_many :transmittals, through: :transmittable_ors
+
   has_one :process_coverage, dependent: :destroy
   # has_one :group_import_tracker, dependent: :destroy
   has_one :progress_tracker, as: :trackable, dependent: :destroy
@@ -155,8 +158,10 @@ class GroupRemit < ApplicationRecord
   end
 
   def create_notification
-    employee = agreement.emp_agreements.find_by(active: true).employee
-    Notification.create(notifiable: employee, process_coverage: process_coverage, message: "#{self.cooperative.name} - #{self.name} submitted a checklist")
+    # employee = agreement.emp_agreements.find_by(active: true).employee
+    # Notification.create(notifiable: employee, process_coverage: process_coverage, message: "#{self.cooperative.name} - #{self.name} submitted a checklist")
+    team = agreement.emp_agreements.find_by(active: true).team
+    Notification.create(notifiable: team, process_coverage: process_coverage, message: "#{self.cooperative.name} - #{self.name} submitted a checklist")
   end
 
   def set_for_payment_status
@@ -367,6 +372,10 @@ class GroupRemit < ApplicationRecord
     else
       batches.recent.where.missing(:batch_health_decs)
     end
+  end
+
+  def batches_with_incorrect_prem
+    batches.where("premium != system_premium")
   end
 
   def all_batches_have_beneficiaries?

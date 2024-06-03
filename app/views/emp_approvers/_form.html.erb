@@ -4,8 +4,8 @@
   <%= f.error_notification message: f.object.errors[:base].to_sentence if f.object.errors[:base].present? %>
 
   <div class="form-inputs mb-3">
-    <%= f.association :employee, collection: Employee::ANALYSTS %>
-    <%= f.association :approver, collection: Employee::HEADS %>
+    <%= f.association :employee, collection: Employee::ANALYSTS, input_html: { data: { controller: "ts--select" } } %>
+    <%= f.association :approver, collection: Employee::APPROVER %>
   </div>
 
   <div class="form-actions text-end">

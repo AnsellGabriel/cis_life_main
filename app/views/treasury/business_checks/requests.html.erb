@@ -1,14 +1,18 @@
 <div class="<%= flex_justify_align('between', 'center') %> gap-1 mb-3">
   <%= content_tag :h4, "Request for Payments", class: 'text-primary mb-0' %>
-  <%== pagy_bootstrap_nav(@pagy) %>
+  <% if @pagy.pages > 1 %>
+    <%== pagy_bootstrap_nav(@pagy) %>
+  <% end %>
 </div>
 
-<table class="table table-bordered table-hover bg-white">
+<table class="<%= table_sm_hoverable %>">
     <thead class="table-dark">
       <tr>
         <th class="text-center" scope="col">Voucher</th>
         <th class="text-center" scope="col">Payee</th>
+        <th class="text-center" scope="col">Particulars</th>
         <th class="text-center" scope="col">Amount</th>
+        <th></th>
       </tr>
     </thead>
 
@@ -17,11 +21,14 @@
 
         <% @vouchers.each do |voucher| %>
           <tr>
-            <td class="text-center">
-              <%= link_to "CV#{voucher.voucher}", accounting_check_path(voucher) %> 
+            <td class="text-center align-middle">
+              <%= "CV#{voucher.voucher}" %> 
             </td>
-            <td><%= voucher.payable %></td>
-            <td class="text-end"><%= to_curr voucher.amount %></td>
+            <td class="align-middle"><%= voucher.payable %></td>
+            <td class="align-middle"><%= voucher.particulars %></td>
+            <td class="text-end align-middle"><%= to_curr voucher.amount %></td>
+            <td class="text-center align-middle">
+              <%= link_to '<i class="bi bi-eye-fill"></i>'.html_safe, voucher, class: 'btn btn-sm btn-outline-primary', title: 'View' %>
           </tr>
 
         <% end %>

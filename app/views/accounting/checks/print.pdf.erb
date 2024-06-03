@@ -35,7 +35,7 @@
         </div>
         <div class="col-9">
           <% @ledger_entries.each do |entry| %>
-            <div class="ps-3 pt-1"><%= entry.account %></div>
+            <div class="<%= entry.debit? ? 'ps-1' : 'ps-5' %> pt-1"><%= entry.account %></div>
           <% end %>
         </div>
       </div>

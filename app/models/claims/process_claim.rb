@@ -1,10 +1,10 @@
 class Claims::ProcessClaim < ApplicationRecord
-  attr_accessor :batch_id
+  attr_accessor :batch_id, :coop_bank
   before_destroy :remove_from_loan_batch
 
   validates_presence_of :cooperative_id, :agreement_id, :entry_type, :claimant_name, :claimant_email, :claimant_contact_no, :date_incident
 
-  def to_s 
+  def to_s
     claimable.coop_member.full_name.titleize
   end
 
@@ -20,6 +20,11 @@ class Claims::ProcessClaim < ApplicationRecord
   enum entry_type: {
     claim: 0,
     coop: 1
+  }
+
+  enum payout_type: {
+    check_voucher: 0,
+    debit_advice: 1
   }
 
   enum status: {
@@ -52,7 +57,7 @@ class Claims::ProcessClaim < ApplicationRecord
     payment_procedure: 8, # payment
     denied_claim: 9, # denied
     reconsider_review: 10,
-    pending_claim: 11,
+    payment_rejected: 11, # if accounting reject the request for payment
     claimable: 12,
     paid: 13, # paid
     voucher_generated: 14,
@@ -65,13 +70,18 @@ class Claims::ProcessClaim < ApplicationRecord
     verify_hardcopy_document: 21,
     issuance_denied_letter: 22,
     payment_preparation: 23,
-    retrieval_documents: 24
+    retrieval_documents: 24,
+    pending_claim: 25
   }
 
 
 
   def self.get_route (i)
     claim_routes.key(i)
+  end
+
+  def payable
+    cooperative
   end
 
   def display_route(claim_routes)

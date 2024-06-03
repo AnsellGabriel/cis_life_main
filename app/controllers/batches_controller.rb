@@ -38,19 +38,21 @@ class BatchesController < ApplicationController
 
   def health_dec
     @batch = case params[:batch_type]
-            when "LoanInsurance::Batch"
-              LoanInsurance::Batch.find(params[:id])
-            else
-              Batch.find(params[:id])
-             end
+    when "LoanInsurance::Batch"
+      LoanInsurance::Batch.find(params[:id])
+    else
+      Batch.find(params[:id])
+    end
+    @coop_member = @batch.coop_member
 
+    b = @batch.health_declaration.present? ? @batch : @coop_member.loan_batches.pluck(:id)
     @pagy, @batch_remarks = pagy(@batch.remarks, items: 2, params: { active_tab: "stars" })
 
     @member = @batch.member_details
-    @batch_health_dec = @batch.health_declaration
+    @batch_health_dec = @batch.health_declaration.present? ? @batch.health_declaration : @batch.coop_member.batch_health_decs
     @group_remit = GroupRemit.find(params[:group_remit_id]).decorate
-    @questionaires = BatchHealthDec.where(healthdecable: @batch).where(answerable_type: "HealthDec")
-    @subquestions = BatchHealthDec.where(healthdecable: @batch).where(answerable_type: "HealthDecSubquestion")
+    @questionaires = BatchHealthDec.where(healthdecable: b).where(answerable_type: "HealthDec")
+    @subquestions = BatchHealthDec.where(healthdecable: b).where(answerable_type: "HealthDecSubquestion")
 
     @for_und = params[:for_und]
     @md = params[:md]
@@ -160,10 +162,13 @@ class BatchesController < ApplicationController
     #     params[:batch][:savings_amount]
     #   )
     # else
+    encoded_prem = params.dig(:batch, :encoded_premium).presence&.to_f # convert and return the string to float and return nil if it is empty
+
     Batch.process_batch(
       @batch,
       @group_remit,
-      batch_params[:rank]
+      batch_params[:rank],
+      encoded_prem
     )
     # end
 

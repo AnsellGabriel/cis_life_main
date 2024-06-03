@@ -1,0 +1,18 @@
+<%= link_to payees_path, class: 'btn btn-secondary mb-1' do %>
+  <i class="bi bi-chevron-left"></i>
+<% end %>
+
+<div class="card" style="width: 500px">
+  <div class="card-body">
+    <%= content_tag :h4, @payee.name, class: 'text-primary mb-3' %>
+    <div class="d-flex gap-1">
+      <p class="strong">Address:</p>
+      <p><%= @payee.address %></p>
+    </div>
+
+    <div class="d-flex gap-1">
+      <p class="strong">Contact Number:</p>
+      <p><%= @payee.contact_number %></p>
+    </div>
+  </div>
+</div>

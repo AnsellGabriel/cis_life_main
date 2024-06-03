@@ -47,17 +47,17 @@ class Accounting::ChecksController < ApplicationController
       return redirect_to accounting_check_path(@check), alert: "Total amount of business checks is not equal to the voucher amount"
     end
 
-    claim = @check.request.requestable
+    requestable = @check.voucher_request.requestable
 
     ActiveRecord::Base.transaction do
       @check.update!(claimable: true)
 
-      if claim.is_a?(ProcessClaim)
-        claim.update!(claim_route: 12, payment: 1)
-        coop = claim.claimable.cooperative
-        Notification.create(notifiable: coop, message: "Claim for #{claim.claimable.full_name} is claimable")
-      elsif claim.is_a?(ProcessCoverage)
-        claim.group_remit.ready_for_refund!
+      if requestable.is_a?(Claims::ProcessClaim)
+        requestable.update!(claim_route: 12, payment: 1)
+        coop = requestable.claimable.cooperative
+        Notification.create(notifiable: coop, message: "Claim for #{requestable.claimable.full_name} is claimable")
+      elsif requestable.is_a?(ProcessCoverage)
+        requestable.group_remit.ready_for_refund!
       end
     end
 
@@ -72,10 +72,13 @@ class Accounting::ChecksController < ApplicationController
 
   # GET /accounting/checks
   def index
-    @checks = Accounting::Check.all.order(created_at: :desc)
-    @q = @checks.ransack(params[:q])
-    @checks = @q.result
+    if params[:date_from].present? && params[:date_to].present?
+      @q = Accounting::Check.where(date_voucher: params[:date_from]..params[:date_to]).order(created_at: :desc).ransack(params[:q])
+    else
+      @q = Accounting::Check.all.order(created_at: :desc).ransack(params[:q])
+    end
 
+    @checks = @q.result
     @pagy, @checks = pagy(@checks, items: 10)
   end
 
@@ -84,8 +87,8 @@ class Accounting::ChecksController < ApplicationController
     @business_checks = @check.business_checks.where.not(id: nil).order(created_at: :desc)
     @ledgers = @check.general_ledgers
 
-    if @check.request.present?
-      @request = @check.request
+    if @check.voucher_request.present?
+      @request = @check.voucher_request
       @claim = @request.requestable
     end
   end
@@ -99,7 +102,6 @@ class Accounting::ChecksController < ApplicationController
       request = Accounting::VoucherRequest.find(params[:rid])
       @amount = request.amount
       @coop = request.requestable.cooperative
-
       @check = Accounting::Check.new(voucher: sprintf("%05d", initiate_voucher), payable: @coop, amount: @amount, date_voucher: Date.today, particulars: request.particulars)
     else
       @check = Accounting::Check.new(voucher: sprintf("%05d", initiate_voucher), date_voucher: Date.today)
@@ -121,7 +123,7 @@ class Accounting::ChecksController < ApplicationController
       if params[:rid].present?
         request = Accounting::VoucherRequest.find(params[:rid])
         request.voucher_generated!
-        @check.update(request: request)
+        @check.update(voucher_request: request)
       end
 
       redirect_to @check, notice: "Check voucher created."
@@ -159,7 +161,7 @@ class Accounting::ChecksController < ApplicationController
 
   # collection of payees
   def set_payables
-    @payables = (Cooperative.all + Payee.all).sort_by(&:name)
+    @payables = (Cooperative.all.select(:id, :name) + Payee.all.select(:id, :name)).sort_by(&:name)
   end
 
   # Only allow a list of trusted parameters through.

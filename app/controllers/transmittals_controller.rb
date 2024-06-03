@@ -37,7 +37,7 @@ class TransmittalsController < ApplicationController
     end
 
 
-    @pagy, @transmittals = pagy(@transmittals, items: 2)
+    @pagy, @transmittals = pagy(@transmittals, items: 10)
   end
 
   # GET /transmittals/1
@@ -47,7 +47,14 @@ class TransmittalsController < ApplicationController
 
   # GET /transmittals/new
   def new
-    @transmittal = Transmittal.new
+    # raise 'errors'
+    @type = params[:b_ids].present? ? "mis" : nil
+    @group_remit_ids = GroupRemit.where(id: params[:b_ids]).pluck(:id)
+    if Rails.env.development?
+      @transmittal = Transmittal.new(description: FFaker::Lorem.phrase)
+    else
+      @transmittal = Transmittal.new
+    end
     # @transmittal.transmittal_ors.build
   end
 
@@ -57,19 +64,18 @@ class TransmittalsController < ApplicationController
 
   # POST /transmittals
   def create
-    # raise 'errors'
     @transmittal = Transmittal.new(transmittal_params)
     @transmittal.transmittal_type = current_user.is_mis? ? "mis" : "und"
-    @transmittal.set_code_and_type(@transmittal.transmittal_type, current_user)
+    @transmittal.set_code_and_type(current_user)
     
-    if params[:transmittal][:transmittal_ors_attributes].nil?
+    if params[:transmittal][:transmittal_ors_attributes].nil? && params[:transmittal][:group_remit_ids].nil?
       # flash.now[:alert] = 
       # redirect_to :new, alert: "Please add ORs/PCs before saving transmittal."
       redirect_back fallback_location: { action: "new" }, alert: "Please add ORs/PCs before saving transmittal."
     else
 
       if @transmittal.save
-          @transmittal.save_items(params[:transmittal][:transmittal_ors_attributes])
+          @transmittal.save_items(params[:transmittal][:transmittal_ors_attributes], params[:transmittal][:group_remit_ids])
           redirect_to @transmittal, notice: "Transmittal was successfully created."
       else
         render :new, status: :unprocessable_entity
@@ -106,10 +112,12 @@ class TransmittalsController < ApplicationController
 
     # Only allow a list of trusted parameters through.
     def transmittal_params
-      params.require(:transmittal).permit(:description, :transmittal_type,
+      params.require(:transmittal).permit(:description, :transmittal_type, :group_remit_ids,
         #transmittal_ors_attributes: [:id, :transmittal_id, :transmittable_id, :transmittable_type, :_destroy]
         # transmittal_ors_attributes: [:global_owner] 
         transmittal_ors_attributes: [:global_transmittable, :_destroy]
       )
     end
+
+
 end
