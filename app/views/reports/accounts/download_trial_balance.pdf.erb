@@ -14,8 +14,8 @@
       <tr>
         <th class="text-center" style="font-size: 1.1rem; font-weight: bold; border: 2px solid black">Code</th>
         <th class="text-center" style="font-size: 1.1rem; font-weight: bold; border: 2px solid black">Title</th>
-        <th class="text-center" style="font-size: 1.1rem; font-weight: bold; border: 2px solid black">Debit</th>
-        <th class="text-center" style="font-size: 1.1rem; font-weight: bold; border: 2px solid black">Credit</th>
+        <th colspan="2" class="text-center" style="font-size: 1.1rem; font-weight: bold; border: 2px solid black">Period</th>
+        <th colspan="2" class="text-center" style="font-size: 1.1rem; font-weight: bold; border: 2px solid black">Year To Date</th>
       </tr>
     </thead>
     <tbody>
@@ -26,8 +26,10 @@
       <%= render 'reports/accounts/accounts', name: 'STATUTORY RESERVE', accounts: @reserve %>
 
       <tr  style="border-top: 2px solid black">
-        <td colspan="2" class="text-end"></td>
-        <td class="text-end"><%= number_to_currency(@total_debit, unit: '') %></td>
-        <td class="text-end"><%= number_to_currency(@total_credit, unit: '') %></td>
+        <td colspan="2" class="text-end" style="font-size: 1.1rem; font-weight: bold; border: 2px solid black">TOTAL</td>
+        <td class="text-end" style="font-size: 1.1rem; font-weight: bold; border: 2px solid black"><%= number_to_currency(@total_debit, unit: '') %></td>
+        <td class="text-end" style="font-size: 1.1rem; font-weight: bold; border: 2px solid black"><%= number_to_currency(@total_credit, unit: '') %></td>
+        <td class="text-end" style="font-size: 1.1rem; font-weight: bold; border: 2px solid black"><%= number_to_currency(@ytd_total_debit, unit: '') %></td>
+        <td class="text-end" style="font-size: 1.1rem; font-weight: bold; border: 2px solid black"><%= number_to_currency(@ytd_total_credit, unit: '') %></td>
     </tbody>
 <% end %>
