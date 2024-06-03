@@ -1,1 +1,18 @@
-<%= content_tag :h4, 'Accounting Dashboard', class: 'text-primary' %>
+<%= content_tag :h3, "#{current_user} - #{current_user.userable.designation}", class: 'mb-3' %>
+<div class="d-flex gap-2">
+  <% if current_user.head? %>
+    <%= link_to accounting_for_approval_path	 do %>
+      <%= render 'coop/dashboard/counter_box', title: 'For Approvals', count: @for_approvals.size  %>
+    <% end %>
+  <% end %>
+
+  <%= link_to accounting_voucher_requests_path(pt: :check_voucher) do %>
+    <%= render 'coop/dashboard/counter_box', title: 'Check Requests', count: @check_req.size %>
+  <% end %>
+  <%= link_to accounting_voucher_requests_path(pt: :debit_advice) do %>
+    <%= render 'coop/dashboard/counter_box', title: 'DA Requests', count: @da_req.size %>
+  <% end %>
+  <%= link_to accounting_voucher_requests_path(pt: :journal_voucher) do %>
+    <%= render 'coop/dashboard/counter_box', title: 'Journal Requests', count: @journal_req.size %>
+  <% end%>
+</div>

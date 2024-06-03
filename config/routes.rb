@@ -285,7 +285,7 @@ Rails.application.routes.draw do
     end
 
     resources :checks do
-      get :for_approval_index, on: :collection
+      # get :for_approval_index, on: :collection
       get :claimable, on: :member
       # get :cancel, on: :member
       resources :business_checks, as: 'business', except: [:index]
@@ -310,7 +310,10 @@ Rails.application.routes.draw do
     resources :voucher_requests, only: %i[index show]
 
     get "dashboard", to: "dashboard#index"
+    get "for_approval", to: "dashboard#for_approval"
   end
+
+  resources :payees
 
   # treasury
   namespace :treasury do
@@ -335,6 +338,7 @@ Rails.application.routes.draw do
     end
 
     get "dashboard", to: "dashboard#index"
+    get "for_approval", to: "dashboard#for_approval"
 
     resources :debit_advices, only: %i[index]
   end
@@ -420,9 +424,7 @@ Rails.application.routes.draw do
     get "cooperatives", to: "cooperatives#index"
     get "view_ors", to: "dashboard#view_ors"
 
-    resources :members do
-      get :update_table, on: :collection
-    end
+    resources :members, only: [:index, :show]
   end
 
   # * Authentication Routes

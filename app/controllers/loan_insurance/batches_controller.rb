@@ -92,7 +92,9 @@ class LoanInsurance::BatchesController < ApplicationController
     if agreement.plan.acronym == "SII"
       result = @batch.sii_process_batch
     else
-      result = @batch.process_batch(params[:loan_insurance_batch][:encoded_premium], current_user)
+      #result = @batch.process_batch(params[:loan_insurance_batch][:encoded_premium], current_user)
+      encoded_prem =  params.dig(:loan_insurance_batch, :encoded_premium).presence&.to_f # convert and return the string to float and return nil if it is empty
+      result = @batch.process_batch(encoded_prem, current_user)
     end
 
     respond_to do |format|
@@ -298,8 +300,7 @@ class LoanInsurance::BatchesController < ApplicationController
   private
   # Only allow a list of trusted parameters through.
   def batch_params
-    params.require(:loan_insurance_batch).permit(:group_remit_id, :coop_member_id, :loan_amount, :terms, :effectivity_date, :expiry_date, :date_release, :date_mature, :loan_insurance_loan_id,
-:unused_loan_id)
+    params.require(:loan_insurance_batch).permit(:group_remit_id, :coop_member_id, :loan_amount, :terms, :effectivity_date, :expiry_date, :date_release, :date_mature, :loan_insurance_loan_id, :unused_loan_id)
   end
 
   # Use callbacks to share common setup or constraints between actions.

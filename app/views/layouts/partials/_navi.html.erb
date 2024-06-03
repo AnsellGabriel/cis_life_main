@@ -26,29 +26,30 @@
           <% else %>
             <% case current_user.userable.department_id %>
             <% when 11 %>
-            <%= render 'layouts/partials/accounting_nav' %>
+              <%= render 'layouts/partials/accounting_nav' %>
             <% when 26 %>
-            <%= render 'layouts/partials/treasury_nav' %>
+              <%= render 'layouts/partials/treasury_nav' %>
             <% when 15 %>
-            <%= render 'layouts/partials/nav_dropdown', title: 'Data Entries' do %>
-              <%= link_to "Agreements", agreements_path, class: "dropdown-item" %>
-              <%= link_to "Cooperative", cooperatives_path, class: "dropdown-item" %>
-              <%= link_to "Transmittal", transmittals_path, class: "dropdown-item" %>
-            <% end %>
-            <% when 27 %>
-            <%= render 'layouts/partials/nav_dropdown', title: 'Audit' do %>
-              <%= link_to "For Audit", audit_for_audits_path, class: "dropdown-item" %>
-            <% end %>
-            <% when 17 %>
-            <%= render 'layouts/partials/nav_dropdown', title: 'Underwriting' do %>
-              <%= link_to "Agreement", agreements_path, class: "dropdown-item" %>
-              <%= link_to "Process", process_coverages_path, class: "dropdown-item" %>
-              <%= link_to "Transmittal", transmittals_path, class: "dropdown-item" %>
-              <%#= link_to "Generate CSV", gen_csv_process_coverages_path, class: "dropdown-item", data: { turbo_frame: "remote_modal" } %>
-              <% if current_user.medical_director? %>
-                <%= link_to "Medical Director", med_directors_home_path, class: "dropdown-item" %>
+              <%= link_to "Members Database", mis_members_path, class: "nav-link" %>
+              <%= render 'layouts/partials/nav_dropdown', title: 'Data Entries' do %>
+                <%= link_to "Agreement", agreements_path, class: "dropdown-item" %>
+                <%= link_to "Cooperative", cooperatives_path, class: "dropdown-item" %>
+                <%= link_to "Transmittal", transmittals_path, class: "dropdown-item" %>
               <% end %>
-            <% end %>
+            <% when 27 %>
+              <%= render 'layouts/partials/nav_dropdown', title: 'Audit' do %>
+                <%= link_to "For Audit", audit_for_audits_path, class: "dropdown-item" %>
+              <% end %>
+            <% when 17 %>
+              <%= render 'layouts/partials/nav_dropdown', title: 'Underwriting' do %>
+                <%= link_to "Agreement", agreements_path, class: "dropdown-item" %>
+                <%= link_to "Process", process_coverages_path, class: "dropdown-item" %>
+                <%= link_to "Transmittal", transmittals_path, class: "dropdown-item" %>
+                <%#= link_to "Generate CSV", gen_csv_process_coverages_path, class: "dropdown-item", data: { turbo_frame: "remote_modal" } %>
+                <% if current_user.medical_director? %>
+                  <%= link_to "Medical Director", med_directors_home_path, class: "dropdown-item" %>
+                <% end %>
+              <% end %>
             <% when 19 %>
             <%= render 'layouts/partials/nav_dropdown', title: 'Claims' do %>
               <%= link_to "Claim index", claims_process_claims_path, class: "dropdown-item" %>

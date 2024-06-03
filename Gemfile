@@ -157,3 +157,5 @@ gem 'spreadsheet'
 
 #gem for datatable
 gem 'ajax-datatables-rails'
+gem 'cancancan' # for authorization
+

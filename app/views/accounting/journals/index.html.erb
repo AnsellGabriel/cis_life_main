@@ -9,52 +9,57 @@
   <div class="d-flex gap-1">
     <%= search_form_for @q do |f| %>
       <div class="d-flex gap-1">
-        <%= f.text_field :voucher_cont, class: 'form-control', placeholder: 'Search journals' %>
-        <%= button_tag(type: 'submit', class: small_btn('warning text-dark'), value: 'branches', style: 'width: 40px') do %>
+        <%= f.text_field :voucher_cont, class: 'form-control filter_field', placeholder: 'Search journals' %>
+        <%= button_tag(type: 'submit', class: "#{small_btn('warning text-dark')} filter_btn", value: 'branches', style: 'width: 40px') do %>
           <i class='bi bi-search'></i>
         <% end %>
       </div>
     <% end %>
 
-    <%= link_to accounting_journals_path, class: "btn btn-secondary", title: "Reload" do %>
+    <%= link_to accounting_journals_path, class: "btn btn-sm btn-secondary filter_btn", title: "Reload" do %>
       <i class="bi bi-arrow-clockwise"></i>
     <% end %>
   </div>
 
-  <%== pagy_bootstrap_nav(@pagy) if @pagy.pages > 1 %>
+  <div class="">
+    <%= render 'accounting/shared/date_filter', url: accounting_journals_path, req_type: nil %>
+  </div>
 </div>
 
 
-  <table class="<%= table_sm_hoverable %>">
-    <thead class="table-dark">
-      <tr>
-        <th class="text-center">Voucher</th>
-        <th class="text-center">Date</th>
-        <th>Payee</th>
-        <th class="text-center">Particulars</th>
-        <th class="text-center">Status</th>
-      </tr>
-    </thead>
+<table class="<%= table_sm_hoverable %>">
+  <thead class="table-dark">
+    <tr>
+      <th class="text-center">Voucher</th>
+      <th class="text-center">Date</th>
+      <th>Payee</th>
+      <th class="text-center">Particulars</th>
+      <th class="text-center">Status</th>
+    </tr>
+  </thead>
 
-    <tbody>
-      <% if @journals.present? %>
-        <% @journals.each do |journal| %>
-          <tr>
-            <td class="text-center align-middle"> 
-              <%= link_to journal.voucher, journal, class: 'text-primary', title: 'View'%>
-            </td>
-            <td class="text-center align-middle"><%= month_day_year(journal.date_voucher) %></td>
-            <td class="align-middle"><%= journal.payable %></td>
-            <td class="align-middle"><%= journal.particulars %></td>
-            <td class="text-center align-middle">
-              <span class="<%= journal.decorate.status_badge %>"><%= journal.status.titleize %></span>
-            </td>          
-          </tr>
-        <% end %>
-      <% else %>
+  <tbody>
+    <% if @journals.present? %>
+      <% @journals.each do |journal| %>
         <tr>
-          <td colspan="7" class="text-center">No debit advices found.</td>
+          <td class="text-center align-middle"> 
+            <%= link_to journal.voucher, journal, class: 'text-primary', title: 'View'%>
+          </td>
+          <td class="text-center align-middle"><%= month_day_year(journal.date_voucher) %></td>
+          <td class="align-middle"><%= journal.payable %></td>
+          <td class="align-middle"><%= journal.particulars %></td>
+          <td class="text-center align-middle">
+            <span class="<%= journal.decorate.status_badge %>"><%= journal.status.titleize %></span>
+          </td>          
         </tr>
       <% end %>
-    </tbody>
-  </table>
+    <% else %>
+      <tr>
+        <td colspan="7" class="text-center">No debit advices found.</td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<%== pagy_bootstrap_nav(@pagy) if @pagy.pages > 1 %>
+

@@ -7,9 +7,8 @@ class LppiImportService
     @cooperative = cooperative
     @agreement = @group_remit.agreement
     @current_user = current_user
-
     @headers = ["FIRST_NAME", "LAST_NAME", "BIRTHDATE", "EFFECTIVITY_DATE", "EXPIRY_DATE", "RELEASE_DATE", "MATURITY_DATE", "LOAN_AMOUNT", "LOAN_TYPE"]
-
+    @headers.push("UNUSED_EFF_DATE", "UNUSED_LOAN_AMOUNT", "REFERRENCE_ID") if @current_user.is_mis?
     @progress_tracker = @group_remit.create_progress_tracker(progress: 0.0)
   end
 
@@ -101,7 +100,10 @@ class LppiImportService
       maturity_date: row["MATURITY_DATE"],
       loan_amount: row["LOAN_AMOUNT"],
       loan_type: row["LOAN_TYPE"].to_s.squish.upcase,
-      premium: @current_user.is_mis? && row["PREMIUM"].present? ? row["PREMIUM"].to_f : nil
+      premium: @current_user.is_mis? && row["PREMIUM"].present? ? row["PREMIUM"].to_f : nil,
+      unused_eff_date: @current_user.is_mis? && row["UNUSED_EFF_DATE"].present? ? row["UNUSED_EFF_DATE"] : nil,
+      unused_loan_amount: @current_user.is_mis? && row["UNUSED_LOAN_AMOUNT"].present? ? row["UNUSED_LOAN_AMOUNT"].to_f : nil,
+      reference_id: @current_user.is_mis? && row["REFERENCE_ID"].present? ? row["REFERENCE_ID"].to_s.squish.upcase : nil
     }
   end
 
@@ -150,6 +152,18 @@ class LppiImportService
     coop_member = member.coop_members.find_by(cooperative: @cooperative)
     loan_type = LoanInsurance::Loan.find_by(name: batch_hash[:loan_type])
 
+    if @current_user.is_mis?
+      active_loans = coop_member.loan_batches.where.not(status: [:terminated, :expired])
+
+      if batch_hash[:reference_id].present?
+        unused = active_loans.find_by(reference_id: batch_hash[:reference_id])
+      end
+
+      if unused.nil? && batch_hash[:unused_eff_date].present? && batch_hash[:unused_loan_amount].present?
+        unused = active_loans.find_by(loan_amount: batch_hash[:unused_loan_amount], effectivity_date: batch_hash[:unused_eff_date])
+      end
+    end
+
     new_batch = @group_remit.batches.new(
                   coop_member_id: coop_member.id,
                   effectivity_date: batch_hash[:effectivity_date],
@@ -157,7 +171,8 @@ class LppiImportService
                   date_release: batch_hash[:release_date],
                   date_mature: batch_hash[:maturity_date],
                   loan_amount: batch_hash[:loan_amount],
-                  loan: loan_type
+                  loan: loan_type,
+                  unused_loan_id: (@current_user.is_mis? and unused.present?) ? unused.id : nil
                 )
 
     # previous_loans = coop_member.active_loans(@group_remit, loan_type).order(created_at: :desc)

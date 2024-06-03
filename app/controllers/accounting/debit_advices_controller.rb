@@ -4,10 +4,13 @@ class Accounting::DebitAdvicesController < ApplicationController
 
   # GET /accounting/debit_advices
   def index
-    @debit_advices = Accounting::DebitAdvice.all.order(created_at: :desc)
-    @q = @debit_advices.ransack(params[:q])
-    @debit_advices = @q.result
+    if params[:date_from].present? && params[:date_to].present?
+      @q = Accounting::DebitAdvice.where(date_voucher: params[:date_from]..params[:date_to]).order(created_at: :desc).ransack(params[:q])
+    else
+      @q = Accounting::DebitAdvice.all.order(created_at: :desc).ransack(params[:q])
+    end
 
+    @debit_advices = @q.result
     @pagy, @debit_advices = pagy(@debit_advices, items: 10)
   end
 

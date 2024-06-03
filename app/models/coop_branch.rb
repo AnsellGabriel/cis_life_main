@@ -5,6 +5,7 @@ class CoopBranch < ApplicationRecord
 
   has_many :coop_users
   has_many :coop_members
+  has_many :group_remits
   belongs_to :cooperative
   belongs_to :coop_type, optional: true
   belongs_to :geo_region, optional: true

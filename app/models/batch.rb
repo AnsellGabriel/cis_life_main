@@ -3,7 +3,7 @@ class Batch < ApplicationRecord
 
   include Calculate
 
-  attr_accessor :rank
+  attr_accessor :rank, :encoded_premium
 
   validates_presence_of :effectivity_date, :expiry_date, :premium, :coop_sf_amount, :age, :agent_sf_amount, :coop_member_id
   # batch.status
@@ -115,10 +115,11 @@ class Batch < ApplicationRecord
   end
 
 
-  def self.process_batch(batch, group_remit, rank = nil, premium = nil, savings_amount = nil)
+  def self.process_batch(batch, group_remit, rank = nil, premium = nil)
     agreement = group_remit.agreement
     coop_member = batch.coop_member
     previous_coverage = agreement.agreements_coop_members.find_by(coop_member_id: coop_member.id)
+    batch.terms = group_remit.terms
     batch.expiry_date = group_remit.expiry_date
     batch.effectivity_date = ["single", "multiple"].include?(agreement.anniversary_type.downcase) ? Date.today : group_remit.effectivity_date
     batch.first_name = coop_member.member.first_name

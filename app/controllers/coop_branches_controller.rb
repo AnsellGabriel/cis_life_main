@@ -82,7 +82,12 @@ class CoopBranchesController < ApplicationController
 
   # DELETE /coop_branches/1 or /coop_branches/1.json
   def destroy
-    @coop_branch.destroy
+    begin
+      @coop_branch.destroy
+    rescue ActiveRecord::InvalidForeignKey => e
+      redirect_to cooperative_path(@cooperative), alert: "Branch cannot be deleted due to dependent records."
+      return
+    end
 
     respond_to do |format|
       format.html { redirect_to cooperative_coop_branches_path, notice: "Coop branch was successfully destroyed." }

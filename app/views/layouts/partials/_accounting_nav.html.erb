@@ -1,5 +1,5 @@
 <% if current_user.head? %>
-  <%= link_to "For Approvals", for_approval_index_accounting_checks_path, class: "nav-link" %>
+  <%= link_to "For Approvals", accounting_for_approval_path, class: "nav-link" %>
 <% end %>
 
 <%= render 'layouts/partials/nav_dropdown', title: 'Vouchers' do %>
@@ -14,10 +14,13 @@
   <%= link_to "Journal Voucher", accounting_voucher_requests_path(pt: :journal_voucher), class: "dropdown-item" %>
 <% end %>
 
-<%= link_to "Accounts", treasury_accounts_path, class: "nav-link" %>
+
 <%= render 'layouts/partials/nav_dropdown', title: 'Reports' do %>
-  <%= link_to "Trial Balance", trial_balance_reports_accounts_path, class: 'nav-link' %>
-  <%= link_to "General Disbursement Book", accounting_general_disbursement_book_index_path, class: 'nav-link', style: 'min-width: 220px;' %>
-  <%= link_to "Journal Book", accounting_journal_book_index_path, class: 'nav-link'%>
-  <%= link_to "Receipt Book", accounting_receipt_book_index_path, class: 'nav-link'%>
+  <%= link_to "Trial Balance", trial_balance_reports_accounts_path, class: 'dropdown-item' %>
+  <%= link_to "General Disbursement Book", accounting_general_disbursement_book_index_path, class: 'dropdown-item', style: 'min-width: 220px;' %>
+  <%= link_to "Journal Book", accounting_journal_book_index_path, class: 'dropdown-item'%>
+  <%= link_to "Receipt Book", accounting_receipt_book_index_path, class: 'dropdown-item'%>
 <% end %>
+
+<%= link_to "Accounts", treasury_accounts_path, class: "nav-link" %>
+<%= link_to "Payees", payees_path, class: "nav-link" %>

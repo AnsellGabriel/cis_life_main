@@ -14,6 +14,7 @@ class GroupRemit < ApplicationRecord
   # has_one :agreement
   # has_one :cashier_entry, through: :agreement, class_name: "Treasury::CashierEntry"
   belongs_to :anniversary, optional: true
+  belongs_to :coop_branch, optional: true
 
   has_many :remarks, as: :remarkable, dependent: :destroy
   has_many :batch_group_remits
@@ -374,6 +375,10 @@ class GroupRemit < ApplicationRecord
     else
       batches.recent.where.missing(:batch_health_decs)
     end
+  end
+
+  def batches_with_incorrect_prem
+    batches.where("premium != system_premium")
   end
 
   def all_batches_have_beneficiaries?

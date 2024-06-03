@@ -16,14 +16,14 @@
       </div>
     <% end %>
 
-    <%= link_to accounting_checks_path, class: "btn btn-secondary filter_btn", title: "Reload" do %>
+    <%= link_to accounting_checks_path, class: "btn-sm btn btn-secondary filter_btn", title: "Reload" do %>
       <i class="bi bi-arrow-clockwise"></i>
     <% end %>
 
     
   </div>
   <div class="">
-    <%= render 'accounting/shared/date_filter', url: accounting_checks_path %>
+    <%= render 'accounting/shared/date_filter', url: accounting_checks_path, req_type: nil %>
   </div>
 </div>
 <table class="<%= table_sm_hoverable %>">

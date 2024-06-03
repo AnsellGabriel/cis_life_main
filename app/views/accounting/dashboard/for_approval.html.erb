@@ -1,0 +1,35 @@
+<%= content_tag :h4, "For Approval", class: 'text-primary mb-3' %>
+
+<table class="<%= table_sm_hoverable %>">
+  <thead class="table-dark">
+    <tr>
+      <th class="text-center">Voucher</th>
+      <th class="text-center">Date</th>
+      <th class="text-center">Payee</th>
+      <th class="text-center">Amount</th>
+      <th class="text-center">Status</th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% if @for_approvals.present? %>
+      <% @for_approvals.each do |voucher| %>
+        <tr>
+          <td class="<%= centered_cell %>">
+            <%= link_to "#{'CV' if voucher.type == 'Accounting::Check'}#{voucher.voucher}", voucher, class: 'text-primary', title: 'View'%>
+          </td>
+          <td class="<%= centered_cell %>"><%= month_day_year(voucher.date_voucher) %></td>
+          <td class="<%= centered_cell %>"><%= voucher.payable %></td>
+          <td class="<%= centered_cell %>"><%= to_curr(voucher.amount) %></td>
+          <td class="<%= centered_cell %>">
+            <span class="<%= voucher.decorate.status_badge %>"><%= voucher.status.titleize %></span>
+          </td>        
+        </tr>
+      <% end %>
+    <% else %>
+      <tr>
+        <td colspan="7" class="text-center">No vouchers found.</td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>

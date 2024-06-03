@@ -1,0 +1,29 @@
+<table class="table table-bordered table-hover align-middle mt-1">
+  <h6>Loan Payment Protection Insurance</h6>
+  <thead>
+    <th>Batch Name</th>
+    <th>Loan Details</th>
+    <th>Effectivity</th>
+    <th>Expiry</th>
+    <th>Terms</th>
+    <th>Loan</th>
+    <th>Premium</th>
+  </thead>
+  <tbody>
+    <% coop_member.loan_batches.order(created_at: :desc).each do |lppi| %>
+      <tr>
+        <td><small><%= batch_status(lppi.status) %></small> <%= lppi.group_remit %></td>
+        <td><%= lppi.loan&.name %></td>
+        <td><%= short_month_day_year(lppi.effectivity_date) %></td>
+        <td><%= short_month_day_year(lppi.expiry_date) %></td>
+        <td>
+          <%= lppi.terms %>
+        </td>
+        <td>
+          <%= to_curr(lppi.loan_amount) %>
+        </td>
+        <td><%= to_curr(lppi.premium) %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>

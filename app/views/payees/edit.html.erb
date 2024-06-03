@@ -1,0 +1,10 @@
+<%= link_to payees_path, class: 'btn btn-secondary mb-1' do %>
+  <i class="bi bi-chevron-left"></i>
+<% end %>
+
+<div class="card">
+  <h5 class="card-header">Edit payee</h5>
+  <div class="card-body">
+    <%= render "form", payee: @payee %>
+  </div>
+</div>

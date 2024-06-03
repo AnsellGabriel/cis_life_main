@@ -232,6 +232,7 @@ module ApplicationHelper
       when 15 then "MANAGEMENT INFORMATION SYSTEM"
       when 11 then "ACCOUNTING"
       when 27 then "AUDIT"
+      when 26 then "TREASURY"
       end
 
     end

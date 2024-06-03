@@ -39,10 +39,11 @@ class GroupRemitsController < InheritedResources::Base
         # Your transactional code here
         @group_remit.set_under_review_status
         @group_remit.date_submitted = Date.today
+        @group_remit.coop_branch = current_user.userable.dig(:coop_branch)
         @group_remit.save!
-        
+
         create_process_coverage(@group_remit)
-                
+
         @process_coverage.save!
 
         respond_to do |format|
@@ -69,6 +70,7 @@ class GroupRemitsController < InheritedResources::Base
     load_data
     load_batches
     paginate_batches
+    @batch_with_incorrect_prem = @group_remit.batches_with_incorrect_prem
   end
 
   def new
@@ -197,7 +199,7 @@ class GroupRemitsController < InheritedResources::Base
     counters  # controller/concerns/counter.rb
   end
 
-  def create_process_coverage(group_remit)    
+  def create_process_coverage(group_remit)
     @process_coverage = group_remit.build_process_coverage
     @process_coverage.effectivity = group_remit.effectivity_date
     @process_coverage.expiry = group_remit.expiry_date
