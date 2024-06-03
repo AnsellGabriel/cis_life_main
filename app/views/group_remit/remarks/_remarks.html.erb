@@ -1,0 +1,42 @@
+<div class="card border-light">
+  <div class="card-header">
+    Remarks
+  </div>
+  <%= turbo_frame_tag 'pagination' do %>
+    <div class="card-body">
+    
+      <%# if process_coverage.process_remarks.count <= 0 %>
+      
+      <% if remarks.count <= 0 %>
+        <%= content_tag :td, "NO REMARKS", colspan: 2, class: "text-center" %>
+      <% else %>
+        <%# process_coverage.process_remarks.order(created_at: :desc).each do |rem| %>
+        <% remarks.order(created_at: :desc).each do |rem| %>
+
+          <%= content_tag :div, class: "d-flex justify-content-between align-items-center" do %>
+            <%= content_tag :p, class: "mb-1" do %>
+              <%= rem.user %> <%= content_tag :small, "- #{time_ago_in_words(rem.created_at)} ago" %> <%= remarks_status(rem.status) %>
+            <% end %>
+          <% end %>
+          <%= content_tag :p, rem.remark, class: "small mb-0 fst-italic" %>
+
+          <%= content_tag :hr %>
+        <% end %>
+        
+      <% end %>
+
+    </div>
+    <div class="card-footer">
+      <div class="row">
+        <div class="col">
+          <%= link_to "Add Remarks", "#", class: "btn btn-outline-primary mb-2 btn-sm", data: { turbo_frame: "remote_modal" } %>
+        </div>
+        <div class="col">
+          <%#== pagy_bootstrap_nav(@pagy_rem) if @pagy_rem.pages > 1 %>
+          <%= render PaginationComponent.new(results: @pagy_rem) %>
+        </div>
+      </div>
+    </div>
+  <% end %>
+
+</div>

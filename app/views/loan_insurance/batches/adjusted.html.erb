@@ -1,0 +1,58 @@
+<%= turbo_frame_tag 'modal-xl' do %>
+  <div class="modal-header">
+    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+  </div>
+  <div class="modal-body sm-secondary-text">
+    <div id="error_notif"></div>
+    <div class="row <%= flex_justify_align('center') %>">
+      <div class="col-md-10" style="margin: auto;">
+        <div class="card mb-3">
+          <div class="card-body">
+            <div class="row mb-1">
+              <%= content_tag :span, class: 'text-primary' do %>
+                <i class="bi bi-file-medical-fill"></i> Substandard Details
+              <% end %>
+            </div>
+            <hr>
+            <div class="row">
+              <table class="table table-stripped">
+                <thead>
+                  <th>Adjusted Premium</th>
+                  <th>Adjusted Coverage</th>
+                  <th></th>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>
+                      <div class="row">
+                        <div class="col-4">
+                          <%= to_currency(@batch.adjusted_prem) %>
+                        </div>
+                        <div class="col">
+                          <%= button_to "Accept", accept_adjustment_loan_insurance_batch_path(@batch, type: "prem"), data: { turbo_method: :post }, class: "btn btn-sm btn-success", onclick: "return confirm('Are you sure?')" %>
+                        </div>
+                      </div>
+                    </td>
+                    <td>
+                      <div class="row">
+                        <div class="col-4">
+                          <%= to_currency(@batch.adjusted_cov) %>
+                        </div>
+                        <div class="col">
+                          <%= button_to "Accept", accept_adjustment_loan_insurance_batch_path(@batch, type: "cov"), data: { turbo_method: :post }, class: "btn btn-sm btn-success", onclick: "return confirm('Are you sure?')" %>
+                        </div>
+                      </div>
+                    </td>
+                    <td>
+                      <%= button_to "Cancel Coverage", cancel_coverage_loan_insurance_batch_path(@batch), data: { turbo_method: :post }, class: "btn btn-sm btn-danger", onclick: "return confirm('Are you sure?')" %>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+<% end %>
