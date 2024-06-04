@@ -181,7 +181,7 @@ class LppiImportService
     #   new_batch.unused_loan_id = previous_loans.first.id
     # end
 
-    result = new_batch.process_batch(batch_hash[:premium])
+    result = new_batch.process_batch(batch_hash[:premium], @current_user)
 
     if result == :no_rate_for_age
       create_denied_member(member, "No rate available for members with age: #{new_batch.age}")
