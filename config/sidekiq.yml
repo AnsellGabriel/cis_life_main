@@ -9,7 +9,7 @@
       class: 'LoanStatusUpdater'
       queue: 'default'
     payment_reminder:
-      cron: '33 13 * * *'
+      cron: '25 16 * * *'
       class: 'GroupRemitPaymentStatusUpdater'
       queue: 'default'
 
