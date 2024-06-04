@@ -11,25 +11,31 @@ class GroupRemitPaymentStatusUpdater
 
 
     approved_remittances.each do |remit|
-      1st_notice = remit.process_coverage.evaluate_date + 15.days #date approved
-      2nd_notice = remit.process_coverage.evaluate_date + 30.days #date approved
-      3rd_notice = remit.process_coverage.evaluate_date + 45.days #date approved
+      first_notice = remit.process_coverage.evaluate_date + 15.days 
+      second_notice = remit.process_coverage.evaluate_date + 30.days 
+      third_notice = remit.process_coverage.evaluate_date + 45.days
 
-      if 1st_notice == Date.today
+      if first_notice == Date.today
         remit.process_coverage.notifications.build(
           message: "Please upload proof of payment for remittance: #{remit.name} because it has been 15 days since the approval of coverages.",
           notifiable: remit.agreement.cooperative
         )
-      elsif 2nd_notice == Date.today
+      elsif second_notice == Date.today
         remit.process_coverage.notifications.build(
           message: "Please upload proof of payment for remittance: #{remit.name} because it has been 30 days since the approval of coverages.",
           notifiable: remit.agreement.cooperative
         )
-      elsif 3rd_notice == Date.today
+      elsif third_notice == Date.today
         remit.process_coverage.notifications.build(
           message: "Failure to upload proof of payment for coverages of #{remit.name} will be cancelled today.",
           notifiable: remit.agreement.cooperative
         )
+      elsif third_notice < Date.today
+        user = remit.agreement.cooperative.coop_users.first.user
+        remit.remarks.create(remark: "Coverages denied due to non-uploading proof of payment.", user: user)
+        remit.batches.update(insurance_status: :denied)
+        remit.process_coverage.update(status: :denied)
+        remit.update(status: :expired)
       end
     end
   end
