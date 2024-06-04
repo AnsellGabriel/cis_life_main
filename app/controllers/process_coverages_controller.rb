@@ -455,7 +455,8 @@ class ProcessCoveragesController < ApplicationController
     end
 
     respond_to do |format|
-      @batch.update(for_md: true)
+      @batch.batch_remarks.create(remark: "For M.D. Recommendation", status: :md_reco, user: current_user.userable)
+      @batch.update(for_md: true, insurance_status: :md_recom)
       format.html { redirect_to @process_coverage, notice: "Batch sent to M.D. for review"  }
     end
 
@@ -470,7 +471,7 @@ class ProcessCoveragesController < ApplicationController
       @batch = LoanInsurance::Batch.find_by(id: params[:process_coverage][:batch])
       rate = params[:process_coverage][:premium].to_d
       @batch.update_prem_substandard(rate)
-      @batch.substandard = true
+      # @batch.substandard = true
     else
       @batch = Batch.find_by(id: params[:process_coverage][:batch])
       @premium = params[:process_coverage][:premium].to_d
@@ -479,7 +480,7 @@ class ProcessCoveragesController < ApplicationController
 
 
     @batch.insurance_status = :pending
-    @batch.batch_remarks.build(remark: "Adjusted Premium set. Premium: #{@batch.premium}", status: :pending, user_type: "Employee", user_id: current_user.userable.id)
+    @batch.batch_remarks.build(remark: "Adjusted Premium set. Premium: #{@batch.premium}", status: :prem_adjust, user_type: "Employee", user_id: current_user.userable.id)
 
     respond_to do |format|
       # raise 'errors'
@@ -502,9 +503,10 @@ class ProcessCoveragesController < ApplicationController
 
     @batch = LoanInsurance::Batch.find_by(id: params[:process_coverage][:batch])
     loan_amount = params[:process_coverage][:loan_amount]
-    @batch.loan_amount = loan_amount
+    # @batch.loan_amount = loan_amount
+    @batch.adjusted_cov = loan_amount
     @batch.insurance_status = :pending
-    @batch.batch_remarks.build(remark: "Adjusted Coverage set. Coverage: #{@batch.loan_amount}", status: :pending, user_type: "Employee", user_id: current_user.userable.id)
+    @batch.batch_remarks.build(remark: "Adjusted Coverage set. Coverage: #{@batch.loan_amount}", status: :cov_adjust, user_type: "Employee", user_id: current_user.userable.id)
 
     respond_to do |format|
       if @batch.save!

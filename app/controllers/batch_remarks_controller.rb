@@ -1,6 +1,6 @@
 class BatchRemarksController < ApplicationController
   before_action :authenticate_user!
-  before_action :set_batch_remark, only: %i[ show edit update destroy ]
+  before_action :set_batch_remark, only: %i[ show edit update destroy accept_adjustment ]
 
   # GET /batch_remarks
   def index
@@ -77,18 +77,8 @@ class BatchRemarksController < ApplicationController
     else
 
       respond_to do |format|
-        # if @batch_remark.remark.empty? && @batch_remark.batch_status == "For reconsideration" && params[:batch_type] == "Batch"
-        #   format.html { render :new, alert: "Unable to create empty request" }
-        # elsif @batch_remark.remark.empty? && @batch_remark.batch_status == "For reconsideration" && params[:batch_type] == "BatchDependent"
-        #   format.html { render :new, alert: "Unable to create empty request" }
-        # elsif @batch_remark.remark.empty?
-        #   # format.html { return redirect_to process_coverage_path(@process_coverage), alert: "Unable to create empty request."}
-        #   format.html { render :new, alert: "Unable to create empty request" }
-
-        # end
         if @batch_remark.save
 
-          # byebug
           # redirect_to @batch_remark, notice: "Batch remark was successfully created."
           if params[:batch_remark][:batch_status] == "Pending"
             # format.html { redirect_to pending_batch_process_coverage_path(id: @process_coverage, batch: @batch)}
@@ -137,6 +127,7 @@ class BatchRemarksController < ApplicationController
 
           elsif params[:batch_remark][:batch_status] == "MD"
             @group_remit = @batch.group_remits.find_by(type: "Remittance")
+            @batch.update(insurance_status: :pending)
             # format.html { redirect_to all_health_decs_group_remit_batches_path(@group_remit.process_coverage), notice: "Recommendation created." }
             format.html { redirect_to med_directors_home_path, notice: "Recommendation created." }
           elsif params[:batch_remark][:batch_status] == "For reconsideration"

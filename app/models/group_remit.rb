@@ -55,6 +55,8 @@ class GroupRemit < ApplicationRecord
     refunded: 2
   }
 
+  GR_CLASS = ["LoanInsurance::GroupRemit", "Remittance", "BatchRemit"]
+
   def to_s
     name
   end

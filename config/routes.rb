@@ -236,7 +236,9 @@ Rails.application.routes.draw do
       get :terminate, on: :member
       get :modal_remarks, on: :member
       get :find_loan, on: :member
-
+      get :adjusted, on: :member
+      post :accept_adjustment, on: :member
+      post :cancel_coverage, on: :member
       collection do
         get :approve_all
       end
@@ -377,6 +379,7 @@ Rails.application.routes.draw do
   resources :underwriting_routes
   resources :batch_remarks do
     get :form_md, on: :member
+    post :accept_adjustment, on: :member
   end
   resources :dependent_remarks
 

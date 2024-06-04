@@ -29,7 +29,7 @@
                 <%#= link_to "Process", pc, data: {turbo: false}, class: "btn btn-sm btn-outline-success" %>
                 <%= button_to "Process", set_processor_process_coverage_path(pc), method: :post, data: { turbo: false }, class: "btn btn-sm btn-outline-success", onclick: "return confirm('Are you sure you want to process this?')" %>
               <% else %>
-                <% if pc.processor == current_user.userable %>
+                <% if pc.processor == current_user.userable || (current_user.head? || current_user.senior_officer?) %>
                   <%= link_to "View", pc, data: {turbo: false}, class: "btn btn-sm btn-outline-primary" %>
                   <% if pc.approved? %>
                     <%= link_to lppi_summary_loan_insurance_group_remit_path(pc.group_remit), class: "btn btn-sm btn-warning", title: "Download Summary" do %>

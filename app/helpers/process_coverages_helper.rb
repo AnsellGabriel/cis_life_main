@@ -121,7 +121,7 @@ module ProcessCoveragesHelper
       case rank
       when "analyst"
         if p_status == "for_process"
-          if b_status == "for_review"
+          if b_status == "for_review" || b_status == "pending"
             "d-inline"
           else
             "d-none"
@@ -245,15 +245,27 @@ module ProcessCoveragesHelper
   end
 
   def check_md_reco(batch)
-    if batch.batch_remarks.where(status: :md_reco).count > 0
-      "table-warning"
-    elsif batch.approved?
+    case batch.insurance_status
+    when "approved"
       "table-success"
-    elsif batch.denied?
+    when "denied"
       "table-danger"
-    elsif batch.pending?
+    when "pending"
       "table-secondary"
+    else
+      if batch.batch_remarks.where(status: :md_reco).count > 0
+        "table-secondary"
+      end
     end
+    # if batch.batch_remarks.where(status: :md_reco).count > 0
+    #   "table-warning"
+    # elsif batch.approved?
+    #   "table-success"
+    # elsif batch.denied?
+    #   "table-danger"
+    # elsif batch.pending? || batch.md_recom?
+    #   "table-secondary"
+    # end
   end
   
 end

@@ -62,6 +62,11 @@ class AgreementsController < ApplicationController
       @agreement = current_user.userable.agreements.build
     else
       @agreement = Agreement.new(agreement_params)
+      @agreement.emp_agreements.build(
+        employee: current_user.userable,
+        category_type: :main_approver,
+        team: current_user.userable.team
+      )
     end
 
     if @agreement.save!

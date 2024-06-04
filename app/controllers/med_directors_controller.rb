@@ -10,6 +10,8 @@ class MedDirectorsController < ApplicationController
     @for_review = 0
     @reviewed = 0
     @gyrt_batches = Batch.includes(:batch_remarks).where(for_md: true)
+    # @gyrt_batches = Batch.includes(:batch_remarks).where(for_md: true, insurance_status: :md_recom)
+    # @lppi_batches = LoanInsurance::Batch.includes(:batch_remarks).where(for_md: true, insurance_status: :md_recom)
     @lppi_batches = LoanInsurance::Batch.includes(:batch_remarks).where(for_md: true)
 
     @pagy_batches, @combined = pagy_array((@batches = (@gyrt_batches + @lppi_batches).sort_by do |batch|

@@ -6,6 +6,9 @@
       </div>
       <div class="col-6">
         <%= render "process_remarks", process_remarks: @filtered_remarks, process_coverage: process_coverage %>
+        <% if process_coverage.group_remit.remarks.present? %>
+          <%= link_to "Coop Remarks", group_remit_remarks_path(process_coverage.group_remit), class: small_btn('danger'), data: {turbo_frame: 'reg_form_modal'} %>
+        <% end %>
       </div>
     </div>
     <%= render "pro_cov_lppi", process_coverage: process_coverage %>
@@ -16,6 +19,9 @@
       </div>
       <div class="col-6">
         <%= render "process_remarks", process_remarks: @filtered_remarks, process_coverage: process_coverage %>
+        <% if process_coverage.group_remit.remarks.present? %>
+          <%= link_to "Coop Remarks", group_remit_remarks_path(process_coverage.group_remit), class: small_btn('danger'), data: {turbo_frame: 'reg_form_modal'} %>
+        <% end %>
         <% group_remit = process_coverage.group_remit %>
         <% if group_remit.refund_amount %>
           <div class="card">
@@ -95,7 +101,7 @@
                 </div>
               </div>
                 <div class="col-10">
-                    <% if ['for_process', 'pending', 'reprocess_approved', 'for_head_approval'].include?(process_coverage.status) %>
+                    <% if (['for_process', 'pending', 'reprocess_approved', 'for_head_approval'].include?(process_coverage.status) && pc.processor == current_user.userable) %>
                       <% if process_coverage.group_remit.batches.where(insurance_status: [:pending, :for_review]).count > 0 %>
                         <div class="text-end">
                           <%= link_to "Accept All Eligible", approve_all_group_remit_batches_path(@group_remit,group_remit: process_coverage.group_remit, process_coverage: process_coverage), class: "btn btn-success", onclick: "return confirm('Are you sure?')", method: :get %>

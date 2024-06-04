@@ -8,3 +8,8 @@
       cron: '25 13 * * *' 
       class: 'LoanStatusUpdater'
       queue: 'default'
+    payment_reminder:
+      cron: '25 16 * * *'
+      class: 'GroupRemitPaymentStatusUpdater'
+      queue: 'default'
+

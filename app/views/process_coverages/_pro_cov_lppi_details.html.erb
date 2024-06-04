@@ -6,6 +6,10 @@
       <%= process_coverage.group_remit.agreement.cooperative %>
     <% end %>
     <%= content_tag :p do %>
+      <strong>Address:</strong>
+      <%= process_coverage.group_remit.agreement.cooperative&.get_address %>
+    <% end %>
+    <%= content_tag :p do %>
       <strong>Agent:</strong>
       <%= process_coverage.group_remit.agreement.agent %>
     <% end %>

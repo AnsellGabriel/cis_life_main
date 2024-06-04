@@ -18,4 +18,8 @@ class CoopUser < ApplicationRecord
   def get_fullname
     "#{first_name} #{last_name}"
   end
+
+  def signed_fullname
+    "#{first_name} #{middle_name[0]}. #{last_name}".titleize
+  end
 end

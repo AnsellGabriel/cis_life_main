@@ -46,7 +46,7 @@
                   <small><%= batch.get_group_remit.agreement.cooperative %> <br>
                   <%= content_tag :small, batch.get_group_remit.agreement.plan, class: "fw-lighter" %> <br>
                   
-                  <% if batch.batch_remarks.where(status: :md_reco).count > 0 %>
+                  <% if batch.batch_remarks.where(status: :md_reco, user: current_user.userable).count > 0 %>
                     <%= content_tag :span, "Already Checked.", class: "fw-lighter text-success" %>
                   <% else %>
                     <%= content_tag :span, "For M.D. Recommendation", class: "fw-lighter text-warning" %>
