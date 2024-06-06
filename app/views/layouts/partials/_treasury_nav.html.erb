@@ -1,17 +1,12 @@
 <% if current_user.head? %>
   <%= link_to "For Approval", treasury_for_approval_path, class: "nav-link" %>
 <% end %>
-<%= render 'layouts/partials/nav_dropdown', title: 'Business Checks' do %>
-  <%= link_to "Index", treasury_checks_path	, class: "dropdown-item" %>
-  <%= link_to "Requests", requests_treasury_checks_path	, class: "dropdown-item" %>
-<% end %>
-<%= render 'layouts/partials/nav_dropdown', title: 'Cashier Entries' do %>
-  <%= link_to "Index", treasury_cashier_entries_path	, class: "dropdown-item" %>
-<% end %>
-<%= render 'layouts/partials/nav_dropdown', title: 'Debit Advices' do %>
-  <%= link_to "Index", treasury_debit_advices_path	, class: "dropdown-item" %>
-<% end %>
 <%= link_to "For ORs", payments_path	, class: "nav-link" %>
+<%= render 'layouts/partials/nav_dropdown', title: 'For Payments' do %>
+  <%= link_to "Business Checks", requests_treasury_checks_path	, class: "dropdown-item" %>
+  <%= link_to "Debit Advices", treasury_debit_advices_path	, class: "dropdown-item" %>
+<% end %>
+<%= link_to "Cashier Entries", treasury_cashier_entries_path, class: "nav-link" %>
 <%= render 'layouts/partials/nav_dropdown', title: 'Encoding' do %>
   <%= link_to "Payment Types", treasury_payment_types_path	, class: "dropdown-item" %>
 <% end %>

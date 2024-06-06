@@ -30,8 +30,8 @@
 <table class="<%= table_sm_hoverable %>">
   <thead class="table-dark">
     <tr>
-      <th class="text-center">DA No.</th>
-      <th class="text-center">Date</th>
+      <th class="text-center" style="min-width: 100px">DA No.</th>
+      <th class="text-center" style="min-width: 100px">Date</th>
       <th class="text-center">Payee</th>
       <th class="text-center">Amount</th>
       <th class="text-center">Status</th>
@@ -45,7 +45,7 @@
           <td class="<%= centered_cell %>">
             <%= link_to da.voucher, da %>
           </td>
-          <td class="<%= centered_cell %>"><%= short_month_day_year(da.date_voucher) %></td>
+          <td class="<%= centered_cell %>"><%= month_day_year(da.date_voucher) %></td>
           <td class="align-middle"><%= da.payable %></td>
           <td class="<%= centered_cell %>"><%= to_curr(da.amount) %></td>
           <td class="<%= centered_cell %>">

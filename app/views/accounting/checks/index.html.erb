@@ -29,8 +29,8 @@
 <table class="<%= table_sm_hoverable %>">
   <thead class="table-dark">
     <tr>
-      <th>Voucher</th>
-      <th class="text-center">Date</th>
+      <th class="text-center" style="min-width: 100px">Voucher</th>
+      <th class="text-center" style="min-width: 100px">Date</th>
       <th>Payee</th>
       <th class="text-center">Amount</th>
       <th class="text-center">Status</th>
@@ -41,7 +41,7 @@
     <% if @checks.present? %>
       <% @checks.each do |check| %>
         <tr>
-          <td>
+          <td class="text-center">
             <%= link_to "CV#{check.voucher}", check, class: 'text-primary', title: 'View'%>
           </td>
           <td class="text-center"><%= month_day_year(check.date_voucher) %></td>

@@ -5,6 +5,7 @@
         <p class="mb-0 text-muted"><small>Receipt Number</small></p>
         <h3 class="text-primary"><%= entry.or_no %></h3>
         <p><small><strong>OR date:</strong> <span><%= month_day_year(entry.or_date) %></span></small></p>
+        <p><small><strong>Created by:</strong> <span><%= entry.employee %></span></small></p>
         <p class="badge bg-<%= entry.decorate.status_color %>"><%= entry.status.humanize %></p>
       </div>
       <div class="">
