@@ -10,7 +10,8 @@
         flatpickr_prev_arrow: "Prev" },
         placeholder: 'Date From',
         error: '*Required',
-        class: 'form-control text-center filter_field'
+        class: 'form-control text-center filter_field',
+        value: params[:date_from]
       %> 
     <span>-</span>
     <%= form.text_field :date_to, as: :string, data: {
@@ -20,7 +21,8 @@
         flatpickr_prev_arrow: "Prev" },
         placeholder: 'Date To',
         error: '*Required',
-        class: 'form-control text-center filter_field'
+        class: 'form-control text-center filter_field',
+        value: params[:date_to]
       %> 
     <%= form.submit "Search", class: "#{small_btn('warning')} filter_btn" %>
   </div>

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2024_06_06_024342) do
+ActiveRecord::Schema[7.0].define(version: 2024_06_10_025519) do
   create_table "accounting_vouchers", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.date "date_voucher"
     t.string "voucher"
@@ -26,13 +26,14 @@ ActiveRecord::Schema[7.0].define(version: 2024_06_06_024342) do
     t.integer "audit", default: 0
     t.integer "audited_by"
     t.date "post_date"
-    t.integer "accountant_id"
     t.integer "approved_by"
     t.integer "certified_by"
     t.string "type"
     t.integer "branch"
     t.integer "payout_status", default: 0
     t.bigint "request_id"
+    t.bigint "employee_id"
+    t.index ["employee_id"], name: "index_accounting_vouchers_on_employee_id"
     t.index ["payable_type", "payable_id"], name: "index_accounting_vouchers_on_payable"
     t.index ["request_id"], name: "index_accounting_vouchers_on_request_id"
     t.index ["treasury_account_id"], name: "index_accounting_vouchers_on_treasury_account_id"
@@ -1508,6 +1509,7 @@ ActiveRecord::Schema[7.0].define(version: 2024_06_06_024342) do
     t.index ["requestable_type", "requestable_id"], name: "index_voucher_requests_on_requestable"
   end
 
+  add_foreign_key "accounting_vouchers", "employees"
   add_foreign_key "accounting_vouchers", "treasury_accounts"
   add_foreign_key "accounting_vouchers", "voucher_requests", column: "request_id"
   add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"

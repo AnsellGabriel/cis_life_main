@@ -8,5 +8,6 @@
 
   <div class="form-actions text-center">
     <%= f.button :submit, 'Add Bank', class: 'btn-success' %>
+    <%= link_to 'Back', approve_claim_debit_claims_process_claim_path(params[:pc_id]), class: 'btn btn-secondary' %>
   </div>
 <% end %>

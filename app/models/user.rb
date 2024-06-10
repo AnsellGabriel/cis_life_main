@@ -13,6 +13,7 @@ class User < ApplicationRecord
   has_many :remarks, dependent: :destroy
   has_one :progress_tracker, as: :trackable, dependent: :destroy
   # accepts_nested_attributes_for :ff
+  delegate :initials_name, to: :userable
 
   enum rank: {
     rank_and_file: 0,

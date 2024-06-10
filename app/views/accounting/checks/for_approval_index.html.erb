@@ -17,7 +17,7 @@
   <tbody>
     <% if @checks.present? %>
       <% @checks.each do |check| %>
-        <% accountant = User.find(check.accountant_id) %>
+        <% accountant = check.employee %>
         <tr>
           <td>
             <%= link_to "CV#{check.voucher}", check, class: 'text-primary', title: 'View'%>
@@ -25,7 +25,7 @@
           <td class="text-center"><%= month_day_year(check.date_voucher) %></td>
           <td><%= check.payable %></td>
           <td class="text-end"><%= to_curr(check.amount) %></td>
-          <td><%= accountant.userable.signed_fullname %></td>
+          <td><%= accountant.signed_fullname %></td>
         </tr>
       <% end %>
     <% else %>

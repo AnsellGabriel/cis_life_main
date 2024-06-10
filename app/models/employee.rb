@@ -11,6 +11,7 @@ class Employee < ApplicationRecord
   has_many :agreements, through: :emp_agreements
   has_many :notifications, as: :notifiable, dependent: :destroy
   has_many :treasury_cashier_entries
+  has_many :vouchers, class_name: "Accounting::Voucher"
 
   validates_presence_of :last_name, :first_name, :branch, :department_id, :designation
   # has_one :member_import_tracker, as: :trackable, dependent: :destroy
