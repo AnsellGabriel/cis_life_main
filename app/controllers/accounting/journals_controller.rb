@@ -1,10 +1,12 @@
 class Accounting::JournalsController < ApplicationController
+  include Accounting::Filterable
+
   before_action :set_journal, only: %i[ show edit update destroy download]
   before_action :set_payables, only: %i[ new edit create update]
 
   def download
     @ledger_entries = @journal.general_ledgers
-    @accountant = Employee.find(@journal.accountant_id)
+    @accountant = @journal.employee
     @approver = Employee.find(@journal.approved_by) if @journal.approved_by.present?
     @certifier = Employee.find(@journal.certified_by) if @journal.certified_by.present?
 
@@ -24,14 +26,8 @@ class Accounting::JournalsController < ApplicationController
 
   # GET /accounting/journals
   def index
-    if params[:date_from].present? && params[:date_to].present?
-      @q = Accounting::Journal.where(date_voucher: params[:date_from]..params[:date_to]).order(created_at: :desc).ransack(params[:q])
-    else
-      @q = Accounting::Journal.all.order(created_at: :desc).ransack(params[:q])
-    end
-
-    @journals = @q.result
-    @pagy, @journals = pagy(@journals, items: 10)
+    @q = Accounting::Journal.ransack(params[:q])
+    filtered_and_paginated_vouchers # concerns/accounting/filterable.rb
   end
 
   def requests
@@ -70,7 +66,7 @@ class Accounting::JournalsController < ApplicationController
   # POST /accounting/journals
   def create
     @journal = Accounting::Journal.new(journal_params)
-    @journal.accountant_id = current_user.userable.id
+    @journal.employee = current_user.userable
     @journal.branch = current_user.userable.branch_before_type_cast
 
     if @journal.save

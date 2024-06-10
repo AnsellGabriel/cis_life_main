@@ -16,14 +16,14 @@
   <tbody>
     <% if @journals.present? %>
       <% @journals.each do |journal| %>
-        <% accountant = User.find(journal.accountant_id) %>
+        <% accountant = journal.employee %>
         <tr>
           <td>
             <%= link_to "#{journal.formatted_voucher}", journal, class: 'text-primary', title: 'View'%>
           </td>
           <td class="text-center"><%= month_day_year(journal.date_voucher) %></td>
           <td><%= journal.payable %></td>
-          <td><%= accountant.userable.signed_fullname %></td>
+          <td><%= accountant.signed_fullname %></td>
         </tr>
       <% end %>
     <% else %>

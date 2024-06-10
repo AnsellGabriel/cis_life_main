@@ -1,14 +1,16 @@
 class Accounting::ChecksController < ApplicationController
+  include Accounting::Filterable
+
   before_action :authenticate_user!
   before_action :set_check, only: %i[ show edit update destroy cancel check claimable download print]
   before_action :set_payables, only: %i[ new edit create update]
 
   def download
     @ledger_entries = @check.general_ledgers
-    @accountant = Employee.find(@check.accountant_id)
+    @accountant = @check.employee
     @approver = Employee.find(@check.approved_by) if @check.approved_by.present?
     @certifier = Employee.find(@check.certified_by) if @check.certified_by.present?
-    @auditor = Employee.find(@check.audited_by) if @check.audited_by.present?
+    @auditor = User.find(@check.audited_by) if @check.audited_by.present?
     @amount_in_words = amount_to_words(@check.amount)
 
     respond_to do |format|
@@ -21,10 +23,10 @@ class Accounting::ChecksController < ApplicationController
 
   def print
     @ledger_entries = @check.general_ledgers
-    @accountant = Employee.find(@check.accountant_id)
+    @accountant = @check.employee
     @approver = Employee.find(@check.approved_by) if @check.approved_by.present?
     @certifier = Employee.find(@check.certified_by) if @check.certified_by.present?
-    @auditor = Employee.find(@check.audited_by) if @check.audited_by.present?
+    @auditor = User.find(@check.audited_by) if @check.audited_by.present?
     @amount_in_words = amount_to_words(@check.amount)
 
     respond_to do |format|
@@ -72,14 +74,8 @@ class Accounting::ChecksController < ApplicationController
 
   # GET /accounting/checks
   def index
-    if params[:date_from].present? && params[:date_to].present?
-      @q = Accounting::Check.where(date_voucher: params[:date_from]..params[:date_to]).order(created_at: :desc).ransack(params[:q])
-    else
-      @q = Accounting::Check.all.order(created_at: :desc).ransack(params[:q])
-    end
-
-    @checks = @q.result
-    @pagy, @checks = pagy(@checks, items: 10)
+    @q = Accounting::Check.ransack(params[:q])
+    filtered_and_paginated_vouchers # concerns/accounting/filterable.rb
   end
 
   # GET /accounting/checks/1
@@ -116,7 +112,7 @@ class Accounting::ChecksController < ApplicationController
   # POST /accounting/checks
   def create
     @check = Accounting::Check.new(modified_check_params)
-    @check.accountant_id = current_user.userable.id
+    @check.employee = current_user.userable
     @check.branch = current_user.userable.branch_before_type_cast
 
     if @check.save
@@ -185,5 +181,4 @@ class Accounting::ChecksController < ApplicationController
     # Format the result
     result = "#{integer_part_words.titleize} Pesos and #{decimal_part}/100 only"
   end
-
 end

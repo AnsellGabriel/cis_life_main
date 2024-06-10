@@ -7,15 +7,39 @@
       <%= link_to 'Remarks', accounting_check_remarks_path(@request, e_t: @request.entry_type), class: 'btn btn-sm btn-warning', data: {turbo_frame: 'reg_form_modal'} %>
     <% else%>
       <%= render 'new_voucher_btn' %>
-      <%= link_to new_accounting_check_remark_path(@request, e_t: @request.entry_type), class: 'btn btn-sm btn-danger', data: {turbo_frame: 'reg_form_modal'}  do %>
-        <i class="bi bi-x-circle-fill"></i> Reject Request
+      <% unless @request.payment_type == 'journal_voucher' %>
+        <%= link_to new_accounting_check_remark_path(@request, e_t: @request.entry_type), class: 'btn btn-sm btn-danger', data: {turbo_frame: 'reg_form_modal'}  do %>
+          <i class="bi bi-x-circle-fill"></i> Reject Request
+        <% end %>
       <% end %>
     <% end %>
   <% end %>
 
-  <%= content_tag :button, "Attachments", 
+  <%= content_tag :button, 
     class: small_btn('outline-primary'), 
     data: {bs_toggle: "modal",
       bs_target: "#attachmentsModal"
-    }
+    } do
   %>
+    <i class="bi bi-paperclip"></i> Attachments
+  <% end %>
+
+  <% if @request.debit_advice? %>
+    <% if @request.requestable.remarks.present? %>
+      <% if @request.requestable.is_a?(Claims::ProcessClaim) %>
+        <%= link_to claims_process_claim_remarks_path(@request.requestable), class: "btn btn-outline-primary btn-sm position-relative", data: { turbo_frame: "reg_form_modal" } do %>
+          <i class="bi bi-journal-bookmark-fill"></i> Notes
+        <% end %>
+      <% end %>
+    <% end %>
+  <% elsif @request.journal_voucher? %>
+    <% if @request.requestable.request_id.present? %>
+      <% request = Accounting::VoucherRequest.find(@request.requestable.request_id)%>
+      <% if request.requestable.is_a?(Claims::ProcessClaim) %>
+        <%= link_to claims_process_claim_remarks_path(request.requestable), class: "btn btn-outline-primary btn-sm position-relative", data: { turbo_frame: "reg_form_modal" } do %>
+          <i class="bi bi-journal-bookmark-fill"></i> Notes
+        <% end %>
+      <% end %>
+    <% end %>
+  <% end %>
+

@@ -1,9 +1,7 @@
-<%= content_tag :h1, "List of Loan Insurance Loans" %>
-
-
-<div class="text-end mb-3">
-  <%= link_to new_loan_insurance_loan_path, class: 'btn btn-primary' do %>
-    New Loan
+<div class="<%= flex_justify_align('', 'center') %> gap-1 mb-3">
+  <%= content_tag :h3, "Loan Types" %>
+  <%= link_to new_loan_insurance_loan_path, class: small_btn('primary') do %>
+    <i class="bi bi-plus-lg"></i>
   <% end %>
 </div>
 
@@ -34,7 +32,7 @@
           <td><%= loan_insurance_loan.for_sii %></td>
       
             <td>
-              <%= link_to 'View', loan_insurance_loan, class: 'btn btn-secondary btn-sm' %>
+              <%#= link_to 'View', loan_insurance_loan, class: 'btn btn-secondary btn-sm' %>
               <%= link_to 'Edit', edit_loan_insurance_loan_path(loan_insurance_loan), class: 'btn btn-secondary btn-sm' %>
               <%= link_to "Delete", loan_insurance_loan, class: "btn btn-danger btn-sm", method: :delete, data: { "turbo-method": :delete, turbo_confirm: "Are you sure?" } %>
             </td>

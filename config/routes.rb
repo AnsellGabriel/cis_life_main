@@ -6,10 +6,12 @@ Rails.application.routes.draw do
   resources :teams do
     get :selected, on: :member
   end
+
   resources :demo_schedules
   resources :transmittals do
     get :remove_or, on: :member
   end
+
   resources :special_arrangements
   resources :sip_pbs
   resources :sip_abs
@@ -21,6 +23,7 @@ Rails.application.routes.draw do
   resources :claim_request_for_payments
   resources :claim_payments
   get "actuarial/index"
+  
   namespace :actuarial do
     resources :reserves
     resources :reserve_batches
@@ -60,6 +63,7 @@ Rails.application.routes.draw do
       get :print_sheet, to: "process_claims#print_sheet", on: :member
       get :approve_claim_debit, on: :member
       # get :claimable, on: :collection
+      resources :remarks
     end
 
     resources :claim_remarks do

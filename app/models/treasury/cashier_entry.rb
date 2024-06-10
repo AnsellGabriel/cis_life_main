@@ -2,7 +2,7 @@ class Treasury::CashierEntry < ApplicationRecord
   attr_accessor :dummy_payee, :dummy_entry_type, :product_check
   before_save :format_or_no
 
-  validates_presence_of :or_no, :or_date, :treasury_account_id, :global_entriable, :amount
+  validates_presence_of :or_no, :or_date, :treasury_account_id, :global_entriable, :amount, :employee_id, :branch
 
   # enum payment_type: { gyrt: 1, lppi: 2, others: 3 }
   enum status: { pending: 0, posted: 1, cancelled: 2, for_approval: 3}
@@ -10,6 +10,7 @@ class Treasury::CashierEntry < ApplicationRecord
 
   belongs_to :treasury_account, class_name: "Treasury::Account"
   belongs_to :treasury_payment_type, class_name: "Treasury::PaymentType"
+  belongs_to :employee
   belongs_to :entriable, polymorphic: true
   belongs_to :agreement, optional: true
   belongs_to :plan, optional: true

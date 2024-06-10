@@ -8,6 +8,7 @@
         </div>
         <h3 class="text-primary"><%= "#{journal.voucher}" %></h3>
         <p><small><strong>Voucher date:</strong> <span><%= month_day_year(journal.date_voucher) %></span></small></p>
+        <p><small><strong>Created by:</strong> <span><%= journal.employee&.signed_fullname %></span></small></p>
         <% if journal.post_date? %>
           <p><small><strong>Post date:</strong> <span><%= month_day_year(journal.post_date) %></span></small></p>
         <% end %>
