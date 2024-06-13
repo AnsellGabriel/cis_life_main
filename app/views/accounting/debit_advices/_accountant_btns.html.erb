@@ -14,13 +14,19 @@
 
   <% if @debit_advice.posted? %>
     <%= link_to download_accounting_debit_advice_path(@debit_advice, format: :pdf), class: small_btn('outline-primary'), target: '_blank', title: 'PDF' do %>
-      <i class="bi bi-filetype-pdf"></i> PDF
+      <i class="bi bi-filetype-pdf"></i>
     <% end %>
   <% end %>
 
   <% if @debit_advice.attachment.present? %>
     <%= link_to @debit_advice.attachment.receipt.url, class: 'btn btn-sm btn-outline-primary', target: "_blank" do %>
       <i class="bi bi-eye-fill"></i> View Payment
+    <% end %>
+  <% end %>
+
+  <% if @debit_advice.paid? %>
+    <%= link_to accounting_check_remarks_path(@debit_advice, e_t: @debit_advice.entry_type), class: 'btn btn-sm btn-warning', data: {turbo_frame: 'reg_form_modal'} do %>
+      <i class="bi bi-card-list"></i> Remarks
     <% end %>
   <% end %>
 </div>

@@ -33,10 +33,16 @@
   <% elsif @request.journal_voucher? %>
     <% if @request.requestable.request_id.present? %>
       <% request = Accounting::VoucherRequest.find(@request.requestable.request_id)%>
-      <% if request.requestable.is_a?(Claims::ProcessClaim) %>
+      <% if request.requestable.is_a?(Claims::ProcessClaim) && request.requestable.remarks.present? %>
         <%= link_to claims_process_claim_remarks_path(request.requestable), class: "btn btn-outline-primary btn-sm position-relative", data: { turbo_frame: "reg_form_modal" } do %>
           <i class="bi bi-journal-bookmark-fill"></i> Notes
         <% end %>
+      <% end %>
+    <% end %>
+
+    <% if @request.requestable.remarks.present? %>
+      <%= link_to accounting_check_remarks_path(@request.requestable, e_t: @request.requestable.entry_type, closable: true), class: 'btn btn-sm btn-outline-primary', data: {turbo_frame: 'reg_form_modal'} do %>
+        <i class="bi bi-card-checklist"></i> Remarks
       <% end %>
     <% end %>
   <% end %>

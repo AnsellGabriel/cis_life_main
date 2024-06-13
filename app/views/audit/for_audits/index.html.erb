@@ -14,7 +14,6 @@
         <th class="text-center" scope="col">Created by</th>
         <th class="text-center" scope="col">Amount</th>
         <th class="text-center" scope="col">Status</th>
-        <th class="text-center" scope="col">Actions</th>
       </tr>
     </thead>
 
@@ -22,26 +21,25 @@
       <% if @vouchers.present? %> 
         <% @vouchers.each do |voucher| %>
           <tr>
-            <td class="text-center align-middle"><%= (voucher.type == "Accounting::Check" ? "CV" : "") + voucher.voucher %></td>
+            <td class="text-center align-middle" style="min-width: 100px">
+              <% if voucher.type == "Accounting::Check" %>
+                <%= link_to accounting_check_path(voucher), title: 'Show' do %>
+                  <%= (voucher.type == "Accounting::Check" ? "CV" : "") + voucher.voucher %>
+                <% end %>
+              <% elsif voucher.type == "Accounting::DebitAdvice" %>
+                <%= link_to accounting_debit_advice_path(voucher), title: 'Show' do %>
+                  <%= (voucher.type == "Accounting::Check" ? "CV" : "") + voucher.voucher %>
+                <% end %>
+              <% end %>
+            </td>
             <td class="text-center align-middle"><%= voucher.payable %></td>
-            <td class="text-center align-middle"><%= voucher.voucher_request&.payment_type&.humanize %></td>
-            <td class="text-center align-middle"><%= voucher.voucher_request&.requester %></td>
+            <td class="text-center align-middle" style="min-width: 100px"><%= voucher.payment_type %></td>
+            <td class="text-center align-middle" style="min-width: 150px"><%= voucher.employee.signed_fullname %></td>
             <td class="text-end align-middle"><%= to_curr voucher.amount %></td>
             <td class="text-center align-middle">
               <span class="<%= voucher.decorate.audit_badge %>">
                 <%= voucher.decorate.audit_text %>
               </span>
-            </td>
-            <td class="text-center align-middle">
-              <% if voucher.type == "Accounting::Check" %>
-                <%= link_to accounting_check_path(voucher), class: small_btn('outline-primary'), title: 'Show' do %>
-                  <i class="bi bi-eye-fill"></i>
-                <% end %>
-              <% elsif voucher.type == "Accounting::DebitAdvice" %>
-                <%= link_to accounting_debit_advice_path(voucher), class: small_btn('outline-primary'), title: 'Show' do %>
-                  <i class="bi bi-eye-fill"></i>
-                <% end %>
-              <% end %>
             </td>
           </tr>
         <% end %>
@@ -53,3 +51,4 @@
 
     </tbody>
   </table>
+
