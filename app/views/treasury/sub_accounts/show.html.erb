@@ -38,18 +38,17 @@
       <% end %>
 
       <% if @searched_ledgers.present? and params[:download].nil? %>
-        <%= link_to "Generate CSV", treasury_account_path(@account, download_csv: 'true', date_from: params[:date_from], date_to: params[:date_to]), 
+        <%= link_to "Generate CSV", treasury_sub_account_path(@account, download_csv: 'true', date_from: params[:date_from], date_to: params[:date_to]), 
           class: 'btn-sm btn btn-warning', 
           method: :get,
           data: {turbo: false, action: "click->report-checker#clearDownload"}
         %>
-        <%= link_to "Print PDF", treasury_account_path(@account, download_pdf: 'true', date_from: params[:date_from], date_to: params[:date_to] ), 
+        <%= link_to "Print PDF", treasury_sub_account_path(@account, download_pdf: 'true', date_from: params[:date_from], date_to: params[:date_to] ), 
           class: 'btn-sm btn btn-warning', 
           method: :get,
           data: {turbo: false, action: "click->report-checker#clearDownload"}
         %>
       <% end %>
-
     </div>
 
     <% if params[:date_from].present? %>
@@ -116,3 +115,4 @@
     <% end %>
   </div>
 </div>
+

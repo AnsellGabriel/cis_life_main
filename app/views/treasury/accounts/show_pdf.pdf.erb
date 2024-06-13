@@ -36,7 +36,7 @@
           <% debit = entry.debit? ? entry.amount : 0 %>
           <% credit = entry.credit? ? entry.amount : 0 %>
           <tr class="text-center">
-            <td class="text-start"><%= entry.ledgerable.reference %></td>
+            <td class="text-start"><%= entry.ledgerable&.reference %></td>
             <td class="text-end"><%= short_month_day_year(entry.transaction_date) %></td>
             <td class="text-start"><%= entry.payee %></td>
             <td class="text-start"><%= entry.description %></td>

@@ -12,6 +12,12 @@ module Treasuries::Ledgerable
       @balance_date = DateTime.new(Date.today.year, 1, 1)..params[:date_to]&.to_date
     end
 
+    def set_ledger_and_pagy
+      @ledgers = @account.general_ledgers.where(transaction_date: @balance_date)
+      @searched_ledgers = @ledgers.where(transaction_date: @search_date)
+      @pagy, @view_ledger = pagy(@searched_ledgers, items: 20)
+    end
+
     def compute_balance
       # sum of all debits and credits before the first ledger entry
       initial_debit = @ledgers.debits.where("id < ?", @view_ledger.first&.id).sum(:amount)
@@ -21,12 +27,6 @@ module Treasuries::Ledgerable
       @initial_balance = initial_debit - initial_credit
       @total_debit = @searched_ledgers.debits.sum(:amount)
       @total_credit = @searched_ledgers.credits.sum(:amount)
-    end
-
-    def set_ledger_and_pagy
-      @ledgers = @account.general_ledgers.where(transaction_date: @balance_date)
-      @searched_ledgers = @ledgers.where(transaction_date: @search_date)
-      @pagy, @view_ledger = pagy(@searched_ledgers, items: 20)
     end
   end
 
