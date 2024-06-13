@@ -321,6 +321,7 @@ Rails.application.routes.draw do
 
   # treasury
   namespace :treasury do
+    resources :sub_accounts
     resources :payment_types
     resources :business_checks, as: 'checks', path: 'checks', only: %w[index edit update] do
       get :requests, on: :collection

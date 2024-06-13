@@ -31,7 +31,7 @@ class Reports::AccountLedgerCsvJob
           credit = record.credit? ? record.amount : 0
           @balance += debit - credit
 
-          csv << [record.ledgerable.reference, record.transaction_date.strftime("%B %d, %Y"), record.payee, record.description, number_to_currency(debit, unit: ""), number_to_currency(credit, unit: ""), number_to_currency(@balance, unit: "")]
+          csv << [record.ledgerable&.reference, record.transaction_date.strftime("%B %d, %Y"), record.payee, record.description, number_to_currency(debit, unit: ""), number_to_currency(credit, unit: ""), number_to_currency(@balance, unit: "")]
         end
 
         csv << ["End Balance", number_to_currency(@balance, unit: "")]

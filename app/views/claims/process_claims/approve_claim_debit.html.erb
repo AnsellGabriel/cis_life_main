@@ -3,7 +3,7 @@
     <div class="d-flex gap-1">
       <%= content_tag :h5, 'Select Bank', class: "modal-title", id: "staticBackdropLabel" %>
       <%= link_to new_cooperative_coop_bank_path(@cooperative, pc_id: @process_claim.id), class: small_btn('success') do %>
-        <i class="bi bi-plus-lg"></i>
+        <i class="bi bi-plus-lg"></i> Add Bank
       <% end %>
       <%= link_to @process_claim.remarks.present? ? claims_process_claim_remarks_path(@process_claim) : new_claims_process_claim_remark_path(@process_claim), class: "btn btn-primary btn-sm position-relative", data: { turbo_frame: "reg_form_modal" } do %>
         <i class="bi bi-journal-bookmark-fill"></i> Notes

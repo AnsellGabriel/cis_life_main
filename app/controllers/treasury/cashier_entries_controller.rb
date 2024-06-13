@@ -108,6 +108,8 @@ class Treasury::CashierEntriesController < ApplicationController
   # end
 
   def update
+    @entry.check_agreement # check if the entry has a plan or agreement
+
     if @entry.update(entry_params)
       redirect_to @entry, notice: "Entry updated"
     else

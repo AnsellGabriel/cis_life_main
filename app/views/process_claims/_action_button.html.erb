@@ -2,7 +2,7 @@
     <% if current_user.userable_type == "CoopUser" %>
         <%= link_to '<i class="bi bi-chevron-left"></i>'.html_safe, show_insurance_coop_member_path(@process_claim.claimable), class: 'btn btn-secondary btn-sm' %>
     <% elsif current_user.is_auditor? %>
-        <%= link_to '<i class="bi bi-chevron-left"></i>'.html_safe, accounting_debit_advice_path(@process_claim.voucher_request.vouchers.last
+        <%= link_to '<i class="bi bi-chevron-left"></i>'.html_safe, accounting_debit_advice_path(@process_claim.voucher_requests.last.vouchers.last
     ), class: 'btn btn-outline-secondary btn-sm' %>
     <% elsif current_user.userable_type == "Employee"%>
         <%= link_to '<i class="bi bi-chevron-left"></i>'.html_safe, index_show_process_claims_path(p: @process_claim.claim_route), class: 'btn btn-outline-secondary btn-sm'  %>

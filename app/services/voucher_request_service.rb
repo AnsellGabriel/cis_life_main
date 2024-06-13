@@ -9,41 +9,16 @@ class VoucherRequestService
   end
 
   def create_request
-    request = Accounting::VoucherRequest.find_or_initialize_by(requestable: @requestable)
-
-    request.update!(
+    # request = Accounting::VoucherRequest.find_or_initialize_by(requestable: @requestable)
+    @requestable.voucher_requests.create!(
       amount: @amount,
-      status: request.new_record? ? :pending : :posted,
+      status: :pending,
       particulars: @requestable.try(:particulars).present? ? @requestable.particulars : particulars,
       request_type: @request_type,
       requester: @current_user.userable.signed_fullname,
       payment_type: @payment_type,
       account: @bank_id.present? ? Treasury::Account.find(@bank_id) : nil
     )
-
-    # if request.present?
-      # request.update!(
-      #   amount: @amount,
-      #   status: :posted,
-      #   particulars: @requestable.try(:particulars).present? ? @requestable.particulars : particulars,
-      #   request_type: @request_type,
-      #   requester: @current_user.userable.signed_fullname,
-      #   payment_type: @payment_type,
-      #   account: @bank_id.present? ? Treasury::Account.find(@bank_id) : nil
-      # )
-    # else
-    #   @requestable.create_voucher_request!(
-    #     amount: @amount,
-    #     status: :pending,
-    #     particulars: @requestable.try(:particulars).present? ? @requestable.particulars : particulars,
-    #     request_type: @request_type,
-    #     requester: @current_user.userable.signed_fullname,
-    #     payment_type: @payment_type,
-    #     account: @bank_id.present? ? Treasury::Account.find(@bank_id) : nil
-    #   )
-    # end
-
-    true
   end
 
   private

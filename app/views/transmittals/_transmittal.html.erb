@@ -1,20 +1,22 @@
 <div id="<%= dom_id transmittal %>">
-  <p>
-    <strong>Code:</strong>
-    <%= transmittal.code %>
-  </p>
+  <div class="<%= flex_justify_align('between') %>">
+    <p>
+      <strong>Code:</strong>
+      <%= transmittal.code %>
+    </p>
 
-  <p>
-    <strong>Description:</strong>
-    <%= transmittal.description %>
-  </p>
+    <p>
+      <strong>Description:</strong>
+      <%= transmittal.description %>
+    </p>
 
-  <p>
-    <strong>Type:</strong>
-    <%= transmittal.transmittal_type %>
-  </p>
+    <p>
+      <strong>Type:</strong>
+      <%= transmittal.transmittal_type %>
+    </p>
+  </div>
 
-  <table class="table">
+  <table class="<%= table_sm_hoverable %>">
     <thead>
       <th>OR Number</th>
       <th>OR Date</th>
@@ -39,8 +41,8 @@
             <td><%= val.transmittable.official_receipt %></td>
             <td><%= val.transmittable.get_or_date %></td>
             <td><%= val.transmittable.cooperative %></td>
-            <td>
-              <%= link_to remove_or_transmittal_path(or: val), class: "btn btn-outline-danger", onclick: "return confirm('Are you sure?')" do %>
+            <td class="text-center">
+              <%= link_to remove_or_transmittal_path(or: val), class: small_btn('outline-danger'), onclick: "return confirm('Are you sure?')" do %>
                 <%= bootstrap_icon "x-lg" %>
               <% end %>
             </td>
@@ -52,8 +54,8 @@
             </td>
             <td><%= val.transmittable.get_or_date %></td>
             <td><%= val.transmittable.group_remit.cooperative %></td>
-            <td>
-              <%= link_to remove_or_transmittal_path(or: val), class: "btn btn-sm btn-outline-danger", title: "Remove", onclick: "return confirm('Are you sure?')" do %>
+            <td class="text-center">
+              <%= link_to remove_or_transmittal_path(or: val), class: small_btn('outline-danger'), title: "Remove", onclick: "return confirm('Are you sure?')" do %>
                 <%= bootstrap_icon "x-lg" %>
               <% end %>
             </td>

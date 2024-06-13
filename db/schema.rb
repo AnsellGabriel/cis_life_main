@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2024_06_10_025519) do
+ActiveRecord::Schema[7.0].define(version: 2024_06_13_004537) do
   create_table "accounting_vouchers", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.date "date_voucher"
     t.string "voucher"
@@ -767,8 +767,10 @@ ActiveRecord::Schema[7.0].define(version: 2024_06_10_025519) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.date "transaction_date"
+    t.bigint "sub_account_id"
     t.index ["account_id"], name: "index_general_ledgers_on_account_id"
     t.index ["ledgerable_type", "ledgerable_id"], name: "index_general_ledgers_on_ledgerable"
+    t.index ["sub_account_id"], name: "index_general_ledgers_on_sub_account_id"
   end
 
   create_table "geo_barangays", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
@@ -1000,6 +1002,20 @@ ActiveRecord::Schema[7.0].define(version: 2024_06_10_025519) do
     t.integer "contestability"
     t.decimal "markup_rate", precision: 10, scale: 6
     t.decimal "markup_sf", precision: 10, scale: 4
+    t.index ["agreement_id"], name: "index_loan_insurance_rates_on_agreement_id"
+  end
+
+  create_table "loan_insurance_rates_copy1", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+    t.integer "min_age"
+    t.integer "max_age"
+    t.decimal "monthly_rate", precision: 5, scale: 2
+    t.decimal "annual_rate", precision: 5, scale: 2
+    t.decimal "daily_rate", precision: 5, scale: 2
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.bigint "agreement_id", null: false
+    t.decimal "min_amount", precision: 15, scale: 2
+    t.decimal "max_amount", precision: 15, scale: 2
     t.index ["agreement_id"], name: "index_loan_insurance_rates_on_agreement_id"
   end
 
@@ -1449,6 +1465,13 @@ ActiveRecord::Schema[7.0].define(version: 2024_06_10_025519) do
     t.index ["cashier_entry_id"], name: "index_treasury_payments_on_cashier_entry_id"
   end
 
+  create_table "treasury_sub_accounts", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+    t.string "name"
+    t.string "description"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
   create_table "underwriting_routes", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.string "name"
     t.string "description"
@@ -1551,6 +1574,7 @@ ActiveRecord::Schema[7.0].define(version: 2024_06_10_025519) do
   add_foreign_key "emp_approvers", "employees", column: "approver_id"
   add_foreign_key "employees", "departments"
   add_foreign_key "general_ledgers", "treasury_accounts", column: "account_id"
+  add_foreign_key "general_ledgers", "treasury_sub_accounts", column: "sub_account_id"
   add_foreign_key "group_remits", "agreements"
   add_foreign_key "group_remits", "coop_branches"
   add_foreign_key "health_dec_subquestions", "health_decs"
@@ -1565,6 +1589,7 @@ ActiveRecord::Schema[7.0].define(version: 2024_06_10_025519) do
   add_foreign_key "loan_insurance_details", "loan_insurance_retentions"
   add_foreign_key "loan_insurance_loans", "cooperatives"
   add_foreign_key "loan_insurance_rates", "agreements"
+  add_foreign_key "loan_insurance_rates_copy1", "agreements", name: "loan_insurance_rates_copy1_ibfk_1"
   add_foreign_key "member_dependents", "members"
   add_foreign_key "process_claims", "agreement_benefits"
   add_foreign_key "process_claims", "agreements"
