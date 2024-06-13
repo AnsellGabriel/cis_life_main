@@ -17,11 +17,11 @@ class GeneralLedgersController < ApplicationController
         else
           @entry.update!(post_date: Date.current, certified_by: current_user.userable.id)
 
-          if @entry.voucher_request.present?
-            @entry.voucher_request.update!(status: :posted)
+          if @entry.voucher_requests&.last.present?
+            @entry.voucher_requests&.last.update!(status: :posted)
 
-            if @entry.voucher_request.requestable.is_a?(Claims::ProcessClaim)
-              claim_track = @entry.voucher_request.requestable.process_track.build
+            if @entry.voucher_requests&.last.requestable.is_a?(Claims::ProcessClaim)
+              claim_track = @entry.voucher_requests&.last.requestable.process_track.build
               claim_track.route_id = 14
               claim_track.user_id = current_user.id
               claim_track.save
@@ -133,7 +133,7 @@ class GeneralLedgersController < ApplicationController
 
   # Only allow a list of trusted parameters through.
   def general_ledger_params
-    params.require(:general_ledger).permit(:description, :account_id, :amount, :ledger_type)
+    params.require(:general_ledger).permit(:description, :account_id, :sub_account_id, :amount, :ledger_type)
   end
 
 end

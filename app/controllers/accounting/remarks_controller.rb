@@ -50,7 +50,12 @@ class Accounting::RemarksController < ApplicationController
         if params[:e_t] == 'request'
           @voucher.transaction do
             @voucher.rejected!
-            @voucher.requestable.payment_rejected!
+            process_claim = @voucher.requestable
+            process_claim.payment_rejected!
+            claim_track = process_claim.process_track.build
+            claim_track.route_id = 11
+            claim_track.user_id = current_user.id
+            claim_track.save!
           end
         else
           @voucher.transaction do

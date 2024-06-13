@@ -2,6 +2,7 @@
 
   <div class="form-inputs mb-3">
     <%= f.association :account, input_html: {data: {controller: 'ts--select'}}, error: '*Required' %>
+    <%= f.association :sub_account, input_html: {data: {controller: 'ts--select'}}%>
     <div class="row">
       <%= f.input :amount, wrapper_class: 'col-6', error: '*Required' %>
       <%= f.input :ledger_type, as: :select, collection: GeneralLedger.ledger_types.map {|k,v| [k.humanize, k]}, wrapper_class: 'col-6', error: '*Required' %>

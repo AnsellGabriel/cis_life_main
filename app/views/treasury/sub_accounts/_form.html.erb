@@ -5,10 +5,6 @@
 
   <div class="form-inputs mb-3">
     <%= f.input :name %>
-<%= f.input :account_type, as: :select, collection: Treasury::Account.account_types.map { |k, v| [k.humanize.capitalize, k.to_s] } %>
-    <%= f.input :is_check_account, label: 'Check account?' %>
-    <%= f.input :contact_number %>
-    <%= f.input :address %>
   </div>
 
   <div class="form-actions text-center">

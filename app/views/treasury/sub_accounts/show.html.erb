@@ -1,6 +1,6 @@
 <div class="container">
   <div class="gap-1">
-    <%= link_to treasury_accounts_path, class: 'btn-sm btn btn-outline-secondary mb-1' do %>
+    <%= link_to treasury_sub_accounts_path, class: 'btn-sm btn btn-outline-secondary mb-1' do %>
       <i class="bi bi-arrow-left-square"></i>
       Back
     <% end %>
@@ -10,7 +10,7 @@
 
   <div class="mb-2 <%= flex_justify_align('between', 'end') %>">
     <div class="<%= flex_justify_align('', 'center') %> gap-1" data-controller="report-checker">
-      <%= form_with(url: treasury_account_path(@account), method: :get) do |f| %>
+      <%= form_with(url: treasury_sub_account_path(@account), method: :get) do |f| %>
         <div class="<%= flex_justify_align('','center') %> gap-1 small">
           <%= f.date_field :date_from, as: :string, data: {
             controller: "flatpickr",

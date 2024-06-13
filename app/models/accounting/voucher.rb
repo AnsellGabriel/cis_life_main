@@ -7,7 +7,7 @@ class Accounting::Voucher < ApplicationRecord
   belongs_to :treasury_account, class_name: "Treasury::Account", foreign_key: :treasury_account_id, optional: true
   belongs_to :employee
 
-  has_many :general_ledgers, as: :ledgerable
+  has_many :general_ledgers, as: :ledgerable, dependent: :destroy
   has_many :remarks, as: :remarkable, dependent: :destroy
 
   enum audit: { for_audit: 0, approved: 1, pending_audit: 2 }

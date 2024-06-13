@@ -20,7 +20,7 @@
           
           <%= content_tag :small, "- #{time_ago_in_words(note.created_at)} ago" %> 
         <% end %>
-        <%= content_tag :p, note.remark, class: "small mb-0 fst-italic" %>
+        <%= content_tag :p, simple_format(note.remark), class: "small mb-0 fst-italic" %>
         <hr>
       </div>
     <% end %>

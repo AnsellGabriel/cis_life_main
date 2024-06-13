@@ -20,7 +20,7 @@ class Treasury::CashierEntry < ApplicationRecord
   # has_many :payments, class_name: "Treasury::Payment", dependent: :destroy
   # has_many :payments, dependent: :destroy
   has_many :bills, class_name: "Treasury::BillingStatement", dependent: :destroy
-  has_many :general_ledgers, as: :ledgerable
+  has_many :general_ledgers, as: :ledgerable, dependent: :destroy
   has_many :transmittable_ors, as: :transmittable, inverse_of: :transmittable
   has_many :transmittals, through: :transmittable_ors
 
