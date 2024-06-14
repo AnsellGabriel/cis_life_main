@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2024_06_13_075311) do
+ActiveRecord::Schema[7.0].define(version: 2024_06_14_081648) do
   create_table "accounting_journal_entries", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.string "journable_type", null: false
     t.bigint "journable_id", null: false
@@ -47,6 +47,16 @@ ActiveRecord::Schema[7.0].define(version: 2024_06_13_075311) do
     t.index ["payable_type", "payable_id"], name: "index_accounting_vouchers_on_payable"
     t.index ["request_id"], name: "index_accounting_vouchers_on_request_id"
     t.index ["treasury_account_id"], name: "index_accounting_vouchers_on_treasury_account_id"
+  end
+
+  create_table "accounts_beginning_balances", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+    t.bigint "account_id", null: false
+    t.decimal "debit", precision: 15, scale: 2
+    t.decimal "credit", precision: 15, scale: 2
+    t.integer "year"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["account_id"], name: "index_accounts_beginning_balances_on_account_id"
   end
 
   create_table "action_text_rich_texts", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
@@ -1546,6 +1556,7 @@ ActiveRecord::Schema[7.0].define(version: 2024_06_13_075311) do
   add_foreign_key "accounting_vouchers", "employees"
   add_foreign_key "accounting_vouchers", "treasury_accounts"
   add_foreign_key "accounting_vouchers", "voucher_requests", column: "request_id"
+  add_foreign_key "accounts_beginning_balances", "treasury_accounts", column: "account_id"
   add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
   add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
   add_foreign_key "agreements_coop_members", "agreements"

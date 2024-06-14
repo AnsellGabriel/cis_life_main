@@ -1,0 +1,9 @@
+
+<%= render @accounting_account_beginning_balance %>
+
+<div>
+  <%= link_to "Edit", edit_accounting_account_beginning_balance_path(@accounting_account_beginning_balance), class: 'btn btn-primary' %> |
+  <%= link_to "Back", accounting_account_beginning_balances_path, class: 'btn btn-primary' %>
+
+  <%= button_to "Delete", @accounting_account_beginning_balance, method: :delete, class: 'btn btn-danger' %>
+</div>
