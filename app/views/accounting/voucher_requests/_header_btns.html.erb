@@ -48,7 +48,7 @@
   <% end %>
 
   <% if @request.remarks.present? %>
-    <%= link_to accounting_check_remarks_path(@request, e_t: @request.entry_type), class: 'btn btn-sm btn-outline-danger', data: {turbo_frame: 'reg_form_modal'} do %>
+    <%= link_to accounting_check_remarks_path(@request, e_t: @request.entry_type), class: 'btn btn-sm btn-outline-primary', data: {turbo_frame: 'reg_form_modal'} do %>
       <i class="bi bi-card-checklist"></i> Remarks
     <% end %>
   <% end %>

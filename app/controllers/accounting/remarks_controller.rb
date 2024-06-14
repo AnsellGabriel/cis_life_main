@@ -51,7 +51,14 @@ class Accounting::RemarksController < ApplicationController
           @voucher.transaction do
             @voucher.rejected!
             process_claim = @voucher.requestable
-            process_claim.payment_rejected!
+            process_claim.update!(
+              claim_route: 11,
+              status: :process,
+              claim_filed: 0,
+              processing: 0,
+              approval: 0,
+              payment: 0
+            )
             claim_track = process_claim.process_track.build
             claim_track.route_id = 11
             claim_track.user_id = current_user.id

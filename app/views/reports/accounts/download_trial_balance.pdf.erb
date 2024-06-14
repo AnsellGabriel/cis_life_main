@@ -19,6 +19,13 @@
       </tr>
     </thead>
     <tbody>
+      <tr>
+        <td colspan="2" style="font-size: 1.1rem; font-weight: bold; border: 2px solid black"></td>
+        <td colspan="1" class="text-center" style="font-size: 1.1rem; font-weight: bold; border: 2px solid black">Debit</td>
+        <td colspan="1" class="text-center" style="font-size: 1.1rem; font-weight: bold; border: 2px solid black">Credit</td>
+        <td colspan="1" class="text-center" style="font-size: 1.1rem; font-weight: bold; border: 2px solid black">Debit</td>
+        <td colspan="1" class="text-center" style="font-size: 1.1rem; font-weight: bold; border: 2px solid black">Credit</td>
+      </tr>
       <%= render 'reports/accounts/accounts', name: 'ASSETS', accounts: @assets %>
       <%= render 'reports/accounts/accounts', name: 'LIABILITIES', accounts: @liabilities %>
       <%= render 'reports/accounts/accounts', name: 'INCOME', accounts: @income %>

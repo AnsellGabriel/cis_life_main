@@ -5,7 +5,7 @@
   <div class="card-body">
     <dl class="row">
       <dt class="col-sm-4">Route:</dt>
-      <dd class="col-sm-8"><%= @process_claim.claim_route.humanize.titleize %></dd>
+      <dd class="col-sm-8 <%= 'text-danger' if @process_claim.payment_rejected? %>"><%= @process_claim.claim_route.humanize.titleize %></dd>
       <dt class="col-sm-4">Status</dt>
       <dd class="col-sm-8"><%= @process_claim.status.humanize unless @process_claim.status.nil? %></dd>
       <dt class="col-sm-4">Date Incident:</dt>

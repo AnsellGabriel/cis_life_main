@@ -2,7 +2,7 @@
   <ul class="timeline">
     <% @process_claim.process_track.order(created_at: :desc).each do |ct| %>
       <li class="mb-3">
-        <p class="text-primary mb-1"> <%= Claims::ProcessClaim.get_route(ct.route_id).to_s.humanize.titleize %> <small class="text-muted"> <%= date_as_month_day_year ct.created_at %> </small></p>
+        <p class="text-primary mb-1"> <span class="<%= 'text-danger' if ct.route_id == 11 %>"><%= Claims::ProcessClaim.get_route(ct.route_id).to_s.humanize.titleize %></span> <small class="text-muted"> <%= date_as_month_day_year ct.created_at %> </small></p>
         <small> <%= ct.description %> by <%= ct.user %> </small>
       </li>
     <% end %>

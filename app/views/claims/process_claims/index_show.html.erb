@@ -20,7 +20,7 @@
             <%= process_claim.cooperative %> <br>
             <small><%= process_claim.agreement.agent %></small> <br>
             <%= content_tag :span, process_claim.entry_type.titleize, class: "badge rounded-pill text-bg-primary"  %>
-            <%= content_tag :span, process_claim.display_route(process_claim.claim_route) , class: "badge rounded-pill text-bg-secondary" %></td>
+            <%= content_tag :span, process_claim.display_route(process_claim.claim_route) , class: "badge rounded-pill text-bg-#{process_claim.payment_rejected? ? 'danger' : 'secondary'}" %></td>
           <td><strong><%= process_claim.agreement.plan %></strong> <br>
             <%= content_tag :small, process_claim.claim_type %> <br>
             <small>Date Incident: <%= to_shortdate(process_claim.date_incident) %></small> <br>
