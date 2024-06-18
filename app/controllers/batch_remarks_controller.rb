@@ -127,7 +127,7 @@ class BatchRemarksController < ApplicationController
 
           elsif params[:batch_remark][:batch_status] == "MD"
             @group_remit = @batch.group_remits.find_by(type: "Remittance")
-            @batch.update(insurance_status: :pending)
+            @batch.update(insurance_status: :pending, substandard: true)
             # format.html { redirect_to all_health_decs_group_remit_batches_path(@group_remit.process_coverage), notice: "Recommendation created." }
             format.html { redirect_to med_directors_home_path, notice: "Recommendation created." }
           elsif params[:batch_remark][:batch_status] == "For reconsideration"

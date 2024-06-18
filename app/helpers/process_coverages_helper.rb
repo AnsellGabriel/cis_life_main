@@ -267,5 +267,16 @@ module ProcessCoveragesHelper
     #   "table-secondary"
     # end
   end
+
+  def adjustment_status(val)
+    case val
+    when "pending"
+      content_tag(:span, "Pending", class: "badge rounded-pill bg-secondary")
+    when "approved"
+      content_tag(:span, "Approved", class: "badge rounded-pill bg-success")
+    when "denied"
+      content_tag(:span, "Denied", class: "badge rounded-pill bg-danger")
+    end
+  end
   
 end

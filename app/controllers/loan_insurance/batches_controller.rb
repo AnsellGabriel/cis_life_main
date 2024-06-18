@@ -1,5 +1,5 @@
 class LoanInsurance::BatchesController < ApplicationController
-  before_action :set_batch, only: %i[ show edit update destroy adjusted accept_adjustment cancel_coverage ]
+  before_action :set_batch, only: %i[ show edit update destroy adjusted accept_adjustment cancel_coverage adjustments ]
   before_action :set_group_remit, only: %i[ new import edit]
 
   def import
@@ -143,7 +143,8 @@ class LoanInsurance::BatchesController < ApplicationController
   end
 
   def accept_adjustment
-    @batch.adjustment(params[:type], current_user)
+    @adjusted = AdjustedCoverage.find(params[:ac])
+    @batch.adjustment(params[:type], current_user, @adjusted)
     
     respond_to do |format|
       if @batch.save
@@ -294,6 +295,10 @@ class LoanInsurance::BatchesController < ApplicationController
     else
       redirect_to process_coverage_path(@process_coverage), alert: "No batches have been approved!"
     end
+
+  end
+
+  def adjustments
 
   end
 

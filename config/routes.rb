@@ -239,6 +239,7 @@ Rails.application.routes.draw do
       get :adjusted, on: :member
       post :accept_adjustment, on: :member
       post :cancel_coverage, on: :member
+      get :adjustments, on: :member
       collection do
         get :approve_all
       end

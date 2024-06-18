@@ -15,18 +15,21 @@ class MedDirectorsController < ApplicationController
     @lppi_batches = LoanInsurance::Batch.includes(:batch_remarks).where(for_md: true)
 
     @pagy_batches, @combined = pagy_array((@batches = (@gyrt_batches + @lppi_batches).sort_by do |batch|
-      if batch.batch_remarks.exists?(status: :md_reco)
-        @for_review += 1
-        1
-      else
+      # if batch.batch_remarks.exists?(status: :md_reco) || batch.insurance_status != "approved"
+      @md = User.find_by(rank: :medical_director)
+      # if batch.batch_remarks.where(status: :md_reco).count > 0 || batch.insurance_status == "approved"
+      if batch.batch_remarks.where(user: @md.userable).count > 0 || batch.insurance_status == "approved"
         @reviewed += 1
         0
+      else
+        @for_review += 1
+        1
       end
     end),
     items: 5, link_extra: 'data-turbo-frame="md_pagy"')
     # @for_review = for_review
     # @reviewed = reviewed
-  end
+end
 
   private
 

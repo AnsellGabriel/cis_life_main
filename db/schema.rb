@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2024_05_31_065251) do
+ActiveRecord::Schema[7.0].define(version: 2024_06_18_015459) do
   create_table "accounting_vouchers", charset: "utf8mb4", force: :cascade do |t|
     t.date "date_voucher"
     t.string "voucher"
@@ -134,6 +134,20 @@ ActiveRecord::Schema[7.0].define(version: 2024_05_31_065251) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["plan_id"], name: "index_actuarial_reserves_on_plan_id"
+  end
+
+  create_table "adjusted_coverages", charset: "utf8mb4", force: :cascade do |t|
+    t.string "coverageable_type", null: false
+    t.bigint "coverageable_id", null: false
+    t.decimal "adjusted_coverage", precision: 10, scale: 2
+    t.decimal "adjusted_premium", precision: 10, scale: 2
+    t.decimal "substandard_rate", precision: 10, scale: 2
+    t.decimal "underpayment", precision: 10, scale: 2
+    t.decimal "total_rate", precision: 10, scale: 2
+    t.integer "status"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["coverageable_type", "coverageable_id"], name: "index_adjusted_coverages_on_coverageable"
   end
 
   create_table "admin_users", charset: "utf8mb4", force: :cascade do |t|
@@ -941,6 +955,10 @@ ActiveRecord::Schema[7.0].define(version: 2024_05_31_065251) do
     t.decimal "system_premium", precision: 10, scale: 2
     t.decimal "adjusted_prem", precision: 10, scale: 2, default: "0.0"
     t.decimal "adjusted_cov", precision: 10, scale: 2, default: "0.0"
+    t.decimal "adjusted_unuse", precision: 10, scale: 2, default: "0.0"
+    t.decimal "adjusted_coop_sf", precision: 10, scale: 2, default: "0.0"
+    t.decimal "adjusted_agent_sf", precision: 10, scale: 2, default: "0.0"
+    t.decimal "adjusted_premium_due", precision: 10, scale: 2, default: "0.0"
     t.index ["coop_member_id"], name: "index_loan_insurance_batches_on_coop_member_id"
     t.index ["group_remit_id"], name: "index_loan_insurance_batches_on_group_remit_id"
     t.index ["loan_insurance_loan_id"], name: "index_loan_insurance_batches_on_loan_insurance_loan_id"
