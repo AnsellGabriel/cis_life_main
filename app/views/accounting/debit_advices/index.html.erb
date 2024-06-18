@@ -21,8 +21,15 @@
     <% end %>
   </div>
 
-  <div class="">
+  <div class="d-flex gap-1">
     <%= render 'accounting/shared/date_filter', url: accounting_debit_advices_path, req_type: nil %>
+    <%= render 'shared/filter_btn' do %>
+      <li><%= link_to "All", accounting_debit_advices_path, class: "dropdown-item" %></li>
+      <li><%= link_to "Posted", accounting_debit_advices_path(status: "posted", date_from: params[:date_from], date_to: params[:date_to]), class: "dropdown-item" %></li>
+      <li><%= link_to "For Approval", accounting_debit_advices_path(status: "for_approval", date_from: params[:date_from], date_to: params[:date_to]), class: "dropdown-item" %></li>
+      <li><%= link_to "Pending", accounting_debit_advices_path(status: "pending", date_from: params[:date_from], date_to: params[:date_to]), class: "dropdown-item" %></li>
+      <li><%= link_to "Cancelled", accounting_debit_advices_path(status: "cancelled", date_from: params[:date_from], date_to: params[:date_to]), class: "dropdown-item" %></li>
+    <% end %>
   </div>
 </div>
 
@@ -30,8 +37,8 @@
 <table class="<%= table_sm_hoverable %>">
   <thead class="table-dark">
     <tr>
-      <th class="text-center">DA No.</th>
-      <th class="text-center">Date</th>
+      <th class="text-center" style="min-width: 100px">DA No.</th>
+      <th class="text-center" style="min-width: 100px">Date</th>
       <th class="text-center">Payee</th>
       <th class="text-center">Amount</th>
       <th class="text-center">Status</th>
@@ -39,13 +46,13 @@
   </thead>
 
   <tbody>
-    <% if @debit_advices.present? %>
-      <% @debit_advices.each do |da| %>
+    <% if @vouchers.present? %>
+      <% @vouchers.each do |da| %>
         <tr>
           <td class="<%= centered_cell %>">
             <%= link_to da.voucher, da %>
           </td>
-          <td class="<%= centered_cell %>"><%= short_month_day_year(da.date_voucher) %></td>
+          <td class="<%= centered_cell %>"><%= month_day_year(da.date_voucher) %></td>
           <td class="align-middle"><%= da.payable %></td>
           <td class="<%= centered_cell %>"><%= to_curr(da.amount) %></td>
           <td class="<%= centered_cell %>">

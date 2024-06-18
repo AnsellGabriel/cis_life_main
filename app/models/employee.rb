@@ -2,14 +2,17 @@ class Employee < ApplicationRecord
   mount_uploader :report, ReportUploader
 
   belongs_to :department
-  has_one :emp_approver 
-  has_many :emp_agreements
-  has_many :agreements, through: :emp_agreements
-  has_one :user, as: :userable, dependent: :destroy
-  has_many :notifications, as: :notifiable, dependent: :destroy
 
   has_one :employee_team
   has_one :team, through: :employee_team
+  has_one :emp_approver
+  has_one :user, as: :userable, dependent: :destroy
+  has_many :emp_agreements
+  has_many :agreements, through: :emp_agreements
+  has_many :notifications, as: :notifiable, dependent: :destroy
+  has_many :treasury_cashier_entries
+  has_many :vouchers, class_name: "Accounting::Voucher"
+
   validates_presence_of :last_name, :first_name, :branch, :department_id, :designation
   # has_one :member_import_tracker, as: :trackable, dependent: :destroy
 

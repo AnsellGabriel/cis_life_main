@@ -1,19 +1,19 @@
 <div class="<%= flex_justify_align('between', 'center') %> mb-1">
-  <div class="<%= flex_justify_align('', 'center') %> gap-3">
+  <div class="<%= flex_justify_align('', 'center') %> gap-1">
     <%= content_tag :h4, "Accounts", class: 'text-primary' %>
-    <% if current_user.is_treasurer? %>
-      <%= link_to new_treasury_account_path, class: small_btn('primary'), data: {turbo_frame: 'modal'} do %>
-        New Account
-      <% end %>
-    <% end %>
+    <%= link_to 'Add', new_treasury_account_path, class: small_btn('outline-primary'), data: {turbo_frame: 'modal'} %>
   </div>
 
-  <div class="">
+  <div class="<%= flex_justify_align('center') %> gap-1">
     <%= search_form_for @q do |f| %>
       <div class="form-group d-flex gap-1">
-        <%= f.search_field :name_or_code_cont, placeholder: "Account name", class: "form-control" %>
-        <%= f.submit "Search", class: small_btn('warning text-dark') %>
+        <%= f.search_field :name_or_code_cont, placeholder: "Account name", class: "form-control filter_field" %>
+        <%= f.submit "Search", class: small_btn('warning text-dark filter_btn') %>
       </div>
+    <% end %>
+
+    <%= link_to treasury_accounts_path, class: 'btn-sm btn btn-secondary filter_btn' do %>
+      <i class="bi bi-arrow-clockwise"></i>
     <% end %>
   </div>
 </div>
@@ -23,7 +23,6 @@
     <tr>
       <th>Code</th>
       <th>Account</th>
-      <th class="text-center">Actions</th>
     </tr>
   </thead>
 
@@ -31,9 +30,8 @@
     <% @treasury_accounts.each do |account| %>
       <tr>
         <th scope="row"><%= account.code %></th>
-        <td><%= account.name %></td>
-        <td class="text-center">
-          <%= link_to 'View', account, class: 'btn btn-primary btn-sm' %>
+        <td>          
+          <%= link_to account.name, account %>
         </td>
       </tr>
     <% end %>

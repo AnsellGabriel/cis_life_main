@@ -7,6 +7,7 @@
     <%= link_to 'Dashboard', coop_dashboard_path, class: "#{small_btn('secondary')}" %>
   <% end %>
   <%= link_to 'New Batch', loan_insurance_group_remits_path, class: small_btn('primary'), data: { turbo_method: :post } %>
+  <%= link_to 'Loan Types', loan_insurance_loans_path, class: small_btn('primary') %>
 </div>
 
 <div class="<%= flex_justify_align('between', 'center') %>">

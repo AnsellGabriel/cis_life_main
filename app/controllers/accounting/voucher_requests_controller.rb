@@ -3,11 +3,18 @@ class Accounting::VoucherRequestsController < ApplicationController
 
   def index
     # binding.pry
+    @requests = Accounting::VoucherRequest.where(payment_type: params[:pt].to_sym).order(created_at: :desc)
+    @requests = @requests.where(status: params[:status]) if params[:status].present?
+
     if params[:date_from].present? && params[:date_to].present?
-      @requests = Accounting::VoucherRequest.where(created_at: params[:date_from].to_date.beginning_of_day..params[:date_to].to_date.end_of_day, payment_type: params[:pt].to_sym).order(created_at: :desc)
-    else
-      @requests = Accounting::VoucherRequest.where(payment_type: params[:pt].to_sym).order(created_at: :desc)
+      @requests = @requests.where(created_at: params[:date_from].to_date.beginning_of_day..params[:date_to].to_date.end_of_day)
     end
+
+    # if params[:date_from].present? && params[:date_to].present?
+    #   @requests = Accounting::VoucherRequest.where(created_at: params[:date_from].to_date.beginning_of_day..params[:date_to].to_date.end_of_day, payment_type: params[:pt].to_sym).order(created_at: :desc)
+    # else
+    #   @requests = Accounting::VoucherRequest.where(payment_type: params[:pt].to_sym).order(created_at: :desc)
+    # end
 
     @pagy, @requests = pagy(@requests, items: 10)
   end

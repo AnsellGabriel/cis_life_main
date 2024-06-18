@@ -25,15 +25,17 @@ class Reports::TrialBalancePdfJob
         pdf: "trial_balance.pdf",
         template: "reports/accounts/download_trial_balance",
         assigns: {
-          date_from: date_from.to_date,
-          date_to: date_to.to_date,
+          date_from: date_from&.to_date.beginning_of_day,
+          date_to: date_to&.to_date.end_of_day,
           assets: @assets,
           liabilities: @liabilities,
           income: @income,
           expense: @expense,
           reserve: @reserve,
-          total_debit: @total_debit,
-          total_credit: @total_credit
+          total_debit: 0,
+          total_credit: 0,
+          ytd_total_debit: 0,
+          ytd_total_credit: 0
         }
       )
 
@@ -58,8 +60,6 @@ class Reports::TrialBalancePdfJob
     @income = Treasury::Account.where(account_type: 4)
     @expense = Treasury::Account.where(account_type: 5)
     @reserve = Treasury::Account.where(account_type: 6)
-    @total_debit = 0
-    @total_credit = 0
   end
 
   def broadcast_download(employee)

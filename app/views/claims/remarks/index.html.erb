@@ -1,0 +1,28 @@
+<%= turbo_frame_tag "reg_form_modal" do %>
+  <div class="modal-header">
+    <div class="d-flex gap-1">
+      <%= content_tag :h5, 'Notes', class: "modal-title", id: "staticBackdropLabel" %>
+      <% if current_user.is_claims? %>
+        <%= link_to new_claims_process_claim_remark_path(@process_claim), class: "btn btn-primary btn-sm position-relative", data: { turbo_frame: "reg_form_modal" } do %>
+          <i class="bi bi-plus-lg"></i>
+        <% end %>
+        <%= link_to 'Back', approve_claim_debit_claims_process_claim_path(@process_claim), class: small_btn('secondary') %>
+      <% end %>
+    </div>
+    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+  </div>
+  
+  <div class="modal-body">
+    <% @notes.each do |note| %>
+      <div class="mb-3">
+        <%= content_tag :p, class: "mb-1" do %>
+          <%= note.user.userable.signed_fullname %> 
+          
+          <%= content_tag :small, "- #{time_ago_in_words(note.created_at)} ago" %> 
+        <% end %>
+        <%= content_tag :p, simple_format(note.remark), class: "small mb-0 fst-italic" %>
+        <hr>
+      </div>
+    <% end %>
+  </div>
+<% end %>

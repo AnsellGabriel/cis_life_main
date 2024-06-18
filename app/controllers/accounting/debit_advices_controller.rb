@@ -1,17 +1,13 @@
 class Accounting::DebitAdvicesController < ApplicationController
+  include Accounting::Filterable
+
   before_action :set_debit_advice, only: %i[ show edit update destroy new_receipt upload_receipt download]
   before_action :set_payables, only: %i[ new edit create update]
 
   # GET /accounting/debit_advices
   def index
-    if params[:date_from].present? && params[:date_to].present?
-      @q = Accounting::DebitAdvice.where(date_voucher: params[:date_from]..params[:date_to]).order(created_at: :desc).ransack(params[:q])
-    else
-      @q = Accounting::DebitAdvice.all.order(created_at: :desc).ransack(params[:q])
-    end
-
-    @debit_advices = @q.result
-    @pagy, @debit_advices = pagy(@debit_advices, items: 10)
+    @q = Accounting::DebitAdvice.ransack(params[:q])
+    filtered_and_paginated_vouchers # concerns/accounting/filterable.rb
   end
 
   # GET /accounting/debit_advices/1
@@ -45,7 +41,7 @@ class Accounting::DebitAdvicesController < ApplicationController
   # POST /accounting/debit_advices
   def create
     @debit_advice = Accounting::DebitAdvice.new(modified_da_params)
-    @debit_advice.accountant_id = current_user.userable.id
+    @debit_advice.employee = current_user.userable
     @debit_advice.branch = current_user.userable.branch_before_type_cast
 
     ActiveRecord::Base.transaction do
@@ -105,7 +101,7 @@ class Accounting::DebitAdvicesController < ApplicationController
 
   def download
     @ledger_entries = @debit_advice.general_ledgers
-    @accountant = Employee.find(@debit_advice.accountant_id)
+    @accountant = @debit_advice.employee
     @approver = Employee.find(@debit_advice.approved_by) if @debit_advice.approved_by.present?
     @certifier = Employee.find(@debit_advice.certified_by) if @debit_advice.certified_by.present?
 

@@ -121,13 +121,6 @@ class LoanInsurance::Batch < Batch
       self.valid_health_dec = prev_cov.present? ? prev_cov.valid_health_dec : false
     end
 
-    if self.rate.nil?
-      loan_rate
-    else
-      calculate_values(agreement, loan_rate, encoded_premium)
-      true
-    end
-
     if effectivity_date < Date.today
       if ((Date.today - effectivity_date).to_i / 30) >= 2 #months
         self.batch_remarks.build(remark: "The remittance is late by over 60 days as of today.",
@@ -136,6 +129,15 @@ class LoanInsurance::Batch < Batch
         )
         self.insurance_status = :pending
       end
+    end
+
+    #! do not add code after this validation as this is the return value of the method
+    #! please add them above this comment
+    if self.rate.nil?
+      loan_rate
+    else
+      calculate_values(agreement, loan_rate, encoded_premium)
+      true
     end
   end
 

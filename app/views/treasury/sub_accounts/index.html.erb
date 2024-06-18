@@ -1,0 +1,37 @@
+<div class="<%= flex_justify_align('between', 'center') %> mb-1">
+  <div class="<%= flex_justify_align('', 'center') %> gap-3">
+    <%= content_tag :h4, "Sub Accounts", class: 'text-primary' %>
+    <%= link_to 'Add', new_treasury_sub_account_path, class: small_btn('outline-primary'), data: {turbo_frame: 'modal'} %>
+  </div>
+
+  <div class="<%= flex_justify_align('center') %> gap-1">
+    <%= search_form_for @q do |f| %>
+      <div class="form-group d-flex gap-1">
+        <%= f.search_field :name_cont, placeholder: "Account name", class: "form-control filter_field" %>
+        <%= f.submit "Search", class: small_btn('warning text-dark filter_btn') %>
+      </div>
+    <% end %>
+
+    <%= link_to treasury_sub_accounts_path, class: 'btn-sm btn btn-secondary filter_btn' do %>
+      <i class="bi bi-arrow-clockwise"></i>
+    <% end %>
+  </div>
+</div>
+
+<table class="table table-striped table-bordered table-hover">
+  <thead>
+    <tr>
+      <th>Name</th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @sub_accounts.order(:name).each do |account| %>
+      <tr>
+        <td>          
+          <%= link_to account.name, account %>
+        </td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>

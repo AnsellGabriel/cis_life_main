@@ -2,10 +2,21 @@
 <div class="d-flex gap-2">
   <% if current_user.head? %>
     <%= link_to treasury_for_approval_path	 do %>
-      <%= render 'coop/dashboard/counter_box', title: 'For Approvals', count: @for_approvals.size  %>
+      <%= render 'coop/dashboard/counter_box', title: 'Need Approval', count: @for_approvals.size  %>
     <% end %>
   <% end %>
 
+  <%= link_to payments_path	 do %>
+    <%= render 'coop/dashboard/counter_box', title: 'Need OR', count: @for_ors.size  %>
+  <% end %>
+
+  <%= link_to requests_treasury_checks_path	 do %>
+    <%= render 'coop/dashboard/counter_box', title: 'For Payment - Check', count: @vouchers.size  %>
+  <% end %>
+
+  <%= link_to treasury_debit_advices_path	 do %>
+    <%= render 'coop/dashboard/counter_box', title: 'For Payment - DA', count: @debit_advices.size  %>
+  <% end %>
   
   <%#= link_to accounting_voucher_requests_path(pt: :check_voucher) do %>
     <%#= render 'coop/dashboard/counter_box', title: 'Check Requests', count: @check_req.size %>

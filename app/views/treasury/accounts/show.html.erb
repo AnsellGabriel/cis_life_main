@@ -6,11 +6,11 @@
     <% end %>
   </div>
 
-  <%= render @treasury_account %>
+  <%= render @account %>
 
   <div class="mb-2 <%= flex_justify_align('between', 'end') %>">
     <div class="<%= flex_justify_align('', 'center') %> gap-1" data-controller="report-checker">
-      <%= form_with(url: treasury_account_path(@treasury_account), method: :get) do |f| %>
+      <%= form_with(url: treasury_account_path(@account), method: :get) do |f| %>
         <div class="<%= flex_justify_align('','center') %> gap-1 small">
           <%= f.date_field :date_from, as: :string, data: {
             controller: "flatpickr",
@@ -38,12 +38,12 @@
       <% end %>
 
       <% if @searched_ledgers.present? and params[:download].nil? %>
-        <%= link_to "Generate CSV", treasury_account_path(@treasury_account, download_csv: 'true', date_from: params[:date_from], date_to: params[:date_to]), 
+        <%= link_to "Generate CSV", treasury_account_path(@account, download_csv: 'true', date_from: params[:date_from], date_to: params[:date_to]), 
           class: 'btn-sm btn btn-warning', 
           method: :get,
           data: {turbo: false, action: "click->report-checker#clearDownload"}
         %>
-        <%= link_to "Print PDF", treasury_account_path(@treasury_account, download_pdf: 'true', date_from: params[:date_from], date_to: params[:date_to] ), 
+        <%= link_to "Print PDF", treasury_account_path(@account, download_pdf: 'true', date_from: params[:date_from], date_to: params[:date_to] ), 
           class: 'btn-sm btn btn-warning', 
           method: :get,
           data: {turbo: false, action: "click->report-checker#clearDownload"}
@@ -84,7 +84,7 @@
           <% debit = entry.debit? ? entry.amount : 0 %>
           <% credit = entry.credit? ? entry.amount : 0 %>
           <tr class="text-center">
-            <td class="text-start"><%= entry.ledgerable.reference %></td>
+            <td class="text-start"><%= entry.ledgerable&.reference %></td>
             <td class="text-end"><%= date_as_month_day_year(entry.transaction_date) %></td>
             <td class="text-start"><%= entry.payee %></td>
             <td class="text-start"><%= entry.description %></td>

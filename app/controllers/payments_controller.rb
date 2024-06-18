@@ -2,7 +2,13 @@ class PaymentsController < ApplicationController
   before_action :initialize_payment_data, only: %i[create]
 
   def index
-    @payments = Payment.all.includes(payable: {agreement: [:cooperative, :plan]}).order(updated_at: :desc)
+    @payments = Payment.includes(payable: {agreement: [:cooperative, :plan]}).order(updated_at: :desc)
+    @payments = @payments.where(status: params[:status]) unless params[:status].nil?
+
+    if params[:date_from].present? && params[:date_to].present?
+      @payments = @payments.where(created_at: params[:date_from].to_date.beginning_of_day..params[:date_to].to_date.end_of_day)
+    end
+
     @pagy, @payments = pagy(@payments, items: 10)
   end
 
