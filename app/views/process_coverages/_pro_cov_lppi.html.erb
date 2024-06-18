@@ -123,9 +123,34 @@
                   <%= insurance_status(batch.insurance_status) %>
                 </td>
                 <td>
-                  <% if batch.adjusted_prem > 0 || batch.adjusted_cov > 0 %>
-                    <%= process_premiums("Adjusted Premium", batch.adjusted_prem) %> <br>                    
-                    <%= process_premiums("Adjusted Coverage",batch.adjusted_cov) %>
+                  <%# if batch.adjusted_prem > 0 || batch.adjusted_cov > 0 %>
+                    <%#= process_premiums("Adjusted Premium", batch.adjusted_prem) %>           
+                    <%#= process_premiums("Adjusted Coverage",batch.adjusted_cov) %>
+                  <%# end %>
+                  <% if batch.adjusted_coverages.present? && batch.adjusted_coverages.where(status: :approved).count == 0 %>
+                    <%= link_to "Open", adjustments_loan_insurance_batch_path(batch), class: "btn btn-sm btn-warning", data: { turbo_frame: "reg_form_modal_xl", turbo: true } %>
+                  <% end %>
+                  <% if batch.adjusted_coverages.where(status: :approved).count > 0 %>
+                    <% if batch.adjusted_cov > 0 %>
+                      <%= to_currency(batch.adjusted_cov) %>
+                    <% end %>
+                    <% if batch.adjusted_prem > 0 %>
+                      <div class="row">
+                        <%= process_premiums("Premium", batch.adjusted_prem) %>
+                      </div>
+                      <div class="row">
+                        <%= process_premiums("Agent's SF", batch.adjusted_agent_sf) %>
+                      </div>
+                      <div class="row">
+                        <%= process_premiums("Unused Prem", batch.adjusted_unuse) %>
+                      </div>
+                      <div class="row">
+                        <%= process_premiums("Coop's SF", batch.adjusted_coop_sf) %>
+                      </div>
+                      <div class="row">
+                        <%= process_premiums("Net Prem", batch.adjusted_premium_due) %> 
+                      </div>
+                    <% end %>
                   <% end %>
                 </td>
                 <td>
@@ -177,16 +202,18 @@
                     <% unless batch.approved? %>
                       <%# if current_user.head? && !batch.valid_health_dec? && batch.check_md_reco > 0 %>
                       <% if !batch.valid_health_dec? && batch.check_md_reco > 0 %>
-                        <% if batch.adjusted_prem == 0 %>
+                        <%# if batch.adjusted_prem == 0 %>
+                        <% unless batch.adjusted_coverages.where(status: :approved).count > 0 %>
                           <%= link_to set_premium_batch_process_coverage_path(batch: batch, batch_type: batch.class.name), onclick: "return confirm('Are you sure?')", method: :get, class: "btn btn-sm btn-info mb-1", data: { turbo_frame: "reg_form_modal", turbo: true } do %>
                             <%= bootstrap_icon "coin" %>
                           <% end %>
                         <% end %>
-                        <% if batch.adjusted_cov == 0 %>
-                          <%= link_to adjust_lppi_cov_process_coverage_path(batch: batch, batch_type: batch.class.name), onclick: "return confirm('Are you sure?')", method: :get, class: "btn btn-sm btn-info mb-1", data: { turbo_frame: "reg_form_modal", turbo: true } do %>
-                            <%= bootstrap_icon "cash" %>
-                          <% end %>
-                        <% end %>
+                        <%# end %>
+                        <%# if batch.adjusted_cov == 0 %>
+                          <%#= link_to adjust_lppi_cov_process_coverage_path(batch: batch, batch_type: batch.class.name), onclick: "return confirm('Are you sure?')", method: :get, class: "btn btn-sm btn-info mb-1", data: { turbo_frame: "reg_form_modal", turbo: true } do %>
+                            <%#= bootstrap_icon "cash" %>
+                          <%# end %>
+                        <%# end %>
                       <% end %>
                     <% end %>
                     

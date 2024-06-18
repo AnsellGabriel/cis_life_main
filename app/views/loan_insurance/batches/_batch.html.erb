@@ -23,6 +23,9 @@
 					<%= content_tag :span, 
               "#{to_curr(batch.loan_amount)}", class: "text-primary sm-green-text"
           %>
+					<% if batch.adjusted_cov > 0 %>
+						<%= content_tag :span, "#{to_curr(batch.adjusted_cov)}", class: "text-warning sm-green-text" %>
+					<% end %>
 				</div>
 			</div>
 		</div>
@@ -52,6 +55,9 @@
               "#{to_curr(batch.premium)}", 
               class: "text-secondary sm-green-text"
           %>
+					<% if batch.adjusted_prem > 0 %>
+						<%= content_tag :span, "#{to_curr(batch.adjusted_prem)}", class: "text-warning sm-green-text" %>
+					<% end %>
 					<% if current_user.is_mis? and batch.system_premium != batch.premium and !batch.system_premium.nil? %>
 						<%= content_tag :span, 
               "Correct premium: #{to_curr(batch.system_premium)}", 
@@ -72,6 +78,10 @@
 									"(#{to_curr(batch.unused)})", 
 									class: "text-secondary sm-green-text"
 							%>
+							<% if batch.adjusted_unuse > 0 %>
+								<%= content_tag :span, "#{to_curr(batch.adjusted_unuse)}", class: "text-warning sm-green-text" %>
+							<% end %>
+
 							<% if batch.excess > 0 %>
 								<%= content_tag :span, 
 									"Excess: #{to_curr(batch.excess)}", 
@@ -93,6 +103,9 @@
               "#{to_curr(batch.premium_due)}", 
               class: "text-primary sm-green-text"
           %>
+					<% if batch.adjusted_premium_due > 0 %>
+						<%= content_tag :span, "#{to_curr(batch.adjusted_premium_due)}", class: "text-warning sm-green-text" %>
+					<% end %>
 				</div>
 			</div>
 		</div>

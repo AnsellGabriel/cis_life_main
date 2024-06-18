@@ -54,6 +54,9 @@ class Batch < ApplicationRecord
 
   has_many :reserve_batches, as: :batchable, dependent: :destroy, class_name: "Actuarial::ReserveBatch"
 
+  has_many :adjusted_coverages, as: :coverageable, dependent: :destroy
+
+
   # alias_attribute :batches, :reserve_batches
 
   def full_name
