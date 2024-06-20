@@ -1,0 +1,26 @@
+
+<%= simple_form_for(@cf_account) do |f| %>
+  <%= f.error_notification %>
+  <%= f.error_notification message: f.object.errors[:base].to_sentence if f.object.errors[:base].present? %>
+
+  <div class="form-inputs mb-3">
+    <%#= f.association :cooperative %>
+    <%= f.association :cooperative, 
+              input_html: { 
+                id: "coop_id", 
+                data: { 
+                  action: "change->coop#change", 
+                  controller: "ts--select" 
+                }
+              }, 
+              prompt: "Select a Cooperative" %>
+    <%= f.input :amount %>
+    <%= f.input :amount_limit %>
+    <%= f.input :status, collection: Claims::CfAccount.statuses.keys.map { |status| [status.humanize, status] }, include_blank: false, label: 'Status', input_html: { class: 'form-select' } %>
+  </div>
+
+  <div class="form-actions text-end">
+    <%= link_to "Back", claims_cf_accounts_path, class: 'btn btn-secondary' %>
+    <%= f.button :submit, class: 'btn-success' %>
+  </div>
+<% end %>

@@ -15,9 +15,10 @@ class ClaimsPdf < Prawn::Document
     cur = cursor
     
     insured_information
-    claim_details
-    benefit_distribution(cur)
+    # claim_details
     insurance_details(cur)
+    # benefit_distribution(cur)
+    move_down 10
     claim_coverage
     cur2 = cursor
     processing_steps(cur2)
@@ -29,7 +30,7 @@ class ClaimsPdf < Prawn::Document
   end
 
   def insured_information 
-    bounding_box([0, cursor], width: 300, height: 90) do
+    bounding_box([0, cursor], width: 300, height: 200) do
       #  transparent(0.5) { stroke_bounds }
       gap = 20
       y_position = cursor
@@ -48,12 +49,13 @@ class ClaimsPdf < Prawn::Document
         bounding_box([0, y_position - gap], width: 200, height: 150) do
           text "Cooperative:", size: 9
         end
-        bounding_box([100, y_position - gap], width: 190, height: 40) do
+        bounding_box([100, y_position - gap], width: 190, height: 50) do
           text @pc.cooperative.name.titleize, size: 9, style: :bold
           text @pc.cooperative.get_address, size: 9
           # transparent(0.5) { stroke_bounds }
         end
       end
+      claim_details
     end
     
   end
@@ -65,7 +67,7 @@ class ClaimsPdf < Prawn::Document
       move_down 10
       indent(10) do
         y_position = bounds.top
-        gap = 20
+        gap = 15
         y_position -= gap
         bounding_box([0, y_position], width: 100, height: 10) do
           
@@ -160,9 +162,9 @@ class ClaimsPdf < Prawn::Document
   end
 
   def insurance_details(cur)
-    y_position = cur - 120
-    bounding_box([310, y_position], width: 220, height: 200) do
-      # transparent(0.5) { stroke_bounds }
+    y_position = cur
+    bounding_box([310, y_position], width: 220, height: 230) do
+      transparent(0.5) { stroke_bounds }
       text "IV. Insurance Details", size: 10, style: :bold
       
       indent(10) do
@@ -188,12 +190,14 @@ class ClaimsPdf < Prawn::Document
           self.cell_style = {:size => 8}
         end
       end
+      move_down 10
+      benefit_distribution
     end
   end
 
   def processing_steps(cur)
     y_position = cur - 20
-    bounding_box([310, y_position], width: 220, height: 300) do
+    bounding_box([310, y_position], width: 220) do
       # transparent(0.5) { stroke_bounds }
       y_position = y_position
       gap = 20
@@ -205,7 +209,7 @@ class ClaimsPdf < Prawn::Document
         data = [["Process", "Date"]]
         @pc.process_track.order(created_at: :desc).each do |ct|
           data += [[ "#{Claims::ProcessClaim.get_route(ct.route_id).to_s.humanize.titleize} 
-            #{ct.description} by #{ct.user}", "#{to_shortdate(ct.created_at)}" ]]
+                 by #{ct.user}", "#{to_shortdate(ct.created_at)}" ]]
           # bounding_box([0, y_position - gap], width: 120, height: 20) do
           #   transparent(0.5) { stroke_bounds }
           #   text ProcessClaim.get_route(ct.route_id).to_s.humanize.titleize, size: 9
@@ -232,22 +236,25 @@ class ClaimsPdf < Prawn::Document
       # transparent(0.5) { stroke_bounds }
       text "V. Policy Coverage", size: 10, style: :bold
       indent(10) do 
-        data = [["ORNO", "ORdate", "Effectivity","Expiry","Insured","Cover","Status","Duration"]]
-        data += [[ {content: "Current", colspan: 8} ]]
+        data = [["ORNO", "ORdate", "Effectivity","Expiry","Amount Insured","Benefit","Status","Duration","#"]]
+        data += [[ {content: "Current", colspan: 9} ]]
+        i = 1
         @pc.claim_coverages.where(coverage_type: "Current").each do |cc|
-          data += [["#{cc.orno}","#{to_shortdate(cc.or_date)}","#{to_shortdate(cc.effectivity)}","#{to_shortdate(cc.expiry)}","#{num_format(cc.amount)}","#{num_format(cc.amount_cover)}","#{cc.status}"]]
+          data += [["#{cc.orno}","#{to_shortdate(cc.or_date)}","#{to_shortdate(cc.effectivity)}","#{to_shortdate(cc.expiry)}","#{num_format(cc.amount)}","#{num_format(cc.amount_cover)}","#{cc.status}","#{cc.get_duration}",i]]
+          i += 1
         end
         previous = @pc.claim_coverages.where(coverage_type: "Previous")
         unless previous.empty?
-          data += [[ {content: "Previous", colspan: 8} ]]
+          data += [[ {content: "Previous", colspan: 9} ]]
           previous.each do |cc|
-            data += [["#{cc.orno}","#{to_shortdate(cc.or_date)}","#{to_shortdate(cc.effectivity)}","#{to_shortdate(cc.expiry)}","#{num_format(cc.amount)}","#{num_format(cc.amount_cover)}","#{cc.status}"]]
+            data += [["#{cc.orno}","#{to_shortdate(cc.or_date)}","#{to_shortdate(cc.effectivity)}","#{to_shortdate(cc.expiry)}","#{num_format(cc.amount)}","#{num_format(cc.amount_cover)}","#{cc.status}","#{cc.get_duration}",i]]
           end
         end
         table data do
           row(0).font_style = :bold
+          # columns(0).align = :center
           columns(4..6).align = :right
-          self.column_widths = [40,60,60,60,70,70,50,110]
+          self.column_widths = [40,60,60,60,60,60,40,110]
           self.cell_style = {:size => 8}
         end
       end
@@ -257,7 +264,7 @@ class ClaimsPdf < Prawn::Document
   def claim_remarks(cur)
     bounding_box([0, cur - 20], width: 300) do
       bounding_box([0, bounds.top], width: 300) do
-        transparent(0.5) { stroke_bounds }
+        # transparent(0.5) { stroke_bounds }
         text "VI. Recommendations", size: 10, style: :bold
         move_down 10
         # data = [[ "User", "Status", "Recommendations" ]]
@@ -266,7 +273,7 @@ class ClaimsPdf < Prawn::Document
         #   data += [[ "#{cr.user.userable.get_fullname}", "#{cr.status.titleize}", "#{cr.remark}" ]]
         # end
         indent(10) do
-          @pc.claim_remarks.each do |cr|
+          @pc.claim_remarks.where(coop: 0).each do |cr|
             status = ""
             status += "(#{cr.status.titleize})" unless cr.status.nil?
             
@@ -301,9 +308,9 @@ class ClaimsPdf < Prawn::Document
     end
   end
 
-  def benefit_distribution(cur)
-    y_position = cur 
-    bounding_box([310, y_position], width: 220, height: 120) do
+  def benefit_distribution
+    # y_position = cur 
+    # bounding_box([310, y_position], width: 220, height: 120) do
       # transparent(0.5) { stroke_bounds }
       text "III. Benefit Distribution", size: 10, style: :bold
 
@@ -320,7 +327,7 @@ class ClaimsPdf < Prawn::Document
               self.cell_style = {:size => 8}
         end
       end
-    end
+    # end
   end
 
 

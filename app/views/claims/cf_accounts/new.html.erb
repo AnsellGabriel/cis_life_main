@@ -1,0 +1,10 @@
+
+<%# <div class="card">
+  <h5 class="card-header">New cf account</h5>
+  <div class="card-body"> %>
+  <%# </div>
+</div> %>
+
+<%= render "claims/claim_confinements/remote_modal", title: "New reinsurance" do %>
+    <%= render "form", cf_account: @cf_account %>
+<% end %>

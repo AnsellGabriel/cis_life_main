@@ -23,25 +23,12 @@
     </div>
     <%#= render 'show_coop' unless current_user.userable_type == 'CoopUser' %>
     <%= render 'claims_detail' %>
-    <div class="card">
-      <h5 class="card-header">Claimant details</h5>
-      <div class="card-body">
-        <dl class="row">
-          <dt class="col-sm-4">Name</dt>
-          <dd class="col-sm-8"><%= @process_claim.claimant_name %></dd>
-          <dt class="col-sm-4">Relation</dt>
-          <dd class="col-sm-8"><%= @process_claim.relationship %></dd>
-          <dt class="col-sm-4">Contact</dt>
-          <dd class="col-sm-8"><%= @process_claim.claimant_contact_no %></dd>
-          <dt class="col-sm-4">Email</dt>
-          <dd class="col-sm-8"><%= @process_claim.claimant_email %></dd>
-        </dl>
-      </div>
-    </div>
+    <%= render 'claimant_details' %>
+    
   </div>
   <div class="col-md-6">
     <%= render 'insured_details' %>
-    <% if @process_claim.file_claim? || @process_claim.filed_by_analyst? || @process_claim.claim_filed? %>
+    <% if @process_claim.coop_file? || @process_claim.analyst_file? || @process_claim.claim_filed? || @process_claim.incomplete_document? %>
       <%= render 'claims/claim_attachments/show_attach_document' %>
     <% else %>
       <div class="card">
@@ -50,7 +37,7 @@
         </div>
       </div>
     <% end %>
-    <% if @process_claim.claim_type && @process_claim.claim_type == ClaimType.find_by(name: 'Hospital Confinement Claim') %>
+    <% if @process_claim.claim_type && @process_claim.claim_type == Claims::ClaimType.find_by(name: 'Hospital Confinement Claim') %>
       <div class="card">
         <%= content_tag :h5, 'Confinement', class: "card-header" %>
         <div class="card-body">
@@ -105,6 +92,5 @@
   <%# </div>
   </div>  %>
 </div>
-<% unless current_user.is_coop_user? %>
-  <%= render 'tabs' %>
-<% end %>
+<%= render 'tabs' if @process_claim.processing %>
+<%#= console %>
