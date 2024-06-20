@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2024_05_30_072627) do
+ActiveRecord::Schema[7.0].define(version: 2024_06_08_125353) do
   create_table "accounting_vouchers", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.date "date_voucher"
     t.string "voucher"
@@ -366,6 +366,16 @@ ActiveRecord::Schema[7.0].define(version: 2024_05_30_072627) do
     t.datetime "updated_at", null: false
   end
 
+  create_table "cf_accounts", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+    t.bigint "cooperative_id"
+    t.decimal "amount", precision: 18, scale: 2
+    t.decimal "amount_limit", precision: 18, scale: 2
+    t.integer "status"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["cooperative_id"], name: "index_cf_accounts_on_cooperative_id"
+  end
+
   create_table "check_voucher_requests", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.string "requestable_type", null: false
     t.bigint "requestable_id", null: false
@@ -409,6 +419,8 @@ ActiveRecord::Schema[7.0].define(version: 2024_05_30_072627) do
     t.bigint "process_claim_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.text "postmortem"
+    t.text "cause_of_incident"
     t.index ["process_claim_id"], name: "index_claim_causes_on_process_claim_id"
   end
 
@@ -421,6 +433,19 @@ ActiveRecord::Schema[7.0].define(version: 2024_05_30_072627) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["process_claim_id"], name: "index_claim_confinements_on_process_claim_id"
+  end
+
+  create_table "claim_coverage_reinsurances", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+    t.bigint "claim_reinsurance_id"
+    t.bigint "claim_coverage_id"
+    t.bigint "reinsurer_id"
+    t.decimal "amount", precision: 18, scale: 2
+    t.decimal "ri_reported", precision: 18, scale: 2
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["claim_coverage_id"], name: "index_claim_coverage_reinsurances_on_claim_coverage_id"
+    t.index ["claim_reinsurance_id"], name: "index_claim_coverage_reinsurances_on_claim_reinsurance_id"
+    t.index ["reinsurer_id"], name: "index_claim_coverage_reinsurances_on_reinsurer_id"
   end
 
   create_table "claim_coverages", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
@@ -437,9 +462,8 @@ ActiveRecord::Schema[7.0].define(version: 2024_05_30_072627) do
     t.bigint "process_claim_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.string "coverageable_type", null: false
-    t.bigint "coverageable_id", null: false
-    t.index ["coverageable_type", "coverageable_id"], name: "index_claim_coverages_on_coverageable"
+    t.bigint "batch_id"
+    t.index ["batch_id"], name: "index_claim_coverages_on_batch_id"
     t.index ["process_claim_id"], name: "index_claim_coverages_on_process_claim_id"
   end
 
@@ -478,6 +502,14 @@ ActiveRecord::Schema[7.0].define(version: 2024_05_30_072627) do
     t.index ["process_claim_id"], name: "index_claim_payments_on_process_claim_id"
   end
 
+  create_table "claim_reinsurances", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+    t.bigint "process_claim_id"
+    t.integer "status"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["process_claim_id"], name: "index_claim_reinsurances_on_process_claim_id"
+  end
+
   create_table "claim_remarks", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.bigint "process_claim_id", null: false
     t.bigint "user_id", null: false
@@ -488,6 +520,7 @@ ActiveRecord::Schema[7.0].define(version: 2024_05_30_072627) do
     t.boolean "coop"
     t.boolean "read"
     t.boolean "pin"
+    t.boolean "removed"
     t.index ["process_claim_id"], name: "index_claim_remarks_on_process_claim_id"
     t.index ["user_id"], name: "index_claim_remarks_on_user_id"
   end

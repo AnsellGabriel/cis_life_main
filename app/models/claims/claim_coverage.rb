@@ -1,6 +1,7 @@
 class Claims::ClaimCoverage < ApplicationRecord
   belongs_to :process_claim
-  belongs_to :coverageable, polymorphic: true
+  belongs_to :batch, optional: true
+  # belongs_to :coverageable, polymorphic: true
 
   Coverage_status = ["Current", "Previous"]
   Status = ["Approved", "Denied", "Pending"]

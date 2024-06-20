@@ -35,7 +35,13 @@ Rails.application.routes.draw do
     get :reserves_index, on: :collection
   end
   namespace :claims do 
-    resources :claim_types, :claim_documents, :claim_type_benefits, :claim_confinements, :claim_benefits, :claim_coverages, :claim_distributions, :claim_type_natures, :claim_type_agreements
+    resources :claim_types, :claim_documents, :claim_type_benefits, :claim_confinements, :claim_benefits, :claim_coverages, :claim_distributions, :claim_type_natures, :claim_type_agreements, :cf_accounts
+    
+    resources :claim_coverage_reinsurances do 
+      get :claim_reinsurance_create, to: "claim_coverage_reinsurances#claim_reinsurance_create", as: "claim_ri_create", on: :collection
+      get :claim_reinsurance_update, to: "claim_coverage_reinsurances#claim_reinsurance_update", as: "claim_ri_update", on: :member
+    end
+
     resources :causes do
       post 'create_cause', to: "causes#create"
     end
@@ -102,6 +108,14 @@ Rails.application.routes.draw do
     get :show_fields, on: :member
   end
 
+  resources :dashboards do 
+    get :actuarial, on: :collection
+    get :claims, on: :collection
+    get :mis, on: :collection
+    get :coop, on: :collection
+    get :treasury, on: :collection
+    get :accounting, on: :collection
+  end
 
   resources :user do
     get :approved, on: :member

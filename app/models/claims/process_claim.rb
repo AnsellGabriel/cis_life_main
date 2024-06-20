@@ -71,7 +71,9 @@ class Claims::ProcessClaim < ApplicationRecord
     issuance_denied_letter: 22,
     payment_preparation: 23,
     retrieval_documents: 24,
-    pending_claim: 25
+    pending_claim: 25,
+    reinsurance_verification: 26,
+    reinsurance_verified: 27
   }
 
 
@@ -159,6 +161,7 @@ class Claims::ProcessClaim < ApplicationRecord
   belongs_to :claim_type_nature, optional: true
   has_many :process_track, as: :trackable, dependent: :destroy
   has_one :claim_cause, dependent: :destroy
+  has_one :claim_reinsurance, dependent: :destroy, class_name: "Claims::ClaimReinsurance"
   has_many :claim_benefits, dependent: :destroy
   has_many :claim_coverages, dependent: :destroy
   has_many :claim_remarks, dependent: :destroy

@@ -24,7 +24,7 @@ class ReinsurersController < ApplicationController
     @reinsurer = Reinsurer.new(reinsurer_params)
 
     if @reinsurer.save
-      redirect_to @reinsurer, notice: "Reinsurer was successfully created."
+      redirect_to reinsurers_path, notice: "Reinsurer was successfully created."
     else
       render :new, status: :unprocessable_entity
     end
@@ -33,7 +33,7 @@ class ReinsurersController < ApplicationController
   # PATCH/PUT /reinsurers/1
   def update
     if @reinsurer.update(reinsurer_params)
-      redirect_to @reinsurer, notice: "Reinsurer was successfully updated."
+      redirect_to reinsurers_path, notice: "Reinsurer was successfully updated."
     else
       render :edit, status: :unprocessable_entity
     end

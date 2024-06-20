@@ -203,7 +203,11 @@ class Claims::ProcessClaimsController < ApplicationController
     @cooperative = @process_claim.cooperative
     @payout_type = @process_claim.voucher_request&.vouchers&.where(audit: [:pending_audit, :for_audit])&.last
     @audit_remarks = @payout_type&.remarks
-
+    unless @process_claim.claim_reinsurance.nil?
+      @reinsurers = Reinsurer.all
+      @claim_reinsurance = @process_claim.claim_reinsurance
+      @coverage_reinsurances = Claims::ClaimCoverageReinsurance.where(claim_reinsurance: @claim_reinsurance)
+    end
     # if @process_claim.debit_advice?
     #   @bank = @process_claim.voucher_request.account
     # end
@@ -423,11 +427,12 @@ class Claims::ProcessClaimsController < ApplicationController
       claim_documents_attributes: [:id, :document, :document_type, :_destroy],
       process_tracks_attributes: [:id, :description, :route_id, :trackable_type, :trackable_id ],
       claim_benefits_param: [:id, :benefit_id, :amount, :status],
-      claim_cause_attributes: [:id, :acd, :ucd, :osccd, :icd],
+      claim_cause_attributes: [:id, :acd, :ucd, :osccd, :icd, :postmortem, :cause_of_incident],
       claim_coverage_attributes: [:id, :amount_benefit, :coverage_type, :coverageale],
       claim_remark_attributes: [:id, :user_id, :status, :remark, :coop, :read],
       claim_attachment_attributes: [:id, :claim_type_id, :doc],
-      claim_confinement_attributes: [:id, :date_admit, :date_discharge, :terms, :amount])
+      claim_confinement_attributes: [:id, :date_admit, :date_discharge, :terms, :amount],
+      claim_reinsurance_attributes: [:id, :status])
   end
 
   def set_dummy_value

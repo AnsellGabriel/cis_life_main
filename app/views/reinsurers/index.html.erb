@@ -14,8 +14,6 @@
       <th>#</th>
             <th>Name</th>
             <th>Short Name</th>
-            <th>Address</th>
-            <th>Contact No</th>
             <th></th>
         </tr>
     </thead>
@@ -25,10 +23,10 @@
         <tr>
 
         <th scope="row"><%= reinsurer.id %></th>
-        <td><%= reinsurer.name %></td>
+        <td><%= reinsurer.name %> 
+        <small><%= reinsurer.address %> <br>
+          <%= reinsurer.contact_no %></small></td>
         <td><%= reinsurer.short_name %></td>
-        <td><%= reinsurer.address %></td>
-        <td><%= reinsurer.contact_no %></td>
     
           <td>
             <%= link_to 'View', reinsurer, class: 'btn btn-secondary btn-sm' %>
