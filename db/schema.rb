@@ -10,11 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-<<<<<<< HEAD
-ActiveRecord::Schema[7.0].define(version: 2024_06_08_125353) do
-=======
-ActiveRecord::Schema[7.0].define(version: 2024_06_13_004537) do
->>>>>>> main
+ActiveRecord::Schema[7.0].define(version: 2024_06_18_015459) do
   create_table "accounting_vouchers", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.date "date_voucher"
     t.string "voucher"
@@ -141,7 +137,7 @@ ActiveRecord::Schema[7.0].define(version: 2024_06_13_004537) do
     t.index ["plan_id"], name: "index_actuarial_reserves_on_plan_id"
   end
 
-  create_table "adjusted_coverages", charset: "utf8mb4", force: :cascade do |t|
+  create_table "adjusted_coverages", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.string "coverageable_type", null: false
     t.bigint "coverageable_id", null: false
     t.decimal "adjusted_coverage", precision: 10, scale: 2
@@ -155,7 +151,7 @@ ActiveRecord::Schema[7.0].define(version: 2024_06_13_004537) do
     t.index ["coverageable_type", "coverageable_id"], name: "index_adjusted_coverages_on_coverageable"
   end
 
-  create_table "admin_users", charset: "utf8mb4", force: :cascade do |t|
+  create_table "admin_users", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.string "email", default: "", null: false
     t.string "encrypted_password", default: "", null: false
     t.string "reset_password_token"
@@ -1076,20 +1072,6 @@ ActiveRecord::Schema[7.0].define(version: 2024_06_13_004537) do
     t.index ["agreement_id"], name: "index_loan_insurance_rates_on_agreement_id"
   end
 
-  create_table "loan_insurance_rates_copy1", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
-    t.integer "min_age"
-    t.integer "max_age"
-    t.decimal "monthly_rate", precision: 5, scale: 2
-    t.decimal "annual_rate", precision: 5, scale: 2
-    t.decimal "daily_rate", precision: 5, scale: 2
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.bigint "agreement_id", null: false
-    t.decimal "min_amount", precision: 15, scale: 2
-    t.decimal "max_amount", precision: 15, scale: 2
-    t.index ["agreement_id"], name: "index_loan_insurance_rates_on_agreement_id"
-  end
-
   create_table "loan_insurance_retentions", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.decimal "amount", precision: 15, scale: 2
     t.boolean "active"
@@ -1669,7 +1651,6 @@ ActiveRecord::Schema[7.0].define(version: 2024_06_13_004537) do
   add_foreign_key "loan_insurance_details", "loan_insurance_retentions"
   add_foreign_key "loan_insurance_loans", "cooperatives"
   add_foreign_key "loan_insurance_rates", "agreements"
-  add_foreign_key "loan_insurance_rates_copy1", "agreements", name: "loan_insurance_rates_copy1_ibfk_1"
   add_foreign_key "member_dependents", "members"
   add_foreign_key "process_claims", "agreement_benefits"
   add_foreign_key "process_claims", "agreements"
