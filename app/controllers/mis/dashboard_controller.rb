@@ -20,7 +20,7 @@ class Mis::DashboardController < ApplicationController
 
     @ors = case @type
     when "enc"
-      GroupRemit.where(mis_entry: true)
+      GroupRemit.where(mis_entry: true).order(created_at: :desc)
     when "nt"
       # GroupRemit.where.not(official_receipt: nil).where(mis_entry: true)
       GroupRemit.where.not(id: TransmittalOr.with_ors_already).where(mis_entry: true)
