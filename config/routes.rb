@@ -6,10 +6,12 @@ Rails.application.routes.draw do
   resources :teams do
     get :selected, on: :member
   end
+
   resources :demo_schedules
   resources :transmittals do
     get :remove_or, on: :member
   end
+
   resources :special_arrangements
   resources :sip_pbs
   resources :sip_abs
@@ -21,6 +23,7 @@ Rails.application.routes.draw do
   resources :claim_request_for_payments
   resources :claim_payments
   get "actuarial/index"
+  
   namespace :actuarial do
     resources :reserves
     resources :reserve_batches
@@ -73,6 +76,7 @@ Rails.application.routes.draw do
       get :claims_dashboard, to: "process_claims#claims_dashboard", on: :collection
       get :approve_claim_debit, on: :member
       # get :claimable, on: :collection
+      resources :remarks
     end
 
     resources :claim_remarks do
@@ -258,7 +262,10 @@ Rails.application.routes.draw do
       get :terminate, on: :member
       get :modal_remarks, on: :member
       get :find_loan, on: :member
-
+      get :adjusted, on: :member
+      post :accept_adjustment, on: :member
+      post :cancel_coverage, on: :member
+      get :adjustments, on: :member
       collection do
         get :approve_all
       end
@@ -337,6 +344,7 @@ Rails.application.routes.draw do
 
   # treasury
   namespace :treasury do
+    resources :sub_accounts
     resources :payment_types
     resources :business_checks, as: 'checks', path: 'checks', only: %w[index edit update] do
       get :requests, on: :collection
@@ -399,6 +407,7 @@ Rails.application.routes.draw do
   resources :underwriting_routes
   resources :batch_remarks do
     get :form_md, on: :member
+    post :accept_adjustment, on: :member
   end
   resources :dependent_remarks
 

@@ -23,7 +23,8 @@ class Batch < ApplicationRecord
     approved: 0,
     denied: 1,
     pending: 2,
-    for_review: 3
+    for_review: 3,
+    md_recom: 4
   }
 
   scope :filter_by_member_name, ->(name) {
@@ -52,6 +53,9 @@ class Batch < ApplicationRecord
   # has_many :claim_coverages, as: :coverageable, class_name: 'Claims::ClaimCoverage', dependent: :destroy
 
   has_many :reserve_batches, as: :batchable, dependent: :destroy, class_name: "Actuarial::ReserveBatch"
+
+  has_many :adjusted_coverages, as: :coverageable, dependent: :destroy
+
 
   # alias_attribute :batches, :reserve_batches
 

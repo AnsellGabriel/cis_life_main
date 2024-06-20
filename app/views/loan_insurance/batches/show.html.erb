@@ -89,6 +89,9 @@
               </div>
               <div class="col-sm-3 ">
                 <%= to_number(@batch.loan_amount) %>
+                <% if @batch.adjusted_cov.present? %>
+                  <%= to_number(@batch.adjusted_cov) %>
+                <% end %>
               </div>
               <div class="col-sm-3">
                 <span class="mb-0 text-secondary">Unused Premium</span>

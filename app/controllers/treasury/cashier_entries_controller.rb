@@ -8,6 +8,7 @@ class Treasury::CashierEntriesController < ApplicationController
     @amount_in_words = amount_to_words(@receipt.amount)
     @payment_type = @receipt.treasury_payment_type.name
     @vat = @receipt.vat
+
     respond_to do |format|
       format.pdf do
         render pdf: "OR##{@receipt.or_no}",
@@ -43,6 +44,11 @@ class Treasury::CashierEntriesController < ApplicationController
 
     @q = Treasury::CashierEntry.ransack(params[:q])
     @entries = @q.result.order(created_at: :desc)
+    @entries = @entries.where(status: params[:status]) unless params[:status].nil?
+
+    if params[:date_from].present? && params[:date_to].present?
+      @entries = @entries.where(created_at: params[:date_from].to_date.beginning_of_day..params[:date_to].to_date.end_of_day)
+    end
 
     @pagy, @entries = pagy(@entries, items: 10)
   end
@@ -75,7 +81,7 @@ class Treasury::CashierEntriesController < ApplicationController
   end
 
   def create
-    @entry = Treasury::CashierEntry.new(entry_params)
+    @entry = Treasury::CashierEntry.new(entry_params.merge(employee: current_user.userable))
     @entry.branch = current_user.userable.branch_before_type_cast # assign employee branch to entry
 
     if @entry.entriable_type == "Remittance"
@@ -83,7 +89,7 @@ class Treasury::CashierEntriesController < ApplicationController
     end
 
     @entry.check_agreement
-    if @entry.save
+    if @entry.save!
       # if @entry.entriable_type == "Remittance"
       #   approve_payment(@group_remit.payments.last.id)
       # end
@@ -102,6 +108,8 @@ class Treasury::CashierEntriesController < ApplicationController
   # end
 
   def update
+    @entry.check_agreement # check if the entry has a plan or agreement
+
     if @entry.update(entry_params)
       redirect_to @entry, notice: "Entry updated"
     else

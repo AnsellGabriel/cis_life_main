@@ -17,6 +17,7 @@ class User < ApplicationRecord
   has_many :read_messages
   has_many :read_messages, through: :read_messages, source: :claim_remark
   # accepts_nested_attributes_for :ff
+  delegate :initials_name, to: :userable
 
   enum rank: {
     rank_and_file: 0,

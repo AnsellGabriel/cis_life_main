@@ -1,0 +1,41 @@
+<%= turbo_frame_tag "reg_form_modal_xl" do %>
+  <% batch = @batch %>
+  <div class="modal-header">
+    <%= content_tag :h5, "Adjustments", class: "modal-title", id: "staticBackdropLabel" %>    
+    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+  </div>
+  <div class="modal-body">
+    <table class="table">
+      <thead>
+        <th>Sub-standard Rate</th>
+        <th>Rate</th>
+        <th>Total Rate</th>
+        <th>Terms</th>
+        <th>Original Sum Insured</th>
+        <th>Adjusted Sum Insured</th>
+        <th>Premium Paid</th>
+        <th>Correct Premium Due</th>
+        <th>Underpayment</th>
+        <th>Status</th>
+      </thead>
+      <tbody>
+        <% batch.adjusted_coverages.each do |ac| %>
+          <tr>
+            <td><%= ac.substandard_rate %></td>
+            <td><%= batch.rate.annual_rate %></td>
+            <td><%= batch.rate.annual_rate * ac.substandard_rate %></td>
+            <td><%= batch.terms %></td>
+            <td><%= to_currency(batch.loan_amount) %></td>
+            <td><%= to_currency(ac.adjusted_coverage) %></td>
+            <td><%= to_currency(batch.premium) %></td>
+            <td><%= to_currency(ac.adjusted_premium )%></td>
+            <td><%= to_currency(ac.underpayment) %></td>
+            <td><%= adjustment_status(ac.status) %></td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+  </div>
+<% end %>
+  
+  

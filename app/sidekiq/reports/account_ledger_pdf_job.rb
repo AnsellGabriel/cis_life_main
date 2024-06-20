@@ -28,7 +28,7 @@ class Reports::AccountLedgerPdfJob
         assigns: {
           date_from: date_from.to_date,
           date_to: date_to.to_date,
-          treasury_account: @account,
+          account: @account,
           searched_ledgers: @searched_ledgers,
           initial_balance: @balance,
           total_debit: @total_debit,

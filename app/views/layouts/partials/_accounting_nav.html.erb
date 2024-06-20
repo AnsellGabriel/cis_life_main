@@ -22,5 +22,9 @@
   <%= link_to "Receipt Book", accounting_receipt_book_index_path, class: 'dropdown-item'%>
 <% end %>
 
-<%= link_to "Accounts", treasury_accounts_path, class: "nav-link" %>
+<%= render 'layouts/partials/nav_dropdown', title: 'Accounts' do %>
+  <%= link_to "Accounts", treasury_accounts_path, class: 'dropdown-item' %>
+  <%= link_to "Sub Accounts", treasury_sub_accounts_path, class: 'dropdown-item' %>
+<% end %>
+
 <%= link_to "Payees", payees_path, class: "nav-link" %>

@@ -3,13 +3,19 @@
     <div class="d-flex gap-1">
       <%= content_tag :h5, 'Select Bank', class: "modal-title", id: "staticBackdropLabel" %>
       <%= link_to new_cooperative_coop_bank_path(@cooperative, pc_id: @process_claim.id), class: small_btn('success') do %>
-        <i class="bi bi-plus-lg"></i>
+        <i class="bi bi-plus-lg"></i> Add Bank
+      <% end %>
+      <%= link_to @process_claim.remarks.present? ? claims_process_claim_remarks_path(@process_claim) : new_claims_process_claim_remark_path(@process_claim), class: "btn btn-primary btn-sm position-relative", data: { turbo_frame: "reg_form_modal" } do %>
+        <i class="bi bi-journal-bookmark-fill"></i> Notes
       <% end %>
     </div>
     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
   </div>
   
   <div class="modal-body">
+    <div class="alert alert-danger small" role="alert">
+      Please add a note if the Metrobank account will not be used as the fund account for this claim, and please include the fund account details to the note.
+    </div>
     <% if @cooperative.treasury_accounts.present? %>
       <%= simple_form_for(@process_claim, url: claim_route_claims_process_claim_path, method: :get) do |f| %>
         <%= hidden_field_tag :p, 8 %>

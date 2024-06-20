@@ -40,7 +40,7 @@
         </div>
         <div class="col-6" id="to_hide_agreement" data-hider-target="hideme">
           <%#= f.association :agreement, label: "Plan", input_html: { id: "agreement_id", data: { coop_target: "agreementSelect" } } %>
-          <%= f.association :plan, label: "Plan" %>
+          <%= f.association :plan, label: "Plan", input_html: { data: {hider_target: 'plan'} }%>
         </div>
       </div>
       

@@ -24,6 +24,7 @@
           <tr>
             <td class="<%= "ps-5" if ledger.credit? %>">
               <%= ledger.account.name %> 
+              <%= " - #{ledger.sub_account.name}" %> 
 
               <% if entry.pending? and (current_user.is_accountant? or current_user.is_treasurer?) %>
                 <%= link_to edit_entry_ledger_path(entry, ledger, e_t: entry.entry_type), 

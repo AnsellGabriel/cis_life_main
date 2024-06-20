@@ -3,6 +3,7 @@ class GeneralLedger < ApplicationRecord
 
   belongs_to :ledgerable, polymorphic: true
   belongs_to :account, class_name: "Treasury::Account", foreign_key: "account_id"
+  belongs_to :sub_account, class_name: "Treasury::SubAccount", foreign_key: "sub_account_id", optional: true
 
   enum ledger_type: { debit: 0, credit: 1 }
 
@@ -78,10 +79,12 @@ class GeneralLedger < ApplicationRecord
   def payee
     case ledgerable_type
     when "Treasury::CashierEntry"
-      if self.ledgerable.entriable_type == "Payment"
+      if self.ledgerable&.entriable_type == "Payment"
         self.ledgerable.entriable.payable.agreement.cooperative.name
-      elsif self.ledgerable.entriable_type == "Cooperative"
+      elsif self.ledgerable&.entriable_type == "Cooperative"
         self.ledgerable.entriable.name
+      else
+        '-'
       end
     when "Accounting::Check"
       self.ledgerable.payable

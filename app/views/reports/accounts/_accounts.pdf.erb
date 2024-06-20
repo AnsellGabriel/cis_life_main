@@ -1,18 +1,28 @@
 <tr>
-  <td colspan="4" class="text-start" style="font-size: 1.1rem; font-weight: bold; border: 2px solid black"><%= name %></td>
+  <td colspan="2" class="text-start" style="font-size: 1.1rem; font-weight: bold; border: 2px solid black"><%= name %></td>
+  <td colspan="1" class="text-start" style="font-size: 1.1rem; font-weight: bold; border: 2px solid black">Debit</td>
+  <td colspan="1" class="text-start" style="font-size: 1.1rem; font-weight: bold; border: 2px solid black">Credit</td>
+  <td colspan="1" class="text-start" style="font-size: 1.1rem; font-weight: bold; border: 2px solid black">Debit</td>
+  <td colspan="1" class="text-start" style="font-size: 1.1rem; font-weight: bold; border: 2px solid black">Credit</td>
 </tr>
 <% accounts.order(:name).each do |a| %>
   <% ledgers_with_transaction_date = a.general_ledgers.with_transaction_date(@date_from, @date_to) %>
+  <% year_to_date_ledgers = a.general_ledgers.with_transaction_date(Date.today.beginning_of_year, @date_to) %>
   <% next if ledgers_with_transaction_date.empty? %>
   <% difference = ledgers_with_transaction_date.total_debit - ledgers_with_transaction_date.total_credit %>
+  <% ytd_difference = year_to_date_ledgers.total_debit - year_to_date_ledgers.total_credit %>
 
   <tr>
     <td><%= a.code %></td>
     <td><%= a.name %></td>
     <td class="text-end"><%= difference >= 0  ? number_to_currency(difference, unit: '') : '' %></td>
     <td class="text-end"><%= difference <= 0 ? number_to_currency(difference.abs, unit: '') : '' %></td>
+    <td class="text-end"><%= ytd_difference >= 0  ? number_to_currency(ytd_difference, unit: '') : '' %></td>
+    <td class="text-end"><%= ytd_difference <= 0 ? number_to_currency(ytd_difference.abs, unit: '') : '' %></td>
 
     <% @total_debit += difference if difference > 0 %>
     <% @total_credit += difference.abs if difference < 0 %>
+    <% @ytd_total_debit += ytd_difference if ytd_difference > 0 %>
+    <% @ytd_total_credit += ytd_difference.abs if ytd_difference < 0 %>
   </tr>
 <% end %>

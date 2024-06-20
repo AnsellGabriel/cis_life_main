@@ -24,6 +24,8 @@ class LoanInsurance::Batch < Batch
   has_many :reserve_batches, class_name: "Actuarial::ReserveBatch", as: :batchable, dependent: :destroy
   has_many :reserves, through: :reserve_batches, class_name: "Actuarial::Reserve"
 
+  has_many :adjusted_coverages, as: :coverageable, dependent: :destroy
+
   def self.get_lppi_batches_count
     includes(group_remit: { agreement: :plan}).where(plan: {id: 2}).count
   end
@@ -82,7 +84,7 @@ class LoanInsurance::Batch < Batch
     self.loan = coop_member.cooperative.loans.find_by(for_sii: true)
   end
 
-  def process_batch(encoded_premium = nil)
+  def process_batch(encoded_premium = nil, current_user = nil)
     return :no_dates if effectivity_date.nil? || expiry_date.nil?
 
     agreement = group_remit.agreement
@@ -115,9 +117,22 @@ class LoanInsurance::Batch < Batch
     else
       cm = coop_member
       prev_cov = coop_member.loan_batches.order(effectivity_date: :desc).last
+
       self.valid_health_dec = prev_cov.present? ? prev_cov.valid_health_dec : false
     end
 
+    if effectivity_date < Date.today
+      if ((Date.today - effectivity_date).to_i / 30) >= 2 #months
+        self.batch_remarks.build(remark: "The remittance is late by over 60 days as of today.",
+        status: :pending,
+        user: current_user.userable
+        )
+        self.insurance_status = :pending
+      end
+    end
+
+    #! do not add code after this validation as this is the return value of the method
+    #! please add them above this comment
     if self.rate.nil?
       loan_rate
     else
@@ -135,21 +150,66 @@ class LoanInsurance::Batch < Batch
   end
 
   def update_prem_substandard(sub_rate)
-    self.premium = (self.loan_amount / 1000) * (sub_rate * self.terms)
+    self.adjusted_prem = (self.loan_amount / 1000) * (sub_rate * self.terms)
 
-    if unused_loan_id
-      previous_batch = LoanInsurance::Batch.find(unused_loan_id)
-      previous_batch.update(status: :terminated, terminate_date: self.effectivity_date)
-      unused_term = compute_terms(previous_batch.expiry_date, effectivity_date)
-      self.unused = (previous_batch.loan_amount / 1000 ) * (rate.monthly_rate * unused_term)
-      self.premium_due = self.premium - unused
-    else
-      self.unused = 0
-      self.premium_due = self.premium
+    # if unused_loan_id
+    #   previous_batch = LoanInsurance::Batch.find(unused_loan_id)
+    #   previous_batch.update(status: :terminated, terminate_date: self.effectivity_date)
+    #   unused_term = compute_terms(previous_batch.expiry_date, effectivity_date)
+    #   self.unused = (previous_batch.loan_amount / 1000 ) * (rate.monthly_rate * unused_term)
+    #   self.premium_due = self.premium - unused
+    # else
+    #   self.unused = 0
+    #   self.premium_due = self.premium
+    # end
+
+    # self.agent_sf_amount = calculate_service_fee(self.group_remit.agreement.agent_sf, self.adjusted_prem)
+    # self.coop_sf_amount = calculate_service_fee(self.group_remit.agreement.coop_sf, self.adjusted_prem)
+  end
+
+  def add_adjustment(rate)
+    total_rate = self.rate.annual_rate * rate
+    adjusted_coverage = (self.premium) / (total_rate / 12 * self.terms) * 1000
+    adjusted_premium = (self.loan_amount / 1000 ) * ((total_rate / 12) * self.terms)
+    underpayment = adjusted_premium - self.premium
+
+
+    adjusted_coverages.build(
+      substandard_rate: rate,
+      total_rate: total_rate,
+      adjusted_premium: adjusted_premium,
+      adjusted_coverage: adjusted_coverage,
+      underpayment: underpayment,
+      status: :pending
+    )
+    # self.substandard = true
+  end
+
+  def adjustment(type, current_user, adjusted)
+    case type
+    when "prem"
+      self.adjusted_prem = adjusted.adjusted_premium
+      if unused_loan_id
+        previous_batch = LoanInsurance::Batch.find(unused_loan_id)
+        previous_batch.update(status: :terminated, terminate_date: self.effectivity_date)
+        unused_term = compute_terms(previous_batch.expiry_date, effectivity_date)
+        self.adjusted_unuse = (previous_batch.loan_amount / 1000 ) * (rate.monthly_rate * unused_term)
+        self.adjusted_premium_due = self.adjusted_prem - adjusted_unuse
+      else
+        self.adjusted_unuse = 0
+        self.adjusted_premium_due = self.adjusted_prem
+      end
+      
+      self.adjusted_agent_sf = calculate_service_fee(self.rate.agent_sf, self.adjusted_prem)
+      self.adjusted_coop_sf = calculate_service_fee(self.rate.coop_sf, self.adjusted_prem)
+
+      batch_remarks.build(remark: "Adjusted premium accepted. : #{self.adjusted_prem}", status: :prem_adjust, user: current_user.userable)
+    when "cov"
+      self.adjusted_cov = adjusted.adjusted_coverage
+      batch_remarks.build(remark: "Adjusted coverage accepted. : #{self.adjusted_cov}", status: :cov_adjust, user: current_user.userable)
     end
-
-    self.agent_sf_amount = calculate_service_fee(self.group_remit.agreement.agent_sf, self.premium_due)
-    self.coop_sf_amount = calculate_service_fee(self.group_remit.agreement.coop_sf, self.premium_due)
+    # self.substandard = true
+    adjusted.update!(status: :approved)
   end
 
   def self.get_member_lppi_coverages(member)
@@ -262,6 +322,8 @@ class LoanInsurance::Batch < Batch
     self.last_name = coop_member.member.last_name
     self.birthdate = coop_member.member.birth_date
     self.civil_status = coop_member.member.civil_status
+    self.date_release = effectivity_date if not self.date_release.present?
+    self.date_mature = expiry_date if not self.date_mature.present?
   end
 
   def find_loan_rate(agreement)

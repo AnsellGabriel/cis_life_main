@@ -54,7 +54,7 @@
                       <%= link_to "MD", all_health_decs_group_remit_batches_path(pc.group_remit), class: "btn btn-secondary" %>
                     <% end %>
                   <% end %>
-                  <% if pc.processor == current_user.userable %>
+                  <% if pc.processor == current_user.userable || current_user.head? %>
                     <%= link_to 'View', pc, data: { turbo: false }, class: 'btn btn-secondary btn-sm' %>
                   <% end %>
                   <% if pc.status == "approved" && pc.group_remit.or_number.present? %>

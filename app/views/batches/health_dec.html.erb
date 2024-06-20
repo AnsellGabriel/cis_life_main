@@ -22,6 +22,9 @@
         <li class="nav-item" role="presentation">
           <button class="nav-link <%= 'active' if params[:active_tab] == 'stars' %>" id="pills-rem-tab" data-bs-toggle="pill" data-bs-target="#pills-rem" type="button" role="tab" aria-controls="pills-rem" aria-selected="false">Remarks/Recommendation</button>
         </li>
+        <li class="nav-item" role="presentation">
+          <button class="nav-link <%= 'active' if params[:active_tab] == 'stars' %>" id="pills-loan-tab" data-bs-toggle="pill" data-bs-target="#pills-loan" type="button" role="tab" aria-controls="pills-rem" aria-selected="false">Insurance Details</button>
+        </li>
       <% end %>
     </ul>
     <div class="tab-content" id="pills-tabContent">
@@ -60,6 +63,94 @@
       <div class="tab-pane fade" id="pills-mem" role="tabpanel" aria-labelledby="pills-mem-tab">
         <%= render 'coop_members/coop_member', member: @batch.coop_member.member, coop_member: @batch.coop_member %>
       </div>
+      <div class="tab-pane fade" id="pills-loan" role="tabpanel" aria-labelledby="pills-loan-tab">
+        <div class="card-body">
+            <% plan = @batch.group_remit.agreement.plan.acronym %>
+            <% if plan == "LPPI" %>
+            <hr>
+            <div class="row">
+              <div class="col-sm-3">
+                <span class="mb-0 text-secondary">Loan Type</span>
+              </div>
+              <div class="col-sm-3">
+                <%= @batch.loan&.name %>
+              </div>
+              <div class="col-sm-3">
+                <span class="mb-0 text-secondary">Premium</span>
+              </div>
+              <div class="col-sm-3">
+                <%= to_number(@batch.premium) %>
+              </div>
+            </div>
+            <hr>
+            <div class="row">
+              <div class="col-sm-3">
+                <span class="mb-0 text-secondary">Loan Amount</span>
+              </div>
+              <div class="col-sm-3 ">
+                <%= to_number(@batch.loan_amount) %>
+              </div>
+              <div class="col-sm-3">
+                <span class="mb-0 text-secondary">Unused Premium</span>
+              </div>
+              <div class="col-sm-3 ">
+                <%= to_number(@batch.unused) %>
+              </div>
+            </div>
+            <hr>
+            <div class="row">
+              <div class="col-sm-3">
+                <span class="mb-0 text-secondary">Terms</span>
+              </div>
+              <div class="col-sm-3 ">
+                <%= @batch.terms %>
+              </div>
+              <div class="col-sm-3">
+                <span class="mb-0 text-secondary">Premium Due</span>
+              </div>
+              <div class="col-sm-3 ">
+                <%= to_number(@batch.premium_due) %>
+              </div>
+            </div>
+            <hr>
+
+            <div class="row">
+              <div class="col-sm-3">
+                <span class="mb-0 text-secondary">Release Date</span>
+              </div>
+              <div class="col-sm-3 ">
+                <%= month_day_year(@batch.date_release) %>
+              </div>
+              <div class="col-sm-3">
+                <span class="mb-0 text-secondary">Effectivity Date</span>
+              </div>
+              <div class="col-sm-3 ">
+                <%= month_day_year(@batch.effectivity_date) %>
+              </div>
+            </div>
+            <hr>
+            <div class="row">
+              <div class="col-sm-3">
+                <span class="mb-0 text-secondary">Maturity Date</span>
+              </div>
+              <div class="col-sm-3">
+                <%= month_day_year(@batch.date_mature)%>
+              </div>
+              <div class="col-sm-3">
+                <span class="mb-0 text-secondary">Expiry Date</span>
+              </div>
+              <div class="col-sm-3">
+                <%= month_day_year(@batch.expiry_date)%>
+              </div>
+            </div>
+            <hr>
+            <% else %>
+              <%= render "loan_insurance/batches/sii_show" %>
+            <% end %>
+            
+
+          </div>
+      </div>
       <div class="tab-pane fade <%= 'active show' if params[:active_tab] == 'stars' %>" id="pills-rem" role="tabpanel" aria-labelledby="pills-rem-tab">
         <div class="row">
           <div class="col-6 ms-3">
@@ -80,7 +171,7 @@
             <%#= content_tag :h4, @batch.batch_remarks.where(status: 2).first.remark %>
           </div>
           <% if @md.present? %>
-            <% unless @batch.insurance_status == "approved" || @batch.insurance_status == "denied" %>
+            <% unless (@batch.insurance_status == "approved" || @batch.insurance_status == "denied") %>
               <div class="col-6">
                   <%= render "batch_remarks/form_md", locals: { batch_remark: @batch_remark, batch: @batch }  %>
               </div>
@@ -94,4 +185,3 @@
 
   </div>
 <% end %>
-<%#= @batch %>

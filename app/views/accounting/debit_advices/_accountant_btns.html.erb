@@ -1,13 +1,20 @@
 <div class="mb-1">
   <% if @request.present? %>
     <%= render 'back_btn', link: accounting_voucher_request_path(@request, pt: @request.payment_type) %>
+    <% if @request.requestable.remarks.present? %>
+      <% if @request.requestable.is_a?(Claims::ProcessClaim) %>
+        <%= link_to claims_process_claim_remarks_path(@request.requestable), class: "btn btn-outline-primary btn-sm position-relative", data: { turbo_frame: "reg_form_modal" }, title: 'Notes' do %>
+          <i class="bi bi-journal-bookmark-fill"></i> Notes
+        <% end %>
+      <% end %>
+    <% end %>
   <% else %>
     <%= render 'back_btn', link: accounting_debit_advices_path %>
   <% end %>
 
   <% if @debit_advice.posted? %>
-    <%= link_to download_accounting_debit_advice_path(@debit_advice, format: :pdf), class: small_btn('primary'), target: '_blank', title: 'Download' do %>
-      <i class="bi bi-download"></i>
+    <%= link_to download_accounting_debit_advice_path(@debit_advice, format: :pdf), class: small_btn('outline-primary'), target: '_blank', title: 'PDF' do %>
+      <i class="bi bi-filetype-pdf"></i> PDF
     <% end %>
   <% end %>
 

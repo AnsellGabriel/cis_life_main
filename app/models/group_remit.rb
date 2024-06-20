@@ -14,6 +14,7 @@ class GroupRemit < ApplicationRecord
   # has_one :agreement
   # has_one :cashier_entry, through: :agreement, class_name: "Treasury::CashierEntry"
   belongs_to :anniversary, optional: true
+  belongs_to :coop_branch, optional: true
 
   has_many :remarks, as: :remarkable, dependent: :destroy
   has_many :batch_group_remits
@@ -53,6 +54,8 @@ class GroupRemit < ApplicationRecord
     ready_for_refund: 1,
     refunded: 2
   }
+
+  GR_CLASS = ["LoanInsurance::GroupRemit", "Remittance", "BatchRemit"]
 
   def to_s
     name

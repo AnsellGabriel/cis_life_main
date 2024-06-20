@@ -41,8 +41,11 @@
           </div>
         </div>
         <h3 class="text-primary"><%= "#{debit_advice.voucher}" %></h3>
-        <div class="<%= flex_justify_align('between', 'center') %>">
-          <p><small><strong>DA date:</strong> <span><%= month_day_year(debit_advice.date_voucher) %></span></small></p>
+        <div class="<%= flex_justify_align('between', 'start') %>">
+          <div class="">
+            <p><small><strong>DA date:</strong> <span><%= month_day_year(debit_advice.date_voucher) %></span></small></p>
+            <p><small><strong>Created by:</strong> <span><%= debit_advice.employee&.signed_fullname %></span></small></p>
+          </div>
           <% if debit_advice.post_date? %>
             <p><small><strong>Post date:</strong> <span><%= month_day_year(debit_advice.post_date) %></span></small></p>
           <% end %>

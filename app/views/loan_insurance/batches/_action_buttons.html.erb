@@ -36,11 +36,21 @@
 	<% end %>
 
 	<% if batch.health_declaration.exists? %>
-		<%= link_to health_dec_group_remit_batch_path(group_remit, batch, for_und: true, batch_type: batch.class.name), 
+		<%= link_to health_dec_group_remit_batch_path(group_remit, batch, batch_type: batch.class.name), 
 			class: small_btn('outline-primary'), 
 			title: 'Health Declaration Form',
 			data: { turbo_frame: "reg_form_modal_xl" } do %>
 			<i class="bi bi-file-earmark-medical"></i>
+		<% end %>
+	<% end %>
+
+	<% #if batch.substandard == false && batch.batch_remarks.where(status: [:prem_adjust, :cov_adjust]).count > 0 %>
+	<% if batch.substandard == true && batch.adjusted_coverages.count > 0 %>
+		<%= link_to adjusted_loan_insurance_batch_path(batch),
+				class: small_btn('warning'),
+				title: "Substandard",
+				data: { turbo_frame: "modal-xl"} do %>
+					<%= bootstrap_icon "plus-slash-minus" %>
 		<% end %>
 	<% end %>
 
