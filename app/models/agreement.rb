@@ -20,7 +20,7 @@ class Agreement < ApplicationRecord
   has_many :emp_agreements
   has_many :employees, through: :emp_agreements
   has_many :group_remits
-  has_many :process_claims
+  has_many :process_claims, class_name: "Claims::ProcessClaim", dependent: :destroy
   has_many :anniversaries, dependent: :destroy
   has_many :agreements_coop_members
   has_many :coop_members, through: :agreements_coop_members
