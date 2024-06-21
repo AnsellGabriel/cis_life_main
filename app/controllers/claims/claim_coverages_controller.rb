@@ -14,7 +14,7 @@ class Claims::ClaimCoveragesController < ApplicationController
     @claim_coverage = @process_claim.claim_coverages.build(claim_coverage_params)
     # @claim_benefit = ClaimBenefit.new(claim_benefit_params)
     respond_to do |format|
-      if @claim_coverage.save
+      if @claim_coverage.save!
         format.html { redirect_back fallback_location: @process_claim, notice: "Coverage was successfully created." }
         format.json { render :show, status: :created, location: @claim_benefit }
       else

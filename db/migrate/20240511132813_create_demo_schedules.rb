@@ -8,7 +8,7 @@ class CreateDemoSchedules < ActiveRecord::Migration[7.0]
       t.date :demo_date
       t.integer :time_slot
       t.text :remarks
-      t.integer :satus
+      t.integer :status
       t.integer :method
 
       t.timestamps

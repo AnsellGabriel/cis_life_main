@@ -1,35 +1,43 @@
 
-<table class="table table-striped table-bordered table-hover">
+<table class="table table-bordered table-hover">
     <thead>
       <tr>
-      <th>#</th>
-        <th>Claims</th>
-        <th></th>
+      
+      <th>Claims</th>
       </tr>
     </thead>
     <tbody>
-        <% @claim_remarks.order(created_at: :desc).each do |cr| %>
-            <tr>
-                <% @process_claim = cr.process_claim %>
-                <th scope="row"><%= cr.id %></th>
-                <td><strong><%= @process_claim.claimable.get_fullname %></strong> <br>
-                    <small><%= @process_claim.agreement.plan %> <%= @process_claim.claim_type %></small> <br>
-                    <%= cr.remark[0, 100] %> ... <br>
-                    <small class="text-muted"><%= cr.created_at %></small>
-                </td>
-                <td>
-                    <% if current_user.userable_type == "CoopUser" %>
-                        <%= link_to "View", show_coop_claims_process_claim_path(@process_claim), class: "btn btn-warning btn-sm"  %>
-                   <% else %>
-                        <% if @process_claim.submitted? || @process_claim.claim_filed? %>
-                            <%= link_to "View", show_coop_claims_process_claim_path(@process_claim), class: "btn btn-warning btn-sm"  %>
-                            <%= link_to "Edit", claims_file_process_claim_path(@process_claim), class: "btn btn-warning btn-sm" if @process_claim.claim_filed? %>
-                        <% else %>
-                            <%= link_to "View", claim_process_process_claim_path(@process_claim), class: "btn btn-warning btn-sm"  %>
-                        <% end %>
-                    <% end %>
-                </td>
-            </tr>
+        <tr class="table-warning"><td><strong>Unread</strong></td></tr>
+        <% @messages.where(coop: 1, read: 0).where.not(user: current_user).each do |message| %>
+        <tr>
+            
+            <td><strong><%= message.user.userable.get_fullname %></strong> <small>
+                <% if message.user.userable_type == "CoopUser" %>
+                  @<%= message.user.userable.cooperative %>
+                <% end %>
+                
+                <em class="text-muted"><%= message.created_at %></em></small> <%= content_tag :span, 'Unread', class: "badge rounded-pill bg-warning text-dark" unless message.read? %> <br>
+                <small class="text-muted">Claim: <%= message.process_claim.claimable.get_fullname %>| Claim route: <%= message.process_claim.claim_route.humanize %></small> <br>
+                <strong> <%= link_to message.remark, show_coop_claims_process_claim_path(message.process_claim_id) if current_user.userable_type == "CoopUser" %> 
+                    <%= link_to message.remark, claim_process_claims_process_claim_path(message.process_claim_id) if current_user.userable_type == "Employee" %> 
+                </strong></td>
+        </tr>
+        <% end %>
+        <tr class="table-success"><td><strong>Everthing else</strong></td></tr>
+        <% @messages.where(coop: 1, read: 1).where.not(user: current_user).each do |message| %>
+        <tr>
+            
+            <td><strong><%= message.user.userable.get_fullname %></strong> <small>
+                <% if message.user.userable_type == "CoopUser" %>
+                  @<%= message.user.userable.cooperative %>
+                <% end %>
+                
+                <em class="text-muted"><%= message.created_at %></em></small> <%= content_tag :span, 'Unread', class: "badge rounded-pill bg-warning text-dark" unless message.read? %> <br>
+                <small class="text-muted">Claim: <%= message.process_claim.claimable.get_fullname %>| Claim route: <%= message.process_claim.claim_route.humanize %></small> <br>
+                <small> <%= link_to message.remark, show_coop_claims_process_claim_path(message.process_claim_id) if current_user.userable_type == "CoopUser" %> 
+                    <%= link_to message.remark, claim_process_claims_process_claim_path(message.process_claim_id) if current_user.userable_type == "Employee" %> 
+                </small></td>
+        </tr>
         <% end %>
     </tbody>
 </table>

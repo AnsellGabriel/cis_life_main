@@ -9,7 +9,8 @@ class AuthorityLevel < ApplicationRecord
     claim: 0,
     underwriting: 1,
     accounting: 2,
-    treasury: 3
+    treasury: 3,
+    reconsider: 4
   }
 end
 

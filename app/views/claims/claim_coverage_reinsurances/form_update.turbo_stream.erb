@@ -1,0 +1,4 @@
+<%= turbo_stream.update "remote_modal_body" do %>
+  <%= render "form", url: claims_claim_coverage_reinsurances_path(r: @claim_reinsurance), meth: 'post' if params[:action] == 'create' %>
+  <%= render "form", url: claims_claim_coverage_reinsurance_path(@claim_coverage_reinsurance), meth: 'patch' if params[:action] == 'update' %>
+<% end %>

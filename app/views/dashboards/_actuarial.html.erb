@@ -1,0 +1,59 @@
+<div class="text-center mt-5 mb-5">
+    <%= link_to "Reinsurer", reinsurers_path, class: "btn btn-secondary" %>
+    <%# <a href="/settings" class="btn btn-secondary mx-2">Settings</a> %>
+</div>
+<div class="row">
+    <div class="col-md-4">
+        <div class="card text-dark bg-info mb-3 h-100">
+            <div class="card-body">
+                <% if @claim_reinsurance.count == 0 %>
+                    <h5 class="card-title">Great news,</h5>
+                    <small class="text-muted">You currently have no pending claims reinsurance verification. Keep up the excellent work!</small>
+                <% else %>
+                    <h5 class="card-title">For Reinsurance Verification</h5>
+                    <small>While you were away, the following claims have been assigned to you for verification:</small><br>
+                    <h2 class="text-center mt-3"><%= link_to @claim_reinsurance.count, claims_claim_coverage_reinsurances_path, class: "text-dark" %></h2>
+                <% end %>
+            </div>
+            <div class="card-footer">
+                <%= link_to 'See Details <i class="bi bi-box-arrow-right"></i>'.html_safe, claims_claim_coverage_reinsurances_path, class: "text-dark" %>     
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card h-100">
+            <div class="card-body">
+                <% if @claim_reinsurance.count == 0 %>
+                    <h5 class="card-title">Great news,</h5>
+                    <small class="text-muted">You currently have no pending claims reinsurance verification. Keep up the excellent work!</small>
+                <% else %>
+                    <h5 class="card-title">Coverage for Reinsurance</h5>
+                    <small>While you were away, the following claims have been assigned to you for verification:</small><br>
+                    <h2 class="text-center mt-3"><%= link_to @claim_reinsurance.count, index_show_claims_process_claims_path, class: "text-dark" %></h2>
+                <% end %>
+            </div>
+            <div class="card-footer">
+                <%= link_to 'See Details <i class="bi bi-box-arrow-right"></i>'.html_safe, index_show_claims_process_claims_path(p: ), class: "text-dark" %>    
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card h-100">
+            <div class="card-body">
+                <% if @claim_reinsurance.count == 0 %>
+                    <h5 class="card-title">Great news,</h5>
+                    <small class="text-muted">You currently have no pending claims reinsurance verification. Keep up the excellent work!</small>
+                <% else %>
+                    <h5 class="card-title">Reserving</h5>
+                    <small>While you were away, the following claims have been assigned to you for verification:</small><br>
+                    <h2 class="text-center mt-3"><%= link_to @claim_reinsurance.count, index_show_claims_process_claims_path, class: "text-dark" %></h2>
+                <% end %>
+            </div>
+            <div class="card-footer">
+                <%= link_to 'See Details <i class="bi bi-box-arrow-right"></i>'.html_safe, actuarial_reserves_path, class: "text-dark" %>    
+            </div>
+        </div>
+    </div>
+    
+  </div>
+ </div>

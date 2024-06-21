@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2024_06_14_081648) do
+ActiveRecord::Schema[7.0].define(version: 2024_06_20_083108) do
   create_table "accounting_journal_entries", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.string "journable_type", null: false
     t.bigint "journable_id", null: false
@@ -155,6 +155,20 @@ ActiveRecord::Schema[7.0].define(version: 2024_06_14_081648) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["plan_id"], name: "index_actuarial_reserves_on_plan_id"
+  end
+
+  create_table "adjusted_coverages", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+    t.string "coverageable_type", null: false
+    t.bigint "coverageable_id", null: false
+    t.decimal "adjusted_coverage", precision: 10, scale: 2
+    t.decimal "adjusted_premium", precision: 10, scale: 2
+    t.decimal "substandard_rate", precision: 10, scale: 2
+    t.decimal "underpayment", precision: 10, scale: 2
+    t.decimal "total_rate", precision: 10, scale: 2
+    t.integer "status"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["coverageable_type", "coverageable_id"], name: "index_adjusted_coverages_on_coverageable"
   end
 
   create_table "admin_users", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
@@ -387,6 +401,16 @@ ActiveRecord::Schema[7.0].define(version: 2024_06_14_081648) do
     t.datetime "updated_at", null: false
   end
 
+  create_table "cf_accounts", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+    t.bigint "cooperative_id"
+    t.decimal "amount", precision: 18, scale: 2
+    t.decimal "amount_limit", precision: 18, scale: 2
+    t.integer "status"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["cooperative_id"], name: "index_cf_accounts_on_cooperative_id"
+  end
+
   create_table "check_voucher_requests", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.string "requestable_type", null: false
     t.bigint "requestable_id", null: false
@@ -430,6 +454,8 @@ ActiveRecord::Schema[7.0].define(version: 2024_06_14_081648) do
     t.bigint "process_claim_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.text "postmortem"
+    t.text "cause_of_incident"
     t.index ["process_claim_id"], name: "index_claim_causes_on_process_claim_id"
   end
 
@@ -442,6 +468,19 @@ ActiveRecord::Schema[7.0].define(version: 2024_06_14_081648) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["process_claim_id"], name: "index_claim_confinements_on_process_claim_id"
+  end
+
+  create_table "claim_coverage_reinsurances", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+    t.bigint "claim_reinsurance_id"
+    t.bigint "claim_coverage_id"
+    t.bigint "reinsurer_id"
+    t.decimal "amount", precision: 18, scale: 2
+    t.decimal "ri_reported", precision: 18, scale: 2
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["claim_coverage_id"], name: "index_claim_coverage_reinsurances_on_claim_coverage_id"
+    t.index ["claim_reinsurance_id"], name: "index_claim_coverage_reinsurances_on_claim_reinsurance_id"
+    t.index ["reinsurer_id"], name: "index_claim_coverage_reinsurances_on_reinsurer_id"
   end
 
   create_table "claim_coverages", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
@@ -458,9 +497,8 @@ ActiveRecord::Schema[7.0].define(version: 2024_06_14_081648) do
     t.bigint "process_claim_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.string "coverageable_type", null: false
-    t.bigint "coverageable_id", null: false
-    t.index ["coverageable_type", "coverageable_id"], name: "index_claim_coverages_on_coverageable"
+    t.bigint "batch_id"
+    t.index ["batch_id"], name: "index_claim_coverages_on_batch_id"
     t.index ["process_claim_id"], name: "index_claim_coverages_on_process_claim_id"
   end
 
@@ -472,6 +510,15 @@ ActiveRecord::Schema[7.0].define(version: 2024_06_14_081648) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["process_claim_id"], name: "index_claim_distributions_on_process_claim_id"
+  end
+
+  create_table "claim_document_requests", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+    t.bigint "process_claim_id"
+    t.bigint "claim_type_document_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["claim_type_document_id"], name: "index_claim_document_requests_on_claim_type_document_id"
+    t.index ["process_claim_id"], name: "index_claim_document_requests_on_process_claim_id"
   end
 
   create_table "claim_documents", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
@@ -492,6 +539,14 @@ ActiveRecord::Schema[7.0].define(version: 2024_06_14_081648) do
     t.index ["process_claim_id"], name: "index_claim_payments_on_process_claim_id"
   end
 
+  create_table "claim_reinsurances", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+    t.bigint "process_claim_id"
+    t.integer "status"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["process_claim_id"], name: "index_claim_reinsurances_on_process_claim_id"
+  end
+
   create_table "claim_remarks", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.bigint "process_claim_id", null: false
     t.bigint "user_id", null: false
@@ -502,6 +557,7 @@ ActiveRecord::Schema[7.0].define(version: 2024_06_14_081648) do
     t.boolean "coop"
     t.boolean "read"
     t.boolean "pin"
+    t.boolean "removed"
     t.index ["process_claim_id"], name: "index_claim_remarks_on_process_claim_id"
     t.index ["user_id"], name: "index_claim_remarks_on_user_id"
   end
@@ -515,6 +571,15 @@ ActiveRecord::Schema[7.0].define(version: 2024_06_14_081648) do
     t.datetime "updated_at", null: false
     t.string "description"
     t.index ["process_claim_id"], name: "index_claim_request_for_payments_on_process_claim_id"
+  end
+
+  create_table "claim_type_agreements", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+    t.bigint "agreement_id"
+    t.bigint "claim_type_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["agreement_id"], name: "index_claim_type_agreements_on_agreement_id"
+    t.index ["claim_type_id"], name: "index_claim_type_agreements_on_claim_type_id"
   end
 
   create_table "claim_type_benefits", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
@@ -964,6 +1029,11 @@ ActiveRecord::Schema[7.0].define(version: 2024_06_14_081648) do
     t.decimal "system_premium", precision: 10, scale: 2
     t.decimal "adjusted_prem", precision: 10, scale: 2, default: "0.0"
     t.decimal "adjusted_cov", precision: 10, scale: 2, default: "0.0"
+    t.decimal "adjusted_unuse", precision: 10, scale: 2, default: "0.0"
+    t.decimal "adjusted_coop_sf", precision: 10, scale: 2, default: "0.0"
+    t.decimal "adjusted_agent_sf", precision: 10, scale: 2, default: "0.0"
+    t.decimal "adjusted_premium_due", precision: 10, scale: 2, default: "0.0"
+    t.decimal "system_unused", precision: 15, scale: 2, default: "0.0"
     t.index ["coop_member_id"], name: "index_loan_insurance_batches_on_coop_member_id"
     t.index ["group_remit_id"], name: "index_loan_insurance_batches_on_group_remit_id"
     t.index ["loan_insurance_loan_id"], name: "index_loan_insurance_batches_on_loan_insurance_loan_id"
@@ -1234,7 +1304,7 @@ ActiveRecord::Schema[7.0].define(version: 2024_06_14_081648) do
   end
 
   create_table "process_tracks", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
-    t.string "description"
+    t.integer "status"
     t.integer "route_id"
     t.bigint "user_id", null: false
     t.string "trackable_type", null: false
@@ -1281,6 +1351,16 @@ ActiveRecord::Schema[7.0].define(version: 2024_06_14_081648) do
     t.integer "minimum_participation"
     t.string "proposal_no"
     t.index ["cooperative_id"], name: "index_proposals_on_cooperative_id"
+  end
+
+  create_table "read_messages", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+    t.bigint "user_id", null: false
+    t.bigint "claim_remark_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["claim_remark_id"], name: "index_read_messages_on_claim_remark_id"
+    t.index ["user_id", "claim_remark_id"], name: "index_read_messages_on_user_id_and_claim_remark_id", unique: true
+    t.index ["user_id"], name: "index_read_messages_on_user_id"
   end
 
   create_table "reinsurance_batches", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
@@ -1624,6 +1704,8 @@ ActiveRecord::Schema[7.0].define(version: 2024_06_14_081648) do
   add_foreign_key "product_benefits", "agreement_benefits"
   add_foreign_key "product_benefits", "benefits"
   add_foreign_key "proposals", "cooperatives"
+  add_foreign_key "read_messages", "claim_remarks"
+  add_foreign_key "read_messages", "users"
   add_foreign_key "sip_pbs", "plan_units"
   add_foreign_key "treasury_billing_statements", "treasury_cashier_entries", column: "cashier_entry_id"
   add_foreign_key "treasury_business_checks", "accounting_vouchers", column: "voucher_id"

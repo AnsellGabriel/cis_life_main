@@ -4,7 +4,7 @@
   </div>
   <div class="col-md-6">
     <div class="text-end">
-      <%= link_to '<i class="bi bi-plus-square"></i> Add Beneficiary'.html_safe, new_claims_claim_distribution_path(v: @process_claim), class: "btn btn-primary btn-sm mb-3", data: { turbo_frame: "remote_modal" } if @process_claim.claim_filed? || @process_claim.file_claim? %>
+      <%= link_to '<i class="bi bi-plus-square"></i> Add Beneficiary'.html_safe, new_claims_claim_distribution_path(v: @process_claim), class: "btn btn-primary btn-sm mb-3", data: { turbo_frame: "remote_modal" } if @process_claim.claim_filed? || current_user.userable_type == "Employee" %>
     </div>
   </div>
 </div>
@@ -12,8 +12,8 @@
   <thead>
     <tr class="border-top border-bottom border-primary">
       <%# <th class="text-primary">ID</th> %>
-      <th class="text-primary">Beneficiary</th>
-      <th class="text-end text-primary">Amount</th>
+      <th>Beneficiary</th>
+      <th class="text-end">Amount</th>
     </tr>
   </thead>
   <tbody>

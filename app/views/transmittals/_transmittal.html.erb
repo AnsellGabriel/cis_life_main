@@ -21,6 +21,7 @@
       <th>OR Number</th>
       <th>OR Date</th>
       <th>Cooperative</th>
+      <th>Members Count</th>
       <th></th>
     </thead>
     <tbody>
@@ -41,8 +42,9 @@
             <td><%= val.transmittable.official_receipt %></td>
             <td><%= val.transmittable.get_or_date %></td>
             <td><%= val.transmittable.cooperative %></td>
-            <td class="text-center">
-              <%= link_to remove_or_transmittal_path(or: val), class: small_btn('outline-danger'), onclick: "return confirm('Are you sure?')" do %>
+            <td><%= val.transmittable.batches.count %></td>
+            <td>
+              <%= link_to remove_or_transmittal_path(or: val), class: "btn btn-outline-danger", onclick: "return confirm('Are you sure?')" do %>
                 <%= bootstrap_icon "x-lg" %>
               <% end %>
             </td>

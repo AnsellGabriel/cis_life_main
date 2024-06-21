@@ -1,9 +1,29 @@
 <div class="mb-3">
-  <ul class="timeline">
-    <% @process_claim.process_track.order(created_at: :desc).each do |ct| %>
+  <ul class="timeline" style="display: flex; flex-direction: column-reverse;">
+    <% date_entry = Date.today %>
+    <% @process_claim.process_track.each_with_index do |ct, index| %>
       <li class="mb-3">
-        <p class="text-primary mb-1"> <span class="<%= 'text-danger' if ct.route_id == 11 %>"><%= Claims::ProcessClaim.get_route(ct.route_id).to_s.humanize.titleize %></span> <small class="text-muted"> <%= date_as_month_day_year ct.created_at %> </small></p>
-        <small> <%= ct.description %> by <%= ct.user %> </small>
+        <%# date_tat = get_date_tat(to_shortdate(ct.created_at),to_shortdate(date_entry)) unless date_entry.nil? %>
+        <% unless index == 0 %>
+          <% start_date = Time.zone.parse(ct.created_at.to_s) %>
+          <% end_date = DateTime.parse( @process_claim.process_track[index-1].created_at.to_s) %>
+          <% date_tat = get_date_tat(start_date, end_date) unless date_entry.nil? %>
+          <%# date_entry = ct.created_at %>
+        <% end %>
+        <small class="text-primary mb-1"> For <%= Claims::ProcessClaim.get_route(ct.route_id).to_s.humanize.titleize %> <small class="text-muted"> <%=  ct.created_at %></small> <%= date_tat unless index == 0 %> </small> <br>
+        
+        <% if ct.status.nil? %>
+          <small class="text-muted">Forwarded by <%= ct.user %> </small>
+        <% else %>
+          <% if ct.status == "approved" || ct.status == "reconsider_approved" %>
+            <small class="text-success"><%= ct.status.humanize %></small>
+          <% elsif ct.status == "denied" || ct.status == "reconsider_denied" %>
+            <small class="text-danger"><%= ct.status.humanize %></small>
+          <% elsif ct.status == "pending" %>
+            <small class="text-warning"><%= ct.status.humanize %></small>
+          <% end %>
+          <small>by <%= ct.user %></small>
+        <% end %>
       </li>
     <% end %>
   </ul>

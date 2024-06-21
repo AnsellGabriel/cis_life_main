@@ -12,56 +12,59 @@
       <i class="bi bi-chevron-left"></i>
     <% end %>
   <% end %>
-  <%# if current_user.is_mis? %>
-    <%= link_to "Remarks", group_remit_remarks_path(@group_remit), class: small_btn('danger'), data: {turbo_frame: 'reg_form_modal'} %>
-    <%# if @group_remit.process_coverage.process_remarks.present? %>
-      <%#= link_to "UND Remarks", view_all_process_remarks_path(process_coverage: @group_remit.process_coverage), class: "btn btn-outline-secondary mb-2 btn-sm", data: { turbo_frame: "remote_modal" } %>
-    <%# end %>
-  <%# end %>
-  <div class="mb-0 gap-1 <%= flex_justify_align('', 'center') %>">
-    <% if @group_remit.is_pending_or_renewal? %>
-      <% if mis_user?(current_user) %>
-        <%= link_to "#{@group_remit.official_receipt.present? ? "Edit" : "Add"} OR", edit_or_loan_insurance_group_remit_path, class: small_btn("outline-success"), data: {turbo_frame: 'modal'} %>
-      <% end %>
 
-      <div class="d-flex gap-1">
-        <%= content_tag :button, "Batch Import", 
-        class: "btn btn-sm btn-outline-primary",
-        data: {bs_toggle: "modal",
-          bs_target: "#batchEnrollment"
-        }%> 
-        <% if @group_remit.complete_health_decs? %>
-          <%= button_to 'Submit', submit_loan_insurance_group_remit_path(@group_remit), 
-            method: :get,
-            class: small_btn('outline-primary'),
-            data: {turbo_confirm: 'Submit group remit?' }
-          %>
-        <% else %>
-          <div class="" data-bs-toggle="tooltip" data-bs-placement="top" title="Please answer all health declaration" style="cursor: pointer">
-            <button type="button" class="<%= small_btn('outline-primary') %>" disabled>
-              Submit
-            </button>
-          </div>
-        <% end %>
-        <% if @group_remit.denied_members.present? %>
-            <%= link_to group_remit_denied_members_path(@group_remit), class: "#{small_btn('outline-danger')} position-relative" do %>
-            Rejected members
-            <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
-              !
-              <span class="visually-hidden">unread messages</span>
-            </span>
-          <% end %>
-        <% end %>
-      </div>
+  <% if is_mis_user_and_entry?(@group_remit) or is_coop_user_and_entry?(@group_remit) %>
+    <%# if current_user.is_mis? %>
+      <%= link_to "Remarks", group_remit_remarks_path(@group_remit), class: small_btn('danger'), data: {turbo_frame: 'reg_form_modal'} %>
+      <%# if @group_remit.process_coverage.process_remarks.present? %>
+        <%#= link_to "UND Remarks", view_all_process_remarks_path(process_coverage: @group_remit.process_coverage), class: "btn btn-outline-secondary mb-2 btn-sm", data: { turbo_frame: "remote_modal" } %>
+      <%# end %>
+    <%# end %>
+    <div class="mb-0 gap-1 <%= flex_justify_align('', 'center') %>">
       <% if @group_remit.is_pending_or_renewal? %>
-        <%= button_to "Delete Batch", loan_insurance_group_remit_path(@group_remit), 
-          method: :delete,
-          data: { turbo_confirm: 'Delete Batch?'},
-          class: small_btn('outline-danger') 
-        %>
+        <% if mis_user?(current_user) %>
+          <%= link_to "#{@group_remit.official_receipt.present? ? "Edit" : "Add"} OR", edit_or_loan_insurance_group_remit_path, class: small_btn("outline-success"), data: {turbo_frame: 'modal'} %>
+        <% end %>
+
+        <div class="d-flex gap-1">
+          <%= content_tag :button, "Batch Import", 
+          class: "btn btn-sm btn-outline-primary",
+          data: {bs_toggle: "modal",
+            bs_target: "#batchEnrollment"
+          }%> 
+          <% if @group_remit.complete_health_decs? %>
+            <%= button_to 'Submit', submit_loan_insurance_group_remit_path(@group_remit), 
+              method: :get,
+              class: small_btn('outline-primary'),
+              data: {turbo_confirm: 'Submit group remit?' }
+            %>
+          <% else %>
+            <div class="" data-bs-toggle="tooltip" data-bs-placement="top" title="Please answer all health declaration" style="cursor: pointer">
+              <button type="button" class="<%= small_btn('outline-primary') %>" disabled>
+                Submit
+              </button>
+            </div>
+          <% end %>
+          <% if @group_remit.denied_members.present? %>
+              <%= link_to group_remit_denied_members_path(@group_remit), class: "#{small_btn('outline-danger')} position-relative" do %>
+              Rejected members
+              <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+                !
+                <span class="visually-hidden">unread messages</span>
+              </span>
+            <% end %>
+          <% end %>
+        </div>
+        <% if @group_remit.is_pending_or_renewal? %>
+          <%= button_to "Delete Batch", loan_insurance_group_remit_path(@group_remit), 
+            method: :delete,
+            data: { turbo_confirm: 'Delete Batch?'},
+            class: small_btn('outline-danger') 
+          %>
+        <% end %>
       <% end %>
-    <% end %>
-  </div>
+    </div>
+  <% end %>
 </div>
 
 <div class="<%= flex_justify_align('between', 'start') %> mb-3 gap-3">
@@ -73,7 +76,7 @@
             <%= content_tag :span, @group_remit.status_text, class: @group_remit.status_badge %>
             <%= content_tag :h3, @group_remit, class: 'mb-0 text-primary' %>
           </div>
-          <% if (@group_remit.is_for_payment? or @group_remit.reupload_payment?) && (@group_remit.process_coverage.approved?) %>
+          <% if ((@group_remit.is_for_payment? or @group_remit.reupload_payment?) && (@group_remit.process_coverage.approved?)) and (is_mis_user_and_entry?(@group_remit) or is_coop_user_and_entry?(@group_remit)) %>
             <%= render 'group_remits/payment', group_remit: @group_remit %>  
           <% end %>
         </div>
@@ -83,7 +86,7 @@
         <% end %>
       </div>
       <div class="<%= flex_justify_align('center') %> gap-5">
-        <% if @group_remit.is_pending_or_renewal? %>
+        <% if @group_remit.is_pending_or_renewal? and (is_mis_user_and_entry?(@group_remit) or is_coop_user_and_entry?(@group_remit)) %>
           <div class="card d-flex">
             <div class="card-header" style="width: 100%;">
               <div class="text-center">
@@ -133,7 +136,7 @@
       <% end %>
     <% end %>
 
-    <% if @batch_with_incorrect_prem.present? %>
+    <% if @batch_with_incorrect_prem.present? and current_user.is_mis?%>
       <%= link_to loan_insurance_group_remit_path(@group_remit, incorrect_premiums: true), class: "mb-3 btn btn-sm btn-outline-danger position-relative" do %>
           <%= 'Incorrect Premiums' %>
           <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-warning text-dark">

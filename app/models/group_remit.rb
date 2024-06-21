@@ -378,7 +378,7 @@ class GroupRemit < ApplicationRecord
   end
 
   def batches_with_incorrect_prem
-    batches.where("premium != system_premium")
+    batches.where("premium != system_premium OR unused != system_unused")
   end
 
   def all_batches_have_beneficiaries?

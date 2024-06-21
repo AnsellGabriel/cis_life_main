@@ -51,6 +51,8 @@
                 <% end %>
               <% end %>
             <% when 19 %>
+            <%= link_to "Dashboard", claims_dashboards_path, class: "nav-link" %>
+            <%#= link_to "Cooperative", cooperatives_path, class: "nav-link" %>
             <%= render 'layouts/partials/nav_dropdown', title: 'Claims' do %>
               <%= link_to "Claim index", claims_process_claims_path, class: "dropdown-item" %>
               <%= link_to "Submitted", index_show_claims_process_claims_path(p: 1), class: "dropdown-item" %>
@@ -62,7 +64,6 @@
               <%= link_to "President Evaluation", index_show_claims_process_claims_path(p: 6), class: "dropdown-item" %>
               <li><hr class="dropdown-divider"></li>
               <%= link_to "Documents", claims_claim_documents_path, class: "dropdown-item" %>
-              <%= link_to "Claim Type", claims_claim_types_path, class: "dropdown-item" %>
               <%= link_to "Claims Message", claims_claim_remarks_path, class: "dropdown-item" %>
               <%= link_to "Benefits", benefits_path, class: "dropdown-item" %>
               <%= link_to "Claim Type", claims_claim_types_path, class: "dropdown-item" %>
@@ -70,9 +71,11 @@
               <%= link_to "Claim Nature", claims_claim_type_natures_path, class: "dropdown-item" %>
               <%#= link_to "Claims Message", claim_remarks_path, class: "dropdown-item" %>
               <%= link_to "User Levels", user_levels_path, class: "dropdown-item" %>
+              <%= link_to "Claims fund", claims_cf_accounts_path, class: "dropdown-item" %>
             <% end %>
             <% when 14 %>
             <%= render 'layouts/partials/nav_dropdown', title: "A&R" do %>
+              <%= link_to "Reinsurer", reinsurers_path, class: "dropdown-item" %>
               <%= link_to "Life Reinsurance", reinsurances_path, class: "dropdown-item" %>
               <%= link_to "Life Reserves", actuarial_reserves_path, class: "dropdown-item" %>
             <% end %>

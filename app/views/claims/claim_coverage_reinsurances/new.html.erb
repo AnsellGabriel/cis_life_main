@@ -1,0 +1,3 @@
+<%= render "claims/claim_confinements/remote_modal", title: "New reinsurance" do %>
+  <%= render "form", url: claims_claim_coverage_reinsurances_path(r: @claim_reinsurance), meth: 'post' %>
+<% end %>
