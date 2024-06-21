@@ -8,6 +8,7 @@ class Claims::CfAccountsController < ApplicationController
 
   # GET /cf_accounts/1
   def show
+    @cf_ledgers = Claims::CfLedger.where(cf_account: @cf_account)
   end
 
   # GET /cf_accounts/new
