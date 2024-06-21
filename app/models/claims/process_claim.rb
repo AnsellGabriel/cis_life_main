@@ -170,6 +170,7 @@ class Claims::ProcessClaim < ApplicationRecord
   has_many :claim_confinements, dependent: :destroy
   has_many :claim_distributions, dependent: :destroy
   has_many :remarks, as: :remarkable, dependent: :destroy
+  has_many :cf_availments, dependent: :destroy, class_name: "Claims::CfAvailment"
   has_one :loan_batch, class_name: "LoanInsurance::Batch"
 
   # has_one :claim_request_for_payment, dependent: :destroy

@@ -40,6 +40,12 @@ Rails.application.routes.draw do
   namespace :claims do 
     resources :claim_types, :claim_documents, :claim_type_benefits, :claim_confinements, :claim_benefits, :claim_coverages, :claim_distributions, :claim_type_natures, :claim_type_agreements, :cf_accounts
     
+    resources :cf_replenishes do 
+      get :update_status, to: "cf_replenishes#update_status", on: :member
+    end
+    resources :cf_availments do 
+      get :update_status, to: "cf_availments#update_status", on: :member
+    end
     resources :claim_coverage_reinsurances do 
       get :claim_reinsurance_create, to: "claim_coverage_reinsurances#claim_reinsurance_create", as: "claim_ri_create", on: :collection
       get :claim_reinsurance_update, to: "claim_coverage_reinsurances#claim_reinsurance_update", as: "claim_ri_update", on: :member

@@ -411,6 +411,47 @@ ActiveRecord::Schema[7.0].define(version: 2024_06_20_083108) do
     t.index ["cooperative_id"], name: "index_cf_accounts_on_cooperative_id"
   end
 
+  create_table "cf_availments", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+    t.bigint "process_claim_id", null: false
+    t.bigint "cf_account_id", null: false
+    t.bigint "user_id", null: false
+    t.date "transaction_date"
+    t.decimal "amount", precision: 18, scale: 2
+    t.string "description"
+    t.integer "status"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["cf_account_id"], name: "index_cf_availments_on_cf_account_id"
+    t.index ["process_claim_id"], name: "index_cf_availments_on_process_claim_id"
+    t.index ["user_id"], name: "index_cf_availments_on_user_id"
+  end
+
+  create_table "cf_ledgers", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+    t.string "ledgerable_type", null: false
+    t.bigint "ledgerable_id", null: false
+    t.bigint "cf_account_id", null: false
+    t.integer "entry_type"
+    t.decimal "amount", precision: 18, scale: 2
+    t.datetime "transaction_date"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["cf_account_id"], name: "index_cf_ledgers_on_cf_account_id"
+    t.index ["ledgerable_type", "ledgerable_id"], name: "index_cf_ledgers_on_ledgerable"
+  end
+
+  create_table "cf_replenishes", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+    t.bigint "cf_account_id"
+    t.bigint "user_id"
+    t.date "transaction_date"
+    t.decimal "amount", precision: 18, scale: 2
+    t.string "description"
+    t.integer "status"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["cf_account_id"], name: "index_cf_replenishes_on_cf_account_id"
+    t.index ["user_id"], name: "index_cf_replenishes_on_user_id"
+  end
+
   create_table "check_voucher_requests", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.string "requestable_type", null: false
     t.bigint "requestable_id", null: false
@@ -1651,6 +1692,10 @@ ActiveRecord::Schema[7.0].define(version: 2024_06_20_083108) do
   add_foreign_key "batch_group_remits", "group_remits"
   add_foreign_key "batches", "agreement_benefits"
   add_foreign_key "batches", "coop_members"
+  add_foreign_key "cf_availments", "cf_accounts"
+  add_foreign_key "cf_availments", "process_claims"
+  add_foreign_key "cf_availments", "users"
+  add_foreign_key "cf_ledgers", "cf_accounts"
   add_foreign_key "claim_attachments", "claim_type_documents"
   add_foreign_key "claim_attachments", "process_claims"
   add_foreign_key "claim_causes", "process_claims"

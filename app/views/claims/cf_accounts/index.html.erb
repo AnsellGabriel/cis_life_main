@@ -15,6 +15,7 @@
             <th>Cooperative</th>
             <th class="text-end">Amount</th>
             <th class="text-end">Amount Limit</th>
+            <th class="text-end">Balance</th>
             <th></th>
         </tr>
     </thead>
@@ -29,12 +30,14 @@
        </td>
         <td class="text-end"><%= to_curr(cf_account.amount) %></td>
         <td class="text-end"><%= to_curr(cf_account.amount_limit) %></td>
+        <td class="text-end"><%= to_curr(cf_account.get_balance(Time.now)) %></td>
         
     
           <td>
-            <%#= link_to 'View', cf_account, class: 'btn btn-secondary btn-sm' %>
+            <%= link_to 'View', cf_account, class: 'btn btn-secondary btn-sm', data: { turbo_frame: "remote_modal" } %>
             <%= link_to 'Edit', edit_claims_cf_account_path(cf_account), class: 'btn btn-secondary btn-sm', data: { turbo_frame: "remote_modal" } %>
-            <%= link_to "Delete", cf_account, class: "btn btn-danger btn-sm", method: :delete, data: { "turbo-method": :delete, turbo_confirm: "Are you sure?" } %>
+            <%= link_to 'Replenish', new_claims_cf_replenish_path(cf: cf_account), class: 'btn btn-primary btn-sm', data: { turbo_frame: "remote_modal" } %>
+            <%#= link_to "Delete", cf_account, class: "btn btn-danger btn-sm", method: :delete, data: { "turbo-method": :delete, turbo_confirm: "Are you sure?" } %>
           </td>
 
         </tr>

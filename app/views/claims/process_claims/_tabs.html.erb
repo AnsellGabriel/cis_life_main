@@ -51,6 +51,7 @@
           <%= render 'claims/claim_distributions/show_distribution' %>
         </div>
         <div class="col-md-6">
+          <%= render 'request_payment' if @process_claim.payment_preparation? && @process_claim.claim_distributions.present? %>
         </div>
       </div>
     </div>

@@ -44,7 +44,7 @@ class Claims::ClaimDistributionsController < ApplicationController
         @claim_distribution.destroy
 
         respond_to do |format|
-        format.html { redirect_to claims_file_process_claim_path(@process_claim), notice: "Claim coverage was successfully destroyed." }
+        format.html { redirect_to claims_file_claims_process_claim_path(@process_claim), notice: "Claim coverage was successfully destroyed." }
         format.json { head :no_content }
         end
     end

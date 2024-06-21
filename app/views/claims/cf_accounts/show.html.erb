@@ -1,9 +1,5 @@
 
-<%= render @cf_account %>
 
-<div>
-  <%= link_to "Edit", edit_claims_cf_account_path(@cf_account), class: 'btn btn-primary' %> |
-  <%= link_to "Back", claims_cf_accounts_path, class: 'btn btn-primary' %>
-
-  <%= button_to "Delete", @cf_account, method: :delete, class: 'btn btn-danger' %>
-</div>
+<%= render "claims/cf_replenishes/remote_modal", title: "Claims Fund" do %>
+    <%= render @cf_account %>
+<% end %>
