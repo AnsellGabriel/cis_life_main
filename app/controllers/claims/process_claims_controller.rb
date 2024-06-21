@@ -1,7 +1,7 @@
 
 class Claims::ProcessClaimsController < ApplicationController
   include ProcessClaimHelper
-  before_action :set_process_claim, only: %i[ show edit update destroy show_coop show_ca claim_route claims_file claim_process update_status edit_ca update_ca print_sheet edit_coop update_coop ]
+  before_action :set_process_claim, only: %i[ show edit update destroy show_coop show_ca claim_route claims_file claim_process update_status edit_ca update_ca print_sheet edit_coop update_coop approve_claim_debit]
 
   def index
     @process_claims = Claims::ProcessClaim.all
@@ -283,17 +283,17 @@ class Claims::ProcessClaimsController < ApplicationController
         @process_claim.update(status: :pending) if @claim_track.pending?
       end
       unless @claims_user_reconsider.nil?
-        if @process_claim.check_authority_level(@claims_user_reconsider.maxAmount) 
+        if @process_claim.check_authority_level(@claims_user_reconsider.maxAmount)
           @process_claim.update(status: :reconsider_denied) if @claim_track.reconsider_denied?
           @process_claim.update(status: :reconsider_approved, approval: 1) if @claim_track.reconsider_approved?
         end
       end
     end
     @claim_track.user_id = current_user.id
-    
+
     #CHECK THE ATTACH DOCUMENTS
     unless current_user.userable_type == "Employee"
-      if @process_claim.coop_file? || @process_claim.analyst_file? || @process_claim.incomplete_document? 
+      if @process_claim.coop_file? || @process_claim.analyst_file? || @process_claim.incomplete_document?
         document_status = @process_claim.attach_document_status
         @status_message = document_status[:status_message]
         status = document_status[:status]
@@ -301,7 +301,7 @@ class Claims::ProcessClaimsController < ApplicationController
         return redirect_to claim_process_claims_process_claim_path(@process_claim), alert: @status_message if status && current_user.userable_type == "Employee"
       end
     end
-    
+
 
     # raise "errors"
     respond_to do |format|
@@ -331,7 +331,7 @@ class Claims::ProcessClaimsController < ApplicationController
               else
                 format.html { redirect_to claim_process_claims_process_claim_path(@process_claim), alert: "Something went wrong" }
               end
-            end         
+            end
           end
         when 18
           @process_claim.update!(claim_route: @claim_track.route_id, status: :denied_due_to_non_compliance)
@@ -340,7 +340,7 @@ class Claims::ProcessClaimsController < ApplicationController
         else
           @process_claim.update!(claim_route: @claim_track.route_id)
         end
-        
+
         if current_user.userable_type == "Employee"
           return redirect_to claim_process_claims_process_claim_path(@process_claim), notice: "#{@process_claim.claim_route.to_s.humanize.titleize} status"
         else
@@ -382,10 +382,10 @@ class Claims::ProcessClaimsController < ApplicationController
     end
   end
 
-  def edit_coop 
+  def edit_coop
   end
 
-  def update_coop 
+  def update_coop
     if @process_claim.update(process_claim_params)
       if @process_claim.coop_file?
         redirect_to show_coop_claims_process_claim_path(@process_claim), notice: "Process claim was successfully updated."
@@ -403,9 +403,9 @@ class Claims::ProcessClaimsController < ApplicationController
     redirect_to show_insurance_coop_member_path(@coop_member), alert: "Claim cancelled"
   end
 
-  def claims_dashboard 
+  def claims_dashboard
     @user_levels = current_user.user_levels.where(active: 1) if current_user
-    @for_evaluation = Claims::ProcessClaim.where(claim_route: get_route_evaluators) if current_user.userable_type == "Employee" 
+    @for_evaluation = Claims::ProcessClaim.where(claim_route: get_route_evaluators) if current_user.userable_type == "Employee"
     # unless @claims_user_authority_level == "Claims Evaluator" ||  @claims_user_authority_level == "COSO (Approver)" || @claims_user_authority_level == "President (Approver)"
     #   @for_evaluation = Claims::ProcessClaim.where(claim_route: 3)
     # end
@@ -420,7 +420,7 @@ class Claims::ProcessClaimsController < ApplicationController
   def set_process_claim
     @process_claim = Claims::ProcessClaim.find(params[:id])
     @loan_batch = @process_claim.loan_batch if @process_claim.loan_batch.present?
-    
+
   end
 
   # Only allow a list of trusted parameters through.
