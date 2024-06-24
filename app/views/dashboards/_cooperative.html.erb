@@ -1,0 +1,75 @@
+
+<div class="row mb-3">
+    <div class="col-md-6">
+        <div class="card bg-light h-100">
+            <div class="card-body">
+                <dl class="row">
+                <dt class="col-sm-4">Cooperative:</dt>
+                <%# coop_mem = @process_claim.claimable %>
+                <dd class="col-sm-8"><%= content_tag :h6, @cooperative %></dd>
+                <dt class="col-sm-4">Address:</dt>
+                <dd class="col-sm-8"><%= content_tag :span, @cooperative.get_address == '' ? 'No address' : @cooperative.get_address %></dd>
+                <dt class="col-sm-4">Contact:</dt>
+                <dd class="col-sm-8"><%= content_tag :span, @cooperative.contact_number.present? ? @cooperative.contact_number : 'No contact number' %></dd>
+                <%#= content_tag :strong, 'Benefits', class: "" %>
+                </dl>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card text-dark bg-warning mb-3 h-100">
+            <div class="card-body">    
+                <h5 class="card-title">Members</h5>
+                <h2 class="text-center mt-3"><%= link_to @cooperative.coop_members.count, coop_members_path, class: "text-dark" %></h2>
+             
+            </div>
+            <div class="card-footer">
+                <%= link_to 'See Details <i class="bi bi-box-arrow-right"></i>'.html_safe, coop_members_path, class: "text-dark" %>     
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card border-primary mb-3 h-100">
+            <div class="card-body text-primary">
+                <h5 class="card-title">Claims Messages <i class="bi bi-chat-dots"></i></h5>
+                <% if @coop_messages.where(read: 0).count == 0 %>
+                    <small class="card-text">Fantastic! You have no new cooperative messages at the moment.</small>
+                <% else %>
+                    <small class="card-text">You've received a cooperative message that requires your attention.</small>
+                    <h2 class="text-center mt-3"><%= @coop_messages.where(read: 0).where.not(user: current_user).count unless @coop_messages.nil? %></h2>
+                <% end %>
+            </div>
+            <div class="card-footer"><%= link_to 'Go to Messages <i class="bi bi-box-arrow-right"></i>'.html_safe, unread_messages_claims_claim_remarks_path, class: "text-primary" %></div>
+        </div>
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-6">
+        <div class="card-group mb-3">
+            <div class="card">
+                <div class="card-body">
+                <p class="text-primary card-title">COOP FILED</p>
+                <h2 class="text-muted"><%= @process_claims.count %></h2>
+                </div>
+                <div class="card-footer"><small class="text-muted"> <%= link_to 'See Details <i class="bi bi-box-arrow-right"></i>'.html_safe, index_coop_claims_process_claims_url, class: "text-muted" %></small></div>
+            </div>
+            <div class="card">
+                <div class="card-body">
+                <p class="text-primary card-title">FOR COMPLIANCE</p>
+                <h2 class="text-muted"><%= @process_claims.where(claim_route: 19).count %></h2>
+
+                </div>
+                <div class="card-footer"><small class="text-muted"> <%= link_to 'See Details <i class="bi bi-box-arrow-right"></i>'.html_safe, index_show_claims_process_claims_path(p: 19), class: "text-muted" %></small></div>
+            </div>
+            <div class="card">
+                <div class="card-body">
+                <p class="text-primary card-title">PAYMENT READY</p>
+                <h2 class="text-muted"><%= @process_claims.claimable.count %></h2>
+
+                </div>
+                <div class="card-footer"><small class="text-muted"> <%= link_to 'See Details <i class="bi bi-box-arrow-right"></i>'.html_safe, index_show_claims_process_claims_path(p: 12), class: "text-muted" %></small></div>
+            </div>
+        </div>
+    </div>
+</div>
+

@@ -4,7 +4,16 @@ class Claims::ProcessClaimsController < ApplicationController
   before_action :set_process_claim, only: %i[ show edit update destroy show_coop show_ca claim_route claims_file claim_process update_status edit_ca update_ca print_sheet edit_coop update_coop ]
 
   def index
-    @process_claims = Claims::ProcessClaim.all
+    # @process_claims = Claims::ProcessClaim.all
+    # @q = Claims::ProcessClaim.ransack(params[:q])
+    # @pagy, @process_claims = @q.result(distinct: true)
+    # @pagy, @cooperatives = pagy(@q, items: 10 )
+
+    @q = Claims::ProcessClaim.ransack(params[:q])
+    @process_claims = @q.result(distinct: true)
+
+    # use pagy
+    @pagy, @process_claims = pagy(@process_claims, items: 10)
   end
 
   def index_coop
@@ -33,7 +42,7 @@ class Claims::ProcessClaimsController < ApplicationController
     #   format.pdf do
         pdf = ClaimsPdf.new(@process_claim, view_context)
         send_data pdf.render,
-          filename: "#{@process_claim.claimable.get_fullname}.pdf",
+          filename: "#{@process_claim.coop_member.get_fullname}.pdf",
           type: 'application/pdf',
           disposition: 'inline'
     #   end
@@ -41,9 +50,9 @@ class Claims::ProcessClaimsController < ApplicationController
     # pdf = Prawn::Document.new
     # pdf = ClaimsPrintSheetPdf.new
     # pdf.text "Claims Processing Sheet"
-    # pdf.text @process_claim.claimable.get_fullname.titleize, size: 15, style: :bold
+    # pdf.text @process_claim.coop_member.get_fullname.titleize, size: 15, style: :bold
     # pdf.text @process_claim.cooperative.name
-    # send_data(pdf.render, filename: "#{@process_claim.claimable.get_fullname}.pdf", type: 'application/pdf', disposition: 'inline')
+    # send_data(pdf.render, filename: "#{@process_claim.coop_member.get_fullname}.pdf", type: 'application/pdf', disposition: 'inline')
   end
   # GET /process_claims/1
   def show
@@ -87,7 +96,7 @@ class Claims::ProcessClaimsController < ApplicationController
     @process_claim.agreement = Agreement.find(params[:a]) if params[:a].present?
     @process_claim.agreement_benefit = AgreementBenefit.find(params[:ab]) if params[:ab].present?
     @coop_member = CoopMember.find(params[:cm])
-    @process_claim.claimable = @coop_member
+    @process_claim.coop_member = @coop_member
     @process_claim.cooperative = @coop_member.cooperative
 
     if Rails.env.development?
@@ -100,7 +109,7 @@ class Claims::ProcessClaimsController < ApplicationController
     # raise "errors"
     @process_claim = Claims::ProcessClaim.new
     @coop_member = CoopMember.find(params[:cm])
-    @process_claim.claimable = @coop_member
+    @process_claim.coop_member = @coop_member
     @process_claim.cooperative = @coop_member.cooperative
     @claim_cause = @process_claim.build_claim_cause
     @agreement = Agreement.where(cooperative: @process_claim.cooperative)
@@ -117,7 +126,7 @@ class Claims::ProcessClaimsController < ApplicationController
     @process_claim.claim_route = :coop_file
     @process_claim.status = :pending
     @rel_css = process_claim_params[:relationship].empty? ? "is-invalid" : "is-valid"
-    @coop_member = CoopMember.find(process_claim_params[:claimable_id])
+    @coop_member = CoopMember.find(process_claim_params[:coop_member_id])
 
     unless process_claim_params[:date_incident].empty?
       @process_claim.age = @process_claim.get_age.to_i
@@ -179,7 +188,7 @@ class Claims::ProcessClaimsController < ApplicationController
 
   # GET /process_claims/1/edit
   def edit
-    @coop_member = @process_claim.claimable
+    @coop_member = @process_claim.coop_member
   end
 
   def edit_ca
@@ -248,10 +257,10 @@ class Claims::ProcessClaimsController < ApplicationController
       return redirect_to new_process_claim_path, alert: "The claim cannot be processed. The incident date has passed the 5-year claim period."
     end
 
-    if params[:process_claim][:claimable_type] == "Batch"
-      @process_claim.claimable = Batch.find(params[:process_claim][:claimable_id])
+    if params[:process_claim][:coop_member_type] == "Batch"
+      @process_claim.coop_member = Batch.find(params[:process_claim][:coop_member_id])
     else
-      @process_claim.claimable = BatchDependent.find(params[:process_claim][:claimable_id])
+      @process_claim.coop_member = BatchDependent.find(params[:process_claim][:coop_member_id])
     end
 
     begin
@@ -360,7 +369,7 @@ class Claims::ProcessClaimsController < ApplicationController
         @process_claim.claim_benefits.create(process_claim_id: @process_claim.id, benefit_id: pb.benefit_id, amount: pb.coverage_amount)
       end
     end
-    @batch = Batch.where(coop_member: @process_claim.claimable, agreement_benefit: @process_claim.agreement_benefit)
+    @batch = Batch.where(coop_member: @process_claim.coop_member, agreement_benefit: @process_claim.agreement_benefit)
     @batch.each do |b|
       @process_claim.claim_coverages.create(process_claim: @process_claim, coverageable: b)
     end
@@ -397,7 +406,7 @@ class Claims::ProcessClaimsController < ApplicationController
 
   # DELETE /process_claims/1
   def destroy
-    @coop_member = @process_claim.claimable
+    @coop_member = @process_claim.coop_member
 
     @process_claim.destroy
     redirect_to show_insurance_coop_member_path(@coop_member), alert: "Claim cancelled"
@@ -425,7 +434,7 @@ class Claims::ProcessClaimsController < ApplicationController
 
   # Only allow a list of trusted parameters through.
   def process_claim_params
-    params.require(:claims_process_claim).permit(:coop_bank, :claim_type_nature_id, :cooperative_id, :claim_route, :agreement_id, :agreement_benefit_id, :batch_id, :claimable_id, :cause_id, :claim_type_id, :date_file, :claim_filed, :processing, :approval, :payment, :claimable_type, :date_incident, :entry_type, :claimant_name, :claimant_email, :claimant_contact_no, :nature_of_claim, :agreement_benefit_id, :relationship,
+    params.require(:claims_process_claim).permit(:coop_bank, :claim_type_nature_id, :cooperative_id, :coop_member_id, :claim_route, :agreement_id, :agreement_benefit_id, :batch_id, :coop_member_id, :cause_id, :claim_type_id, :date_file, :claim_filed, :processing, :approval, :payment, :coop_member_type, :date_incident, :entry_type, :claimant_name, :claimant_email, :claimant_contact_no, :nature_of_claim, :agreement_benefit_id, :relationship,
       claim_documents_attributes: [:id, :document, :document_type, :_destroy],
       process_tracks_attributes: [:id, :description, :route_id, :trackable_type, :trackable_id ],
       claim_benefits_param: [:id, :benefit_id, :amount, :status],

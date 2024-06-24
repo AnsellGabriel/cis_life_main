@@ -12,18 +12,16 @@
         <dl class="row">
           <dt class="col-sm-4">Insurance:</dt>
           <dd class="col-sm-8"><%= @process_claim.agreement.plan %></dd>
-          <dt class="col-sm-4">Type</dt>
-          <dd class="col-sm-8"><%= @process_claim.claimable_type %></dd>
           <dt class="col-sm-4">Name:</dt>
-          <dd class="col-sm-8 text-primary"><%= @process_claim.claimable.get_fullname %></dd>
+          <dd class="col-sm-8 text-primary"><%= @process_claim.coop_member.get_fullname %></dd>
           <dt class="col-sm-4">Birthdate</dt>
-          <dd class="col-sm-8"> <%= to_shortdate(@process_claim.claimable.member.birth_date) %></dd>
+          <dd class="col-sm-8"> <%= to_shortdate(@process_claim.coop_member.member.birth_date) %></dd>
           <dt class="col-sm-4">Branch:</dt>
-          <dd class="col-sm-8"><%= @process_claim.claimable.coop_branch %></dd>
+          <dd class="col-sm-8"><%= @process_claim.coop_member.coop_branch %></dd>
           <dt class="col-sm-4">Mobile number:</dt>
-          <dd class="col-sm-8"><%= @process_claim.claimable.member.mobile_number %></dd>
+          <dd class="col-sm-8"><%= @process_claim.coop_member.member.mobile_number %></dd>
           <dt class="col-sm-4">Email:</dt>
-          <dd class="col-sm-8"><%= @process_claim.claimable.member.email %> </dd>
+          <dd class="col-sm-8"><%= @process_claim.coop_member.member.email %> </dd>
         </dl>
         <% if @loan_batch.present? %>
           <dl class="row">
@@ -66,8 +64,6 @@
       <div class="card-body">
         <%= f.hidden_field :agreement_id %>
         <%= f.hidden_field :cooperative_id %>
-        <%= f.hidden_field :claimable_id %>
-        <%= f.hidden_field :claimable_type %>
         <%= f.hidden_field :agreement_benefit_id %>
         <%= render 'claimant', f: f %>
       </div>

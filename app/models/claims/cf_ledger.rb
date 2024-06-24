@@ -10,7 +10,7 @@ class Claims::CfLedger < ApplicationRecord
 
   def transact_detail
     if self.ledgerable_type == "Claims::CfAvailment"
-      return self.ledgerable.process_claim.claimable.get_fullname
+      return self.ledgerable.process_claim.coop_member.get_fullname
     else
       unless self.ledgerable.description == ""
         return self.ledgerable.description

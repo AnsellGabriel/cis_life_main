@@ -1,6 +1,6 @@
 <div id="<%= dom_id cf_availment %>">
         <strong>Date: </strong> <%= cf_availment.transaction_date %> <br>
-        <strong>Claim: </strong> <%= cf_availment.process_claim.claimable.get_fullname %> <br>
+        <strong>Claim: </strong> <%= cf_availment.process_claim.coop_member.get_fullname %> <br>
         <small><%= cf_availment.cf_account %></small> <br>
         <small class="text-muted"><%= cf_availment.user %> <span class="badge bg-primary"><%= cf_availment.status.humanize %></span></small> <br>
         <%= cf_availment.description %> <br>

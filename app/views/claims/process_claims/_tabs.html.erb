@@ -39,7 +39,7 @@
     <div class="tab-pane fade show" role="tabpanel" id="coverage" aria-labelledby="coverage-tab">
       <%= render 'claims/claim_coverages/show_coverages' %>
     </div>
-    <% if @process_claim.claim_type_id == 2 %>
+    <% unless @process_claim.claim_reinsurance.nil? %>
       <div class="tab-pane fade show" role="tabpanel" id="reinsurance" aria-labelledby="reinsurance-tab">
         <%= render 'claims/claim_coverage_reinsurances/show_coverage_reinsurances' %>
       </div>
