@@ -6,6 +6,11 @@ class Claims::CfAccountsController < ApplicationController
     @cf_accounts = Claims::CfAccount.all
   end
 
+  def index_critical
+    @cf_accounts = Claims::CfAccount.where(status: :critical)
+    render :index
+  end
+
   # GET /cf_accounts/1
   def show
     @cf_ledgers = Claims::CfLedger.where(cf_account: @cf_account)

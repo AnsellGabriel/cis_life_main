@@ -5,7 +5,7 @@ class Claims::ProcessClaim < ApplicationRecord
   validates_presence_of :cooperative_id, :agreement_id, :entry_type, :claimant_name, :claimant_email, :claimant_contact_no, :date_incident
 
   def to_s
-    claimable.coop_member.full_name.titleize
+    coop_member.full_name.titleize
   end
 
   enum nature_of_claim: {
@@ -75,13 +75,18 @@ class Claims::ProcessClaim < ApplicationRecord
     reinsurance_verification: 26,
     reinsurance_verified: 27
   }
-
-
+  def self.ransackable_attributes(auth_object = nil)
+  ["age", "agreement_benefit_id", "agreement_id", "approval", "cause_id", "claim_filed", "claim_route", "claim_type_id", "claim_type_nature_id", "claimant_contact_no", "claimant_email", "claimant_name", "coop_member_id", "cooperative_id", "created_at", "date_file", "date_incident", "entry_type", "id", "payment", "payout_type", "processing", "relationship", "status", "updated_at"]
+  end
+  def self.ransackable_associations(auth_object = nil)
+    ["cooperative", "coop_member"]
+  end
 
   def self.get_route (i)
     claim_routes.key(i)
   end
 
+  
   def payable
     cooperative
   end
@@ -107,7 +112,7 @@ class Claims::ProcessClaim < ApplicationRecord
   def get_age
     unless self.date_incident.nil?
       today = self.date_incident
-      birthdate = self.claimable.birthdate
+      birthdate = self.coop_member.birthdate
       age = today.year - birthdate.year
   
       # Adjust age if the user's birthday hasn't occurred yet this year
@@ -152,7 +157,8 @@ class Claims::ProcessClaim < ApplicationRecord
     end
   end
 
-  belongs_to :claimable, polymorphic: true
+  # belongs_to :claimable, polymorphic: true
+  belongs_to :coop_member
   belongs_to :cooperative
   belongs_to :agreement
   belongs_to :agreement_benefit, optional: true

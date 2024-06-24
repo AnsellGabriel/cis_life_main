@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2024_06_21_033016) do
+ActiveRecord::Schema[7.0].define(version: 2024_06_23_020832) do
   create_table "accounting_vouchers", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.date "date_voucher"
     t.string "voucher"
@@ -1240,8 +1240,6 @@ ActiveRecord::Schema[7.0].define(version: 2024_06_21_033016) do
     t.string "claimant_name"
     t.string "relationship"
     t.integer "claim_route"
-    t.string "claimable_type", null: false
-    t.bigint "claimable_id", null: false
     t.integer "age"
     t.bigint "cause_id"
     t.date "date_file"
@@ -1253,12 +1251,13 @@ ActiveRecord::Schema[7.0].define(version: 2024_06_21_033016) do
     t.integer "status"
     t.integer "payout_type"
     t.bigint "claim_type_nature_id"
+    t.bigint "coop_member_id"
     t.index ["agreement_benefit_id"], name: "index_process_claims_on_agreement_benefit_id"
     t.index ["agreement_id"], name: "index_process_claims_on_agreement_id"
     t.index ["cause_id"], name: "index_process_claims_on_cause_id"
     t.index ["claim_type_id"], name: "index_process_claims_on_claim_type_id"
     t.index ["claim_type_nature_id"], name: "index_process_claims_on_claim_type_nature_id"
-    t.index ["claimable_type", "claimable_id"], name: "index_process_claims_on_claimable"
+    t.index ["coop_member_id"], name: "index_process_claims_on_coop_member_id"
     t.index ["cooperative_id"], name: "index_process_claims_on_cooperative_id"
   end
 

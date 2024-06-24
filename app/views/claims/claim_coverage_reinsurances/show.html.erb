@@ -1,6 +1,8 @@
 <%= link_to '<i class="bi bi-box-arrow-left"></i> Back'.html_safe, claims_claim_coverage_reinsurances_path, class: "btn btn-light mb-2" %>
-<%= link_to '<i class="bi bi-check-lg"></i> Accomplished'.html_safe, claim_ri_update_claims_claim_coverage_reinsurance_path(@claim_reinsurance), class: "btn btn-success mb-2" if @claim_reinsurance.pending? %>
-<%= link_to '<i class="bi bi-check-lg"></i> Pending'.html_safe, claim_ri_update_claims_claim_coverage_reinsurance_path(@claim_reinsurance), class: "btn btn-warning mb-2" if @claim_reinsurance.accomplished? %>
+<% if current_user.userable.department_id == 14 %>
+    <%= link_to '<i class="bi bi-check-lg"></i> Accomplished'.html_safe, claim_ri_update_claims_claim_coverage_reinsurance_path(@claim_reinsurance), class: "btn btn-success mb-2" if @claim_reinsurance.pending? %>
+    <%= link_to '<i class="bi bi-check-lg"></i> Pending'.html_safe, claim_ri_update_claims_claim_coverage_reinsurance_path(@claim_reinsurance), class: "btn btn-warning mb-2" if @claim_reinsurance.accomplished? %>
+<% end %>
 <div class="row">
     <div class="col-md-6">
         <%= render 'claims/process_claims/insured_details' %>

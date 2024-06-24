@@ -15,7 +15,7 @@
         <tr>
           <td class="text-center" scope="row"><%= process_claim.id %>
           </td>
-          <td><strong><%= process_claim.claimable %></strong> <br>
+          <td><strong><%= process_claim.coop_member %></strong> <br>
             <%= process_claim.agreement.plan %> <%= content_tag :small, process_claim.agreement_benefit %> <br>
             <small>Date Incident <%= to_shortdate(process_claim.date_incident) %></small> <br>
             <small class="text-primary"><%= process_claim.display_route(process_claim.claim_route) %>

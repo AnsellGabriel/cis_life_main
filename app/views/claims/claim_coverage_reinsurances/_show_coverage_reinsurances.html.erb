@@ -76,7 +76,7 @@
           <% unless params[:action] == 'show_coop' %>
             <td class="text-end">
               <%#= link_to 'View', benefit_claim, class: 'btn' %>
-              <%= link_to '<i class="bi bi-pencil-square"></i>'.html_safe, new_claims_claim_coverage_reinsurance_path(c: ), class: 'btn btn-outline-primary btn-sm', data: { turbo_frame: "remote_modal" } %>      
+              <%= link_to '<i class="bi bi-pencil-square"></i>'.html_safe, new_claims_claim_coverage_reinsurance_path(c: cc), class: 'btn btn-outline-primary btn-sm', data: { turbo_frame: "remote_modal" } %>      
             </td>
           <% end %>
         </tr>
