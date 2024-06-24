@@ -72,4 +72,11 @@
         </div>
     </div>
 </div>
-
+<div class="row mb-2">
+  <div class="col-6">
+    <%= pie_chart @age_bracket, title: "Age Demographic" %>
+  </div>
+  <div class="col-6">
+    <%= pie_chart @gender_counts, title: "Gender Demographic" %>
+  </div>
+</div>
