@@ -123,6 +123,15 @@
         <% end %>
       <% end %>
     <% end %>
+    <% batches = @group_remit.batches.where(substandard: true) %>
+    <%= link_to loan_insurance_group_remit_path(@group_remit, substandard: true), class: "mb-3 btn btn-sm btn-outline-primary position-relative" do %>
+      Substandard
+      <% unless batches.size.zero? %>
+        <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-warning text-dark">
+          <%= batches.size >= 100 ? '99+' : batches.size %>
+        </span>
+      <% end %>
+    <% end %>
 
     <% if @batch_with_health_dec.present? %>
       <%= link_to loan_insurance_group_remit_path(@group_remit, batch_health_dec_filter: true), class: "mb-3 btn btn-sm btn-outline-danger position-relative" do %>

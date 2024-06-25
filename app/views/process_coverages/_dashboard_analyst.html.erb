@@ -34,7 +34,7 @@
             <td class="text-success">PROCESSED</td>
             <td><%= @approved_process_coverages.count %></td>
             <td>
-              <%= link_to "View", cov_list_process_coverages_path(cov_type: "Processed", current_date: @current_date, date_type: "yearly", title: "PROCESSED"), class: "btn btn-primary btn-sm", data: { turbo_frame: "remote_modal" } %>
+              <%= link_to "View", cov_list_process_coverages_path(cov_type: "Processed", current_date: @current_date, date_type: "yearly", title: "PROCESSED"), class: "btn btn-primary btn-sm", data: { turbo_frame: "remote_modal", turbo: true } %>
             </td>
           </tr>
           <tr>
@@ -44,6 +44,45 @@
           </tr>
         </tbody>
       </table>
+    </div>
+
+    <div class="row">
+      <div class="col">
+        <div class="card">
+          <div class="card-header text-secondary">SUB-STANDARD</div>
+          <div class="card-body">
+            <div class="row">
+              <div class="col-6">
+                For M.D. Review
+              </div>
+              <div class="col-1">
+                :
+              </div>
+              <div class="col-2">
+                <%= @for_md_review %>
+              </div>
+              <div class="col-2">
+                <%= link_to "View", substandard_batches_process_coverages_path(type: "md"), class: "btn btn-sm btn-primary", data: { turbo_frame: "modal-xl" } %>
+              </div>
+            </div>
+            <br>
+            <div class="row">
+              <div class="col-6">
+                Reviewed
+              </div>
+              <div class="col-1">
+                :
+              </div>
+              <div class="col-2">
+                <%= @md_reviewed %>
+              </div>
+              <div class="col-2">
+                <%= link_to "View", substandard_batches_process_coverages_path(), class: "btn btn-sm btn-primary", data: { turbo_frame: "modal-xl" } %>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
 
     <div class="row">

@@ -61,7 +61,7 @@ class ProcessCoveragesController < ApplicationController
       end
 
     elsif current_user.analyst?
-      @process_coverages_x = ProcessCoverage.joins(group_remit: { agreement: :plan }).where(team: current_user.userable.team)
+      @process_coverages_x = ProcessCoverage.joins(group_remit: { agreement: :plan, batches: {} }).where(team: current_user.userable.team)
       @for_process_coverages = @process_coverages_x.where(status: :for_process, processor: nil)
       # @for_process_coverages = @process_coverages_x.where(processor: nil)
       # @approved_process_coverages = @process_coverages_x.where(status: :approved, who_approved: current_user.userable)
@@ -74,6 +74,24 @@ class ProcessCoveragesController < ApplicationController
       @selected_process_coverages = @process_coverages_x.where(processor: current_user.userable, status: [:pending, :for_process])
 
       @coverages_total_processed = ProcessCoverage.where(status: [:approved, :denied, :reprocess])
+
+      @md_reviewed= 0 
+      @for_md_review = 0
+      @reviewed_batch = [] 
+      @for_review_batch = []
+      @lppi_batches = LoanInsurance::Batch.includes(group_remit: :process_coverage).where(process_coverages: { team: current_user.userable.team}, substandard: true, for_md: true).sort_by do |batch|
+        md = User.find_by(rank: :medical_director)
+        if batch.batch_remarks.where(user: md.userable).count > 0
+          @md_reviewed += 1
+          @reviewed_batch << batch
+        else
+          @for_md_review += 1
+          @for_review_batch << batch
+        end
+      end
+      # @for_md_review = LoanInsurance::Batch.includes(group_remit: :process_coverage).where(process_coverages: { team: current_user.userable.team}, substandard: true)
+
+      # @md_reviewed = LoanInsurance::Batch.includes(group_remit: :process_coverage).includes(:batch_remarks).where(process_coverages: { team: current_user.userable.team}, substandard: true)
 
       if params[:search].present?
         @process_coverages = @process_coverages_x.joins("INNER JOIN cooperatives ON cooperatives.id = agreements.cooperative_id").where(
@@ -111,19 +129,30 @@ class ProcessCoveragesController < ApplicationController
     # endx``
   end
 
-  def preview
-    pdf = Prawn::Document.new
-    pdf.text "This is a preview"
-    pdf.text "It only shows up in the preview route"
-    pdf.start_new_page
-    pdf.text "this is new page"
-    100.times do |i|
-      pdf.text "this is line #{i}"
+  def substandard_batches
+    @md_reviewed = 0
+    @for_md_review = 0
+    @reviewed_batches = []
+    @for_review_batches = []
+    @lppi_batches = LoanInsurance::Batch.includes(group_remit: :process_coverage).where(process_coverages: { team: current_user.userable.team}, substandard: true, for_md: true).sort_by do |batch|
+      md = User.find_by(rank: :medical_director)
+      if batch.batch_remarks.where(user: md.userable).count > 0
+        @md_reviewed += 1
+        @reviewed_batches << batch
+      else
+        @for_md_review += 1
+        @for_review_batches << batch
+      end
     end
-    send_data(pdf.render,
-      filename: "hello.pdf",
-      type: "application/pdf",
-      disposition: "inline")
+
+    case params[:type]
+    when "md"
+      @title = "For M.D. Review"
+      @batches = @for_review_batches
+    else 
+      @title = "M.D. Reviewed Coverages"
+      @batches = @reviewed_batches
+    end
 
   end
 

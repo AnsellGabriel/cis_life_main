@@ -104,9 +104,6 @@
                   <div class="row">
                     <%= process_premiums("Premium", batch.premium)%>
                   </div>
-                  <div class="row">
-                    <%= process_premiums("Agent's SF", batch.agent_sf_amount) %>
-                  </div>
                   <% if @plan.acronym == "LPPI" %>
                     <div class="row">
                       <%= process_premiums("Unused Prem", batch.unused) %>
@@ -116,7 +113,7 @@
                     <%= process_premiums("Coop's SF", batch.coop_sf_amount) %>
                   </div>
                   <div class="row">
-                    <%= process_premiums("Net Prem", (batch.premium - (batch.coop_sf_amount + batch.agent_sf_amount))) %>
+                    <%= process_premiums("Net Prem", (batch.premium - batch.coop_sf_amount)) %>
                   </div>
                 </td>
                 <td id="<%= "batch_#{batch.id}"%>" >
@@ -137,9 +134,6 @@
                     <% if batch.adjusted_prem > 0 %>
                       <div class="row">
                         <%= process_premiums("Premium", batch.adjusted_prem) %>
-                      </div>
-                      <div class="row">
-                        <%= process_premiums("Agent's SF", batch.adjusted_agent_sf) %>
                       </div>
                       <div class="row">
                         <%= process_premiums("Unused Prem", batch.adjusted_unuse) %>
