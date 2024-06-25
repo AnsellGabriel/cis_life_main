@@ -1,0 +1,12 @@
+<div id="<%= dom_id cf_availment %>">
+        <strong>Date: </strong> <%= cf_availment.transaction_date %> <br>
+        <strong>Claim: </strong> <%= cf_availment.process_claim.coop_member.get_fullname %> <br>
+        <small><%= cf_availment.cf_account %></small> <br>
+        <small class="text-muted"><%= cf_availment.user %> <span class="badge bg-primary"><%= cf_availment.status.humanize %></span></small> <br>
+        <%= cf_availment.description %> <br>
+        <strong>Amount:</strong><%= to_curr(cf_availment.amount) %>
+  <hr>
+  <%= link_to "Approve", update_status_claims_cf_availment_path(cf_availment, s: 1), class: 'btn  btn-sm btn-success' %> |
+  <%#= link_to "Denied", update_status_claims_cf_availment_path(cf_availment, s: 2), class: 'btn  btn-sm btn-danger' %> 
+  <%= link_to "Pending", update_status_claims_cf_availment_path(cf_availment, s: 0), class: 'btn  btn-sm btn-warning' %> 
+</div>

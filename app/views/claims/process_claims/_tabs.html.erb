@@ -11,6 +11,11 @@
         <button class="nav-link" data-bs-toggle="tab" id="confine-tab" type="button" data-bs-target="#confine" role="tab" aria-controls="confine">Confinement</button>
       </li>
     <% end %>
+    <% unless @process_claim.claim_reinsurance.nil? %>
+      <li class="nav-item" role="presentation">
+        <button class="nav-link" data-bs-toggle="tab" id="reinsurance-tab" type="button" data-bs-target="#reinsurance" role="tab" aria-controls="reinsure">Reinsurance</button>
+      </li>
+    <% end %>
     <li class="nav-item" role="presentation">
       <button class="nav-link" data-bs-toggle="tab" id="beneficiary-tab" type="button" data-bs-target="#beneficiary" role="tab" aria-controls="contact">Benefit Distribution</button>
     </li>
@@ -18,53 +23,59 @@
       <button class="nav-link" data-bs-toggle="tab" id="beneficiary-tab" type="button" data-bs-target="#message" role="tab" aria-controls="message">Coop Message %>
     <%# <span class="badge rounded-pill text-bg-warning"><%= @process_claim.claim_remarks.where(coop: 1).count %>
     <%# </button> %>
-  </li>
-</ul>
-<div class="tab-content container mt-3" id="myTabControl">
-  <div class="tab-pane fade show active" role="tabpanel" id="home" aria-labelledby="home-tab">
-    <div class="row">
-      <div class="col-md-6">
-        <%= render 'claims/claim_benefits/show_benefit' %>
-        <%= render  'claims/claim_confinements/show_confinement' if @process_claim.claim_type == Claims::ClaimType.find_by(name: 'Hospital Confinement Claim') %>
-      </div>
-      <div class="col-md-6">
-        <%= render 'claims/process_claims/insurance_details' %>
-      </div>
-    </div>
-  </div>
-  <div class="tab-pane fade show" role="tabpanel" id="coverage" aria-labelledby="coverage-tab">
-    <%= render 'claims/claim_coverages/show_coverages' %>
-  </div>
-  <div class="tab-pane fade show" role="tabpanel" id="beneficiary" aria-labelledby="beneficiary-tab">
-    <div class="row">
-      <div class="col-md-6">
-        <%= render 'claims/claim_distributions/show_distribution' %>
-      </div>
-      <div class="col-md-6">
+  </ul>
+  <div class="tab-content container mt-3" id="myTabControl">
+    <div class="tab-pane fade show active" role="tabpanel" id="home" aria-labelledby="home-tab">
+      <div class="row">
+        <div class="col-md-6">
+          <%= render 'claims/claim_benefits/show_benefit' %>
+          <%= render  'claims/claim_confinements/show_confinement' if @process_claim.claim_type == Claims::ClaimType.find_by(name: 'Hospital Confinement Claim') %>
+        </div>
+        <div class="col-md-6">
+          <%= render 'claims/process_claims/insurance_details' %>
+        </div>
       </div>
     </div>
-  </div>
-  <div class="tab-pane fade show" role="tabpanel" id="confine" aria-labelledby="confine-tab">
-    <div class="row">
-      <h4 class="col-md-6 text-primary">Claim Confinement</h4>
-      <div class="col-md-6 text-end">
-        <%#= link_to '<i class="bi bi-plus-square"></i> Add Confinement'.html_safe, new_claim_confinement_path(v: @process_claim), class: "btn btn-primary mb-3", data: { turbo_frame: "remote_modal" } unless params[:action] == 'evaluate' %>
+    <div class="tab-pane fade show" role="tabpanel" id="coverage" aria-labelledby="coverage-tab">
+      <%= render 'claims/claim_coverages/show_coverages' %>
+    </div>
+    <% unless @process_claim.claim_reinsurance.nil? %>
+      <div class="tab-pane fade show" role="tabpanel" id="reinsurance" aria-labelledby="reinsurance-tab">
+        <%= render 'claims/claim_coverage_reinsurances/show_coverage_reinsurances' %>
+      </div>
+    <% end %>
+
+    <div class="tab-pane fade show" role="tabpanel" id="beneficiary" aria-labelledby="beneficiary-tab">
+      <div class="row">
+        <div class="col-md-6">
+          <%= render 'claims/claim_distributions/show_distribution' %>
+        </div>
+        <div class="col-md-6">
+          <%= render 'request_payment' if @process_claim.payment_preparation? && @process_claim.claim_distributions.present? %>
+        </div>
       </div>
     </div>
-    <%#= render 'claim_confinements/show_confinement' %>
-  </div>
-  <%# <div class="tab-pane fade show" role="tabpanel" id="coverage" aria-labelledby="coverage-tab">
+    <div class="tab-pane fade show" role="tabpanel" id="confine" aria-labelledby="confine-tab">
+      <div class="row">
+        <h4 class="col-md-6 text-primary">Claim Confinement</h4>
+        <div class="col-md-6 text-end">
+          <%#= link_to '<i class="bi bi-plus-square"></i> Add Confinement'.html_safe, new_claim_confinement_path(v: @process_claim), class: "btn btn-primary mb-3", data: { turbo_frame: "remote_modal" } unless params[:action] == 'evaluate' %>
+        </div>
+      </div>
+      <%#= render 'claim_confinements/show_confinement' %>
+    </div>
+    <%# <div class="tab-pane fade show" role="tabpanel" id="coverage" aria-labelledby="coverage-tab">
         <div class="row">
           <h3 class="col-md-6">Claims Coverage</h3>
           <div class="col-md-6 text-end"> %>
-  <%#= link_to '<i class="bi bi-plus-square"></i> New item'.html_safe, new_claim_coverage_path(v: @process_claim), class: "btn btn-primary mb-3", data: { turbo_frame: "remote_modal" } %>
-  <%# </div>
+    <%#= link_to '<i class="bi bi-plus-square"></i> New item'.html_safe, new_claim_coverage_path(v: @process_claim), class: "btn btn-primary mb-3", data: { turbo_frame: "remote_modal" } %>
+    <%# </div>
         </div> %>
-  <%#= render 'claim_coverages/show_coverage' %>
-  <%# </div> %>
-  <%# <div class="tab-pane fade show" role="tabpanel" id="message" aria-labelledby="home-tab"> %>
-  <%#= link_to '<i class="bi bi-chat-left-text"></i> Message'.html_safe, new_claims_claim_remark_path(v: @process_claim, c: 1), class: "btn btn-primary", data: { turbo_frame: "remote_modal" } %>
-  <%#= render 'claims/claim_remarks/show_coop_remark' %>
-  <%# </div> %>
-</div>
+    <%#= render 'claim_coverages/show_coverage' %>
+    <%# </div> %>
+    <%# <div class="tab-pane fade show" role="tabpanel" id="message" aria-labelledby="home-tab"> %>
+    <%#= link_to '<i class="bi bi-chat-left-text"></i> Message'.html_safe, new_claims_claim_remark_path(v: @process_claim, c: 1), class: "btn btn-primary", data: { turbo_frame: "remote_modal" } %>
+    <%#= render 'claims/claim_remarks/show_coop_remark' %>
+    <%# </div> %>
+  </div>
 </div>

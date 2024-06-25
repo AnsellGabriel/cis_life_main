@@ -6,7 +6,7 @@ export default class extends Controller {
   // }
   static targets = [ "agreementSelect" ]
 
-  search_agreement(event) {
+  search_agreement(event) { 
     let agreement_id  = event.target.selectedOptions[0].value
     let target = this.agreementSelectTarget.id
 

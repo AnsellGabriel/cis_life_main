@@ -1,43 +1,40 @@
 <div class="mb-1">
-  <%= link_to show_insurance_coop_member_path(@coop_member), class: small_btn('secondary') do %>
-    <i class="bi bi-chevron-left"></i>
-  <% end %>
-</div>
-<%= simple_form_for(@process_claim, url: url) do |f| %>
-  <%# <div class="row"> %>
-  <%# <div class="col-md-6"> %>
-  <div class="card mb-3">
-    <h5 class="card-header">Member Details</h5>
-    <div class="card-body">
-      <dl class="row">
-        <dt class="col-sm-4">Insurance:</dt>
-        <dd class="col-sm-8"><%= @process_claim.agreement.plan %></dd>
-        <dt class="col-sm-4">Type</dt>
-        <dd class="col-sm-8"><%= @process_claim.claimable_type %></dd>
-        <dt class="col-sm-4">Name:</dt>
-        <dd class="col-sm-8 text-primary"><%= @process_claim.claimable.get_fullname %></dd>
-        
-        <dt class="col-sm-4">Birthdate</dt>
-        <dd class="col-sm-8"> <%= to_shortdate(@process_claim.claimable.member.birth_date) %></dd>
-        <dt class="col-sm-4">Branch:</dt>
-        <dd class="col-sm-8"><%= @process_claim.claimable.coop_branch %></dd>
-        <dt class="col-sm-4">Mobile number:</dt>
-        <dd class="col-sm-8"><%= @process_claim.claimable.member.mobile_number %></dd>
-        <dt class="col-sm-4">Email:</dt>
-        <dd class="col-sm-8"><%= @process_claim.claimable.member.email %> </dd>
-      </dl>
-      <% if @loan_batch.present? %>
+  <%#= link_to show_insurance_coop_member_path(@coop_member), class: small_btn('secondary') do %>
+    <%# <i class="bi bi-chevron-left"></i> %>
+    <%# end %>
+  </div>
+  <%= simple_form_for(@process_claim, url: url) do |f| %>
+    <%# <div class="row"> %>
+    <%# <div class="col-md-6"> %>
+    <div class="card mb-3">
+      <h5 class="card-header">Member Details</h5>
+      <div class="card-body">
         <dl class="row">
-          <dt class="col-sm-4">Loan amount:</dt>
-          <dd class="col-sm-8 text-primary"><%= to_curr @loan_batch.loan_amount %></dd>
-          <dt class="col-sm-4">Loan effectivity date:</dt>
-          <dd class="col-sm-8 text-primary"><%= to_shortdate @loan_batch.effectivity_date %></dd>
-          <dt class="col-sm-4">Loan expiry date:</dt>
-          <dd class="col-sm-8 text-primary"><%= to_shortdate @loan_batch.expiry_date %></dd>
+          <dt class="col-sm-4">Insurance:</dt>
+          <dd class="col-sm-8"><%= @process_claim.agreement.plan %></dd>
+          <dt class="col-sm-4">Name:</dt>
+          <dd class="col-sm-8 text-primary"><%= @process_claim.coop_member.get_fullname %></dd>
+          <dt class="col-sm-4">Birthdate</dt>
+          <dd class="col-sm-8"> <%= to_shortdate(@process_claim.coop_member.member.birth_date) %></dd>
+          <dt class="col-sm-4">Branch:</dt>
+          <dd class="col-sm-8"><%= @process_claim.coop_member.coop_branch %></dd>
+          <dt class="col-sm-4">Mobile number:</dt>
+          <dd class="col-sm-8"><%= @process_claim.coop_member.member.mobile_number %></dd>
+          <dt class="col-sm-4">Email:</dt>
+          <dd class="col-sm-8"><%= @process_claim.coop_member.member.email %> </dd>
         </dl>
-      <% end %>
-      <div class="row">
-        <%= f.input :date_incident, as: :string, input_html: {data: {
+        <% if @loan_batch.present? %>
+          <dl class="row">
+            <dt class="col-sm-4">Loan amount:</dt>
+            <dd class="col-sm-8 text-primary"><%= to_curr @loan_batch.loan_amount %></dd>
+            <dt class="col-sm-4">Loan effectivity date:</dt>
+            <dd class="col-sm-8 text-primary"><%= to_shortdate @loan_batch.effectivity_date %></dd>
+            <dt class="col-sm-4">Loan expiry date:</dt>
+            <dd class="col-sm-8 text-primary"><%= to_shortdate @loan_batch.expiry_date %></dd>
+          </dl>
+        <% end %>
+        <div class="row">
+          <%= f.input :date_incident, as: :string, input_html: {data: {
                 controller: "flatpickr",
                 flatpickr_max_date: Time.zone.now,
                 flatpickr_next_arrow: "Next",
@@ -47,31 +44,33 @@
                 dateformat: "m-d-Y\\Z",
                 wrapper_html: {class: "#{flex_justify_align('start', '', true)} col-6"},
                 label_html: {style: ""}, error: "*Required" %>
-        <% if @process_claim.agreement.plan.acronym.upcase == 'LPPI'%>
-          <%= f.association :claim_type, collection: ClaimType.where(name: 'Life').order(:name), error: "*Required", wrapper_html: {class: "col-6"} %>
-        <% else %>
-          <% benefit_names = @process_claim.agreement_benefit.product_benefits.joins(:benefit).pluck('LOWER(benefits.name)') %>
-          <%= f.association :claim_type, collection: ClaimType.where(name: benefit_names).order(:name), error: "*Required", wrapper_html: {class: "col-6"} %>
-        <% end %>
+          <% if @process_claim.agreement.plan.acronym.upcase == 'LPPI'%>
+            <%#= f.association :claim_type, collection: ClaimType.all, error: "*Required", wrapper_html: {class: "col-6"} %>
+          <% else %>
+            <% benefit_names = @process_claim.agreement_benefit.product_benefits.joins(:benefit).pluck('LOWER(benefits.name)') %>
+          <% end %>
+          <%= f.association :claim_type, 
+                          collection: Claims::ClaimTypeAgreement.where(agreement_id: @process_claim.agreement_id),
+                          label_method: :claim_type,  
+                          value_method: :claim_type_id,
+                          error: "*Required", wrapper_html: {class: "col-6"} %>
+        </div>
       </div>
     </div>
-  </div>
-  <%# </div> %>
-  <%# <div class="col-md-6"> %>
-  <div class="card mb-3">
-    <h5 class="card-header">Claimant Details</h5>
-    <div class="card-body">
-      <%= f.hidden_field :agreement_id %>
-      <%= f.hidden_field :cooperative_id %>
-      <%= f.hidden_field :claimable_id %>
-      <%= f.hidden_field :claimable_type %>
-      <%= f.hidden_field :agreement_benefit_id %>
-      <%= render 'claimant', f: f %>
+    <%# </div> %>
+    <%# <div class="col-md-6"> %>
+    <div class="card mb-3">
+      <h5 class="card-header">Claimant Details</h5>
+      <div class="card-body">
+        <%= f.hidden_field :agreement_id %>
+        <%= f.hidden_field :cooperative_id %>
+        <%= f.hidden_field :agreement_benefit_id %>
+        <%= render 'claimant', f: f %>
+      </div>
+      <div class="card-footer text-center">
+        <%= f.button :submit, 'Submit Claim', class: 'btn-success', data: {turbo_confirm: "Please confirm that all details are accurate and correct"} %>
+      </div>
     </div>
-    <div class="card-footer text-center">
-      <%= f.button :submit, 'Submit Claim', class: 'btn-success', data: {turbo_confirm: "Please confirm that all details are accurate and correct"} %>
-    </div>
-  </div>
-  <%# </div> %>
-  <%# </div> %>
-<% end %>
+    <%# </div> %>
+    <%# </div> %>
+  <% end %>

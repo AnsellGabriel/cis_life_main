@@ -3,7 +3,7 @@
     <dl class="row">
       <dt class="col-sm-4">Plan:</dt>
       <%# coop_mem = @process_claim.claimable %>
-      <dd class="col-sm-8"> <%= link_to @process_claim.agreement.plan, @process_claim.agreement, class: "text-primary", target: '_blank' %></dd>
+      <dd class="col-sm-8"> <%= link_to @process_claim.agreement.plan, show_details_agreement_path(@process_claim.agreement), data: { turbo_frame: "remote_modal" }, class: "text-primary" %></dd>
       <dt class="col-sm-4">Agreement Benefit</dt>
       <dd class="col-sm-8"> <%= @process_claim.agreement_benefit %></dd>
       <%#= content_tag :strong, 'Benefits', class: "" %>

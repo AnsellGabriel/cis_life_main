@@ -10,6 +10,13 @@
                   flatpickr_max_date: Time.zone.now,
                   flatpickr_next_arrow: "Next",
                   flatpickr_prev_arrow: "Prev" } } %>
+      <%= f.input :bsno, label: "BSNO", wrapper_html: { class: "col-md-6" } %>
+      <%#= f.input :or_date, label: "OR date", wrapper_html: { class: "col-md-6" } %>
+      <%= f.input :bs_date, label: "BS date", as: :string, wrapper_html: { class: "col-md-6" }, 
+              input_html: { data: { controller: "flatpickr",
+                  flatpickr_max_date: Time.zone.now,
+                  flatpickr_next_arrow: "Next",
+                  flatpickr_prev_arrow: "Prev" } } %>
     </div>
     <%# <div class="row"> %>
     <%#= f.input :bsno, label: "BSNO", wrapper_html: { class: "col-md-6" } %>

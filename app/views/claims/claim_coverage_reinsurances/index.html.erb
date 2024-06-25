@@ -1,0 +1,68 @@
+<%= content_tag :h4, 'List of Claims', class:"text-primary" %>
+<table class="table table-striped table-bordered table-hover">
+  <thead>
+    <tr>
+      <th>#</th>
+      <th>Details</th>
+      <th>Insurance</th>
+      <%# <th>Batch</th> %>
+      <%# <th>Date Incident</th>
+        <th>Entry Type</th> %>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr><td colspan="4" class="text-primary"> <strong>Pending (<%= @claim_reinsurances.where(status: 0).count %>)</strong> </td></tr>
+    <% @claim_reinsurances.where(status: 0).each do |cr| %>
+      <% process_claim = cr.process_claim %>
+      <tr>
+        <th scope="row"><%= process_claim.id %></th>
+        <td><strong><%= process_claim.coop_member.get_fullname %></strong> <br>
+          <%= process_claim.cooperative %> <br>
+          <small><%= process_claim.agreement.agent %></small> <br>
+          <small>
+            <%= content_tag :span, cr.status.titleize, class: "badge rounded-pill text-bg-light"  %>
+          </small>
+        </td>
+        <td><strong><%= process_claim.agreement.plan %></strong> <br>
+          <%= content_tag :small, process_claim.claim_type %> <br>
+          <small>Date Incident: <%= to_shortdate(process_claim.date_incident) %></small> <br>
+          <%= content_tag :small, "Date Filed: #{to_shortdate(process_claim.date_file)}" unless process_claim.date_file.nil? %></td>
+        <%# <td><%= process_claim.batch %>
+        <td>
+          <% if current_user.userable.department_id == 14 %>
+            <%= link_to 'Show', claims_claim_coverage_reinsurance_path(cr), class: "btn btn-secondary" %>
+          <% else %>
+            <%= link_to "View", claim_process_claims_process_claim_path(process_claim), class: "btn btn-warning btn-sm"  %>
+          <% end %>
+        </td>
+      </tr>
+    <% end %>
+    <tr><td colspan="4" class="text-primary"> <strong>Accomplished (<%= @claim_reinsurances.where(status: 1).count %>)</strong> </td></tr>
+    <% @claim_reinsurances.where(status: 1).each do |cr| %>
+      <% process_claim = cr.process_claim %>
+      <tr>
+        <th scope="row"><%= process_claim.id %></th>
+        <td><strong><%= process_claim.coop_member.get_fullname %></strong> <br>
+          <%= process_claim.cooperative %> <br>
+          <small><%= process_claim.agreement.agent %></small> <br>
+          <small>
+            <%= content_tag :span, cr.status.titleize, class: "badge rounded-pill text-bg-light"  %>
+          </small>
+        </td>
+        <td><strong><%= process_claim.agreement.plan %></strong> <br>
+          <%= content_tag :small, process_claim.claim_type %> <br>
+          <small>Date Incident: <%= to_shortdate(process_claim.date_incident) %></small> <br>
+          <%= content_tag :small, "Date Filed: #{to_shortdate(process_claim.date_file)}" unless process_claim.date_file.nil? %></td>
+        <%# <td><%= process_claim.batch %>
+        <td>
+          <% if current_user.userable.department_id == 14 %>
+            <%= link_to 'Show', claims_claim_coverage_reinsurance_path(cr), class: "btn btn-secondary" %>
+          <% else %>
+            <%= link_to "View", claim_process_claims_process_claim_path(process_claim), class: "btn btn-warning btn-sm"  %>
+          <% end %>
+        </td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>

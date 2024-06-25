@@ -1,11 +1,8 @@
-<%= render 'layouts/partials/nav_dropdown', title: 'Cooperative' do %>
-  <%= link_to "Members", coop_members_path, class: "dropdown-item" %>
-  <%= link_to "Claims Filed", index_coop_claims_process_claims_url, class: "dropdown-item" %>
-  <%#= link_to "Claims Message", claim_remarks_path, class: "dropdown-item" %>
-  <%#= link_to "Graph", pages_coop_path, class: "dropdown-item", data: {turbo: false} %>
-<% end %>
+<%= link_to "Members", coop_members_path, class: "nav-link" %>
 <% @cooperative = current_user.userable.cooperative %>
 <%= render 'layouts/partials/nav_dropdown', title: 'Insurance' do %>
+  <%= link_to "Insurance Claims", index_coop_claims_process_claims_url, class: "dropdown-item" %>
+  <%= link_to "Graph", pages_coop_path, class: "dropdown-item", data: {turbo: false} %>
   <% @cooperative.agreements.includes(:plan).each do |a| %>
     <% case a.plan.acronym %>
     <% when 'LPPI' %>

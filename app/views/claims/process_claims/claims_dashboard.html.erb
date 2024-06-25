@@ -1,0 +1,158 @@
+<div class="row">
+  <div class="col-md-6 mb-3">
+    <div class="card text-dark bg-light mb-3 h-100">
+      <div class="card-body">
+        <h5 class="card-title">Hi <%= current_user.userable.get_fullname %>,</h5>
+        <small class="text-muted">We’d like to remind you of your current authority level for claims settlement. Here are the details:</small><br>
+        <dl class="row">
+          <% @user_levels.each do |ul| %>
+            <dt class="col-sm-4"><%= ul.authority_level.name %> :</dt>
+            <dd class="col-sm-8"><%= to_curr(ul.authority_level.maxAmount) %></dd>
+          <% end %>
+        </dl>
+      </div>
+      <div class="card-footer"><%= link_to "Claim index", claims_process_claims_path, class: "btn btn-secondary btn-sm" %> | 
+      <%= link_to "Cooperative", cooperatives_path, class: "btn btn-secondary btn-sm" %></div>
+    </div>
+  </div>
+  <div class="col-md-3 mb-3">
+    <div class="card text-dark bg-info mb-3 h-100">
+      <div class="card-body">
+        <% if @for_evaluation.count == 0 %>
+            <h5 class="card-title">Great news,</h5>
+            <small class="text-muted">You currently have no pending claims for evaluation. Keep up the excellent work!</small>
+        <% else %>
+            <h5 class="card-title">For Evaluation</h5>
+            <small>While you were away, the following claims have been assigned to you for evaluation:</small><br>
+            <h2 class="text-center mt-3"><%= link_to @for_evaluation.count, index_show_claims_process_claims_path(p: get_route_evaluators), class: "text-dark" %></h2>
+        <% end %>
+      </div>
+      <div class="card-footer">
+        <%= link_to 'See Details <i class="bi bi-box-arrow-right"></i>'.html_safe, index_show_claims_process_claims_path(p: get_route_evaluators), class: "text-dark" %>     
+      </div>
+    </div>
+  </div>
+  <% unless @claims_user_authority_level == "Claims Evaluator" %>
+    <div class="col-md-3 mb-3">
+      <div class="card border-primary mb-3 h-100">
+      <div class="card-body text-primary">
+          <h5 class="card-title">Messages <i class="bi bi-chat-dots"></i></h5>
+          <% if @coop_messages.where(read: 0).count == 0 %>
+              <small class="card-text">Fantastic! You have no new cooperative messages at the moment.</small>
+          <% else %>
+              <small class="card-text">You've received a cooperative message that requires your attention.</small>
+              <h2 class="text-center mt-3"><%= @coop_messages.where(read: 0).where.not(user: current_user).count unless @coop_messages.nil? %></h2>
+          <% end %>
+      </div>
+      <div class="card-footer"><%= link_to 'Go to Messages <i class="bi bi-box-arrow-right"></i>'.html_safe, unread_messages_claims_claim_remarks_path, class: "text-primary" %></div>
+      </div>
+    </div>
+  <% end %>
+
+  <div class="col-md-3">
+    <div class="card">
+      <div class="card-body">
+        <table class="table">
+          <thead>
+            <tr>
+              <th>Claim Route</th>
+              <th class="text-center">Count</th>
+            </tr>
+          </thead>
+          <tbody>
+            <%= claim_route_row("CA Filed", 17) %>
+            <%= claim_route_row("Documentation Review", 1) %>
+            <%= claim_route_row("Retrieval of Document", 24) %>
+            <%= claim_route_row("Claims Filed", 2) %>
+            <%= claim_route_row("Claims Review", 3) %>
+            <%= claim_route_row("Head Evaluation", 4) %>
+            <%= claim_route_row("COSO Evaluation", 5) %>
+            <%= claim_route_row("President Evaluation", 6) %>
+            
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-md-6">
+    <div class="card-group mb-3">
+      <div class="card">
+        <div class="card-body">
+          <p class="text-primary card-title">COOP FILED</p>
+          <h2 class="text-muted"><%= @process_claims.where(claim_route: 1, entry_type: 1).count %></h2>
+        </div>
+        <div class="card-footer"><small class="text-muted"> <%= link_to 'See Details <i class="bi bi-box-arrow-right"></i>'.html_safe, index_show_claims_process_claims_path(p: 1), class: "text-muted" %></small></div>
+      </div>
+      <div class="card">
+        <div class="card-body">
+          <p class="text-primary card-title">FOR COMPLIANCE</p>
+          <h2 class="text-muted"><%= @process_claims.where(claim_route: 19, entry_type: 0).count %></h2>
+
+        </div>
+        <div class="card-footer"><small class="text-muted"> <%= link_to 'See Details <i class="bi bi-box-arrow-right"></i>'.html_safe, index_show_claims_process_claims_path(p: 19), class: "text-muted" %></small></div>
+      </div>
+      <div class="card">
+        <div class="card-body">
+          <p class="text-primary card-title">FOR PAYMENT</p>
+          <h2 class="text-muted"><%= @process_claims.where(claim_route: 23, status: 0).count %></h2>
+
+        </div>
+        <div class="card-footer"><small class="text-muted"> <%= link_to 'See Details <i class="bi bi-box-arrow-right"></i>'.html_safe, index_show_claims_process_claims_path(p: 23), class: "text-muted" %></small></div>
+      </div>
+    </div>
+    <div class="card-group">
+      <div class="card bg-success">
+        <div class="card-body">
+          <p class="text-light card-title">APPROVED</p>
+          <% approved_claims = @process_claims.where(status: 0) %>
+          <h2 class="text-light"><%= approved_claims.count %></h2>
+          <small class="text-light"><%= to_currency(approved_claims.to_a.sum(&:get_benefit_claim_total)) %></small>
+        </div>
+        <div class="card-footer"><small> <%= link_to 'See Details <i class="bi bi-box-arrow-right"></i>'.html_safe, index_show_claims_process_claims_path(s: 0), class: "text-light" %></small></div>
+      </div>
+      <div class="card bg-danger">
+        <div class="card-body">
+          <p class="text-light card-title">DENIED</p>
+          <% denied_claims = @process_claims.where(status: 1) %>
+          <h2 class="text-light"><%= denied_claims.count %></h2>
+          <small class="text-light"><%= to_currency(denied_claims.to_a.sum(&:get_benefit_claim_total)) %></small>
+
+        </div>
+        <div class="card-footer"><small> <%= link_to 'See Details <i class="bi bi-box-arrow-right"></i>'.html_safe, index_show_claims_process_claims_path(s: 1), class: "text-light" %></small></div>
+      </div>
+      <div class="card bg-warning">
+        <div class="card-body">
+          <p class="card-title">PENDING</p>
+          <h2><%= @process_claims.where(claim_route: :pending_claim).count %></h2>
+
+        </div>
+        <div class="card-footer"><small class="text-muted"> <%= link_to 'See Details <i class="bi bi-box-arrow-right"></i>'.html_safe, index_show_claims_process_claims_path(p: 25), class: "text-dark" %></small></div>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-3">
+    <div class="card">
+      <div class="card-body">
+        <table class="table">
+          <thead>
+            <tr>
+              <th>Claim Route</th>
+              <th class="text-center">Count</th>
+            </tr>
+          </thead>
+          <tbody>
+            <%= claim_route_row("Head Reconsider", 10) %>
+            <%= claim_route_row("COSO Reconsider", 20) %>
+            <%= claim_route_row("Accounting Processing", 8) %>
+            <%= claim_route_row("Pending Audit", 16) %>
+            <%= claim_route_row("Treasury Processing", 14) %>
+            <%= claim_route_row("Payment Ready", 12) %>
+            <%= claim_route_row("Process Complete", 7) %>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+<%# console %>

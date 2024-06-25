@@ -10,7 +10,7 @@ class ApplicationController < ActionController::Base
     else
       case current_user.userable_type
       when "Agent" then redirect_to agents_path
-      when "CoopUser" then redirect_to coop_dashboard_path
+      when "CoopUser" then redirect_to coop_dashboards_path
       when "Employee"
 
         if current_user.medical_director?
@@ -25,9 +25,12 @@ class ApplicationController < ActionController::Base
           when 11 then redirect_to accounting_dashboard_path
           when 17, 13 then redirect_to process_coverages_path
           when 15 then redirect_to mis_dashboard_path
-          when 14 then redirect_to reinsurances_path
-          else redirect_to employees_path
-          end
+          when 14 then redirect_to actuarial_dashboards_path
+          # when 19 then redirect_to claims_dashboard_claims_process_claims_path
+          when 19 then redirect_to claims_dashboards_path
+        else redirect_to employees_path
+            
+        end
         end
 
       else
@@ -59,8 +62,13 @@ class ApplicationController < ActionController::Base
       session[:claims_max_amount]
     else
       user_levels.each do |ul|
+        
         if ul.authority_level.claim?
           session[:claims_max_amount] = ul.authority_level.maxAmount
+          @claims_user_authority_level = ul.authority_level
+        elsif ul.authority_level.reconsider?
+          session[:reconsider_limit] = ul.authority_level.maxAmount
+          @claims_user_reconsider = ul.authority_level
         elsif ul.authority_level.underwriting?
           session[:max_amount] = ul.authority_level.maxAmount
         end

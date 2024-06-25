@@ -18,8 +18,12 @@ class CoopMember < ApplicationRecord
   has_many :batches
   has_many :agreements_coop_members
   has_many :agreements, through: :agreements_coop_members
-  has_many :process_claims, as: :claimable, class_name: "Claims::ProcessClaim",  dependent: :destroy
+  has_many :process_claims, class_name: "Claims::ProcessClaim"
 
+  def self.ransackable_attributes(auth_object = nil)
+    ["coop_branch_id", "cooperative_id", "created_at", "deceased", "full_name", "id", "member_id", "membership_date", "old_mem_code", "transferred", "updated_at"]
+  end
+  
   def to_s
     "#{full_name.titleize}"
   end

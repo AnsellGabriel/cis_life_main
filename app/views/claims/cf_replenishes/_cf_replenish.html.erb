@@ -1,0 +1,39 @@
+<div id="<%= dom_id cf_replenish %>">
+  <p>
+    <strong>Cf account:</strong>
+    <%= cf_replenish.cf_account %>
+  </p>
+
+  <p>
+    <strong>User:</strong>
+    <%= cf_replenish.user %>
+  </p>
+
+  <p>
+    <strong>Transaction date:</strong>
+    <%= cf_replenish.transaction_date %>
+  </p>
+
+  <p>
+    <strong>Amount:</strong>
+    <%= cf_replenish.amount %>
+  </p>
+
+  <p>
+    <strong>Description:</strong>
+    <%= cf_replenish.description %>
+  </p>
+
+  <p>
+    <strong>Status:</strong>
+    <%= cf_replenish.status %>
+  </p>
+
+<%#= link_to "Edit", edit_claims_cf_replenish_path(@cf_replenish), class: 'btn btn-sm btn-primary' %> 
+<%#= link_to "Back", claims_cf_replenishes_path, class: 'btn  btn-sm btn-secondary' %>
+<hr>
+<%= link_to "Approve", update_status_claims_cf_replenish_path(cf_replenish, s: 1), class: 'btn  btn-sm btn-success' %> |
+<%= link_to "Denied", update_status_claims_cf_replenish_path(cf_replenish, s: 2), class: 'btn  btn-sm btn-danger' %> |
+<%= link_to "Pending", update_status_claims_cf_replenish_path(cf_replenish, s: 0), class: 'btn  btn-sm btn-warning' %> 
+
+</div>

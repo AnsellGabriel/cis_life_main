@@ -23,9 +23,13 @@ class DemoSchedulesController < ApplicationController
   # POST /demo_schedules
   def create
     @demo_schedule = DemoSchedule.new(demo_schedule_params)
-
+    @demo_schedule.status = 0
     if @demo_schedule.save
-      redirect_to root_path, notice: "Demo schedule was successfully created."
+      if current_user
+        redirect_to authenticated_root_path, notice: "Demo schedule was successfully created."
+      else
+        redirect_to unauthenticated_root_path, notice: "Demo schedule was successfully created."
+      end
     else
       render :new, status: :unprocessable_entity
       # format.turbo_stream { render :form_update, status: :unprocessable_entity }
@@ -55,6 +59,6 @@ class DemoSchedulesController < ApplicationController
 
     # Only allow a list of trusted parameters through.
     def demo_schedule_params
-      params.require(:demo_schedule).permit(:cooperative, :name, :contact_no, :email, :demo_date, :time_slot, :remarks, :satus, :method)
+      params.require(:demo_schedule).permit(:cooperative, :name, :contact_no, :email, :demo_date, :time_slot, :remarks, :status, :method)
     end
 end

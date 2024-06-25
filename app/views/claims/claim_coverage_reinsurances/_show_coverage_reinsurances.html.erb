@@ -1,0 +1,92 @@
+
+<div class="row">
+  <div class="col-md-6">
+    <%= content_tag :h5, 'Reinsurance Coverage', class:"text-primary" %>
+  </div>
+  
+</div>
+<table class="table table-border">
+  <thead class="border-top border-bottom border-primary">
+    <tr>
+      <th class="text-primary">ORNO</th>
+      <th class="text-primary">Effectivity</th>
+      <th class="text-primary">Expiry</th>
+      <th class="text-end text-primary">Amount Insured</th>
+      <th class="text-end text-primary">Amount Benefit</th>
+      <%# <th class="text-end text-primary">Reinsurance (Reported) Covered</th> %>
+      
+      <% @reinsurers.each do |r| %>
+        <th class="text-end text-primary"><%= r.short_name %></th>
+      <% end %>
+      <th class="text-primary"></th>
+    </tr>
+  </thead>
+  <tbody>
+    <% current = @process_claim.claim_coverages.where(coverage_type: "Current") %>
+    <% unless current.empty? %>
+      <tr>
+        <td colspan="6" class="text-primary"> <strong>Current</strong> </td>
+      </tr>
+      <% current.each do |cc| %>
+        <tr>
+          <td><%= cc.orno %> <br>
+            <small><%= to_shortdate(cc.or_date) %></small></td>
+          <td><small><%= to_shortdate(cc.effectivity) %></small> </td>
+          <td><small><%= to_shortdate(cc.expiry) %></small></td>
+          <td class="text-end"> <small><%= to_curr(cc.amount) %></small> </td>
+          <td class="text-end"> <small><%= to_curr(cc.amount_cover) %></small> </td>
+           <% @reinsurers.each do |r| %>
+              <% coverage_reinsurance = @coverage_reinsurances.find_by(reinsurer: r, claim_coverage: cc) %>
+              <td class="text-end"><small>
+                <% if current_user.userable.department_id == 14 %>
+                  <%= link_to to_curr(coverage_reinsurance.amount), edit_claims_claim_coverage_reinsurance_path(coverage_reinsurance), data: { turbo_frame: "remote_modal" } unless coverage_reinsurance.nil? %>
+                <% else %>
+                  <%= to_curr(coverage_reinsurance.amount) unless coverage_reinsurance.nil? %>
+                <% end %>
+                </small></td>
+           <% end %>
+          <td class="text-end">
+            <%= link_to '<i class="bi bi-plus-circle"></i>'.html_safe, new_claims_claim_coverage_reinsurance_path(c: cc, r: @claim_reinsurance), class: 'btn btn-outline-primary btn-sm', data: { turbo_frame: "remote_modal" } if current_user.userable.department_id == 14 %>
+          </td>
+        </tr>
+      <% end %>
+      <tr>
+        <td colspan="3" class="table-active border-top border-primary"> <small>Total</small> </td>
+        <td class="text-end text-primary border-top border-primary"><small><%= to_curr(@process_claim.claim_coverages.where(coverage_type: "Current").sum(:amount)) %></small></td>
+        <td class="text-end text-primary border-top border-primary"><small><%= to_curr(@process_claim.claim_coverages.where(coverage_type: "Current").sum(:amount_cover)) %></small></td>
+         <% @reinsurers.each do |r| %>
+          <td class="text-end text-primary border-top border-primary"><small><%= to_curr(@coverage_reinsurances.where(reinsurer: r).sum(:amount)) %></small></td>
+         <% end %>
+      </tr>
+    <% end %>
+    <% previous = @process_claim.claim_coverages.where(coverage_type: "Previous") %>
+    <% unless previous.empty? %>
+      <tr>
+        <td colspan="6" class="text-primary"> <strong>Previous</strong> </td>
+      </tr>
+      <% previous.each do |cc| %>
+        <tr>
+          <td><%= cc.orno %> <br>
+            <small><%= to_shortdate(cc.or_date) %></small></td>
+          <td><small><%= to_shortdate(cc.effectivity) %></small> </td>
+          <td><small><%= to_shortdate(cc.expiry) %></small></td>
+          <td class="text-end"> <small><%= to_curr(cc.amount) %></small> </td>
+          <td class="text-end"> <small><%= to_curr(cc.amount_cover) %></small> </td>
+          <td><small><%= cc.status %></small> </td>
+          <% unless params[:action] == 'show_coop' %>
+            <td class="text-end">
+              <%#= link_to 'View', benefit_claim, class: 'btn' %>
+              <%= link_to '<i class="bi bi-pencil-square"></i>'.html_safe, new_claims_claim_coverage_reinsurance_path(c: cc), class: 'btn btn-outline-primary btn-sm', data: { turbo_frame: "remote_modal" } %>      
+            </td>
+          <% end %>
+        </tr>
+      <% end %>
+    <% end %>
+    <%# <tr> %>
+    <%# <td colspan="4" class="table-active border-top border-primary"> <small>Total</small> </td> %>
+    <%# <td class="text-end text-primary border-top border-primary">
+        <%= to_curr(@process_claim.claim_coverages.where(coverage_type: "Prior").sum(:amount)) %>
+    <%# </td>  %>
+  </tr>
+</tbody>
+</table>

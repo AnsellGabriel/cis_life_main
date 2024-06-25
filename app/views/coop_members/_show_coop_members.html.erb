@@ -75,21 +75,19 @@
         <% coop_member = member.coop_members.find_by(cooperative_id: @cooperative.id)%>
         <tr>
           <td>
-            <div class="">
-              <div class="<%= flex_justify_align('','center') %> gap-2">
-                <% if coop_member.deceased? %>
-                  <%= content_tag :span, 'DECEASED', class: badge('danger') %>
-                <% end %>
-              </div>
-              <%= content_tag :strong, "#{coop_member.get_fullname}" %> <%= content_tag :small, "#{member.birth_date.strftime('%b %d, %y')}", class: "text-muted" %>
-              <div class="d-flex align-items-center gap-1">
-                <% if member.mobile_number.present? %>
-                  <span class="sm-secondary-text text-muted"><i class="bi bi-phone"></i> <%= member.mobile_number %> </span>
-                <% end %>
-                <% if member.email.present? %>
-                  <span class="sm-secondary-text text-muted"><i class="bi bi-envelope"></i> <%= member.email %> </span>
-                <% end %>
-              </div>
+            <div class="<%= flex_justify_align('','center') %> gap-2">
+              <% if coop_member.deceased? %>
+                <%= content_tag :span, 'DECEASED', class: badge('danger') %>
+              <% end %>
+            </div>
+            <%= content_tag :strong, "#{coop_member.get_fullname}" %> <%= content_tag :small, "#{member.birth_date.strftime('%b %d, %y')}", class: "text-muted" %>
+            <div class="d-flex align-items-center gap-1">
+              <% if member.mobile_number.present? %>
+                <span class="sm-secondary-text text-muted"><i class="bi bi-phone"></i> <%= member.mobile_number %> </span>
+              <% end %>
+              <% if member.email.present? %>
+                <span class="sm-secondary-text text-muted"><i class="bi bi-envelope"></i> <%= member.email %> </span>
+              <% end %>
             </div>
           </td>
           <td><%= coop_member.coop_branch.name.titleize %></td>

@@ -1,0 +1,26 @@
+
+<%= simple_form_for(@cf_replenish) do |f| %>
+  <%= f.error_notification %>
+  <%= f.error_notification message: f.object.errors[:base].to_sentence if f.object.errors[:base].present? %>
+
+  <div class="form-inputs mb-3">
+    <%= f.association :cf_account, input_html: { data: { controller: "ts--select" } }  %>
+    <%#= f.association :cf_account %>
+    <%= f.hidden_field :user %>
+    <div class="row">
+      <%= f.input :transaction_date, label: "Date", as: :string, wrapper_html: { class: "col-md-6" }, 
+                input_html: { data: { controller: "flatpickr",
+                    flatpickr_next_arrow: "Next",
+                    flatpickr_prev_arrow: "Prev" } } %>
+      <%= f.input :amount, wrapper_html: { class: "col-md-6" } %>
+      <%= f.input :description %>
+      <%#= f.input :type, wrapper_html: { class: "col-md-6" } %>
+    </div>
+    <%#= f.input :transaction_date %>
+  </div>
+
+  <div class="form-actions text-end">
+    <%= link_to "Back", claims_cf_replenishes_path, class: 'btn btn-secondary' %>
+    <%= f.button :submit, class: 'btn-success', value: "Request Replenishment" %>
+  </div>
+<% end %>

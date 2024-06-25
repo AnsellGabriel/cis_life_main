@@ -1,0 +1,58 @@
+<%= content_tag :h1, "Claims Fund Availments" %>
+
+  <table class="table table-striped table-bordered table-hover">
+    <thead>
+      <tr>
+      <th>#</th>
+          <th>Details</th>
+            <th>Transaction Date</th>
+            <th class="text-end">Amount</th>
+            <th></th>
+        </tr>
+    </thead>
+
+    <tbody>
+        <tr class="table-warning"><td colspan="5"><strong>Pending</strong></td></tr>
+      <% @cf_availments.pending.each do |cf_availment| %>
+        <tr>
+
+        <th scope="row"><%= cf_availment.id %></th>
+        <td>
+        <%= cf_availment.process_claim.coop_member.get_fullname %> <br>
+        <small><%= cf_availment.cf_account %></small> <br>
+        <small class="text-muted"><%= cf_availment.user %> <span class="badge bg-warning text-dark"><%= cf_availment.status.humanize %></span></small> <br>
+        <%= cf_availment.description %></td>
+        <td><%= cf_availment.transaction_date %></td>
+        <td class="text-end"><%= to_curr(cf_availment.amount) %></td>
+    
+          <td>
+            <%= link_to 'View', cf_availment, class: 'btn btn-secondary btn-sm', data: { turbo_frame: "remote_modal" } %>
+            <%#= link_to 'Edit', edit_claims_cf_availment_path(cf_availment), class: 'btn btn-secondary btn-sm' %>
+            <%#= link_to "Delete", cf_availment, class: "btn btn-danger btn-sm", method: :delete, data: { "turbo-method": :delete, turbo_confirm: "Are you sure?" } %>
+          </td>
+
+        </tr>
+      <% end %>
+      <tr class="table-success"><td colspan="5"><strong>Approved</strong></td></tr>
+      <% @cf_availments.approved.each do |cf_availment| %>
+        <tr>
+
+        <th scope="row"><%= cf_availment.id %></th>
+        <td>
+        <%= cf_availment.process_claim.coop_member.get_fullname %> <br>
+        <small><%= cf_availment.cf_account %></small> <br>
+        <small class="text-muted"><%= cf_availment.user %> <span class="badge bg-primary"><%= cf_availment.status.humanize %></span></small> <br>
+        <%= cf_availment.description %></td>
+        <td><%= cf_availment.transaction_date %></td>
+        <td class="text-end"><%= to_curr(cf_availment.amount) %></td>
+    
+          <td>
+            <%= link_to 'View', cf_availment, class: 'btn btn-secondary btn-sm', data: { turbo_frame: "remote_modal" } %>
+            <%#= link_to 'Edit', edit_claims_cf_availment_path(cf_availment), class: 'btn btn-secondary btn-sm' %>
+            <%#= link_to "Delete", cf_availment, class: "btn btn-danger btn-sm", method: :delete, data: { "turbo-method": :delete, turbo_confirm: "Are you sure?" } %>
+          </td>
+
+        </tr>
+      <% end %>
+    </tbody>
+  </table>

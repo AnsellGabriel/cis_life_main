@@ -16,12 +16,12 @@
     <% @demo_schedules.each do |demo_schedule| %>
       <tr>
         <th scope="row"><%= demo_schedule.id %></th>
-        <><strong><%= demo_schedule.cooperative %></strong>
-        <%= demo_schedule.name %> <br>
-       <%= demo_schedule.contact_no %> | <%= demo_schedule.email %>
-        <td><%= demo_schedule.demo_date %> <br>
-        <%= demo_schedule.time_slot %></td>
-        <td><%= demo_schedule.satus %></td>
+        <td><strong><%= demo_schedule.cooperative %></strong> <br>
+          <small><%= demo_schedule.name %> <br>
+            <%= demo_schedule.contact_no %> | <%= demo_schedule.email %></small></td>
+        <td><%= to_shortdate(demo_schedule.demo_date)  %> <br>
+          <%= demo_schedule.time_slot.humanize %></td>
+        <td><%= demo_schedule.status.humanize %></td>
         <td>
           <%= link_to 'View', demo_schedule, class: 'btn btn-secondary btn-sm' %>
           <%= link_to 'Edit', edit_demo_schedule_path(demo_schedule), class: 'btn btn-secondary btn-sm' %>

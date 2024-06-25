@@ -12,6 +12,10 @@ class User < ApplicationRecord
   has_many :dependent_remarks
   has_many :remarks, dependent: :destroy
   has_one :progress_tracker, as: :trackable, dependent: :destroy
+
+  has_many :claim_remarks
+  has_many :read_messages
+  has_many :read_messages, through: :read_messages, source: :claim_remark
   # accepts_nested_attributes_for :ff
   delegate :initials_name, to: :userable
 
@@ -25,6 +29,13 @@ class User < ApplicationRecord
 
   attribute :admin, :boolean, default: false
   attribute :approved, :boolean, default: false
+
+  def unread_messages
+    Claims::ClaimRemark.left_outer_joins(:read_messages)
+           .where(coop: 1, read_messages: { id: nil })
+          #  .or(Claims::ClaimRemark.left_outer_joins(:read_messages)
+          #             .where.not(read_messages: { user_id: id }))
+  end
 
   def to_s
     userable.to_s

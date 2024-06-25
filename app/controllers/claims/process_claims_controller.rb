@@ -1,9 +1,19 @@
 
 class Claims::ProcessClaimsController < ApplicationController
-  before_action :set_process_claim, only: %i[ show edit update destroy show_coop show_ca claim_route claims_file claim_process update_status edit_ca update_ca print_sheet approve_claim_debit ]
+  include ProcessClaimHelper
+  before_action :set_process_claim, only: %i[ show edit update destroy show_coop show_ca claim_route claims_file claim_process update_status edit_ca update_ca print_sheet edit_coop update_coop ]
 
   def index
-    @process_claims = Claims::ProcessClaim.all
+    # @process_claims = Claims::ProcessClaim.all
+    # @q = Claims::ProcessClaim.ransack(params[:q])
+    # @pagy, @process_claims = @q.result(distinct: true)
+    # @pagy, @cooperatives = pagy(@q, items: 10 )
+
+    @q = Claims::ProcessClaim.ransack(params[:q])
+    @process_claims = @q.result(distinct: true)
+
+    # use pagy
+    @pagy, @process_claims = pagy(@process_claims, items: 10)
   end
 
   def index_coop
@@ -12,8 +22,17 @@ class Claims::ProcessClaimsController < ApplicationController
   end
 
   def index_show
-    @process_claims = Claims::ProcessClaim.where(claim_route: params[:p])
-    @display = Claims::ProcessClaim.get_route(params[:p].to_i).to_s.humanize.titleize
+    unless params[:p].nil?
+      @process_claims = Claims::ProcessClaim.where(claim_route: params[:p])
+      @display = Claims::ProcessClaim.get_route(params[:p].to_i).to_s.humanize.titleize
+    end
+    unless params[:s].nil?
+      @process_claims = Claims::ProcessClaim.where(status: params[:s])
+      case params[:s]
+      when 0
+        @display = "Approved Claims"
+      end
+    end
     # raise "errors"
   end
 
@@ -23,7 +42,7 @@ class Claims::ProcessClaimsController < ApplicationController
     #   format.pdf do
         pdf = ClaimsPdf.new(@process_claim, view_context)
         send_data pdf.render,
-          filename: "#{@process_claim.claimable.get_fullname}.pdf",
+          filename: "#{@process_claim.coop_member.get_fullname}.pdf",
           type: 'application/pdf',
           disposition: 'inline'
     #   end
@@ -31,9 +50,9 @@ class Claims::ProcessClaimsController < ApplicationController
     # pdf = Prawn::Document.new
     # pdf = ClaimsPrintSheetPdf.new
     # pdf.text "Claims Processing Sheet"
-    # pdf.text @process_claim.claimable.get_fullname.titleize, size: 15, style: :bold
+    # pdf.text @process_claim.coop_member.get_fullname.titleize, size: 15, style: :bold
     # pdf.text @process_claim.cooperative.name
-    # send_data(pdf.render, filename: "#{@process_claim.claimable.get_fullname}.pdf", type: 'application/pdf', disposition: 'inline')
+    # send_data(pdf.render, filename: "#{@process_claim.coop_member.get_fullname}.pdf", type: 'application/pdf', disposition: 'inline')
   end
   # GET /process_claims/1
   def show
@@ -77,7 +96,7 @@ class Claims::ProcessClaimsController < ApplicationController
     @process_claim.agreement = Agreement.find(params[:a]) if params[:a].present?
     @process_claim.agreement_benefit = AgreementBenefit.find(params[:ab]) if params[:ab].present?
     @coop_member = CoopMember.find(params[:cm])
-    @process_claim.claimable = @coop_member
+    @process_claim.coop_member = @coop_member
     @process_claim.cooperative = @coop_member.cooperative
 
     if Rails.env.development?
@@ -90,22 +109,24 @@ class Claims::ProcessClaimsController < ApplicationController
     # raise "errors"
     @process_claim = Claims::ProcessClaim.new
     @coop_member = CoopMember.find(params[:cm])
-    @process_claim.claimable = @coop_member
+    @process_claim.coop_member = @coop_member
     @process_claim.cooperative = @coop_member.cooperative
     @claim_cause = @process_claim.build_claim_cause
     @agreement = Agreement.where(cooperative: @process_claim.cooperative)
-    set_dummy_value
+    set_dummy_value if Rails.env.development?
   end
 
   def create_coop
-    if params[:lb].present?
-      @loan_batch = LoanInsurance::Batch.find(params[:lb])
-    end
+    # raise "errors"
+    # if params[:lb].present?
+    #   @loan_batch = LoanInsurance::Batch.find(params[:lb])
+    # end
     @process_claim = Claims::ProcessClaim.new(process_claim_params)
     @process_claim.entry_type = :coop
-    @process_claim.claim_route = :file_claim
+    @process_claim.claim_route = :coop_file
+    @process_claim.status = :pending
     @rel_css = process_claim_params[:relationship].empty? ? "is-invalid" : "is-valid"
-    @coop_member = CoopMember.find(process_claim_params[:claimable_id])
+    @coop_member = CoopMember.find(process_claim_params[:coop_member_id])
 
     unless process_claim_params[:date_incident].empty?
       @process_claim.age = @process_claim.get_age.to_i
@@ -132,14 +153,15 @@ class Claims::ProcessClaimsController < ApplicationController
   def create_ca
     @process_claim = Claims::ProcessClaim.new(process_claim_params)
     @process_claim.entry_type = :claim
-    @process_claim.claim_route = :filed_by_analyst
+    @process_claim.claim_route = :analyst_file if @process_claim.id.nil?
+    @process_claim.status = :pending
     @process_claim.age = @process_claim.get_age.to_i
-
+    # raise "errors"
     respond_to do |format|
       if @process_claim.save
         @process_claim.process_track.create(route_id: 17, user: current_user)
         format.html { redirect_to claim_process_claims_process_claim_path(@process_claim), notice: "Claims was successfully added." }
-        format.json { render :show, status: :created, location: @anniversary }
+        format.json { render :show, status: :created, location: @process_claim }
       else
         format.html { render :new_ca, status: :unprocessable_entity }
         format.json { render json: @process_claim.errors, status: :unprocessable_entity }
@@ -149,19 +171,30 @@ class Claims::ProcessClaimsController < ApplicationController
   end
 
   def update_ca
-    if @process_claim.update(process_claim_params)
-
-        redirect_to index_show_claims_process_claims_path(p: 17), notice: "Process claim was successfully updated."
-    else
-      render :edit, status: :unprocessable_entity
-    end
+    # if @process_claim.claim_cause.nil?
+    #   if @process_claim.claim_cause.save
+    #     redirect_to claim_process_claims_process_claim_path(@process_claim), notice: "Claims was successfully added."
+    #   else
+    #     render :edit, status: :unprocessable_entity
+    #   end
+    # else
+      if @process_claim.update(process_claim_params)
+          redirect_to claim_process_claims_process_claim_path(@process_claim), notice: "Process claim was successfully updated."
+      else
+        render :edit, status: :unprocessable_entity
+      end
+    # end
   end
 
   # GET /process_claims/1/edit
   def edit
+    @coop_member = @process_claim.coop_member
   end
 
   def edit_ca
+    if @process_claim.claim_cause.nil?
+      @claim_cause = @process_claim.build_claim_cause
+    end
   end
 
   def claims_file
@@ -179,10 +212,14 @@ class Claims::ProcessClaimsController < ApplicationController
     @cooperative = @process_claim.cooperative
     # @payout_type = @process_claim.voucher_requests&.last&.vouchers&.where(audit: [:pending_audit, :for_audit])&.last
     @audit_remarks = @payout_type&.remarks
-
-    if @process_claim.debit_advice?
-      @bank = @process_claim.voucher_request.account
+    unless @process_claim.claim_reinsurance.nil?
+      @reinsurers = Reinsurer.all
+      @claim_reinsurance = @process_claim.claim_reinsurance
+      @coverage_reinsurances = Claims::ClaimCoverageReinsurance.where(claim_reinsurance: @claim_reinsurance)
     end
+    # if @process_claim.debit_advice?
+    #   @bank = @process_claim.voucher_request.account
+    # end
   end
 
   def approve_claim_debit
@@ -220,10 +257,10 @@ class Claims::ProcessClaimsController < ApplicationController
       return redirect_to new_process_claim_path, alert: "The claim cannot be processed. The incident date has passed the 5-year claim period."
     end
 
-    if params[:process_claim][:claimable_type] == "Batch"
-      @process_claim.claimable = Batch.find(params[:process_claim][:claimable_id])
+    if params[:process_claim][:coop_member_type] == "Batch"
+      @process_claim.coop_member = Batch.find(params[:process_claim][:coop_member_id])
     else
-      @process_claim.claimable = BatchDependent.find(params[:process_claim][:claimable_id])
+      @process_claim.coop_member = BatchDependent.find(params[:process_claim][:coop_member_id])
     end
 
     begin
@@ -246,24 +283,48 @@ class Claims::ProcessClaimsController < ApplicationController
     # @claim_track = ProcessTrack.new
     @claim_track = @process_claim.process_track.build
     @claim_track.route_id = params[:p]
+    unless params[:s].nil?
+      @claim_track.status = params[:s].to_i
+      @claim_track.route_id = approver_routes(@process_claim,@claims_user_authority_level.maxAmount, @claim_track.status)
+      if @process_claim.check_authority_level(@claims_user_authority_level.maxAmount)
+        @process_claim.update(status: :denied) if @claim_track.denied?
+        @process_claim.update(status: :approved) if @claim_track.approved?
+        @process_claim.update(status: :pending) if @claim_track.pending?
+      end
+      unless @claims_user_reconsider.nil?
+        if @process_claim.check_authority_level(@claims_user_reconsider.maxAmount) 
+          @process_claim.update(status: :reconsider_denied) if @claim_track.reconsider_denied?
+          @process_claim.update(status: :reconsider_approved, approval: 1) if @claim_track.reconsider_approved?
+        end
+      end
+    end
     @claim_track.user_id = current_user.id
+    
+    #CHECK THE ATTACH DOCUMENTS
+    unless current_user.userable_type == "Employee"
+      if @process_claim.coop_file? || @process_claim.analyst_file? || @process_claim.incomplete_document? 
+        document_status = @process_claim.attach_document_status
+        @status_message = document_status[:status_message]
+        status = document_status[:status]
+        return redirect_to show_coop_claims_process_claim_path(@process_claim), alert: @status_message if status && current_user.userable_type == "CoopUser"
+        return redirect_to claim_process_claims_process_claim_path(@process_claim), alert: @status_message if status && current_user.userable_type == "Employee"
+      end
+    end
+    
+
+    # raise "errors"
     respond_to do |format|
       if @claim_track.save
-        if @claim_track.route_id == 2
-          # raise "error"
-          import_product_benefit if @process_claim.submitted?
-          @process_claim.update!(claim_route: @claim_track.route_id, status: :process, claim_filed: 1, processing: 0, approval: 0, payment: 0)
-          format.html { redirect_to claims_file_claims_process_claim_path(@process_claim), notice: "#{@process_claim.claim_route.to_s.humanize.titleize} by #{current_user}"  }
-        elsif @claim_track.route_id == 3
-          @process_claim.update!(claim_route: @claim_track.route_id, processing: 1)
-          format.html { redirect_to claim_process_claims_process_claim_path(@process_claim), notice: "#{@process_claim.claim_route.to_s.humanize.titleize} by #{current_user}"  }
-          # ClaimsMailer.with(process_claim: @process_claim).new_claim_email.deliver_later
-        elsif @claim_track.route_id == 5
-          # RegisterMailer.with(registration: @registration, event_hub: @event_hub).register_created.deliver_later
-          @process_claim.update!(claim_route: @claim_track.route_id, processing: 1)
-          format.html { redirect_to claim_process_claims_process_claim_path(@process_claim), notice: "#{@process_claim.claim_route.to_s.humanize.titleize} by #{current_user}"  }
-
-        elsif @claim_track.route_id == 8
+        case @claim_track.route_id
+        when 1
+          @process_claim.update!(claim_route: @claim_track.route_id, status: :process, claim_filed: 0, processing: 0, approval: 0, payment: 0)
+        when 2
+          import_product_benefit if @process_claim.documentation_review?
+          @process_claim.update!(claim_route: @claim_track.route_id, status: :process, claim_filed: 1, processing: 0)
+        when 3
+          @process_claim.update!(claim_route: @claim_track.route_id, status: :process, processing: 1)
+        when 8
+          @process_claim.update!(claim_route: @claim_track.route_id, status: :approved, payment: 1)
           ActiveRecord::Base.transaction do
             @process_claim.update!(claim_route: @claim_track.route_id, status: :approved, approval: 1)
 
@@ -275,37 +336,31 @@ class Claims::ProcessClaimsController < ApplicationController
               request = VoucherRequestService.new(@process_claim, @process_claim.get_benefit_claim_total, :claims_payment, current_user, params[:pt].to_sym, account_id)
 
               if request.create_request
-                format.html { redirect_to show_coop_claims_process_claim_path(@process_claim), notice: "#{@process_claim.claim_route.to_s.humanize.titleize} by #{current_user}"  }
+                format.html { redirect_to claims_process_claims_path(@process_claim), notice: "#{@process_claim.claim_route.to_s.humanize.titleize} status"  }
               else
-                format.html { redirect_to show_coop_claims_process_claim_path(@process_claim), alert: "Something went wrong" }
+                format.html { redirect_to claim_process_claims_process_claim_path(@process_claim), alert: "Something went wrong" }
               end
-            end
+            end         
           end
+        when 18
+          @process_claim.update!(claim_route: @claim_track.route_id, status: :denied_due_to_non_compliance)
+        when 19
+          @process_claim.update!(claim_route: @claim_track.route_id, status: :pending)
         else
-          @required_docs = @process_claim.claim_type.claim_type_documents.where(required: true)
-          @uploaded_docs = @process_claim.claim_attachments
-
-          missing_docs = @required_docs.pluck(:id) - @uploaded_docs.pluck(:claim_type_document_id)
-
-          if missing_docs.empty?
-            @process_claim.update_attribute(:claim_route, @claim_track.route_id)
-            format.html { redirect_to show_coop_claims_process_claim_path(@process_claim), notice: "#{@process_claim.claim_route.to_s.humanize.titleize} by #{current_user}"  }
-          else
-            format.html { redirect_to show_coop_claims_process_claim_path(@process_claim), alert: "Please upload the required documents" }
-          end
+          @process_claim.update!(claim_route: @claim_track.route_id)
         end
-
-        format.json { render :show, status: :ok, location: @process_claim }
-      else
-        format.html { render :new, status: :unprocessable_entity }
-        format.json { render json: @process_claim.errors, status: :unprocessable_entity }
+        
+        if current_user.userable_type == "Employee"
+          return redirect_to claim_process_claims_process_claim_path(@process_claim), notice: "#{@process_claim.claim_route.to_s.humanize.titleize} status"
+        else
+          return redirect_to show_coop_claims_process_claim_path(@process_claim), notice: "#{@process_claim.claim_route.to_s.humanize.titleize} status"
+        end
       end
     end
   end
 
-
   def import_product_benefit
-    if @process_claim.claim_type == ClaimType.find_by(name: "Hospital Confinement Claim")
+    if @process_claim.claim_type == Claims::ClaimType.find_by(name: "Hospital Confinement Claim")
       @benefit = Benefit.find_by(name: "Hospital Income Benefit")
       @process_claim.claim_benefits.create(process_claim_id: @process_claim.id, benefit: @benefit, amount: @process_claim.claim_confinements.sum(:amount))
     else
@@ -314,7 +369,7 @@ class Claims::ProcessClaimsController < ApplicationController
         @process_claim.claim_benefits.create(process_claim_id: @process_claim.id, benefit_id: pb.benefit_id, amount: pb.coverage_amount)
       end
     end
-    @batch = Batch.where(coop_member: @process_claim.claimable, agreement_benefit: @process_claim.agreement_benefit)
+    @batch = Batch.where(coop_member: @process_claim.coop_member, agreement_benefit: @process_claim.agreement_benefit)
     @batch.each do |b|
       @process_claim.claim_coverages.create(process_claim: @process_claim, coverageable: b)
     end
@@ -329,7 +384,20 @@ class Claims::ProcessClaimsController < ApplicationController
       if @process_claim.claim_filed?
         redirect_to index_show_claims_process_claims_path(p: 2), notice: "Process claim was successfully updated."
       else
-        redirect_to index_show_claims_process_claims_path(p: 3), notice: "Process claim was successfully updated."
+        redirect_to index_show_process_claims_path(p: 3), notice: "Process claim was successfully updated."
+      end
+    else
+      render :edit, status: :unprocessable_entity
+    end
+  end
+
+  def edit_coop 
+  end
+
+  def update_coop 
+    if @process_claim.update(process_claim_params)
+      if @process_claim.coop_file?
+        redirect_to show_coop_claims_process_claim_path(@process_claim), notice: "Process claim was successfully updated."
       end
     else
       render :edit, status: :unprocessable_entity
@@ -338,10 +406,22 @@ class Claims::ProcessClaimsController < ApplicationController
 
   # DELETE /process_claims/1
   def destroy
-    @coop_member = @process_claim.claimable
+    @coop_member = @process_claim.coop_member
 
     @process_claim.destroy
     redirect_to show_insurance_coop_member_path(@coop_member), alert: "Claim cancelled"
+  end
+
+  def claims_dashboard 
+    @user_levels = current_user.user_levels.where(active: 1) if current_user
+    @for_evaluation = Claims::ProcessClaim.where(claim_route: get_route_evaluators) if current_user.userable_type == "Employee" 
+    # unless @claims_user_authority_level == "Claims Evaluator" ||  @claims_user_authority_level == "COSO (Approver)" || @claims_user_authority_level == "President (Approver)"
+    #   @for_evaluation = Claims::ProcessClaim.where(claim_route: 3)
+    # end
+    @coop_messages = Claims::ClaimRemark.where(coop: 1)
+    @process_claims = Claims::ProcessClaim.all
+    # end
+    # raise "errors"
   end
 
   private
@@ -349,19 +429,21 @@ class Claims::ProcessClaimsController < ApplicationController
   def set_process_claim
     @process_claim = Claims::ProcessClaim.find(params[:id])
     @loan_batch = @process_claim.loan_batch if @process_claim.loan_batch.present?
+    
   end
 
   # Only allow a list of trusted parameters through.
   def process_claim_params
-    params.require(:claims_process_claim).permit(:coop_bank, :claim_type_nature_id, :cooperative_id, :claim_route, :agreement_id, :agreement_benefit_id, :batch_id, :claimable_id, :cause_id, :claim_type_id, :date_file, :claim_filed, :processing, :approval, :payment, :claimable_type, :date_incident, :entry_type, :claimant_name, :claimant_email, :claimant_contact_no, :nature_of_claim, :agreement_benefit_id, :relationship,
+    params.require(:claims_process_claim).permit(:coop_bank, :claim_type_nature_id, :cooperative_id, :coop_member_id, :claim_route, :agreement_id, :agreement_benefit_id, :batch_id, :coop_member_id, :cause_id, :claim_type_id, :date_file, :claim_filed, :processing, :approval, :payment, :coop_member_type, :date_incident, :entry_type, :claimant_name, :claimant_email, :claimant_contact_no, :nature_of_claim, :agreement_benefit_id, :relationship,
       claim_documents_attributes: [:id, :document, :document_type, :_destroy],
       process_tracks_attributes: [:id, :description, :route_id, :trackable_type, :trackable_id ],
       claim_benefits_param: [:id, :benefit_id, :amount, :status],
-      claim_cause_attributes: [:id, :acd, :ucd, :osccd, :icd],
+      claim_cause_attributes: [:id, :acd, :ucd, :osccd, :icd, :postmortem, :cause_of_incident],
       claim_coverage_attributes: [:id, :amount_benefit, :coverage_type, :coverageale],
       claim_remark_attributes: [:id, :user_id, :status, :remark, :coop, :read],
       claim_attachment_attributes: [:id, :claim_type_id, :doc],
-      claim_confinement_attributes: [:id, :date_admit, :date_discharge, :terms, :amount])
+      claim_confinement_attributes: [:id, :date_admit, :date_discharge, :terms, :amount],
+      claim_reinsurance_attributes: [:id, :status])
   end
 
   def set_dummy_value

@@ -18,5 +18,13 @@
       <%= content_tag :dt, 'ICD', class: "col-sm-2" %>
       <%= content_tag :dd, @process_claim.claim_cause.icd, class: "col-sm-10" %>
     <% end %>
+    <% unless @process_claim.claim_cause.postmortem == "" %>
+      <%= content_tag :dt, 'POSTMORTEM CERTIFICATION OF DEATH', class: "col-sm-2" %>
+      <%= content_tag :dd, @process_claim.claim_cause.postmortem, class: "col-sm-10" %>
+    <% end %>
+    <% unless @process_claim.claim_cause.cause_of_incident == "" %>
+      <%= content_tag :dt, 'Cause of Incident', class: "col-sm-2" %>
+      <%= content_tag :dd, @process_claim.claim_cause.cause_of_incident, class: "col-sm-10" %>
+    <% end %>
   <% end %>
 </dl>

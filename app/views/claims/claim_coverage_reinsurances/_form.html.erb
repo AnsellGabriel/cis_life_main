@@ -1,0 +1,18 @@
+<%= simple_form_for(@claim_coverage_reinsurance, url: url, method: meth) do |f| %>
+    <%= f.error_notification %>
+    <%= f.error_notification message: f.object.errors[:base].to_sentence if f.object.errors[:base].present? %>
+    <div class="form-inputs mb-3">
+        <%= f.association :reinsurer, label_method: :short_name %>
+        <%= f.hidden_field :claim_coverage_id %>
+        <div class="row">
+            <%= f.input :ri_reported, label: "Amount Reported", wrapper_html: { class: "col-md-6" } %>
+            <%= f.input :amount, label: "Amount Covered", wrapper_html: { class: "col-md-6" } %>
+        </div>
+    </div>
+    <br>
+    <div class="form-actions text-end">
+        <%= link_to "Delete", @claim_coverage_reinsurance, class: "btn btn-danger", method: :delete, data: { "turbo-method": :delete, turbo_confirm: "Are you sure?" } %>
+        <%= link_to "Back", claims_claim_coverage_reinsurance_path(@claim_reinsurance), class: "btn btn-secondary" %>
+        <%= f.button :submit, class: "btn btn-success", value: "Submit" %>
+    </div>
+<% end %>

@@ -2,6 +2,10 @@
 class Claims::ClaimAttachmentsController < ApplicationController
   before_action :set_claim_attachment, only: %i[ edit update destroy ]
 
+  def document_request 
+    
+  end
+  
   def new
     @process_claim = Claims::ProcessClaim.find(params[:p])
     @claim_type_document = Claims::ClaimTypeDocument.find(params[:d])

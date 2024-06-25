@@ -13,18 +13,18 @@
         <h5 class="card-header">Member Details</h5>
         <div class="card-body">
           <dl class="row">
-            <dt class="col-sm-4">Type</dt>
-            <dd class="col-sm-8"><%= @process_claim.claimable_type %></dd>
+            <dt class="col-sm-4">Cooperative</dt>
+            <dd class="col-sm-8"><%= @process_claim.cooperative %></dd>
             <dt class="col-sm-4">Name:</dt>
-            <dd class="col-sm-8 text-primary"><%= @process_claim.claimable.get_fullname %></dd>
+            <dd class="col-sm-8 text-primary"><%= @process_claim.coop_member.get_fullname %></dd>
             <dt class="col-sm-4">Birthdate</dt>
-            <dd class="col-sm-8"> <%= to_shortdate(@process_claim.claimable.member.birth_date) %></dd>
+            <dd class="col-sm-8"> <%= to_shortdate(@process_claim.coop_member.member.birth_date) %></dd>
             <dt class="col-sm-4">Branch:</dt>
-            <dd class="col-sm-8"><%= @process_claim.claimable.coop_branch %></dd>
+            <dd class="col-sm-8"><%= @process_claim.coop_member.coop_branch %></dd>
             <dt class="col-sm-4">Mobile number:</dt>
-            <dd class="col-sm-8"><%= @process_claim.claimable.member.mobile_number %></dd>
+            <dd class="col-sm-8"><%= @process_claim.coop_member.member.mobile_number %></dd>
             <dt class="col-sm-4">Email:</dt>
-            <dd class="col-sm-8"><%= @process_claim.claimable.member.email %> </dd>
+            <dd class="col-sm-8"><%= @process_claim.coop_member.member.email %> </dd>
           </dl>
         </div>
       </div>
@@ -42,8 +42,7 @@
           <div class="row">
             <%= f.hidden_field :agreement_id %>
             <%= f.hidden_field :cooperative_id %>
-            <%= f.hidden_field :claimable_id %>
-            <%= f.hidden_field :claimable_type %>
+            <%= f.hidden_field :coop_member_id %>
             <%= f.input :date_file, label: "Date Filed", as: :string, wrapper_html: { class: "col-md-6" }, 
               input_html: { data: { controller: "flatpickr",
                   flatpickr_max_date: Time.zone.now,
@@ -54,26 +53,24 @@
                   flatpickr_max_date: Time.zone.now,
                   flatpickr_next_arrow: "Next",
                   flatpickr_prev_arrow: "Prev" } } %>
-            <%= f.association :claim_type, prompt: "Select claim type", collection: ClaimType.order(:name), wrapper_html: { class: 'col-md-6' } %>
+            <%= f.association :claim_type, prompt: "Select claim type", collection: Claims::ClaimType.order(:name), wrapper_html: { class: 'col-md-6' } %>
             <%= f.association :cause, prompt: "Select a cause", collection: Claims::Cause.order(:name), wrapper_html: { class: 'col-md-6' } %>
             <%= f.association :claim_type_nature, label: "Nature of claim", prompt: "Select a nature of claim", collection: Claims::ClaimTypeNature.order(:name) %>
             <%#= f.association :agreement, prompt: "Select agreement", collection: Agreement.where(cooperative: @process_claim.cooperative) %>
             <%#= f.association :agreement, prompt: "Select agreement", collection: @agreement %>
-            <div class="row" data-controller="geography">
-              <%#= f.association :agreement, prompt: "Select agreement", collection: @process_claim.cooperative.agreements %>
-              <%= f.association :agreement, label: "Agreement", prompt: "Select a Agreement", input_html: { class: 'form-select', data: { action: "change->agreements#search_agreement" } } %>
-              <%= f.association :agreement_benefit, label: "Agreement Benefit", input_html: { class: 'form-select', id: 'agreement_id', data: { agreements_target: "agreementSelect" } }  %>
-            </div>
             <div data-controller="agreements">
-              <%#= f.association  %>
-              <%#= f.association :agreement_benefit, label: "Agreement Benefit", wrapper_html: { class: "col col-md-3" }, input_html: { class: 'form-select', id: 'barangay_id', data: { geographs_target: "agreementSelect" } }  %>
+              <%#= f.association :agreement, prompt: "Select agreement", collection: @process_claim.cooperative.agreements %>
+              <%= f.association :agreement, label: "Agreement", prompt: "Select a Agreement",collection: Agreement.where(cooperative_id: @process_claim.cooperative_id), input_html: { class: 'form-select', data: { action: "change->agreements#search_agreement" } } %>
+              <%= f.association :agreement_benefit, label: "Agreement Benefit", input_html: { class: 'form-select', id: 'agreement_id', data: { agreements_target: "agreementSelect" } }  %>
             </div>
           </div>
           <%= f.simple_fields_for :claim_cause do |cc| %>
+            <%= cc.input :icd, label: "ICD" %>
             <%= cc.input :acd, label: "ACD" %>
             <%= cc.input :ucd, label: "UCD" %>
-            <%= cc.input :icd, label: "ICD" %>
             <%= cc.input :osccd, label: "OSCCD" %>
+            <%= cc.input :postmortem, label: "POSTMORTEM CERTIFICATION OF DEATH" %>
+            <%= cc.input :cause_of_incident, label: "CAUSE OF INCIDENT" %>
             <%#= render 'question_fields', f: builder %>
           <% end %>
         </div>

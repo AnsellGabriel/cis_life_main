@@ -37,13 +37,33 @@ Rails.application.routes.draw do
   resources :reinsurances do
     get :reserves_index, on: :collection
   end
-  namespace :claims do
-    resources :claim_types, :claim_type_documents, :claim_type_benefits, :claim_confinements, :claim_benefits, :claim_coverages, :claim_distributions, :claim_type_natures, :claim_documents
+  namespace :claims do 
+    resources :claim_types, :claim_documents, :claim_type_benefits, :claim_confinements, :claim_benefits, :claim_coverages, :claim_distributions, :claim_type_natures, :claim_type_agreements
+    
+    resources :cf_accounts do 
+      get :index_critical, to: "cf_accounts#index_critical", on: :collection
+    end
+
+    resources :cf_replenishes do 
+      get :update_status, to: "cf_replenishes#update_status", on: :member
+    end
+    resources :cf_availments do 
+      get :update_status, to: "cf_availments#update_status", on: :member
+    end
+    resources :claim_coverage_reinsurances do 
+      get :claim_reinsurance_create, to: "claim_coverage_reinsurances#claim_reinsurance_create", as: "claim_ri_create", on: :collection
+      get :claim_reinsurance_update, to: "claim_coverage_reinsurances#claim_reinsurance_update", as: "claim_ri_update", on: :member
+    end
+
     resources :causes do
       post 'create_cause', to: "causes#create"
     end
     resources :claim_attachments do
       get :attach_new_doc, on: :collection
+    end
+
+    resources :claim_type_documents do 
+      get :document_request, to: "claim_type_documents#document_request", on: :member
     end
 
     resources :process_claims do
@@ -58,9 +78,12 @@ Rails.application.routes.draw do
       get :update_status, on: :member
       get :new_ca, to: "process_claims#new_ca", on: :collection
       get :edit_ca, to: "process_claims#edit_ca", on: :member
+      get :edit_coop, to: "process_claims#edit_coop", on: :member
       post :create_ca, to: "process_claims#create_ca", on: :collection
       patch :update_ca, to: "process_claims#update_ca", on: :member
+      patch :update_coop, to: "process_claims#update_coop", on: :member
       get :print_sheet, to: "process_claims#print_sheet", on: :member
+      get :claims_dashboard, to: "process_claims#claims_dashboard", on: :collection
       get :approve_claim_debit, on: :member
       # get :claimable, on: :collection
       resources :remarks
@@ -71,6 +94,7 @@ Rails.application.routes.draw do
       post :create_status, to: "claim_remarks#create_status", on: :collection
       get :message_history, to: "claim_remarks#message_history", on: :collection
       get :read_message, on: :member
+      get :unread_messages, on: :collection
     end
   end
 
@@ -98,6 +122,14 @@ Rails.application.routes.draw do
     get :show_fields, on: :member
   end
 
+  resources :dashboards do 
+    get :actuarial, on: :collection
+    get :claims, on: :collection
+    get :mis, on: :collection
+    get :coop, on: :collection
+    get :treasury, on: :collection
+    get :accounting, on: :collection
+  end
 
   resources :user do
     get :approved, on: :member
