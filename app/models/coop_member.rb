@@ -74,4 +74,13 @@ class CoopMember < ApplicationRecord
     # Filter the group_remits with a status of "paid"
     paid_group_remits.present?
   end
+
+  def get_max_effectivity(ri_start, ri_end)
+    dates = loan_batches.where.not(loan_insurance_batches: { status: [:terminated, :expired] }).where("(loan_insurance_batches.effectivity_date <= ? and loan_insurance_batches.expiry_date >= ?) OR (loan_insurance_batches.effectivity_date <= ? and loan_insurance_batches.expiry_date >= ?)", ri_start, ri_start, ri_end, ri_end).pluck(:effectivity_date)
+    dates.max
+  end
+  
+  def get_ri_batches(ri_start, ri_end)
+    loan_batches.where.not(loan_insurance_batches: { status: [:terminated, :expired] }).where("(loan_insurance_batches.effectivity_date <= ? and loan_insurance_batches.expiry_date >= ?) OR (loan_insurance_batches.effectivity_date <= ? and loan_insurance_batches.expiry_date >= ?)", ri_start, ri_start, ri_end, ri_end)
+  end
 end
