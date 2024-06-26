@@ -35,6 +35,9 @@ module BatchesLoader
       else
         @f_batches = batches_eager_loaded
       end
+      if params[:substandard].present?
+        @f_batches = batches_eager_loaded.where(substandard: true)
+      end
     end
 
     def paginate_batches

@@ -444,6 +444,7 @@ Rails.application.routes.draw do
     get :modal_remarks, on: :member
     get :psheet, on: :member
     get :cov_list, on: :collection
+    get :substandard_batches, on: :collection
     patch :update_batch_selected, on: :collection
     get :transfer_to_md, on: :member
     get :und, on: :collection
@@ -453,7 +454,6 @@ Rails.application.routes.draw do
 
   get "product_csv", to: "process_coverages#product_csv"
   get "ri_csv", to: "reinsurances#ri_csv"
-  get "preview", to: "process_coverages#preview"
   get "download", to: "process_coverages#download"
   get "process_coverages/pdf/:id", to: "process_coverages#pdf", as: "pc_pdf"
 

@@ -21,7 +21,8 @@
 			<div class="<%= flex_justify_align('','center',true) %> ps-6">
 				<div class="d-flex flex-column mb-1">
 					<%= content_tag :span, 
-              "#{to_curr(batch.loan_amount)}", class: "text-primary sm-green-text"
+              "#{to_curr(batch.loan_amount)}", 
+							class: batch.adjusted_cov > 0 ? "text-secondary sm-green-text" : "text-primary sm-green-text"
           %>
 					<% if batch.adjusted_cov > 0 %>
 						<%= content_tag :span, "#{to_curr(batch.adjusted_cov)}", class: "text-warning sm-green-text" %>
@@ -56,7 +57,7 @@
               class: "text-secondary sm-green-text"
           %>
 					<% if batch.adjusted_prem > 0 %>
-						<%= content_tag :span, "#{to_curr(batch.adjusted_prem)}", class: "text-warning sm-green-text" %>
+						<%= content_tag :span, "#{to_curr(batch.adjusted_prem)}", class: "text-primary sm-green-text" %>
 					<% end %>
 					<% if current_user.is_mis? and batch.system_premium != batch.premium and !batch.system_premium.nil? %>
 						<%= content_tag :span, 
@@ -81,7 +82,7 @@
 						<% end %>
 							<%= content_tag :span, 
 									"(#{to_curr(batch.unused)})", 
-									class: "text-secondary sm-green-text"
+									class: batch.adjusted_unuse > 0 ? "text-primary sm-green-text" : "text-secondary sm-green-text"
 							%>
 							<% if current_user.is_mis? and batch.system_unused != batch.unused and !batch.system_unused.nil? %>
 								<%= content_tag :span, 
@@ -91,7 +92,7 @@
 							<% end %>
 
 							<% if batch.adjusted_unuse > 0 %>
-								<%= content_tag :span, "#{to_curr(batch.adjusted_unuse)}", class: "text-warning sm-green-text" %>
+								<%= content_tag :span, "#{to_curr(batch.adjusted_unuse)}", class: "text-primary sm-green-text" %>
 							<% end %>
 
 							<% if batch.excess > 0 %>
@@ -113,10 +114,10 @@
 				<div class="d-flex flex-column mb-1">
 					<%= content_tag :span, 
               "#{to_curr(batch.premium_due)}", 
-              class: "text-primary sm-green-text"
+              class: batch.adjusted_premium_due > 0 ? "text-secondary sm-green-text" : "text-primary sm-green-text"
           %>
 					<% if batch.adjusted_premium_due > 0 %>
-						<%= content_tag :span, "#{to_curr(batch.adjusted_premium_due)}", class: "text-warning sm-green-text" %>
+						<%= content_tag :span, "#{to_curr(batch.adjusted_premium_due)}", class: "text-primary sm-green-text" %>
 					<% end %>
 				</div>
 			</div>

@@ -35,7 +35,7 @@
 	<% #if batch.substandard == false && batch.batch_remarks.where(status: [:prem_adjust, :cov_adjust]).count > 0 %>
 	<% if batch.substandard == true && batch.adjusted_coverages.count > 0 %>
 		<%= link_to adjusted_loan_insurance_batch_path(batch),
-				class: small_btn('warning'),
+				class: small_btn('outline-primary'),
 				title: "Substandard",
 				data: { turbo_frame: "modal-xl"} do %>
 					<%= bootstrap_icon "plus-slash-minus" %>

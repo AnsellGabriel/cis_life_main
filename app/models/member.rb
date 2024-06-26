@@ -70,7 +70,9 @@ class Member < ApplicationRecord
 
     if total_loan_amount >= retention
       self.coop_members.each do |cm|
-        cm.loan_batches.where("(loan_insurance_batches.effectivity_date <= ? and loan_insurance_batches.expiry_date >= ?) OR (loan_insurance_batches.effectivity_date <= ? and loan_insurance_batches.expiry_date >= ?)", ri_start, ri_start, ri_end, ri_end).each do |batch|
+        latest_date = cm.get_max_effectivity(ri_start, ri_end)
+        # cm.loan_batches.where.not(loan_insurance_batches: { status: [:terminated, :expired] }).where("(loan_insurance_batches.effectivity_date <= ? and loan_insurance_batches.expiry_date >= ?) OR (loan_insurance_batches.effectivity_date <= ? and loan_insurance_batches.expiry_date >= ?)", ri_start, ri_start, ri_end, ri_end).each do |batch|
+        cm.get_ri_batches(ri_start, ri_end).each do |batch|
           ri_date = batch.reinsurance_batches.find_by(batch: batch).nil? ? ri.reinsurance.date_from : batch.reinsurance_batches.find_by(batch: batch).ri_date
 
           # ri.batches << batch
