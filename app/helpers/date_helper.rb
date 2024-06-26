@@ -14,6 +14,10 @@ module DateHelper
     date.present? ? date.strftime('%b %d, %Y') : "-"
   end
 
+  def format_date_with_time(datetime)
+    datetime.strftime("%B %d, %Y %I:%M %p") if datetime.present?
+  end
+
   def month_day_year(date)
     if date == "-"
       date

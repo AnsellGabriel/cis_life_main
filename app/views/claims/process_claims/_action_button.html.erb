@@ -3,7 +3,6 @@
     <% if current_user.userable_type == "CoopUser" %>
       <%= link_to '<i class="bi bi-arrow-left-square"></i> Back'.html_safe, index_coop_claims_process_claims_path, class: 'btn btn-outline-secondary btn-sm' %>
     <% elsif current_user.is_auditor? %>
-      <%= link_to '<i class="bi bi-arrow-left-square"></i> Back'.html_safe, accounting_check_path(@process_claim.voucher_request.vouchers.last), class: 'btn btn-outline-secondary btn-sm' %>
     <% elsif current_user.userable_type == "Employee"%>
       <%= link_to '<i class="bi bi-chevron-left"></i>'.html_safe, index_show_claims_process_claims_path(p: @process_claim.claim_route), class: 'btn btn-outline-secondary btn-sm'  %>
       <% if @audit_remarks.present? %>
@@ -37,7 +36,7 @@
   </div>
   <div class="col-md-4">
     <div class="text-end">
-      <% if @process_claim.processing? && current_user.userable_type == "Employee" %>
+      <% if @process_claim.processing? && current_user.is_claims? %>
         <% if validate_evaluator(@process_claim) %>
           <% if @process_claim.reconsider? %>
             <%= link_to '<i class="bi bi-check-circle"></i> Approve'.html_safe, claim_route_claims_process_claim_path(s: 2), class: "btn btn-success btn-sm", data: {turbo_confirm: "Do you want to approve?", turbo_method: :get}  %>
@@ -64,4 +63,3 @@
     </div>
   </div>
 </div>
-<% console %>

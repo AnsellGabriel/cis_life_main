@@ -1,0 +1,16 @@
+
+<%= simple_form_for(@accounting_account_beginning_balance) do |f| %>
+  <%= f.error_notification %>
+  <%= f.error_notification message: f.object.errors[:base].to_sentence if f.object.errors[:base].present? %>
+
+  <div class="form-inputs mb-3">
+    <%= f.association :account %>
+    <%= f.input :balance %>
+    <%= f.input :year %>
+  </div>
+
+  <div class="form-actions text-end">
+    <%= link_to "Back", accounting_account_beginning_balances_path, class: 'btn btn-secondary' %>
+    <%= f.button :submit, class: 'btn-success' %>
+  </div>
+<% end %>

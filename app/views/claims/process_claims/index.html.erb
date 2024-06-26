@@ -29,7 +29,7 @@
     <% @process_claims.each do |process_claim| %>
       <tr>
         <th scope="row"><%= process_claim.id %></th>
-        <td><strong><%= process_claim.coop_member.get_fullname %></strong> <br>
+        <td><strong><%= process_claim.coop_member&.get_fullname %></strong> <br>
           <%= process_claim.cooperative %> <br>
           <small><%= process_claim.agreement.agent %></small> <br>
           <small>

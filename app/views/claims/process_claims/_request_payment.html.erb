@@ -10,7 +10,10 @@
           <%= link_to '<i class="bi bi-card-heading"></i> Request Payment - Check'.html_safe, claim_route_claims_process_claim_path(p: 8, pt: "check_voucher"), class: "btn btn-light btn-sm mb-3", data: {turbo_confirm: "Approve claim and request check voucher?", turbo_method: :get}  %>
           <br>
         <% end %>
+        
         <%  if @voucher.nil? || @voucher.is_a?(Accounting::DebitAdvice)%>
+          <%= link_to '<i class="bi bi-safe2"></i> Request Payment - Bank Transfer'.html_safe, approve_claim_debit_claims_process_claim_path(@process_claim, bank_transfer: true), class: "btn btn-light btn-sm mb-3", data: {turbo_frame: "reg_form_modal", turbo_method: :get}  %>
+          <br>
           <%= link_to '<i class="bi bi-safe2"></i> Request Payment - Debit Advice'.html_safe, approve_claim_debit_claims_process_claim_path(@process_claim), class: "btn btn-light btn-sm", data: {turbo_frame: "reg_form_modal", turbo_method: :get}  %>
         <% end %>
     </div>

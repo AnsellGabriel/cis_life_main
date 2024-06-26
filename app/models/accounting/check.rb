@@ -12,6 +12,10 @@ class Accounting::Check < Accounting::Voucher
     "CV#{self.voucher}"
   end
 
+  def payment_type
+    'Check Voucher'
+  end
+
   def entry_type
     'cv'
   end

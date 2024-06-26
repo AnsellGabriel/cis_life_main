@@ -89,13 +89,13 @@ class Accounting::DebitAdvicesController < ApplicationController
       return
     end
 
-    @debit_advice.attachment ||= @debit_advice.build_attachment
-    @debit_advice.attachment.receipt = file
+    @debit_advice.build_attachment(receipt: file)
+    # @debit_advice.attachment.receipt = file
 
     if @debit_advice.attachment.save
       redirect_to accounting_debit_advice_path(@debit_advice), notice: 'File uploaded'
     else
-      redirect_to accounting_debit_advice_path(@debit_advice), alert: 'Failed to upload file'
+      redirect_to accounting_debit_advice_path(@debit_advice), alert: 'Failed to upload file, please only upload: jpg, jpeg, png, pdf files'
     end
   end
 

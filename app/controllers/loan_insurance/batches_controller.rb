@@ -145,13 +145,13 @@ class LoanInsurance::BatchesController < ApplicationController
   def accept_adjustment
     @adjusted = AdjustedCoverage.find(params[:ac])
     @batch.adjustment(params[:type], current_user, @adjusted)
-    
+
     respond_to do |format|
       if @batch.save
         msg = params[:type] == "prem" ? "Premium adjustment accepted" : "Coverage adjustment accepted"
-        format.html { redirect_to @batch.group_remit, notice: msg } 
+        format.html { redirect_to @batch.group_remit, notice: msg }
       else
-        format.html { redirect_to @batch.group_remit, alert: "Coverage not adjusted." } 
+        format.html { redirect_to @batch.group_remit, alert: "Coverage not adjusted." }
       end
     end
   end
@@ -179,10 +179,15 @@ class LoanInsurance::BatchesController < ApplicationController
         @batch.update!(batch_params)
         @batch.rate = nil
         # result = @batch.process_batch
-        result = @batch.process_batch(params[:loan_insurance_batch][:encoded_premium], current_user)
+        encoded_prem =  params.dig(:loan_insurance_batch, :encoded_premium).presence&.to_f
+        encoded_unused =  params.dig(:loan_insurance_batch, :encoded_unused).presence&.to_f
+        result = @batch.process_batch(encoded_prem, current_user, encoded_unused)
 
-        if result == :no_rate_for_amount
-          raise ActiveRecord::RangeError
+        case result
+         when :no_rate_for_amount
+           raise ActiveRecord::RangeError
+         when :no_dates
+           raise ActiveRecord::RecordInvalid
         end
 
         @batch.save!
@@ -191,6 +196,8 @@ class LoanInsurance::BatchesController < ApplicationController
       end
     rescue ActiveRecord::RangeError => e
       @batch.errors.add(:loan_amount, "doesn't have a rate available")
+      render :edit, status: :unprocessable_entity
+    rescue ActiveRecord::RecordInvalid => e
       render :edit, status: :unprocessable_entity
     end
 

@@ -12,6 +12,16 @@
 
 
 ActiveRecord::Schema[7.0].define(version: 2024_06_23_020832) do
+  create_table "accounting_journal_entries", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+    t.string "journable_type", null: false
+    t.bigint "journable_id", null: false
+    t.bigint "journal_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["journable_type", "journable_id"], name: "index_accounting_journal_entries_on_journable"
+    t.index ["journal_id"], name: "index_accounting_journal_entries_on_journal_id"
+  end
+
   create_table "accounting_vouchers", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.date "date_voucher"
     t.string "voucher"
@@ -40,7 +50,17 @@ ActiveRecord::Schema[7.0].define(version: 2024_06_23_020832) do
     t.index ["treasury_account_id"], name: "index_accounting_vouchers_on_treasury_account_id"
   end
 
-  create_table "action_text_rich_texts", charset: "utf8mb4", force: :cascade do |t|
+  create_table "accounts_beginning_balances", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+    t.bigint "account_id", null: false
+    t.decimal "debit", precision: 15, scale: 2
+    t.decimal "credit", precision: 15, scale: 2
+    t.integer "year"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["account_id"], name: "index_accounts_beginning_balances_on_account_id"
+  end
+
+  create_table "action_text_rich_texts", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.string "name", null: false
     t.text "body", size: :long
     t.string "record_type", null: false
@@ -410,7 +430,7 @@ ActiveRecord::Schema[7.0].define(version: 2024_06_23_020832) do
   create_table "cf_ledgers", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.string "ledgerable_type", null: false
     t.bigint "ledgerable_id", null: false
-    t.bigint "cf_account_id", null: false
+    t.bigint "cf_account_id"
     t.integer "entry_type"
     t.decimal "amount", precision: 18, scale: 2
     t.datetime "transaction_date"
@@ -545,10 +565,12 @@ ActiveRecord::Schema[7.0].define(version: 2024_06_23_020832) do
   end
 
   create_table "claim_documents", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
-    t.string "name"
-    t.string "description"
+    t.bigint "process_claim_id", null: false
+    t.string "document"
+    t.integer "document_type"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.index ["process_claim_id"], name: "index_claim_documents_on_process_claim_id"
   end
 
   create_table "claim_payments", charset: "utf8mb4", force: :cascade do |t|
@@ -748,7 +770,7 @@ ActiveRecord::Schema[7.0].define(version: 2024_06_23_020832) do
     t.date "demo_date"
     t.integer "time_slot"
     t.text "remarks"
-    t.integer "status"
+    t.integer "satus"
     t.integer "method"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
@@ -1056,6 +1078,7 @@ ActiveRecord::Schema[7.0].define(version: 2024_06_23_020832) do
     t.decimal "adjusted_coop_sf", precision: 10, scale: 2, default: "0.0"
     t.decimal "adjusted_agent_sf", precision: 10, scale: 2, default: "0.0"
     t.decimal "adjusted_premium_due", precision: 10, scale: 2, default: "0.0"
+    t.decimal "system_unused", precision: 15, scale: 2, default: "0.0"
     t.index ["coop_member_id"], name: "index_loan_insurance_batches_on_coop_member_id"
     t.index ["group_remit_id"], name: "index_loan_insurance_batches_on_group_remit_id"
     t.index ["loan_insurance_loan_id"], name: "index_loan_insurance_batches_on_loan_insurance_loan_id"
@@ -1117,7 +1140,7 @@ ActiveRecord::Schema[7.0].define(version: 2024_06_23_020832) do
     t.index ["agreement_id"], name: "index_loan_insurance_rates_on_agreement_id"
   end
 
-  create_table "loan_insurance_rates_copy1", charset: "utf8mb4", force: :cascade do |t|
+  create_table "loan_insurance_rates_copy1", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.integer "min_age"
     t.integer "max_age"
     t.decimal "monthly_rate", precision: 5, scale: 2
@@ -1655,9 +1678,11 @@ ActiveRecord::Schema[7.0].define(version: 2024_06_23_020832) do
     t.index ["requestable_type", "requestable_id"], name: "index_voucher_requests_on_requestable"
   end
 
+  add_foreign_key "accounting_journal_entries", "accounting_vouchers", column: "journal_id"
   add_foreign_key "accounting_vouchers", "employees"
   add_foreign_key "accounting_vouchers", "treasury_accounts"
   add_foreign_key "accounting_vouchers", "voucher_requests", column: "request_id"
+  add_foreign_key "accounts_beginning_balances", "treasury_accounts", column: "account_id"
   add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
   add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
   add_foreign_key "agreements_coop_members", "agreements"
@@ -1675,10 +1700,10 @@ ActiveRecord::Schema[7.0].define(version: 2024_06_23_020832) do
   add_foreign_key "cf_availments", "cf_accounts"
   add_foreign_key "cf_availments", "process_claims"
   add_foreign_key "cf_availments", "users"
-  add_foreign_key "cf_ledgers", "cf_accounts"
   add_foreign_key "claim_attachments", "claim_type_documents"
   add_foreign_key "claim_attachments", "process_claims"
   add_foreign_key "claim_causes", "process_claims"
+  add_foreign_key "claim_documents", "process_claims"
   add_foreign_key "claim_payments", "process_claims"
   add_foreign_key "claim_remarks", "process_claims"
   add_foreign_key "claim_remarks", "users"
@@ -1715,6 +1740,7 @@ ActiveRecord::Schema[7.0].define(version: 2024_06_23_020832) do
   add_foreign_key "loan_insurance_details", "loan_insurance_retentions"
   add_foreign_key "loan_insurance_loans", "cooperatives"
   add_foreign_key "loan_insurance_rates", "agreements"
+  add_foreign_key "loan_insurance_rates_copy1", "agreements", name: "loan_insurance_rates_copy1_ibfk_1"
   add_foreign_key "member_dependents", "members"
   add_foreign_key "process_claims", "agreement_benefits"
   add_foreign_key "process_claims", "agreements"

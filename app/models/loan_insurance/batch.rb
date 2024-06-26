@@ -1,5 +1,7 @@
 class LoanInsurance::Batch < Batch
   attr_accessor :encoded_premium
+  attr_accessor :encoded_unused
+
   include CoverageStatus
   self.table_name = "loan_insurance_batches"
 
@@ -84,7 +86,7 @@ class LoanInsurance::Batch < Batch
     self.loan = coop_member.cooperative.loans.find_by(for_sii: true)
   end
 
-  def process_batch(encoded_premium = nil, current_user = nil)
+  def process_batch(encoded_premium = nil, current_user = nil, encoded_unused = nil)
     return :no_dates if effectivity_date.nil? || expiry_date.nil?
 
     agreement = group_remit.agreement
@@ -136,7 +138,7 @@ class LoanInsurance::Batch < Batch
     if self.rate.nil?
       loan_rate
     else
-      calculate_values(agreement, loan_rate, encoded_premium)
+      calculate_values(agreement, loan_rate, encoded_premium, encoded_unused)
       true
     end
   end
@@ -199,7 +201,7 @@ class LoanInsurance::Batch < Batch
         self.adjusted_unuse = 0
         self.adjusted_premium_due = self.adjusted_prem
       end
-      
+
       self.adjusted_agent_sf = calculate_service_fee(self.rate.agent_sf, self.adjusted_prem)
       self.adjusted_coop_sf = calculate_service_fee(self.rate.coop_sf, self.adjusted_prem)
 
@@ -256,8 +258,8 @@ class LoanInsurance::Batch < Batch
     nil
   end
 
-  def calculate_values(agreement, loan_rate, encoded_premium = nil)
-    if encoded_premium.present?
+  def calculate_values(agreement, loan_rate, encoded_premium = nil, encoded_unused = nil)
+    if encoded_premium.present? && encoded_premium != 0
       self.premium = encoded_premium
       self.system_premium = agreement.with_markup? ?  (loan_amount / 1000 ) * (rate_with_markup * terms) : (loan_amount / 1000 ) * ((rate.annual_rate / 12) * terms)
     elsif agreement.with_markup?
@@ -267,12 +269,20 @@ class LoanInsurance::Batch < Batch
       self.premium = (loan_amount / 1000 ) * ((rate.annual_rate / 12) * terms) # use encoded premium by MIS if present
     end
 
+    self.excess = 0 # reset excess value
+
     if unused_loan_id
       previous_batch = LoanInsurance::Batch.find(unused_loan_id)
       previous_batch.update(status: :terminated, terminate_date: self.effectivity_date)
-
       unused_term = compute_terms(previous_batch.expiry_date, effectivity_date)
-      self.unused = (previous_batch.loan_amount / 1000 ) * (rate.monthly_rate * unused_term)
+
+      if encoded_unused && encoded_unused != 0
+        self.unused = encoded_unused
+        self.system_unused = (previous_batch.loan_amount / 1000 ) * (rate.monthly_rate * unused_term)
+      else
+        self.unused = (previous_batch.loan_amount / 1000 ) * (rate.monthly_rate * unused_term)
+      end
+
       self.premium_due = premium - unused
     else
       self.unused = 0

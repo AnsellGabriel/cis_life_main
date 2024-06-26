@@ -38,4 +38,8 @@ class Accounting::Voucher < ApplicationRecord
   def global_payable=(payable)
     self.payable = GlobalID::Locator.locate payable
   end
+
+  def self.ransackable_associations(auth_object = nil)
+    ["payable"]
+  end
 end

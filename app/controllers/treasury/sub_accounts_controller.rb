@@ -17,10 +17,10 @@ class Treasury::SubAccountsController < ApplicationController
     compute_balance
 
     if params[:download_csv] == 'true'
-      @account.general_ledgers.to_csv(current_user.userable.id, @account.id, params[:date_from], params[:date_to])
+      @account.general_ledgers.to_csv(current_user.userable.id, @account.id, params[:date_from], params[:date_to], true)
       flash.now[:notice] = "CSV will be generated and will be ready for download once done"
     elsif params[:download_pdf] == 'true'
-      @account.general_ledgers.to_pdf(current_user.userable.id, @account.id, params[:date_from], params[:date_to])
+      @account.general_ledgers.to_pdf(current_user.userable.id, @account.id, params[:date_from], params[:date_to], true)
       flash.now[:notice] = "PDF will be generated and will be ready for download once done"
     end
   end

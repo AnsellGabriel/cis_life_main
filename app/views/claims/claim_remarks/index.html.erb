@@ -17,7 +17,7 @@
                 <% end %>
                 
                 <em class="text-muted"><%= message.created_at %></em></small> <%= content_tag :span, 'Unread', class: "badge rounded-pill bg-warning text-dark" unless message.read? %> <br>
-                <small class="text-muted">Claim: <%= message.process_claim.coop_member.get_fullname %>| Claim route: <%= message.process_claim.claim_route.humanize %></small> <br>
+                <small class="text-muted">Claim: <%= message.process_claim.coop_member&.get_fullname %>| Claim route: <%= message.process_claim.claim_route.humanize %></small> <br>
                 <strong> <%= link_to message.remark, show_coop_claims_process_claim_path(message.process_claim_id) if current_user.userable_type == "CoopUser" %> 
                     <%= link_to message.remark, claim_process_claims_process_claim_path(message.process_claim_id) if current_user.userable_type == "Employee" %> 
                 </strong></td>
@@ -33,7 +33,7 @@
                 <% end %>
                 
                 <em class="text-muted"><%= message.created_at %></em></small> <%= content_tag :span, 'Unread', class: "badge rounded-pill bg-warning text-dark" unless message.read? %> <br>
-                <small class="text-muted">Claim: <%= message.process_claim.coop_member.get_fullname %>| Claim route: <%= message.process_claim.claim_route.humanize %></small> <br>
+                <small class="text-muted">Claim: <%= message.process_claim.coop_member&.get_fullname %>| Claim route: <%= message.process_claim.claim_route.humanize %></small> <br>
                 <small> <%= link_to message.remark, show_coop_claims_process_claim_path(message.process_claim_id) if current_user.userable_type == "CoopUser" %> 
                     <%= link_to message.remark, claim_process_claims_process_claim_path(message.process_claim_id) if current_user.userable_type == "Employee" %> 
                 </small></td>

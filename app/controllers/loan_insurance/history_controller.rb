@@ -12,10 +12,7 @@ class LoanInsurance::HistoryController < ApplicationController
       "Terms",
       "Release",
       "Maturity",
-      "Premium",
-      "Unused",
-      "Excess",
-      "Premium Due",
+      "Insurance",
       "Status"
     ]
   end

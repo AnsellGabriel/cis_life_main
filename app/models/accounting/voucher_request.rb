@@ -21,7 +21,8 @@ class Accounting::VoucherRequest < ApplicationRecord
 
   enum request_type: {
     claims_payment: 0,
-    refund: 1
+    refund: 1,
+    request: 2
   }
 
   def entry_type

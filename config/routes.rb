@@ -308,6 +308,7 @@ Rails.application.routes.draw do
   # * Finance Module Routes
   # accounting
   namespace :accounting do
+    resources :account_beginning_balances
     resources :debit_advices do
       get :new_receipt, on: :member
       post :upload_receipt, on: :member
