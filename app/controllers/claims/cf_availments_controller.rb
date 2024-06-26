@@ -32,6 +32,7 @@ class Claims::CfAvailmentsController < ApplicationController
     @cf_availment = Claims::CfAvailment.new(cf_availment_params)
     @cf_availment.status = :pending
     @cf_availment.user = current_user
+  
     if @cf_availment.save!
       redirect_to claim_process_claims_process_claim_path(@cf_availment.process_claim), notice: "Claims Fund successfully requested."
     else

@@ -18,7 +18,7 @@
 
         <th scope="row"><%= cf_availment.id %></th>
         <td>
-        <%= cf_availment.process_claim.claimable.get_fullname %> <br>
+        <%= cf_availment.process_claim.coop_member.get_fullname %> <br>
         <small><%= cf_availment.cf_account %></small> <br>
         <small class="text-muted"><%= cf_availment.user %> <span class="badge bg-warning text-dark"><%= cf_availment.status.humanize %></span></small> <br>
         <%= cf_availment.description %></td>
@@ -39,7 +39,7 @@
 
         <th scope="row"><%= cf_availment.id %></th>
         <td>
-        <%= cf_availment.process_claim.claimable.get_fullname %> <br>
+        <%= cf_availment.process_claim.coop_member.get_fullname %> <br>
         <small><%= cf_availment.cf_account %></small> <br>
         <small class="text-muted"><%= cf_availment.user %> <span class="badge bg-primary"><%= cf_availment.status.humanize %></span></small> <br>
         <%= cf_availment.description %></td>

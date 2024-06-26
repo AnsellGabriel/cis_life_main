@@ -9,7 +9,7 @@
     <%#= f.association :user %>
     <div class="alert alert-warning" role="alert">
       <%= @cf_availment.cf_account.cooperative %> <br>
-      <strong>Balance: </strong>
+      <strong>Balance: <%= to_curr(@cf_availment.cf_account.get_balance(Time.now)) %></strong>
     </div>
     <div class="row">
       <%= f.input :transaction_date, label: "Date", as: :string, wrapper_html: { class: "col-md-6" }, 
@@ -27,6 +27,6 @@
 
   <div class="form-actions text-end">
     <%#= link_to "Back", claims_cf_availments_path, class: 'btn btn-secondary' %>
-    <%= f.button :submit, class: 'btn-success' %>
+    <%= f.button :submit, class: 'btn-success', value: "Request Availment" %>
   </div>
 <% end %>

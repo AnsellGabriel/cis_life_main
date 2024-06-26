@@ -27,7 +27,7 @@ class VoucherRequestService
     if @requestable.is_a?(ProcessCoverage)
       "Refund for #{@requestable.group_remit.agreement.plan.acronym} with OR # #{@requestable.group_remit.official_receipt}"
     elsif @requestable.is_a?(Claims::ProcessClaim)
-      "Payment for #{@requestable.agreement.plan.acronym} #{benefit_names} benefit of #{@requestable.claimable.full_name} as per claim date filed #{@requestable.date_file.strftime("%m/%d/%Y")}. Incident Date #{@requestable.date_incident.strftime("%m/%d/%Y")}"
+      "Payment for #{@requestable.agreement.plan.acronym} #{benefit_names} benefit of #{@requestable.coop_member.get_fullname} as per claim date filed #{@requestable.date_file.strftime("%m/%d/%Y")}. Incident Date #{@requestable.date_incident.strftime("%m/%d/%Y")}"
     end
   end
 

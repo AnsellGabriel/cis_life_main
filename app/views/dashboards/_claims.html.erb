@@ -61,7 +61,7 @@
     <div class="col-md-6">
         <div class="row">
             <div class="col-md-6 mb-3">
-                <div class="card text-dark bg-info mb-3">
+                <div class="card text-dark bg-info h-100">
                 <div class="card-body">
                     <% if @for_evaluation.count == 0 %>
                         <h5 class="card-title">Great news,</h5>
@@ -79,7 +79,7 @@
             </div>
             <% unless @claims_user_authority_level.name == "Claims Evaluator" %>
                 <div class="col-md-6 mb-3">
-                    <div class="card border-primary mb-3">
+                    <div class="card border-primary mb-3 h-100">
                         <div class="card-body text-primary">
                             <h5 class="card-title">Messages <i class="bi bi-chat-dots"></i></h5>
                             <% if @coop_messages.where(read: 0).count == 0 %>
@@ -117,6 +117,31 @@
                     </div>
                     <div class="card-footer"><small class="text-muted"> <%= link_to 'See Details <i class="bi bi-box-arrow-right"></i>'.html_safe, index_show_claims_process_claims_path(p: 23), class: "text-muted" %></small></div>
                 </div>
+            </div>
+            <div class="card-group mb-3">
+                <div class="card">
+                    <div class="card-body">
+                    <p class="text-primary card-title">CLAIMS FUND</p>
+                    <h2 class="text-muted"><%= @claims_fund.count %></h2>
+                    </div>
+                    <div class="card-footer"><small class="text-muted"> <%= link_to 'See Details <i class="bi bi-box-arrow-right"></i>'.html_safe, claims_cf_accounts_path, class: "text-muted" %></small></div>
+                </div>
+                <div class="card">
+                    <div class="card-body">
+                    <p class="text-primary card-title">CRITICAL</p>
+                    <h2 class="text-muted"><%= @claims_fund.critical.count %></h2>
+                    </div>
+                    <div class="card-footer"><small class="text-muted"> <%= link_to 'See Details <i class="bi bi-box-arrow-right"></i>'.html_safe, index_critical_claims_cf_accounts_path, class: "text-muted" %></small></div>
+                </div>
+                <div class="card">
+                    <div class="card-body">
+                    <p class="text-primary card-title">REPLENISH</p>
+                    <% cf_replenish = Claims::CfReplenish.where(status: :pending) %>
+                    <h2 class="text-muted"><%= cf_replenish.count %></h2>
+                    </div>
+                    <div class="card-footer"><small class="text-muted"> <%= link_to 'See Details <i class="bi bi-box-arrow-right"></i>'.html_safe, index_show_claims_process_claims_path(p: 1), class: "text-muted" %></small></div>
+                </div>
+                
             </div>
         </div>
         

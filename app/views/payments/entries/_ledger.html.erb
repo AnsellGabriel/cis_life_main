@@ -23,22 +23,24 @@
         <% ledgers.each do |ledger| %>
           <tr>
             <td class="<%= "ps-5" if ledger.credit? %>">
-              <%= ledger.account.name %> 
-              <%= " - #{ledger.sub_account.name}" if ledger.sub_account.present? %> 
+              <div class="<%= flex_justify_align('', 'center')%> gap-1">
+                <span><%= ledger.account.name %></span>
+                <% if entry.pending? and (current_user.is_accountant? or current_user.is_treasurer?) %>
+                  <%= link_to edit_entry_ledger_path(entry, ledger, e_t: entry.entry_type), 
+                    class: small_btn('outline-primary'), 
+                    title: 'Edit entry', data: {turbo_frame: 'modal'} do %>
+                    <i class="bi bi-pencil"></i>
+                  <% end %>
+                  <%= link_to entry_ledger_path(entry, ledger, e_t: entry.entry_type), 
+                    class: small_btn('outline-danger'), 
+                    title: 'Remove entry',
+                    data: {turbo_confirm: 'Remove entry?', turbo_method: :delete} do %>
+                    <i class="bi bi-trash"></i>
+                  <% end %>
+                <% end %>
+              </div>
 
-              <% if entry.pending? and (current_user.is_accountant? or current_user.is_treasurer?) %>
-                <%= link_to edit_entry_ledger_path(entry, ledger, e_t: entry.entry_type), 
-                  class: small_btn('outline-primary'), 
-                  title: 'Edit entry', data: {turbo_frame: 'modal'} do %>
-                  <i class="bi bi-pencil"></i>
-                <% end %>
-                <%= link_to entry_ledger_path(entry, ledger, e_t: entry.entry_type), 
-                  class: small_btn('outline-danger'), 
-                  title: 'Remove entry',
-                  data: {turbo_confirm: 'Remove entry?', turbo_method: :delete} do %>
-                  <i class="bi bi-trash"></i>
-                <% end %>
-              <% end %>
+              <p class="text-secondary small"><%= "#{ledger.sub_account.name}" if ledger.sub_account.present? %></p>
               
             </td>
             <td class="text-end"><%= ledger.debit? ? to_curr(ledger.amount) : 0.00 %></td>

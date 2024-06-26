@@ -10,7 +10,7 @@ class ApplicationController < ActionController::Base
     else
       case current_user.userable_type
       when "Agent" then redirect_to agents_path
-      when "CoopUser" then redirect_to coop_dashboard_path
+      when "CoopUser" then redirect_to coop_dashboards_path
       when "Employee"
 
         if current_user.medical_director?

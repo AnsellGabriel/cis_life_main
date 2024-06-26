@@ -1,5 +1,7 @@
 class Claims::CfAccount < ApplicationRecord
   belongs_to :cooperative
+  has_many :cf_replenishes
+  has_many :cf_availments
 
   def to_s 
     cooperative.name

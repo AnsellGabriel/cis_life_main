@@ -38,8 +38,12 @@ Rails.application.routes.draw do
     get :reserves_index, on: :collection
   end
   namespace :claims do 
-    resources :claim_types, :claim_documents, :claim_type_benefits, :claim_confinements, :claim_benefits, :claim_coverages, :claim_distributions, :claim_type_natures, :claim_type_agreements, :cf_accounts
+    resources :claim_types, :claim_documents, :claim_type_benefits, :claim_confinements, :claim_benefits, :claim_coverages, :claim_distributions, :claim_type_natures, :claim_type_agreements
     
+    resources :cf_accounts do 
+      get :index_critical, to: "cf_accounts#index_critical", on: :collection
+    end
+
     resources :cf_replenishes do 
       get :update_status, to: "cf_replenishes#update_status", on: :member
     end
