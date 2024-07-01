@@ -4,15 +4,10 @@
   <td class="align-middle" >
     <div class="d-flex" style="padding-left: 60px; padding-top: 30px; padding-bottom: 30px;">
       <div class="d-flex flex-column gap-1">
-        
         <div class="">
           <%= render 'batches/batch_status', batch: batch, agreement: agreement %>
         </div>
-        <%= render 'batches/member_details', 
-          batch: batch, 
-          member: batch.member_details, 
-          agreement: agreement
-        %>
+        <%= render 'batches/member_details', batch: batch, member: batch.member_details, agreement: agreement %>
       </div>
     </div>
   </td>
@@ -20,13 +15,8 @@
 		<div class="<%= flex_justify_align('center') %>">
 			<div class="<%= flex_justify_align('','center',true) %> ps-6">
 				<div class="d-flex flex-column mb-1">
-					<%= content_tag :span, 
-              "#{to_curr(batch.loan_amount)}", 
-							class: batch.adjusted_cov > 0 ? "text-secondary sm-green-text" : "text-primary sm-green-text"
-          %>
-					<% if batch.adjusted_cov > 0 %>
-						<%= content_tag :span, "#{to_curr(batch.adjusted_cov)}", class: "text-warning sm-green-text" %>
-					<% end %>
+					<%= content_tag :span, "#{to_curr(batch.loan_amount)}", class: batch.adjusted_cov > 0 ? "text-secondary sm-green-text" : "text-primary sm-green-text" %>
+				  <%= content_tag :span, "#{to_curr(batch.adjusted_cov)}", class: "text-warning sm-green-text" if batch.adjusted_cov > 0 %>
 				</div>
 			</div>
 		</div>
@@ -35,15 +25,9 @@
 		<div class="<%= flex_justify_align('center') %>">
 			<div class="<%= flex_justify_align('','center',true) %> ps-6">
 				<div class="d-flex flex-column mb-1">
-					<%= content_tag :span, 
-              "Effectivity: #{month_day_year(batch.effectivity_date)}", class: "text-secondary sm-green-text"
-          %>
-					<%= content_tag :span, 
-              "Expiry: #{month_day_year(batch.expiry_date)}", class: "text-secondary sm-green-text"
-          %>
-					<%= content_tag :span, 
-              "Terms: #{batch.terms}", class: "text-secondary sm-green-text"
-          %>
+					<%= content_tag :span, "Effectivity: #{month_day_year(batch.effectivity_date)}", class: "text-secondary sm-green-text" %>
+					<%= content_tag :span, "Expiry: #{month_day_year(batch.expiry_date)}", class: "text-secondary sm-green-text" %>
+					<%= content_tag :span, "Terms: #{batch.terms}", class: "text-secondary sm-green-text" %>
 				</div>
 			</div>
 		</div>
@@ -52,60 +36,40 @@
 		<div class="<%= flex_justify_align('center') %>">
 			<div class="<%= flex_justify_align('','center',true) %> ps-6">
 				<div class="<%= flex_justify_align('center', 'center', true) %> mb-1">
-					<%= content_tag :span, 
-              "#{to_curr(batch.premium)}", 
-              class: "text-secondary sm-green-text"
-          %>
-					<% if batch.adjusted_prem > 0 %>
-						<%= content_tag :span, "#{to_curr(batch.adjusted_prem)}", class: "text-primary sm-green-text" %>
-					<% end %>
-					<% if current_user.is_mis? and batch.system_premium != batch.premium and !batch.system_premium.nil? %>
-						<%= content_tag :span, 
-              "Correct premium: #{to_curr(batch.system_premium)}", 
-              class: "text-danger sm-green-text"
-          	%>
-					<% end %>
+					<%= content_tag :span, "#{to_curr(batch.premium)}", class: "text-secondary sm-green-text" %>
+					<%= content_tag :span, "#{to_curr(batch.adjusted_prem)}", class: "text-primary sm-green-text" if batch.adjusted_prem > 0 %>
+					<%= render_incorrect_prem(batch) %>
 				</div>
 			</div>
 		</div>
 	</td>
-	<% if agreement.plan.acronym == "LPPI" %>
-		<% if group_remit.agreement.unusable == true %>
-			<td class="align-middle" >
-				<div class="<%= flex_justify_align('center') %>">
-					<div class="<%= flex_justify_align('','center',true) %> ps-6">
-						<% if batch.unused_loan_id.present? %>
-							<div class="<%= flex_justify_align('center', 'center', true) %> mb-1" style="cursor: pointer"
-									onclick='alert("<%= escape_javascript("Unused loan details:\nLoan type: #{batch.decorate.prev_loan_type}\nLoan amount: #{to_curr(batch.decorate.prev_loan_amount)}\nEffectivity date: #{month_day_year(batch.decorate.prev_loan_eff_date)}") %>")'>
-						<% else %>
-							<div class="<%= flex_justify_align('center', 'center', true) %> mb-1">
-						<% end %>
-							<%= content_tag :span, 
-									"(#{to_curr(batch.unused)})", 
-									class: batch.adjusted_unuse > 0 ? "text-primary sm-green-text" : "text-secondary sm-green-text"
-							%>
-							<% if current_user.is_mis? and batch.system_unused != batch.unused and !batch.system_unused.nil? %>
-								<%= content_tag :span, 
-									"Correct unused: #{to_curr(batch.system_unused)}", 
-									class: "text-danger sm-green-text"
-								%>
-							<% end %>
+	
+	<% if agreement.plan.acronym == "LPPI" and group_remit.agreement.unusable == true %>
+		<td class="align-middle" >
+			<div class="<%= flex_justify_align('center') %>">
+				<div class="<%= flex_justify_align('','center',true) %> ps-6">
+					<div class="<%= flex_justify_align('center', 'center', true) %> mb-1">
+					<%= content_tag :span, "(#{to_curr(batch.unused)})", class: batch.adjusted_unuse > 0 ? "text-primary sm-green-text" : "text-secondary sm-green-text" %>
 
-							<% if batch.adjusted_unuse > 0 %>
-								<%= content_tag :span, "#{to_curr(batch.adjusted_unuse)}", class: "text-primary sm-green-text" %>
-							<% end %>
+					<% if current_user.is_mis? and batch.system_unused != batch.unused and (!batch.system_unused.nil? and batch.system_unused != 0) %>
+						<%= content_tag :span, "Correct unused: #{to_curr(batch.system_unused)}", class: "text-danger sm-green-text" %>
+					<% end %>
 
-							<% if batch.excess > 0 %>
-								<%= content_tag :span, 
-									"Excess: #{to_curr(batch.excess)}", 
-									class: "sm-green-text"
-								%>
-							<% end %>
-						</div>
+					<% if batch.adjusted_unuse > 0 %>
+						<%= content_tag :span, "#{to_curr(batch.adjusted_unuse)}", class: "text-primary sm-green-text" %>
+					<% end %>
+
+					<% if batch.excess > 0 %>
+						<%= content_tag :span, "Excess: #{to_curr(batch.excess)}", class: "sm-green-text" %>
+					<% end %>
+					
+					<% if batch.unused_loan_id.present? and batch.unused_loan_id != 0 %>
+						<%= link_to '(Show)', loan_insurance_batch_path(batch.unused_loan_id, unused: true), data: {turbo_frame: "modal-xl"}, class: 'text-primary sm-green-text' %>
+					<% end %>
 					</div>
 				</div>
-			</td>
-		<% end %>
+			</div>
+		</td>
 	<% end %>
 	
   <td class="align-middle" >

@@ -2,7 +2,7 @@ class Accounting::VoucherRequest < ApplicationRecord
   self.table_name = "voucher_requests"
 
   belongs_to :requestable, polymorphic: true
-  belongs_to :account, class_name: "Treasury::Account", optional: true
+  belongs_to :account, class_name: "CoopBank", optional: true
   has_many :vouchers, class_name: "Accounting::Voucher", foreign_key: :request_id, dependent: :destroy
   has_many :remarks, as: :remarkable, dependent: :destroy
 

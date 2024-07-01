@@ -64,15 +64,13 @@
       </div>
       <% if current_user.is_mis? %>
         <div class="row">
-          <% if batch.unused_loan_id %>
-            <div class="form-floating mb-3 col-md-6" data-controller="number-formatter">
-              <%= f.input :encoded_unused, as: :text, label: false, placeholder: 'Unused Premium', class: 'form-control', wrapper: false, input_html: {class: 'text-primary', data: {number_formatter_target: 'input'}, value: batch.unused }%>
-              <%= f.label :encoded_unused, 'Unused Premium', class: 'ps-4' %>
-            </div>
-          <% end %>
           <div class="form-floating mb-3 col-md-6" data-controller="number-formatter">
             <%= f.input :encoded_premium, as: :text, label: false, placeholder: 'Premium', class: 'form-control', wrapper: false, input_html: {class: 'text-primary', data: {number_formatter_target: 'input'}, value: batch.premium }%>
             <%= f.label :encoded_premium, 'Premium', class: 'ps-4' %>
+          </div>
+          <div class="form-floating mb-3 col-md-6" data-controller="number-formatter" data-loan-form-target="unusedPremium" >
+            <%= f.input :encoded_unused, as: :text, label: false, placeholder: 'Unused Premium', class: 'form-control', wrapper: false, input_html: {class: 'text-primary', data: {number_formatter_target: 'input'}, value: batch.unused }%>
+            <%= f.label :encoded_unused, 'Unused Premium', class: 'ps-4' %>
           </div>
       </div>
       <% end %>

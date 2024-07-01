@@ -53,7 +53,7 @@
 		<% end %>
 
 		<% unless batch.renewal? || batch.terminated? %>
-			<%= link_to edit_loan_insurance_batch_path(batch, group_remit_id: group_remit.id),
+			<%= link_to edit_loan_insurance_batch_path(batch, group_remit_id: group_remit.id, edit: true),
 				data: {turbo_frame: "modal"}, 
 				class: small_btn('outline-primary'), 
 				title: 'Edit' do
@@ -72,7 +72,7 @@
 				<i class="bi bi-trash-fill"></i>
 			<% end %>
 
-			<% if batch.unused_loan_id %>
+			<% if batch.unused_loan_id and batch.unused_loan_id != 0 %>
 				<% batch = batch.decorate %>
 				<%= button_to remove_unused_loan_insurance_batch_path(batch), 
 					title: 'Remove unused premium',

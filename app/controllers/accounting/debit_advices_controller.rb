@@ -28,7 +28,7 @@ class Accounting::DebitAdvicesController < ApplicationController
       @request = Accounting::VoucherRequest.find(params[:rid])
       @bank = @request.account
       @coop = @request.requestable.payable
-      @debit_advice = Accounting::DebitAdvice.new(voucher: Accounting::DebitAdvice.generate_series, payable: @coop, amount: @request.amount, date_voucher: Date.today, particulars: "#{@request.particulars} \n\nBank: #{@bank.name}\nAccount Number: #{@bank.account_number}\nAddress: #{@bank.address}")
+      @debit_advice = Accounting::DebitAdvice.new(voucher: Accounting::DebitAdvice.generate_series, payable: @coop, amount: @request.amount, date_voucher: Date.today, particulars: "#{@request.particulars} \n\nBank: #{@bank.name}\nBranch: #{@bank.branch}\nAccount Number: #{@bank.account_number}")
     else
       @debit_advice = Accounting::DebitAdvice.new(voucher: Accounting::DebitAdvice.generate_series, date_voucher: Date.today)
     end

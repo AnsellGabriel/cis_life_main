@@ -9,6 +9,7 @@
     <thead class="table-dark">
       <tr>
         <th class="text-center" scope="col">Voucher</th>
+        <th class="text-center" scope="col">Date</th>
         <th class="text-center" scope="col">Payee</th>
         <th class="text-center" scope="col">Type</th>
         <th class="text-center" scope="col">Created by</th>
@@ -32,6 +33,7 @@
                 <% end %>
               <% end %>
             </td>
+            <td class="text-center align-middle" style="min-width: 100px"><%= month_day_year voucher.created_at %></td>
             <td class="text-center align-middle"><%= voucher.payable %></td>
             <td class="text-center align-middle" style="min-width: 100px"><%= voucher.payment_type %></td>
             <td class="text-center align-middle" style="min-width: 150px"><%= voucher.employee.signed_fullname %></td>

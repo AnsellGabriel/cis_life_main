@@ -17,7 +17,7 @@ class VoucherRequestService
       request_type: @request_type,
       requester: @current_user.userable.signed_fullname,
       payment_type: @payment_type,
-      account: @bank_id.present? ? Treasury::Account.find(@bank_id) : nil
+      account: @bank_id.present? ? CoopBank.find(@bank_id) : nil
     )
   end
 
