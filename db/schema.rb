@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2024_07_01_054443) do
+ActiveRecord::Schema[7.0].define(version: 2024_07_02_073505) do
   create_table "accounting_journal_entries", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.string "journable_type", null: false
     t.bigint "journable_id", null: false
@@ -27,7 +27,7 @@ ActiveRecord::Schema[7.0].define(version: 2024_07_01_054443) do
     t.string "payable_type", null: false
     t.bigint "payable_id", null: false
     t.bigint "treasury_account_id"
-    t.decimal "amount", precision: 10, scale: 2
+    t.decimal "amount", precision: 15, scale: 2
     t.text "particulars"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
@@ -43,6 +43,7 @@ ActiveRecord::Schema[7.0].define(version: 2024_07_01_054443) do
     t.integer "payout_status", default: 0
     t.bigint "request_id"
     t.bigint "employee_id"
+    t.string "code"
     t.index ["employee_id"], name: "index_accounting_vouchers_on_employee_id"
     t.index ["payable_type", "payable_id"], name: "index_accounting_vouchers_on_payable"
     t.index ["request_id"], name: "index_accounting_vouchers_on_request_id"
@@ -1229,6 +1230,10 @@ ActiveRecord::Schema[7.0].define(version: 2024_07_01_054443) do
     t.string "contact_number"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.integer "payee_type"
+    t.string "code"
+    t.bigint "cooperative_id"
+    t.index ["cooperative_id"], name: "index_payees_on_cooperative_id"
   end
 
   create_table "payments", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
@@ -1538,6 +1543,7 @@ ActiveRecord::Schema[7.0].define(version: 2024_07_01_054443) do
     t.string "account_number"
     t.string "old_code"
     t.string "parent_code"
+    t.integer "children", default: 0
   end
 
   create_table "treasury_billing_statements", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
@@ -1739,6 +1745,7 @@ ActiveRecord::Schema[7.0].define(version: 2024_07_01_054443) do
   add_foreign_key "loan_insurance_rates", "agreements"
   add_foreign_key "loan_insurance_rates_copy1", "agreements", name: "loan_insurance_rates_copy1_ibfk_1"
   add_foreign_key "member_dependents", "members"
+  add_foreign_key "payees", "cooperatives"
   add_foreign_key "process_claims", "agreement_benefits"
   add_foreign_key "process_claims", "agreements"
   add_foreign_key "process_claims", "cooperatives"

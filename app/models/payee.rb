@@ -1,5 +1,11 @@
 class Payee < ApplicationRecord
-  validates_presence_of :name, :address
+  validates_presence_of :payee_type
+  # validates_presence_of :cooperative_id, if: :cooperative?
+  # validates :name, presence: true, uniqueness: true
+
+  belongs_to :cooperative, optional: true
+
+  enum payee_type: { cooperative: 0, individual: 1, others: 2}
 
   private
 

@@ -1,8 +1,8 @@
 <%= simple_form_for(@payee) do |f| %>
   <div class="form-inputs mb-3">
     <%= f.input :name %>
-    <%= f.input :address %>
-    <%= f.input :contact_number %>
+    <%= f.input :payee_type, as: :select, collection: Payee.payee_types.map {|pt| [pt[0].humanize, pt[0]]} %>
+    <%= f.association :cooperative, collection: Cooperative.all.select(:id, :name), input_html: {data: {controller: 'ts--select'}} %>
   </div>
 
   <div class="form-actions text-center">
