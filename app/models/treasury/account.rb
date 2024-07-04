@@ -1,6 +1,6 @@
 class Treasury::Account < ApplicationRecord
   validates_presence_of :name, :code, :account_type
-  validates :code, uniqueness: true
+  # validates :code, uniqueness: true
   validates :account_number, presence: true, length: { maximum: 18 }, format: { with: /\A\d+\z/ }, if: :bank?
 
   enum account_type: {

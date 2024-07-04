@@ -1,0 +1,19 @@
+<%= form_with url: loan_insurance_group_remit_path(@group_remit), method: :get do %>
+  <div class="form-group d-flex justify-content-end gap-3 mb-3">
+    <%= text_field_tag 'batch_filter', 
+      nil, 
+      placeholder: 'Member\'s name', 
+      class: "form-control", 
+      style: "width: auto"
+    %>
+    <%= submit_tag 'Search', class: small_btn('warning') %>
+  </div>
+<% end %>
+
+<div class="">
+  <%= link_to "View All", loan_insurance_group_remit_path(@group_remit), 
+    class: "#{small_btn('outline-warning')} mb-3 d-flex align-items-center", 
+    style: "height: 38px;",
+    data: { turbo: false } 
+  %>
+</div>

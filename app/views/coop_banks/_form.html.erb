@@ -1,9 +1,9 @@
 
-<%= simple_form_for(@account, url: cooperative_coop_banks_path(coop, pc_id: params[:pc_id])) do |f| %>
+<%= simple_form_for(@bank, url: cooperative_coop_banks_path(coop, pc_id: params[:pc_id])) do |f| %>
   <div class="form-inputs mb-3">
-    <%= f.input :name, label: 'Account Name' %>
-    <%= f.input :account_number %>
-    <%= f.input :address %>
+    <%= f.input :name, label: 'Bank' %>
+    <%= f.input :branch, label: 'Branch' %>
+    <%= f.input :account_number, input_html: { type: 'text', pattern: '\d*', title: 'Only numbers are allowed' } %>
   </div>
 
   <div class="form-actions text-center">

@@ -10,13 +10,13 @@
   </div>
   
   <div class="modal-body">
-    <% if @cooperative.treasury_accounts.present? %>
+    <% if @cooperative.coop_banks.present? %>
       <%= simple_form_for(@process_claim, url: claim_route_claims_process_claim_path, method: :get) do |f| %>
         <%= hidden_field_tag :p, 8 %>
         <%= hidden_field_tag :pt, "debit_advice" %>
         <%= hidden_field_tag :bank_transfer, params[:bank_transfer] %>
         <div class="field <%= flex_justify_align('center', 'center', true) %>">
-          <% @cooperative.treasury_accounts.each do |bank| %>
+          <% @cooperative.coop_banks.each do |bank| %>
             <div class="d-flex gap-3">
               <%= f.radio_button :coop_bank, bank.id %>
               <%= f.label "coop_bank_#{bank.id}" do %>
@@ -24,9 +24,8 @@
                   <div class="card-body">
                     <div class="d-flex gap-1">
                       <div>
-                        <h5 class="card-title"><%= bank.name %></h5>
+                        <h5 class="card-title"><%= "#{bank.name} - #{bank.branch}" %></h5>
                         <p class="card-text"><%= bank.account_number %></p>
-                        <p class="card-text small text-secondary"><%= bank.address %></p>
                       </div>
                     </div>
                   </div>

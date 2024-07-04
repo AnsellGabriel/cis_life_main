@@ -48,11 +48,11 @@
     <% if @vouchers.present? %>
       <% @vouchers.each do |check| %>
         <tr>
-          <td class="text-center">
-            <%= link_to "CV#{check.voucher}", check, class: 'text-primary', title: 'View'%>
+          <td class="">
+            <%= link_to "#{check.voucher}", check, class: 'text-primary', title: 'View'%>
           </td>
           <td class="text-center"><%= month_day_year(check.date_voucher) %></td>
-          <td><%= check.payable %></td>
+          <td><%= check.payable.name %></td>
           <td class="text-end"><%= to_curr(check.amount) %></td>
           <td class="text-center">
             <span class="<%= check.decorate.status_badge %>"><%= check.status.titleize %></span>

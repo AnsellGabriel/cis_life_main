@@ -10,4 +10,10 @@ module BatchHelper
     when "denied" then content_tag(:b, "DENIED", class: "text-danger")
     end
   end
+
+  def render_incorrect_prem(batch)
+    if current_user.is_mis? and batch.system_premium != batch.premium and !batch.system_premium.nil?
+      content_tag :span, "Correct premium: #{to_curr(batch.system_premium)}", class: "text-danger sm-green-text"
+    end
+  end
 end
