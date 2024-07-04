@@ -18,7 +18,7 @@ class ApplicationController < ActionController::Base
         else
           case current_user.userable.department_id
             # when 26 then redirect_to treasury_dashboard_path
-            when 26 then redirect_to treasury_dashboard_path
+            when 26 then redirect_to treasury_dashboards_path
             # when 27 then redirect_to audit_dashboard_path
             when 27 then redirect_to audit_for_audits_path
             # when 11 then redirect_to accounting_dashboard_path

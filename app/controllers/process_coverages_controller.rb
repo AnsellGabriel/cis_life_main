@@ -1,8 +1,8 @@
 class ProcessCoveragesController < ApplicationController
   include CsvGenerator
-  
+
   before_action :authenticate_user!
-  before_action :check_emp_department, except: :modal_remarks 
+  before_action :check_emp_department, except: :modal_remarks
   before_action :set_process_coverage,
   only: %i[ show edit update destroy approve_batch deny_batch pending_batch reconsider_batch pdf set_premium_batch update_batch_prem transfer_to_md update_batch_cov adjust_lppi_cov refund psheet set_processor set_processor]
 
@@ -75,9 +75,9 @@ class ProcessCoveragesController < ApplicationController
 
       @coverages_total_processed = ProcessCoverage.where(status: [:approved, :denied, :reprocess])
 
-      @md_reviewed= 0 
+      @md_reviewed= 0
       @for_md_review = 0
-      @reviewed_batch = [] 
+      @reviewed_batch = []
       @for_review_batch = []
       @lppi_batches = LoanInsurance::Batch.includes(group_remit: :process_coverage).where(process_coverages: { team: current_user.userable.team}, substandard: true, for_md: true).sort_by do |batch|
         md = User.find_by(rank: :medical_director)
@@ -120,8 +120,8 @@ class ProcessCoveragesController < ApplicationController
       # @analysts = @analysts_x.joins(:emp_approver).where(emp_approver: { approver: current_user.userable_id })
     end
 
-    @pagy_pc, @filtered_pc = pagy(@process_coverages.order(@arel_pcs[:processor_id].eq(current_user.userable_id).desc), items: 5, page_param: :process_coverage, link_extra: 'data-turbo-frame="pro_cov_pagination"')
-    @notifications = current_user.userable.team.notifications.where(created_at: @current_date.beginning_of_week..@current_date.end_of_week)
+    @pagy_pc, @filtered_pc = pagy(@process_coverages&.order(@arel_pcs[:processor_id].eq(current_user.userable_id).desc), items: 5, page_param: :process_coverage, link_extra: 'data-turbo-frame="pro_cov_pagination"')
+    @notifications = current_user.userable.team&.notifications&.where(created_at: @current_date.beginning_of_week..@current_date.end_of_week)
     # if params[:search].present?
     #   @process_coverages = @process_coverages_x.joins(group_remit: {agreement: :cooperative}).where("group_remits.name LIKE ? OR group_remits.description LIKE ? OR agreements.moa_no LIKE ? OR cooperatives.name LIKE ?", "%#{params[:search]}%", "%#{params[:search]}%", "%#{params[:search]}%", "%#{params[:search]}%")
     # else
@@ -149,7 +149,7 @@ class ProcessCoveragesController < ApplicationController
     when "md"
       @title = "For M.D. Review"
       @batches = @for_review_batches
-    else 
+    else
       @title = "M.D. Reviewed Coverages"
       @batches = @reviewed_batches
     end
@@ -169,7 +169,7 @@ class ProcessCoveragesController < ApplicationController
   end
 
   def product_csv
-        
+
     date_from = Date.strptime(params[:date_from], "%m-%d-%Y")
     date_to = Date.strptime(params[:date_to], "%m-%d-%Y")
 
@@ -182,7 +182,7 @@ class ProcessCoveragesController < ApplicationController
       @process_coverages = ProcessCoverage.where(processor_id: params[:emp_id], status: params[:process_type], created_at: date_from..date_to).order(:created_at)
     end
 
-    if @process_coverages.nil? || @process_coverages.empty? 
+    if @process_coverages.nil? || @process_coverages.empty?
       redirect_back fallback_location: process_coverages_path, alert: "No record(s) found."
     else
       generate_csv(@process_coverages, "#{emp} - #{date_from} to #{date_to}")
@@ -220,7 +220,7 @@ class ProcessCoveragesController < ApplicationController
       else
         format.html { redirect_to @process_coverage }
       end
-      
+
     end
   end
 
@@ -630,7 +630,7 @@ class ProcessCoveragesController < ApplicationController
   def reassess
     @process_coverage = ProcessCoverage.find_by(id: params[:process_coverage_id])
     @group_remit = @process_coverage.group_remit
-    
+
     respond_to do |format|
       if @process_coverage.update_attribute(:status, "reassess")
         @group_remit.update_attribute(:status, "under_review")

@@ -45,6 +45,7 @@ class Treasury::CashierEntriesController < ApplicationController
     @q = Treasury::CashierEntry.ransack(params[:q])
     @entries = @q.result.order(created_at: :desc)
     @entries = @entries.where(status: params[:status]) unless params[:status].nil?
+    @entries = @entries.where(employee: params[:u]) unless params[:u].nil?
 
     if params[:date_from].present? && params[:date_to].present?
       @entries = @entries.where(created_at: params[:date_from].to_date.beginning_of_day..params[:date_to].to_date.end_of_day)
