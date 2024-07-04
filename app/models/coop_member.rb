@@ -11,7 +11,7 @@ class CoopMember < ApplicationRecord
   delegate :age, to: :member
 
   belongs_to :cooperative
-  belongs_to :coop_branch
+  belongs_to :coop_branch, optional: true
   belongs_to :member
   has_many :loan_batches, class_name: "LoanInsurance::Batch", foreign_key: "coop_member_id"
   has_many :batch_health_decs, through: :loan_batches

@@ -61,7 +61,8 @@ class ProcessCoveragesController < ApplicationController
       end
 
     elsif current_user.analyst?
-      @process_coverages_x = ProcessCoverage.joins(group_remit: { agreement: :plan, batches: {} }).where(team: current_user.userable.team)
+      # @process_coverages_x = ProcessCoverage.joins(group_remit: { agreement: :plan, batches: {} }).where(team: current_user.userable.team)
+      @process_coverages_x = ProcessCoverage.joins(group_remit: { agreement: :plan }).where(team: current_user.userable.team)
       @for_process_coverages = @process_coverages_x.where(status: :for_process, processor: nil)
       # @for_process_coverages = @process_coverages_x.where(processor: nil)
       # @approved_process_coverages = @process_coverages_x.where(status: :approved, who_approved: current_user.userable)
@@ -119,7 +120,7 @@ class ProcessCoveragesController < ApplicationController
       @analysts = @analysts_x.joins(:emp_approver)
       # @analysts = @analysts_x.joins(:emp_approver).where(emp_approver: { approver: current_user.userable_id })
     end
-
+    
     @pagy_pc, @filtered_pc = pagy(@process_coverages.order(@arel_pcs[:processor_id].eq(current_user.userable_id).desc), items: 5, page_param: :process_coverage, link_extra: 'data-turbo-frame="pro_cov_pagination"')
     @notifications = current_user.userable.team.notifications.where(created_at: @current_date.beginning_of_week..@current_date.end_of_week)
     # if params[:search].present?
