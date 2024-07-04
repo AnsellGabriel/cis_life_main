@@ -7,6 +7,10 @@ class Payee < ApplicationRecord
 
   enum payee_type: { cooperative: 0, individual: 1, others: 2}
 
+  def get_address
+    address
+  end
+
   private
 
   def self.ransackable_attributes(auth_object = nil)

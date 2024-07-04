@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2024_07_02_073505) do
+ActiveRecord::Schema[7.0].define(version: 2024_07_03_055439) do
   create_table "accounting_journal_entries", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.string "journable_type", null: false
     t.bigint "journable_id", null: false
@@ -897,6 +897,7 @@ ActiveRecord::Schema[7.0].define(version: 2024_07_02_073505) do
     t.datetime "updated_at", null: false
     t.date "transaction_date"
     t.bigint "sub_account_id"
+    t.string "code"
     t.index ["account_id"], name: "index_general_ledgers_on_account_id"
     t.index ["ledgerable_type", "ledgerable_id"], name: "index_general_ledgers_on_ledgerable"
     t.index ["sub_account_id"], name: "index_general_ledgers_on_sub_account_id"
@@ -1589,6 +1590,7 @@ ActiveRecord::Schema[7.0].define(version: 2024_07_02_073505) do
     t.bigint "agreement_id"
     t.bigint "plan_id"
     t.bigint "employee_id"
+    t.string "code"
     t.index ["agreement_id"], name: "index_treasury_cashier_entries_on_agreement_id"
     t.index ["employee_id"], name: "index_treasury_cashier_entries_on_employee_id"
     t.index ["entriable_type", "entriable_id"], name: "index_treasury_cashier_entries_on_entriable"
@@ -1620,6 +1622,7 @@ ActiveRecord::Schema[7.0].define(version: 2024_07_02_073505) do
     t.string "description"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.string "code"
   end
 
   create_table "underwriting_routes", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
