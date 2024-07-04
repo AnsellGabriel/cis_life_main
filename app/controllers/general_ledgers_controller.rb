@@ -21,10 +21,12 @@ class GeneralLedgersController < ApplicationController
             @entry.voucher_request.update!(status: :posted)
 
             if @entry.voucher_request.requestable.is_a?(Claims::ProcessClaim)
-              claim_track = @entry.voucher_requests&.last.requestable.process_track.build
+              claim_track = @entry.voucher_request.requestable.process_track.build
               claim_track.route_id = 14
               claim_track.user_id = current_user.id
               claim_track.save
+            elsif @entry.voucher_request.requestable.is_a?(Accounting::DebitAdvice)
+              @entry.voucher_request.requestable.journal_entries.create(journal: @entry)
             end
           end
 

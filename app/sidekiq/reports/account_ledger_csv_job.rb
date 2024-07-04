@@ -3,9 +3,9 @@ class Reports::AccountLedgerCsvJob
   include ActionView::Helpers::NumberHelper
   include Reports::Concerns::Downloadable
 
-  def perform(employee_id, account_id, date_from, date_to)
+  def perform(employee_id, account_id, date_from, date_to, is_sub_account = false)
     employee = Employee.find(employee_id)
-    @account = Treasury::Account.find(account_id)
+    @account = is_sub_account ? Treasury::SubAccount.find(account_id) : Treasury::Account.find(account_id)
     save_path = Rails.root.join("public/uploads/employee/report/#{employee_id}", "#{@account.name.downcase}_ledger.csv")
 
     # if File.exist?(save_path)

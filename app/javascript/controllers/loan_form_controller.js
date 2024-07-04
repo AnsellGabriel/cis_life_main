@@ -17,8 +17,10 @@ export default class extends Controller {
   updateLoan(e) {
     let batch_id = e.target.value;
 
-    get(`/loan_insurance/batches/${batch_id}/find_loan`, {
-      responseKind: "turbo-stream"
-    })
+    if (batch_id !== 'none') {
+      get(`/loan_insurance/batches/${batch_id}/find_loan`, {
+        responseKind: "turbo-stream"
+      })
+    }
   }
 }

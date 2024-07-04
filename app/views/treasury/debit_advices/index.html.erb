@@ -32,7 +32,6 @@
         <th>Payee</th>
         <th class="text-center">Amount</th>
         <th class="text-center">Status</th>
-        <th></th>
       </tr>
     </thead>
 
@@ -41,7 +40,7 @@
         <% @debit_advices.each do |da| %>
           <tr>
             <td class="text-center">
-              <%= da.voucher %>
+              <%= link_to da.voucher, da, title: 'View' %>
             </td>
             <td class="text-center align-middle"><%= short_month_day_year(da.date_voucher) %></td>
             <td class="align-middle"><%= da.payable %></td>
@@ -49,11 +48,6 @@
             <td class="text-center align-middle">
               <span class="<%= da.decorate.payout_status_badge %>"><%= da.payout_status.titleize %></span>
             </td>    
-            <td class="text-center align-middle">
-              <%= link_to da, class: small_btn('outline-primary'), title: 'View' do %>
-                <i class="bi bi-eye-fill"></i>
-              <% end %>
-            </td>
           </tr> 
         <% end %>
       <% else %>

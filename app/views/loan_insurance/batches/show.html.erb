@@ -2,6 +2,9 @@
   <% batch_presenter = BatchPresenter.new(@batch) %>
   <% plan = @batch.group_remit.agreement.plan.acronym %>
   <div class="modal-header">
+    <% if params[:unused] %>
+      <h5 class="modal-title">Unused Loan from Batch: <%= @batch.group_remit %> </h5>
+    <% end %>
     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
   </div>
   

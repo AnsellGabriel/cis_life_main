@@ -55,6 +55,6 @@ class PayeesController < ApplicationController
 
     # Only allow a list of trusted parameters through.
     def payee_params
-      params.require(:payee).permit(:name, :address, :contact_number)
+      params.require(:payee).permit(:name, :address, :contact_number, :payee_type, :cooperative_id)
     end
 end

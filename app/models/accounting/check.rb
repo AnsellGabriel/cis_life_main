@@ -1,6 +1,6 @@
 class Accounting::Check < Accounting::Voucher
   validates_presence_of :treasury_account_id, :amount
-  before_save :format_cv_no
+  # before_save :format_cv_no
 
   has_many :business_checks, class_name: "Treasury::BusinessCheck", foreign_key: :voucher_id, dependent: :destroy
 
@@ -10,6 +10,10 @@ class Accounting::Check < Accounting::Voucher
 
   def reference
     "CV#{self.voucher}"
+  end
+
+  def payment_type
+    'Check Voucher'
   end
 
   def entry_type

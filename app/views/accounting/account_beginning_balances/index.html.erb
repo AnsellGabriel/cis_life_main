@@ -1,0 +1,40 @@
+<%= content_tag :h1, "List of Accounting Account Beginning Balances" %>
+
+
+<div class="text-end mb-3">
+  <%= link_to new_accounting_account_beginning_balance_path, class: 'btn btn-primary' do %>
+    New Account Beginning Balance
+  <% end %>
+</div>
+
+
+  <table class="table table-striped table-bordered table-hover">
+    <thead>
+      <tr>
+      <th>#</th>
+            <th>Account</th>
+            <th>Balance</th>
+            <th>Year</th>
+            <th></th>
+        </tr>
+    </thead>
+
+    <tbody>
+      <% @accounting_account_beginning_balances.each do |accounting_account_beginning_balance| %>
+        <tr>
+
+        <th scope="row"><%= accounting_account_beginning_balance.id %></th>
+        <td><%= accounting_account_beginning_balance.account %></td>
+        <td><%= accounting_account_beginning_balance.balance %></td>
+        <td><%= accounting_account_beginning_balance.year %></td>
+    
+          <td>
+            <%= link_to 'View', accounting_account_beginning_balance, class: 'btn btn-secondary btn-sm' %>
+            <%= link_to 'Edit', edit_accounting_account_beginning_balance_path(accounting_account_beginning_balance), class: 'btn btn-secondary btn-sm' %>
+            <%= link_to "Delete", accounting_account_beginning_balance, class: "btn btn-danger btn-sm", method: :delete, data: { "turbo-method": :delete, turbo_confirm: "Are you sure?" } %>
+          </td>
+
+        </tr>
+      <% end %>
+    </tbody>
+  </table>

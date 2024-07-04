@@ -13,7 +13,7 @@ class CoopBanksController < ApplicationController
   # GET /coop_banks/new
   def new
     @coop = Cooperative.find(params[:cooperative_id])
-    @account = Treasury::Account.new
+    @bank = @coop.coop_banks.new
   end
 
   # GET /coop_banks/1/edit
@@ -24,24 +24,12 @@ class CoopBanksController < ApplicationController
   # POST /coop_banks
   def create
     @coop = Cooperative.find(params[:cooperative_id])
-    @account = Treasury::Account.bank.find_or_initialize_by(account_number: coop_bank_params[:account_number])
+    @bank = @coop.coop_banks.build(coop_bank_params)
 
-    ActiveRecord::Base.transaction do
-      if @account.new_record?
-        @account.add_bank(coop_bank_params[:name], coop_bank_params[:address])
-      end
-
-      if @account.save
-        begin
-          @coop_bank = CoopBank.create!(cooperative: @coop, treasury_account: @account)
-
-          redirect_to approve_claim_debit_claims_process_claim_path(params[:pc_id]), notice: "Bank successfully added"
-        rescue ActiveRecord::RecordInvalid => e
-          redirect_to approve_claim_debit_claims_process_claim_path(params[:pc_id])
-        end
-      else
-        render :new, status: :unprocessable_entity
-      end
+    if @bank.save
+        redirect_to approve_claim_debit_claims_process_claim_path(params[:pc_id]), notice: "Bank successfully added"
+    else
+      render :new, status: :unprocessable_entity
     end
   end
 
@@ -68,6 +56,6 @@ class CoopBanksController < ApplicationController
 
     # Only allow a list of trusted parameters through.
     def coop_bank_params
-      params.require(:treasury_account).permit(:name, :account_number, :address)
+      params.require(:coop_bank).permit(:name, :account_number, :branch)
     end
 end
