@@ -56,6 +56,12 @@ class DashboardsController < ApplicationController
     end
 
     def mis
+      @encoded = GroupRemit.where(mis_entry: true)
+      @not_encoded = Treasury::CashierEntry.posted.includes(:agreement).where.not(or_no: GroupRemit.pluck(:official_receipt))
+      @transmitted = TransmittalOr.joins(:transmittal).where(transmittal: { transmittal_type: :mis })
+      @with_ors = GroupRemit.where.not(id: TransmittalOr.with_ors_already).where(mis_entry: true)
+      @lppi_encoded = LoanInsurance::Batch.get_lppi_batches_count
+      @gyrt_encoded = Batch.get_gyrt_encoded
       render :index
     end
 end
