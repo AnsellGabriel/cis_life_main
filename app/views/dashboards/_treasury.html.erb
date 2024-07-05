@@ -1,0 +1,77 @@
+<div class="card-group h-100 mb-3">
+    <div class="card bg-info">
+    <div class="card-body">
+      <p class="text-dark card-title">OVERALL</p>
+      <h2 class="text-dark"><%= @encoded_ors.count %></h2>
+      <small class="text-dark"><%= to_currency(@encoded_ors.sum(:amount)) %></small>
+    </div>
+    <div class="card-footer"><small> <%= link_to 'See Details <i class="bi bi-box-arrow-right"></i>'.html_safe, treasury_cashier_entries_path(u: current_user.userable.id), class: "text-dark" %></small></div>
+  </div>
+  <div class="card bg-success">
+    <div class="card-body">
+      <p class="text-light card-title">POSTED</p>
+      <h2 class="text-dark"><%= @posted_ors.count %></h2>
+      <small class="text-dark"><%= to_currency(@posted_ors.sum(:amount)) %></small>
+    </div>
+    <div class="card-footer"><small> <%= link_to 'See Details <i class="bi bi-box-arrow-right"></i>'.html_safe, treasury_cashier_entries_path(status: :posted, u: current_user.userable.id), class: "text-light" %></small></div>
+  </div>
+  <div class="card bg-danger">
+    <div class="card-body">
+      <p class="text-light card-title">CANCELLED</p>
+      <h2 class="text-dark"><%= @cancelled_ors.count %></h2>
+      <small class="text-dark"><%= to_currency(@cancelled_ors.sum(:amount)) %></small>
+    </div>
+    <div class="card-footer"><small> <%= link_to 'See Details <i class="bi bi-box-arrow-right"></i>'.html_safe, treasury_cashier_entries_path(status: :cancelled, u: current_user.userable.id), class: "text-light" %></small></div>
+  </div>
+  <div class="card bg-warning">
+    <div class="card-body">
+      <p class="card-title">FOR APPROVAL</p>
+      <h2 class="text-dark"><%= @for_approval_ors.count %></h2>
+      <small class="text-dark"><%= to_currency(@for_approval_ors.sum(:amount)) %></small>
+    </div>
+    <div class="card-footer"><small class="text-muted"> <%= link_to 'See Details <i class="bi bi-box-arrow-right"></i>'.html_safe, treasury_cashier_entries_path(status: :for_approval, u: current_user.userable.id), class: "text-dark" %></small></div>
+  </div>
+  <div class="card bg-warning">
+    <div class="card-body">
+      <p class="card-title">PENDING</p>
+      <h2 class="text-dark"><%= @pending_ors.count %></h2>
+      <small class="text-dark"><%= to_currency(@pending_ors.sum(:amount)) %></small>
+    </div>
+    <div class="card-footer"><small class="text-muted"> <%= link_to 'See Details <i class="bi bi-box-arrow-right"></i>'.html_safe, treasury_cashier_entries_path(status: :pending, u: current_user.userable.id), class: "text-dark" %></small></div>
+  </div>
+</div>
+
+<div class="card-group mb-3">
+  <% if current_user.head? %>
+    <div class="card">
+      <div class="card-body">
+      <p class="text-primary card-title">NEED APPROVAL</p>
+      <h2 class="text-muted"><%= @need_approval.count %></h2>
+      </div>
+      <div class="card-footer"><small class="text-muted"> <%= link_to 'See Details <i class="bi bi-box-arrow-right"></i>'.html_safe, treasury_for_approval_path, class: "text-muted" %></small></div>
+    </div>
+  <% end %>
+  <div class="card">
+    <div class="card-body">
+    <p class="text-primary card-title">FOR OR</p>
+    <h2 class="text-muted"><%= @payments.count %></h2>
+    </div>
+    <div class="card-footer"><small class="text-muted"> <%= link_to 'See Details <i class="bi bi-box-arrow-right"></i>'.html_safe, payments_path(status: :for_review), class: "text-muted" %></small></div>
+  </div>
+  <div class="card">
+    <div class="card-body">
+    <p class="text-primary card-title">PAYMENT - BUSINESS CHECK</p>
+    <h2 class="text-muted"><%= @for_business_checks.count %></h2>
+
+    </div>
+    <div class="card-footer"><small class="text-muted"> <%= link_to 'See Details <i class="bi bi-box-arrow-right"></i>'.html_safe, requests_treasury_checks_path, class: "text-muted" %></small></div>
+  </div>
+  <div class="card">
+    <div class="card-body">
+    <p class="text-primary card-title">PAYMENT - DEBIT ADVICE</p>
+    <h2 class="text-muted"><%= @for_debit_advice.count %></h2>
+
+    </div>
+    <div class="card-footer"><small class="text-muted"> <%= link_to 'See Details <i class="bi bi-box-arrow-right"></i>'.html_safe, treasury_debit_advices_path, class: "text-muted" %></small></div>
+  </div>
+</div>

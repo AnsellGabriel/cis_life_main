@@ -27,7 +27,7 @@
               <% elsif process_claim.approved? || process_claim.reconsider_approved? %>
                 <span class="badge rounded-pill bg-success text-light"><%= process_claim.status.humanize %></span>
               <% else %>
-                <span class="badge rounded-pill bg-primary text-light"><%= process_claim.status.humanize %></span>
+                <span class="badge rounded-pill bg-primary text-light"><%= process_claim.status&.humanize %></span>
               <% end %>
             </small>
           </td>

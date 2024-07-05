@@ -43,6 +43,10 @@
           <%= f.association :plan, label: "Plan", input_html: { data: {hider_target: 'plan'} }%>
         </div>
       </div>
+      <div class="row hidden" data-hider-target="amounts">
+        <%= f.input :deposit, error: '*Required', wrapper_html: {class: 'col-6'} %>
+        <%= f.input :service_fee, error: '*Required', wrapper_html: {class: 'col-6'} %>
+      </div>
       
     </div>
   </div>

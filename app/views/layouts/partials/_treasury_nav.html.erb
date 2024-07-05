@@ -1,12 +1,13 @@
 <% if current_user.head? %>
   <%= link_to "For Approval", treasury_for_approval_path, class: "nav-link" %>
 <% end %>
-<%= link_to "For ORs", payments_path	, class: "nav-link" %>
-<%= render 'layouts/partials/nav_dropdown', title: 'For Payments' do %>
-  <%= link_to "Business Checks", requests_treasury_checks_path	, class: "dropdown-item" %>
-  <%= link_to "Debit Advices", treasury_debit_advices_path	, class: "dropdown-item" %>
+<%= render 'layouts/partials/nav_dropdown', title: 'Production' do %>
+  <%= link_to "Cashier Entries", treasury_cashier_entries_path, class: "dropdown-item" %>
+  <li><hr class="dropdown-divider"></li>
+  <%= link_to "For OR", payments_path	, class: "dropdown-item" %>
+  <%= link_to "For Business Checks", requests_treasury_checks_path	, class: "dropdown-item" %>
+  <%= link_to "For Debit Advices", treasury_debit_advices_path	, class: "dropdown-item" %>
 <% end %>
-<%= link_to "Cashier Entries", treasury_cashier_entries_path, class: "nav-link" %>
 <%= render 'layouts/partials/nav_dropdown', title: 'Encoding' do %>
   <%= link_to "Payment Types", treasury_payment_types_path	, class: "dropdown-item" %>
 <% end %>

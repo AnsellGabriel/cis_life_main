@@ -45,6 +45,7 @@ class Treasury::CashierEntriesController < ApplicationController
     @q = Treasury::CashierEntry.ransack(params[:q])
     @entries = @q.result.order(created_at: :desc)
     @entries = @entries.where(status: params[:status]) unless params[:status].nil?
+    @entries = @entries.where(employee: params[:u]) unless params[:u].nil?
 
     if params[:date_from].present? && params[:date_to].present?
       @entries = @entries.where(created_at: params[:date_from].to_date.beginning_of_day..params[:date_to].to_date.end_of_day)
@@ -89,7 +90,7 @@ class Treasury::CashierEntriesController < ApplicationController
     end
 
     @entry.check_agreement
-    if @entry.save!
+    if @entry.save
       # if @entry.entriable_type == "Remittance"
       #   approve_payment(@group_remit.payments.last.id)
       # end
@@ -135,7 +136,7 @@ class Treasury::CashierEntriesController < ApplicationController
 
   # Only allow a list of trusted parameters through.
   def entry_params
-    params.require(:treasury_cashier_entry).permit(:or_no, :or_date, :global_entriable, :treasury_payment_type_id, :treasury_account_id, :amount, :agreement_id, :plan_id)
+    params.require(:treasury_cashier_entry).permit(:deposit, :service_fee, :or_no, :or_date, :global_entriable, :treasury_payment_type_id, :treasury_account_id, :amount, :agreement_id, :plan_id)
   end
 
   def amount_to_words(amount)

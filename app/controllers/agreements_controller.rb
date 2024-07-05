@@ -8,7 +8,7 @@ class AgreementsController < ApplicationController
     @plans = Plan.all
     @agreements_x = Agreement.all
 
-    
+
     if params[:search].present?
       @agreements = @agreements_x.filtered(params[:search])
     else
