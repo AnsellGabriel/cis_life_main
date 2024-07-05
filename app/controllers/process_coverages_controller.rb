@@ -564,47 +564,35 @@ class ProcessCoveragesController < ApplicationController
       if current_user.rank == "analyst"
 
         if @max_amount >= @total_gross_prem
-
-          # if @process_coverage.count_batches_denied(klass_name) > 0
           if @process_coverage.count_batches("denied") > 0
-            # if @process_coverage.group_remit.batches.where(batches: { insurance_status: :denied }).count > 0
-            # @process_coverage.update_attribute(:status, "for_head_approval")
             @process_coverage.update(status: :for_head_approval, process_date: Date.today, who_processed: current_user.userable)
             format.html { redirect_to process_coverage_path(@process_coverage), notice: "Process Coverage for Head Approval!" }
           else
-            # @process_coverage.update_attribute(:status, "approved")
             @process_coverage.update(status: :approved, process_date: Date.today, evaluate_date: Date.today, who_approved: current_user.userable)
-            # @process_coverage.group_remit.set_total_premiums_and_fees
             format.html { redirect_to process_coverage_path(@process_coverage), notice: "Process Coverage Approved!" }
           end
         else
           @process_coverage.update_attribute(:status, "for_head_approval")
           format.html { redirect_to process_coverage_path(@process_coverage), notice: "Process Coverage for Head Approval!" }
         end
+
       elsif current_user.rank == "head"
+
         if @max_amount >= @total_gross_prem
-          # @process_coverage.update_attribute(:status, "approved")
           @process_coverage.update(status: :approved, evaluate_date: Date.today, who_approved: current_user.userable)
-          # @process_coverage.group_remit.set_total_premiums_and_fees
           format.html { redirect_to process_coverage_path(@process_coverage), notice: "Process Coverage Approved!" }
         else
           @process_coverage.update_attribute(:status, "for_vp_approval")
           format.html { redirect_to process_coverage_path(@process_coverage), notice: "Process Coverage for VP approval!" }
         end
+
       elsif current_user.rank == "senior_officer"
-        # @process_coverage.update_attribute(:status, "approved")
         @process_coverage.update(status: :approved, evaluate_date: Date.today, who_approved: current_user.userable)
-        # @process_coverage.group_remit.set_total_premiums_and_fees
         format.html { redirect_to process_coverage_path(@process_coverage), notice: "Process Coverage Approved!" }
       end
     end
 
     @process_coverage.group_remit.set_total_premiums_and_fees
-
-    # if @process_coverage.update_attribute(:status, "approved")
-    #   @process_coverage.group_remit.set_total_premiums_and_fees
-    #   format.html { redirect_to process_coverage_path(@process_coverage), notice: "Process Coverage Approved!" }
-    # end
   end
 
   def refund

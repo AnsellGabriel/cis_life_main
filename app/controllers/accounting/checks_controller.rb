@@ -56,8 +56,8 @@ class Accounting::ChecksController < ApplicationController
 
       if requestable.is_a?(Claims::ProcessClaim)
         requestable.update!(claim_route: 12, payment: 1)
-        coop = requestable.claimable.cooperative
-        Notification.create(notifiable: coop, message: "Claim for #{requestable.claimable.full_name} is claimable")
+        coop = requestable.coop_member.cooperative
+        Notification.create(notifiable: coop, message: "Claim for #{requestable.coop_member.full_name} is claimable")
       elsif requestable.is_a?(ProcessCoverage)
         requestable.group_remit.ready_for_refund!
       end

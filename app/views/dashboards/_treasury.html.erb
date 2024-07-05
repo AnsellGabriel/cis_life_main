@@ -10,8 +10,8 @@
   <div class="card bg-success">
     <div class="card-body">
       <p class="text-light card-title">POSTED</p>
-      <h2 class="text-dark"><%= @approved_ors.count %></h2>
-      <small class="text-dark"><%= to_currency(@encoded_ors.sum(:amount)) %></small>
+      <h2 class="text-dark"><%= @posted_ors.count %></h2>
+      <small class="text-dark"><%= to_currency(@posted_ors.sum(:amount)) %></small>
     </div>
     <div class="card-footer"><small> <%= link_to 'See Details <i class="bi bi-box-arrow-right"></i>'.html_safe, treasury_cashier_entries_path(status: :posted, u: current_user.userable.id), class: "text-light" %></small></div>
   </div>
@@ -20,7 +20,6 @@
       <p class="text-light card-title">CANCELLED</p>
       <h2 class="text-dark"><%= @cancelled_ors.count %></h2>
       <small class="text-dark"><%= to_currency(@cancelled_ors.sum(:amount)) %></small>
-
     </div>
     <div class="card-footer"><small> <%= link_to 'See Details <i class="bi bi-box-arrow-right"></i>'.html_safe, treasury_cashier_entries_path(status: :cancelled, u: current_user.userable.id), class: "text-light" %></small></div>
   </div>
@@ -61,7 +60,7 @@
   </div>
   <div class="card">
     <div class="card-body">
-    <p class="text-primary card-title">FOR BUSINESS CHECK</p>
+    <p class="text-primary card-title">PAYMENT - BUSINESS CHECK</p>
     <h2 class="text-muted"><%= @for_business_checks.count %></h2>
 
     </div>
@@ -69,7 +68,7 @@
   </div>
   <div class="card">
     <div class="card-body">
-    <p class="text-primary card-title">FOR DEBIT ADVICE</p>
+    <p class="text-primary card-title">PAYMENT - DEBIT ADVICE</p>
     <h2 class="text-muted"><%= @for_debit_advice.count %></h2>
 
     </div>

@@ -43,15 +43,19 @@ class DashboardsController < ApplicationController
 
     def treasury
       @encoded_ors = Treasury::CashierEntry.where(employee: current_user.userable)
-      @approved_ors = Treasury::CashierEntry.where(status: :approved, employee: current_user.userable)
-      @cancelled_ors = Treasury::CashierEntry.where(status: :cancelled, employee: current_user.userable)
-      @for_approval_ors = Treasury::CashierEntry.where(status: :for_approval, employee: current_user.userable)
-      @pending_ors = Treasury::CashierEntry.where(status: :pending, employee: current_user.userable)
-      @need_approval = Treasury::CashierEntry.where(status: :for_approval)
-      @payments = Payment.where(status: :for_review)
-      @for_business_checks = Accounting::Check.where(status: :posted, claimable: false, audit: :approved)
-      @for_debit_advice = Accounting::DebitAdvice.approved
+      @posted_ors = Treasury::CashierEntry.posted.where(employee: current_user.userable)
+      @cancelled_ors = Treasury::CashierEntry.cancelled.where(employee: current_user.userable)
+      @for_approval_ors = Treasury::CashierEntry.for_approval.where(employee: current_user.userable)
+      @pending_ors = Treasury::CashierEntry.pending.where(employee: current_user.userable)
+      @need_approval = Treasury::CashierEntry.for_approval
+      @payments = Payment.for_review
+      @for_business_checks = Accounting::Check.approved.posted.where(claimable: false)
+      @for_debit_advice = Accounting::DebitAdvice.approved.pending_payout
 
+      render :index
+    end
+
+    def mis
       render :index
     end
 end

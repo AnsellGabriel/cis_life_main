@@ -42,7 +42,7 @@
             <% elsif process_claim.pending? %>
               <span class="badge rounded-pill bg-warning text-dark"><%= process_claim.status.humanize %></span>
             <% else %>
-              <span class="badge rounded-pill bg-primary text-light"><%= process_claim.status.humanize %></span>
+              <span class="badge rounded-pill bg-primary text-light"><%= process_claim.status&.humanize %></span>
             <% end %>
           </small>
         </td>

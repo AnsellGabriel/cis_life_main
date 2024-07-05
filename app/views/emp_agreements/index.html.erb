@@ -26,37 +26,4 @@
     <% end %>
   </tbody>
 </table>
-
-  <!--table class="table table-striped table-bordered table-hover">
-    <thead>
-      <tr>
-
-        <th>#</th>
-        <th>Analyst Name</th>
-        <th>Agreement</th>
-        <th></th>
-
-      </tr>
-    </thead>
-
-    <tbody>
-      <% @emp_agreements.each do |emp_agreement| %>
-        <tr>
-
-        <th scope="row"><%= emp_agreement.id %></th>
-        <td><%= emp_agreement.employee %></td>
-        <td>
-          <%= content_tag :span, emp_agreement.agreement.cooperative %> <%= content_tag :small, "(#{emp_agreement.agreement.plan})", class: "badge text-dark" %>
-        </td>
-    
-          <td>
-            <%= link_to 'View', emp_agreement, class: 'btn btn-secondary btn-sm' %>
-            <%#= link_to 'Edit', edit_emp_agreement_path(emp_agreement), class: 'btn btn-success btn-sm' %>
-            <%#= link_to "Delete", emp_agreement, class: "btn btn-danger btn-sm", method: :delete, data: { "turbo-method": :delete, turbo_confirm: "Are you sure?" } %>
-          </td>
-
-        </tr>
-      <% end %>
-    </tbody>
-  </table-->
 </div>
