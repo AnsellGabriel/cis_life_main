@@ -10,7 +10,7 @@ class GroupRemit < ApplicationRecord
   scope :loan_remits, -> { where(:type => "LoanInsurance::GroupRemit")}
   scope :remittances, -> { where(:type => "Remittance")}
 
-  belongs_to :agreement
+  belongs_to :agreement, optional: true
   # has_one :agreement
   # has_one :cashier_entry, through: :agreement, class_name: "Treasury::CashierEntry"
   belongs_to :anniversary, optional: true
