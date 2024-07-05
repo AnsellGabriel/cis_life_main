@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2024_07_05_012542) do
+ActiveRecord::Schema[7.0].define(version: 2024_07_05_052526) do
   create_table "accounting_journal_entries", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.string "journable_type", null: false
     t.bigint "journable_id", null: false
@@ -1597,8 +1597,8 @@ ActiveRecord::Schema[7.0].define(version: 2024_07_05_012542) do
     t.bigint "plan_id"
     t.bigint "employee_id"
     t.string "code"
-    t.decimal "service_fee", precision: 15, scale: 2
-    t.decimal "deposit", precision: 15, scale: 2
+    t.decimal "service_fee", precision: 15, scale: 2, default: "0.0"
+    t.decimal "deposit", precision: 15, scale: 2, default: "0.0"
     t.index ["agreement_id"], name: "index_treasury_cashier_entries_on_agreement_id"
     t.index ["employee_id"], name: "index_treasury_cashier_entries_on_employee_id"
     t.index ["entriable_type", "entriable_id"], name: "index_treasury_cashier_entries_on_entriable"
