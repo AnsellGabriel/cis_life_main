@@ -7,8 +7,7 @@ class LppiImportService
     @cooperative = cooperative
     @agreement = @group_remit.agreement
     @current_user = current_user
-    @headers = ["FIRST_NAME", "LAST_NAME", "BIRTHDATE", "EFFECTIVITY_DATE", "EXPIRY_DATE", "RELEASE_DATE", "MATURITY_DATE", "LOAN_AMOUNT", "LOAN_TYPE"]
-    @headers.push("UNUSED_EFF_DATE", "UNUSED_LOAN_AMOUNT", "REFERRENCE_ID") if @current_user.is_mis?
+    @headers = ["FIRST_NAME", "LAST_NAME", "BIRTHDATE", "EFFECTIVITY_DATE", "EXPIRY_DATE", "LOAN_AMOUNT"]
     @progress_tracker = @group_remit.create_progress_tracker(progress: 0.0)
   end
 
@@ -104,6 +103,7 @@ class LppiImportService
       unused: @current_user.is_mis? && row["UNUSED"].present? ? row["UNUSED"].to_f : nil,
       unused_eff_date: row["UNUSED_EFF_DATE"].present? ? row["UNUSED_EFF_DATE"] : nil,
       unused_loan_amount: row["UNUSED_LOAN_AMOUNT"].present? ? row["UNUSED_LOAN_AMOUNT"].to_f : nil,
+      unused_loan_type: row["UNUSED_LOAN_TYPE"].to_s.squish.upcase,
       reference_id: @current_user.is_mis? && row["REFERENCE_ID"].present? ? row["REFERENCE_ID"].to_s.squish.upcase : nil
     }
   end
@@ -158,11 +158,16 @@ class LppiImportService
       unused = active_loans.find_by(reference_id: batch_hash[:reference_id])
     end
 
-    if unused.nil? and (batch_hash[:unused_eff_date].present? or batch_hash[:unused_loan_amount].present?)
-      unused = active_loans.find_by(loan_amount: batch_hash[:unused_loan_amount], effectivity_date: batch_hash[:unused_eff_date])
+    if unused.nil? and (batch_hash[:unused_eff_date].present? or batch_hash[:unused_loan_amount].present? or batch_hash[:unused_loan_type].present?)
+      if batch_hash[:unused_loan_type].present?
+        unused_loan_type = LoanInsurance::Loan.find_by(name: batch_hash[:unused_loan_type])
+        unused = active_loans.find_by(loan_amount: batch_hash[:unused_loan_amount], effectivity_date: batch_hash[:unused_eff_date], loan: unused_loan_type)
+      else
+        unused = active_loans.find_by(loan_amount: batch_hash[:unused_loan_amount], effectivity_date: batch_hash[:unused_eff_date])
+      end
 
       if unused.nil?
-        create_denied_member(member, "No existing loan with the given unused loan amount #{number_with_precision(batch_hash[:unused_loan_amount], :precision => 2, :delimiter => ',')} and effectivity date #{batch_hash[:unused_eff_date]&.to_date&.strftime('%b %d, %Y')}. Please check and input manually.")
+        create_denied_member(member, "No existing loan with the given unused loan type #{unused_loan_type&.name&.upcase}, amount #{number_with_precision(batch_hash[:unused_loan_amount], :precision => 2, :delimiter => ',')} and effectivity date #{batch_hash[:unused_eff_date]&.to_date&.strftime('%b %d, %Y')}. Please check and input manually.")
         return
       end
     end
