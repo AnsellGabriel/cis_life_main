@@ -22,7 +22,7 @@ class ApplicationController < ActionController::Base
             # when 27 then redirect_to audit_dashboard_path
             when 27 then redirect_to audit_for_audits_path
             # when 11 then redirect_to accounting_dashboard_path
-            when 11 then redirect_to accounting_dashboard_path
+            when 11 then redirect_to accounting_dashboards_path
             when 17, 13 then redirect_to process_coverages_path
             when 15 then redirect_to mis_dashboards_path
             when 14 then redirect_to actuarial_dashboards_path
