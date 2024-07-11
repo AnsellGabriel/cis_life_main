@@ -40,6 +40,7 @@
       <th class="text-center" style="min-width: 100px">DA No.</th>
       <th class="text-center" style="min-width: 100px">Date</th>
       <th class="text-center">Payee</th>
+      <th class="text-center">Created by</th>
       <th class="text-center">Amount</th>
       <th class="text-center">Status</th>
     </tr>
@@ -54,6 +55,7 @@
           </td>
           <td class="<%= centered_cell %>"><%= month_day_year(da.date_voucher) %></td>
           <td class="align-middle"><%= da.payable %></td>
+          <td class="<%= centered_cell %>"><%= da.employee %></td>
           <td class="<%= centered_cell %>"><%= to_curr(da.amount) %></td>
           <td class="<%= centered_cell %>">
             <span class="<%= da.decorate.status_badge %>"><%= da.status.titleize %></span>

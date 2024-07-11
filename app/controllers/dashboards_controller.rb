@@ -72,9 +72,9 @@ class DashboardsController < ApplicationController
       @journal_vouchers = Accounting::Journal.where(employee: current_user.userable)
 
       request = Accounting::VoucherRequest.pending
-      @check_req =request.check_voucher
-      @da_req =request.debit_advice
-      @journal_req =request.journal_voucher
+      @check_req = request.check_voucher
+      @da_req = request.debit_advice
+      @journal_req = request.journal_voucher
 
       render :index
     end

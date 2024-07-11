@@ -74,7 +74,14 @@ class Accounting::ChecksController < ApplicationController
 
   # GET /accounting/checks
   def index
-    @q = Accounting::Check.ransack(params[:q])
+    if params[:e].present?
+      @checks = Accounting::Check.where(employee: params[:e])
+    else
+      @checks = Accounting::Check.all
+    end
+    
+    @q = @checks.ransack(params[:q])
+
     filtered_and_paginated_vouchers # concerns/accounting/filterable.rb
   end
 

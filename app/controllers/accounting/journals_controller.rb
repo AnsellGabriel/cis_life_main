@@ -26,7 +26,13 @@ class Accounting::JournalsController < ApplicationController
 
   # GET /accounting/journals
   def index
-    @q = Accounting::Journal.ransack(params[:q])
+    if params[:e].present?
+      @journals = Accounting::Journal.where(employee: params[:e])
+    else
+      @journals = Accounting::Journal.all
+    end
+
+    @q = @journals.ransack(params[:q])
     filtered_and_paginated_vouchers # concerns/accounting/filterable.rb
   end
 
