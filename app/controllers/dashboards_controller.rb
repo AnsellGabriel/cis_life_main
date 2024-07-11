@@ -62,6 +62,20 @@ class DashboardsController < ApplicationController
       @with_ors = GroupRemit.where.not(id: TransmittalOr.with_ors_already).where(mis_entry: true)
       @lppi_encoded = LoanInsurance::Batch.get_lppi_batches_count
       @gyrt_encoded = Batch.get_gyrt_encoded
+
+      render :index
+    end
+
+    def accounting
+      @check_vouchers = Accounting::Check.where(employee: current_user.userable)
+      @debit_advices = Accounting::DebitAdvice.where(employee: current_user.userable)
+      @journal_vouchers = Accounting::Journal.where(employee: current_user.userable)
+
+      request = Accounting::VoucherRequest.pending
+      @check_req =request.check_voucher
+      @da_req =request.debit_advice
+      @journal_req =request.journal_voucher
+
       render :index
     end
 end

@@ -5,7 +5,7 @@
       <div class="<%= flex_justify_align('between','start') %>">
         <div class="<%= flex_justify_align('','', true) %> gap-1">
           <p><small><strong>Date:</strong> <span><%= format_date_with_time(request.created_at) %></span></small></p>
-          <p><small><strong>Requester:</strong> <span><%= request.requester %></span></small></p>
+          <p><small><strong>Requested by:</strong> <span><%= request.requester %></span></small></p>
         </div>
         <div class="<%= flex_justify_align('','center') %> gap-1">
           <p><small><strong>Status:</strong></small></p>

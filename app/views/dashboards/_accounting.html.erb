@@ -1,0 +1,148 @@
+<div class="card-group mb-5">
+  <div class="card">
+    <div class="card-body">
+    <p class="text-primary card-title">CHECK VOUCHER REQUESTS</p>
+    <h2 class="text-muted"><%= @check_req.count %></h2>
+    </div>
+    <div class="card-footer"><small class="text-muted"> <%= link_to 'See Details <i class="bi bi-box-arrow-right"></i>'.html_safe, accounting_voucher_requests_path(pt: :check_voucher), class: "text-muted" %></small></div>
+  </div>
+  <div class="card">
+    <div class="card-body">
+    <p class="text-primary card-title">DEBIT ADVICE REQUESTS</p>
+    <h2 class="text-muted"><%= @da_req.count %></h2>
+
+    </div>
+    <div class="card-footer"><small class="text-muted"> <%= link_to 'See Details <i class="bi bi-box-arrow-right"></i>'.html_safe, accounting_voucher_requests_path(pt: :debit_advice), class: "text-muted" %></small></div>
+  </div>
+  <div class="card">
+    <div class="card-body">
+    <p class="text-primary card-title">JOURNAL VOUCHER REQUESTS</p>
+    <h2 class="text-muted"><%= @journal_req.count %></h2>
+
+    </div>
+    <div class="card-footer"><small class="text-muted"> <%= link_to 'See Details <i class="bi bi-box-arrow-right"></i>'.html_safe, accounting_voucher_requests_path(pt: :journal_voucher), class: "text-muted" %></small></div>
+  </div>
+</div>
+<h3>DISBURSEMENT MONITORING</h3>
+<div class="mb-3 d-flex gap-3">
+  <div class="card w-100">
+    <div class="card-body">
+      <table class="table">
+        <thead>
+            <tr>
+              <th>Check Voucher</th>
+              <th class="text-center">Count</th>
+              <th class="text-center">Amount</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+              <td class="text-primary">Overall</td>
+              <td class="text-center"><%= @check_vouchers.count %></td>
+              <td class="text-end"><%= to_number(@check_vouchers.sum(:amount)) %></td>
+            </tr>
+            <tr>
+              <td class="text-success">Posted</td>
+              <td class="text-center"><%= @check_vouchers.posted.count %></td>
+              <td class="text-end"><%= to_number(@check_vouchers.posted.sum(:amount)) %></td>
+            </tr>
+            <tr>
+              <td class="text-danger">Cancelled</td>
+              <td class="text-center"><%= @check_vouchers.cancelled.count %></td>
+              <td class="text-end"><%= to_number(@check_vouchers.cancelled.sum(:amount)) %></td>
+            </tr>
+            <tr>
+              <td class="text-warning">For Approval</td>
+              <td class="text-center"><%= @check_vouchers.for_approval.count %></td>
+              <td class="text-end"><%= to_number(@check_vouchers.for_approval.sum(:amount)) %></td>
+            </tr>
+            <tr>
+              <td class="text-warning">Pending</td>
+              <td class="text-center"><%= @check_vouchers.pending.count %></td>
+              <td class="text-end"><%= to_number(@check_vouchers.pending.sum(:amount)) %></td>
+            </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+  <div class="card w-100">
+    <div class="card-body">
+      <table class="table">
+        <thead>
+            <tr>
+              <th>Journal Voucher</th>
+              <th class="text-center">Count</th>
+              <th class="text-center">Amount</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+              <td class="text-primary">Overall</td>
+              <td class="text-center"><%= @journal_vouchers.count %></td>
+              <td class="text-end"><%= to_number(@journal_vouchers.sum(:amount)) %></td>
+            </tr>
+            <tr>
+              <td class="text-success">Posted</td>
+              <td class="text-center"><%= @journal_vouchers.posted.count %></td>
+              <td class="text-end"><%= to_number(@journal_vouchers.posted.sum(:amount)) %></td>
+            </tr>
+            <tr>
+              <td class="text-danger">Cancelled</td>
+              <td class="text-center"><%= @journal_vouchers.cancelled.count %></td>
+              <td class="text-end"><%= to_number(@journal_vouchers.cancelled.sum(:amount)) %></td>
+            </tr>
+            <tr>
+              <td class="text-warning">For Approval</td>
+              <td class="text-center"><%= @journal_vouchers.for_approval.count %></td>
+              <td class="text-end"><%= to_number(@journal_vouchers.for_approval.sum(:amount)) %></td>
+            </tr>
+            <tr>
+              <td class="text-warning">Pending</td>
+              <td class="text-center"><%= @journal_vouchers.pending.count %></td>
+              <td class="text-end"><%= to_number(@journal_vouchers.pending.sum(:amount)) %></td>
+            </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+  <div class="card w-100">
+    <div class="card-body">
+      <table class="table">
+        <thead>
+            <tr>
+              <th>Debit Advice</th>
+              <th class="text-center">Count</th>
+              <th class="text-center">Amount</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+              <td class="text-primary">Overall</td>
+              <td class="text-center"><%= @debit_advices.count %></td>
+              <td class="text-end"><%= to_number(@debit_advices.sum(:amount)) %></td>
+            </tr>
+            <tr>
+              <td class="text-success">Posted</td>
+              <td class="text-center"><%= @debit_advices.posted.count %></td>
+              <td class="text-end"><%= to_number(@debit_advices.posted.sum(:amount)) %></td>
+            </tr>
+            <tr>
+              <td class="text-danger">Cancelled</td>
+              <td class="text-center"><%= @debit_advices.cancelled.count %></td>
+              <td class="text-end"><%= to_number(@debit_advices.cancelled.sum(:amount)) %></td>
+            </tr>
+            <tr>
+              <td class="text-warning">For Approval</td>
+              <td class="text-center"><%= @debit_advices.for_approval.count %></td>
+              <td class="text-end"><%= to_number(@debit_advices.for_approval.sum(:amount)) %></td>
+            </tr>
+            <tr>
+              <td class="text-warning">Pending</td>
+              <td class="text-center"><%= @debit_advices.pending.count %></td>
+              <td class="text-end"><%= to_number(@debit_advices.pending.sum(:amount)) %></td>
+            </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
