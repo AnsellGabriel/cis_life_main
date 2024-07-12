@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2024_07_05_052526) do
+ActiveRecord::Schema[7.0].define(version: 2024_07_12_052035) do
   create_table "accounting_journal_entries", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.string "journable_type", null: false
     t.bigint "journable_id", null: false
@@ -1531,6 +1531,8 @@ ActiveRecord::Schema[7.0].define(version: 2024_07_05_052526) do
     t.integer "transmittal_type"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.bigint "user_id"
+    t.index ["user_id"], name: "index_transmittals_on_user_id"
   end
 
   create_table "treasury_accounts", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
@@ -1767,6 +1769,7 @@ ActiveRecord::Schema[7.0].define(version: 2024_07_05_052526) do
   add_foreign_key "read_messages", "claim_remarks"
   add_foreign_key "read_messages", "users"
   add_foreign_key "sip_pbs", "plan_units"
+  add_foreign_key "transmittals", "users"
   add_foreign_key "treasury_billing_statements", "treasury_cashier_entries", column: "cashier_entry_id"
   add_foreign_key "treasury_business_checks", "accounting_vouchers", column: "voucher_id"
   add_foreign_key "treasury_cashier_entries", "employees"

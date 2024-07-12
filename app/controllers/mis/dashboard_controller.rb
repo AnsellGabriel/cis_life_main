@@ -7,8 +7,8 @@ class Mis::DashboardController < ApplicationController
     # @with_ors = GroupRemit.where.not(official_receipt: nil).where(mis_entry: true)
     @with_ors = GroupRemit.where.not(id: TransmittalOr.with_ors_already).where(mis_entry: true)
 
-    @lppi_encoded = LoanInsurance::Batch.get_lppi_batches_count
-    @gyrt_encoded = Batch.get_gyrt_encoded
+    @lppi_encoded = LoanInsurance::Batch.get_lppi_batches_count(current_user.id)
+    @gyrt_encoded = Batch.get_gyrt_encoded(current_user.id)
   end
 
   def view_ors
@@ -42,7 +42,7 @@ class Mis::DashboardController < ApplicationController
     if params[:e].present?
       @filtered_ors = @filtered_ors.where(mis_user: params[:e])
     end
-    
+
     @pagy_ors, @filtered_ors = pagy(@filtered_ors, items: 25)
   end
 end

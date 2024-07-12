@@ -28,8 +28,8 @@ class LoanInsurance::Batch < Batch
 
   has_many :adjusted_coverages, as: :coverageable, dependent: :destroy
 
-  def self.get_lppi_batches_count
-    includes(group_remit: { agreement: :plan}).where(plan: {id: 2}).count
+  def self.get_lppi_batches_count(user_id)
+    includes(group_remit: { agreement: :plan}).where(plan: {id: 2}).where(group_remit: {mis_user: user_id}).count
   end
 
   def sii_skip_validation
