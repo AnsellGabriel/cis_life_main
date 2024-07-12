@@ -37,38 +37,35 @@ namespace :deploy do
       end
     end
   end
-end
 
-namespace :sidekiq do
-  desc 'Start sidekiq'
-  task :start do
-    on roles(:app) do
-      within current_path do
-        execute :bundle, 'exec sidekiq -C config/sidekiq.yml'
+  namespace :sidekiq do
+    desc 'Start sidekiq'
+    task :start do
+      on roles(:app) do
+        within current_path do
+          execute :bundle, 'exec sidekiq -C config/sidekiq.yml'
+        end
+      end
+    end
+
+    desc 'Stop sidekiq'
+    task :stop do
+      on roles(:app) do
+        within current_path do
+          execute :pkill, '-f sidekiq'
+        end
+      end
+    end
+
+    desc "Restart sidekiq"
+    task :restart do
+      on roles(:app) do
+      invoke 'sidekiq:stop'
+      invoke 'sidekiq:start'
       end
     end
   end
-
-  desc 'Stop sidekiq'
-  task :stop do
-    on roles(:app) do
-      within current_path do
-        execute :pkill, '-f sidekiq'
-      end
-    end
-  end
-
-  desc "Restart sidekiq"
-  task :restart do
-    on roles(:app) do
-    invoke 'sidekiq:stop'
-    invoke 'sidekiq:start'
-    end
-  end
 end
-
-after 'deploy', 'sidekiq:restart'
-
 
 append :linked_dirs, "log", "tmp/pids", "tmp/cache", "tmp/sockets", "vendor/bundle", ".bundle", "public/system", "public/uploads"
 # Default branch is :master
