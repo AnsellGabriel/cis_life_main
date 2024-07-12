@@ -53,7 +53,7 @@ namespace :sidekiq do
   task :stop do
     on roles(:app) do
       within current_path do
-        execute :sidekiqctl, 'stop'
+        execute :pkill, '-f sidekiq'
       end
     end
   end
