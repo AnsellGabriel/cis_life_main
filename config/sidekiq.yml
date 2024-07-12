@@ -1,7 +1,8 @@
+:concurrency: 5
 :scheduler:
   :schedule:
     group_remit_update:
-      cron: '0 10 * * *' # Set the desired time for the job to run (6:00 am in this example)
+      cron: '17 10 * * *' # Set the desired time for the job to run (6:00 am in this example)
       class: 'GroupRemitStatusUpdater'
       queue: 'default'
     batch_status_update:

@@ -43,7 +43,6 @@ append :linked_dirs, "log", "tmp/pids", "tmp/cache", "tmp/sockets", "vendor/bund
 # Default branch is :master
 # ask :branch, `git rev-parse --abbrev-ref HEAD`.chomp
 
-
 set :migration_role, :app
 
 set :migration_servers, -> { primary(fetch(:migration_role)) }
