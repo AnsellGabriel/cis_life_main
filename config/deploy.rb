@@ -39,6 +39,36 @@ namespace :deploy do
   end
 end
 
+namespace :sidekiq do
+  desc 'Start sidekiq'
+  task :start do
+    on roles(:app) do
+      within current_path do
+        execute :bundle, 'exec sidekiq -C config/sidekiq.yml'
+      end
+    end
+  end
+
+  desc 'Stop sidekiq'
+  task :stop do
+    on roles(:app) do
+      within current_path do
+        execute :sidekiqctl, 'stop'
+      end
+    end
+  end
+
+  desc "Restart sidekiq"
+  task :restart do
+    on roles(:app) do
+    invoke 'sidekiq:stop'
+    invoke 'sidekiq:start'
+    end
+  end
+end
+
+after 'deploy', 'sidekiq:restart'
+
 
 append :linked_dirs, "log", "tmp/pids", "tmp/cache", "tmp/sockets", "vendor/bundle", ".bundle", "public/system", "public/uploads"
 # Default branch is :master
@@ -61,7 +91,6 @@ set :rails_assets_groups, :assets
 
 set :keep_assets, 2
 
-after :deploy, "foreman:start"
 # Default deploy_to directory is /var/www/my_app_name
 # set :deploy_to, "/var/www/my_app_name"
 
