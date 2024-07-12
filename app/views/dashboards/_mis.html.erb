@@ -20,7 +20,7 @@
     <h2 class="text-muted"><%= @transmitted.count %></h2>
 
     </div>
-    <div class="card-footer"><small class="text-muted"> <%= link_to 'See Details <i class="bi bi-box-arrow-right"></i>'.html_safe, transmittals_path, class: "text-muted" %></small></div>
+    <div class="card-footer"><small class="text-muted"> <%= link_to 'See Details <i class="bi bi-box-arrow-right"></i>'.html_safe, transmittals_path(e: current_user.id), class: "text-muted" %></small></div>
   </div>
   <div class="card">
     <div class="card-body">
@@ -37,12 +37,12 @@
     <div class="card bg-warning">
       <div class="card-body">
         <p class="text-dark card-title">ENCODED GYRT</p>
-        <h2 class="text-dark"><%= number_with_delimiter(@lppi_encoded) %></h2>    </div>
+        <h2 class="text-dark"><%= number_with_delimiter(@gyrt_encoded) %></h2>    </div>
     </div>
     <div class="card bg-warning">
       <div class="card-body">
         <p class="text-dark card-title">ENCODED LPPI</p>
-        <h2 class="text-dark"><%= number_with_delimiter(@gyrt_encoded) %></h2>
+        <h2 class="text-dark"><%= number_with_delimiter(@lppi_encoded) %></h2>
       </div>
     </div>
   </div>

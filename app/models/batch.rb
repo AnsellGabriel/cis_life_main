@@ -111,8 +111,8 @@ class Batch < ApplicationRecord
     joins(coop_member: :member).where(expiry_date: date.., insurance_status: :approved)
   end
 
-  def self.get_gyrt_encoded
-    includes(group_remits: { agreement: :plan}).where(plan: {id: [1,3,4]}).count
+  def self.get_gyrt_encoded(user_id)
+    includes(group_remits: {agreement: :plan}).where(plan: {id: [1,3,4]}).where(group_remits: {mis_user: user_id}).count
   end
 
 

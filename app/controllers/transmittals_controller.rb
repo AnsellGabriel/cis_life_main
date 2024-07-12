@@ -13,7 +13,12 @@ class TransmittalsController < ApplicationController
 
     if current_user.is_mis?
       type = :mis
-      @transmittals = Transmittal.where(transmittal_type: type)
+
+      if params[:e].present?
+        @transmittals = Transmittal.where(transmittal_type: type, user: User.find(params[:e]))
+      else
+        @transmittals = Transmittal.where(transmittal_type: type)
+      end
     elsif current_user.is_und?
       type = :und
       @transmittals = Transmittal.where(transmittal_type: type)
@@ -67,6 +72,7 @@ class TransmittalsController < ApplicationController
     @transmittal = Transmittal.new(transmittal_params)
     @transmittal.transmittal_type = current_user.is_mis? ? "mis" : "und"
     @transmittal.set_code_and_type(current_user)
+    @transmittal.user = current_user
 
     if params[:transmittal][:transmittal_ors_attributes].nil? && params[:transmittal][:group_remit_ids].nil?
       # flash.now[:alert] =
