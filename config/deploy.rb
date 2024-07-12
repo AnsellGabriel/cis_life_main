@@ -65,6 +65,8 @@ namespace :deploy do
       end
     end
   end
+
+  after 'deploy', 'sidekiq:restart'
 end
 
 append :linked_dirs, "log", "tmp/pids", "tmp/cache", "tmp/sockets", "vendor/bundle", ".bundle", "public/system", "public/uploads"
