@@ -56,10 +56,10 @@ class DashboardsController < ApplicationController
     end
 
     def mis
-      @encoded = GroupRemit.where(mis_entry: true)
+      @encoded = GroupRemit.where(mis_entry: true, mis_user: current_user.id)
       @not_encoded = Treasury::CashierEntry.posted.includes(:agreement).where.not(or_no: GroupRemit.pluck(:official_receipt))
       @transmitted = TransmittalOr.joins(:transmittal).where(transmittal: { transmittal_type: :mis })
-      @with_ors = GroupRemit.where.not(id: TransmittalOr.with_ors_already).where(mis_entry: true)
+      @with_ors = GroupRemit.where.not(id: TransmittalOr.with_ors_already).where(mis_entry: true, mis_user: current_user.id)
       @lppi_encoded = LoanInsurance::Batch.get_lppi_batches_count
       @gyrt_encoded = Batch.get_gyrt_encoded
 
@@ -72,9 +72,9 @@ class DashboardsController < ApplicationController
       @journal_vouchers = Accounting::Journal.where(employee: current_user.userable)
 
       request = Accounting::VoucherRequest.pending
-      @check_req =request.check_voucher
-      @da_req =request.debit_advice
-      @journal_req =request.journal_voucher
+      @check_req = request.check_voucher
+      @da_req = request.debit_advice
+      @journal_req = request.journal_voucher
 
       render :index
     end
