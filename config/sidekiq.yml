@@ -2,11 +2,11 @@
 :scheduler:
   :schedule:
     group_remit_update:
-      cron: '21 11 * * *' # Set the desired time for the job to run (6:00 am in this example)
+      cron: '59 23 * * *' # Set the desired time for the job to run (6:00 am in this example)
       class: 'GroupRemitStatusUpdater'
       queue: 'default'
     batch_status_update:
-      cron: '25 13 * * *' 
+      cron: '27 12 * * *' 
       class: 'LoanStatusUpdater'
       queue: 'default'
     payment_reminder:
