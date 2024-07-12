@@ -39,6 +39,10 @@ class Mis::DashboardController < ApplicationController
       @filtered_ors = @ors
     end
 
+    if params[:e].present?
+      @filtered_ors = @filtered_ors.where(mis_user: params[:e])
+    end
+    
     @pagy_ors, @filtered_ors = pagy(@filtered_ors, items: 25)
   end
 end

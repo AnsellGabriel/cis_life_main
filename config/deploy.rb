@@ -60,6 +60,8 @@ set :assets_manifests, ["app/assets/config/manifest.js"]
 set :rails_assets_groups, :assets
 
 set :keep_assets, 2
+
+after :deploy, "foreman:start"
 # Default deploy_to directory is /var/www/my_app_name
 # set :deploy_to, "/var/www/my_app_name"
 
