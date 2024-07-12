@@ -6,7 +6,7 @@
       class: 'GroupRemitStatusUpdater'
       queue: 'default'
     batch_status_update:
-      cron: '35 11 * * *' 
+      cron: '42 11 * * *' 
       class: 'LoanStatusUpdater'
       queue: 'default'
     payment_reminder:
