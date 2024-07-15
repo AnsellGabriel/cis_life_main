@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2024_07_12_052035) do
+ActiveRecord::Schema[7.0].define(version: 2024_07_15_023015) do
   create_table "accounting_journal_entries", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.string "journable_type", null: false
     t.bigint "journable_id", null: false
@@ -200,6 +200,7 @@ ActiveRecord::Schema[7.0].define(version: 2024_07_12_052035) do
     t.bigint "agent_group_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.string "code"
     t.index ["agent_group_id"], name: "index_agents_on_agent_group_id"
   end
 
@@ -1594,9 +1595,11 @@ ActiveRecord::Schema[7.0].define(version: 2024_07_12_052035) do
     t.bigint "agreement_id"
     t.bigint "plan_id"
     t.bigint "employee_id"
-    t.string "code"
     t.decimal "service_fee", precision: 15, scale: 2, default: "0.0"
     t.decimal "deposit", precision: 15, scale: 2, default: "0.0"
+    t.string "code"
+    t.bigint "agent_id"
+    t.index ["agent_id"], name: "index_treasury_cashier_entries_on_agent_id"
     t.index ["agreement_id"], name: "index_treasury_cashier_entries_on_agreement_id"
     t.index ["employee_id"], name: "index_treasury_cashier_entries_on_employee_id"
     t.index ["entriable_type", "entriable_id"], name: "index_treasury_cashier_entries_on_entriable"
@@ -1609,6 +1612,7 @@ ActiveRecord::Schema[7.0].define(version: 2024_07_12_052035) do
     t.string "name"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.string "code"
   end
 
   create_table "treasury_payments", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
@@ -1772,6 +1776,7 @@ ActiveRecord::Schema[7.0].define(version: 2024_07_12_052035) do
   add_foreign_key "transmittals", "users"
   add_foreign_key "treasury_billing_statements", "treasury_cashier_entries", column: "cashier_entry_id"
   add_foreign_key "treasury_business_checks", "accounting_vouchers", column: "voucher_id"
+  add_foreign_key "treasury_cashier_entries", "agents"
   add_foreign_key "treasury_cashier_entries", "employees"
   add_foreign_key "treasury_cashier_entries", "treasury_accounts"
   add_foreign_key "treasury_cashier_entries", "treasury_payment_types"

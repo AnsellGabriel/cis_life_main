@@ -56,7 +56,7 @@
           <td class="text-center"><%= month_day_year(entry.or_date) %></td>
           <td><%= entry.entriable %></td>
           <td class="text-end"><%= to_curr(entry.amount) %></td>
-          <td class="text-center">
+          <td class="">
             <span class="<%= entry.decorate.status_badge %>"><%= entry.decorate.status.titleize %></span>
           </td>
         </tr>

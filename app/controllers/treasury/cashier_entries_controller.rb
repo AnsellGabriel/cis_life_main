@@ -136,7 +136,7 @@ class Treasury::CashierEntriesController < ApplicationController
 
   # Only allow a list of trusted parameters through.
   def entry_params
-    params.require(:treasury_cashier_entry).permit(:deposit, :service_fee, :or_no, :or_date, :global_entriable, :treasury_payment_type_id, :treasury_account_id, :amount, :agreement_id, :plan_id)
+    params.require(:treasury_cashier_entry).permit(:deposit, :service_fee, :or_no, :or_date, :global_entriable, :treasury_payment_type_id, :treasury_account_id, :amount, :agreement_id, :plan_id, :agent_id)
   end
 
   def amount_to_words(amount)
