@@ -155,6 +155,7 @@ class Claims::ProcessClaimsController < ApplicationController
     @process_claim.entry_type = :claim
     @process_claim.claim_route = :analyst_file if @process_claim.id.nil?
     @process_claim.status = :pending
+    # @process_claim.micro = 1 if @process_claim.agreement.plan.micro
     @process_claim.age = @process_claim.get_age.to_i
     # raise "errors"
     respond_to do |format|
@@ -281,27 +282,33 @@ class Claims::ProcessClaimsController < ApplicationController
   def claim_route
     # @process_claim.claim_track = ProcessTrack.build
     # @claim_track = ProcessTrack.new
-    @claim_track = @process_claim.process_track.build
+    # raise "errors"
+    @claim_track = @process_claim.process_tracks.build
     @claim_track.route_id = params[:p]
     unless params[:s].nil?
       @claim_track.status = params[:s].to_i
-      @claim_track.route_id = approver_routes(@process_claim,@claims_user_authority_level.maxAmount, @claim_track.status)
-      if @process_claim.check_authority_level(@claims_user_authority_level.maxAmount)
-        @process_claim.update(status: :denied) if @claim_track.denied?
-        @process_claim.update(status: :approved) if @claim_track.approved?
-        @process_claim.update(status: :pending) if @claim_track.pending?
-      end
-      unless @claims_user_reconsider.nil?
-        if @process_claim.check_authority_level(@claims_user_reconsider.maxAmount) 
-          @process_claim.update(status: :reconsider_denied) if @claim_track.reconsider_denied?
-          @process_claim.update(status: :reconsider_approved, approval: 1) if @claim_track.reconsider_approved?
+      unless @claim_track.reconsider?
+        @claim_track.route_id = approver_routes(@process_claim,@claims_user_authority_level.maxAmount, @claim_track.status)
+        if @process_claim.check_authority_level(@claims_user_authority_level.maxAmount)
+          @process_claim.update(status: :denied) if @claim_track.denied?
+          @process_claim.update(status: :approved) if @claim_track.approved?
+          @process_claim.update(status: :pending) if @claim_track.pending?
         end
+        unless @claims_user_reconsider.nil?
+          if @process_claim.check_authority_level(@claims_user_reconsider.maxAmount) 
+            @process_claim.update(status: :reconsider_denied) if @claim_track.reconsider_denied?
+            @process_claim.update(status: :reconsider_approved, approval: 1) if @claim_track.reconsider_approved?
+          end
+        end
+      else 
+        @claim_track.route_id = 10 if @process_claim.claim_review?
+        @process_claim.update!(status: :reconsider)
       end
     end
     @claim_track.user_id = current_user.id
-    
+    # raise "errors"
     #CHECK THE ATTACH DOCUMENTS
-    unless current_user.userable_type == "Employee"
+    # unless current_user.userable_type == "Employee"
       if @process_claim.coop_file? || @process_claim.analyst_file? || @process_claim.incomplete_document? 
         document_status = @process_claim.attach_document_status
         @status_message = document_status[:status_message]
@@ -309,45 +316,50 @@ class Claims::ProcessClaimsController < ApplicationController
         return redirect_to show_coop_claims_process_claim_path(@process_claim), alert: @status_message if status && current_user.userable_type == "CoopUser"
         return redirect_to claim_process_claims_process_claim_path(@process_claim), alert: @status_message if status && current_user.userable_type == "Employee"
       end
-    end
+    # end
     
 
     # raise "errors"
     respond_to do |format|
       if @claim_track.save
-        case @claim_track.route_id
-        when 1
-          @process_claim.update!(claim_route: @claim_track.route_id, status: :process, claim_filed: 0, processing: 0, approval: 0, payment: 0)
-        when 2
-          import_product_benefit if @process_claim.documentation_review?
-          @process_claim.update!(claim_route: @claim_track.route_id, status: :process, claim_filed: 1, processing: 0)
-        when 3
-          @process_claim.update!(claim_route: @claim_track.route_id, status: :process, processing: 1)
-        when 8
-          @process_claim.update!(claim_route: @claim_track.route_id, status: :approved, payment: 1)
-          ActiveRecord::Base.transaction do
-            @process_claim.update!(claim_route: @claim_track.route_id, status: :approved, approval: 1)
-
-            if @process_claim.voucher_requests&.last&.vouchers&.pending_audit.present?
-              #* put the check voucher to pending here
-              @process_claim.voucher_request.vouchers.pending_audit.last.update(audit: :for_audit)
-            else
-              account_id = process_claim_params[:coop_bank] if params[:pt] == 'debit_advice'
-              request = VoucherRequestService.new(@process_claim, @process_claim.get_benefit_claim_total, :claims_payment, current_user, params[:pt].to_sym, account_id)
-
-              if request.create_request
-                format.html { redirect_to claims_process_claims_path(@process_claim), notice: "#{@process_claim.claim_route.to_s.humanize.titleize} status"  }
-              else
-                format.html { redirect_to claim_process_claims_process_claim_path(@process_claim), alert: "Something went wrong" }
+        unless @claim_track.reconsider?
+            case @claim_track.route_id
+            when 1
+              @process_claim.update!(claim_route: @claim_track.route_id, status: :process, claim_filed: 0, processing: 0, approval: 0, payment: 0)
+            when 2
+              import_product_benefit if @process_claim.documentation_review?
+              @process_claim.update!(claim_route: @claim_track.route_id, status: :process, claim_filed: 1, processing: 0)
+            when 3
+              @process_claim.update!(claim_route: @claim_track.route_id, status: :process, processing: 1)
+            when 8
+              @process_claim.update!(claim_route: @claim_track.route_id, status: :approved, payment: 1)
+              ActiveRecord::Base.transaction do
+                @process_claim.update!(claim_route: @claim_track.route_id, status: :approved, approval: 1)
+    
+                if @process_claim.voucher_requests&.last&.vouchers&.pending_audit.present?
+                  #* put the check voucher to pending here
+                  @process_claim.voucher_request.vouchers.pending_audit.last.update(audit: :for_audit)
+                else
+                  account_id = process_claim_params[:coop_bank] if params[:pt] == 'debit_advice'
+                  request = VoucherRequestService.new(@process_claim, @process_claim.get_benefit_claim_total, :claims_payment, current_user, params[:pt].to_sym, account_id)
+    
+                  if request.create_request
+                    format.html { redirect_to claims_process_claims_path(@process_claim), notice: "#{@process_claim.claim_route.to_s.humanize.titleize} status"  }
+                  else
+                    format.html { redirect_to claim_process_claims_process_claim_path(@process_claim), alert: "Something went wrong" }
+                  end
+                end         
               end
-            end         
-          end
-        when 18
-          @process_claim.update!(claim_route: @claim_track.route_id, status: :denied_due_to_non_compliance)
-        when 19
-          @process_claim.update!(claim_route: @claim_track.route_id, status: :pending)
-        else
-          @process_claim.update!(claim_route: @claim_track.route_id)
+            when 18
+              @process_claim.update!(claim_route: @claim_track.route_id, status: :denied_due_to_non_compliance)
+            when 19
+              @process_claim.update!(claim_route: @claim_track.route_id, status: :pending)
+            when 24
+              @process_claim.update!(claim_route: @claim_track.route_id, status: :pending)
+              return redirect_to edit_ca_claims_process_claim_path(@process_claim)
+            else
+              @process_claim.update!(claim_route: @claim_track.route_id)
+            end
         end
         
         if current_user.userable_type == "Employee"
@@ -434,7 +446,7 @@ class Claims::ProcessClaimsController < ApplicationController
 
   # Only allow a list of trusted parameters through.
   def process_claim_params
-    params.require(:claims_process_claim).permit(:coop_bank, :claim_type_nature_id, :cooperative_id, :coop_member_id, :claim_route, :agreement_id, :agreement_benefit_id, :batch_id, :coop_member_id, :cause_id, :claim_type_id, :date_file, :claim_filed, :processing, :approval, :payment, :coop_member_type, :date_incident, :entry_type, :claimant_name, :claimant_email, :claimant_contact_no, :nature_of_claim, :agreement_benefit_id, :relationship,
+    params.require(:claims_process_claim).permit(:coop_bank, :claim_retrieval_id, :claim_type_nature_id, :cooperative_id, :coop_member_id, :claim_route, :agreement_id, :agreement_benefit_id, :batch_id, :coop_member_id, :cause_id, :claim_type_id, :date_file, :claim_filed, :processing, :approval, :payment, :coop_member_type, :date_incident, :entry_type, :claimant_name, :claimant_email, :claimant_contact_no, :nature_of_claim, :agreement_benefit_id, :relationship, :micro,
       claim_documents_attributes: [:id, :document, :document_type, :_destroy],
       process_tracks_attributes: [:id, :description, :route_id, :trackable_type, :trackable_id ],
       claim_benefits_param: [:id, :benefit_id, :amount, :status],

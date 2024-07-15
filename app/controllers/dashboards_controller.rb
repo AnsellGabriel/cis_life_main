@@ -16,6 +16,8 @@ class DashboardsController < ApplicationController
         @process_claims = Claims::ProcessClaim.all
         @claim_reinsurances = Claims::ClaimReinsurance.all
         @claims_fund = Claims::CfAccount.all
+        @cf_availments = Claims::CfAvailment.all
+        @cf_replenishes = Claims::CfReplenish.all
         render :index
     end
 

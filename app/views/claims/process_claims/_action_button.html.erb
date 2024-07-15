@@ -1,5 +1,5 @@
 <div class="row">
-  <div class="col-md-8">
+  <div class="col-md-7">
     <% if current_user.userable_type == "CoopUser" %>
       <%= link_to '<i class="bi bi-arrow-left-square"></i> Back'.html_safe, index_coop_claims_process_claims_path, class: 'btn btn-outline-secondary btn-sm' %>
     <% elsif current_user.is_auditor? %>
@@ -24,29 +24,35 @@
     <% elsif current_user.is_auditor? %>
     <% elsif current_user.userable_type == 'Employee' %>
       <%= link_to '<i class="bi bi-card-list"></i> Audit Remarks'.html_safe, accounting_check_remarks_path(@voucher, e_t: @voucher.entry_type), class: 'btn btn-sm btn-outline-danger', data: {turbo_frame: 'reg_form_modal'} if @audit_remarks.present? %>
-      <%= link_to "Claims Filed", claim_route_claims_process_claim_path(@process_claim, p: 2), class: "btn btn-primary btn-sm" if @process_claim.documentation_review? || @process_claim.analyst_file? || @process_claim.retrieval_documents? %>
-      <%= link_to "Retrieval of Documents", claim_route_claims_process_claim_path(@process_claim, p: 24), class: "btn btn-primary btn-sm" if @process_claim.documentation_review? || @process_claim.analyst_file? %>
+      <%= link_to "Claims Filed", claim_route_claims_process_claim_path(@process_claim, p: 2), class: "btn btn-primary btn-sm" if @process_claim.documentation_review? || @process_claim.analyst_file? || @process_claim.retrieval? %>
       <%= link_to "Claims Review", claim_route_claims_process_claim_path(@process_claim, p: 3), class: "btn btn-primary btn-sm" if @process_claim.claim_filed? %>
-      <%= link_to '<i class="bi bi-repeat"></i> Return to Claims Filed'.html_safe, claim_route_claims_process_claim_path(p: 2), class: "btn btn-primary btn-sm" if @process_claim.claim_review? || @process_claim.incomplete_document? || @process_claim.pending_claim? %>
+      <%= link_to "Retrieval", claim_route_claims_process_claim_path(@process_claim, p: 24), class: "btn btn-warning btn-sm" if @process_claim.documentation_review? || @process_claim.analyst_file? || @process_claim.claim_filed? %>
+      <%= link_to '<i class="bi bi-arrow-90deg-left"></i> Return to Claims Filed'.html_safe, claim_route_claims_process_claim_path(p: 2), class: "btn btn-primary btn-sm" if @process_claim.claim_review? || @process_claim.incomplete_document? || @process_claim.pending_claim? %>
+      <%= link_to '<i class="bi bi-arrow-90deg-right"></i> Send to Evaluator'.html_safe, claim_route_claims_process_claim_path(p: 4), class: "btn btn-primary btn-sm" if @process_claim.claim_review? %>
+      <%= link_to '<i class="bi bi-arrow-90deg-left"></i> Return to Claims Analyst'.html_safe, claim_route_claims_process_claim_path(p: 3), class: "btn btn-primary btn-sm" if @process_claim.evaluation? %>
+      <%= link_to '<i class="bi bi-arrow-90deg-right"></i> Send to COSO'.html_safe, claim_route_claims_process_claim_path(p: 5), class: "btn btn-primary btn-sm" if @process_claim.evaluation? %>
       <%= link_to '<i class="bi bi-sign-stop-lights"></i> Pending'.html_safe, new_status_claims_claim_remarks_path(v: @process_claim, s: 2), class: "btn btn-warning btn-sm", data: { turbo_frame: "remote_modal" } if @process_claim.claim_filed?  %>
       <%= link_to '<i class="bi bi-bootstrap-reboot"></i> Reconsider'.html_safe, new_status_claims_claim_remarks_path(v: @process_claim, s: 3), class: "btn btn-warning btn-sm", data: { turbo_frame: "remote_modal" } if @process_claim.denied? && @claims_user_authority_level.name == "Evaluators" %>
       
       <%= link_to "Request Documents", claim_route_claims_process_claim_path(@process_claim, p: 19), class: "btn btn-warning btn-sm", data: {turbo_confirm: "Return this claim to coop?", turbo_method: :get} if @process_claim.documentation_review? || @process_claim.claim_filed? %>
       <%= link_to "Recover Claims", claim_route_claims_process_claim_path(@process_claim, p: 19), class: "btn btn-warning btn-sm", data: {turbo_confirm: "Return this claim to coop?", turbo_method: :get} if @process_claim.non_compliant? %>
+      <%= link_to "Processing Sheet", print_sheet_claims_process_claim_path(@process_claim), class: "btn btn-warning btn-sm" if @process_claim.process? %>
     <% end %>
   </div>
-  <div class="col-md-4">
+  <div class="col-md-5">
     <div class="text-end">
       <% if @process_claim.processing? && current_user.userable_type == "Employee" %>
         <% if validate_evaluator(@process_claim) %>
           <% if @process_claim.reconsider? %>
             <%= link_to '<i class="bi bi-check-circle"></i> Approve'.html_safe, claim_route_claims_process_claim_path(s: 2), class: "btn btn-success btn-sm", data: {turbo_confirm: "Do you want to approve?", turbo_method: :get}  %>
-            <%= link_to '<i class="bi bi-x-square"></i> Denied'.html_safe, claim_route_claims_process_claim_path(s: 3), class: "btn btn-success btn-sm", data: {turbo_confirm: "Do you want to approve?", turbo_method: :get}  %>
+            <%= link_to '<i class="bi bi-x-square"></i> Denied'.html_safe, claim_route_claims_process_claim_path(s: 3), class: "btn btn-danger btn-sm", data: {turbo_confirm: "Do you want to approve?", turbo_method: :get}  %>
+            <%= link_to '<i class="bi bi-x-circle"></i> Reconsider'.html_safe, claim_route_claims_process_claim_path(s: 5), class: "btn btn-warning btn-sm", data: {turbo_confirm: "Do you want to reconsider the claim?", turbo_method: :get }  %>
             <%#= link_to '<i class="bi bi-check-circle"></i> Denied'.html_safe, claim_route_claims_process_claim_path(p: path, s: 3), class: "btn btn-danger btn-sm", data: {turbo_confirm: "Do you want to Denied?", turbo_method: :get}  %>
           <% else %>
             <%= link_to '<i class="bi bi-check-circle"></i> Approve'.html_safe, claim_route_claims_process_claim_path(s: 0), class: "btn btn-success btn-sm", data: {turbo_confirm: "Do you want to approve the claim?", turbo_method: :get}  %>
             <%= link_to '<i class="bi bi-x-square"></i> Denied'.html_safe, claim_route_claims_process_claim_path(s: 1), class: "btn btn-danger btn-sm", data: {turbo_confirm: "Do you want to denied the claim?", turbo_method: :get }  %>
             <%= link_to '<i class="bi bi-sign-stop-lights"></i> Pending'.html_safe, claim_route_claims_process_claim_path(s: 4), class: "btn btn-warning btn-sm", data: {turbo_confirm: "Do you want to pending the claim?", turbo_method: :get }  %>
+            <%= link_to '<i class="bi bi-x-circle"></i> Reconsider'.html_safe, claim_route_claims_process_claim_path(s: 5), class: "btn btn-warning btn-sm", data: {turbo_confirm: "Do you want to reconsider the claim?", turbo_method: :get }  %>
           <% end %>
         <% end %>
       <% end %>
@@ -64,4 +70,3 @@
     </div>
   </div>
 </div>
-<% console %>

@@ -1,11 +1,11 @@
 <%= content_tag :h1, "List of Cf Replenishes" %>
 
 
-<div class="text-end mb-3">
-  <%= link_to new_claims_cf_replenish_path, class: 'btn btn-primary', data: { turbo_frame: "remote_modal" } do %>
-    New Cf Replenish
-  <% end %>
-</div>
+<%# <div class="text-end mb-3"> %>
+  <%#= link_to new_claims_cf_replenish_path, class: 'btn btn-primary', data: { turbo_frame: "remote_modal" } do %>
+    <%# New Cf Replenish %>
+  <%# end %>
+<%# </div> %>
 
 
   <table class="table table-striped table-bordered table-hover">
@@ -27,7 +27,8 @@
         <td><%= cf_replenish.cf_account %> <br>
         <small class="text-muted"><%= cf_replenish.user %> <span class="badge bg-primary"><%= cf_replenish.status.humanize %></span></small> <br>
         <%= cf_replenish.description %></td>
-        <td><%= cf_replenish.transaction_date %></td>
+        <td><%= cf_replenish.transaction_date %> <br>
+        <small><%= cf_replenish.orno %> - <%= cf_replenish.ordate %></small></td>
         <td class="text-end"><%= to_curr(cf_replenish.amount) %></td>
  
     

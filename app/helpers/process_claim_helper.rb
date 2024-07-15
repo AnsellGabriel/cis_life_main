@@ -75,6 +75,8 @@ module ProcessClaimHelper
             path = 9
         when "pending"
             path = 25
+        when "reconsider"
+            path = 5
         end
         case process_claim.claim_route
         # when process_claim.claim_review? 
@@ -94,7 +96,7 @@ module ProcessClaimHelper
                 unless process_claim.check_authority_level(max_amount)
                     path = 6
                 end
-            end 
+            end
         # when "evaluation_president"
         #     if @claims_user_authority_level.name == "President (Approver)"
                 

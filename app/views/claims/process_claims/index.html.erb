@@ -46,10 +46,10 @@
             <% end %>
           </small>
         </td>
-        <td><strong><%= process_claim.agreement.plan %></strong> <br>
+        <td><strong><%= process_claim.agreement.plan %></strong> <%= content_tag :span, 'Micro', class: 'badge rounded-pill bg-warning text-dark' if process_claim.agreement.plan.micro %> <br>
           <%= content_tag :small, process_claim.claim_type %> <br>
-          <small>Date Incident: <%= to_shortdate(process_claim.date_incident) %></small> <br>
-          <%= content_tag :small, "Date Filed: #{to_shortdate(process_claim.date_file)}" unless process_claim.date_file.nil? %></td>
+          <%= to_curr(process_claim.get_benefit_claim_total) %>
+          </td>
         <%# <td><%= process_claim.batch %>
         <td>
           <%= render 'index_link', p: process_claim %>
