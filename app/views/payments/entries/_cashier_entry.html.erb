@@ -46,10 +46,10 @@
         <span class="small col-10"><%= entry.treasury_account %></span>
       </div>
 
-      <% if entry.remittance? %>
+      <% if entry.agent.present? or entry.remittance? %>
         <div class="row mb-3">
           <span class="small fw-bold col-2">Agent: </span>
-          <span class="small col-10"><%= entry.agent %></span>
+          <span class="small col-10"><%= entry.show_agent %></span>
         </div>
       <% end %>
 
@@ -67,7 +67,7 @@
           <span class="small">Amount</span>
           <span class="small"><%= to_curr(entry.amount) %></span>
         </div>
-        <% if entry.service_fee > 0 %>
+        <% if entry.service_fee and entry.service_fee > 0 %>
           <hr>
           <div class="<%= flex_justify_align('between') %>">
             <span class="small">Service Fee</span>
