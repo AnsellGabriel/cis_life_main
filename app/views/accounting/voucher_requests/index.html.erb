@@ -30,7 +30,7 @@
 
         <% @requests.each do |request| %>
           <tr>
-            <td class="text-center w-125 align-middle"><%= short_month_day_year(request.created_at) %></td>
+            <td class="text-center w-125 align-middle"><%= format_date_with_time(request.created_at) %></td>
             <td class="align-middle"><%= request.payee %></td>
             <td><%= request.particulars %></td>
             <td class="text-center w-150 align-middle"><%= request.requester %></td>

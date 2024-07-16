@@ -6,13 +6,13 @@
     <dl class="row">
       <dt class="col-sm-4">Name:</dt>
       <% coop_mem = @process_claim.coop_member %>
-      <dd class="col-sm-8"> <%= link_to coop_mem.get_fullname, coop_mem, class: "text-primary", data: {turbo_frame: 'modal-xl'}, title: 'Show' %></dd>
+      <dd class="col-sm-8"> <%= link_to coop_mem&.get_fullname, coop_mem, class: "text-primary", data: {turbo_frame: 'modal-xl'}, title: 'Show' %></dd>
       <dt class="col-sm-4">Birthdate</dt>
-      <dd class="col-sm-8"> <%= to_shortdate(@process_claim.coop_member.member.birth_date) %>, Age: <%= @process_claim.age %></dd>
+      <dd class="col-sm-8"> <%= to_shortdate(@process_claim.coop_member&.member&.birth_date) %>, Age: <%= @process_claim.age %></dd>
       <dt class="col-sm-4">Gender:</dt>
-      <dd class="col-sm-8"><%= @process_claim.coop_member.member.gender %></dd>
+      <dd class="col-sm-8"><%= @process_claim.coop_member&.member&.gender %></dd>
       <dt class="col-sm-4">Occupation:</dt>
-      <dd class="col-sm-8"><%= coop_mem.member.occupation %></dd>
+      <dd class="col-sm-8"><%= coop_mem&.member&.occupation %></dd>
       <dt class="col-sm-4">Cooperative:</dt>
       <dd class="col-sm-8"><%= @process_claim.cooperative %> </dd>
       <dt class="col-sm-4">Address:</dt>

@@ -101,6 +101,7 @@ class LppiImportService
       loan_amount: row["LOAN_AMOUNT"],
       loan_type: row["LOAN_TYPE"].to_s.squish.upcase,
       premium: @current_user.is_mis? && row["PREMIUM"].present? ? row["PREMIUM"].to_f : nil,
+      unused: @current_user.is_mis? && row["UNUSED"].present? ? row["UNUSED"].to_f : nil,
       unused_eff_date: @current_user.is_mis? && row["UNUSED_EFF_DATE"].present? ? row["UNUSED_EFF_DATE"] : nil,
       unused_loan_amount: @current_user.is_mis? && row["UNUSED_LOAN_AMOUNT"].present? ? row["UNUSED_LOAN_AMOUNT"].to_f : nil,
       reference_id: @current_user.is_mis? && row["REFERENCE_ID"].present? ? row["REFERENCE_ID"].to_s.squish.upcase : nil
@@ -181,7 +182,7 @@ class LppiImportService
     #   new_batch.unused_loan_id = previous_loans.first.id
     # end
 
-    result = new_batch.process_batch(batch_hash[:premium], @current_user)
+    result = new_batch.process_batch(batch_hash[:premium], @current_user, batch_hash[:unused])
 
     if result == :no_rate_for_age
       create_denied_member(member, "No rate available for members with age: #{new_batch.age}")

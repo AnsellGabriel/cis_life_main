@@ -10,6 +10,11 @@
     </div>
   </div>
 
+  <div class="row p-3" style="border-top: 2px solid black; border-bottom: 1px solid black">
+    <div class="col-8"></div>
+    <div class="col-2 text-end fw-bold">Debit</div>
+    <div class="col-2 text-end fw-bold">Credit</div>
+  </div>
   <% @entries.each do |entry| %>
     <% case entry.class.name %>
     <% when "Accounting::Check" %>
@@ -20,7 +25,8 @@
       <% entry_number = entry.or_no %>
     <% end %>
     
-    <div class="pt-1 mt-3" style="border-top: 1px solid black">
+
+    <div class="pt-1" style="border-top: 1px solid black">
       <div class="row">
         <div class="col-2"><%= entry_number %></div>
         <div class="col-2 text-center pe-3"><%= date_as_month_day_year(entry.class.name == "Treasury::CashierEntry" ? entry.or_date : entry.post_date) %></div>
@@ -44,7 +50,7 @@
         <div class="row mb-3">
           <div class="col-1"></div>
           <div class="col-2"><%= ledger.account.code %></div>
-          <div class="col-5"><%= ledger.account.name %></div>
+          <div class="col-5 ps-5"><%= ledger.account.name %></div>
           <div class="col-2 text-end">0.00</div>
           <div class="col-2 text-end"><%= to_curr(ledger.amount) %></div>
         </div>
@@ -61,11 +67,14 @@
       </div>
     </div>
   <% end %>
-  <div class="pt-3 mt-5" style="border-top: 1px solid black">
+  <div class="pt-3 mt-5" style="border-top: 2px solid black">
     <div class="row">
-      <div class="col-8 text-end">Total</div>
-      <div class="col-2 text-end"><%= to_curr(@total_debit) %></div>
-      <div class="col-2 text-end"><%= to_curr(@total_credit) %></div>
+      <div class="col-8 text-end fw-bold">Total</div>
+      <div class="col-2 text-end fw-bold"><%= to_curr(@total_debit) %></div>
+      <div class="col-2 text-end fw-bold"><%= to_curr(@total_credit) %></div>
     </div>
   </div>
 <% end %>
+<div class="row text-center fst-italic mt-5">
+  <div class="col-12">This is a system-generated document and does not require a signature.</div>
+</div>

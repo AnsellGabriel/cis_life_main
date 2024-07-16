@@ -47,9 +47,9 @@ class LoanInsurance::BatchesController < ApplicationController
     end
   end
 
-  def show_unuse_batch
-    @batch = LoanInsurance::Batch.find(params[:id])
-  end
+  # def show_unuse_batch
+  #   @batch = LoanInsurance::Batch.find(params[:id])
+  # end
 
   def modal_remarks
     @batch = LoanInsurance::Batch.find(params[:id])
@@ -89,12 +89,14 @@ class LoanInsurance::BatchesController < ApplicationController
     params[:loan_insurance_batch][:loan_amount] = params[:loan_insurance_batch][:loan_amount].gsub(",", "").to_d
     @batch = LoanInsurance::Batch.new(batch_params)
     @batch.loan_amount = nil if @batch.loan_amount <= 0
+
     if agreement.plan.acronym == "SII"
       result = @batch.sii_process_batch
     else
       #result = @batch.process_batch(params[:loan_insurance_batch][:encoded_premium], current_user)
       encoded_prem =  params.dig(:loan_insurance_batch, :encoded_premium).presence&.to_f # convert and return the string to float and return nil if it is empty
-      result = @batch.process_batch(encoded_prem, current_user)
+      encoded_unused =  params.dig(:loan_insurance_batch, :encoded_unused).presence&.to_f
+      result = @batch.process_batch(encoded_prem, current_user, encoded_unused)
     end
 
     respond_to do |format|
@@ -145,13 +147,13 @@ class LoanInsurance::BatchesController < ApplicationController
   def accept_adjustment
     @adjusted = AdjustedCoverage.find(params[:ac])
     @batch.adjustment(params[:type], current_user, @adjusted)
-    
+
     respond_to do |format|
       if @batch.save
         msg = params[:type] == "prem" ? "Premium adjustment accepted" : "Coverage adjustment accepted"
-        format.html { redirect_to @batch.group_remit, notice: msg } 
+        format.html { redirect_to @batch.group_remit, notice: msg }
       else
-        format.html { redirect_to @batch.group_remit, alert: "Coverage not adjusted." } 
+        format.html { redirect_to @batch.group_remit, alert: "Coverage not adjusted." }
       end
     end
   end
@@ -179,10 +181,15 @@ class LoanInsurance::BatchesController < ApplicationController
         @batch.update!(batch_params)
         @batch.rate = nil
         # result = @batch.process_batch
-        result = @batch.process_batch(params[:loan_insurance_batch][:encoded_premium], current_user)
+        encoded_prem =  params.dig(:loan_insurance_batch, :encoded_premium).presence&.to_f
+        encoded_unused =  params.dig(:loan_insurance_batch, :encoded_unused).presence&.to_f
+        result = @batch.process_batch(encoded_prem, current_user, encoded_unused)
 
-        if result == :no_rate_for_amount
-          raise ActiveRecord::RangeError
+        case result
+         when :no_rate_for_amount
+           raise ActiveRecord::RangeError
+         when :no_dates
+           raise ActiveRecord::RecordInvalid
         end
 
         @batch.save!
@@ -191,6 +198,8 @@ class LoanInsurance::BatchesController < ApplicationController
       end
     rescue ActiveRecord::RangeError => e
       @batch.errors.add(:loan_amount, "doesn't have a rate available")
+      render :edit, status: :unprocessable_entity
+    rescue ActiveRecord::RecordInvalid => e
       render :edit, status: :unprocessable_entity
     end
 
@@ -244,7 +253,7 @@ class LoanInsurance::BatchesController < ApplicationController
   # DELETE /loan_insurance/batches/1
   def destroy
     @batch.transaction do
-      if @batch.unused_loan_id.present?
+      if @batch.unused_loan_id.present? and @batch.unused_loan_id != 0
         LoanInsurance::Batch.find(@batch.unused_loan_id).update(status: :recent)
       end
 
@@ -305,7 +314,7 @@ class LoanInsurance::BatchesController < ApplicationController
   private
   # Only allow a list of trusted parameters through.
   def batch_params
-    params.require(:loan_insurance_batch).permit(:group_remit_id, :coop_member_id, :loan_amount, :terms, :effectivity_date, :expiry_date, :date_release, :date_mature, :loan_insurance_loan_id, :unused_loan_id)
+    params.require(:loan_insurance_batch).permit(:group_remit_id, :coop_member_id, :loan_amount, :terms, :effectivity_date, :expiry_date, :date_release, :date_mature, :loan_insurance_loan_id, :unused_loan_id, :encoded_premium, :encoded_unused)
   end
 
   # Use callbacks to share common setup or constraints between actions.
