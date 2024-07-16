@@ -73,7 +73,7 @@
       <% @batch_lppi.order(created_at: :desc).each do |lppi| %>
         <tr>
           <td><small><%= batch_status(lppi.status) %></small> <%= lppi.group_remit %></td>
-          <td><%= lppi.loan.name %></td>
+          <td><%= lppi.loan&.name %></td>
           <td><%= short_month_day_year(lppi.effectivity_date) %></td>
           <td><%= short_month_day_year(lppi.expiry_date) %></td>
           <td>

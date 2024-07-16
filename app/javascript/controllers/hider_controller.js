@@ -3,7 +3,7 @@ import { Controller } from "@hotwired/stimulus"
 
 // Connects to data-controller="hider"
 export default class extends Controller {
-  static targets = ["input", "hideme", "plan", "amounts"]
+  static targets = ["input", "hideme", "plan", "amounts", "vat", "vatContainer"]
   connect() {
     this.toggle()
   }
@@ -20,5 +20,7 @@ export default class extends Controller {
       this.hidemeTarget.style.display = "none";
       this.amountsTarget.classList.add("hidden");
     }
+
+    if 
   }
 }

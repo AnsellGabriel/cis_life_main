@@ -2,6 +2,7 @@
 require "sidekiq/web"
 
 Rails.application.routes.draw do
+  resources :branches
   resources :employee_teams
   resources :teams do
     get :selected, on: :member

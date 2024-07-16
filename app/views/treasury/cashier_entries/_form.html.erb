@@ -31,7 +31,14 @@
       %>
     <% end %>
     <div data-controller="hider">
-      <%= f.input :product_check, as: :boolean, label: "Product?", input_html: { name: "someid", id: "someid", data: { action: "input->hider#toggle", hider_target: "input" } } %>
+      <div class="row">
+        <div class="col-6">
+          <%= f.input :product_check, as: :boolean, label: "Insurance", input_html: {data: { action: "input->hider#toggle", hider_target: "input" } } %>
+        </div>
+        <div class="col-6">
+          <%= f.input :vat_check, as: :boolean, label: "Vatable", input_html: {data: { action: "input->hider#toggle", hider_target: "vat" } } %>
+        </div>
+      </div>
       <%= f.association :treasury_account, label: 'Account', error: '*Required', input_html: { data: { controller: "ts--select" } }  %>
       <%= f.association :treasury_payment_type, label: 'Entry type', error: '*Required', input_html: { data: { controller: "ts--select" } } %>
       <div class="row">
