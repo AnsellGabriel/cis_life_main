@@ -13,6 +13,7 @@
       <th class="text-primary">Expiry</th>
       <th class="text-end text-primary">Amount Insured</th>
       <th class="text-end text-primary">Amount Benefit</th>
+      <th class="text-end text-primary">1CISP</th>
       <%# <th class="text-end text-primary">Reinsurance (Reported) Covered</th> %>
       
       <% @reinsurers.each do |r| %>
@@ -35,6 +36,8 @@
           <td><small><%= to_shortdate(cc.expiry) %></small></td>
           <td class="text-end"> <small><%= to_curr(cc.amount) %></small> </td>
           <td class="text-end"> <small><%= to_curr(cc.amount_cover) %></small> </td>
+          <% sum_ri = @coverage_reinsurances.where(claim_coverage: cc).sum(:amount) %>
+          <td class="text-end"> <small><%= to_curr(cc.amount_cover - sum_ri) %></small> </td>
            <% @reinsurers.each do |r| %>
               <% coverage_reinsurance = @coverage_reinsurances.find_by(reinsurer: r, claim_coverage: cc) %>
               <td class="text-end"><small>
@@ -54,6 +57,7 @@
         <td colspan="3" class="table-active border-top border-primary"> <small>Total</small> </td>
         <td class="text-end text-primary border-top border-primary"><small><%= to_curr(@process_claim.claim_coverages.where(coverage_type: "Current").sum(:amount)) %></small></td>
         <td class="text-end text-primary border-top border-primary"><small><%= to_curr(@process_claim.claim_coverages.where(coverage_type: "Current").sum(:amount_cover)) %></small></td>
+        <td class="text-end text-primary border-top border-primary"><small><%= to_curr(@process_claim.claim_coverages.where(coverage_type: "Current").sum(:amount_cover) - @coverage_reinsurances.sum(:amount)) %></small></td>
          <% @reinsurers.each do |r| %>
           <td class="text-end text-primary border-top border-primary"><small><%= to_curr(@coverage_reinsurances.where(reinsurer: r).sum(:amount)) %></small></td>
          <% end %>

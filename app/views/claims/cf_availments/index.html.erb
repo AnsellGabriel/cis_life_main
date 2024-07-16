@@ -34,7 +34,7 @@
         </tr>
       <% end %>
       <tr class="table-success"><td colspan="5"><strong>Approved</strong></td></tr>
-      <% @cf_availments.approved.each do |cf_availment| %>
+      <% @cf_availments.not_pending.each do |cf_availment| %>
         <tr>
 
         <th scope="row"><%= cf_availment.id %></th>

@@ -3,6 +3,8 @@ class Claims::CfAccount < ApplicationRecord
   has_many :cf_replenishes
   has_many :cf_availments
 
+  # validates_presence_of :name
+
   def to_s 
     cooperative.name
   end

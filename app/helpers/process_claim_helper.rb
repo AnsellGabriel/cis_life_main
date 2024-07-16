@@ -75,6 +75,8 @@ module ProcessClaimHelper
             path = 9
         when "pending"
             path = 25
+        when "reconsider"
+            path = 5
         end
         case process_claim.claim_route
         # when process_claim.claim_review?

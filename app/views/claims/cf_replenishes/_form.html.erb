@@ -13,6 +13,12 @@
                     flatpickr_next_arrow: "Next",
                     flatpickr_prev_arrow: "Prev" } } %>
       <%= f.input :amount, wrapper_html: { class: "col-md-6" } %>
+      <%= f.input :orno, label: 'ORNO', wrapper_html: { class: "col-md-6" } %>
+      <%#= f.input :ordate, label: 'OR date', wrapper_html: { class: "col-md-6" } %>
+      <%= f.input :ordate, label: "OR Date", as: :string, wrapper_html: { class: "col-md-6" }, 
+                input_html: { data: { controller: "flatpickr",
+                    flatpickr_next_arrow: "Next",
+                    flatpickr_prev_arrow: "Prev" } } %>
       <%= f.input :description %>
       <%#= f.input :type, wrapper_html: { class: "col-md-6" } %>
     </div>

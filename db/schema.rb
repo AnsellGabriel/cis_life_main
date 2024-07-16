@@ -20,7 +20,7 @@ ActiveRecord::Schema[7.0].define(version: 2024_07_15_081224) do
     t.index ["journable_type", "journable_id"], name: "index_accounting_journal_entries_on_journable"
     t.index ["journal_id"], name: "index_accounting_journal_entries_on_journal_id"
   end
-
+  
   create_table "accounting_vouchers", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.date "date_voucher"
     t.string "voucher"

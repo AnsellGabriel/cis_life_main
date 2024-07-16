@@ -30,9 +30,17 @@ class Claims::CfAvailmentsController < ApplicationController
   def create
     # raise "errors"
     @cf_availment = Claims::CfAvailment.new(cf_availment_params)
+    @process_claim = Claims::ProcessClaim.find(cf_availment_params[:process_claim_id])
+    @process_claim.update(claim_route: :payment_procedure)
+    @process_claim.process_tracks.create(route_id: 28, user: current_user)
+    # @process_track = @process_claim.process_track.build
+    # @process_track.route_id = 28
+    # @process_track.user = current_user
+    # @process_track.save!
+    # @process_claim.process_track.create!(route_id: 28, user_id: current_user)
     @cf_availment.status = :pending
     @cf_availment.user = current_user
-  
+    
     if @cf_availment.save!
       redirect_to claim_process_claims_process_claim_path(@cf_availment.process_claim), notice: "Claims Fund successfully requested."
     else
@@ -54,8 +62,11 @@ class Claims::CfAvailmentsController < ApplicationController
     @cf_account = @cf_availment.cf_account
     case params[:s].to_i
     when 1
-        @cf_availment.update!(status: :approved)
+        @cf_availment.update!(status: :approved_head)
         @cf_availment.cf_ledgers.create(cf_account: @cf_account, amount: @cf_availment.amount, entry_type: :credit, transaction_date: Time.now)
+        @process_claim.update(claim_route: :process_completed)
+        @process_claim.process_tracks.create(route_id: 29, user: current_user)
+        # raise "errors"
         if @cf_account.get_balance(Time.now) < @cf_account.amount_limit
           @cf_account.update(status: :critical)
         else 
@@ -68,6 +79,10 @@ class Claims::CfAvailmentsController < ApplicationController
       when 0
         @cf_availment.update!(status: :pending)
         update_notice = "Claims Fund Pending"
+      when 3
+        @cf_availment.update!(status: :approved_final)
+        
+        update_notice = "Claims Fund Approved Final"
     end
     
     redirect_to claims_cf_availments_path, notice: "Claims fund approved", status: :see_other
@@ -83,6 +98,7 @@ class Claims::CfAvailmentsController < ApplicationController
     # Use callbacks to share common setup or constraints between actions.
     def set_cf_availment
       @cf_availment = Claims::CfAvailment.find(params[:id])
+      @process_claim = @cf_availment.process_claim
     end
 
     # Only allow a list of trusted parameters through.
