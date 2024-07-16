@@ -1,12 +1,12 @@
 
 <%= simple_form_for(entry) do |f| %>
 
-  <div class="form-inputs mb-3">
+  <div class="form-inputs mb-3" data-controller="hider">
     <div class="row">
-      <div class="col-6">
+      <div class="col-3">
         <%= f.input :or_no, label: 'OR Number', error: '*Required' %>
       </div>
-      <div class="col-6">
+      <div class="col-3">
         <%= f.input :or_date, as: :string, input_html: {data: {
           controller: "flatpickr",
           flatpickr_max_date: Date.today,
@@ -16,42 +16,70 @@
           error: '*Required'
         %> 
       </div>
+      <div class="col-2 <%= flex_justify_align('','end') %>">
+        <%= f.input :product_check, as: :boolean, label: "Insurance", input_html: {data: { action: "input->hider#toggle", hider_target: "input" }} %>
+      </div>
+      <div class="col-2 <%= flex_justify_align('','end') %>">
+        <%= f.input :discount_check, as: :boolean, label: "Discounted", input_html: {data: { action: "input->hider#toggle", hider_target: "discount" }} %>
+      </div>
+      <div class="col-2 <%= flex_justify_align('','end') %>">
+        <%= f.input :vat_check, as: :boolean, label: "Vatable", input_html: {data: { action: "input->hider#toggle", hider_target: "vat" }} %>
+      </div>
     </div>
-    <% if @group_remit.present? %>
-      <%= f.hidden_field :global_entriable, value: @group_remit.to_global_id  %>
-      <%= f.input :dummy_payee, label: 'Payee', input_html: {value: @group_remit.agreement.cooperative}, disabled: true  %>
-    <% else %>
-      <%= f.input :global_entriable, 
-        collection: @entriables, 
-        label_method: :to_s, 
-        value_method: :to_global_id, 
-        label: 'Payee', 
-        error: '*Required',
-        input_html: { data: { controller: "ts--select", action: "change->coop#search_agreement" } }
-      %>
-    <% end %>
-    <div data-controller="hider">
-      <%= f.input :product_check, as: :boolean, label: "Product?", input_html: { name: "someid", id: "someid", data: { action: "input->hider#toggle", hider_target: "input" } } %>
-      <%= f.association :treasury_account, label: 'Account', error: '*Required', input_html: { data: { controller: "ts--select" } }  %>
-      <%= f.association :treasury_payment_type, label: 'Entry type', error: '*Required', input_html: { data: { controller: "ts--select" } } %>
+    <div class="row">
+      <div class="col-6">
+        <% if @group_remit.present? %>
+          <%= f.hidden_field :global_entriable, value: @group_remit.to_global_id  %>
+          <%= f.input :dummy_payee, label: 'Payee', input_html: {value: @group_remit.agreement.cooperative}, disabled: true  %>
+        <% else %>
+          <%= f.input :global_entriable, 
+            collection: @entriables, 
+            label_method: :to_s, 
+            value_method: :to_global_id, 
+            label: 'Payee', 
+            error: '*Required',
+            input_html: { data: { controller: "ts--select", action: "change->coop#search_agreement" } }
+          %>
+        <% end %>
+      </div>
+      <div class="col-6">
+        <%= f.association :treasury_account, label: 'Account', error: '*Required', input_html: { data: { controller: "ts--select" } }  %>
+      </div>
+    </div>  
+    <div>
       <div class="row">
+        <div class="col-6">
+          <%= f.association :treasury_payment_type, label: 'Entry type', error: '*Required', input_html: { data: { controller: "ts--select" } } %>
+        </div>
         <div class="col-6">
           <%= f.input :amount, error: '*Required' %>
         </div>
-        <div class="col-6" id="to_hide_agreement" data-hider-target="hideme">
-          <%#= f.association :agreement, label: "Plan", input_html: { id: "agreement_id", data: { coop_target: "agreementSelect" } } %>
-          <%= f.association :plan, label: "Plan", input_html: { data: {hider_target: 'plan'} }%>
-        </div>
+      </div>
+      <div class="row" id="to_hide_agreement" data-hider-target="hideme">
+        <%= f.association :agent, error: '*Required', input_html: { data: { controller: "ts--select" } }, wrapper_html: {class: 'col-6'} %>
+        <%= f.association :plan, label: "Plan", input_html: { data: {hider_target: 'plan'} }, wrapper_html: {class: 'col-6'}%>
       </div>
       <div class="hidden" data-hider-target="amounts">
         <div class="row">
-          <%= f.input :deposit, error: '*Required', wrapper_html: {class: 'col-6'} %>
-          <%= f.input :service_fee, error: '*Required', wrapper_html: {class: 'col-6'} %>
+          <%= f.input :deposit, error: '*Required', wrapper_html: {class: 'col-4'} %>
+          <%= f.input :service_fee, error: '*Required', wrapper_html: {class: 'col-4'} %>
+          <%= f.input :unuse, label: 'Unused Premium', error: '*Required', wrapper_html: {class: 'col-4'} %>
         </div>
-        <%= f.association :agent, error: '*Required', input_html: { data: { controller: "ts--select" } } %>
       </div>
-
-      
+      <div class="hidden" data-hider-target="discountContainer">
+        <div class="row">
+          <%= f.input :deposit, error: '*Required', wrapper_html: {class: 'col-4'} %>
+          <%= f.input :service_fee, error: '*Required', wrapper_html: {class: 'col-4'} %>
+        </div>
+      </div>
+      <div class="hidden" data-hider-target="vatContainer">
+        <div class="row">
+          <%= f.input :deposit, error: '*Required', wrapper_html: {class: 'col-4'} %>
+          <%= f.input :service_fee, error: '*Required', wrapper_html: {class: 'col-4'} %>
+          <%= f.input :unuse, label: 'Unused Premium', error: '*Required', wrapper_html: {class: 'col-4'} %>
+          <%= f.input :unuse, label: 'Unused Premium', error: '*Required', wrapper_html: {class: 'col-4'} %>
+        </div>
+      </div>
     </div>
   </div>
 

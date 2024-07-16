@@ -51,7 +51,7 @@ class Treasury::CashierEntriesController < ApplicationController
       @entries = @entries.where(created_at: params[:date_from].to_date.beginning_of_day..params[:date_to].to_date.end_of_day)
     end
 
-    @pagy, @entries = pagy(@entries, items: 10)
+    @pagy, @entries = pagy(@entries, items: 20)
   end
 
   def for_approval_index

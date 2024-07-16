@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2024_07_16_033243) do
+ActiveRecord::Schema[7.0].define(version: 2024_07_15_081224) do
   create_table "accounting_journal_entries", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.string "journable_type", null: false
     t.bigint "journable_id", null: false
@@ -20,7 +20,7 @@ ActiveRecord::Schema[7.0].define(version: 2024_07_16_033243) do
     t.index ["journable_type", "journable_id"], name: "index_accounting_journal_entries_on_journable"
     t.index ["journal_id"], name: "index_accounting_journal_entries_on_journal_id"
   end
-
+  
   create_table "accounting_vouchers", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.date "date_voucher"
     t.string "voucher"
@@ -39,11 +39,12 @@ ActiveRecord::Schema[7.0].define(version: 2024_07_16_033243) do
     t.integer "approved_by"
     t.integer "certified_by"
     t.string "type"
-    t.integer "branch"
     t.integer "payout_status", default: 0
     t.bigint "request_id"
     t.bigint "employee_id"
     t.string "code"
+    t.bigint "branch_id"
+    t.index ["branch_id"], name: "index_accounting_vouchers_on_branch_id"
     t.index ["employee_id"], name: "index_accounting_vouchers_on_employee_id"
     t.index ["payable_type", "payable_id"], name: "index_accounting_vouchers_on_payable"
     t.index ["request_id"], name: "index_accounting_vouchers_on_request_id"
@@ -394,6 +395,17 @@ ActiveRecord::Schema[7.0].define(version: 2024_07_16_033243) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.integer "benefit_type"
+  end
+
+  create_table "branches", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+    t.string "code"
+    t.string "name"
+    t.string "branch_code"
+    t.string "approver"
+    t.string "position"
+    t.string "initials"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
   end
 
   create_table "causes", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
@@ -1611,8 +1623,13 @@ ActiveRecord::Schema[7.0].define(version: 2024_07_16_033243) do
     t.decimal "service_fee", precision: 15, scale: 2, default: "0.0"
     t.decimal "deposit", precision: 15, scale: 2, default: "0.0"
     t.bigint "agent_id"
+    t.bigint "branch_id"
+    t.decimal "unuse", precision: 15, scale: 2
+    t.decimal "vat_exempt", precision: 15, scale: 2
+    t.decimal "zero_rated", precision: 15, scale: 2
     t.index ["agent_id"], name: "index_treasury_cashier_entries_on_agent_id"
     t.index ["agreement_id"], name: "index_treasury_cashier_entries_on_agreement_id"
+    t.index ["branch_id"], name: "index_treasury_cashier_entries_on_branch_id"
     t.index ["employee_id"], name: "index_treasury_cashier_entries_on_employee_id"
     t.index ["entriable_type", "entriable_id"], name: "index_treasury_cashier_entries_on_entriable"
     t.index ["plan_id"], name: "index_treasury_cashier_entries_on_plan_id"
@@ -1708,6 +1725,7 @@ ActiveRecord::Schema[7.0].define(version: 2024_07_16_033243) do
   end
 
   add_foreign_key "accounting_journal_entries", "accounting_vouchers", column: "journal_id"
+  add_foreign_key "accounting_vouchers", "branches"
   add_foreign_key "accounting_vouchers", "employees"
   add_foreign_key "accounting_vouchers", "treasury_accounts"
   add_foreign_key "accounting_vouchers", "voucher_requests", column: "request_id"
@@ -1788,6 +1806,7 @@ ActiveRecord::Schema[7.0].define(version: 2024_07_16_033243) do
   add_foreign_key "treasury_billing_statements", "treasury_cashier_entries", column: "cashier_entry_id"
   add_foreign_key "treasury_business_checks", "accounting_vouchers", column: "voucher_id"
   add_foreign_key "treasury_cashier_entries", "agents"
+  add_foreign_key "treasury_cashier_entries", "branches"
   add_foreign_key "treasury_cashier_entries", "employees"
   add_foreign_key "treasury_cashier_entries", "treasury_accounts"
   add_foreign_key "treasury_cashier_entries", "treasury_payment_types"
