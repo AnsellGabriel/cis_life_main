@@ -1617,15 +1617,18 @@ ActiveRecord::Schema[7.0].define(version: 2024_07_15_081224) do
     t.decimal "withholding_tax", precision: 15, scale: 2, default: "0.0"
     t.boolean "vatable", default: false
     t.bigint "treasury_payment_type_id", null: false
+    t.integer "branch"
     t.bigint "agreement_id"
     t.bigint "plan_id"
     t.bigint "employee_id"
+    t.string "code"
     t.decimal "service_fee", precision: 15, scale: 2, default: "0.0"
     t.decimal "deposit", precision: 15, scale: 2, default: "0.0"
-    t.string "code"
     t.bigint "agent_id"
     t.bigint "branch_id"
     t.decimal "unuse", precision: 15, scale: 2
+    t.decimal "vat_exempt", precision: 15, scale: 2
+    t.decimal "zero_rated", precision: 15, scale: 2
     t.index ["agent_id"], name: "index_treasury_cashier_entries_on_agent_id"
     t.index ["agreement_id"], name: "index_treasury_cashier_entries_on_agreement_id"
     t.index ["branch_id"], name: "index_treasury_cashier_entries_on_branch_id"
