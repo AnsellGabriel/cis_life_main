@@ -6,13 +6,14 @@ class Accounting::Voucher < ApplicationRecord
   belongs_to :voucher_request, class_name: "Accounting::VoucherRequest", foreign_key: :request_id, optional: true
   belongs_to :treasury_account, class_name: "Treasury::Account", foreign_key: :treasury_account_id, optional: true
   belongs_to :employee
+  belongs_to :branch
 
   has_many :general_ledgers, as: :ledgerable, dependent: :destroy
   has_many :remarks, as: :remarkable, dependent: :destroy
 
   enum audit: { for_audit: 0, approved: 1, pending_audit: 2 }
   enum status: { pending: 0, posted: 1, cancelled: 2, for_approval: 3}
-  enum branch: { head_office: 0, cagayan_de_oro: 1, iloilo: 2, davao: 3}
+  # enum branch: { head_office: 0, cagayan_de_oro: 1, iloilo: 2, davao: 3}
 
 
   scope :checks, -> { where(type: "Accounting::Check") }

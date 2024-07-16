@@ -1,14 +1,15 @@
 class Treasury::CashierEntry < ApplicationRecord
-  attr_accessor :dummy_payee, :dummy_entry_type, :product_check
-  before_save :format_or_no, :add_deposit
+  attr_accessor :dummy_payee, :dummy_entry_type, :product_check, :vat_check
+  before_save :add_deposit#, :format_or_no
 
   validates_presence_of :or_no, :or_date, :treasury_account_id, :amount, :employee_id, :branch#, :global_entriable
 
   enum status: { pending: 0, posted: 1, cancelled: 2, for_approval: 3}
-  enum branch: { head_office: 0, cagayan_de_oro: 1, iloilo: 2, davao: 3}
+  # enum branch: { head_office: 0, cagayan_de_oro: 1, iloilo: 2, davao: 3, }
 
   belongs_to :treasury_account, class_name: "Treasury::Account"
   belongs_to :treasury_payment_type, class_name: "Treasury::PaymentType"
+  belongs_to :branch
   belongs_to :employee
   belongs_to :agent, optional: true
   belongs_to :entriable, polymorphic: true

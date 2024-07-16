@@ -39,8 +39,9 @@ class GroupRemitsController < InheritedResources::Base
         # Your transactional code here
         @group_remit.set_under_review_status
         @group_remit.date_submitted = Date.today
-        @group_remit.coop_branch = current_user.userable.dig(:coop_branch)
+        @group_remit.coop_branch = current_user.userable.dig(:coop_branch) if current_user.is_coop_user?
         @group_remit.save!
+
 
         create_process_coverage(@group_remit)
 
