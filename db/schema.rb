@@ -422,6 +422,8 @@ ActiveRecord::Schema[7.0].define(version: 2024_07_15_081224) do
     t.integer "status"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.string "code"
+    t.integer "id_code"
     t.index ["cooperative_id"], name: "index_cf_accounts_on_cooperative_id"
   end
 
@@ -462,6 +464,8 @@ ActiveRecord::Schema[7.0].define(version: 2024_07_15_081224) do
     t.integer "status"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.string "orno"
+    t.date "ordate"
     t.index ["cf_account_id"], name: "index_cf_replenishes_on_cf_account_id"
     t.index ["user_id"], name: "index_cf_replenishes_on_user_id"
   end
@@ -626,6 +630,13 @@ ActiveRecord::Schema[7.0].define(version: 2024_07_15_081224) do
     t.datetime "updated_at", null: false
     t.string "description"
     t.index ["process_claim_id"], name: "index_claim_request_for_payments_on_process_claim_id"
+  end
+
+  create_table "claim_retrievals", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+    t.string "name"
+    t.text "description"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
   end
 
   create_table "claim_type_agreements", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
@@ -1285,6 +1296,7 @@ ActiveRecord::Schema[7.0].define(version: 2024_07_15_081224) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.boolean "dependable", default: false
+    t.boolean "micro"
   end
 
   create_table "process_claims", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
@@ -1312,9 +1324,11 @@ ActiveRecord::Schema[7.0].define(version: 2024_07_15_081224) do
     t.integer "payout_type"
     t.bigint "claim_type_nature_id"
     t.bigint "coop_member_id"
+    t.bigint "claim_retrieval_id"
     t.index ["agreement_benefit_id"], name: "index_process_claims_on_agreement_benefit_id"
     t.index ["agreement_id"], name: "index_process_claims_on_agreement_id"
     t.index ["cause_id"], name: "index_process_claims_on_cause_id"
+    t.index ["claim_retrieval_id"], name: "index_process_claims_on_claim_retrieval_id"
     t.index ["claim_type_id"], name: "index_process_claims_on_claim_type_id"
     t.index ["claim_type_nature_id"], name: "index_process_claims_on_claim_type_nature_id"
     t.index ["coop_member_id"], name: "index_process_claims_on_coop_member_id"
@@ -1603,15 +1617,18 @@ ActiveRecord::Schema[7.0].define(version: 2024_07_15_081224) do
     t.decimal "withholding_tax", precision: 15, scale: 2, default: "0.0"
     t.boolean "vatable", default: false
     t.bigint "treasury_payment_type_id", null: false
+    t.integer "branch"
     t.bigint "agreement_id"
     t.bigint "plan_id"
     t.bigint "employee_id"
+    t.string "code"
     t.decimal "service_fee", precision: 15, scale: 2, default: "0.0"
     t.decimal "deposit", precision: 15, scale: 2, default: "0.0"
-    t.string "code"
     t.bigint "agent_id"
     t.bigint "branch_id"
     t.decimal "unuse", precision: 15, scale: 2
+    t.decimal "vat_exempt", precision: 15, scale: 2
+    t.decimal "zero_rated", precision: 15, scale: 2
     t.index ["agent_id"], name: "index_treasury_cashier_entries_on_agent_id"
     t.index ["agreement_id"], name: "index_treasury_cashier_entries_on_agreement_id"
     t.index ["branch_id"], name: "index_treasury_cashier_entries_on_branch_id"

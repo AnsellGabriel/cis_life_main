@@ -1,5 +1,5 @@
 class Treasury::CashierEntry < ApplicationRecord
-  attr_accessor :dummy_payee, :dummy_entry_type, :product_check, :vat_check
+  attr_accessor :dummy_payee, :dummy_entry_type, :product_check, :vat_check, :discount_check
   before_save :add_deposit#, :format_or_no
 
   validates_presence_of :or_no, :or_date, :treasury_account_id, :amount, :employee_id, :branch#, :global_entriable

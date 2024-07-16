@@ -101,7 +101,7 @@
                 </div>
               </div>
                 <div class="col-10">
-                    <% if (['for_process', 'pending', 'reprocess_approved', 'for_head_approval'].include?(process_coverage.status) && pc.processor == current_user.userable) %>
+                    <% if (['for_process', 'pending', 'reprocess_approved', 'for_head_approval'].include?(process_coverage.status) && process_coverage.processor == current_user.userable) %>
                       <% if process_coverage.group_remit.batches.where(insurance_status: [:pending, :for_review]).count > 0 %>
                         <div class="text-end">
                           <%= link_to "Accept All Eligible", approve_all_group_remit_batches_path(@group_remit,group_remit: process_coverage.group_remit, process_coverage: process_coverage), class: "btn btn-success", onclick: "return confirm('Are you sure?')", method: :get %>
