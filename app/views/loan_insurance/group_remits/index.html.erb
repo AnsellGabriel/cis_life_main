@@ -29,7 +29,7 @@
   <div class="d-flex gap-1">
     <%= search_form_for @q, url: loan_insurance_group_remits_path do |f| %>
       <div class="form-group d-flex gap-1">
-        <%= f.search_field :name_cont, placeholder: "Search name", class: "form-control" %>
+        <%= f.search_field :name_or_official_receipt_cont, placeholder: "Search OR# or Name", class: "form-control" %>
         <%= button_tag(type: 'submit', class: small_btn('warning text-dark'), style: 'width: 40px') do %>
           <i class='bi bi-search'></i>
         <% end %>

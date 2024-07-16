@@ -1,0 +1,50 @@
+<div class="card-group mb-3">
+  <div class="card">
+    <div class="card-body">
+    <p class="text-primary card-title">ENCODED</p>
+    <h2 class="text-muted"><%= @encoded.count %></h2>
+    </div>
+    <div class="card-footer"><small class="text-muted"> <%= link_to 'See Details <i class="bi bi-box-arrow-right"></i>'.html_safe, mis_view_ors_path(t: "enc", e: current_user.id), class: "text-muted" %></small></div>
+  </div>
+  <div class="card">
+    <div class="card-body">
+    <p class="text-primary card-title">NOT ENCODED</p>
+    <h2 class="text-muted"><%= @not_encoded.count %></h2>
+
+    </div>
+    <div class="card-footer"><small class="text-muted"> <%= link_to 'See Details <i class="bi bi-box-arrow-right"></i>'.html_safe, mis_view_ors_path(t: "ne"), class: "text-muted" %></small></div>
+  </div>
+  <div class="card">
+    <div class="card-body">
+    <p class="text-primary card-title">TRANSMITTED</p>
+    <h2 class="text-muted"><%= @transmitted.count %></h2>
+
+    </div>
+    <div class="card-footer"><small class="text-muted"> <%= link_to 'See Details <i class="bi bi-box-arrow-right"></i>'.html_safe, transmittals_path(e: current_user.id), class: "text-muted" %></small></div>
+  </div>
+  <div class="card">
+    <div class="card-body">
+    <p class="text-primary card-title">NOT TRANSMITTED</p>
+    <h2 class="text-muted"><%= @with_ors.count %></h2>
+
+    </div>
+    <div class="card-footer"><small class="text-muted"> <%= link_to 'See Details <i class="bi bi-box-arrow-right"></i>'.html_safe, mis_view_ors_path(t: "nt", e: current_user.id), class: "text-muted" %></small></div>
+  </div>
+</div>
+
+<div class="row">
+  <div class="card-group h-100 mb-3">
+    <div class="card bg-warning">
+      <div class="card-body">
+        <p class="text-dark card-title">ENCODED GYRT</p>
+        <h2 class="text-dark"><%= number_with_delimiter(@gyrt_encoded) %></h2>    </div>
+    </div>
+    <div class="card bg-warning">
+      <div class="card-body">
+        <p class="text-dark card-title">ENCODED LPPI</p>
+        <h2 class="text-dark"><%= number_with_delimiter(@lppi_encoded) %></h2>
+      </div>
+    </div>
+  </div>
+  <div></div>
+</div>

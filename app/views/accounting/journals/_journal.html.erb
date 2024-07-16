@@ -8,44 +8,46 @@
         </div>
         <h3 class="text-primary"><%= "#{journal.voucher}" %></h3>
         <p><small><strong>Voucher date:</strong> <span><%= month_day_year(journal.date_voucher) %></span></small></p>
-        <p><small><strong>Created by:</strong> <span><%= journal.employee&.signed_fullname %></span></small></p>
         <% if journal.post_date? %>
           <p><small><strong>Post date:</strong> <span><%= month_day_year(journal.post_date) %></span></small></p>
         <% end %>
       </div>
-      <div class="">
-        <% if current_user.is_accountant? %>
-          <% if current_user.head? and journal.for_approval? %>
-            <%= link_to post_entry_ledgers_path(journal, e_t: journal.entry_type), class: 'btn btn-sm btn-success mt-1', data: {turbo_confirm: "IMPORTANT: This process is not reversible. Post voucher?", turbo_method: :get} do %>
-              <i class="bi bi-check-circle-fill"></i> Approve
-            <% end %>
-            <%= link_to new_accounting_check_remark_path(journal, e_t: journal.entry_type), data: {turbo_frame: 'reg_form_modal' }, class: 'btn btn-sm btn-danger mt-1', title: 'Cancel' do %>
-              <i class="bi bi-x-lg"></i><span> Cancel</span>
-            <% end %>
-          <% else %>
-            <% if journal.pending? %>
-              <%= link_to "Submit", for_approval_entry_ledgers_path(journal, e_t: journal.entry_type), class: 'btn btn-sm btn-success mt-1', data: {turbo_confirm: "Submit voucher for approval?", turbo_method: :get} %>
-              <%= link_to edit_accounting_journal_path(journal), class: 'btn btn-sm btn-outline-primary mt-1', data: {turbo_frame: 'modal'}, title: 'Edit receipt' do %> 
-                <i class="bi bi-pencil"></i><span> Edit</span>
+      <div class="<%= flex_justify_align('between','', true) %>">
+        <div class="">
+          <% if current_user.is_accountant? %>
+            <% if current_user.head? and journal.for_approval? %>
+              <%= link_to post_entry_ledgers_path(journal, e_t: journal.entry_type), class: 'btn btn-sm btn-success mt-1', data: {turbo_confirm: "IMPORTANT: This process is not reversible. Post voucher?", turbo_method: :get} do %>
+                <i class="bi bi-check-circle-fill"></i> Approve
               <% end %>
-              <%= link_to new_accounting_check_remark_path(journal, e_t: journal.entry_type), data: {turbo_frame: 'reg_form_modal' }, class: 'btn btn-sm btn-outline-danger mt-1', title: 'Cancel' do %>
+              <%= link_to new_accounting_check_remark_path(journal, e_t: journal.entry_type), data: {turbo_frame: 'reg_form_modal' }, class: 'btn btn-sm btn-danger mt-1', title: 'Cancel' do %>
                 <i class="bi bi-x-lg"></i><span> Cancel</span>
               <% end %>
+            <% else %>
+              <% if journal.pending? %>
+                <%= link_to "Submit", for_approval_entry_ledgers_path(journal, e_t: journal.entry_type), class: 'btn btn-sm btn-success mt-1', data: {turbo_confirm: "Submit voucher for approval?", turbo_method: :get} %>
+                <%= link_to edit_accounting_journal_path(journal), class: 'btn btn-sm btn-outline-primary mt-1', data: {turbo_frame: 'modal'}, title: 'Edit receipt' do %> 
+                  <i class="bi bi-pencil"></i><span> Edit</span>
+                <% end %>
+                <%= link_to new_accounting_check_remark_path(journal, e_t: journal.entry_type), data: {turbo_frame: 'reg_form_modal' }, class: 'btn btn-sm btn-outline-danger mt-1', title: 'Cancel' do %>
+                  <i class="bi bi-x-lg"></i><span> Cancel</span>
+                <% end %>
+              <% end %>
             <% end %>
+            <% if journal.cancelled? or journal.pending_audit? %>
+              <%= link_to accounting_check_remarks_path(journal, e_t: journal.entry_type), class: 'btn btn-sm btn-outline-danger mt-1', data: {turbo_frame: 'reg_form_modal'} do %>
+                <i class="bi bi-card-list"></i> Remarks
+              <% end %>
+            <% end%>
           <% end %>
-          <% if journal.cancelled? or journal.pending_audit? %>
-            <%= link_to accounting_check_remarks_path(journal, e_t: journal.entry_type), class: 'btn btn-sm btn-outline-danger mt-1', data: {turbo_frame: 'reg_form_modal'} do %>
-              <i class="bi bi-card-list"></i> Remarks
-            <% end %>
-          <% end%>
-        <% end %>
+        </div>
+        <p><small><strong>Created by:</strong> <span><%= journal.employee&.signed_fullname %></span></small></p>
       </div>
     </div>
 
     <div class="card-body">
       <div class="row mb-3">
         <span class="small fw-bold col-2">Payee: </span>
-        <span class="small col-10"><%= journal.payable %></span>
+        <span class="small col-10"><%= journal.payable.name %></span>
       </div>
       <div class="row mb-3">
         <span class="small fw-bold col-2">Amount: </span>

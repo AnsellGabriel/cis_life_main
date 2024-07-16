@@ -9,7 +9,7 @@
   <div class="d-flex gap-1">
     <%= search_form_for @q do |f| %>
       <div class="d-flex gap-1">
-        <%= f.text_field :voucher_cont, class: 'form-control filter_field', placeholder: 'Search journals' %>
+        <%= f.text_field :payable_of_Cooperative_type_name_or_voucher_cont, class: 'form-control filter_field', placeholder: 'Search voucher or payee' %>
         <%= button_tag(type: 'submit', class: "#{small_btn('warning text-dark')} filter_btn", value: 'branches', style: 'width: 40px') do %>
           <i class='bi bi-search'></i>
         <% end %>
@@ -37,10 +37,11 @@
 <table class="<%= table_sm_hoverable %>">
   <thead class="table-dark">
     <tr>
-      <th class="text-center" style="min-width: 100px">Voucher</th>
+      <th class="text-center" style="min-width: 150px">Voucher</th>
       <th class="text-center" style="min-width: 100px">Date</th>
-      <th>Payee</th>
+      <th class="text-center">Payee</th>
       <th class="text-center">Particulars</th>
+      <th class="text-center">Created by</th>
       <th class="text-center">Status</th>
     </tr>
   </thead>
@@ -53,8 +54,9 @@
             <%= link_to journal.voucher, journal, class: 'text-primary', title: 'View'%>
           </td>
           <td class="text-center align-middle"><%= month_day_year(journal.date_voucher) %></td>
-          <td class="align-middle"><%= journal.payable %></td>
+          <td class="align-middle"><%= journal.payable.name %></td>
           <td class="align-middle"><%= journal.particulars %></td>
+          <td class="align-middle"><%= journal.employee %></td>
           <td class="text-center align-middle">
             <span class="<%= journal.decorate.status_badge %>"><%= journal.status.titleize %></span>
           </td>          

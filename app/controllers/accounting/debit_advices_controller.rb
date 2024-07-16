@@ -28,7 +28,7 @@ class Accounting::DebitAdvicesController < ApplicationController
       @request = Accounting::VoucherRequest.find(params[:rid])
       @bank = @request.account
       @coop = @request.requestable.payable
-      @debit_advice = Accounting::DebitAdvice.new(voucher: Accounting::DebitAdvice.generate_series, payable: @coop, amount: @request.amount, date_voucher: Date.today, particulars: "#{@request.particulars} \n\nBank: #{@bank.name}\nAccount Number: #{@bank.account_number}\nAddress: #{@bank.address}")
+      @debit_advice = Accounting::DebitAdvice.new(voucher: Accounting::DebitAdvice.generate_series, payable: @coop, amount: @request.amount, date_voucher: Date.today, particulars: "#{@request.particulars} \n\nBank: #{@bank.name}\nBranch: #{@bank.branch}\nAccount Number: #{@bank.account_number}")
     else
       @debit_advice = Accounting::DebitAdvice.new(voucher: Accounting::DebitAdvice.generate_series, date_voucher: Date.today)
     end
@@ -89,13 +89,13 @@ class Accounting::DebitAdvicesController < ApplicationController
       return
     end
 
-    @debit_advice.attachment ||= @debit_advice.build_attachment
-    @debit_advice.attachment.receipt = file
+    @debit_advice.build_attachment(receipt: file)
+    # @debit_advice.attachment.receipt = file
 
     if @debit_advice.attachment.save
       redirect_to accounting_debit_advice_path(@debit_advice), notice: 'File uploaded'
     else
-      redirect_to accounting_debit_advice_path(@debit_advice), alert: 'Failed to upload file'
+      redirect_to accounting_debit_advice_path(@debit_advice), alert: 'Failed to upload file, please only upload: jpg, jpeg, png, pdf files'
     end
   end
 

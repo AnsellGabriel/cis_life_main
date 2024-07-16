@@ -17,7 +17,7 @@ ActiveRecord::Schema[7.0].define(version: 2024_07_12_131918) do
     t.string "payable_type", null: false
     t.bigint "payable_id", null: false
     t.bigint "treasury_account_id"
-    t.decimal "amount", precision: 10, scale: 2
+    t.decimal "amount", precision: 15, scale: 2
     t.text "particulars"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
@@ -33,10 +33,21 @@ ActiveRecord::Schema[7.0].define(version: 2024_07_12_131918) do
     t.integer "payout_status", default: 0
     t.bigint "request_id"
     t.bigint "employee_id"
+    t.string "code"
     t.index ["employee_id"], name: "index_accounting_vouchers_on_employee_id"
     t.index ["payable_type", "payable_id"], name: "index_accounting_vouchers_on_payable"
     t.index ["request_id"], name: "index_accounting_vouchers_on_request_id"
     t.index ["treasury_account_id"], name: "index_accounting_vouchers_on_treasury_account_id"
+  end
+
+  create_table "accounts_beginning_balances", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+    t.bigint "account_id", null: false
+    t.decimal "debit", precision: 15, scale: 2
+    t.decimal "credit", precision: 15, scale: 2
+    t.integer "year"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["account_id"], name: "index_accounts_beginning_balances_on_account_id"
   end
 
   create_table "action_text_rich_texts", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
@@ -179,6 +190,7 @@ ActiveRecord::Schema[7.0].define(version: 2024_07_12_131918) do
     t.bigint "agent_group_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.string "code"
     t.index ["agent_group_id"], name: "index_agents_on_agent_group_id"
   end
 
@@ -411,7 +423,7 @@ ActiveRecord::Schema[7.0].define(version: 2024_07_12_131918) do
   create_table "cf_ledgers", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.string "ledgerable_type", null: false
     t.bigint "ledgerable_id", null: false
-    t.bigint "cf_account_id", null: false
+    t.bigint "cf_account_id"
     t.integer "entry_type"
     t.decimal "amount", precision: 18, scale: 2
     t.datetime "transaction_date"
@@ -547,10 +559,12 @@ ActiveRecord::Schema[7.0].define(version: 2024_07_12_131918) do
   end
 
   create_table "claim_documents", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
-    t.string "name"
-    t.string "description"
+    t.bigint "process_claim_id", null: false
+    t.string "document"
+    t.integer "document_type"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.index ["process_claim_id"], name: "index_claim_documents_on_process_claim_id"
   end
 
   create_table "claim_payments", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
@@ -650,9 +664,10 @@ ActiveRecord::Schema[7.0].define(version: 2024_07_12_131918) do
     t.bigint "cooperative_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.bigint "treasury_account_id"
+    t.string "name"
+    t.string "branch"
+    t.string "account_number"
     t.index ["cooperative_id"], name: "index_coop_banks_on_cooperative_id"
-    t.index ["treasury_account_id"], name: "index_coop_banks_on_treasury_account_id"
   end
 
   create_table "coop_branches", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
@@ -732,6 +747,7 @@ ActiveRecord::Schema[7.0].define(version: 2024_07_12_131918) do
     t.bigint "geo_municipality_id"
     t.bigint "geo_barangay_id"
     t.bigint "coop_type_id"
+    t.string "old_code"
     t.index ["coop_type_id"], name: "index_cooperatives_on_coop_type_id"
     t.index ["geo_barangay_id"], name: "index_cooperatives_on_geo_barangay_id"
     t.index ["geo_municipality_id"], name: "index_cooperatives_on_geo_municipality_id"
@@ -755,7 +771,7 @@ ActiveRecord::Schema[7.0].define(version: 2024_07_12_131918) do
     t.date "demo_date"
     t.integer "time_slot"
     t.text "remarks"
-    t.integer "status"
+    t.integer "satus"
     t.integer "method"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
@@ -883,6 +899,7 @@ ActiveRecord::Schema[7.0].define(version: 2024_07_12_131918) do
     t.datetime "updated_at", null: false
     t.date "transaction_date"
     t.bigint "sub_account_id"
+    t.string "code"
     t.index ["account_id"], name: "index_general_ledgers_on_account_id"
     t.index ["ledgerable_type", "ledgerable_id"], name: "index_general_ledgers_on_ledgerable"
     t.index ["sub_account_id"], name: "index_general_ledgers_on_sub_account_id"
@@ -1063,6 +1080,9 @@ ActiveRecord::Schema[7.0].define(version: 2024_07_12_131918) do
     t.decimal "adjusted_coop_sf", precision: 10, scale: 2, default: "0.0"
     t.decimal "adjusted_agent_sf", precision: 10, scale: 2, default: "0.0"
     t.decimal "adjusted_premium_due", precision: 10, scale: 2, default: "0.0"
+    t.decimal "system_unused", precision: 15, scale: 2, default: "0.0"
+    t.string "old_cov_code"
+    t.string "old_mem_code"
     t.index ["coop_member_id"], name: "index_loan_insurance_batches_on_coop_member_id"
     t.index ["group_remit_id"], name: "index_loan_insurance_batches_on_group_remit_id"
     t.index ["loan_insurance_loan_id"], name: "index_loan_insurance_batches_on_loan_insurance_loan_id"
@@ -1121,6 +1141,20 @@ ActiveRecord::Schema[7.0].define(version: 2024_07_12_131918) do
     t.integer "contestability"
     t.decimal "markup_rate", precision: 10, scale: 6
     t.decimal "markup_sf", precision: 10, scale: 4
+    t.index ["agreement_id"], name: "index_loan_insurance_rates_on_agreement_id"
+  end
+
+  create_table "loan_insurance_rates_copy1", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+    t.integer "min_age"
+    t.integer "max_age"
+    t.decimal "monthly_rate", precision: 5, scale: 2
+    t.decimal "annual_rate", precision: 5, scale: 2
+    t.decimal "daily_rate", precision: 5, scale: 2
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.bigint "agreement_id", null: false
+    t.decimal "min_amount", precision: 15, scale: 2
+    t.decimal "max_amount", precision: 15, scale: 2
     t.index ["agreement_id"], name: "index_loan_insurance_rates_on_agreement_id"
   end
 
@@ -1201,6 +1235,10 @@ ActiveRecord::Schema[7.0].define(version: 2024_07_12_131918) do
     t.string "contact_number"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.integer "payee_type"
+    t.string "code"
+    t.bigint "cooperative_id"
+    t.index ["cooperative_id"], name: "index_payees_on_cooperative_id"
   end
 
   create_table "payments", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
@@ -1498,6 +1536,8 @@ ActiveRecord::Schema[7.0].define(version: 2024_07_12_131918) do
     t.integer "transmittal_type"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.bigint "user_id"
+    t.index ["user_id"], name: "index_transmittals_on_user_id"
   end
 
   create_table "treasury_accounts", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
@@ -1511,6 +1551,9 @@ ActiveRecord::Schema[7.0].define(version: 2024_07_12_131918) do
     t.string "code"
     t.integer "account_category"
     t.string "account_number"
+    t.string "old_code"
+    t.string "parent_code"
+    t.integer "children", default: 0
   end
 
   create_table "treasury_billing_statements", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
@@ -1556,6 +1599,11 @@ ActiveRecord::Schema[7.0].define(version: 2024_07_12_131918) do
     t.bigint "agreement_id"
     t.bigint "plan_id"
     t.bigint "employee_id"
+    t.decimal "service_fee", precision: 15, scale: 2, default: "0.0"
+    t.decimal "deposit", precision: 15, scale: 2, default: "0.0"
+    t.string "code"
+    t.bigint "agent_id"
+    t.index ["agent_id"], name: "index_treasury_cashier_entries_on_agent_id"
     t.index ["agreement_id"], name: "index_treasury_cashier_entries_on_agreement_id"
     t.index ["employee_id"], name: "index_treasury_cashier_entries_on_employee_id"
     t.index ["entriable_type", "entriable_id"], name: "index_treasury_cashier_entries_on_entriable"
@@ -1568,6 +1616,7 @@ ActiveRecord::Schema[7.0].define(version: 2024_07_12_131918) do
     t.string "name"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.string "code"
   end
 
   create_table "treasury_payments", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
@@ -1587,6 +1636,7 @@ ActiveRecord::Schema[7.0].define(version: 2024_07_12_131918) do
     t.string "description"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.string "code"
   end
 
   create_table "underwriting_routes", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
@@ -1649,9 +1699,11 @@ ActiveRecord::Schema[7.0].define(version: 2024_07_12_131918) do
     t.index ["requestable_type", "requestable_id"], name: "index_voucher_requests_on_requestable"
   end
 
+  add_foreign_key "accounting_journal_entries", "accounting_vouchers", column: "journal_id"
   add_foreign_key "accounting_vouchers", "employees"
   add_foreign_key "accounting_vouchers", "treasury_accounts"
   add_foreign_key "accounting_vouchers", "voucher_requests", column: "request_id"
+  add_foreign_key "accounts_beginning_balances", "treasury_accounts", column: "account_id"
   add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
   add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
   add_foreign_key "agreements_coop_members", "agreements"
@@ -1669,16 +1721,15 @@ ActiveRecord::Schema[7.0].define(version: 2024_07_12_131918) do
   add_foreign_key "cf_availments", "cf_accounts"
   add_foreign_key "cf_availments", "process_claims"
   add_foreign_key "cf_availments", "users"
-  add_foreign_key "cf_ledgers", "cf_accounts"
   add_foreign_key "claim_attachments", "claim_type_documents"
   add_foreign_key "claim_attachments", "process_claims"
   add_foreign_key "claim_causes", "process_claims"
+  add_foreign_key "claim_documents", "process_claims"
   add_foreign_key "claim_payments", "process_claims"
   add_foreign_key "claim_remarks", "process_claims"
   add_foreign_key "claim_remarks", "users"
   add_foreign_key "claim_request_for_payments", "process_claims"
   add_foreign_key "coop_banks", "cooperatives"
-  add_foreign_key "coop_banks", "treasury_accounts"
   add_foreign_key "coop_branches", "cooperatives"
   add_foreign_key "coop_members", "coop_branches"
   add_foreign_key "coop_members", "cooperatives"
@@ -1709,7 +1760,9 @@ ActiveRecord::Schema[7.0].define(version: 2024_07_12_131918) do
   add_foreign_key "loan_insurance_details", "loan_insurance_retentions"
   add_foreign_key "loan_insurance_loans", "cooperatives"
   add_foreign_key "loan_insurance_rates", "agreements"
+  add_foreign_key "loan_insurance_rates_copy1", "agreements", name: "loan_insurance_rates_copy1_ibfk_1"
   add_foreign_key "member_dependents", "members"
+  add_foreign_key "payees", "cooperatives"
   add_foreign_key "process_claims", "agreement_benefits"
   add_foreign_key "process_claims", "agreements"
   add_foreign_key "process_claims", "cooperatives"
@@ -1724,8 +1777,10 @@ ActiveRecord::Schema[7.0].define(version: 2024_07_12_131918) do
   add_foreign_key "read_messages", "claim_remarks"
   add_foreign_key "read_messages", "users"
   add_foreign_key "sip_pbs", "plan_units"
+  add_foreign_key "transmittals", "users"
   add_foreign_key "treasury_billing_statements", "treasury_cashier_entries", column: "cashier_entry_id"
   add_foreign_key "treasury_business_checks", "accounting_vouchers", column: "voucher_id"
+  add_foreign_key "treasury_cashier_entries", "agents"
   add_foreign_key "treasury_cashier_entries", "employees"
   add_foreign_key "treasury_cashier_entries", "treasury_accounts"
   add_foreign_key "treasury_cashier_entries", "treasury_payment_types"

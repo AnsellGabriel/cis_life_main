@@ -38,16 +38,18 @@
       <% end %>
 
       <% if @searched_ledgers.present? and params[:download].nil? %>
-        <%= link_to "Generate CSV", treasury_account_path(@account, download_csv: 'true', date_from: params[:date_from], date_to: params[:date_to]), 
-          class: 'btn-sm btn btn-warning', 
+        <%= link_to treasury_account_path(@account, download_csv: 'true', date_from: params[:date_from], date_to: params[:date_to]), 
+          class: 'btn-sm btn btn-outline-primary', 
           method: :get,
-          data: {turbo: false, action: "click->report-checker#clearDownload"}
-        %>
-        <%= link_to "Print PDF", treasury_account_path(@account, download_pdf: 'true', date_from: params[:date_from], date_to: params[:date_to] ), 
-          class: 'btn-sm btn btn-warning', 
+          data: {turbo: false, action: "click->report-checker#clearDownload"} do %>
+            <i class="bi bi-filetype-csv"></i>        
+        <% end %>
+        <%= link_to treasury_account_path(@account, download_pdf: 'true', date_from: params[:date_from], date_to: params[:date_to] ), 
+          class: 'btn-sm btn btn-outline-primary', 
           method: :get,
-          data: {turbo: false, action: "click->report-checker#clearDownload"}
-        %>
+          data: {turbo: false, action: "click->report-checker#clearDownload"} do %>
+            <i class="bi bi-filetype-pdf"></i>
+          <% end %>
       <% end %>
 
     </div>

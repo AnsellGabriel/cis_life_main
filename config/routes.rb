@@ -23,7 +23,7 @@ Rails.application.routes.draw do
   resources :claim_request_for_payments
   resources :claim_payments
   get "actuarial/index"
-  
+
   namespace :actuarial do
     resources :reserves
     resources :reserve_batches
@@ -44,13 +44,13 @@ Rails.application.routes.draw do
       get :index_critical, to: "cf_accounts#index_critical", on: :collection
     end
 
-    resources :cf_replenishes do 
+    resources :cf_replenishes do
       get :update_status, to: "cf_replenishes#update_status", on: :member
     end
-    resources :cf_availments do 
+    resources :cf_availments do
       get :update_status, to: "cf_availments#update_status", on: :member
     end
-    resources :claim_coverage_reinsurances do 
+    resources :claim_coverage_reinsurances do
       get :claim_reinsurance_create, to: "claim_coverage_reinsurances#claim_reinsurance_create", as: "claim_ri_create", on: :collection
       get :claim_reinsurance_update, to: "claim_coverage_reinsurances#claim_reinsurance_update", as: "claim_ri_update", on: :member
     end
@@ -62,7 +62,7 @@ Rails.application.routes.draw do
       get :attach_new_doc, on: :collection
     end
 
-    resources :claim_type_documents do 
+    resources :claim_type_documents do
       get :document_request, to: "claim_type_documents#document_request", on: :member
     end
 
@@ -122,7 +122,7 @@ Rails.application.routes.draw do
     get :show_fields, on: :member
   end
 
-  resources :dashboards do 
+  resources :dashboards do
     get :actuarial, on: :collection
     get :claims, on: :collection
     get :mis, on: :collection
@@ -280,9 +280,9 @@ Rails.application.routes.draw do
         get :approve_all
       end
 
-      member do
-        get :show_unuse_batch, as: "unuse_batch"
-      end
+      # member do
+      #   get :show_unuse_batch, as: "unuse_batch"
+      # end
 
       collection do
         post :import
@@ -308,6 +308,7 @@ Rails.application.routes.draw do
   # * Finance Module Routes
   # accounting
   namespace :accounting do
+    resources :account_beginning_balances
     resources :debit_advices do
       get :new_receipt, on: :member
       post :upload_receipt, on: :member
@@ -443,6 +444,7 @@ Rails.application.routes.draw do
     get :modal_remarks, on: :member
     get :psheet, on: :member
     get :cov_list, on: :collection
+    get :substandard_batches, on: :collection
     patch :update_batch_selected, on: :collection
     get :transfer_to_md, on: :member
     get :und, on: :collection
@@ -452,7 +454,6 @@ Rails.application.routes.draw do
 
   get "product_csv", to: "process_coverages#product_csv"
   get "ri_csv", to: "reinsurances#ri_csv"
-  get "preview", to: "process_coverages#preview"
   get "download", to: "process_coverages#download"
   get "process_coverages/pdf/:id", to: "process_coverages#pdf", as: "pc_pdf"
 

@@ -39,11 +39,9 @@ namespace :deploy do
   end
 end
 
-
 append :linked_dirs, "log", "tmp/pids", "tmp/cache", "tmp/sockets", "vendor/bundle", ".bundle", "public/system", "public/uploads"
 # Default branch is :master
 # ask :branch, `git rev-parse --abbrev-ref HEAD`.chomp
-
 
 set :migration_role, :app
 
@@ -60,6 +58,7 @@ set :assets_manifests, ["app/assets/config/manifest.js"]
 set :rails_assets_groups, :assets
 
 set :keep_assets, 2
+
 # Default deploy_to directory is /var/www/my_app_name
 # set :deploy_to, "/var/www/my_app_name"
 

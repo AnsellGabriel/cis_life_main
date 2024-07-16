@@ -1,7 +1,7 @@
 
 class Claims::ProcessClaimsController < ApplicationController
   include ProcessClaimHelper
-  before_action :set_process_claim, only: %i[ show edit update destroy show_coop show_ca claim_route claims_file claim_process update_status edit_ca update_ca print_sheet edit_coop update_coop ]
+  before_action :set_process_claim, only: %i[ show edit update destroy show_coop show_ca claim_route claims_file claim_process update_status edit_ca update_ca print_sheet edit_coop update_coop approve_claim_debit]
 
   def index
     # @process_claims = Claims::ProcessClaim.all
@@ -98,12 +98,14 @@ class Claims::ProcessClaimsController < ApplicationController
     # if params[:lb].present?
     #   @loan_batch = LoanInsurance::Batch.find(params[:lb])
     # end
+
     @process_claim = Claims::ProcessClaim.new
     @process_claim.agreement = Agreement.find(params[:a]) if params[:a].present?
     @process_claim.agreement_benefit = AgreementBenefit.find(params[:ab]) if params[:ab].present?
     @coop_member = CoopMember.find(params[:cm])
     @process_claim.coop_member = @coop_member
     @process_claim.cooperative = @coop_member.cooperative
+
 
     if Rails.env.development?
       set_dummy_value
@@ -127,12 +129,14 @@ class Claims::ProcessClaimsController < ApplicationController
     # if params[:lb].present?
     #   @loan_batch = LoanInsurance::Batch.find(params[:lb])
     # end
+
     @process_claim = Claims::ProcessClaim.new(process_claim_params)
     @process_claim.entry_type = :coop
     @process_claim.claim_route = :coop_file
     @process_claim.status = :pending
     @rel_css = process_claim_params[:relationship].empty? ? "is-invalid" : "is-valid"
     @coop_member = CoopMember.find(process_claim_params[:coop_member_id])
+
 
     unless process_claim_params[:date_incident].empty?
       @process_claim.age = @process_claim.get_age.to_i
@@ -367,7 +371,7 @@ class Claims::ProcessClaimsController < ApplicationController
               @process_claim.update!(claim_route: @claim_track.route_id)
             end
         end
-        
+
         if current_user.userable_type == "Employee"
           return redirect_to claim_process_claims_process_claim_path(@process_claim), notice: "#{@process_claim.claim_route.to_s.humanize.titleize} status"
         else
@@ -409,10 +413,10 @@ class Claims::ProcessClaimsController < ApplicationController
     end
   end
 
-  def edit_coop 
+  def edit_coop
   end
 
-  def update_coop 
+  def update_coop
     if @process_claim.update(process_claim_params)
       if @process_claim.coop_file?
         redirect_to show_coop_claims_process_claim_path(@process_claim), notice: "Process claim was successfully updated."
@@ -430,9 +434,9 @@ class Claims::ProcessClaimsController < ApplicationController
     redirect_to show_insurance_coop_member_path(@coop_member), alert: "Claim cancelled"
   end
 
-  def claims_dashboard 
+  def claims_dashboard
     @user_levels = current_user.user_levels.where(active: 1) if current_user
-    @for_evaluation = Claims::ProcessClaim.where(claim_route: get_route_evaluators) if current_user.userable_type == "Employee" 
+    @for_evaluation = Claims::ProcessClaim.where(claim_route: get_route_evaluators) if current_user.userable_type == "Employee"
     # unless @claims_user_authority_level == "Claims Evaluator" ||  @claims_user_authority_level == "COSO (Approver)" || @claims_user_authority_level == "President (Approver)"
     #   @for_evaluation = Claims::ProcessClaim.where(claim_route: 3)
     # end
@@ -447,7 +451,7 @@ class Claims::ProcessClaimsController < ApplicationController
   def set_process_claim
     @process_claim = Claims::ProcessClaim.find(params[:id])
     @loan_batch = @process_claim.loan_batch if @process_claim.loan_batch.present?
-    
+
   end
 
   # Only allow a list of trusted parameters through.

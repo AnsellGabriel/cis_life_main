@@ -51,13 +51,10 @@
                 <%= process_premiums("Premium", batch.premium)%>
               </div>
               <div class="row">
-                <%= process_premiums("Agent's SF", batch.agent_sf_amount) %>
-              </div>
-              <div class="row">
                 <%= process_premiums("Coop's SF", batch.coop_sf_amount) %>
               </div>
               <div class="row">
-                <%= process_premiums("Net Prem", (batch.premium - (batch.coop_sf_amount + batch.agent_sf_amount))) %>
+                <%= process_premiums("Net Prem", (batch.premium - batch.coop_sf_amount)) %>
               </div>
             </td>
             <td id="<%= "batch_#{batch.id}"%>" >

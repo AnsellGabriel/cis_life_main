@@ -1,0 +1,36 @@
+<%= turbo_frame_tag 'modal-xl' do %>
+  <div class="modal-header">
+    <%= content_tag :h5, class: 'modal-title text-primary' do %>
+      <i class="bi bi-file-medical-fill"></i> <%= @title %>
+    <% end %>
+    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+  </div>
+  <div class="modal-body sm-secondary-text">
+    <table class="table">
+      <thead>
+        <th>ID</th>
+        <th>Cooperative</th>
+        <th>Name</th>
+        <th></th>
+      </thead>
+      <tbody>
+        <% if @batches.count > 0 %>
+          <% @batches.each do |batch| %>
+            <tr>
+              <td><%= batch.id %></td>
+              <td><%= batch.group_remit.cooperative %></td>
+              <td><%= batch.coop_member %></td>
+              <td><%= link_to "View", batch.group_remit.process_coverage, data: { turbo: false }, class: "btn btn-sm btn-primary" %></td>
+            </tr>
+          <% end %>
+        <% else %>
+          <tr>
+            <td colspan=4 class="text-center lead">
+              No record(s).
+            </td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+  </div>
+<% end %>

@@ -18,6 +18,7 @@ class BatchDependent < ApplicationRecord
   alias_attribute :health_declaration, :batch_health_decs
   # has_many :process_claims, as: :claimable, dependent: :destroy
   has_many :batch_remarks, as: :remarkable, dependent: :destroy
+
   alias_attribute :remarks, :batch_remarks
 
   delegate :full_name, to: :member_dependent

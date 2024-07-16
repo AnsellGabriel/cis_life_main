@@ -1,7 +1,13 @@
 class CoopBank < ApplicationRecord
-  validates_presence_of :cooperative_id, :treasury_account_id
-  validates :cooperative_id, uniqueness: { scope: :treasury_account_id }
+  before_save :upcase_details
+
+  validates_presence_of :cooperative_id, :name, :branch, :cooperative_id
+  validates :account_number, format: { with: /\A\d+\z/, message: "is not valid" }
 
   belongs_to :cooperative
-  belongs_to :treasury_account, class_name: 'Treasury::Account'
+
+  def upcase_details
+    self.name.upcase!
+    self.branch.upcase!
+  end
 end

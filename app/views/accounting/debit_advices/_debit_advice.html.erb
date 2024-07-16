@@ -37,6 +37,9 @@
                   <i class="bi bi-card-list"></i> Remarks
                 <% end %>
               <% end%>
+              <% if debit_advice.journal_entries.present? %>
+                <%= link_to "JV No.: #{debit_advice.journal_entries.last.journal.voucher}", accounting_journal_path(debit_advice.journal_entries.last.journal) %>
+              <% end %>
             <% end %>
           </div>
         </div>
@@ -44,11 +47,13 @@
         <div class="<%= flex_justify_align('between', 'start') %>">
           <div class="">
             <p><small><strong>DA date:</strong> <span><%= month_day_year(debit_advice.date_voucher) %></span></small></p>
+            <% if debit_advice.post_date? %>
+              <p><small><strong>Post date:</strong> <span><%= month_day_year(debit_advice.post_date) %></span></small></p>
+            <% end %>
+          </div>
+          <div>
             <p><small><strong>Created by:</strong> <span><%= debit_advice.employee&.signed_fullname %></span></small></p>
           </div>
-          <% if debit_advice.post_date? %>
-            <p><small><strong>Post date:</strong> <span><%= month_day_year(debit_advice.post_date) %></span></small></p>
-          <% end %>
         </div>
         <% if debit_advice.audited_by.present? %>
           <div class="<%= flex_justify_align('between','center') %> gap-1">
@@ -65,7 +70,6 @@
           </div>
         <% end %>
       </div>
-      
     </div>
     <div class="card-body">
 

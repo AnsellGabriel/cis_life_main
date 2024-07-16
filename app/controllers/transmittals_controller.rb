@@ -4,20 +4,25 @@ class TransmittalsController < ApplicationController
   # GET /transmittals
   def index
     # @transmittals = case current_user
-    # when 
+    # when
     #   Transmittal.where(transmittal_type: :mis)
     # else
     #   Transmittal.where(transmittal_type: :und)
     # end
     # @transmittals = Transmittal.all
-    
+
     if current_user.is_mis?
       type = :mis
-      @transmittals = Transmittal.where(transmittal_type: type)
+
+      if params[:e].present?
+        @transmittals = Transmittal.where(transmittal_type: type, user: User.find(params[:e]))
+      else
+        @transmittals = Transmittal.where(transmittal_type: type)
+      end
     elsif current_user.is_und?
       type = :und
       @transmittals = Transmittal.where(transmittal_type: type)
-    else 
+    else
       @transmittals = Transmittal.all
     end
 
@@ -29,7 +34,7 @@ class TransmittalsController < ApplicationController
         cashier_entry = Treasury::CashierEntry.find_by(entriable: payment)
         # @transmittals = Transmittal.includes(:transmittal_ors).where(transmittal_ors: { transmittable: cashier_entry}, transmittal_type: type)
         @transmittals = @transmittals.includes(:transmittal_ors).where(transmittal_ors: { transmittable: cashier_entry})
-      else 
+      else
         process_coverage = ProcessCoverage.includes(:group_remit).find_by(group_remit: { official_receipt: params[:search]})
         # @transmittals = Transmittal.includes(:transmittal_ors).where(transmittal_ors: { transmittable: process_coverage}, transmittal_type: type)
         @transmittals = @transmittals.includes(:transmittal_ors).where(transmittal_ors: { transmittable: process_coverage})
@@ -67,9 +72,10 @@ class TransmittalsController < ApplicationController
     @transmittal = Transmittal.new(transmittal_params)
     @transmittal.transmittal_type = current_user.is_mis? ? "mis" : "und"
     @transmittal.set_code_and_type(current_user)
-    
+    @transmittal.user = current_user
+
     if params[:transmittal][:transmittal_ors_attributes].nil? && params[:transmittal][:group_remit_ids].nil?
-      # flash.now[:alert] = 
+      # flash.now[:alert] =
       # redirect_to :new, alert: "Please add ORs/PCs before saving transmittal."
       redirect_back fallback_location: { action: "new" }, alert: "Please add ORs/PCs before saving transmittal."
     else
@@ -114,7 +120,7 @@ class TransmittalsController < ApplicationController
     def transmittal_params
       params.require(:transmittal).permit(:description, :transmittal_type, :group_remit_ids,
         #transmittal_ors_attributes: [:id, :transmittal_id, :transmittable_id, :transmittable_type, :_destroy]
-        # transmittal_ors_attributes: [:global_owner] 
+        # transmittal_ors_attributes: [:global_owner]
         transmittal_ors_attributes: [:global_transmittable, :_destroy]
       )
     end

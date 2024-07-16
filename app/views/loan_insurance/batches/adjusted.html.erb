@@ -8,58 +8,92 @@
   </div>
   <div class="modal-body sm-secondary-text">
     <div id="error_notif"></div>
-    <div class="row <%= flex_justify_align('center') %>">
-      <table class="table table-stripped">
-        <thead>
-          <th>Sub-standard Rate</th>
-          <th>Rate</th>
-          <th>Total Rate</th>
-          <th>Terms</th>
-          <th>Original Sum Insured</th>
-          <th>Adjusted Sum Insured</th>
-          <th>Premium Paid</th>
-          <th>Correct Premium Due</th>
-          <th>Underpayment</th>
-          <th>Status</th>
-          <th>Action</th>
-        </thead>
-        <tbody>
-          <% batch.adjusted_coverages.each do |ac| %>
-            <tr>
-              <td><%= ac.substandard_rate %></td>
-              <td><%= batch.rate.annual_rate %></td>
-              <td><%= batch.rate.annual_rate * ac.substandard_rate %></td>
-              <td><%= batch.terms %></td>
-              <td><%= to_currency(batch.loan_amount) %></td>
-              <td><%= to_currency(ac.adjusted_coverage) %></td>
-              <td><%= to_currency(batch.premium) %></td>
-              <td><%= to_currency(ac.adjusted_premium )%></td>
-              <td><%= to_currency(ac.underpayment) %></td>
-              <td><%= adjustment_status(ac.status) %></td>
-              <td>
-                <% unless batch.adjusted_coverages.where(status: :approved).count > 0 %>
-                  <div class="row">
-                    <%= button_to accept_adjustment_loan_insurance_batch_path(@batch, ac: ac, type: "prem"), data: { turbo_method: :post }, class: "btn btn-sm btn-success", onclick: "return confirm('Are you sure?')", title: "Accept Adjusted Premium" do %>
-                      <%= bootstrap_icon "check" %>
-                    <% end %>
-                    <%= button_to accept_adjustment_loan_insurance_batch_path(@batch, ac: ac, type: "cov"), data: { turbo_method: :post }, class: "btn btn-sm btn-warning", onclick: "return confirm('Are you sure?')", title: "Accept Adjusted Coverage" do %>
-                      <%= bootstrap_icon "check" %>
-                    <% end %>
-                    <%= button_to cancel_coverage_loan_insurance_batch_path(@batch), data: { turbo_method: :post }, class: "btn btn-sm btn-danger", onclick: "return confirm('Are you sure?')", title: "Cancel" do %>
-                      <%= bootstrap_icon "x" %>
-                    <% end %>
-                  </div>
-                <% end %>
-              </td>
-            </tr>
-          <% end %>
-        </tbody>
-      </table>
+    
+    <div class="row">
+      <div class="col-6">
+        <h4 class="text-center text-primary">ADJUSTED PREMIUM</h4>
+      </div>
+      <div class="col-6">
+        <h4 class="text-center text-primary">ADJUSTED COVERAGE</h4>
+      </div>
     </div>
-  </div>
-  <div class="modal-footer">
-    <div class="me-auto">
-    <%= link_to "New Remark", new_batch_remark_path(ref: batch, pro_cov: batch.group_remit.process_coverage, batch_status: "New", batch_type: batch.class.name), class: "btn btn-sm btn-primary", data: { turbo_frame: "reg_form_modal" } %>
-    </div>
-  </div>
+    <br>
+    <% batch.adjusted_coverages.each do |ac| %>
+      <div class="row">
+        <div class="col-6">
+          <div class="card">
+            <div class="card-body">
+              <div class="row">
+                <div class="col-4">
+                  <h5 class="card-title">
+                    Original Sum Insured
+                  </h5>
+                  <%= content_tag :span, to_currency(batch.loan_amount), class: "lead" %>
+                </div>
+                <div class="col-4">
+                  <h5 class="card-title">
+                    Premium Due
+                  </h5>
+                  <%= content_tag :span, to_currency(ac.adjusted_premium), class: "lead" %>
+                </div>
+                <div class="col-4">
+                  <h5 class="card-title">
+                    Underpayment
+                  </h5>
+                  <%= content_tag :span, to_currency(ac.underpayment), class: "lead" %>
+                </div>
+              </div>
+            </div>
+            <% unless batch.adjusted_coverages.where(status: :approved).count > 0 %>
+              <div class="card-footer">
+                <%= button_to "Accept", accept_adjustment_loan_insurance_batch_path(@batch, ac: ac, type: "prem"), data: { turbo_method: :post }, class: "btn btn-sm btn-success", onclick: "return confirm('Are you sure?')", title: "Accept Adjusted Premium" %>
+              </div>
+            <% end %>
+          </div>
+        </div>
+        <div class="col-6">
+          <div class="card">
+            <div class="card-body">
+              <div class="row">
+                <div class="col-6">
+                  <h5 class="card-title">
+                    Adjusted Sum Insured
+                  </h5>
+                  <%= content_tag :span, to_currency(ac.adjusted_coverage), class: "lead" %>
+                </div>
+                <div class="col-6">
+                  <h5 class="card-title">
+                    Premium Paid
+                  </h5>
+                  <%= content_tag :span, to_currency(batch.premium), class: "lead" %>
+                </div>
+              </div>
+            </div>
+            <% unless batch.adjusted_coverages.where(status: :approved).count > 0 %>
+              <div class="card-footer">
+                <%= button_to "Accept", accept_adjustment_loan_insurance_batch_path(@batch, ac: ac, type: "cov"), data: { turbo_method: :post }, class: "btn btn-sm btn-success", onclick: "return confirm('Are you sure?')", title: "Accept Adjusted Coverage" %>
+              </div>
+            <% end %>
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-3">
+          <span class="lead">Sub-standard Rate: <b><%= ac.substandard_rate %></b></span> 
+        </div>
+        <div class="col-2">
+          <span class="lead">Rate: <b><%= batch.rate.annual_rate %></b></span>
+        </div>
+        <div class="col-2">
+          <span class="lead">Total Rate: <b><%= ac.substandard_rate * batch.rate.annual_rate %></b></span>
+        </div>
+        <div class="col-2">
+          <span class="lead">Terms: <b><%= batch.terms %></b></span>
+        </div>
+        <div class="col-3">
+          <span class="lead">Status: <b><%= substandard_status(ac.status) %></b></span>
+        </div>
+      </div>
+      <hr>
+    <% end %>
 <% end %>

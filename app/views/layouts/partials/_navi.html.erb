@@ -16,7 +16,7 @@
       <% end %>
       <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
         <% if current_user %>
-          <%= link_to "Home", authenticated_root_path, class: "nav-link" %>
+          <%= link_to "Dashboard", authenticated_root_path, class: "nav-link" %>
           <% if coop_user?(current_user) %>
             <%= render 'layouts/partials/coop_nav' %>
           <% elsif agent_user?(current_user) %>
@@ -54,6 +54,15 @@
             <%= link_to "Dashboard", claims_dashboards_path, class: "nav-link" %>
             <%#= link_to "Cooperative", cooperatives_path, class: "nav-link" %>
             <%= render 'layouts/partials/nav_dropdown', title: 'Claims' do %>
+              <%= link_to "Claim index", claims_process_claims_path, class: "dropdown-item" %>
+              <%= link_to "Submitted", index_show_claims_process_claims_path(p: 1), class: "dropdown-item" %>
+              <%= link_to "Claims Filed", index_show_claims_process_claims_path(p: 2), class: "dropdown-item" %>
+              <%= link_to "Processing", index_show_claims_process_claims_path(p: 3), class: "dropdown-item" %>
+              <%= link_to "Evaluation", index_show_claims_process_claims_path(p: 4), class: "dropdown-item" %>
+              <%= link_to "Rejected", index_show_claims_process_claims_path(p: 11), class: "dropdown-item" %>
+              <%= link_to "VP Evaluation", index_show_claims_process_claims_path(p: 5), class: "dropdown-item" %>
+              <%= link_to "President Evaluation", index_show_claims_process_claims_path(p: 6), class: "dropdown-item" %>
+              <li><hr class="dropdown-divider"></li>
               <%= link_to "Documents", claims_claim_documents_path, class: "dropdown-item" %>
               <%= link_to "Claims Message", claims_claim_remarks_path, class: "dropdown-item" %>
               <%= link_to "Benefits", benefits_path, class: "dropdown-item" %>
@@ -107,7 +116,7 @@
         <%= render 'layouts/partials/nav_dropdown', title: "<i class=\"bi bi-person-circle\"></i> <small> Hi, #{current_user.userable.first_name}</small>".html_safe do %>
           <li class="nav-item"> <a class="nav-link" href="#"><%= current_user.email %></a> </li>
           <li class="nav-item"> <%= link_to "Change Password", edit_user_registration_path, class: "nav-link" %></li>
-          <% if current_user.userable_type == "Employee" and !current_user.is_mis? %>
+          <% if current_user.userable_type == "Employee" and !current_user.is_mis? and !current_user.is_accountant? %>
             <%= content_tag :li, class:"nav-item"  do %>
               <%= link_to "Claims Authority Level: #{to_currency(session[:claims_max_amount])}", "#", class: "nav-link" unless session[:claims_max_amount].nil? %>
               <%= link_to "Underwriting Authority Level: #{to_currency(session[:max_amount])}", "#", class: "nav-link" unless session[:max_amount].nil? %>

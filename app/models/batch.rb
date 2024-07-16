@@ -41,21 +41,19 @@ class Batch < ApplicationRecord
   has_many :batch_group_remits
   has_many :group_remits, through: :batch_group_remits
   has_many :batch_health_decs, as: :healthdecable, dependent: :destroy
-  alias_attribute :health_declaration, :batch_health_decs
   has_many :batch_dependents, dependent: :destroy
   has_many :member_dependents, through: :batch_dependents
   has_many :batch_beneficiaries, dependent: :destroy
   has_many :member_dependents, through: :batch_beneficiaries
   # has_many :batch_remarks, source: :remarkable, source_type: "Batch", dependent: :destroy
   has_many :batch_remarks, as: :remarkable, dependent: :destroy
-  alias_attribute :remarks, :batch_remarks
   # has_many :process_claims, as: :claimable, class_name: "Claims::ProcessClaim",  dependent: :destroy
   # has_many :claim_coverages, as: :coverageable, class_name: 'Claims::ClaimCoverage', dependent: :destroy
-
   has_many :reserve_batches, as: :batchable, dependent: :destroy, class_name: "Actuarial::ReserveBatch"
-
   has_many :adjusted_coverages, as: :coverageable, dependent: :destroy
 
+  alias_attribute :health_declaration, :batch_health_decs
+  alias_attribute :remarks, :batch_remarks
 
   # alias_attribute :batches, :reserve_batches
 
@@ -113,8 +111,8 @@ class Batch < ApplicationRecord
     joins(coop_member: :member).where(expiry_date: date.., insurance_status: :approved)
   end
 
-  def self.get_gyrt_encoded
-    includes(group_remits: { agreement: :plan}).where(plan: {id: [1,3,4]}).count
+  def self.get_gyrt_encoded(user_id)
+    includes(group_remits: {agreement: :plan}).where(plan: {id: [1,3,4]}).where(group_remits: {mis_user: user_id}).count
   end
 
 

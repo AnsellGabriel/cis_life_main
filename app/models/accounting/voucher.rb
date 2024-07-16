@@ -1,6 +1,6 @@
 class Accounting::Voucher < ApplicationRecord
   validates_presence_of :date_voucher, :particulars, :voucher, :payable_type, :payable_id,
-                        :particulars, :status, :audit, :type, :branch, :global_payable, :amount
+                        :particulars, :status, :audit, :type, :branch, :global_payable
 
   belongs_to :payable, polymorphic: true
   belongs_to :voucher_request, class_name: "Accounting::VoucherRequest", foreign_key: :request_id, optional: true
@@ -37,5 +37,9 @@ class Accounting::Voucher < ApplicationRecord
 
   def global_payable=(payable)
     self.payable = GlobalID::Locator.locate payable
+  end
+
+  def self.ransackable_associations(auth_object = nil)
+    ["payable"]
   end
 end

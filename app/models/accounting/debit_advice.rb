@@ -2,8 +2,12 @@ class Accounting::DebitAdvice < Accounting::Voucher
   validates_presence_of :treasury_account_id, :amount
 
   belongs_to :treasury_account, class_name: "Treasury::Account", foreign_key: :treasury_account_id
+
   has_many :debit_advice_journals, class_name: "Accounting::DebitAdviceJournal"
   has_many :journals, through: :debit_advice_journals
+  has_many :journal_entries, as: :journable, dependent: :destroy
+  has_many :voucher_requests, as: :requestable, dependent: :destroy, class_name: "Accounting::VoucherRequest"
+
   has_one :attachment, class_name: 'Accounting::DebitAdviceReceipt'
   has_one :jv_request, as: :requestable, dependent: :destroy, class_name: "Accounting::VoucherRequest"
 
@@ -14,6 +18,10 @@ class Accounting::DebitAdvice < Accounting::Voucher
 
   def entry_type
     'da'
+  end
+
+  def payment_type
+    'Debit Advice'
   end
 
   def voucher_type

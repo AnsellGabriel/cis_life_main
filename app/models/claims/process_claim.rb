@@ -24,7 +24,8 @@ class Claims::ProcessClaim < ApplicationRecord
 
   enum payout_type: {
     check_voucher: 0,
-    debit_advice: 1
+    debit_advice: 1,
+    bank_transfer: 2
   }
 
   enum status: {
@@ -88,7 +89,7 @@ class Claims::ProcessClaim < ApplicationRecord
     claim_routes.key(i)
   end
 
-  
+
   def payable
     cooperative
   end
@@ -116,16 +117,16 @@ class Claims::ProcessClaim < ApplicationRecord
       today = self.date_incident
       birthdate = self.coop_member.birthdate
       age = today.year - birthdate.year
-  
+
       # Adjust age if the user's birthday hasn't occurred yet this year
       age -= 1 if today < birthdate + age.years
-      
+
     else
-      age = 0 
+      age = 0
     end
   end
 
-  def attach_document_status 
+  def attach_document_status
     required_docs = claim_type.claim_type_documents.where(required: true)
     uploaded_docs = claim_attachments
 
@@ -134,7 +135,7 @@ class Claims::ProcessClaim < ApplicationRecord
       requested_docs = claim_document_requests
       missing_requested_docs = requested_docs.pluck(:claim_type_document_id) - uploaded_docs.pluck(:claim_type_document_id)
     end
-    
+
     missing_required_docs = required_docs.pluck(:id) - uploaded_docs.pluck(:claim_type_document_id)
     status = 1 if missing_requested_docs.any? || missing_required_docs.any?
     status_message = if missing_requested_docs.any?
@@ -144,7 +145,7 @@ class Claims::ProcessClaim < ApplicationRecord
              else
                "All required documents are uploaded"
              end
-            
+
     {
       status: status,
       status_message: status_message

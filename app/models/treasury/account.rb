@@ -1,6 +1,6 @@
 class Treasury::Account < ApplicationRecord
-  validates_presence_of :name, :code, :account_type, :account_category
-  validates :code, uniqueness: true
+  validates_presence_of :name, :code, :account_type
+  # validates :code, uniqueness: true
   validates :account_number, presence: true, length: { maximum: 18 }, format: { with: /\A\d+\z/ }, if: :bank?
 
   enum account_type: {
@@ -23,6 +23,7 @@ class Treasury::Account < ApplicationRecord
   has_many :general_ledgers
   has_many :coop_banks
   has_many :cooperatives, through: :coop_banks
+  has_many :beginning_balances, class_name: "Accounting::AccountBeginningBalance"
 
   def to_s
     name

@@ -15,11 +15,18 @@
     <template>
         <h6 class="text-primary">Active loan to terminate <span class="small text-secondary">(For unused premium computation)</span> </h6>
         <select class="form-select select optional" name="loan_insurance_batch[unused_loan_id]" id="loan_insurance_batch_unused_loan_id" data-action="change->loan-form#updateLoan focus->loan-form#updateLoan">
-          <option value="">None</option>
+          <option value="none">None</option>
+
           <% @previous_loans.each do |loan| %>
             <option value="<%= loan.id.to_i %>" data-coop-member-target="batch">
               <span><strong><%= loan.loan %>: </strong></span>
-              <span><%= to_curr(loan.loan_amount) %></span>
+              <span><%= to_curr(loan.loan_amount) %></span> 
+              <span> | </span>
+              <span>Eff Date:</span>
+              <span><%= month_day_year loan.effectivity_date %></span>
+              <span> | </span>
+              <span>Terms:</span>
+              <span><%= loan.terms %></span>
             </option>
           <% end %>
         </select>  

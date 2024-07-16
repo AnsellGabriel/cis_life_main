@@ -1,5 +1,5 @@
 class Treasury::SubAccount < ApplicationRecord
-  validates :name, presence: true, uniqueness: true
+  # validates :name, presence: true, uniqueness: true
 
   has_many :general_ledgers
 

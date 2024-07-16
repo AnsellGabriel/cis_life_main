@@ -2,7 +2,7 @@ class Accounting::VoucherRequest < ApplicationRecord
   self.table_name = "voucher_requests"
 
   belongs_to :requestable, polymorphic: true
-  belongs_to :account, class_name: "Treasury::Account", optional: true
+  belongs_to :account, class_name: "CoopBank", optional: true
   has_many :vouchers, class_name: "Accounting::Voucher", foreign_key: :request_id, dependent: :destroy
   has_many :remarks, as: :remarkable, dependent: :destroy
 
@@ -21,7 +21,8 @@ class Accounting::VoucherRequest < ApplicationRecord
 
   enum request_type: {
     claims_payment: 0,
-    refund: 1
+    refund: 1,
+    request: 2
   }
 
   def entry_type

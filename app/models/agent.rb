@@ -7,11 +7,12 @@ class Agent < ApplicationRecord
   has_one :user, as: :userable, dependent: :destroy
   has_many :agreements
   has_many :group_proposals
+  has_many :cashier_entries, class_name: "Treasury::CashierEntry"
 
   accepts_nested_attributes_for :user
 
   def to_s
-    test = 5
+    # test = 5
     full_name
   end
 

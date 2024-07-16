@@ -40,8 +40,8 @@
       </div>
       <% @journal.general_ledgers.each do |entry| %>
         <div class="row" style="font-size: .8rem">
-          <div class="p-1 col-2"><%= entry.id %></div>
-          <div class="p-1 col-6"><%= entry.account %></div>
+          <div class="p-1 col-2"><%= entry.account.code %></div>
+          <div class="p-1 col-6 <%= 'ps-5' if entry.credit? %>"><%= entry.account %></div>
           <div class="p-1 col-2 text-end" style="border-left: 2px solid black"><%= entry.amount if entry.debit? %></div>
           <div class="p-1 col-2 text-end" style="border-left: 2px solid black"><%= entry.amount if entry.credit? %></div>
         </div>

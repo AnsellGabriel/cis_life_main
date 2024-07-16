@@ -7,8 +7,7 @@ class LppiImportService
     @cooperative = cooperative
     @agreement = @group_remit.agreement
     @current_user = current_user
-    @headers = ["FIRST_NAME", "LAST_NAME", "BIRTHDATE", "EFFECTIVITY_DATE", "EXPIRY_DATE", "RELEASE_DATE", "MATURITY_DATE", "LOAN_AMOUNT", "LOAN_TYPE"]
-    @headers.push("UNUSED_EFF_DATE", "UNUSED_LOAN_AMOUNT", "REFERRENCE_ID") if @current_user.is_mis?
+    @headers = ["FIRST_NAME", "LAST_NAME", "BIRTHDATE", "EFFECTIVITY_DATE", "EXPIRY_DATE", "LOAN_AMOUNT"]
     @progress_tracker = @group_remit.create_progress_tracker(progress: 0.0)
   end
 
@@ -101,8 +100,10 @@ class LppiImportService
       loan_amount: row["LOAN_AMOUNT"],
       loan_type: row["LOAN_TYPE"].to_s.squish.upcase,
       premium: @current_user.is_mis? && row["PREMIUM"].present? ? row["PREMIUM"].to_f : nil,
-      unused_eff_date: @current_user.is_mis? && row["UNUSED_EFF_DATE"].present? ? row["UNUSED_EFF_DATE"] : nil,
-      unused_loan_amount: @current_user.is_mis? && row["UNUSED_LOAN_AMOUNT"].present? ? row["UNUSED_LOAN_AMOUNT"].to_f : nil,
+      unused: @current_user.is_mis? && row["UNUSED"].present? ? row["UNUSED"].to_f : nil,
+      unused_eff_date: row["UNUSED_EFF_DATE"].present? ? row["UNUSED_EFF_DATE"] : nil,
+      unused_loan_amount: row["UNUSED_LOAN_AMOUNT"].present? ? row["UNUSED_LOAN_AMOUNT"].to_f : nil,
+      unused_loan_type: row["UNUSED_LOAN_TYPE"].to_s.squish.upcase,
       reference_id: @current_user.is_mis? && row["REFERENCE_ID"].present? ? row["REFERENCE_ID"].to_s.squish.upcase : nil
     }
   end
@@ -151,16 +152,23 @@ class LppiImportService
   def create_batch(member, batch_hash)
     coop_member = member.coop_members.find_by(cooperative: @cooperative)
     loan_type = LoanInsurance::Loan.find_by(name: batch_hash[:loan_type])
+    active_loans = coop_member.loan_batches.where.not(status: [:terminated, :expired])
 
-    if @current_user.is_mis?
-      active_loans = coop_member.loan_batches.where.not(status: [:terminated, :expired])
+    if batch_hash[:reference_id].present?
+      unused = active_loans.find_by(reference_id: batch_hash[:reference_id])
+    end
 
-      if batch_hash[:reference_id].present?
-        unused = active_loans.find_by(reference_id: batch_hash[:reference_id])
+    if unused.nil? and (batch_hash[:unused_eff_date].present? or batch_hash[:unused_loan_amount].present? or batch_hash[:unused_loan_type].present?)
+      if batch_hash[:unused_loan_type].present?
+        unused_loan_type = LoanInsurance::Loan.find_by(name: batch_hash[:unused_loan_type])
+        unused = active_loans.find_by(loan_amount: batch_hash[:unused_loan_amount], effectivity_date: batch_hash[:unused_eff_date], loan: unused_loan_type)
+      else
+        unused = active_loans.find_by(loan_amount: batch_hash[:unused_loan_amount], effectivity_date: batch_hash[:unused_eff_date])
       end
 
-      if unused.nil? && batch_hash[:unused_eff_date].present? && batch_hash[:unused_loan_amount].present?
-        unused = active_loans.find_by(loan_amount: batch_hash[:unused_loan_amount], effectivity_date: batch_hash[:unused_eff_date])
+      if unused.nil?
+        create_denied_member(member, "No existing loan with the given unused loan type #{unused_loan_type&.name&.upcase}, amount #{number_with_precision(batch_hash[:unused_loan_amount], :precision => 2, :delimiter => ',')} and effectivity date #{batch_hash[:unused_eff_date]&.to_date&.strftime('%b %d, %Y')}. Please check and input manually.")
+        return
       end
     end
 
@@ -172,16 +180,10 @@ class LppiImportService
                   date_mature: batch_hash[:maturity_date],
                   loan_amount: batch_hash[:loan_amount],
                   loan: loan_type,
-                  unused_loan_id: (@current_user.is_mis? and unused.present?) ? unused.id : nil
+                  unused_loan_id: (unused.present?) ? unused.id : nil
                 )
 
-    # previous_loans = coop_member.active_loans(@group_remit, loan_type).order(created_at: :desc)
-
-    # if previous_loans.any?
-    #   new_batch.unused_loan_id = previous_loans.first.id
-    # end
-
-    result = new_batch.process_batch(batch_hash[:premium], @current_user)
+    result = new_batch.process_batch(batch_hash[:premium], @current_user, batch_hash[:unused])
 
     if result == :no_rate_for_age
       create_denied_member(member, "No rate available for members with age: #{new_batch.age}")
