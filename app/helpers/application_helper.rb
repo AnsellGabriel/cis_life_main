@@ -93,6 +93,7 @@ module ApplicationHelper
       when "approved" then content_tag(:span, "Approved", class: "lead text-success")
       when "denied" then content_tag(:span, "Denied", class: "lead text-danger")
       when "for_reconsideration" then content_tag(:span, "For Reconsideration", class: "lead text-primary")
+      when "md_recom" then content_tag(:span, "Pending", class: "lead text-warning")
     end
   end
 

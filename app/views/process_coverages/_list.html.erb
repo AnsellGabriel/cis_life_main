@@ -32,7 +32,8 @@
                 <% if pc.processor == current_user.userable || (current_user.head? || current_user.senior_officer?) %>
                   <%= link_to "View", pc, data: {turbo: false}, class: "btn btn-sm btn-outline-primary" %>
                   <% if pc.approved? %>
-                    <%= link_to lppi_summary_loan_insurance_group_remit_path(pc.group_remit), class: "btn btn-sm btn-warning", title: "Download Summary" do %>
+                    <%#= link_to lppi_summary_loan_insurance_group_remit_path(pc.group_remit), data: {turbo: false}, class: "btn btn-sm btn-warning", title: "Download Summary" do %>
+                    <%= link_to psheet_process_coverage_path(pc, format: :pdf), data: {turbo: false}, class: "btn btn-sm btn-warning", title: "Download Summary" do %>
                       <%= bootstrap_icon "filetype-pdf" %>
                     <% end %>
                   <% end %>

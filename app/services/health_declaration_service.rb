@@ -23,10 +23,11 @@ class HealthDeclarationService
           if sub_questions.present? && answer == "true"
             process_subquestion(@batch, sub_questions)
           end
-
         end
 
-        @batch.update!(valid_health_dec: true) if @pre_approved_health_dec
+        # @batch.update!(valid_health_dec: true) if @pre_approved_health_dec
+        @batch.update!(valid_health_dec: @pre_approved_health_dec)
+
         ActiveRecord::Base.connection.commit_db_transaction
         return true
 

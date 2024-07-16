@@ -36,6 +36,11 @@ class ProcessCoveragesController < ApplicationController
 
     elsif current_user.rank == "head"
 
+      @overall_coverages = ProcessCoverage.where(team: current_user.userable.team)
+      @approved_coverages = @overall_coverages.where(status: :approved)
+      @denied_coverages = @overall_coverages.where(status: :denied)
+      @on_process_coverages = @overall_coverages.where(status: :for_process)
+
       @process_coverages_x = ProcessCoverage.all
       @for_process_coverages = @process_coverages_x.where(status: :for_process)
       @approved_process_coverages = @process_coverages_x.where(status: :approved)
@@ -45,7 +50,7 @@ class ProcessCoveragesController < ApplicationController
       @denied_process_coverages = @process_coverages_x.where(status: :denied)
 
       @coverages_total_processed = ProcessCoverage.where(status: [:approved, :denied, :reprocess])
-
+      
       if params[:search].present?
         @process_coverages = @process_coverages_x.joins(group_remit: {agreement: :cooperative}).where(
         "group_remits.name LIKE ? OR group_remits.description LIKE ? OR agreements.moa_no LIKE ? OR cooperatives.name LIKE ? OR cooperatives.acronym LIKE ?", "%#{params[:search]}%", "%#{params[:search]}%", "%#{params[:search]}%", "%#{params[:search]}%", "%#{params[:search]}%")

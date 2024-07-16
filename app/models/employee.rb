@@ -12,6 +12,8 @@ class Employee < ApplicationRecord
   has_many :notifications, as: :notifiable, dependent: :destroy
   has_many :treasury_cashier_entries
   has_many :vouchers, class_name: "Accounting::Voucher"
+  has_many :processor_pcs, class_name: "ProcessCoverage", foreign_key: 'processor_id'
+  has_many :approver_pcs, class_name: "ProcessCoverage", foreign_key: 'approver_id'
 
   validates_presence_of :last_name, :first_name, :branch, :department_id, :designation
   # has_one :member_import_tracker, as: :trackable, dependent: :destroy
@@ -49,5 +51,13 @@ class Employee < ApplicationRecord
       # Delete the file using CarrierWave
       self.update!(remove_report: true)
     end
+  end
+
+  def get_for_process_count
+    processor_pcs.where(status: :for_process).count
+  end
+
+  def get_approved_count
+    processor_pcs.where(status: :approved).count
   end
 end
