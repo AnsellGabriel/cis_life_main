@@ -10,7 +10,17 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2024_07_12_131918) do
+ActiveRecord::Schema[7.0].define(version: 2024_07_16_033243) do
+  create_table "accounting_journal_entries", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+    t.string "journable_type", null: false
+    t.bigint "journable_id", null: false
+    t.bigint "journal_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["journable_type", "journable_id"], name: "index_accounting_journal_entries_on_journable"
+    t.index ["journal_id"], name: "index_accounting_journal_entries_on_journal_id"
+  end
+
   create_table "accounting_vouchers", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.date "date_voucher"
     t.string "voucher"
@@ -559,12 +569,10 @@ ActiveRecord::Schema[7.0].define(version: 2024_07_12_131918) do
   end
 
   create_table "claim_documents", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
-    t.bigint "process_claim_id", null: false
-    t.string "document"
-    t.integer "document_type"
+    t.string "name"
+    t.text "description"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["process_claim_id"], name: "index_claim_documents_on_process_claim_id"
   end
 
   create_table "claim_payments", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
@@ -1599,9 +1607,9 @@ ActiveRecord::Schema[7.0].define(version: 2024_07_12_131918) do
     t.bigint "agreement_id"
     t.bigint "plan_id"
     t.bigint "employee_id"
+    t.string "code"
     t.decimal "service_fee", precision: 15, scale: 2, default: "0.0"
     t.decimal "deposit", precision: 15, scale: 2, default: "0.0"
-    t.string "code"
     t.bigint "agent_id"
     t.index ["agent_id"], name: "index_treasury_cashier_entries_on_agent_id"
     t.index ["agreement_id"], name: "index_treasury_cashier_entries_on_agreement_id"
@@ -1724,7 +1732,6 @@ ActiveRecord::Schema[7.0].define(version: 2024_07_12_131918) do
   add_foreign_key "claim_attachments", "claim_type_documents"
   add_foreign_key "claim_attachments", "process_claims"
   add_foreign_key "claim_causes", "process_claims"
-  add_foreign_key "claim_documents", "process_claims"
   add_foreign_key "claim_payments", "process_claims"
   add_foreign_key "claim_remarks", "process_claims"
   add_foreign_key "claim_remarks", "users"

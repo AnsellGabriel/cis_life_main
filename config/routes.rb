@@ -143,6 +143,7 @@ Rails.application.routes.draw do
   resources :agreements do
     get :show_details, on: :member
     post :update_ors, on: :member
+    get :selected, on: :member
   end
 
   # resources :agreement_benefits

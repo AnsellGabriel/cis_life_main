@@ -4,7 +4,11 @@
   <%#= f.association :cooperative, input_html: { data: { controller: "ts--select" } }  %>
   <div class="mb-3">
     <%#= link_to "Back", @process_claim.cooperative, class: "btn btn-secondary btn-lg" %>
-    <%= link_to "Back", claim_process_claims_process_claim_path(@process_claim), class: "btn btn-secondary btn-lg" %>
+    <% unless @process_claim.id.nil? %>
+      <%= link_to "Back", claim_process_claims_process_claim_path(@process_claim), class: "btn btn-secondary btn-lg"  %>
+    <% else %>
+      <%= link_to "Back", cooperative_path(@process_claim.cooperative), class: "btn btn-secondary btn-lg"  %>
+    <% end %>
     <%= f.button :submit, 'Save Claim', class: 'btn-success btn-lg' %>
   </div>
   <div class="row">

@@ -8,7 +8,7 @@ class DashboardsController < ApplicationController
 
     def claims
         @user_levels = current_user.user_levels.where(active: 1) if current_user
-        @for_evaluation = Claims::ProcessClaim.where(claim_route: get_route_evaluators) if current_user.userable_type == "Employee"
+        @for_evaluation = Claims::ProcessClaim.where(claim_route: get_route_evaluators) if current_user.userable_type == "Employee" unless @claims_user_authority_level.nil?
         # unless @claims_user_authority_level == "Claims Evaluator" ||  @claims_user_authority_level == "COSO (Approver)" || @claims_user_authority_level == "President (Approver)"
         #   @for_evaluation = Claims::ProcessClaim.where(claim_route: 3)
         # end
