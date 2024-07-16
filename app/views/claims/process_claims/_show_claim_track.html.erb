@@ -1,12 +1,12 @@
 <div class="mb-3">
   <ul class="timeline" style="display: flex; flex-direction: column-reverse;">
     <% date_entry = Date.today %>
-    <% @process_claim.process_track.each_with_index do |ct, index| %>
+    <% @process_claim.process_tracks.each_with_index do |ct, index| %>
       <li class="mb-3">
         <%# date_tat = get_date_tat(to_shortdate(ct.created_at),to_shortdate(date_entry)) unless date_entry.nil? %>
         <% unless index == 0 %>
           <% start_date = Time.zone.parse(ct.created_at.to_s) %>
-          <% end_date = DateTime.parse( @process_claim.process_track[index-1].created_at.to_s) %>
+          <% end_date = DateTime.parse( @process_claim.process_tracks[index-1].created_at.to_s) %>
           <% date_tat = get_date_tat(start_date, end_date) unless date_entry.nil? %>
           <%# date_entry = ct.created_at %>
         <% end %>

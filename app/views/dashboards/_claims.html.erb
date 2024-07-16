@@ -13,7 +13,7 @@
       <div class="card-footer"><small>
         <%= link_to "Cooperative", cooperatives_path, class: "link-primary" %> |
         <%= link_to "Claim Type", claims_claim_types_path, class: "link-primary" %> |
-        <%= link_to "Claims fund", claims_cf_accounts_path, class: "link-primary" %> 
+        <%= link_to "Authority Level", authority_levels_path, class: "link-primary" %> 
       </small></div>
     </div>
   </div>
@@ -126,20 +126,36 @@
                     </div>
                     <div class="card-footer"><small class="text-muted"> <%= link_to 'See Details <i class="bi bi-box-arrow-right"></i>'.html_safe, claims_cf_accounts_path, class: "text-muted" %></small></div>
                 </div>
-                <div class="card">
-                    <div class="card-body">
-                    <p class="text-primary card-title">CRITICAL</p>
-                    <h2 class="text-muted"><%= @claims_fund.critical.count %></h2>
-                    </div>
-                    <div class="card-footer"><small class="text-muted"> <%= link_to 'See Details <i class="bi bi-box-arrow-right"></i>'.html_safe, index_critical_claims_cf_accounts_path, class: "text-muted" %></small></div>
-                </div>
+                <% if @user_levels.where(authority_level_id: 12).present? %>
+                  <div class="card">
+                      <div class="card-body">
+                      <p class="text-primary card-title">AVAILMENT</p>
+                      
+                      <h2 class="text-muted"><%= @cf_availments.pending.count %></h2>
+                      </div>
+                      <div class="card-footer"><small class="text-muted"> <%= link_to 'See Details <i class="bi bi-box-arrow-right"></i>'.html_safe, claims_cf_availments_path, class: "text-muted" %></small></div>
+                  </div>
+                  <% else %>
+                  <div class="card">
+                      <div class="card-body">
+                      <% if @claims_fund.critical.present? %>
+                      <p class="text-danger card-title">CRITICAL</p>
+                      <% else %>
+                      <p class="text-primary card-title">CRITICAL</p>
+                      <% end %>
+                      <h2 class="text-muted"><%= @claims_fund.critical.count %></h2>
+                      </div>
+                      <div class="card-footer"><small class="text-muted"> <%= link_to 'See Details <i class="bi bi-box-arrow-right"></i>'.html_safe, index_critical_claims_cf_accounts_path, class: "text-muted" %></small></div>
+                  </div>
+                  
+
+                <% end %>
                 <div class="card">
                     <div class="card-body">
                     <p class="text-primary card-title">REPLENISH</p>
-                    <% cf_replenish = Claims::CfReplenish.where(status: :pending) %>
-                    <h2 class="text-muted"><%= cf_replenish.count %></h2>
+                    <h2 class="text-muted"><%= @cf_replenishes.pending.count %></h2>
                     </div>
-                    <div class="card-footer"><small class="text-muted"> <%= link_to 'See Details <i class="bi bi-box-arrow-right"></i>'.html_safe, index_show_claims_process_claims_path(p: 1), class: "text-muted" %></small></div>
+                    <div class="card-footer"><small class="text-muted"> <%= link_to 'See Details <i class="bi bi-box-arrow-right"></i>'.html_safe, claims_cf_replenishes_path, class: "text-muted" %></small></div>
                 </div>
                 
             </div>
@@ -176,7 +192,7 @@
                     <tbody>
                         <%= claim_route_row("CA Filed", 17) %>
                         <%= claim_route_row("Documentation Review", 1) %>
-                        <%= claim_route_row("Retrieval of Document", 24) %>
+                        <%= claim_route_row("Retrieval", 24) %>
                         <%= claim_route_row("Claims Filed", 2) %>
                         <%= claim_route_row("Claims Review", 3) %>
                         <%= claim_route_row("Head Evaluation", 4) %>
@@ -201,7 +217,7 @@
                     <tbody>
                         <%= claim_route_row("Head Reconsider", 10) %>
                         <%= claim_route_row("COSO Reconsider", 20) %>
-                        <%= claim_route_row("Accounting Processing", 8) %>
+                        <%= claim_route_row("Payment Procedure", 8) %>
                         <%= claim_route_row("Pending Audit", 16) %>
                         <%= claim_route_row("Treasury Processing", 14) %>
                         <%= claim_route_row("Payment Ready", 12) %>

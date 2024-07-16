@@ -38,10 +38,10 @@ Rails.application.routes.draw do
   resources :reinsurances do
     get :reserves_index, on: :collection
   end
-  namespace :claims do
-    resources :claim_types, :claim_documents, :claim_type_benefits, :claim_confinements, :claim_benefits, :claim_coverages, :claim_distributions, :claim_type_natures, :claim_type_agreements
-
-    resources :cf_accounts do
+  namespace :claims do 
+    resources :claim_types, :claim_documents, :claim_type_benefits, :claim_confinements, :claim_benefits, :claim_coverages, :claim_distributions, :claim_type_natures, :claim_type_agreements, :claim_retrievals
+    
+    resources :cf_accounts do 
       get :index_critical, to: "cf_accounts#index_critical", on: :collection
     end
 

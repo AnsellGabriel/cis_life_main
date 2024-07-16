@@ -1,0 +1,29 @@
+<%= content_tag :h3, 'Claims Retrieval' %>
+
+<div class="text-end mb-3">
+    <%= link_to 'New Retrieval', new_claims_claim_retrieval_path, class: 'btn btn-primary text-end', data: { turbo_frame: "remote_modal" } %>
+</div>
+<table class="table table-bordered table-hover">
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Details</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        <% @claim_retrievals.each do |cr|  %>
+            <tr>
+                <th><%= cr.id %></th>
+                <td><strong><%= cr.name %></strong><br>
+                <%= content_tag :small, cr.description %>
+                </td>
+                <td>
+                    <%#f= link_to 'View', cr, class: 'btn btn-secondary btn-sm', data: { turbo_frame: "remote_modal" } %>
+                    <%= link_to 'Edit', edit_claims_claim_retrieval_path(cr), class: 'btn btn-secondary btn-sm', data: { turbo_frame: "remote_modal" } %>
+                    <%= link_to "Delete", cr, class: "btn btn-danger btn-sm", method: :delete, data: { "turbo-method": :delete, turbo_confirm: "Are you sure?" } %>
+                </td>
+            </tr>
+        <% end %>
+    </tbody>
+</table>
