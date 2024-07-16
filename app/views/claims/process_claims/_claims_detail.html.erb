@@ -14,8 +14,14 @@
   </div>
   <div class="card-body">
     <dl class="row">
+      <dt class="col-sm-4">Claim ID:</dt>
+      <dd class="col-sm-8"><%= @process_claim.id %></dd>
       <dt class="col-sm-4">Route:</dt>
-      <dd class="col-sm-8 <%= 'text-danger' if @process_claim.payment_rejected? %>"><%= @process_claim.claim_route.humanize.titleize %></dd>
+      <dd class="col-sm-8"><%= @process_claim.claim_route.humanize.titleize %></dd>
+      <% if @process_claim.retrieval? %>
+        <dt class="col-sm-4">Retrieval:</dt>
+        <dd class="col-sm-8"><%= @process_claim.claim_retrieval %></dd>
+      <% end %>
       <dt class="col-sm-4">Status</dt>
       <dd class="col-sm-8"><%= @process_claim.status.humanize unless @process_claim.status.nil? %></dd>
       <dt class="col-sm-4">Date Incident:</dt>
@@ -41,6 +47,14 @@
         <% unless @process_claim.claim_cause.osccd == "" %>
           <%= content_tag :dt, 'OSCCD', class: "col-sm-4" %>
           <%= content_tag :dd, @process_claim.claim_cause.osccd, class: "col-sm-8" %>
+        <% end %>
+        <% unless @process_claim.claim_cause.postmortem == "" %>
+          <%= content_tag :dt, 'POST MORTEM', class: "col-sm-4" %>
+          <%= content_tag :dd, @process_claim.claim_cause.postmortem, class: "col-sm-8" %>
+        <% end %>
+        <% unless @process_claim.claim_cause.cause_of_incident == "" %>
+          <%= content_tag :dt, 'CAUSE OF INCIDENT', class: "col-sm-4" %>
+          <%= content_tag :dd, @process_claim.claim_cause.cause_of_incident, class: "col-sm-8" %>
         <% end %>
       <% end %>
     </dl>

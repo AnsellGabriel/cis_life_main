@@ -71,10 +71,12 @@ class Claims::ProcessClaim < ApplicationRecord
     verify_hardcopy_document: 21,
     issuance_denied_letter: 22,
     payment_preparation: 23,
-    retrieval_documents: 24,
+    retrieval: 24,
     pending_claim: 25,
     reinsurance_verification: 26,
-    reinsurance_verified: 27
+    reinsurance_verified: 27,
+    claims_fund_preparation: 28,
+    claims_fund_head_approval: 29
   }
   def self.ransackable_attributes(auth_object = nil)
   ["age", "agreement_benefit_id", "agreement_id", "approval", "cause_id", "claim_filed", "claim_route", "claim_type_id", "claim_type_nature_id", "claimant_contact_no", "claimant_email", "claimant_name", "coop_member_id", "cooperative_id", "created_at", "date_file", "date_incident", "entry_type", "id", "payment", "payout_type", "processing", "relationship", "status", "updated_at"]
@@ -166,7 +168,8 @@ class Claims::ProcessClaim < ApplicationRecord
   belongs_to :cause, optional: true
   belongs_to :claim_type
   belongs_to :claim_type_nature, optional: true
-  has_many :process_track, as: :trackable, dependent: :destroy
+  belongs_to :claim_retrieval, optional: true
+  has_many :process_tracks, as: :trackable, dependent: :destroy
   has_one :claim_cause, dependent: :destroy
   has_one :claim_reinsurance, dependent: :destroy, class_name: "Claims::ClaimReinsurance"
   has_many :claim_benefits, dependent: :destroy
