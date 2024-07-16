@@ -1265,7 +1265,6 @@ ActiveRecord::Schema[7.0].define(version: 2024_07_12_131918) do
     t.bigint "claim_type_nature_id"
     t.bigint "coop_member_id"
     t.bigint "claim_retrieval_id"
-    t.boolean "micro"
     t.index ["agreement_benefit_id"], name: "index_process_claims_on_agreement_benefit_id"
     t.index ["agreement_id"], name: "index_process_claims_on_agreement_id"
     t.index ["cause_id"], name: "index_process_claims_on_cause_id"
