@@ -165,12 +165,14 @@ class Claims::ProcessClaimsController < ApplicationController
     @process_claim.entry_type = :claim
     @process_claim.claim_route = :analyst_file if @process_claim.id.nil?
     @process_claim.status = :pending
+    @agreement = Agreement.find(params[:claims_process_claim][:agreement_id])
+    @process_claim.agreement_benefit_id = nil if @agreement.plan.acronym == "LPPI"
     # @process_claim.micro = 1 if @process_claim.agreement.plan.micro
     @process_claim.age = @process_claim.get_age.to_i
     # raise "errors"
     respond_to do |format|
       if @process_claim.save
-        @process_claim.process_track.create(route_id: 17, user: current_user)
+        @process_claim.process_tracks.create(route_id: 17, user: current_user)
         format.html { redirect_to claim_process_claims_process_claim_path(@process_claim), notice: "Claims was successfully added." }
         format.json { render :show, status: :created, location: @process_claim }
       else

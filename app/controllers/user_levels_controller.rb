@@ -23,7 +23,7 @@ class UserLevelsController < ApplicationController
   def create
     # raise 'errors'
     @user_level = UserLevel.new(user_level_params)
-
+    @user_level.active = 1
     if @user_level.save
       redirect_to user_levels_path, notice: "User level was successfully created."
     else
