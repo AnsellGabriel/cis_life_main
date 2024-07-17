@@ -22,7 +22,11 @@
                 <small>Effectivity: <%= pc.effectivity %> / Expiry: <%= pc.expiry %></small> <br>
               <% end %>
               <small>Status: <%= process_status(pc.status) %></small> <br>
-              <small>Processor: <%= pc.processor %></small>
+              <small>Processor: <%= pc.processor %></small><br>
+              <small>Entry Type: <%= entry_type(pc.group_remit.mis_entry) %></small>
+              <% if pc.group_remit.mis_entry? %>
+                <br><small>Encoder: <%= User.get_encoder(pc.group_remit.mis_user) %></small>
+              <% end %>
             </td>
             <td>
               <% if pc.for_process? && pc.processor.nil? %>

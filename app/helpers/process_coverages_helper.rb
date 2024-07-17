@@ -279,4 +279,12 @@ module ProcessCoveragesHelper
     end
   end
   
+  def entry_type(val)
+    case val
+    when true
+      content_tag(:span, "MIS", class: "badge bg-primary")
+    else
+      content_tag(:span, "COOP", class: "badge bg-info")
+    end
+  end
 end

@@ -82,6 +82,10 @@ class User < ApplicationRecord
     userable_type == "CoopUser"
   end
 
+  def self.get_encoder(id)
+    find(id).userable
+  end
+
   private
 
   def password_complexity
