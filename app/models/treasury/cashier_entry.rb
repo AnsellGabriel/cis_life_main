@@ -2,7 +2,7 @@ class Treasury::CashierEntry < ApplicationRecord
   attr_accessor :dummy_payee, :dummy_entry_type, :product_check, :vat_check, :discount_check
   before_save :add_deposit#, :format_or_no
 
-  validates_presence_of :or_no, :or_date, :treasury_account_id, :amount, :employee_id, :branch#, :global_entriable
+  validates_presence_of :or_no, :or_date, :treasury_account_id, :amount, :employee_id, :branch, :global_entriable
 
   enum status: { pending: 0, posted: 1, cancelled: 2, for_approval: 3}
   # enum branch: { head_office: 0, cagayan_de_oro: 1, iloilo: 2, davao: 3, }
