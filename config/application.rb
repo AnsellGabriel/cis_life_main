@@ -41,8 +41,6 @@ module CisLifeMain
       g.decorator false
     end
     config.autoload_paths += %W(#{config.root}/app/services)
-    config.active_job.queue_adapter = :sidekiq
     config.global_id_signed = true
-
   end
 end

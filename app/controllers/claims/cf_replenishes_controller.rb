@@ -56,7 +56,7 @@ class Claims::CfReplenishesController < ApplicationController
     @cf_account = @cf_replenish.cf_account
     case params[:s].to_i
     when 1
-        @cf_replenish.update!(status: :approved)
+        @cf_replenish.update!(status: :approved_head)
         @cf_replenish.cf_ledgers.create(cf_account: @cf_account, amount: @cf_replenish.amount, entry_type: :debit, transaction_date: Time.now)
         if @cf_account.get_balance(Time.now) < @cf_account.amount_limit
           @cf_account.update(status: :critical)
@@ -70,6 +70,10 @@ class Claims::CfReplenishesController < ApplicationController
       when 0
         @cf_replenish.update!(status: :pending)
         update_notice = "Claims Fund Pending"
+      when 3
+        @cf_replenish.update!(status: :approved_final)
+        
+        update_notice = "Claims Fund Approved Final"
     end
     
     redirect_to claims_cf_replenishes_path, notice: "Claims fund approved", status: :see_other
@@ -89,7 +93,7 @@ class Claims::CfReplenishesController < ApplicationController
 
     # Only allow a list of trusted parameters through.
     def cf_replenish_params
-      params.require(:claims_cf_replenish).permit(:cf_account_id, :user_id, :transaction_date, :amount, :description, :status)
+      params.require(:claims_cf_replenish).permit(:cf_account_id, :user_id, :transaction_date, :amount, :description, :status, :orno, :ordate)
     end
 
     # def cf_availment_params

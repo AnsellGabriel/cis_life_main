@@ -8,7 +8,7 @@ class AgreementsController < ApplicationController
     @plans = Plan.all
     @agreements_x = Agreement.all
 
-    
+
     if params[:search].present?
       @agreements = @agreements_x.filtered(params[:search])
     else
@@ -89,6 +89,14 @@ class AgreementsController < ApplicationController
   def destroy
     @agreement.destroy
     redirect_to agreements_url, notice: "Agreement was successfully destroyed."
+  end
+
+  def selected
+    @target = params[:target]
+    @agreement_benefits = AgreementBenefit.where(agreement: params[:id])
+    respond_to do |format|
+      format.turbo_stream
+    end
   end
 
   private

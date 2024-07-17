@@ -7,6 +7,7 @@ class ProcessTrack < ApplicationRecord
     denied: 1,
     reconsider_approved: 2,
     reconsider_denied: 3,
-    pending: 4
+    pending: 4,
+    reconsider: 5
   }
 end

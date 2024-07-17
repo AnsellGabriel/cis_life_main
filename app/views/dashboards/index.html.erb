@@ -4,11 +4,6 @@
     <p class="lead">We hope you’re having a great day. Here's what’s happening in your account today:</p>
   </div>
 
- 
-  <%# <div class="text-center mt-5">
-    <a href="/profile" class="btn btn-primary mx-2">View Profile</a>
-    <a href="/settings" class="btn btn-secondary mx-2">Settings</a>
-  </div> %>
   <% if current_user.userable_type == "CoopUser" %>
     <%= render 'cooperative' %>
   <% elsif current_user.userable_type == "Employee" %>
@@ -16,7 +11,13 @@
       <% when 14 %>
           <%= render 'actuarial' %>
       <% when 19 %>
-          <%= render 'claims' %>
-      <% end %>
+          <%= render 'claims' unless @claims_user_authority_level.nil? %>
+      <% when 26 %>
+          <%= render 'treasury' %>
+      <% when 15 %>
+          <%= render 'mis' %>
+      <% when 11 %>
+          <%= render 'accounting' %>
+    <% end %>
   <% end %>
 </div>

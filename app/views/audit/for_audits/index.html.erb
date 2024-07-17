@@ -36,7 +36,7 @@
             <td class="text-center align-middle" style="min-width: 100px"><%= month_day_year voucher.created_at %></td>
             <td class="text-center align-middle"><%= voucher.payable %></td>
             <td class="text-center align-middle" style="min-width: 100px"><%= voucher.payment_type %></td>
-            <td class="text-center align-middle" style="min-width: 150px"><%= voucher.employee.signed_fullname %></td>
+            <td class="text-center align-middle" style="min-width: 150px"><%= voucher.employee&.signed_fullname %></td>
             <td class="text-end align-middle"><%= to_curr voucher.amount %></td>
             <td class="text-center align-middle">
               <span class="<%= voucher.decorate.audit_badge %>">

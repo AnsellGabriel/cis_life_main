@@ -32,7 +32,7 @@ class PlansController < InheritedResources::Base
   private
 
   def plan_params
-    params.require(:plan).permit(:name, :description, :acronym, :dependable, :entry_age_from, :entry_age_to, :exit_age, :min_participation)
+    params.require(:plan).permit(:name, :description, :acronym, :dependable, :entry_age_from, :entry_age_to, :exit_age, :min_participation, :micro)
   end
 
   def set_cooperative

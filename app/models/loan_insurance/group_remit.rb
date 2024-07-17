@@ -24,7 +24,7 @@ batch_status: "terminated")
     self.coop_commission = approved_coop_commissions
     self.agent_commission = approved_agent_commissions
     self.net_premium = approved_premium_due - approved_coop_commissions - approved_agent_commissions
-    
+
     unless self.type == "BatchRemit"
 
       if self.process_coverage.status == "approved"
@@ -104,7 +104,7 @@ batch_status: "terminated")
     end
   end
 
-
-
-
+  def batches_with_incorrect_prem
+    batches.where("premium != system_premium OR unused != system_unused")
+  end
 end

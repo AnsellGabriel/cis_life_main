@@ -1,8 +1,8 @@
 class ProcessCoveragesController < ApplicationController
   include CsvGenerator
-  
+
   before_action :authenticate_user!
-  before_action :check_emp_department, except: :modal_remarks 
+  before_action :check_emp_department, except: :modal_remarks
   before_action :set_process_coverage,
   only: %i[ show edit update destroy approve_batch deny_batch pending_batch reconsider_batch pdf set_premium_batch update_batch_prem transfer_to_md update_batch_cov adjust_lppi_cov refund psheet set_processor set_processor]
 
@@ -85,8 +85,9 @@ class ProcessCoveragesController < ApplicationController
       @process_coverages_x = @self_process_coverages
 
       @md_reviewed= 0 
+
       @for_md_review = 0
-      @reviewed_batch = [] 
+      @reviewed_batch = []
       @for_review_batch = []
       @lppi_batches = LoanInsurance::Batch.includes(group_remit: :process_coverage).where(process_coverages: { team: current_user.userable.team}, substandard: true, for_md: true).sort_by do |batch|
         md = User.find_by(rank: :medical_director)
@@ -158,7 +159,7 @@ class ProcessCoveragesController < ApplicationController
     when "md"
       @title = "For M.D. Review"
       @batches = @for_review_batches
-    else 
+    else
       @title = "M.D. Reviewed Coverages"
       @batches = @reviewed_batches
     end
@@ -178,7 +179,7 @@ class ProcessCoveragesController < ApplicationController
   end
 
   def product_csv
-        
+
     date_from = Date.strptime(params[:date_from], "%m-%d-%Y")
     date_to = Date.strptime(params[:date_to], "%m-%d-%Y")
 
@@ -191,7 +192,7 @@ class ProcessCoveragesController < ApplicationController
       @process_coverages = ProcessCoverage.where(processor_id: params[:emp_id], status: params[:process_type], created_at: date_from..date_to).order(:created_at)
     end
 
-    if @process_coverages.nil? || @process_coverages.empty? 
+    if @process_coverages.nil? || @process_coverages.empty?
       redirect_back fallback_location: process_coverages_path, alert: "No record(s) found."
     else
       generate_csv(@process_coverages, "#{emp} - #{date_from} to #{date_to}")
@@ -229,7 +230,7 @@ class ProcessCoveragesController < ApplicationController
       else
         format.html { redirect_to @process_coverage }
       end
-      
+
     end
   end
 
@@ -580,47 +581,35 @@ class ProcessCoveragesController < ApplicationController
       if current_user.rank == "analyst"
 
         if @max_amount >= @total_gross_prem
-
-          # if @process_coverage.count_batches_denied(klass_name) > 0
           if @process_coverage.count_batches("denied") > 0
-            # if @process_coverage.group_remit.batches.where(batches: { insurance_status: :denied }).count > 0
-            # @process_coverage.update_attribute(:status, "for_head_approval")
             @process_coverage.update(status: :for_head_approval, process_date: Date.today, who_processed: current_user.userable)
             format.html { redirect_to process_coverage_path(@process_coverage), notice: "Process Coverage for Head Approval!" }
           else
-            # @process_coverage.update_attribute(:status, "approved")
             @process_coverage.update(status: :approved, process_date: Date.today, evaluate_date: Date.today, who_approved: current_user.userable)
-            # @process_coverage.group_remit.set_total_premiums_and_fees
             format.html { redirect_to process_coverage_path(@process_coverage), notice: "Process Coverage Approved!" }
           end
         else
           @process_coverage.update_attribute(:status, "for_head_approval")
           format.html { redirect_to process_coverage_path(@process_coverage), notice: "Process Coverage for Head Approval!" }
         end
+
       elsif current_user.rank == "head"
+
         if @max_amount >= @total_gross_prem
-          # @process_coverage.update_attribute(:status, "approved")
           @process_coverage.update(status: :approved, evaluate_date: Date.today, who_approved: current_user.userable)
-          # @process_coverage.group_remit.set_total_premiums_and_fees
           format.html { redirect_to process_coverage_path(@process_coverage), notice: "Process Coverage Approved!" }
         else
           @process_coverage.update_attribute(:status, "for_vp_approval")
           format.html { redirect_to process_coverage_path(@process_coverage), notice: "Process Coverage for VP approval!" }
         end
+
       elsif current_user.rank == "senior_officer"
-        # @process_coverage.update_attribute(:status, "approved")
         @process_coverage.update(status: :approved, evaluate_date: Date.today, who_approved: current_user.userable)
-        # @process_coverage.group_remit.set_total_premiums_and_fees
         format.html { redirect_to process_coverage_path(@process_coverage), notice: "Process Coverage Approved!" }
       end
     end
 
     @process_coverage.group_remit.set_total_premiums_and_fees
-
-    # if @process_coverage.update_attribute(:status, "approved")
-    #   @process_coverage.group_remit.set_total_premiums_and_fees
-    #   format.html { redirect_to process_coverage_path(@process_coverage), notice: "Process Coverage Approved!" }
-    # end
   end
 
   def refund
@@ -646,7 +635,7 @@ class ProcessCoveragesController < ApplicationController
   def reassess
     @process_coverage = ProcessCoverage.find_by(id: params[:process_coverage_id])
     @group_remit = @process_coverage.group_remit
-    
+
     respond_to do |format|
       if @process_coverage.update_attribute(:status, "reassess")
         @group_remit.update_attribute(:status, "under_review")

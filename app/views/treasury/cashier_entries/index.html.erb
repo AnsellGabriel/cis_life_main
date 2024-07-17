@@ -1,7 +1,7 @@
 
 <div class="<%= flex_justify_align('', 'center') %> gap-1 mb-3">
   <%= content_tag :h4, "Cashier Entries", class: 'text-primary mb-0' %>
-  <%= link_to new_treasury_cashier_entry_path, class: small_btn('outline-primary'), data: {turbo_frame: 'modal'}, title: 'New' do %>
+  <%= link_to new_treasury_cashier_entry_path, class: small_btn('outline-primary'), data: {turbo_frame: 'modal-lg'}, title: 'New' do %>
     <i class="bi bi-plus-lg"></i>
   <% end %>  
 </div>
@@ -56,7 +56,7 @@
           <td class="text-center"><%= month_day_year(entry.or_date) %></td>
           <td><%= entry.entriable %></td>
           <td class="text-end"><%= to_curr(entry.amount) %></td>
-          <td class="text-center">
+          <td class="">
             <span class="<%= entry.decorate.status_badge %>"><%= entry.decorate.status.titleize %></span>
           </td>
         </tr>
@@ -69,7 +69,7 @@
   </tbody>
 </table>
 
-<div class="<%= flex_justify_align('end') %>">
+<div class="<%= flex_justify_align('end') %> mb-3">
   <% if @pagy.pages > 1 %>
     <%== pagy_bootstrap_nav(@pagy) %>
   <% end %>

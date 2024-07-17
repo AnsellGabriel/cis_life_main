@@ -41,8 +41,8 @@ class ClaimsPdf < Prawn::Document
           text "Insured:", size: 9
         end
         bounding_box([100, y_position - gap], width: 190, height: 20) do
-          text @pc.claimable.get_fullname.titleize, size: 9, style: :bold
-          text "Birthdate: #{to_shortdate(@pc.claimable.birthdate)} Age: #{@pc.age}", size: 9
+          text @pc.coop_member.get_fullname.titleize, size: 9, style: :bold
+          text "Birthdate: #{to_shortdate(@pc.coop_member.birthdate)} Age: #{@pc.age}", size: 9
           # transparent(0.5) { stroke_bounds }
         end
         y_position -= 25
@@ -165,7 +165,7 @@ class ClaimsPdf < Prawn::Document
     y_position = cur
     bounding_box([310, y_position], width: 220, height: 230) do
       transparent(0.5) { stroke_bounds }
-      text "IV. Insurance Details", size: 10, style: :bold
+      text "III. Insurance Details", size: 10, style: :bold
       
       indent(10) do
         y_position = bounds.top
@@ -312,7 +312,7 @@ class ClaimsPdf < Prawn::Document
     # y_position = cur 
     # bounding_box([310, y_position], width: 220, height: 120) do
       # transparent(0.5) { stroke_bounds }
-      text "III. Benefit Distribution", size: 10, style: :bold
+      text "IV. Benefit Distribution", size: 10, style: :bold
 
       data = [["Pariculars", "Amount"]]
       @pc.claim_distributions.each do |cd|

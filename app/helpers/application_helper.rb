@@ -256,14 +256,14 @@ module ApplicationHelper
     'text-center align-middle'
   end
 
-  def view_ors_title(val)
+  def view_ors_title(val, mis_user_id)
     case val
     when "enc"
-      "List of Encoded ORs"
+      "#{mis_user_id ? 'My ' : '' }Encoded ORs"
     when "nt"
-      "List of Not Tranmistted ORs"
+      "Not Tranmistted ORs"
     when "ne"
-      "List of ORs for Encoding"
+      "ORs for Encoding"
     end
   end
 

@@ -2,6 +2,7 @@
 require "sidekiq/web"
 
 Rails.application.routes.draw do
+  resources :branches
   resources :employee_teams
   resources :teams do
     get :selected, on: :member
@@ -37,10 +38,10 @@ Rails.application.routes.draw do
   resources :reinsurances do
     get :reserves_index, on: :collection
   end
-  namespace :claims do
-    resources :claim_types, :claim_documents, :claim_type_benefits, :claim_confinements, :claim_benefits, :claim_coverages, :claim_distributions, :claim_type_natures, :claim_type_agreements
-
-    resources :cf_accounts do
+  namespace :claims do 
+    resources :claim_types, :claim_documents, :claim_type_benefits, :claim_confinements, :claim_benefits, :claim_coverages, :claim_distributions, :claim_type_natures, :claim_type_agreements, :claim_retrievals
+    
+    resources :cf_accounts do 
       get :index_critical, to: "cf_accounts#index_critical", on: :collection
     end
 
@@ -143,6 +144,7 @@ Rails.application.routes.draw do
   resources :agreements do
     get :show_details, on: :member
     post :update_ors, on: :member
+    get :selected, on: :member
   end
 
   # resources :agreement_benefits

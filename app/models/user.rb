@@ -45,6 +45,10 @@ class User < ApplicationRecord
     id
   end
 
+  def get_fullname
+    self.userable.last_name
+  end
+
   # Override Devise method to prevent login if not approved
   def active_for_authentication?
     super && approved?

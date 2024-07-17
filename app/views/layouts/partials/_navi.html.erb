@@ -51,7 +51,7 @@
                 <% end %>
               <% end %>
             <% when 19 %>
-            <%= link_to "Dashboard", claims_dashboards_path, class: "nav-link" %>
+            <%#= link_to "Dashboard", claims_dashboards_path, class: "nav-link" %>
             <%#= link_to "Cooperative", cooperatives_path, class: "nav-link" %>
             <%= render 'layouts/partials/nav_dropdown', title: 'Claims' do %>
               <%= link_to "Claim index", claims_process_claims_path, class: "dropdown-item" %>
@@ -69,6 +69,7 @@
               <%= link_to "Claim Type", claims_claim_types_path, class: "dropdown-item" %>
               <%= link_to "Medical Code", claims_causes_path, class: "dropdown-item" %>
               <%= link_to "Claim Nature", claims_claim_type_natures_path, class: "dropdown-item" %>
+              <%= link_to "Claim Retrieval", claims_claim_retrievals_path, class: "dropdown-item" %>
               <%= link_to "Claim Fund - Replenish", claims_cf_replenishes_path, class: "dropdown-item" %>
               <%= link_to "Claim Fund - Availment", claims_cf_availments_path, class: "dropdown-item" %>
               <%#= link_to "Claims Message", claim_remarks_path, class: "dropdown-item" %>
@@ -115,7 +116,7 @@
         <%= render 'layouts/partials/nav_dropdown', title: "<i class=\"bi bi-person-circle\"></i> <small> Hi, #{current_user.userable.first_name}</small>".html_safe do %>
           <li class="nav-item"> <a class="nav-link" href="#"><%= current_user.email %></a> </li>
           <li class="nav-item"> <%= link_to "Change Password", edit_user_registration_path, class: "nav-link" %></li>
-          <% if current_user.userable_type == "Employee" and !current_user.is_mis? %>
+          <% if current_user.userable_type == "Employee" and !current_user.is_mis? and !current_user.is_accountant? %>
             <%= content_tag :li, class:"nav-item"  do %>
               <%= link_to "Claims Authority Level: #{to_currency(session[:claims_max_amount])}", "#", class: "nav-link" unless session[:claims_max_amount].nil? %>
               <%= link_to "Underwriting Authority Level: #{to_currency(session[:max_amount])}", "#", class: "nav-link" unless session[:max_amount].nil? %>
