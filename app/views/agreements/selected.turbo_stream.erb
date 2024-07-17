@@ -1,0 +1,6 @@
+<%= turbo_stream.update @target do %>
+  <%= content_tag :option, "Choose Agreement Benefit" %>
+  <%= @agreement_benefits.each do |ab| %>
+    <%= content_tag :option, "#{ab.name}", value: ab.id %>
+  <% end %>
+<% end %>

@@ -91,6 +91,14 @@ class AgreementsController < ApplicationController
     redirect_to agreements_url, notice: "Agreement was successfully destroyed."
   end
 
+  def selected
+    @target = params[:target]
+    @agreement_benefits = AgreementBenefit.where(agreement: params[:id])
+    respond_to do |format|
+      format.turbo_stream
+    end
+  end
+
   private
   # Use callbacks to share common setup or constraints between actions.
   def set_agreement
