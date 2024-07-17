@@ -68,12 +68,14 @@
           <span class="small"><%= to_curr(entry.amount) %></span>
         </div>
 
-        <% if entry.insurance? %>
+        <% if entry.service_fee > 0 %>
           <div class="<%= flex_justify_align('between') %>">
             <span class="small">Service Fee</span>
             <span class="small">(<%= to_curr(entry.service_fee) %>)</span>
           </div>
+        <% end %>
 
+        <% if entry.unuse and entry.unuse > 0 %>
           <div class="<%= flex_justify_align('between') %>">
             <span class="small">Unuse</span>
             <span class="small">(<%= to_curr(entry.unuse) %>)</span>
@@ -117,6 +119,7 @@
         
 
         <% if entry.deposit > 0 %>
+          <hr style="opacity: 1; border-color: black !important">
           <div class="<%= flex_justify_align('between') %>">
             <span class="small">Deposit</span>
             <span class="small"><%= to_curr(entry.deposit) %></span>

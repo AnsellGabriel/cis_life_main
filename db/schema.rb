@@ -1624,7 +1624,7 @@ ActiveRecord::Schema[7.0].define(version: 2024_07_17_011209) do
     t.decimal "deposit", precision: 15, scale: 2, default: "0.0"
     t.bigint "agent_id"
     t.bigint "branch_id"
-    t.decimal "unuse", precision: 15, scale: 2
+    t.decimal "unuse", precision: 15, scale: 2, default: "0.0"
     t.decimal "vat_exempt", precision: 15, scale: 2
     t.decimal "zero_rated", precision: 15, scale: 2
     t.decimal "vatable_amount", precision: 15, scale: 2, default: "0.0"

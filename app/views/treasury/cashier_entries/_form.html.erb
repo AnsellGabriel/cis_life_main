@@ -43,20 +43,20 @@
         <% end %>
       </div>
       <div class="col-6">
-        <%= f.association :treasury_account, label: 'Account', error: '*Required', input_html: { data: { controller: "ts--select" } }  %>
+        <%= f.association :treasury_account, collection: Treasury::Account.child_accounts, label: 'Account', error: '*Required', input_html: { data: { controller: "ts--select" } }  %>
       </div>
     </div>  
     <div>
       <div class="row">
         <div class="col-6">
-          <%= f.association :treasury_payment_type, label: 'Entry type', error: '*Required', input_html: { data: { controller: "ts--select" } } %>
+          <%= f.association :treasury_payment_type, collection: Treasury::PaymentType.order(:name), label: 'Entry type', error: '*Required', input_html: { data: { controller: "ts--select" } } %>
         </div>
-        <%= f.association :branch, error: '*Required', wrapper_html: {class: 'col-3'} %>
+        <%= f.association :branch, collection: Branch.order(:name), error: '*Required', wrapper_html: {class: 'col-3'} %>
         <%= f.input :amount, error: '*Required', wrapper_html: {class: 'col-3'} %>
       </div>
       <div class="row" id="to_hide_agreement" data-hider-target="hideme">
-        <%= f.association :agent, error: '*Required', input_html: { data: { controller: "ts--select" } }, wrapper_html: {class: 'col-6'} %>
-        <%= f.association :plan, label: "Plan", input_html: { data: {hider_target: 'plan'} }, wrapper_html: {class: 'col-6'}%>
+        <%= f.association :agent, collection: Agent.order(:first_name), error: '*Required', input_html: { data: { controller: "ts--select" } }, wrapper_html: {class: 'col-6'} %>
+        <%= f.association :plan, collection: Plan.order(:name), label: "Plan", input_html: { data: {hider_target: 'plan'} }, wrapper_html: {class: 'col-6'}%>
       </div>
       <div class="hidden" data-hider-target="amounts">
         <div class="row">
