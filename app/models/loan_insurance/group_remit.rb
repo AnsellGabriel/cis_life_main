@@ -30,7 +30,7 @@ batch_status: "terminated")
       if self.process_coverage.status == "approved"
         if self.mis_entry?
           self.status = :paid
-          self.update_batch_remit
+          # self.update_batch_remit
           self.update_batch_coverages
 
           # net_prem = initial_gross_premium - (denied_principal_premiums + denied_dependent_premiums)

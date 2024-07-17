@@ -1,0 +1,91 @@
+<div class="modal fade" id="inventoryModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+  <div class="modal-dialog modal-xl">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title text-center" id="staticBackdropLabel">
+          <%= "#{current_user.userable.team.name} INVENTORY " %>
+        </h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <h5>Team's over-all count</h5>
+        <ul class="list-group lead">
+          <li class="list-group-item">
+            <div class="row">
+              <div class="col-5 text-secondary">
+                UN-ASSIGNED
+              </div>
+              <div class="col-2">
+                :
+              </div>
+              <div class="col-5">
+                <%= current_user.userable.team.for_assignment_count %>
+              </div>
+            </div>
+          </li>
+          <li class="list-group-item">
+            <div class="row">
+              <div class="col-5 text-dark">
+                FOR PROCESS
+              </div>
+              <div class="col-2">
+                :
+              </div>
+              <div class="col-5">
+                <%= current_user.userable.team.for_process_count %>
+              </div>
+            </div>
+          </li>
+          <li class="list-group-item">
+            <div class="row">
+              <div class="col-5 text-success">
+                PROCESSED
+              </div>
+              <div class="col-2">
+                :
+              </div>
+              <div class="col-5">
+                <%= current_user.userable.team.approved_count %>
+              </div>
+            </div>
+          </li>
+        </ul>
+        <hr>
+        <h5>by Analysts count</h5>
+        <ul class="list-group">
+          <% current_user.userable.team.get_team_members.each do |member| %>
+            <li class="list-group-item">
+              <%= content_tag :span, member.employee.get_fullname, class: "lead" %>
+              <br>
+              <div class="ms-5">
+                <div class="row">
+                  <div class="col-5">
+                    FOR PROCESS
+                  </div>
+                  <div class="col-2">
+                    :
+                  </div>
+                  <div class="col-5">
+                    <%= member.employee.get_for_process_count %>
+                  </div>
+                </div>
+                <hr>
+                <div class="row">
+                  <div class="col-5 text-success">
+                    PROCESSED
+                  </div>
+                  <div class="col-2">
+                    :
+                  </div>
+                  <div class="col-5">
+                    <%= member.employee.get_approved_count %>
+                  </div>
+                </div>
+              </div>
+            </li>
+          <% end %>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>

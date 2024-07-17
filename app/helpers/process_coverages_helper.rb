@@ -240,7 +240,7 @@ module ProcessCoveragesHelper
 
   def substandard(val=nil)
     case val
-      when true then content_tag :span, "substandard", class: "badge bg-primary"
+      when true then content_tag :span, "substandard", class: "badge bg-warning text-dark"
     end
   end
 
@@ -279,4 +279,12 @@ module ProcessCoveragesHelper
     end
   end
   
+  def entry_type(val)
+    case val
+    when true
+      content_tag(:span, "MIS", class: "badge bg-primary")
+    else
+      content_tag(:span, "COOP", class: "badge bg-info")
+    end
+  end
 end

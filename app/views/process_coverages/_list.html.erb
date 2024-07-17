@@ -22,7 +22,11 @@
                 <small>Effectivity: <%= pc.effectivity %> / Expiry: <%= pc.expiry %></small> <br>
               <% end %>
               <small>Status: <%= process_status(pc.status) %></small> <br>
-              <small>Processor: <%= pc.processor %></small>
+              <small>Processor: <%= pc.processor %></small><br>
+              <small>Entry Type: <%= entry_type(pc.group_remit.mis_entry) %></small>
+              <% if pc.group_remit.mis_entry? %>
+                <br><small>Encoder: <%= User.get_encoder(pc.group_remit.mis_user) %></small>
+              <% end %>
             </td>
             <td>
               <% if pc.for_process? && pc.processor.nil? %>
@@ -32,7 +36,8 @@
                 <% if pc.processor == current_user.userable || (current_user.head? || current_user.senior_officer?) %>
                   <%= link_to "View", pc, data: {turbo: false}, class: "btn btn-sm btn-outline-primary" %>
                   <% if pc.approved? %>
-                    <%= link_to lppi_summary_loan_insurance_group_remit_path(pc.group_remit), class: "btn btn-sm btn-warning", title: "Download Summary" do %>
+                    <%#= link_to lppi_summary_loan_insurance_group_remit_path(pc.group_remit), data: {turbo: false}, class: "btn btn-sm btn-warning", title: "Download Summary" do %>
+                    <%= link_to psheet_process_coverage_path(pc, format: :pdf), data: {turbo: false}, class: "btn btn-sm btn-warning", title: "Download Summary" do %>
                       <%= bootstrap_icon "filetype-pdf" %>
                     <% end %>
                   <% end %>
