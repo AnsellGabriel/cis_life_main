@@ -1,6 +1,6 @@
 class Treasury::CashierEntry < ApplicationRecord
   attr_accessor :dummy_payee, :dummy_entry_type, :product_check, :vat_check, :discount_check
-  before_save :add_deposit#, :format_or_no
+  before_save :add_deposit, :check_fields#, :format_or_no
 
   validates_presence_of :or_no, :or_date, :treasury_account_id, :amount, :employee_id, :branch, :global_entriable
 
@@ -114,5 +114,27 @@ class Treasury::CashierEntry < ApplicationRecord
 
   def self.ransackable_attributes(auth_object = nil)
     ["or_no"]
+  end
+
+  def check_fields
+    unless self.insurance?
+      self.agent = nil
+      self.plan = nil
+      self.deposit = 0
+      self.service_fee = 0
+      self.unuse = 0
+    end
+
+    unless self.discounted?
+      self.discount = 0
+      self.withholding_tax = 0
+    end
+
+    unless self.vatable?
+      self.vat_exempt = 0
+      self.zero_rated = 0
+      self.vatable_amount = 0
+      self.vat = 0
+    end
   end
 end

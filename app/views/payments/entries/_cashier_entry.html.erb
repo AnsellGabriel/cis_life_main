@@ -67,27 +67,61 @@
           <span class="small">Amount</span>
           <span class="small"><%= to_curr(entry.amount) %></span>
         </div>
-        <% if entry.service_fee and entry.service_fee > 0 %>
-          <hr>
+
+        <% if entry.insurance? %>
           <div class="<%= flex_justify_align('between') %>">
             <span class="small">Service Fee</span>
             <span class="small">(<%= to_curr(entry.service_fee) %>)</span>
           </div>
-        <% end %>
 
-        <% if entry.unuse and entry.unuse > 0 %>
-          <hr>
           <div class="<%= flex_justify_align('between') %>">
             <span class="small">Unuse</span>
             <span class="small">(<%= to_curr(entry.unuse) %>)</span>
           </div>
         <% end %>
 
-        <hr style="opacity: 1; border-color: black !important">
-        <div class="<%= flex_justify_align('between') %>">
-          <span class="small">Deposit</span>
-          <span class="small"><%= to_curr(entry.deposit) %></span>
-        </div>
+        <% if entry.discounted? %>
+          <div class="<%= flex_justify_align('between') %>">
+            <span class="small">Discount</span>
+            <span class="small">(<%= to_curr(entry.discount) %>)</span>
+          </div>
+
+          <div class="<%= flex_justify_align('between') %>">
+            <span class="small">Withholding Tax</span>
+            <span class="small">(<%= to_curr(entry.withholding_tax) %>)</span>
+          </div>
+        <% end %>
+
+        <% if entry.vatable? %>
+          <div class="<%= flex_justify_align('between') %>">
+            <span class="small">VATable Sales</span>
+            <span class="small"><%= to_curr(entry.vatable_amount) %></span>
+          </div>
+
+          <div class="<%= flex_justify_align('between') %>">
+            <span class="small">VAT-Exempt Sales</span>
+            <span class="small"><%= to_curr(entry.vat_exempt) %></span>
+          </div>
+
+          <div class="<%= flex_justify_align('between') %>">
+            <span class="small">Zero Rates Sales</span>
+            <span class="small"><%= to_curr(entry.zero_rated) %></span>
+          </div>
+
+          <div class="<%= flex_justify_align('between') %>">
+            <span class="small">Value Added Tax</span>
+            <span class="small"><%= to_curr(entry.vat) %></span>
+          </div>
+        <% end %>
+
+        
+
+        <% if entry.deposit > 0 %>
+          <div class="<%= flex_justify_align('between') %>">
+            <span class="small">Deposit</span>
+            <span class="small"><%= to_curr(entry.deposit) %></span>
+          </div>
+        <% end %>
       </div>
     </div>
 

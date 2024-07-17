@@ -62,10 +62,11 @@
                 <p class="text-end fw-bolder small mb-0"><%= to_curr @receipt.discount %></p>
                 <p class="text-end fw-bolder small mb-0"><%= to_curr @receipt.withholding_tax %></p>
                 <p class="text-end fw-bolder small mb-3"><%= to_curr @receipt.net_amount %></p>
-                <p class="text-end fw-bolder small mb-0">0</p>
-                <p class="text-end fw-bolder small mb-0">0</p>
-                <p class="text-end fw-bolder small mb-0">0</p>
-                <p class="text-end fw-bolder small mb-0">0</p>
+                <p class="text-end fw-bolder small mb-0"><%= to_curr @receipt.vatable_amount %></p>
+                <p class="text-end fw-bolder small mb-0"><%= to_curr @receipt.vat_exempt %></p>
+                <p class="text-end fw-bolder small mb-0"><%= to_curr @receipt.zero_rated %></p>
+                <p class="text-end fw-bolder small mb-0"><%= to_curr @receipt.vat %></p>
+                <p class="text-end fw-bolder small mb-0"><%= to_curr @receipt.net_amount %></p>
                 <p class="text-end fw-bolder small"></p>
               <% end %>
             </div>

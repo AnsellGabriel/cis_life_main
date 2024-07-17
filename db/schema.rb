@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2024_07_15_081224) do
+ActiveRecord::Schema[7.0].define(version: 2024_07_17_011209) do
   create_table "accounting_journal_entries", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.string "journable_type", null: false
     t.bigint "journable_id", null: false
@@ -1624,9 +1624,9 @@ ActiveRecord::Schema[7.0].define(version: 2024_07_15_081224) do
     t.decimal "deposit", precision: 15, scale: 2, default: "0.0"
     t.bigint "agent_id"
     t.bigint "branch_id"
-    t.decimal "unuse", precision: 15, scale: 2, default: "0.0"
-    t.decimal "vat_exempt", precision: 15, scale: 2, default: "0.0"
-    t.decimal "zero_rated", precision: 15, scale: 2, default: "0.0"
+    t.decimal "unuse", precision: 15, scale: 2
+    t.decimal "vat_exempt", precision: 15, scale: 2
+    t.decimal "zero_rated", precision: 15, scale: 2
     t.decimal "vatable_amount", precision: 15, scale: 2, default: "0.0"
     t.boolean "insurance", default: false
     t.boolean "discounted", default: false
