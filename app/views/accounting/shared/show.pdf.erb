@@ -35,7 +35,7 @@
       <div class="row mb-3">
         <div class="col-2"></div>
         <div class="col-2"></div>
-        <div class="col-5"><%= entry.branch&.humanize&.titleize %></div>
+        <div class="col-5"><%= entry.branch&.name&.upcase %></div>
       </div>
       <% entry.general_ledgers.debits.each do |ledger| %>
         <div class="row mb-3">
