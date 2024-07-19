@@ -16,7 +16,7 @@
   <% end %>
 
   <tr>
-    <td><%= a.code %></td>
+    <td style="min-width: 100px"><%= a.code %></td>
     <td><%= a.name %></td>
     <td class="text-end"><%= difference >= 0  ? number_to_currency(difference, unit: '') : '' %></td>
     <td class="text-end"><%= difference <= 0 ? number_to_currency(difference.abs, unit: '') : '' %></td>

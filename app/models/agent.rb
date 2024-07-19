@@ -1,5 +1,5 @@
 class Agent < ApplicationRecord
-  validates_presence_of :first_name, :middle_name, :last_name
+  # validates_presence_of :first_name, :middle_name, :last_name
 
   belongs_to :agent_group, optional: true
   # belongs_to :group_proposal

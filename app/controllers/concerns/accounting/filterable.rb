@@ -6,7 +6,7 @@ module Accounting::Filterable
     def filtered_and_paginated_vouchers
       @vouchers = @q.result.order(created_at: :desc).includes(:payable)
       filter_checks
-      @pagy, @vouchers = pagy(@vouchers, items: 10)
+      @pagy, @vouchers = pagy(@vouchers, items: 20)
     end
 
     def filter_checks

@@ -25,6 +25,9 @@ class Treasury::Account < ApplicationRecord
   has_many :cooperatives, through: :coop_banks
   has_many :beginning_balances, class_name: "Accounting::AccountBeginningBalance"
 
+  scope :child_accounts, -> { where.not(code: ['A-1', 'L-1', 'S-1', 'E-1', 'I-1', 'M-1', 'A-1-2', 'A-1-1']).order(:name) }
+
+
   def to_s
     name
   end

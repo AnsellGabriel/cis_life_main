@@ -42,7 +42,6 @@ class Accounting::DebitAdvicesController < ApplicationController
   def create
     @debit_advice = Accounting::DebitAdvice.new(modified_da_params)
     @debit_advice.employee = current_user.userable
-    @debit_advice.branch = current_user.userable.branch_before_type_cast
 
     ActiveRecord::Base.transaction do
       if @debit_advice.save
@@ -121,7 +120,7 @@ class Accounting::DebitAdvicesController < ApplicationController
 
   # Only allow a list of trusted parameters through.
   def da_params
-    params.require(:accounting_debit_advice).permit(:treasury_account, :date_voucher, :voucher, :global_payable, :particulars, :treasury_account_id, :amount, :payable_id)
+    params.require(:accounting_debit_advice).permit(:treasury_account, :date_voucher, :voucher, :global_payable, :particulars, :treasury_account_id, :amount, :payable_id, :branch_id)
   end
 
   def modified_da_params

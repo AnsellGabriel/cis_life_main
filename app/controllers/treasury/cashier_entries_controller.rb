@@ -83,7 +83,6 @@ class Treasury::CashierEntriesController < ApplicationController
 
   def create
     @entry = Treasury::CashierEntry.new(entry_params.merge(employee: current_user.userable))
-    @entry.branch = current_user.userable.branch_before_type_cast # assign employee branch to entry
 
     if @entry.entriable_type == "Remittance"
       @group_remit = @entry.entriable
@@ -136,7 +135,7 @@ class Treasury::CashierEntriesController < ApplicationController
 
   # Only allow a list of trusted parameters through.
   def entry_params
-    params.require(:treasury_cashier_entry).permit(:deposit, :service_fee, :or_no, :or_date, :global_entriable, :treasury_payment_type_id, :treasury_account_id, :amount, :agreement_id, :plan_id, :agent_id)
+    params.require(:treasury_cashier_entry).permit(:deposit, :service_fee, :or_no, :or_date, :global_entriable, :treasury_payment_type_id, :treasury_account_id, :amount, :agreement_id, :plan_id, :agent_id, :vatable, :unuse, :discount, :withholding_tax, :vatable_amount, :vat_exempt, :zero_rated, :vat, :branch_id, :insurance, :discounted)
   end
 
   def amount_to_words(amount)

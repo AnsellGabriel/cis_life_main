@@ -17,13 +17,13 @@
         %> 
       </div>
       <div class="col-2 <%= flex_justify_align('','end') %>">
-        <%= f.input :product_check, as: :boolean, label: "Insurance", input_html: {data: { action: "input->hider#toggle", hider_target: "input" }} %>
+        <%= f.input :insurance, as: :boolean, label: "Insurance", input_html: {data: { action: "input->hider#toggle", hider_target: "input" }} %>
       </div>
       <div class="col-2 <%= flex_justify_align('','end') %>">
-        <%= f.input :discount_check, as: :boolean, label: "Discounted", input_html: {data: { action: "input->hider#toggle", hider_target: "discount" }} %>
+        <%= f.input :discounted, as: :boolean, label: "Discounted", input_html: {data: { action: "input->hider#toggleDiscount", hider_target: "discount" }} %>
       </div>
       <div class="col-2 <%= flex_justify_align('','end') %>">
-        <%= f.input :vat_check, as: :boolean, label: "Vatable", input_html: {data: { action: "input->hider#toggle", hider_target: "vat" }} %>
+        <%= f.input :vatable, label: "Vatable", input_html: {data: { action: "input->hider#toggleVat", hider_target: "vat" }} %>
       </div>
     </div>
     <div class="row">
@@ -43,41 +43,40 @@
         <% end %>
       </div>
       <div class="col-6">
-        <%= f.association :treasury_account, label: 'Account', error: '*Required', input_html: { data: { controller: "ts--select" } }  %>
+        <%= f.association :treasury_account, collection: Treasury::Account.child_accounts, label: 'Account', error: '*Required', input_html: { data: { controller: "ts--select" } }  %>
       </div>
     </div>  
     <div>
       <div class="row">
         <div class="col-6">
-          <%= f.association :treasury_payment_type, label: 'Entry type', error: '*Required', input_html: { data: { controller: "ts--select" } } %>
+          <%= f.association :treasury_payment_type, collection: Treasury::PaymentType.order(:name), label: 'Entry type', error: '*Required', input_html: { data: { controller: "ts--select" } } %>
         </div>
-        <div class="col-6">
-          <%= f.input :amount, error: '*Required' %>
-        </div>
+        <%= f.association :branch, collection: Branch.order(:name), error: '*Required', wrapper_html: {class: 'col-3'} %>
+        <%= f.input :amount, error: '*Required', wrapper_html: {class: 'col-3'} %>
       </div>
       <div class="row" id="to_hide_agreement" data-hider-target="hideme">
-        <%= f.association :agent, error: '*Required', input_html: { data: { controller: "ts--select" } }, wrapper_html: {class: 'col-6'} %>
-        <%= f.association :plan, label: "Plan", input_html: { data: {hider_target: 'plan'} }, wrapper_html: {class: 'col-6'}%>
+        <%= f.association :agent, collection: Agent.order(:first_name), error: '*Required', input_html: { data: { controller: "ts--select" } }, wrapper_html: {class: 'col-6'} %>
+        <%= f.association :plan, collection: Plan.order(:name), label: "Plan", input_html: { data: {hider_target: 'plan'} }, wrapper_html: {class: 'col-6'}%>
       </div>
       <div class="hidden" data-hider-target="amounts">
         <div class="row">
-          <%= f.input :deposit, error: '*Required', wrapper_html: {class: 'col-4'} %>
-          <%= f.input :service_fee, error: '*Required', wrapper_html: {class: 'col-4'} %>
-          <%= f.input :unuse, label: 'Unused Premium', error: '*Required', wrapper_html: {class: 'col-4'} %>
+          <%= f.input :deposit, error: '*Required', wrapper_html: {class: 'col-3'} %>
+          <%= f.input :service_fee, error: '*Required', wrapper_html: {class: 'col-3'} %>
+          <%= f.input :unuse, label: 'Unused Premium', error: '*Required', wrapper_html: {class: 'col-3'} %>
         </div>
       </div>
       <div class="hidden" data-hider-target="discountContainer">
         <div class="row">
-          <%= f.input :deposit, error: '*Required', wrapper_html: {class: 'col-4'} %>
-          <%= f.input :service_fee, error: '*Required', wrapper_html: {class: 'col-4'} %>
+          <%= f.input :discount, label: 'Discount', error: '*Required', wrapper_html: {class: 'col-3'} %>
+          <%= f.input :withholding_tax, label: 'Withholding Tax', error: '*Required', wrapper_html: {class: 'col-3'} %>
         </div>
       </div>
       <div class="hidden" data-hider-target="vatContainer">
         <div class="row">
-          <%= f.input :deposit, error: '*Required', wrapper_html: {class: 'col-4'} %>
-          <%= f.input :service_fee, error: '*Required', wrapper_html: {class: 'col-4'} %>
-          <%= f.input :unuse, label: 'Unused Premium', error: '*Required', wrapper_html: {class: 'col-4'} %>
-          <%= f.input :unuse, label: 'Unused Premium', error: '*Required', wrapper_html: {class: 'col-4'} %>
+          <%= f.input :vatable_amount, label: 'VATable Sales', error: '*Required', wrapper_html: {class: 'col-3'} %>
+          <%= f.input :vat_exempt, label: 'VAT-Exempt Sales', error: '*Required', wrapper_html: {class: 'col-3'} %>
+          <%= f.input :zero_rated, label: 'Zero Rated Sales', error: '*Required', wrapper_html: {class: 'col-3'} %>
+          <%= f.input :vat, label: 'Value Added Tax', error: '*Required', wrapper_html: {class: 'col-3'} %>
         </div>
       </div>
     </div>
