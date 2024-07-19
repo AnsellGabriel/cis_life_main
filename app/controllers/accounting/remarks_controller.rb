@@ -48,7 +48,7 @@ class Accounting::RemarksController < ApplicationController
             @voucher.voucher_request.pending! if @voucher&.voucher_request&.present?
           end
         end
-        
+
       elsif current_user.is_treasurer?
         ActiveRecord::Base.transaction do
           @voucher.paid!
@@ -84,7 +84,7 @@ class Accounting::RemarksController < ApplicationController
   end
 
   def update_claim_and_tracking(process_claim, route)
-    claim_track = process_claim.process_track.build
+    claim_track = process_claim.process_tracks.build
     claim_track.route_id = route
     claim_track.user_id = current_user.id
     claim_track.save!
