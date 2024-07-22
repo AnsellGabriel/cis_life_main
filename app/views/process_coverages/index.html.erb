@@ -1,9 +1,16 @@
-<% if current_user.userable_type == "Employee" %>
-  <% if current_user.senior_officer? || current_user.head? %>
-    <%= render "process_coverages/dashboard_head" %>
-    <%#= render "process_coverages/analysts_inventory" %>
-  <% elsif current_user.analyst? %>
-    <%= render "process_coverages/dashboard_analyst" %>
-    
+<div class="container mt-5">
+  <div class="welcome-message text-center">
+    <h1 class="display-4">Welcome back, <%= current_user.userable.get_fullname %>!</h1>
+    <p class="lead">We hope you’re having a great day. Here's what’s happening in your account today:</p>
+  </div>
+  
+  <% if current_user.userable_type == "Employee" %>
+    <% if current_user.senior_officer? || current_user.head? %>
+      <%= render "process_coverages/dashboard_head" %>
+      <%#= render "process_coverages/analysts_inventory" %>
+    <% elsif current_user.analyst? %>
+      <%= render "process_coverages/dashboard_analyst" %>
+      
+    <% end %>
   <% end %>
-<% end %>
+</div>
