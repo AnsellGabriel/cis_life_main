@@ -5,7 +5,8 @@
         <div class="<%= flex_justify_align('between','center') %>">
           <div class="<%= flex_justify_align('','center') %> gap-1">
             <p class="text-muted"><small>Check Voucher</small></p>
-            <p class="badge bg-<%= check.decorate.status_badge %>"><%= check.status.humanize %></p>
+            <p class="badge bg-primary"><%= check.branch.name.upcase %></p>
+            <p class="badge bg-<%= check.decorate.status_badge %>"><%= check.status.humanize.upcase %></p>
           </div>
           <div class="">
             <% if current_user.is_accountant? %>

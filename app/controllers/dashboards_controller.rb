@@ -74,9 +74,10 @@ class DashboardsController < ApplicationController
     end
 
     def accounting
-      @check_vouchers = Accounting::Check.where(employee: current_user.userable)
-      @debit_advices = Accounting::DebitAdvice.where(employee: current_user.userable)
-      @journal_vouchers = Accounting::Journal.where(employee: current_user.userable)
+      date_range = params[:date_from]&.to_date&.beginning_of_day..params[:date_to]&.to_date&.end_of_day
+      @check_vouchers = Accounting::Check.where(employee: current_user.userable, date_voucher: date_range)
+      @debit_advices = Accounting::DebitAdvice.where(employee: current_user.userable, date_voucher: date_range)
+      @journal_vouchers = Accounting::Journal.where(employee: current_user.userable, date_voucher: date_range)
 
       request = Accounting::VoucherRequest.pending
       @check_req = request.check_voucher

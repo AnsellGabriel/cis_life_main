@@ -21,8 +21,8 @@ module CsvGenerator
     send_data csv_data, filename: "#{filename}.csv", type: "text/csv"
   end
 
-  def lppi_summary_csv(data, filename)
-    csv_data = lppi_report(data)
+  def lppi_summary_csv(data, filename, unusable = false)
+    csv_data = lppi_report(data, unusable = false)
 
     send_data csv_data, filename: "#{filename}.csv", type: "text/csv"
   end
@@ -65,7 +65,7 @@ module CsvGenerator
     csv_data = CSV.generate(headers: true) do |csv|
       csv << ["Code", "Cooperative", "Plan", "Marketing", "Member Count", "Gross Premium", "Coop Service Fee", "Agent Commission", "Net Premium", "Region", "Date", "Processor", "Status"]
 
-      data.each do |record|        
+      data.each do |record|
         csv << [
           record.id,
           record.group_remit&.cooperative,
@@ -133,11 +133,11 @@ module CsvGenerator
     csv_data
   end
 
-  def lppi_report(data)
+  def lppi_report(data, unusable = false)
     # raise 'errors'
     total_net = 0
     csv_data = CSV.generate(headers: true) do |csv|
-      header_row = ["No.", "Last Name", "First Name", "MI", "Suffix", "Birthdate", "Age", "Gender", "Loan Amount", "Loan Type", "Effectivity", "Expiry", "Terms", "Gross Prem", "Unuse Prem", "Coop SF", "Net Prem"]
+      header_row = ["No.", "Last Name", "First Name", "MI", "Suffix", "Birthdate", "Age", "Gender", "Loan Amount", "Loan Type", "Effectivity", "Expiry", "Terms", "Gross Prem", unusable ? "Unuse Prem" : nil, "Coop SF", "Net Prem"]
       csv << header_row
 
       data.each_with_index do |record, index|
@@ -149,7 +149,7 @@ module CsvGenerator
         unuse = record.unused
         coop_sf = record.coop_sf_amount
         net = gross - (unuse + coop_sf)
-        
+
         total_net += net
         csv << [
           index + 1,
@@ -166,14 +166,14 @@ module CsvGenerator
           record.expiry_date,
           record.terms,
           gross,
-          unuse,
+          unusable ? unuse : '-',
           coop_sf,
           net
         ]
       end
-      empty_columns_count = ["No.", "Last Name", "First Name", "MI", "Suffix", "Birthdate", "Age", "Gender", "Loan Amount", "Loan Type", "Effectivity", "Expiry", "Terms", "Gross Prem", "Unuse Prem", "Coop SF", "Net Prem"].count - 5
+      empty_columns_count = ["No.", "Last Name", "First Name", "MI", "Suffix", "Birthdate", "Age", "Gender", "Loan Amount", "Loan Type", "Effectivity", "Expiry", "Terms", "Gross Prem", unusable ? "Unuse Prem" : nil, "Coop SF", "Net Prem"].count - 5
       empty_columns = [""] * empty_columns_count
-      csv << empty_columns + ["TOTAL: ", data.sum(:premium), data.sum(:unused), data.sum(:coop_sf_amount), total_net]
+      csv << empty_columns + ["TOTAL: ", data.sum(:premium), unusable ? data.sum(:unused) : nil, data.sum(:coop_sf_amount), total_net]
     end
     csv_data
   end

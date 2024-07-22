@@ -5,7 +5,7 @@ class PayeesController < ApplicationController
   def index
     @q = Payee.ransack(params[:q])
     @payees = @q.result(distinct: true)
-    @pagy, @payees = pagy(@payees, items: 10)
+    @pagy, @payees = pagy(@payees, items: 20)
   end
 
   # GET /payees/1

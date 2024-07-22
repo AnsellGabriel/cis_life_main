@@ -21,7 +21,7 @@ class LoanInsurance::GroupRemitsController < ApplicationController
   def lppi_summary
     @batches = @group_remit.batches
 
-    lppi_summary_csv(@batches, "#{@group_remit.name}-#{@group_remit.agreement.plan.acronym}")
+    lppi_summary_csv(@batches, "#{@group_remit.name}-#{@group_remit.agreement.plan.acronym}", @group_remit.agreement.unusable)
     # generate_csv(data, filename, balance = nil)
   end
 

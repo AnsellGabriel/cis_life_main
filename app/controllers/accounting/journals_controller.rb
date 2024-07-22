@@ -73,6 +73,7 @@ class Accounting::JournalsController < ApplicationController
   def create
     @journal = Accounting::Journal.new(journal_params)
     @journal.employee = current_user.userable
+    @journal.branch = current_user.userable.branch
 
     if @journal.save
       if params[:rid].present?

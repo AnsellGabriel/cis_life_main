@@ -42,12 +42,11 @@
     <% end %>
 
     <div class="row">
-      <%= f.association :branch, collection: Branch.order(:name), error: '*Required', wrapper_html: {class: 'col-6'} %>
       <div class="col-6">
         <% if params[:rid].present? %>
-          <%= f.input :amount, as: :string, error: '*Required', input_html: {data: {number_formatter_target: 'input'}, readonly: true  } %>
+          <%= f.input :amount, error: '*Required', input_html: { readonly: true  } %>
         <% else %>
-          <%= f.input :amount, as: :string, error: '*Required', input_html: {data: {number_formatter_target: 'input'} } %>
+          <%= f.input :amount, error: '*Required' %>
         <% end %>
       </div>
     </div>
