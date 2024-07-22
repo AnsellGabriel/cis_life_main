@@ -11,7 +11,7 @@
 # It's strongly recommended that you check this file into your version control system.
 
 ActiveRecord::Schema[7.0].define(version: 2024_07_17_011209) do
-  create_table "accounting_journal_entries", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+  create_table "accounting_journal_entries", charset: "utf8mb4", force: :cascade do |t|
     t.string "journable_type", null: false
     t.bigint "journable_id", null: false
     t.bigint "journal_id", null: false
@@ -21,7 +21,7 @@ ActiveRecord::Schema[7.0].define(version: 2024_07_17_011209) do
     t.index ["journal_id"], name: "index_accounting_journal_entries_on_journal_id"
   end
 
-  create_table "accounting_vouchers", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+  create_table "accounting_vouchers", charset: "utf8mb4", force: :cascade do |t|
     t.date "date_voucher"
     t.string "voucher"
     t.string "payable_type", null: false
