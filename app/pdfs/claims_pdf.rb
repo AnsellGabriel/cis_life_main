@@ -13,7 +13,7 @@ class ClaimsPdf < Prawn::Document
     text "CLAIM ID# #{@pc.id}", size: 9, align: :center
     move_down 10
     cur = cursor
-    
+
     insured_information
     # claim_details
     insurance_details(cur)
@@ -29,7 +29,7 @@ class ClaimsPdf < Prawn::Document
     @view.number_to_currency(num, :unit => "")
   end
 
-  def insured_information 
+  def insured_information
     bounding_box([0, cursor], width: 300, height: 200) do
       #  transparent(0.5) { stroke_bounds }
       gap = 20
@@ -57,9 +57,9 @@ class ClaimsPdf < Prawn::Document
       end
       claim_details
     end
-    
+
   end
-  
+
   def claim_details
     bounding_box([0, cursor], width: 300, height: 230) do
       # transparent(0.5) { stroke_bounds }
@@ -70,7 +70,7 @@ class ClaimsPdf < Prawn::Document
         gap = 15
         y_position -= gap
         bounding_box([0, y_position], width: 100, height: 10) do
-          
+
           text "Date Incident:", size: 9
         end
         bounding_box([100, y_position], width: 180, height: 10) do
@@ -81,7 +81,7 @@ class ClaimsPdf < Prawn::Document
           # transparent(0.5) { stroke_bounds }
           text "Claim Type:", size: 9
         end
-        
+
         bounding_box([100, y_position], width: 180, height: 10) do
           # transparent(0.5) { stroke_bounds }
           text @pc.claim_type.name, size: 9
@@ -91,7 +91,7 @@ class ClaimsPdf < Prawn::Document
           # transparent(0.5) { stroke_bounds }
           text "Nature of Claim:", size: 9
         end
-        
+
         bounding_box([100, y_position], width: 180, height: 10) do
           # transparent(0.5) { stroke_bounds }
           text @pc.claim_type_nature.name, size: 9
@@ -144,7 +144,7 @@ class ClaimsPdf < Prawn::Document
               text @pc.claim_cause.icd, size: 9, align: :justify
             end
           end
-          unless @pc.claim_confinements.empty? 
+          unless @pc.claim_confinements.empty?
             data = [["Admit", "Discharge", "Days", "Amount"]]
             @pc.claim_confinements.each do |cc|
               data += [["#{cc.date_admit}", "#{cc.date_discharge}", "#{cc.terms}", "#{num_format(cc.amount)}"]]
@@ -166,7 +166,7 @@ class ClaimsPdf < Prawn::Document
     bounding_box([310, y_position], width: 220, height: 230) do
       transparent(0.5) { stroke_bounds }
       text "III. Insurance Details", size: 10, style: :bold
-      
+
       indent(10) do
         y_position = bounds.top
         gap = 20
@@ -179,7 +179,7 @@ class ClaimsPdf < Prawn::Document
         end
         move_down 10
         data = [["Benefit(s)", "Amount"]]
-        @pc.claim_benefits.each do |cb| 
+        @pc.claim_benefits.each do |cb|
           data += [["#{cb.benefit.name}","#{num_format(cb.amount)}"]]
         end
         data += [["Total","#{num_format(@pc.claim_benefits.sum(:amount))}"]]
@@ -207,8 +207,8 @@ class ClaimsPdf < Prawn::Document
       indent(10) do
         y_position = bounds.top
         data = [["Process", "Date"]]
-        @pc.process_track.order(created_at: :desc).each do |ct|
-          data += [[ "#{Claims::ProcessClaim.get_route(ct.route_id).to_s.humanize.titleize} 
+        @pc.process_tracks.order(created_at: :desc).each do |ct|
+          data += [[ "#{Claims::ProcessClaim.get_route(ct.route_id).to_s.humanize.titleize}
                  by #{ct.user}", "#{to_shortdate(ct.created_at)}" ]]
           # bounding_box([0, y_position - gap], width: 120, height: 20) do
           #   transparent(0.5) { stroke_bounds }
@@ -231,11 +231,11 @@ class ClaimsPdf < Prawn::Document
     end
   end
 
-  def claim_coverage 
+  def claim_coverage
     bounding_box([0, cursor], width: 530) do
       # transparent(0.5) { stroke_bounds }
       text "V. Policy Coverage", size: 10, style: :bold
-      indent(10) do 
+      indent(10) do
         data = [["ORNO", "ORdate", "Effectivity","Expiry","Amount Insured","Benefit","Status","Duration","#"]]
         data += [[ {content: "Current", colspan: 9} ]]
         i = 1
@@ -276,7 +276,7 @@ class ClaimsPdf < Prawn::Document
           @pc.claim_remarks.where(coop: 0).each do |cr|
             status = ""
             status += "(#{cr.status.titleize})" unless cr.status.nil?
-            
+
             text "<b>#{cr.user.userable.get_fullname} </b><b>" + status + "</b>" + "<i> #{cr.created_at} </i>" , size: 8, inline_format: true
             text cr.remark, size: 8, align: :justify
             move_down 10
@@ -309,7 +309,7 @@ class ClaimsPdf < Prawn::Document
   end
 
   def benefit_distribution
-    # y_position = cur 
+    # y_position = cur
     # bounding_box([310, y_position], width: 220, height: 120) do
       # transparent(0.5) { stroke_bounds }
       text "IV. Benefit Distribution", size: 10, style: :bold

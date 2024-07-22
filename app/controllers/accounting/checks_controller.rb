@@ -79,7 +79,7 @@ class Accounting::ChecksController < ApplicationController
     else
       @checks = Accounting::Check.all
     end
-    
+
     @q = @checks.ransack(params[:q])
 
     filtered_and_paginated_vouchers # concerns/accounting/filterable.rb
@@ -120,7 +120,6 @@ class Accounting::ChecksController < ApplicationController
   def create
     @check = Accounting::Check.new(modified_check_params)
     @check.employee = current_user.userable
-    @check.branch = current_user.userable.branch_before_type_cast
 
     if @check.save
       if params[:rid].present?
@@ -169,7 +168,7 @@ class Accounting::ChecksController < ApplicationController
 
   # Only allow a list of trusted parameters through.
   def check_params
-    params.require(:accounting_check).permit(:date_voucher, :voucher, :global_payable, :particulars, :treasury_account_id, :amount, :payable_id)
+    params.require(:accounting_check).permit(:date_voucher, :voucher, :global_payable, :particulars, :treasury_account_id, :amount, :payable_id, :branch_id)
   end
 
   # convert the string amount to float

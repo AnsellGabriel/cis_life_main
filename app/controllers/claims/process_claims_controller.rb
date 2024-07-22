@@ -149,7 +149,7 @@ class Claims::ProcessClaimsController < ApplicationController
           @loan_batch.save!
         end
 
-        @process_claim.process_track.create(route_id: 0, user: current_user)
+        @process_claim.process_tracks.create(route_id: 0, user: current_user)
         format.html { redirect_to show_coop_claims_process_claim_path(@process_claim), notice: "Claims was successfully added." }
         format.json { render :show, status: :created, location: @anniversary }
       else
@@ -307,12 +307,12 @@ class Claims::ProcessClaimsController < ApplicationController
           @process_claim.update(status: :pending) if @claim_track.pending?
         end
         unless @claims_user_reconsider.nil?
-          if @process_claim.check_authority_level(@claims_user_reconsider.maxAmount) 
+          if @process_claim.check_authority_level(@claims_user_reconsider.maxAmount)
             @process_claim.update(status: :reconsider_denied) if @claim_track.reconsider_denied?
             @process_claim.update(status: :reconsider_approved, approval: 1) if @claim_track.reconsider_approved?
           end
         end
-      else 
+      else
         @claim_track.route_id = 10 if @process_claim.claim_review?
         @process_claim.update!(status: :reconsider)
       end
@@ -321,7 +321,7 @@ class Claims::ProcessClaimsController < ApplicationController
     # raise "errors"
     #CHECK THE ATTACH DOCUMENTS
     # unless current_user.userable_type == "Employee"
-      if @process_claim.coop_file? || @process_claim.analyst_file? || @process_claim.incomplete_document? 
+      if @process_claim.coop_file? || @process_claim.analyst_file? || @process_claim.incomplete_document?
         document_status = @process_claim.attach_document_status
         @status_message = document_status[:status_message]
         status = document_status[:status]
@@ -329,7 +329,7 @@ class Claims::ProcessClaimsController < ApplicationController
         return redirect_to claim_process_claims_process_claim_path(@process_claim), alert: @status_message if status && current_user.userable_type == "Employee"
       end
     # end
-    
+
 
     # raise "errors"
     respond_to do |format|
@@ -347,20 +347,20 @@ class Claims::ProcessClaimsController < ApplicationController
               @process_claim.update!(claim_route: @claim_track.route_id, status: :approved, payment: 1)
               ActiveRecord::Base.transaction do
                 @process_claim.update!(claim_route: @claim_track.route_id, status: :approved, approval: 1)
-    
+
                 if @process_claim.voucher_requests&.last&.vouchers&.pending_audit.present?
                   #* put the check voucher to pending here
                   @process_claim.voucher_request.vouchers.pending_audit.last.update(audit: :for_audit)
                 else
                   account_id = process_claim_params[:coop_bank] if params[:pt] == 'debit_advice'
                   request = VoucherRequestService.new(@process_claim, @process_claim.get_benefit_claim_total, :claims_payment, current_user, params[:pt].to_sym, account_id)
-    
+
                   if request.create_request
                     format.html { redirect_to claims_process_claims_path(@process_claim), notice: "#{@process_claim.claim_route.to_s.humanize.titleize} status"  }
                   else
                     format.html { redirect_to claim_process_claims_process_claim_path(@process_claim), alert: "Something went wrong" }
                   end
-                end         
+                end
               end
             when 18
               @process_claim.update!(claim_route: @claim_track.route_id, status: :denied_due_to_non_compliance)

@@ -64,7 +64,7 @@
       </div>
       <hr>
       <div class="<%= flex_justify_align('between') %>">
-        <span class="small">Coop Service Fee (<%= to_curr(@payment.payable.agreement.coop_sf) %> %)</span>
+        <span class="small">Coop Service Fee</span>
         <span class="small">(<%= to_curr(@payment.payable.coop_commission) %>)</span>
       </div>
       <hr style="opacity: 1; border-color: black !important">
@@ -78,7 +78,7 @@
 </div>
 
 <% if @payment.decorate.receiptable? %>
-  <%= link_to new_payment_entry_path(@payment), class: 'btn btn-sm btn-primary mb-3', data: {turbo_frame: 'modal'} do %>
+  <%= link_to new_payment_entry_path(@payment), class: 'btn btn-sm btn-primary mb-3', data: {turbo_frame: 'modal-lg'} do %>
     <i class="bi bi-plus-lg"></i> Generate OR
   <% end %>   
 <% end %>

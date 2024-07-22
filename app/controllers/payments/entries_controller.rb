@@ -17,11 +17,9 @@ class Payments::EntriesController < ApplicationController
   end
 
   def create
-    @entry = @entries.new(entry_params.merge(employee: current_user.userable, branch: current_user.userable.branch_before_type_cast))
+    @entry = @entries.new(entry_params.merge(employee: current_user.userable, insurance: true))
     @payment_type = @payment.plan.acronym.downcase.include?("gyrt") ? "GYRT" : @payment.plan.acronym
 
-    # @entry.payment_type = Treasury::CashierEntry.payment_enum_value(@payment_type.downcase)
-    # binding.pry
     if @entry.save
       redirect_to payment_entry_path(@payment, @entry), notice: "OR added"
     else
@@ -57,7 +55,7 @@ class Payments::EntriesController < ApplicationController
   private
 
   def entry_params
-    params.require(:treasury_cashier_entry).permit(:treasury_payment_type_id, :deposit, :service_fee, :dummy_payee, :dummy_entry_type, :or_no, :or_date, :treasury_account_id, :amount, general_ledgers_attributes: [:account_id, :amount, :ledger_type, :id, :_destroy])
+    params.require(:treasury_cashier_entry).permit(:treasury_payment_type_id, :deposit, :service_fee, :branch_id,:unuse, :dummy_payee, :dummy_entry_type, :or_no, :or_date, :treasury_account_id, :amount, general_ledgers_attributes: [:account_id, :amount, :ledger_type, :id, :_destroy])
   end
 
   def set_payment_and_entries

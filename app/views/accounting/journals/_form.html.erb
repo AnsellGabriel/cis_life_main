@@ -32,7 +32,10 @@
         error: '*Required'
       %>
     <% end %>
-    <%= f.input :amount, error: '*Required' %>
+    <div class="row">
+      <%= f.association :branch, collection: Branch.order(:name), error: '*Required', wrapper_html: {class: 'col-6'} %>
+      <%= f.input :amount, error: '*Required', wrapper_html: {class: 'col-6'} %>
+    </div>
     <%= f.input :particulars, error: '*Required' %>
 
   </div>

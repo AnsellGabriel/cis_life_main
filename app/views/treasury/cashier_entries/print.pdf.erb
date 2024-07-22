@@ -26,11 +26,23 @@
   <body style="font-size: .9rem">
     <div class="row" style="padding-top: 100px; width: 845px">
       <div class="col-4 ">
-        <p class="text-end  mb-2" style="padding-top: 145px; padding-right: 15px"><%= to_curr @receipt.amount %></p>
-        <p class="text-end  mb-2" style="padding-right: 15px"><%= to_curr @receipt.discount %></p>
-        <p class="text-end  mb-2" style="padding-right: 15px"><%= to_curr(@receipt.amount - @receipt.discount) %></p>
-        <p class="text-end  mb-2" style="padding-right: 15px"><%= to_curr @receipt.withholding_tax %></p>
-        <p class="text-end  mb-2" style="padding-right: 15px"><%= to_curr @receipt.net_amount %></p>
+        <% if !@receipt.vatable? %>
+          <p class="text-end  mb-2" style="padding-top: 145px; padding-right: 15px"><%= to_curr @receipt.amount %></p>
+          <p class="text-end  mb-2" style="padding-right: 15px"><%= to_curr @receipt.discount %></p>
+          <p class="text-end  mb-2" style="padding-right: 15px"><%= to_curr(@receipt.amount - @receipt.discount) %></p>
+          <p class="text-end  mb-2" style="padding-right: 15px"><%= to_curr @receipt.withholding_tax %></p>
+          <p class="text-end  mb-2" style="padding-right: 15px"><%= to_curr @receipt.net_amount %></p>
+        <% else %>
+          <p class="text-end  mb-2" style="padding-top: 145px; padding-right: 15px"><%= to_curr @receipt.amount %></p>
+          <p class="text-end  mb-2" style="padding-right: 15px"><%= to_curr @receipt.discount %></p>
+          <p class="text-end  mb-2" style="padding-right: 15px"><%= to_curr @receipt.withholding_tax %></p>
+          <p class="text-end  mb-4" style="padding-right: 15px"><%= to_curr @receipt.net_amount %></p>
+          <p class="text-end  mb-2" style="padding-right: 15px"><%= to_curr @receipt.vatable_amount %></p>
+          <p class="text-end  mb-2" style="padding-right: 15px"><%= to_curr @receipt.vat_exempt %></p>
+          <p class="text-end  mb-2" style="padding-right: 15px"><%= to_curr @receipt.zero_rated %></p>
+          <p class="text-end  mb-2" style="padding-right: 15px"><%= to_curr @receipt.vat %></p>
+          <p class="text-end  mb-2" style="padding-right: 15px"><%= to_curr @receipt.net_amount %></p>
+        <% end %>
       </div>
       <div class="col-8 pdf-text-cont">
         <div class="text-end mb-4"><%= date_as_month_day_year @receipt.or_date %></div>

@@ -3,25 +3,27 @@
     <% case params[:origin] %>
     <% when 'index'%>
       <%= link_to treasury_cashier_entries_path, class: small_btn("outline-secondary") do %>
-        <i class="bi bi-arrow-left-square"></i>
-        Back
+            <i class="bi bi-chevron-left"></i>
       <% end %>
     <% when 'for_approval'%>
       <%= link_to for_approval_index_treasury_cashier_entries_path, class: small_btn("outline-secondary") do %>
-        <i class="bi bi-arrow-left-square"></i>
-        Back
+            <i class="bi bi-chevron-left"></i>
       <% end %>
     <% else %>
       <%= link_to payment_path(@payment), class: small_btn("outline-secondary") do %>
-        <i class="bi bi-arrow-left-square"></i>
-        Back
+            <i class="bi bi-chevron-left"></i>
       <% end %>
     <% end %>
 
     <% if @entry.posted? %>
-      <%= link_to  'Print OR', print_treasury_cashier_entry_path(@entry, format: :pdf), class: small_btn('warning'), target: '_blank'%>
-      <%= link_to  'Download OR', download_treasury_cashier_entry_path(@entry, format: :pdf), class: small_btn('success'), target: '_blank'%>
+    <%= link_to print_treasury_cashier_entry_path(@entry, format: :pdf), class: small_btn('outline-primary'), target: '_blank', title: 'Print' do %>
+      <i class="bi bi-printer-fill"></i>
     <% end %>
+
+    <%= link_to download_treasury_cashier_entry_path(@entry, format: :pdf), class: small_btn('outline-primary'), target: '_blank', title: 'Download PDF' do %>
+      <i class="bi bi-filetype-pdf"></i>
+    <% end %>
+  <% end %>
   </div>
 </div>
 
