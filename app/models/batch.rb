@@ -188,6 +188,10 @@ class Batch < ApplicationRecord
     month_difference = ((today.year * 12 + today.month) - (expiry_date.year * 12 + expiry_date.month)) + (expiry_date.day > today.day ? 1 : 0)
   end
 
+  def self.get_pending_gyrt(group_remits)
+    joins(group_remits: :batch_group_remits).where(batch_group_remits: { group_remit:  group_remits}).where(insurance_status: :pending)
+  end
+
 
   private
 

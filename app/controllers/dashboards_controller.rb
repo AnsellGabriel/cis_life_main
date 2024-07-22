@@ -26,6 +26,11 @@ class DashboardsController < ApplicationController
         @notifications = @cooperative.notifications
         @coop_messages = Claims::ClaimRemark.where(coop: 1)
         @process_claims = Claims::ProcessClaim.where(cooperative: @cooperative)
+
+        @coop_group_remits = @cooperative.group_remits
+        @pending_lppi = LoanInsurance::Batch.get_pending_lppi(@coop_group_remits)
+        @pending_gyrt = Batch.get_pending_gyrt(@coop_group_remits)
+
         #for graphs
         @age_bracket = [
           ["18-65", @cooperative.get_age_demo("regular")],
