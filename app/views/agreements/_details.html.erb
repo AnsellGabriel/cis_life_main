@@ -19,8 +19,13 @@
           <%#= content_tag :p,  officer.designation, class: "w-75 mb-0" %>
           <%#= content_tag :div, "", class: "w-100 mb-2" %>
           <%# end %>
-        </div>
       </div>
+      <div class="w-100 mb-2"></div>
+      <div class="col-3">Marketing Agent</div>
+      <div class="col-9">
+        <%= content_tag :p, moa.agent.to_s.upcase, class: "fw-bold w-75 mb-0" %>
+      </div>
+
       <div class="w-100 border my-3"></div>
       <% if moa.plan.acronym == "LPPI" %>
         <div class="details-header col-12 text-center border-top border-bottom py-2 mb-3">
@@ -40,7 +45,11 @@
                   </td>
                   <td>
                     <%= content_tag :p, "#{to_currency(rate.annual_rate / 12.to_d)} / 1000" %>
-                    <%= content_tag :p, "Mark-up Rate: #{rate.markup_rate}" %>
+                    <% if moa.with_markup? %>
+                      <%= content_tag :p, "Mark-up Rate: #{rate.markup_rate}" %>
+                    <% end %>
+                    <%= content_tag :p, "Coop SF: #{rate.coop_sf}%"%>
+                    <%= content_tag :p, "Agent SF: #{rate.agent_sf}%"%>
                   </td>
                   <td>
                     <small>NEL: <%= to_currency(rate.nel) %></small> <br>
@@ -110,85 +119,16 @@
             </div>
           <% end %>
         <% end %>
-        <div class="row">
-          <div class="col-12 text-center border-top border-bottom py-2 mt-5 mb-2">
-            <%= content_tag :h5, "OTHER DETAILS", class: "mb-0" %>
-          </div>
-          <div class="col-12 border-bottom py-2 mb-5">
-            <% unless moa.plan.acronym == "LPPI" %>
-              <%= content_tag :span, "Age Requirements", class: "lead text-primary" %>
-              <%= content_tag :ul, class: "mb-2" do %>
-                <%= content_tag :li do %>
-                  <p>Entry Age: <b><%= moa.entry_age_from.to_i %> to <%= moa.entry_age_to.to_i %></b> years old </p>
-                <% end %>
-                <%= content_tag :li do %>
-                  <p>Exit Age: <b><%= moa.exit_age.to_i %></b> years and <b>6</b> months old </p>
-                <% end %>
-              <% end %>
-              <%= content_tag :span, "Minimum Participation", class: "lead text-primary" %>
-              <%= content_tag :ul, class: "mb-2" do %>
-                <%= content_tag :li do %>
-                  <p><b><%= num_delimit(moa.minimum_participation.nil? ? 0 : moa.minimum_participation) %></b> members</p>
-                <% end %>
-              <% end %>
-              <%= content_tag :span, "Service Fee", class: "lead text-primary" %>
-              <%= content_tag :ul, class: "mb-2" do %>
-                <%= content_tag :li do %>
-                  <p>Cooperative: <b><%= to_percent((moa.coop_sf.nil? ? 0 : moa.coop_sf)) %></b></p>
-                <% end %>
-                <%= content_tag :li do %>
-                  <p>Marketing Agent: <b><%= to_percent((moa.agent_sf.nil? ? 0 : moa.agent_sf)) %></b></p>
-                <% end %>
-              <% end %>
-            <% end %>
-            <% if ["GYRT","GYRTF","GYRTBR","GYRTFR"].include?(moa.plan.acronym) %>
-              <%= content_tag :span, "Policy Anniversary", class: "lead text-primary" %>
-              <%= content_tag :ul, class: "mb-2" do %>
-                <%= content_tag :li do %>
-                  <p>Type: <b><%= moa.anniversary_type.titleize %></b> </p>
-                  <%= content_tag :ul do %>
-                    <% moa.anniversaries.each do |anniv| %>
-                      <%= content_tag :li, anniv.name %>
-                    <% end %>
-                  <% end %>
-                <% end %>
-              <% end %>
-            <% end %>
-            <% unless moa.plan.acronym == "LPPI" %>
-              <%= content_tag :span, "Contestability", class: "lead text-primary" %>
-              <%= content_tag :ul, class: "mb-2" do %>
-                <%= content_tag :li do %>
-                  <p>Contestability: <b><%= moa.contestability if moa.contestability %></b> </p>
-                <% end %>
-              <% end %>
-              <%= content_tag :span, "No Evidence Limit", class: "lead text-primary" %>
-              <%= content_tag :ul, class: "mb-2" do %>
-                <%= content_tag :li do %>
-                  <p><%= nel_nml(moa.nel) %></p>
-                <% end %>
-              <% end %>
-              <%= content_tag :span, "Non-Medical Limit", class: "lead text-primary" %>
-              <%= content_tag :ul, class: "mb-2" do %>
-                <%= content_tag :li do %>
-                  <p><%= nel_nml(moa.nml) %></p>
-                <% end %>
-              <% end %>
-            <% end %>
-            <%# unless ["GYRT","GYRTF","GYRTBR","GYRTFR"].any? { |str| moa.plan.acronym.include?(str) } %>
-            <%# end %>
-            <%= content_tag :span, "Signed Date", class: "lead text-primary" %>
-            <%= content_tag :ul, class: "mb-2" do %>
-              <%= content_tag :li do %>
-                <p><%#= moa.moa_signed_date.strftime('%B %d, %Y') %></p>
-              <% end %>
-            <% end %>
-            <%= content_tag :span, "Notarized Date", class: "lead text-primary" %>
-            <%= content_tag :ul, class: "mb-2" do %>
-              <%= content_tag :li do %>
-                <p><%#= moa.notarized_date.strftime('%B %d, %Y') %></p>
-              <% end %>
-            <% end %>
-          </div>
-        </div>
+
+        <% unless moa.plan.acronym == "LPPI" %>
+          <%= render "agreements/policy_anniversary", moa: moa %>
+          <%= render "agreements/gyrt_others", moa: moa %>
+        <% else %>
+          <%= render "agreements/lppi_others", moa: moa %>
+        <% end %>
+
+        <% if moa.special_arrangements.present? %>
+          <%= render "agreements/special_arrangements", moa: moa %>
+        <% end %>
       </div>
     </div>
