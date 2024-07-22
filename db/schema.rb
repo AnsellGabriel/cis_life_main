@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2024_07_15_081224) do
+ActiveRecord::Schema[7.0].define(version: 2024_07_22_064709) do
   create_table "accounting_journal_entries", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.string "journable_type", null: false
     t.bigint "journable_id", null: false
@@ -20,7 +20,7 @@ ActiveRecord::Schema[7.0].define(version: 2024_07_15_081224) do
     t.index ["journable_type", "journable_id"], name: "index_accounting_journal_entries_on_journable"
     t.index ["journal_id"], name: "index_accounting_journal_entries_on_journal_id"
   end
-  
+
   create_table "accounting_vouchers", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.date "date_voucher"
     t.string "voucher"
@@ -202,6 +202,7 @@ ActiveRecord::Schema[7.0].define(version: 2024_07_15_081224) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.string "code"
+    t.string "full_name"
     t.index ["agent_group_id"], name: "index_agents_on_agent_group_id"
   end
 
@@ -1323,6 +1324,7 @@ ActiveRecord::Schema[7.0].define(version: 2024_07_15_081224) do
     t.bigint "claim_type_nature_id"
     t.bigint "coop_member_id"
     t.bigint "claim_retrieval_id"
+    t.string "old_code"
     t.index ["agreement_benefit_id"], name: "index_process_claims_on_agreement_benefit_id"
     t.index ["agreement_id"], name: "index_process_claims_on_agreement_id"
     t.index ["cause_id"], name: "index_process_claims_on_cause_id"
@@ -1605,7 +1607,7 @@ ActiveRecord::Schema[7.0].define(version: 2024_07_15_081224) do
     t.string "entriable_type", null: false
     t.bigint "entriable_id", null: false
     t.bigint "treasury_account_id", null: false
-    t.decimal "amount", precision: 15, scale: 2
+    t.decimal "amount", precision: 15, scale: 2, default: "0.0"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.integer "status", default: 0
@@ -1624,9 +1626,12 @@ ActiveRecord::Schema[7.0].define(version: 2024_07_15_081224) do
     t.decimal "deposit", precision: 15, scale: 2, default: "0.0"
     t.bigint "agent_id"
     t.bigint "branch_id"
-    t.decimal "unuse", precision: 15, scale: 2
+    t.decimal "unuse", precision: 15, scale: 2, default: "0.0"
     t.decimal "vat_exempt", precision: 15, scale: 2
     t.decimal "zero_rated", precision: 15, scale: 2
+    t.decimal "vatable_amount", precision: 15, scale: 2, default: "0.0"
+    t.boolean "insurance", default: false
+    t.boolean "discounted", default: false
     t.index ["agent_id"], name: "index_treasury_cashier_entries_on_agent_id"
     t.index ["agreement_id"], name: "index_treasury_cashier_entries_on_agreement_id"
     t.index ["branch_id"], name: "index_treasury_cashier_entries_on_branch_id"

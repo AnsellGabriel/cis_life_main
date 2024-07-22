@@ -50,4 +50,12 @@ class Employee < ApplicationRecord
       self.update!(remove_report: true)
     end
   end
+
+  def self.ransackable_attributes(auth_object = nil)
+    ["first_name", "last_name"]
+  end
+
+  def self.ransackable_associations(auth_object = nil)
+    ["user"]
+  end
 end

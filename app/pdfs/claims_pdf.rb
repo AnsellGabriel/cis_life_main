@@ -105,7 +105,17 @@ class ClaimsPdf < Prawn::Document
         end
         y_position -= gap
         unless @pc.claim_cause.nil?
+          unless @pc.claim_cause.icd == ""
+            bounding_box([0, y_position], width: 100, height: 10) do
+              text "ICD:", size: 9
+            end
+            bounding_box([100, y_position], width: 190) do
+              # transparent(0.5) { stroke_bounds }
+              text @pc.claim_cause.icd, size: 9, align: :justify
+            end
+          end
           unless @pc.claim_cause.acd == ""
+            y_position = cursor - 5
             bounding_box([0, y_position], width: 100, height: 10) do
               text "ACD:", size: 9
             end
@@ -117,7 +127,7 @@ class ClaimsPdf < Prawn::Document
           unless @pc.claim_cause.ucd == ""
             y_position = cursor - 5
             bounding_box([0, y_position], width: 100, height: 10) do
-              text "OSCCD:", size: 9
+              text "UCD:", size: 9
             end
             bounding_box([100, y_position], width: 190) do
               # transparent(0.5) { stroke_bounds }
@@ -134,14 +144,24 @@ class ClaimsPdf < Prawn::Document
               text @pc.claim_cause.osccd, size: 9, align: :justify
             end
           end
-          unless @pc.claim_cause.icd == ""
+          unless @pc.claim_cause.postmortem == ""
             y_position = cursor - 5
             bounding_box([0, y_position], width: 100, height: 10) do
-              text "OSCCD:", size: 9
+              text "Postmortem:", size: 9
             end
             bounding_box([100, y_position], width: 190) do
               # transparent(0.5) { stroke_bounds }
-              text @pc.claim_cause.icd, size: 9, align: :justify
+              text @pc.claim_cause.postmortem, size: 9, align: :justify
+            end
+          end
+          unless @pc.claim_cause.cause_of_incident == ""
+            y_position = cursor - 5
+            bounding_box([0, y_position], width: 100, height: 10) do
+              text "Cause of Incident:", size: 9
+            end
+            bounding_box([100, y_position], width: 190) do
+              # transparent(0.5) { stroke_bounds }
+              text @pc.claim_cause.cause_of_incident, size: 9, align: :justify
             end
           end
           unless @pc.claim_confinements.empty? 
@@ -164,7 +184,7 @@ class ClaimsPdf < Prawn::Document
   def insurance_details(cur)
     y_position = cur
     bounding_box([310, y_position], width: 220, height: 230) do
-      transparent(0.5) { stroke_bounds }
+      # transparent(0.5) { stroke_bounds }
       text "III. Insurance Details", size: 10, style: :bold
       
       indent(10) do
@@ -207,7 +227,7 @@ class ClaimsPdf < Prawn::Document
       indent(10) do
         y_position = bounds.top
         data = [["Process", "Date"]]
-        @pc.process_track.order(created_at: :desc).each do |ct|
+        @pc.process_tracks.order(created_at: :desc).each do |ct|
           data += [[ "#{Claims::ProcessClaim.get_route(ct.route_id).to_s.humanize.titleize} 
                  by #{ct.user}", "#{to_shortdate(ct.created_at)}" ]]
           # bounding_box([0, y_position - gap], width: 120, height: 20) do

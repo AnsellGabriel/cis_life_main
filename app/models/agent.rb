@@ -1,5 +1,5 @@
 class Agent < ApplicationRecord
-  validates_presence_of :first_name, :middle_name, :last_name
+  validates_presence_of :full_name
 
   belongs_to :agent_group, optional: true
   # belongs_to :group_proposal
@@ -14,9 +14,5 @@ class Agent < ApplicationRecord
   def to_s
     # test = 5
     full_name
-  end
-
-  def full_name
-    "#{first_name} #{last_name}"
   end
 end

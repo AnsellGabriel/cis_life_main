@@ -23,9 +23,7 @@
     <% end %>
 
     <%= f.association :agent_group, error: '*Required' %>
-    <%= f.input :first_name, error: '*Required' %>
-    <%= f.input :middle_name, error: '*Required' %>
-    <%= f.input :last_name, error: '*Required' %>
+    <%= f.input :full_name, error: '*Required' %>
     <%= f.input :birthdate, as: :date, html5: true, error: '*Required'  %>
     <%= f.input :mobile_number %>
   </div>
