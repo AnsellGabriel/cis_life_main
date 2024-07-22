@@ -4,11 +4,7 @@
     <%# unless current_user %>
     <div class="" data-controller="password-strength">
       <%= f.fields_for :user do |u| %>
-        <%= u.input :email,
-                    required: true,
-                    autofocus: true,
-                    input_html: { autocomplete: "email" }
-        %>
+        <%= u.input :email, required: true, autofocus: true, input_html: { autocomplete: "email" } %>
         <div class="row mb-3">
           <div class="col-md-6" data-controller="password-toggle">
             <div class="<%= flex_justify_align('','center') %> gap-1 mb-2">
@@ -68,9 +64,11 @@
       <%= f.input :mobile_number, wrapper_html: { class: "col-md-4" } %>
       <%= f.input :employee_number, wrapper_html: { class: "col-md-4" } %>
       
-      <%= f.input :branch, as: :select, collection: Employee.branches.keys.map {|k| [k.humanize, k] }, wrapper_html: { class: "col-md-4" } %>
+      <%= f.association :branch, collection: Branch.order(:name), wrapper_html: { class: "col-md-4" } %>
       <div class="row">
-        <%= f.association :department, error: '*Required', wrapper_html: { class: "col-6" } %>
+        <%= f.association :department, collection: Department.order(:name), error: '*Required', wrapper_html: { class: "col-6" }, 
+          input_html: {data: { controller: "ts--select" } }
+        %>
         <%= f.input :designation, wrapper_html: { class: "col-6" } %>
       </div>
       

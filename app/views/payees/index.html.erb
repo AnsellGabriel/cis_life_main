@@ -24,17 +24,18 @@
 <table class="table table-striped table-bordered table-hover">
   <thead>
     <tr>
-      <th class="" style="width: 10%">#</th>
       <th>Name</th>
+      <th></th>
     </tr>
   </thead>
 
   <tbody>
-    <% @payees.each do |payee| %>
+    <% @payees.order(:name).each do |payee| %>
       <tr>
-        <th scope="row"><%= payee.id %></th>
         <td>
           <%= payee.name %>
+        </td>
+        <td class="text-center">
           <%= link_to edit_payee_path(payee), class: 'btn btn-outline-primary btn-sm', title: 'Edit' do %>
             <i class="bi bi-pencil"></i>
           <% end %>

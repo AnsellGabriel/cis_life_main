@@ -6,7 +6,7 @@
     <%= wicked_pdf_stylesheet_link_tag "bootstrap" %>
   </head>
   <body>
-    <%= render 'layouts/pdf_partials/cisp_header', title: "CHECK VOUCHER" %>
+    <%= render 'layouts/pdf_partials/cisp_header', title: "CHECK VOUCHER", branch: @check.branch.name.upcase %>
     <div class="row mb-2">
       <div class="col-8">
         <div class="row mb-1">
@@ -77,8 +77,8 @@
           <div class="row" style="">
             <div class="ps-1 pt-1 col-2 text-center" style="border-right: 1px solid black"><%= entry.id %></div>
             <div class="ps-5 pt-1 col-6" style="border-right: 1px solid black"><%= entry.account %></div>
-            <div class="pe-1 pt-1 col-2 text-end" style="border-right: 1px solid black"><%= to_curr entry.amount %></div>
-            <div class="pe-1 pt-1 col-2 text-end">0.00</div>
+            <div class="pe-1 pt-1 col-2 text-end" style="border-right: 1px solid black">0.00</div>
+            <div class="pe-1 pt-1 col-2 text-end"><%= to_curr entry.amount %></div>
           </div>
         <% end %>
       </div>

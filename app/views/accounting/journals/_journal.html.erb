@@ -4,7 +4,8 @@
       <div class="">
         <div class="<%= flex_justify_align('','center') %> gap-1">
           <p class="text-muted"><small>Journal Voucher</small></p>
-          <p class="badge bg-<%= journal.decorate.status_color %>"><%= journal.status.humanize %></p>
+          <p class="badge bg-primary"><%= journal.branch.name.upcase %></p>
+          <p class="badge bg-<%= journal.decorate.status_badge %>"><%= journal.status.humanize.upcase %></p>
         </div>
         <h3 class="text-primary"><%= "#{journal.voucher}" %></h3>
         <p><small><strong>Voucher date:</strong> <span><%= month_day_year(journal.date_voucher) %></span></small></p>

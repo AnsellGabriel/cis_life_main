@@ -6,7 +6,7 @@
     <%= wicked_pdf_stylesheet_link_tag "bootstrap" %>
   </head>
   <body style="font-size: .9rem">
-    <%= render 'layouts/pdf_partials/cisp_header', title: "DEBIT ADVICE" %>
+    <%= render 'layouts/pdf_partials/cisp_header', title: "DEBIT ADVICE", branch: @debit_advice.branch.name.upcase %>
     <div class="row">
       <div class="col-10"></div>
       <div class="text-center mb-5 mt-4 col-2 pdf-bottom-border"><%= @debit_advice.date_voucher.strftime("%m/%d/%Y")%></div>

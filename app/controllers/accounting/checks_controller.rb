@@ -98,7 +98,7 @@ class Accounting::ChecksController < ApplicationController
 
   # GET /accounting/checks/new
   def new
-    last_voucher = Accounting::Check.pluck(:voucher).last.to_i
+    last_voucher = Accounting::Check.pluck(:voucher).last.gsub('CV', '').to_i
     initiate_voucher = last_voucher ? last_voucher + 1 : 1
 
     if params[:rid].present?
@@ -118,8 +118,9 @@ class Accounting::ChecksController < ApplicationController
 
   # POST /accounting/checks
   def create
-    @check = Accounting::Check.new(modified_check_params)
+    @check = Accounting::Check.new(check_params)
     @check.employee = current_user.userable
+    @check.branch = current_user.userable.branch
 
     if @check.save
       if params[:rid].present?
@@ -142,7 +143,7 @@ class Accounting::ChecksController < ApplicationController
 
   # PATCH/PUT /accounting/checks/1
   def update
-    if @check.update!(modified_check_params)
+    if @check.update!(check_params)
       redirect_to @check, notice: "Check voucher updated."
     else
       render :edit, status: :unprocessable_entity
@@ -168,14 +169,14 @@ class Accounting::ChecksController < ApplicationController
 
   # Only allow a list of trusted parameters through.
   def check_params
-    params.require(:accounting_check).permit(:date_voucher, :voucher, :global_payable, :particulars, :treasury_account_id, :amount, :payable_id, :branch_id)
+    params.require(:accounting_check).permit(:date_voucher, :voucher, :global_payable, :particulars, :treasury_account_id, :amount, :payable_id)
   end
 
   # convert the string amount to float
-  def modified_check_params
-    check_params[:amount] = check_params[:amount].to_f
-    check_params
-  end
+  # def modified_check_params
+  #   check_params[:amount] = check_params[:amount].to_f
+  #   check_params
+  # end
 
   def amount_to_words(amount)
     # Convert the integer part to words

@@ -1,7 +1,9 @@
 class Accounting::DebitAdvice < Accounting::Voucher
-  validates_presence_of :treasury_account_id, :amount
+  validates_presence_of :treasury_account_id, :amount, :employee_id, :branch_id
 
   belongs_to :treasury_account, class_name: "Treasury::Account", foreign_key: :treasury_account_id
+  belongs_to :employee
+  belongs_to :branch
 
   has_many :debit_advice_journals, class_name: "Accounting::DebitAdviceJournal"
   has_many :journals, through: :debit_advice_journals
