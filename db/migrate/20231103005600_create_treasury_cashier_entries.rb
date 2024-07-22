@@ -1,4 +1,4 @@
-#class CreateTreasuryCashierEntries < ActiveRecord::Migration[7.0]
+class CreateTreasuryCashierEntries < ActiveRecord::Migration[7.0]
   def change
     create_table :treasury_cashier_entries do |t|
       t.integer :or_no
