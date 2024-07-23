@@ -5,25 +5,27 @@
     <%= f.association :cooperative, input_html: { data: { action: "change->plan-agree#search_plans", controller: "ts--select" } }  %>
     <div class="row">
       <%#= f.association :plan, wrapper_html: { class: "col-md-4" }, input_html: { id: "plan_id", data: { action: "change->plan-agree#toggleTargets", plan_agree_target: "planSelect" } } %>
-      <%= f.association :plan, wrapper_html: { class: "col-md-4" }, input_html: { id: "plan_id", data: { action: "change->plan-agree#toggleTargets", plan_agree_target: "planSelect" } } %>
+      <%= f.association :plan, wrapper_html: { class: "col-md-3" }, input_html: { id: "plan_id", data: { action: "change->plan-agree#toggleTargets", plan_agree_target: "planSelect" } } %>
       <% unless current_user.userable_type == "Agent" %>
-        <%= f.association :agent, wrapper_html: {class: "col-md-4" } %>
+        <%= f.association :agent, wrapper_html: {class: "col-md-3" } %>
       <% end %>
-      <%= f.input :moa_no, label: "MOA No.", wrapper_html: {class: "col-md-4" } %>
+      <%= f.input :moa_no, label: "MOA No.", wrapper_html: {class: "col-md-3" } %>
+      <%= f.input :comm_type, collection: Agreement::Comm_type, wrapper_html: { class: "col-md-3" }, label: "Commission Type" %>
     </div>
     <div class="row">
-      <%= f.input :comm_type, collection: Agreement::Comm_type, wrapper_html: { class: "col-md-3" } %>
-      <%= f.input :claims_fund, wrapper_html: { class: "col-md-2 mt-4" } %>
-      <%= f.input :claims_fund_amount, wrapper_html: { class: "col-md-3" } %>
-      <%= f.input :reconsiderable, wrapper_html: { class: "col-md-3 mt-4" }, label: 'Reconsiderable?' %>
-    </div>
-    <div class="row">
-      <%= f.input :transferred, wrapper_html: { class: "col-md-2" } %>
+      <%= f.input :transferred, wrapper_html: { class: "col-md-2" }, label: "Transferred business?" %>
       <%#= f.input :transferred_date, wrapper_html: { class: "col-md-3" } %>
       <%= f.input :transferred_date, as: :string, wrapper_html: { class: "col-3" }, input_html: { data: { controller: "flatpickr",
           flatpickr_next_arrow: "Next",
-          flatpickr_prev_arrow: "Prev" } } %>
+          flatpickr_prev_arrow: "Prev" } }, label: "Date Transferred" %>
       <%= f.input :previous_provider, wrapper_html: { class: "col-md-5" } %>
+    </div>
+    <div class="row">
+      <%= f.input :claims_fund, wrapper_html: { class: "col-md-2 mt-4" }, label: "with Claims fund?" %>
+      <%= f.input :claims_fund_amount, wrapper_html: { class: "col-md-3" } %>
+    </div>
+    <div class="row">
+      <%= f.input :reconsiderable, wrapper_html: { class: "col-md-3 mt-4" }, label: 'with Claims Reconsiderable?' %>
     </div>
     <!--div class="row">
       <%= f.input :entry_age_from, wrapper_html: { class: "col-md-4" }, label: 'Entry Age from' %>

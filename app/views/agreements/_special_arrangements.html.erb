@@ -1,0 +1,13 @@
+<div class="row">
+  <div class="col-12 text-center border-top border-bottom py-2">
+    <%= content_tag :h5, "SPECIAL ARRANGEMENT(S)", class: "mb-0" %>
+  </div>
+
+  <div class="col-12 text-center py-2 mb-2">
+    <ul>
+      <% moa.special_arrangements.each do |sa| %>
+        <li><%= sa.arrangement %></li>
+      <% end %>
+    </ul>
+  </div>
+</div>

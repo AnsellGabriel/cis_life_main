@@ -1,0 +1,15 @@
+<div class="row">
+  <div class="col-12 text-center border-top border-bottom py-2 mt-5">
+    <%= content_tag :h5, "POLICY ANNIVERSARY", class: "mb-0" %>
+    <%= content_tag :span, "TYPE: #{moa.anniversary_type.upcase}", class: "fst-italic" %>
+  </div>
+  <% if moa.anniversaries.present? %>
+    <div class="col-12 text-center py-2 mb-2">
+      <%= content_tag :ul, class: "mb-2" do %>
+        <% moa.anniversaries.each do |anniv| %>
+          <%= content_tag :li, anniv.name %>
+        <% end %>
+      <% end %>
+    </div>
+  <% end %>
+</div>

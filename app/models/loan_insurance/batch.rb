@@ -350,6 +350,10 @@ class LoanInsurance::Batch < Batch
     end
   end
 
+  def self.get_pending_lppi(group_remits)
+    where(group_remit: group_remits).where(insurance_status: :pending)
+  end
+
   private
 
   def skip_validation

@@ -1,0 +1,51 @@
+<div class="col-12 text-center border-bottom py-2 mb-5">
+  <div class="row">
+    <%= content_tag :h5, "OTHER DETAILS", class: "mb-0" %>
+  </div>
+  <div class="row justify-content-center mb-2 mt-3">
+    <% if moa.plan.acronym == "LPPI" %>
+      <div class="col-4">
+        <%= content_tag :span, "with Unused?", class: "lead text-primary" %> <br>
+        <%= moa.unusable? ? "YES" : "NO" %>
+      </div>
+      <div class="col-4">
+        <%= content_tag :span, "with Mark-up?", class: "lead text-primary" %> <br>
+        <%= moa.with_markup? ? "YES" : "NO" %>
+      </div>
+      <div class="col-4">
+        <%= content_tag :span, "Reconsiderable?", class: "lead text-primary" %> <br>
+        <%= moa.reconsiderable? ? "YES" : "NO" %>
+      </div>
+    <% end %>
+  </div>
+  <hr>
+  <div class="row justify-content-center mb-2">
+    <div class="col-4">
+      <%= content_tag :span, "Transferred Business?", class: "lead text-primary" %> <br>
+      <%= moa.transferred? ? "YES" : "NO" %>
+    </div>
+    <% if moa.transferred? %>
+      <div class="col-4">
+        <%= content_tag :span, "Transferred Date", class: "lead text-primary" %> <br>
+        <%= moa.transferred_date %>
+      </div>
+      <div class="col-4">
+        <%= content_tag :span, "Previous Provider", class: "lead text-primary" %> <br>
+        <%= moa.previous_provider.upcase %>
+      </div>
+    <% end %>
+  </div>
+  <hr>
+  <div class="row justify-content-center">
+    <div class="col-6">
+      <%= content_tag :span, "with Claims fund?", class: "lead text-primary" %> <br>
+      <%= moa.claims_fund? ? "YES" : "NO" %>
+    </div>
+    <% if moa.claims_fund? %>
+      <div class="col-6">
+        <%= content_tag :span, "Claims Fund Amount", class: "lead text-primary" %> <br>
+        <%= to_currency(moa.claims_fund_amount) %>
+      </div>
+    <% end %>
+  </div>
+</div>

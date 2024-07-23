@@ -1,49 +1,68 @@
 <div class="row">
-  <%= content_tag :h2, "Monitoring" %>
   <div class="col-4">
     <div class="row">
-      <table class="table">
-        <thead>
-          <th></th>
-          <th>Count</th>
-          <th></th>
-        </thead>
-        <tbody>
-          <tr>
-            <td class="text-secondary">UNPROCESSED</td>
-            <td><%= @for_process_coverages.count %></td>
-            <td>
-              <%= link_to "View", cov_list_process_coverages_path(cov_type: "For Process", current_date: @current_date, date_type: "yearly", title: "UNPROCESSED"), class: "btn btn-primary btn-sm", data: { turbo_frame: "remote_modal" } %>
-            </td>
-          </tr>
-          <tr>
-            <td class="text-dark">TO PROCESS</td>
-            <td><%= @selected_process_coverages.count %></td>
-            <td>
-              <%= link_to "View", cov_list_process_coverages_path(cov_type: "Selected", current_date: @current_date, date_type: "yearly", title: "SELECTED"), class: "btn btn-primary btn-sm", data: { turbo_frame: "remote_modal" } %>
-            </td>
-          </tr>
-          <tr>
-            <td class="text-primary">EVALUATED</td>
-            <td><%= @evaluated_process_coverages.count %></td>
-            <td>
-              <%= link_to "View", cov_list_process_coverages_path(cov_type: "Evaluated", current_date: @current_date, date_type: "yearly", title: "EVALUATED"), class: "btn btn-primary btn-sm", data: { turbo_frame: "remote_modal" } %>
-            </td>
-          </tr>
-          <tr>
-            <td class="text-success">PROCESSED</td>
-            <td><%= @approved_process_coverages.count %></td>
-            <td>
-              <%= link_to "View", cov_list_process_coverages_path(cov_type: "Processed", current_date: @current_date, date_type: "yearly", title: "PROCESSED"), class: "btn btn-primary btn-sm", data: { turbo_frame: "remote_modal", turbo: true } %>
-            </td>
-          </tr>
-          <tr>
-            <td class="text-warning">REFUND</td>
-            <td>0</td>
-            <td><%= link_to "View", "#", class: "btn btn-primary btn-sm" %></td>
-          </tr>
-        </tbody>
-      </table>
+      <div class="card-group h-100">
+        <div class="card bg-secondary text-light">
+          <div class="card-body">
+            <p class="card-title">RECEIVED</p>
+            <h2><%= @for_process_coverages.count %></h2>
+          </div>
+          <div class="card-footer">
+            <small>
+              <%= link_to cov_list_process_coverages_path(cov_type: "For Process", current_date: @current_date, date_type: "yearly", title: "RECEIVED"), class: "text-light", data: {turbo_frame: "remote_modal"} do %>
+                See Details <%= bootstrap_icon "box-arrow-right" %>
+              <% end %>
+            </small>
+          </div>
+        </div>
+        <div class="card bg-success text-light">
+          <div class="card-body">
+            <p class="card-title">APPROVED</p>
+            <h2><%= @approved_process_coverages.count %></h2>
+          </div>
+          <div class="card-footer">
+            <small>
+              <%= link_to cov_list_process_coverages_path(cov_type: "Approved", current_date: @current_date, date_type: "yearly", title: "APPROVED"), class: "text-light", data: {turbo_frame: "remote_modal"} do %>
+                See Details <%= bootstrap_icon "box-arrow-right" %>
+              <% end %>
+            </small>
+          </div>
+        </div>
+        <div class="card bg-danger text-light">
+          <div class="card-body">
+            <p class="card-title">DENIED</p>
+            <h2><%= @denied_process_coverages.count %></h2>
+          </div>
+          <div class="card-footer">
+            <small>
+              <%= link_to cov_list_process_coverages_path(cov_type: "Denied", current_date: @current_date, date_type: "yearly", title: "DENIED"), class: "text-light", data: {turbo_frame: "remote_modal"} do %>
+                See Details <%= bootstrap_icon "box-arrow-right" %>
+              <% end %>
+            </small>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="row mt-2 mb-3">
+      <div class="card-group h-100">
+        <div class="card text-dark bg-info h-100">
+          <div class="card-body">
+            <% if @selected_process_coverages.count > 0 %>
+              <h5 class="card-title">For Process</h5>
+              <small class="text-muted">
+                While you were away, the following claims have been assigned to you for evaluation:
+              </small>
+              <br>
+              <h2 class="text-center mt-3"><%= link_to @selected_process_coverages.count, cov_list_process_coverages_path(cov_type: "Selected", current_date: @current_date, date_type: "yearly", title: "PENDING"), class: "text-dark", data: {turbo_frame: "remote_modal"} %></h2>
+            <% else %>
+              <h5 class="card-title"></h5>
+              <small>
+                You currently have no pending remittance for process. Keep up the excellent work!
+              </small>
+            <% end %>
+          </div>
+        </div>
+      </div>
     </div>
 
     <div class="row">

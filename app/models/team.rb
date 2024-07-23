@@ -4,6 +4,7 @@ class Team < ApplicationRecord
   has_many :emp_agreements
   has_many :agreements, through: :emp_agreements
   has_many :notifications, as: :notifiable, dependent: :destroy
+  has_many :process_coverages
 
   def to_s
     name
@@ -19,5 +20,17 @@ class Team < ApplicationRecord
 
   def get_team_members
     employee_teams.where.not(head: true)
+  end
+
+  def for_assignment_count
+    process_coverages.where(status: :for_process).where(processor: nil).count
+  end
+
+  def for_process_count
+    process_coverages.where(status: :for_process).where.not(processor: nil).count
+  end
+
+  def approved_count
+    process_coverages.where(status: :approved).count
   end
 end
