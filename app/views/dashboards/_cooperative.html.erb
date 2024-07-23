@@ -48,7 +48,7 @@
         <div class="card-group mb-3">
             <div class="card">
                 <div class="card-body">
-                <p class="text-primary card-title">COOP FILED</p>
+                <p class="text-primary card-title">CLAIMS FILED</p>
                 <h2 class="text-muted"><%= @process_claims.count %></h2>
                 </div>
                 <div class="card-footer"><small class="text-muted"> <%= link_to 'See Details <i class="bi bi-box-arrow-right"></i>'.html_safe, index_coop_claims_process_claims_url, class: "text-muted" %></small></div>
@@ -75,14 +75,51 @@
       <div class="card-group mb-3">
         <div class="card bg-warning">
           <div class="card-body">
-              <p class="text-dark card-title">LPPI PENDING</p>
+              <span class="text-dark card-title">PENDING MEMBERS</span><br>
+              <small class="text-dark">(LPPI)</small>
               <h2 class="text-dark"><%= @pending_lppi.count %></h2>
           </div>
+					<div class="card-footer">
+            <small class="text-dark">                
+							<%= content_tag :a, "See Details",  
+								data: {bs_toggle: "modal",
+									bs_target: "#lppiModal"
+								}
+              %>
+            </small>
+          </div>
         </div>
+				<% if ["GYRT","GYRTF","GYRTBR","GYRTFR"].include?(@cooperative.agreements.includes(:plan).pluck(:acronym)) %>
+					<div class="card bg-warning">
+						<div class="card-body">
+								<span class="text-dark card-title">PENDING MEMBERS</span><br>
+								<small class="text-dark">(GYRT)</small>
+								<h2 class="text-dark"><%= @pending_gyrt.count %></h2>
+						</div>
+						<div class="card-footer">
+							<small class="text-dark">                
+								<%= content_tag :a, "See Details",  
+									data: {bs_toggle: "modal",
+										bs_target: "#gyrtModal"
+									}
+								%>
+							</small>
+						</div>
+					</div>
+				<% end %>
         <div class="card bg-warning">
           <div class="card-body">
-              <p class="text-dark card-title">GYRT PENDING</p>
-              <h2 class="text-dark"><%= @pending_gyrt.count %></h2>
+              <span class="text-dark card-title">TO SUBMIT LISTINGS</span><br><br>
+              <h2 class="text-dark"><%= @group_remits_pending.count %></h2>
+          </div>
+          <div class="card-footer">
+            <small class="text-dark">                
+							<%= content_tag :a, "See Details",  
+								data: {bs_toggle: "modal",
+									bs_target: "#toSubmitModal"
+								}
+              %>
+            </small>
           </div>
         </div>
       </div>
@@ -96,3 +133,8 @@
     <%= pie_chart @gender_counts, title: "Gender Demographic" %>
   </div>
 </div>
+
+
+<%= render "dashboards/to_submit_listings" %>
+<%= render "dashboards/lppi_pending" %>
+<%= render "dashboards/gyrt_pending" %>

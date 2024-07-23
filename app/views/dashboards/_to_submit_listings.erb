@@ -1,0 +1,42 @@
+<div class="modal fade" id="toSubmitModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+  <div class="modal-dialog modal-xl">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title text-center" id="staticBackdropLabel">
+          To Submit Listings
+        </h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <table class="table table-striped">
+          <thead>
+            <th>ID</th>
+            <th>Listing Name</th>
+            <th>Plan</th>
+            <th>Date Created</th>
+            <th>Count</th>
+            <th></th>
+          </thead>
+          <tbody>
+            <% @group_remits_pending.each do |group_remit| %>
+              <tr>
+                <td><%= group_remit.id %></td>
+                <td><%= group_remit.name %></td>
+                <td><%= group_remit.agreement.plan.acronym %></td>
+                <td><%= to_shortdate(group_remit.created_at) %></td>
+                <td><%= group_remit.batches.count %></td>
+                <td>
+                  <% if group_remit.agreement.plan.acronym == "LPPI" %>
+                    <%= link_to "View", loan_insurance_group_remit_path(group_remit), class: "btn btn-sm btn-primary" %>
+                  <% else %>
+                    <%= link_to "View", group_remit_path(group_remit), class: "btn btn-sm btn-primary" %>
+                  <% end %>
+                </td>
+              </tr>
+            <% end %>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
