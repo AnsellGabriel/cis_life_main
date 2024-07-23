@@ -16,7 +16,6 @@ default: &default
   username: root
   password:
   # socket: /tmp/mysql.sock
-  socket: /Applications/XAMPP/xamppfiles/var/mysql/mysql.sock
 
 development:
   <<: *default
@@ -28,6 +27,7 @@ development:
 test:
   <<: *default
   database: cis_life_main_test
+  socket: /Applications/XAMPP/xamppfiles/var/mysql/mysql.sock
 
 # As with config/credentials.yml, you never want to store sensitive information,
 # like your database password, in your source code. If your source code is
@@ -54,3 +54,4 @@ production:
   database: cis_life_main_production
   username: cis_life_main
   password: <%= ENV["CIS_LIFE_MAIN_DATABASE_PASSWORD"] %>
+  socket: /var/run/mysqld/mysqld.sock
