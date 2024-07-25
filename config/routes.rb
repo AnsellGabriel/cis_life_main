@@ -438,6 +438,7 @@ Rails.application.routes.draw do
     get :adjust_lppi_cov, on: :member
     post :update_batch_cov, on: :member
     get :set_premium_batch, on: :member
+    get :refund_form, on: :member
     post :update_batch_prem, on: :member
     get :approve
     get :deny

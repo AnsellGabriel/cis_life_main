@@ -43,7 +43,6 @@ class VoucherRequestService
       if @refund_type == "denied"
         "Payment for #{@requestable.group_remit.agreement.plan.acronym} Premium refund for various members denied as per OR# #{or_number}"
       else
-        
         "Refund for #{@requestable.group_remit.agreement.plan.acronym} with OR # #{@requestable.group_remit.official_receipt}"
       end
     elsif @requestable.is_a?(Claims::ProcessClaim)

@@ -101,11 +101,6 @@
       <% end %>
     </div>
 
-    <% unless @process_coverage.voucher_request.present? %>
-      <% if @process_coverage.approved? && @process_coverage.group_remit.mis_entry? && @process_coverage.group_remit.batches.where(insurance_status: :denied).count %>
-        <%= link_to "Premium Refund", refund_process_coverage_path(@process_coverage, type: "prem_refund"), class: small_btn("warning"), data: {turbo_confirm: "Refund request amount: #{to_curr(@process_coverage.group_remit.refund_amount)}", turbo_method: :get} %>
-      <% end %>
-    <% end %>
     <%#= @process_coverage.group_remit.batches.where(insurance_status: :denied).count %>
   </div>
 </div>
