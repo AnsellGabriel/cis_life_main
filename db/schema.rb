@@ -11,7 +11,7 @@
 # It's strongly recommended that you check this file into your version control system.
 
 ActiveRecord::Schema[7.0].define(version: 2024_07_22_015437) do
-  create_table "accounting_journal_entries", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+  create_table "accounting_journal_entries", charset: "utf8mb4", force: :cascade do |t|
     t.string "journable_type", null: false
     t.bigint "journable_id", null: false
     t.bigint "journal_id", null: false
@@ -395,6 +395,17 @@ ActiveRecord::Schema[7.0].define(version: 2024_07_22_015437) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.integer "benefit_type"
+  end
+
+  create_table "branches", charset: "utf8mb4", force: :cascade do |t|
+    t.string "code"
+    t.string "name"
+    t.string "branch_code"
+    t.string "approver"
+    t.string "position"
+    t.string "initials"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
   end
 
   create_table "causes", charset: "utf8mb4", force: :cascade do |t|
@@ -1760,7 +1771,6 @@ ActiveRecord::Schema[7.0].define(version: 2024_07_22_015437) do
   add_foreign_key "dependent_health_decs", "batch_dependents"
   add_foreign_key "dependent_remarks", "batch_dependents"
   add_foreign_key "emp_approvers", "employees", column: "approver_id"
-  add_foreign_key "employees", "branches"
   add_foreign_key "employees", "departments"
   add_foreign_key "general_ledgers", "treasury_accounts", column: "account_id"
   add_foreign_key "general_ledgers", "treasury_sub_accounts", column: "sub_account_id"

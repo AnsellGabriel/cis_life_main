@@ -47,9 +47,9 @@ class LoanInsurance::BatchesController < ApplicationController
     end
   end
 
-  # def show_unuse_batch
-  #   @batch = LoanInsurance::Batch.find(params[:id])
-  # end
+  def show_unuse_batch
+    @batch = LoanInsurance::Batch.find(params[:id])
+  end
 
   def modal_remarks
     @batch = LoanInsurance::Batch.find(params[:id])
