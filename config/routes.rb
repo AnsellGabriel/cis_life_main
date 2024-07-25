@@ -282,9 +282,9 @@ Rails.application.routes.draw do
         get :approve_all
       end
 
-      # member do
-      #   get :show_unuse_batch, as: "unuse_batch"
-      # end
+      member do
+        get :show_unuse_batch, as: "unuse_batch"
+      end
 
       collection do
         post :import

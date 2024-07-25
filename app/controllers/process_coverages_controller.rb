@@ -613,7 +613,11 @@ class ProcessCoveragesController < ApplicationController
   end
 
   def refund
-    request = CheckVoucherRequestService.new(@process_coverage, @process_coverage.group_remit.refund_amount, :refund, current_user)
+    if params[:type].present?
+      request = VoucherRequestService.new(@process_coverage, @process_coverage.group_remit.denied_premiums, :refund, current_user, :journal_voucher, nil, "denied")
+    else
+      request = VoucherRequestService.new(@process_coverage, @process_coverage.group_remit.refund_amount, :refund, current_user)
+    end
 
     if request.create_request
       redirect_to process_coverage_path(@process_coverage), notice: "Refund request sent!"

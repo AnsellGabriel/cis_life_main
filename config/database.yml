@@ -15,6 +15,7 @@ default: &default
   pool: <%= ENV.fetch("RAILS_MAX_THREADS") { 5 } %>
   username: root
   password:
+  socket: /Applications/XAMPP/xamppfiles/var/mysql/mysql.sock
   # socket: /tmp/mysql.sock
 
 development:
@@ -27,7 +28,6 @@ development:
 test:
   <<: *default
   database: cis_life_main_test
-  socket: /Applications/XAMPP/xamppfiles/var/mysql/mysql.sock
 
 # As with config/credentials.yml, you never want to store sensitive information,
 # like your database password, in your source code. If your source code is
