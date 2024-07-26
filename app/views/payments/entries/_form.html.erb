@@ -3,7 +3,7 @@
   <div class="form-inputs mb-3">
     <div class="row">
       <div class="col-6">
-        <%= f.input :or_no, label: 'OR Number', error: '*Required' %>
+        <%= f.input :or_no, label: 'Invoice Number', error: '*Required' %>
       </div>
       <div class="col-6">
         <%= f.input :or_date, as: :string, input_html: {data: {
@@ -11,25 +11,22 @@
           flatpickr_max_date: Date.today,
           flatpickr_next_arrow: "Next",
           flatpickr_prev_arrow: "Prev" }
-          }, label: 'OR Date',
+          }, label: 'Invoice Date',
           error: '*Required'
         %> 
       </div>
     </div>
-    <%= f.input :dummy_payee, label: 'Payee', input_html: {value: @payment.coop}, readonly: true  %>
+    <%= f.input :dummy_payee, label: 'Payor', input_html: {value: @payment.coop}, readonly: true  %>
+    <%= f.association :treasury_account, collection: Treasury::Account.child_accounts, label: 'Deposited To', error: '*Required', input_html: { data: { controller: "ts--select" } }%>
     <div class="row">
-      <%= f.association :treasury_account, collection: Treasury::Account.child_accounts, label: 'Account', error: '*Required', input_html: { data: { controller: "ts--select" } }, wrapper_html: {class: 'col-6'}  %>
-      <%= f.association :treasury_payment_type, collection: Treasury::PaymentType.order(:name), label: 'Entry type', error: '*Required', input_html: { data: { controller: "ts--select" } }, wrapper_html: {class: 'col-6'} %>
     </div>
     <div class="row">
-      <%= f.input :amount, input_html: {value: @payment.amount + @payment.payable.coop_commission}, error: '*Required', wrapper_html: {class: 'col-4'} %>
-      <%= f.association :branch, collection: Branch.order(:name), error: '*Required', wrapper_html: {class: 'col-4'} %>
+      <%= f.input :amount, label: 'Amount Deposited', input_html: {value: @payment.amount + @payment.payable.coop_commission}, error: '*Required', wrapper_html: {class: 'col-3'} %>
+      <%= f.input :deposit, label: 'Total Sales', input_html: {value: @payment.amount}, error: '*Required', wrapper_html: {class: 'col-3'} %>
+      <%= f.input :service_fee, input_html: {value: @payment.payable.coop_commission}, error: '*Required', wrapper_html: {class: 'col-3'} %>
+      <%= f.input :unuse,label: 'Others', error: '*Required', wrapper_html: {class: 'col-3'} %>
     </div>
-    <div class="row">
-      <%= f.input :deposit, input_html: {value: @payment.amount}, error: '*Required', wrapper_html: {class: 'col-4'} %>
-      <%= f.input :service_fee, input_html: {value: @payment.payable.coop_commission}, error: '*Required', wrapper_html: {class: 'col-4'} %>
-      <%= f.input :unuse, error: '*Required', wrapper_html: {class: 'col-4'} %>
-    </div>
+    <%= f.input :particulars, error: '*Required' %>
   </div>
 
   <div class="form-actions text-center">

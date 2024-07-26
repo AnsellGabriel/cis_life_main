@@ -6,7 +6,6 @@ export default class extends Controller {
   static targets = ["input", "hideme", "plan", "amounts", "vat", "vatContainer", "discount", "discountContainer"]
   connect() {
     this.toggle()
-    this.toggleDiscount()
     this.toggleVat()
   }
 
@@ -21,14 +20,6 @@ export default class extends Controller {
     } else {
       this.hidemeTarget.style.display = "none";
       this.amountsTarget.classList.add("hidden");
-    }
-  }
-
-  toggleDiscount() {
-    if (this.discountTarget.checked) {
-      this.discountContainerTarget.classList.remove("hidden");
-    } else {
-      this.discountContainerTarget.classList.add("hidden");
     }
   }
 

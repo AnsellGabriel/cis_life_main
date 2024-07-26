@@ -37,8 +37,8 @@
       </div>
 
       <div class="row mb-3">
-        <span class="small fw-bold col-2">Payment: </span>
-        <span class="small col-10"><%= entry.treasury_payment_type.name.upcase %></span>
+        <span class="small fw-bold col-2">Particulars: </span>
+        <span class="small col-10"><%= entry.particulars %></span>
       </div>
 
       <div class="row mb-3">
@@ -64,7 +64,7 @@
         </div>
         <hr style="opacity: 1; border-color: black !important">
         <div class="<%= flex_justify_align('between') %>">
-          <span class="small">Amount</span>
+          <span class="small">Amount Deposited</span>
           <span class="small"><%= to_curr(entry.amount) %></span>
         </div>
 
@@ -77,7 +77,7 @@
 
         <% if entry.unuse and entry.unuse > 0 %>
           <div class="<%= flex_justify_align('between') %>">
-            <span class="small">Unuse</span>
+            <span class="small">Others</span>
             <span class="small">(<%= to_curr(entry.unuse) %>)</span>
           </div>
         <% end %>
@@ -121,7 +121,7 @@
         <% if entry.deposit > 0 %>
           <hr style="opacity: 1; border-color: black !important">
           <div class="<%= flex_justify_align('between') %>">
-            <span class="small">Deposit</span>
+            <span class="small">Total Sales</span>
             <span class="small"><%= to_curr(entry.deposit) %></span>
           </div>
         <% end %>
