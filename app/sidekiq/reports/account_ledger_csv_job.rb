@@ -23,7 +23,7 @@ class Reports::AccountLedgerCsvJob
 
     begin
       report = CSV.generate(headers: true) do |csv|
-        csv << ["Initial Balance", number_to_currency(@balance, unit: "")]
+        csv << Array.new(5, nil) + ["Initial Balance", number_to_currency(@balance, unit: "")]
         csv << ["Reference", "Date", "Payee", "Description", "Debit", "Credit", "Balance"]
 
         @searched_ledgers.each do |record|
@@ -34,7 +34,7 @@ class Reports::AccountLedgerCsvJob
           csv << [record.ledgerable&.reference, record.transaction_date.strftime("%B %d, %Y"), record.payee, record.description, number_to_currency(debit, unit: ""), number_to_currency(credit, unit: ""), number_to_currency(@balance, unit: "")]
         end
 
-        csv << ["End Balance", number_to_currency(@balance, unit: "")]
+        csv << Array.new(5, nil) + ["End Balance", number_to_currency(@balance, unit: "")]
       end
 
       File.open(save_path, 'wb') { |file|
