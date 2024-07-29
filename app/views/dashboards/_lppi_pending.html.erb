@@ -1,0 +1,44 @@
+<div class="modal fade" id="lppiModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+  <div class="modal-dialog modal-xl">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title text-center" id="staticBackdropLabel">
+          LPPI Pendings
+        </h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <table class="table table-striped">
+          <thead>
+            <th>Name</th>
+            <th>Loan Amount</th>
+            <th>Terms</th>
+            <th>Premium</th>
+            <th>Remarks</th>
+          </thead>
+          <tbody>
+            <% if @pending_lppi.count > 0 %>
+              <% @pending_lppi.each do |lppi| %>
+                <tr>
+                  <td><%= lppi.coop_member %></td>
+                  <td><%= to_currency(lppi.loan_amount) %></td>
+                  <td><%= lppi.terms %></td>
+                  <td><%= to_currency(lppi.premium) %></td>
+                  <td>
+                    <% if lppi.batch_remarks.present? %>
+                      <%= link_to "View Remarks", modal_remarks_process_coverage_path(lppi.group_remit.process_coverage, batch: lppi, batch_type: lppi.class.name), data: { turbo_frame: "reg_form_modal", turbo: true } %>
+                    <% end %>
+                  </td>
+                </tr>
+              <% end %>
+            <% else %>
+              <tr class="text-center">
+                <td colspan=5>NO RECORD(S).</td>
+              </tr>
+            <% end %>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>

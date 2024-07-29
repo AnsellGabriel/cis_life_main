@@ -288,9 +288,11 @@ class GroupRemit < ApplicationRecord
 
   def denied_principal_premiums
     if self.instance_of?(LoanInsurance::GroupRemit)
-      batches.where.not(insurance_status: :approved).sum(:premium_due)
+      # batches.where.not(insurance_status: :approved).sum(:premium_due)
+      batches.where(insurance_status: :denied).sum(:premium_due)
     else
-      batches.where.not(insurance_status: :approved).sum(:premium)
+      # batches.where.not(insurance_status: :approved).sum(:premium)
+      batches.where(insurance_status: :denied).sum(:premium)
     end
   end
 

@@ -54,3 +54,4 @@ production:
   database: cis_life_main_production
   username: cis_life_main
   password: <%= ENV["CIS_LIFE_MAIN_DATABASE_PASSWORD"] %>
+  socket: /var/run/mysqld/mysqld.sock

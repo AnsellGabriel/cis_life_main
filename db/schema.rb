@@ -1771,7 +1771,6 @@ ActiveRecord::Schema[7.0].define(version: 2024_07_26_074043) do
   add_foreign_key "dependent_health_decs", "batch_dependents"
   add_foreign_key "dependent_remarks", "batch_dependents"
   add_foreign_key "emp_approvers", "employees", column: "approver_id"
-  add_foreign_key "employees", "branches"
   add_foreign_key "employees", "departments"
   add_foreign_key "general_ledgers", "treasury_accounts", column: "account_id"
   add_foreign_key "general_ledgers", "treasury_sub_accounts", column: "sub_account_id"

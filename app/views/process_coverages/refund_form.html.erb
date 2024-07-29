@@ -1,0 +1,19 @@
+<%= turbo_frame_tag 'modal-xl' do %>
+  <div class="modal-header">
+    <%= content_tag :h5, class: 'modal-title text-primary' do %>
+      <%= bootstrap_icon "cash" %> Premium Refund
+    <% end %>
+    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+  </div>
+
+  <div class="modal-body">
+    <%= simple_form_for @process_coverage, url: refund_process_coverage_path(), method: :get do |f| %>
+      <%= f.input :request_type, as: :hidden, input_html: {value: @request_type} %>
+      <%= f.input :amount, input_html: {value: @amount} %>
+      <%= f.input :refund_type, as: :hidden, input_html: {value: @request_type} %>
+      <%= f.input :payment_type, as: :select, collection: [["Check Voucher", 0], ["Journal Voucher", 2]] %>
+
+      <%= f.submit "Request", class: "btn btn-primary" %>
+    <% end %>
+  </div>
+<% end %>

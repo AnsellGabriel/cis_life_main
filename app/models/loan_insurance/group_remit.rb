@@ -34,9 +34,10 @@ batch_status: "terminated")
           self.update_batch_coverages
 
           # net_prem = initial_gross_premium - (denied_principal_premiums + denied_dependent_premiums)
-
-          if self.gross_premium > approved_premiums
-            self.refund_amount = (self.gross_premium - approved_premiums) - ((self.gross_premium - approved_premiums) * (agreement.coop_sf / 100))
+          binding.pry
+          if denied_premiums > 0
+            self.refund_amount = denied_premiums
+            # self.refund_amount = (self.gross_premium - approved_premiums) - ((self.gross_premium - approved_premiums) * (agreement.coop_sf / 100))
           end
 
         else

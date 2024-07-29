@@ -31,6 +31,9 @@ class DashboardsController < ApplicationController
         @pending_lppi = LoanInsurance::Batch.get_pending_lppi(@coop_group_remits)
         @pending_gyrt = Batch.get_pending_gyrt(@coop_group_remits)
 
+        @group_remits_pending = @cooperative.group_remits.where(status: :pending)
+        
+
         #for graphs
         @age_bracket = [
           ["18-65", @cooperative.get_age_demo("regular")],

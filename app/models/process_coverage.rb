@@ -1,5 +1,5 @@
 class ProcessCoverage < ApplicationRecord
-  attr_accessor :premium, :loan_amount
+  attr_accessor :premium, :loan_amount, :payment_type
 
   belongs_to :group_remit
 

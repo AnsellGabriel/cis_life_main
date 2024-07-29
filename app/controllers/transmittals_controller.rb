@@ -13,7 +13,6 @@ class TransmittalsController < ApplicationController
 
     if current_user.is_mis?
       type = :mis
-
       if params[:e].present?
         @transmittals = Transmittal.where(transmittal_type: type, user: User.find(params[:e]))
       else

@@ -107,6 +107,45 @@
     <div class="row">
       <div class="col">
         <div class="card">
+          <div class="card-header text-secondary">PREMIUM REFUND</div>
+          <div class="card-body">
+            <div class="row">
+              <div class="col-6">
+                Requested
+              </div>
+              <div class="col-1">
+                :
+              </div>
+              <div class="col-2">
+                <%= @with_voucher_requests.count %>
+              </div>
+              <div class="col-2">
+                <%= link_to "View", "#", class: "btn btn-sm btn-primary", data: { turbo_frame: "modal-xl" } %>
+              </div>
+            </div>
+            <br>
+            <div class="row">
+              <div class="col-6">
+                Approved
+              </div>
+              <div class="col-1">
+                :
+              </div>
+              <div class="col-2">
+                <%= "0" %>
+              </div>
+              <div class="col-2">
+                <%= link_to "View", "#", class: "btn btn-sm btn-primary", data: { turbo_frame: "modal-xl" } %>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col">
+        <div class="card">
           <div class="card-header text-primary">
             <%= content_tag :h6, 'Notification Board', class: 'mb-0' %>
           </div>
