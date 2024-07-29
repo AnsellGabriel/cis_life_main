@@ -38,9 +38,7 @@
     <% end %>
     <%= content_tag :p do %>
       <strong>Status:</strong>
-      <%= process_status(@process_coverage.status) %> |
-      <strong>Reprocess:</strong>
-      <%= reprocess_stat(@process_coverage.reprocess) %>
+      <%= process_status(@process_coverage.status) %>
     <% end %>
     <%= content_tag :p do %>
       <strong>Total Net Premium <small>(Principal)</small>:</strong>
@@ -91,11 +89,11 @@
       <% end %>
     <%# end %>
     </div>
-    <% if current_user.analyst? && (process_coverage.approved? || process_coverage.denied?) %>
-      <%= link_to new_process_remark_path(ref: process_coverage, pro_status: "Reprocess", rem_status: "reprocess"), title: "Reprocess", class: "btn btn-sm btn-warning mb-2", data: { turbo_frame: "remote_modal" } do %>
-        <%= bootstrap_icon "arrow-repeat" %> Reprocess
-      <% end %>
-    <% end %>
+    <%# if current_user.analyst? && (process_coverage.approved? || process_coverage.denied?) %>
+      <%#= link_to new_process_remark_path(ref: process_coverage, pro_status: "Reprocess", rem_status: "reprocess"), title: "Reprocess", class: "btn btn-sm btn-warning mb-2", data: { turbo_frame: "remote_modal" } do %>
+        <%#= bootstrap_icon "arrow-repeat" %> <!-- Reprocess -->
+      <%# end %>
+    <%#end %>
     <%# if (current_user.head? || current_user.senior_officer?) && (process_coverage.reprocess_request?) %>
     <div class="<%= button_show_pc(current_user.rank, @process_coverage, @total_net_prem, "re_approve") %>">
       <%= link_to new_process_remark_path(ref: process_coverage, pro_status: "Reprocess", rem_status: "reprocess_approved"), title: "Reprocess", class: "btn btn-sm btn-warning mb-2", data: { turbo_frame: "remote_modal" } do %>
@@ -103,10 +101,6 @@
       <% end %>
     </div>
 
-    <%# end %>
-    <%# end %>
-    <%# unless process_coverage.group_remit.batches.where(insurance_status: "for_review").count == 0 %>
-    <%#= link_to "Approve All", approve_all_group_remit_batches_path(@group_remit,group_remit: process_coverage.group_remit, process_coverage: process_coverage), class: "btn btn-success", onclick: "return confirm('Are you sure?')", method: :get %>
-    <%# end %>
+    <%#= @process_coverage.group_remit.batches.where(insurance_status: :denied).count %>
   </div>
 </div>

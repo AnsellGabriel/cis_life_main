@@ -14,7 +14,9 @@ class ProcessRemark < ApplicationRecord
     for_vp_approval: 4,
     reprocess: 5,
     reprocess_approved: 6,
-    reassess: 7
+    reassess: 7,
+    refund_request: 8,
+    refund_approved: 9
   }
 
 end
