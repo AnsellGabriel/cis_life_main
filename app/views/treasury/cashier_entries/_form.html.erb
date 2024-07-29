@@ -25,11 +25,11 @@
         <%= f.input :insurance, as: :boolean, label: "Insurance", input_html: {data: { action: "input->hider#toggle", hider_target: "input" }} %>
         <input type="hidden" name="treasury_cashier_entry[vatable]" value="" autocomplete="off">
         <span class="d-flex gap-1 mb-3">
-          <input type="radio" value="true" name="treasury_cashier_entry[vatable]" id="treasury_cashier_entry_vat_true" data-action="input->hider#toggleVat" data-hider-target="vat">
+          <input type="radio" value="true" name="treasury_cashier_entry[vatable]" id="treasury_cashier_entry_vat_true" data-action="input->hider#toggleVat" data-hider-target="vat" <%= 'checked' if entry.vatable? %>>
           <label class="collection_radio_buttons" for="treasury_cashier_entry_vatable_true">VAT</label>
         </span>
         <span class="d-flex gap-1 mb-3">
-          <input type="radio" value="false" name="treasury_cashier_entry[vatable]" id="treasury_cashier_entry_vat_false" data-action="input->hider#toggleVat" data-hider-target="vatFalse" checked>
+          <input type="radio" value="false" name="treasury_cashier_entry[vatable]" id="treasury_cashier_entry_vat_false" data-action="input->hider#toggleVat" data-hider-target="vatFalse" <%= 'checked' unless entry.vatable? %>>
           <label class="collection_radio_buttons" for="treasury_cashier_entry_vatable_false">Non-VAT</label>
         </span>
       </div>

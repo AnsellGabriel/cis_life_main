@@ -43,6 +43,7 @@
       <th class="text-center">OR #</th>
       <th class="text-center" style="width: 8%; min-width: 110px">Date</th>
       <th>Payee</th>
+      <th class="text-center">Branch</th>
       <th class="text-center">Amount</th>
       <th class="text-center">Status</th>
     </tr>
@@ -55,6 +56,7 @@
           <td class="text-center"><%= link_to entry.or_no, entry.decorate.show_path(origin: 'index'), class: 'text-primary' %></td>
           <td class="text-center"><%= month_day_year(entry.or_date) %></td>
           <td><%= entry.entriable %></td>
+          <td class="text-center"><%= entry.branch&.name %></td>
           <td class="text-end"><%= to_curr(entry.amount) %></td>
           <td class="">
             <span class="<%= entry.decorate.status_badge %>"><%= entry.decorate.status.titleize %></span>

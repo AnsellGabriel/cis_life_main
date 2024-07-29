@@ -90,7 +90,8 @@ class Treasury::CashierEntriesController < ApplicationController
     end
 
     @entry.check_agreement
-    if @entry.save!
+
+    if @entry.save
       # if @entry.entriable_type == "Remittance"
       #   approve_payment(@group_remit.payments.last.id)
       # end
