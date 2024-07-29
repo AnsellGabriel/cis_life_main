@@ -4,7 +4,7 @@
 <%= render 'layouts/partials/nav_dropdown', title: 'Production' do %>
   <%= link_to "Cashier Entries", treasury_cashier_entries_path, class: "dropdown-item" %>
   <li><hr class="dropdown-divider"></li>
-  <%= link_to "For OR", payments_path	, class: "dropdown-item" %>
+  <%= link_to "For OR", payments_path(status: :for_review), class: "dropdown-item" %>
   <%= link_to "For Business Checks", requests_treasury_checks_path	, class: "dropdown-item" %>
   <%= link_to "For Debit Advices", treasury_debit_advices_path	, class: "dropdown-item" %>
 <% end %>

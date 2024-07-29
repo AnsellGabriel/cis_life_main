@@ -1,14 +1,14 @@
 class Treasury::CashierEntry < ApplicationRecord
   attr_accessor :dummy_payee, :dummy_entry_type, :product_check, :vat_check, :discount_check
-  before_save :add_deposit, :check_fields#, :format_or_no
+  before_save :add_deposit, :check_fields, :unique_or_no #, :format_or_no
 
-  validates_presence_of :or_no, :or_date, :treasury_account_id, :amount, :employee_id, :branch, :global_entriable
+  validates_presence_of :or_no, :or_date, :treasury_account_id, :amount, :employee_id, :branch_id, :global_entriable, :particulars
 
   enum status: { pending: 0, posted: 1, cancelled: 2, for_approval: 3}
   # enum branch: { head_office: 0, cagayan_de_oro: 1, iloilo: 2, davao: 3, }
 
   belongs_to :treasury_account, class_name: "Treasury::Account"
-  belongs_to :treasury_payment_type, class_name: "Treasury::PaymentType"
+  # belongs_to :treasury_payment_type, class_name: "Treasury::PaymentType", optional: true
   belongs_to :branch
   belongs_to :employee
   belongs_to :agent, optional: true
@@ -111,6 +111,15 @@ class Treasury::CashierEntry < ApplicationRecord
   def format_or_no
     self.or_no = sprintf("%06d", self.or_no.to_i) # "00001"
   end
+
+  def unique_or_no
+    if self.new_record?
+      if Treasury::CashierEntry.where(vatable: self.vatable, or_no: self.or_no).present?
+        errors.add(:or_no, "has already been taken")
+      end
+    end
+  end
+
 
   def self.ransackable_attributes(auth_object = nil)
     ["or_no"]

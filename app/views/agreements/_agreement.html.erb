@@ -101,9 +101,7 @@
     <% end %>
   </div>
 <% else %>
-  <%= link_to new_agreement_benefit_path(a_id: @agreement.id), class: "btn btn-primary btn-sm mb-2", data: { turbo_frame: "remote_modal" } do %>
-    Add Agreement Plan
-  <% end %>
+  <%= link_to 'Add Agreement Plan', new_agreement_benefit_path(a_id: @agreement.id), class: "btn btn-primary btn-sm mb-2", data: { turbo_frame: "remote_modal" } %>
   <div class="row">
     <% @agreement_benefits.each do |ab| %>
       <div class="col-md-4 mb-3">

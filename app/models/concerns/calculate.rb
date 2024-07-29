@@ -30,7 +30,7 @@ module Calculate
       self.premium = (((amount / 1000) * monthly_rate) * group_remit.terms)
       self.coop_sf_amount = calculate_service_fee(group_remit.get_coop_sf, self.premium)
 
-      set_agent_service(group_remit.get_agent_sf)
+      set_agent_service(group_remit)
     end
 
     def calculate_premium_and_fees(premium, group_remit)
@@ -41,14 +41,14 @@ module Calculate
       end
       self.coop_sf_amount = calculate_service_fee(group_remit.get_coop_sf, self.premium)
 
-      set_agent_service(group_remit.get_agent_sf)
+      set_agent_service(group_remit)
     end
 
     def manual_premium_and_fees(premium, group_remit)
       self.premium = premium.to_f
       self.coop_sf_amount = calculate_service_fee(group_remit.get_coop_sf, self.premium)
 
-      set_agent_service(group_remit.get_agent_sf)
+      set_agent_service(group_remit)
     end
 
     def calculate_service_fee(service_fee_percentage, premium)
@@ -63,11 +63,11 @@ module Calculate
       agreement_benefit.product_benefits.sum(:premium)
     end
 
-    def set_agent_service(service_fee)
-      if self.group_remits.last.agreement.comm_type == "Net Commission"
-        self.agent_sf_amount = calculate_service_fee(service_fee, self.premium - self.coop_sf_amount)
+    def set_agent_service(group_remit)
+      if group_remit.agreement.comm_type == "Net Commission"
+        self.agent_sf_amount = calculate_service_fee(group_remit.get_agent_sf, self.premium - self.coop_sf_amount)
       else
-        self.agent_sf_amount = calculate_service_fee(service_fee, self.premium)
+        self.agent_sf_amount = calculate_service_fee(group_remit.get_agent_sf, self.premium)
       end
     end
 

@@ -18,6 +18,7 @@ class Payments::EntriesController < ApplicationController
 
   def create
     @entry = @entries.new(entry_params.merge(employee: current_user.userable, insurance: true))
+    @entry.branch = current_user.userable.branch
     @payment_type = @payment.plan.acronym.downcase.include?("gyrt") ? "GYRT" : @payment.plan.acronym
 
     if @entry.save
@@ -55,7 +56,7 @@ class Payments::EntriesController < ApplicationController
   private
 
   def entry_params
-    params.require(:treasury_cashier_entry).permit(:treasury_payment_type_id, :deposit, :service_fee, :branch_id,:unuse, :dummy_payee, :dummy_entry_type, :or_no, :or_date, :treasury_account_id, :amount, general_ledgers_attributes: [:account_id, :amount, :ledger_type, :id, :_destroy])
+    params.require(:treasury_cashier_entry).permit(:vatable, :vatable_amount, :vat_exempt, :zero_rated, :vat, :particulars, :deposit, :service_fee, :branch_id,:unuse, :dummy_payee, :dummy_entry_type, :or_no, :or_date, :treasury_account_id, :amount, general_ledgers_attributes: [:account_id, :amount, :ledger_type, :id, :_destroy])
   end
 
   def set_payment_and_entries

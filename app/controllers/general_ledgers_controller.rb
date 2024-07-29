@@ -83,7 +83,7 @@ class GeneralLedgersController < ApplicationController
     @ledger = @ledgers.new(general_ledger_params)
 
     if params[:e_t] == 'ce'
-      @ledger.description = @ledger.ledgerable.treasury_payment_type.name
+      @ledger.description = @ledger.ledgerable.particulars
     else
       @ledger.description = @ledger.ledgerable.particulars
     end

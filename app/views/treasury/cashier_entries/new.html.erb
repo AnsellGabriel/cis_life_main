@@ -1,6 +1,6 @@
 <%= turbo_frame_tag "modal-lg" do %>
   <div class="modal-header">
-    <%= content_tag :h5, "New entry #{@group_remit.present? ? "for #{@group_remit.agreement.moa_no}" : ''}", class: "modal-title text-center", id: "staticBackdropLabel" %>
+    <%= content_tag :h5, "New Invoice #{@group_remit.present? ? "for #{@group_remit.agreement.moa_no}" : ''}", class: "modal-title text-center", id: "staticBackdropLabel" %>
     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
   </div>
   
