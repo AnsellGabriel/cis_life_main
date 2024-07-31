@@ -4,7 +4,7 @@ class GroupRemit < ApplicationRecord
   before_destroy :delete_associated_batches
 
   validates_presence_of :name # , :effectivity_date, :expiry_date, :terms
-  validates_uniqueness_of :official_receipt, allow_blank: true
+  # validates_uniqueness_of :official_receipt, allow_blank: true
 
   scope :batch_remits, -> { where(:type => "BatchRemit")}
   scope :loan_remits, -> { where(:type => "LoanInsurance::GroupRemit")}
@@ -472,6 +472,10 @@ class GroupRemit < ApplicationRecord
     else
       sum_approved_batches_premium - sum_approved_batches_sf
     end
+  end
+
+  def sum_refund_amount
+    (gross_premium - approved_premiums) - ((gross_premium - approved_premiums) * (agreement.coop_sf / 100))
   end
 
   def get_or_date

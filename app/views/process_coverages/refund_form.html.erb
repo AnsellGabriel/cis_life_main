@@ -5,13 +5,14 @@
     <% end %>
     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
   </div>
-
+ 
   <div class="modal-body">
     <%= simple_form_for @process_coverage, url: refund_process_coverage_path(), method: :get do |f| %>
       <%= f.input :request_type, as: :hidden, input_html: {value: @request_type} %>
       <%= f.input :amount, input_html: {value: @amount} %>
       <%= f.input :refund_type, as: :hidden, input_html: {value: @request_type} %>
-      <%= f.input :payment_type, as: :select, collection: [["Check Voucher", 0], ["Journal Voucher", 2]] %>
+      <%= f.input :payment_type, as: :select, collection: [["Check Voucher", 0], ["Bank Transfer", 1]] %>
+      <%= f.input :particulars, as: :text %>
 
       <%= f.submit "Request", class: "btn btn-primary" %>
     <% end %>

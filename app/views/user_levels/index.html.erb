@@ -18,6 +18,7 @@
         <tr>
           <th scope="row"><%= user_level.id %></th>
           <td><%= user_level.user.get_fullname %> <br>
+          <small><i><%= user_level.user.email %></i></small><br>
  <small><%= user_level.user.userable.designation %></small> <br>
             <small><%= user_level.authority_level.name %> - <%= to_currency(user_level.authority_level.maxAmount) %></small> <br>
             <small><%= badge_pill(user_level.active) %></small></td>

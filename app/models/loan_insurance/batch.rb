@@ -354,6 +354,16 @@ class LoanInsurance::Batch < Batch
     where(group_remit: group_remits).where(insurance_status: :pending)
   end
 
+  def get_or_number
+    approved_payments = self.group_remit.payments.approved
+    group_remit.official_receipt.present? ? group_remit.official_receipt : approved_payments.first.nil? ? "-" : approved_payments.first.entries.first&.or_no
+  end
+
+  def get_or_date
+    approved_payments = self.group_remit.payments.approved
+    approved_payments.first.nil? ? "-" : approved_payments.first.entries.first&.or_date
+  end
+
   private
 
   def skip_validation

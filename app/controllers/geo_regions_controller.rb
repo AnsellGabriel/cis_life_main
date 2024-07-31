@@ -24,7 +24,8 @@ class GeoRegionsController < ApplicationController
     @geo_region = GeoRegion.new(geo_region_params)
 
     if @geo_region.save
-      redirect_to @geo_region, notice: "Geo region was successfully created."
+      # redirect_to @geo_region, notice: "Geo region was successfully created."
+      redirect_to geo_regions_path, notice: "Geo region was successfully created."
     else
       render :new, status: :unprocessable_entity
     end
@@ -33,7 +34,8 @@ class GeoRegionsController < ApplicationController
   # PATCH/PUT /geo_regions/1
   def update
     if @geo_region.update(geo_region_params)
-      redirect_to @geo_region, notice: "Geo region was successfully updated."
+      # redirect_to @geo_region, notice: "Geo region was successfully updated."
+      redirect_to geo_regions_path, notice: "Geo region was successfully updated."
     else
       render :edit, status: :unprocessable_entity
     end

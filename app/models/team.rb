@@ -5,6 +5,7 @@ class Team < ApplicationRecord
   has_many :agreements, through: :emp_agreements
   has_many :notifications, as: :notifiable, dependent: :destroy
   has_many :process_coverages
+  belongs_to :branch
 
   def to_s
     name

@@ -73,12 +73,12 @@ class ProcessCoveragesController < ApplicationController
       # @for_process_coverages = @process_coverages_x.where(processor: nil)
       # @approved_process_coverages = @process_coverages_x.where(status: :approved, who_approved: current_user.userable)
       @approved_process_coverages = @process_coverages_team.where(status: :approved).where(@arel_pcs[:who_approved_id].eq(current_user.userable_id).or(@arel_pcs[:who_processed_id].eq(current_user.userable_id).and(@arel_pcs[:who_approved_id].not_eq(nil))))
+      @denied_process_coverages = @process_coverages_team.where(status: :denied).where(@arel_pcs[:who_approved_id].eq(current_user.userable_id).or(@arel_pcs[:who_processed_id].eq(current_user.userable_id).and(@arel_pcs[:who_approved_id].not_eq(nil))))
       # @pending_process_coverages = ProcessCoverage.where(status: :pending)
       @reprocess_coverages = @process_coverages_team.where(status: :reprocess)
       @reassess_coverages = @process_coverages_team.where(status: :reassess)
-      @denied_process_coverages = @process_coverages_team.where(status: :denied)
       @evaluated_process_coverages = @process_coverages_team.where(status: [:for_head_approval, :for_vp_approval])
-      @selected_process_coverages = @process_coverages_team.where(processor: current_user.userable, status: [:pending, :for_process])
+      @selected_process_coverages = @process_coverages_team.where(processor: current_user.userable, status: [:pending, :for_process, :for_head_approval, :for_vp_approval])
 
       @coverages_total_processed = ProcessCoverage.where(status: [:approved, :denied, :reprocess])
 
@@ -133,7 +133,7 @@ class ProcessCoveragesController < ApplicationController
     end
     
     @pagy_pc, @filtered_pc = pagy(@process_coverages.order(@arel_pcs[:processor_id].eq(current_user.userable_id).desc), items: 5, page_param: :process_coverage, link_extra: 'data-turbo-frame="pro_cov_pagination"')
-    @notifications = current_user.userable.team.notifications.where(created_at: @current_date.beginning_of_week..@current_date.end_of_week)
+    @notifications = current_user.userable.team.notifications.where(created_at: @current_date.beginning_of_week..@current_date.end_of_week) unless current_user.senior_officer?
     # if params[:search].present?
     #   @process_coverages = @process_coverages_x.joins(group_remit: {agreement: :cooperative}).where("group_remits.name LIKE ? OR group_remits.description LIKE ? OR agreements.moa_no LIKE ? OR cooperatives.name LIKE ?", "%#{params[:search]}%", "%#{params[:search]}%", "%#{params[:search]}%", "%#{params[:search]}%")
     # else
@@ -253,6 +253,10 @@ class ProcessCoveragesController < ApplicationController
     end
 
     @process_coverages = case params[:cov_type]
+      when "All"
+        if current_user.senior_officer?
+          ProcessCoverage.all
+        end
       when "For Process"
         # ProcessCoverage.where(status: :for_process, created_at: start_date..end_date)
         if current_user.head?
@@ -321,6 +325,12 @@ class ProcessCoveragesController < ApplicationController
         elsif current_user.senior_officer?
           ProcessCoverage.where(status: :denied, created_at: start_date..end_date)
         end
+
+      when "Pending"
+        if current_user.senior_officer?
+          ProcessCoverage.where(status: [:pending, :for_vp_approval, :for_head_approval])
+        end
+
       when "head approval" then ProcessCoverage.for_head_approvals(current_user) #(current_user, current_user.userable_id)# where(status: :for_head_approval)
       when "vp approval" then ProcessCoverage.for_vp_approvals(current_user) #(current_user, current_user.userable_id)# where(status: :for_head_approval)
                          end
@@ -625,8 +635,9 @@ class ProcessCoveragesController < ApplicationController
     if request_type.present?
       amount = params[:process_coverage][:amount].to_f
       payment_type = params[:process_coverage][:payment_type].to_i
+      particulars = params[:process_coverage][:particulars]
       
-      request = VoucherRequestService.new(@process_coverage, amount, :refund, current_user, payment_type, nil, request_type)
+      request = VoucherRequestService.new(@process_coverage, amount, :refund, current_user, payment_type, nil, request_type, particulars)
     else
       request = VoucherRequestService.new(@process_coverage, @process_coverage.group_remit.refund_amount, :refund, current_user)
     end

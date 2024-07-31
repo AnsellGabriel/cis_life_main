@@ -89,11 +89,11 @@ module CsvGenerator
 
   def ri_data(data, ri_start, ri_end)
     # raise 'errors'
-    months = (ri_start..ri_end).map { |d| d.strftime("%B") }.uniq
+    # months = (ri_start..ri_end).map { |d| d.strftime("%B") }.uniq
     csv_data = CSV.generate(headers: true) do |csv|
       # csv << ["Code", "Cooperative", "CoopMember Code", "Member Code", "Last Name", "First Name", "MI", "Suffix", "Birthday", "Age", "Gender", "Effectivity", "Expiry", "Terms", "Loan Amount", "Premium", "RI Effect", "RI Expire", "RI Terms"]
-      header_row = ["Code", "Cooperative", "CoopMember Code", "Member Code", "Last Name", "First Name", "MI", "Suffix", "Birthday", "Age", "Gender", "Effectivity", "Expiry", "Terms", "Loan Amount", "Premium", "RI Effect", "RI Expire", "RI Terms"]
-      header_row += months
+      header_row = ["Coverage Code", "Cooperative", "CoopMember Code", "Member Code", "Last Name", "First Name", "MI", "Suffix", "Birthday", "Age", "Gender", "Effectivity", "Expiry", "Terms", "Loan Amount", "Premium", "RI Effect", "RI Expire", "RI Terms", "O.R. No.", "O.R. Date", "URD Status", "R.I. Date", "Terminated due to unused", "Fully paid Date"]
+      # header_row += months
       csv << header_row
 
       data.each do |record|
@@ -118,16 +118,19 @@ module CsvGenerator
             ri_batch.batch&.premium_due,
             ri_batch&.ri_effectivity,
             ri_batch&.ri_expiry,
-            ri_batch&.ri_terms
+            ri_batch&.ri_terms,
+            ri_batch&.batch&.get_or_number,
+            ri_batch&.batch&.get_or_date
           ]
         end
-        months.each do |ctr|
-          date = Date.parse(ctr)
-          monthly_total += [(record.sum_loan_amount_per_month(date.beginning_of_month, date.end_of_month) - @retention_limit)]
-        end
-        empty_columns_count = ["Code", "Cooperative", "CoopMember Code", "Member Code", "Last Name", "First Name", "MI", "Suffix", "Birthday", "Age", "Gender", "Effectivity", "Expiry", "Terms", "Loan Amount", "Premium", "RI Effect", "RI Expire", "RI Terms"].count - 2
-        empty_columns = [""] * empty_columns_count
-        csv << empty_columns + [ "RI Amount: ", (record.sum_loan_amount - @retention_limit)] + monthly_total
+        # months.each do |ctr|
+        #   date = Date.parse(ctr)
+        #   monthly_total += [(record.sum_loan_amount_per_month(date.beginning_of_month, date.end_of_month) - @retention_limit)]
+        # end
+        # empty_columns_count = header_row.count - 2
+        # empty_columns_count = ["Code", "Cooperative", "CoopMember Code", "Member Code", "Last Name", "First Name", "MI", "Suffix", "Birthday", "Age", "Gender", "Effectivity", "Expiry", "Terms", "Loan Amount", "Premium", "RI Effect", "RI Expire", "RI Terms"].count - 2
+        # empty_columns = [""] * empty_columns_count
+        # csv << empty_columns + [ "RI Amount: ", (record.sum_loan_amount - @retention_limit)] + monthly_total
       end
     end
     csv_data
