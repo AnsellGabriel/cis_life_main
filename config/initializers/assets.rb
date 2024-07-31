@@ -14,5 +14,4 @@ Rails.application.config.assets.precompile += %w( jquery.js )
 Rails.application.config.assets.precompile += %w(bootstrap.min.js popper.js)
 Rails.application.config.assets.precompile += %w(.png)
 
-
 ActiveRecord::Base.store_base_sti_class = false
