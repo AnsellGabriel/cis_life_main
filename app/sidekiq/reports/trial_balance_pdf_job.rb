@@ -3,7 +3,7 @@ class Reports::TrialBalancePdfJob
 
   def perform(employee_id, date_from, date_to)
     employee = Employee.find(employee_id)
-    save_path = Rails.root.join("#{Rails.env}/public/uploads/employee/report/#{employee_id}", "trial_balance.pdf")
+    save_path = Rails.root.join("/public/uploads/employee/report/#{employee_id}", "trial_balance.pdf")
     employee.delete_uploaded_report
     FileUtils.mkdir_p(File.dirname(save_path))
     date_range = date_from&.to_date..date_to&.to_date
