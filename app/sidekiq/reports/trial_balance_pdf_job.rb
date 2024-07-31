@@ -4,18 +4,8 @@ class Reports::TrialBalancePdfJob
   def perform(employee_id, date_from, date_to)
     employee = Employee.find(employee_id)
     save_path = Rails.root.join("public/uploads/employee/report/#{employee_id}", "trial_balance.pdf")
-
-    # if File.exist?(save_path)
-    #   broadcast_download(employee)
-    #   return
-    # else
-    #   employee.delete_uploaded_report
-    #   FileUtils.mkdir_p(File.dirname(save_path))
-    # end
-
     employee.delete_uploaded_report
     FileUtils.mkdir_p(File.dirname(save_path))
-
     date_range = date_from&.to_date..date_to&.to_date
     initialize_variables
 
@@ -48,7 +38,7 @@ class Reports::TrialBalancePdfJob
       broadcast_download(employee)
     rescue => e
       # Handle errors (e.g., log the error, send a notification, etc.)
-      Rails.logger.error("Error generating PDF: #{e.message}")
+      Rails.logger.error("Save path: #{save_path}, Error generating PDF: #{e.message}")
     end
   end
 
