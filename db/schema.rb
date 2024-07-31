@@ -1075,7 +1075,7 @@ ActiveRecord::Schema[7.0].define(version: 2024_07_22_064709) do
     t.decimal "agent_sf_amount", precision: 10, scale: 2
     t.boolean "valid_health_dec", default: false
     t.decimal "loan_amount", precision: 10, scale: 2
-    t.bigint "loan_insurance_rate_id", null: false
+    t.bigint "loan_insurance_rate_id"
     t.boolean "reinsurance"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
@@ -1544,6 +1544,8 @@ ActiveRecord::Schema[7.0].define(version: 2024_07_22_064709) do
     t.string "description"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.bigint "branch_id"
+    t.index ["branch_id"], name: "index_teams_on_branch_id"
   end
 
   create_table "transmittal_ors", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
@@ -1810,6 +1812,7 @@ ActiveRecord::Schema[7.0].define(version: 2024_07_22_064709) do
   add_foreign_key "read_messages", "claim_remarks"
   add_foreign_key "read_messages", "users"
   add_foreign_key "sip_pbs", "plan_units"
+  add_foreign_key "teams", "branches"
   add_foreign_key "transmittals", "users"
   add_foreign_key "treasury_billing_statements", "treasury_cashier_entries", column: "cashier_entry_id"
   add_foreign_key "treasury_business_checks", "accounting_vouchers", column: "voucher_id"

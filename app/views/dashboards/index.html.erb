@@ -20,6 +20,10 @@
           <%= render 'mis' %>
       <% when 11 %>
           <%= render 'accounting' %>
+      <% when 13 %>
+        <% if current_user.senior_officer? %>
+          <%= render 'coso' %>
+        <% end %>
     <% end %>
   <% end %>
 </div>

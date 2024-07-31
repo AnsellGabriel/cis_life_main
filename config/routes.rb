@@ -131,6 +131,7 @@ Rails.application.routes.draw do
     get :coop, on: :collection
     get :treasury, on: :collection
     get :accounting, on: :collection
+    get :coso, on: :collection
     get :admin, on: :collection
   end
   

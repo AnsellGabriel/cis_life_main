@@ -1,0 +1,92 @@
+<div class="row">
+  <div class="col-md-4 mb-3">
+    <div class="card text-dark bg-light mb-3 h-100">
+      <div class="card-body">
+        <small class="text-muted">We’d like to remind you of your current authority level. Here are the details:</small><br>
+        <dl class="row">
+          <% @user_levels.each do |ul| %>
+            <dt class="col-sm-8"><small><%= ul.authority_level.name %>:</small></dt>
+            <dd class="col-sm-4"><%= to_curr(ul.authority_level.maxAmount) %></dd>
+          <% end %>
+        </dl>
+      </div>
+      <div class="card-footer"><small>
+        <%= link_to "Cooperative", cooperatives_path, class: "link-primary" %> |
+        <%= link_to "Claim Type", claims_claim_types_path, class: "link-primary" %> |
+        <%= link_to "Authority Level", authority_levels_path, class: "link-primary" %> 
+      </small></div>
+    </div>
+  </div>
+  <div class="col-md-8 mb-3">
+    <div class="card-group h-100">
+      <div class="card bg-info">
+        <div class="card-body">
+          <p class="text-dark card-title">OVERALL</p>
+          <h2 class="text-dark"><%= @process_coverages.count %></h2>
+          <small class="text-dark"><%= to_currency(@total_gross_premium) %></small>
+        </div>
+        <div class="card-footer"><small> <%= link_to 'See Details <i class="bi bi-box-arrow-right"></i>'.html_safe, cov_list_process_coverages_path(cov_type: "All", current_date: @current_date, date_type: "yearly", title: "OVERALL"), class: "text-dark", data: {turbo_frame: "remote_modal"} %></small></div>
+      </div>
+      <div class="card bg-success">
+        <div class="card-body">
+          <p class="text-light card-title">APPROVED</p>
+          <h2 class="text-light"><%= @approved_pcs.count %></h2>
+          <small class="text-light"><%= to_currency(@total_approved_gross_premium) %></small>
+        </div>
+        <div class="card-footer"><small> <%= link_to 'See Details <i class="bi bi-box-arrow-right"></i>'.html_safe, index_show_claims_process_claims_path(s: 0), class: "text-light" %></small></div>
+      </div>
+      <div class="card bg-danger">
+        <div class="card-body">
+          <p class="text-light card-title">DENIED</p>
+          <h2 class="text-light"><%= @denied_pcs.count %></h2>
+          <small class="text-light"><%= to_currency(@total_denied_gross_premium) %></small>
+        </div>
+        <div class="card-footer"><small> <%= link_to 'See Details <i class="bi bi-box-arrow-right"></i>'.html_safe, index_show_claims_process_claims_path(s: 1), class: "text-light" %></small></div>
+      </div>
+      <div class="card bg-warning">
+        <div class="card-body">
+          <p class="card-title">PENDING</p>
+          <h2><%= @pending_pcs.count %></h2>
+        </div>
+        <div class="card-footer"><small class="text-muted"> <%= link_to 'See Details <i class="bi bi-box-arrow-right"></i>'.html_safe, cov_list_process_coverages_path(cov_type: "Pending", current_date: @current_date, date_type: "yearly", title: "PENDING"), class: "text-dark", data: {turbo_frame: "remote_modal"} %></small></div>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="row">
+  <div class="col-md-6">
+    <div class="row">
+      <div class="col-md-6 mb-3">
+          <div class="card text-dark bg-info h-100">
+          <div class="card-body">
+              <% if @pending_pcs.where(status: :for_vp_approval).count == 0 %>
+                  <h5 class="card-title">Great news,</h5>
+                  <small class="text-muted">You currently have no pending processing sheet for evaluation. Keep up the excellent work!</small>
+              <% else %>
+                  <h5 class="card-title">For C.O.S.O. Approval</h5>
+                  <small>While you were away, the following claims have been assigned to you for evaluation:</small><br>
+                  <h2 class="text-center mt-3"><%= link_to @pending_pcs.where(status: :for_vp_approval).count, cov_list_process_coverages_path(cov_type: "vp approval", current_date: @current_date, date_type: "yearly", title: "For C.O.S.O. Approval"), class: "text-dark", data: {turbo_frame: "remote_modal"} %></h2>
+              <% end %>
+          </div>
+          <div class="card-footer">
+              <%#= link_to 'See Details <i class="bi bi-box-arrow-right"></i>'.html_safe, index_show_claims_process_claims_path(p: get_route_evaluators), class: "text-dark" %>     
+          </div>
+          </div>
+          
+      </div>
+      <div class="col-md-6 mb-3">
+        <div class="card border-primary mb-3 h-100">
+          <div class="card-body text-primary">
+            <h5 class="card-title">Messages <i class="bi bi-chat-dots"></i></h5>
+              <small class="card-text">Fantastic! You have no new cooperative messages at the moment.</small>
+              <small class="card-text">You've received a cooperative message that requires your attention.</small>
+              <h2 class="text-center mt-3"><%#= @coop_messages.where(read: 0).where.not(user: current_user).count unless @coop_messages.nil? %></h2>
+          </div>
+          <div class="card-footer"><%#= link_to 'Go to Messages <i class="bi bi-box-arrow-right"></i>'.html_safe, unread_messages_claims_claim_remarks_path, class: "text-primary" %></div>
+        </div>
+      </div>
+    </div>
+      
+  </div>
+</div>
+  

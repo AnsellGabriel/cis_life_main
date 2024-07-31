@@ -20,10 +20,15 @@ batch_status: "terminated")
   end
 
   def set_total_premiums_and_fees
-    self.gross_premium = approved_premium_due
-    self.coop_commission = approved_coop_commissions
-    self.agent_commission = approved_agent_commissions
-    self.net_premium = approved_premium_due - approved_coop_commissions - approved_agent_commissions
+    # self.gross_premium = approved_premium_due
+    # self.coop_commission = approved_coop_commissions
+    # self.agent_commission = approved_agent_commissions
+    # self.net_premium = approved_premium_due - approved_coop_commissions - approved_agent_commissions
+
+    self.gross_premium = commisionable_premium
+    self.coop_commission = total_coop_commissions
+    self.agent_commission = total_agent_commissions
+    self.net_premium = computed_net_premium
 
     unless self.type == "BatchRemit"
 
@@ -34,7 +39,6 @@ batch_status: "terminated")
           self.update_batch_coverages
 
           # net_prem = initial_gross_premium - (denied_principal_premiums + denied_dependent_premiums)
-          binding.pry
           if denied_premiums > 0
             self.refund_amount = denied_premiums
             # self.refund_amount = (self.gross_premium - approved_premiums) - ((self.gross_premium - approved_premiums) * (agreement.coop_sf / 100))

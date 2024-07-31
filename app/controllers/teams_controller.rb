@@ -46,7 +46,7 @@ class TeamsController < ApplicationController
   # PATCH/PUT /teams/1
   def update
     if @team.update(team_params)
-      redirect_to @team, notice: "Team was successfully updated.", status: :see_other
+      redirect_to teams_path, notice: "Team was successfully updated.", status: :see_other
     else
       render :edit, status: :unprocessable_entity
     end
@@ -66,6 +66,6 @@ class TeamsController < ApplicationController
 
     # Only allow a list of trusted parameters through.
     def team_params
-      params.require(:team).permit(:name, :description)
+      params.require(:team).permit(:name, :description, :branch_id)
     end
 end
