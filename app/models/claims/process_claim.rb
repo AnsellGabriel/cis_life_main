@@ -2,11 +2,17 @@ class Claims::ProcessClaim < ApplicationRecord
   attr_accessor :batch_id, :coop_bank
   before_destroy :remove_from_loan_batch
 
-  validates_presence_of :cooperative_id, :agreement_id, :entry_type, :claimant_name, :claimant_email, :claimant_contact_no, :date_incident
+  validates_presence_of :cooperative_id, :agreement_id, :entry_type, :date_incident
 
   def to_s
     coop_member.full_name.titleize
   end
+
+  scope :grouped_benefits_sum, -> {
+    joins(claim_benefits: :benefit)
+    .select('benefits.name, SUM(claim_benefits.amount) AS total_amount')
+    .group('benefits.name')
+  }
 
   enum nature_of_claim: {
     LIFE: 0, # Life
@@ -36,7 +42,9 @@ class Claims::ProcessClaim < ApplicationRecord
     process: 4,
     denied_due_to_non_compliance: 5,
     reconsider_approved: 6,
-    reconsider_denied: 7
+    reconsider_denied: 7,
+    assessment: 8,
+    filing: 9
   }
 
   enum claimant_relation: {
@@ -82,7 +90,7 @@ class Claims::ProcessClaim < ApplicationRecord
   ["age", "agreement_benefit_id", "agreement_id", "approval", "cause_id", "claim_filed", "claim_route", "claim_type_id", "claim_type_nature_id", "claimant_contact_no", "claimant_email", "claimant_name", "coop_member_id", "cooperative_id", "created_at", "date_file", "date_incident", "entry_type", "id", "payment", "payout_type", "processing", "relationship", "status", "updated_at"]
   end
   def self.ransackable_associations(auth_object = nil)
-    ["cooperative", "coop_member"]
+    ["cooperative", "coop_member", "insurable"]
   end
 
   def self.get_route (i)
@@ -160,8 +168,8 @@ class Claims::ProcessClaim < ApplicationRecord
     end
   end
 
-  # belongs_to :claimable, polymorphic: true
-  belongs_to :coop_member
+  belongs_to :insurable, polymorphic: true
+  # belongs_to :coop_member
   belongs_to :cooperative
   belongs_to :agreement
   belongs_to :agreement_benefit, optional: true

@@ -1,6 +1,9 @@
 module ApplicationHelper
   include Pagy::Frontend
 
+  def to_number(amount) 
+    number_to_currency(amount.to_i, precision: 0, delimiter: ',')
+  end
   def to_currency(amount)
     number_to_currency(amount, locale: :ph)
   end

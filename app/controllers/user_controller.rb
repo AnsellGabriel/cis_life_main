@@ -1,8 +1,15 @@
 class UserController < ApplicationController
-
+	before_action :set_user, only: %i[ show edit update destroy ]
     def index 
-			@users = User.where(approved: 0)
-    end
+			# @users = User.all
+			@q = User.ransack(params[:q])
+			# @q = User.ransack(userable_of_Employee_type_last_name_or_userable_of_Employee_type_first_name)
+			# raise 'errors'
+			@users = @q.result(distinct: true)
+	
+			# use pagy
+			@pagy, @users = pagy(@users, items: 10)
+		end 
 
     def admin_dashboard
 			@for_approved_users = User.where(approved: false)
@@ -27,4 +34,18 @@ class UserController < ApplicationController
 				end
 			end
 		end
+
+		def destroy
+			# if @user.userable_type == "CoopUser"
+			# 	@coop_user = Coop
+			# end
+			# @user.destroy
+    	redirect_to user_url, notice: "User was successfully destroyed, Joke only.", status: :see_other
+		end
+
+		private
+
+			def set_user 
+				@user = User.find(params[:id])
+			end
 end

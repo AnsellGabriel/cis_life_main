@@ -50,7 +50,7 @@ class ProcessCoveragesController < ApplicationController
       @denied_process_coverages = @process_coverages_x.where(status: :denied)
 
       @coverages_total_processed = ProcessCoverage.where(status: [:approved, :denied, :reprocess])
-      
+
       if params[:search].present?
         @process_coverages = @process_coverages_x.joins(group_remit: {agreement: :cooperative}).where(
         "group_remits.name LIKE ? OR group_remits.description LIKE ? OR agreements.moa_no LIKE ? OR cooperatives.name LIKE ? OR cooperatives.acronym LIKE ?", "%#{params[:search]}%", "%#{params[:search]}%", "%#{params[:search]}%", "%#{params[:search]}%", "%#{params[:search]}%")
@@ -86,7 +86,7 @@ class ProcessCoveragesController < ApplicationController
 
       @process_coverages_x = @self_process_coverages
 
-      @md_reviewed= 0 
+      @md_reviewed= 0
 
       @for_md_review = 0
       @reviewed_batch = []
@@ -131,7 +131,7 @@ class ProcessCoveragesController < ApplicationController
       @analysts = @analysts_x.joins(:emp_approver)
       # @analysts = @analysts_x.joins(:emp_approver).where(emp_approver: { approver: current_user.userable_id })
     end
-    
+
     @pagy_pc, @filtered_pc = pagy(@process_coverages.order(@arel_pcs[:processor_id].eq(current_user.userable_id).desc), items: 5, page_param: :process_coverage, link_extra: 'data-turbo-frame="pro_cov_pagination"')
     @notifications = current_user.userable.team.notifications.where(created_at: @current_date.beginning_of_week..@current_date.end_of_week) unless current_user.senior_officer?
     # if params[:search].present?

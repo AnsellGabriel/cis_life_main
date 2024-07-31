@@ -11,7 +11,7 @@ class Payment < ApplicationRecord
   enum status: { for_review: 0, approved: 1, rejected: 2 }
 
   def to_s
-    coop.name
+    coop&.name
   end
 
   def reject
@@ -42,7 +42,7 @@ class Payment < ApplicationRecord
   # end
 
   def coop
-    payable.agreement.cooperative
+    payable&.agreement&.cooperative
   end
 
   def plan

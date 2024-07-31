@@ -66,7 +66,7 @@
         <% i += 1 %>
       <% end %>
       <tr>
-        <td colspan="3" class="table-active border-top border-primary"> <small>Total</small> </td>
+        <td colspan="5" class="table-active border-top border-primary"> <small>Total</small> </td>
         <td class="text-end text-primary border-top border-primary"><small><%= to_curr(@process_claim.claim_coverages.where(coverage_type: "Current").sum(:amount)) %></small></td>
         <td class="text-end text-primary border-top border-primary"><small><%= to_curr(@process_claim.claim_coverages.where(coverage_type: "Current").sum(:amount_cover)) %></small></td>
       </tr>
@@ -78,6 +78,7 @@
       </tr>
       <% previous.each do |cc| %>
         <tr>
+          <td><%= i %></td>
           <td><%= cc.orno %> <br>
             <small><%= to_shortdate(cc.or_date) %></small></td>
           <td><%= cc.bsno %> <br>
@@ -85,9 +86,7 @@
           <td><small><%= to_shortdate(cc.effectivity) %></small> </td>
           <td><small><%= to_shortdate(cc.expiry) %></small></td>
           <td class="text-end"> <small><%= to_curr(cc.amount) %></small> </td>
-          <td class="text-end"> <small><%= to_curr(cc.amount_cover) %></small> </td>
-          <td><small><%= cc.status %></small>  </td>
-          <% unless params[:action] == 'show_coop' %>
+           <% i += 1 %>
             <td class="text-end">
               <%#= link_to 'View', benefit_claim, class: 'btn' %>
               <% unless params[:action] == 'evaluate' %>
@@ -95,7 +94,6 @@
                 <%= link_to '<i class="bi bi-trash3"></i>'.html_safe, cc, method: :delete, data: { confirm: 'Are you sure?' }, class: 'btn btn-danger btn-sm' %>
               <% end %>
             </td>
-          <% end %>
         </tr>
       <% end %>
     <% end %>
@@ -107,3 +105,5 @@
   </tr>
 </tbody>
 </table>
+
+<%#= console %>

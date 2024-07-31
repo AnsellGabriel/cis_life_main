@@ -3,13 +3,9 @@
     <%= f.error_notification %>
     <%= f.error_notification message: f.object.errors[:base].to_sentence if f.object.errors[:base].present? %>
     <div class="form-inputs">
-      <%#= f.association :agreement %>
-      <%#= f.association :plan %>
-      <%#= f.association :proposal %>
-      <%#= f.association :option %>
+      <%= f.select :insured_type, options_for_select(AgreementBenefit.insured_types.keys.map { |key| [key.humanize, key] }), { prompt: 'Select Type' }, { class: 'form-control mb-3' } %>
       <%= f.input :name %>
       <%= f.input :description %>
-      <%= f.select :insured_type, options_for_select(AgreementBenefit.insured_types.keys.map { |key| [key.humanize, key] }), { prompt: 'Select Type' }, { class: 'form-control' } %>
       <div class="row">
         <%= f.input :min_age, wrapper_html: { class: "col-md-4" } %>
         <%= f.input :max_age, wrapper_html: { class: "col-md-4" } %>
@@ -18,12 +14,6 @@
       <%#= f.input :insured_type, collection: AgreementBenefit::InsuredType %>
       <%= f.input :with_dependent, label: 'With Dependents?' %>
     </div>
-    <%# <div class="product_benefits"> %>
-    <%#= f.fields_for :product_benefits do |pb| %>
-      <%#= render 'product_benefit_fields', f: pb %>
-      <%# end %>
-      <%# </div> %>
-      <%#= link_to_add_association "Add Benefits", f, :product_benefits, data: {association_insertion_node: '.product_benefits', form_name: "f", association_insertion_method: :append } %>
       <br>
       <div class="form-actions text-end">
         <%= link_to "Back", :back, class: 'btn btn-secondary' %>

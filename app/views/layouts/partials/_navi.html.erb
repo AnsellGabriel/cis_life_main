@@ -25,92 +25,85 @@
             <% end %>
           <% else %>
             <% case current_user.userable.department_id %>
-            <% when 11 %>
-              <%= render 'layouts/partials/accounting_nav' %>
-            <% when 26 %>
-              <%= render 'layouts/partials/treasury_nav' %>
-            <% when 15 %>
-              <%= link_to "Members Database", mis_members_path, class: "nav-link" %>
-              <%= render 'layouts/partials/nav_dropdown', title: 'Data Entries' do %>
-                <%= link_to "Agreement", agreements_path, class: "dropdown-item" %>
-                <%= link_to "Cooperative", cooperatives_path, class: "dropdown-item" %>
-                <%= link_to "Transmittal", transmittals_path, class: "dropdown-item" %>
-              <% end %>
-            <% when 27 %>
-              <%= render 'layouts/partials/nav_dropdown', title: 'Audit' do %>
-                <%= link_to "For Audit", audit_for_audits_path, class: "dropdown-item" %>
-              <% end %>
-            <% when 17 %>
-              <%= render 'layouts/partials/nav_dropdown', title: 'Underwriting' do %>
-                <%= link_to "Agreement", agreements_path, class: "dropdown-item" %>
-                <%= link_to "Process", process_coverages_path, class: "dropdown-item" %>
-                <%= link_to "Transmittal", transmittals_path, class: "dropdown-item" %>
-                <%#= link_to "Generate CSV", gen_csv_process_coverages_path, class: "dropdown-item", data: { turbo_frame: "remote_modal" } %>
-                <% if current_user.medical_director? %>
-                  <%= link_to "Medical Director", med_directors_home_path, class: "dropdown-item" %>
+              <% when 11 %>
+                <%= render 'layouts/partials/accounting_nav' %>
+              <% when 26 %>
+                <%= render 'layouts/partials/treasury_nav' %>
+              <% when 15 %>
+                <%= link_to "Members Database", mis_members_path, class: "nav-link" %>
+                <%= render 'layouts/partials/nav_dropdown', title: 'Data Entries' do %>
+                  <%= link_to "Agreement", agreements_path, class: "dropdown-item" %>
+                  <%= link_to "Cooperative", cooperatives_path, class: "dropdown-item" %>
+                  <%= link_to "Transmittal", transmittals_path, class: "dropdown-item" %>
+                <% end %>
+              <% when 27 %>
+                <%= render 'layouts/partials/nav_dropdown', title: 'Audit' do %>
+                  <%= link_to "For Audit", audit_for_audits_path, class: "dropdown-item" %>
+                <% end %>
+              <% when 17 %>
+                <%= render 'layouts/partials/nav_dropdown', title: 'Underwriting' do %>
+                  <%= link_to "Agreement", agreements_path, class: "dropdown-item" %>
+                  <%= link_to "Process", process_coverages_path, class: "dropdown-item" %>
+                  <%= link_to "Transmittal", transmittals_path, class: "dropdown-item" %>
+                  <%#= link_to "Generate CSV", gen_csv_process_coverages_path, class: "dropdown-item", data: { turbo_frame: "remote_modal" } %>
+                  <% if current_user.medical_director? %>
+                    <%= link_to "Medical Director", med_directors_home_path, class: "dropdown-item" %>
+                  <% end %>
+                <% end %>
+              <% when 19 %>
+                <%#= link_to "Dashboard", claims_dashboards_path, class: "nav-link" %>
+                <%#= link_to "Cooperative", cooperatives_path, class: "nav-link" %>
+                <%= link_to "Analytics", claims_analytics_path, class: "nav-link" %>
+                <%= render 'layouts/partials/nav_dropdown', title: 'Claims' do %>
+                  <%= link_to "Documents", claims_claim_documents_path, class: "dropdown-item" %>
+                  <%= link_to "Claims Message", claims_claim_remarks_path, class: "dropdown-item" %>
+                  <%= link_to "Benefits", benefits_path, class: "dropdown-item" %>
+                  <%= link_to "Claim Type", claims_claim_types_path, class: "dropdown-item" %>
+                  <%= link_to "Medical Code", claims_causes_path, class: "dropdown-item" %>
+                  <%= link_to "Claim Nature", claims_claim_type_natures_path, class: "dropdown-item" %>
+                  <%= link_to "Claim Cause", claims_causes_path, class: "dropdown-item" %>
+                  <%= link_to "Claim Retrieval", claims_claim_retrievals_path, class: "dropdown-item" %>
+                  <%= link_to "Claim Fund - Replenish", claims_cf_replenishes_path, class: "dropdown-item" %>
+                  <%= link_to "Claim Fund - Availment", claims_cf_availments_path, class: "dropdown-item" %>
+                  <%#= link_to "Claims Message", claim_remarks_path, class: "dropdown-item" %>
+                  <%= link_to "User Levels", user_levels_path, class: "dropdown-item" %>
+                  <%= link_to "Claims fund", claims_cf_accounts_path, class: "dropdown-item" %>
+                <% end %>
+              <% when 14 %>
+                <%= render 'layouts/partials/nav_dropdown', title: "A&R" do %>
+                  <%= link_to "Reinsurer", reinsurers_path, class: "dropdown-item" %>
+                  <%= link_to "Life Reinsurance", reinsurances_path, class: "dropdown-item" %>
+                  <%= link_to "Life Reserves", actuarial_reserves_path, class: "dropdown-item" %>
+                <% end %>
+            <% else %>
+              <% if current_user.senior_officer? %>
+                <%= render 'layouts/partials/nav_dropdown', title: "Dashboard" do %>
+                  <%#= link_to "Cooperative", pages_coop_path, class: "dropdown-item", data: { turbo: false } %>
+                  <%= link_to "C.O.S.O.", pages_coso_path, class: "dropdown-item", data: { turbo: false } %>
+                  <%= link_to "President", pages_president_path, class: "dropdown-item", data: { turbo: false } %>
                 <% end %>
               <% end %>
-            <% when 19 %>
-            <%#= link_to "Dashboard", claims_dashboards_path, class: "nav-link" %>
-            <%#= link_to "Cooperative", cooperatives_path, class: "nav-link" %>
-            <%= render 'layouts/partials/nav_dropdown', title: 'Claims' do %>
-              <%= link_to "Claim index", claims_process_claims_path, class: "dropdown-item" %>
-              <%= link_to "Submitted", index_show_claims_process_claims_path(p: 1), class: "dropdown-item" %>
-              <%= link_to "Claims Filed", index_show_claims_process_claims_path(p: 2), class: "dropdown-item" %>
-              <%= link_to "Processing", index_show_claims_process_claims_path(p: 3), class: "dropdown-item" %>
-              <%= link_to "Evaluation", index_show_claims_process_claims_path(p: 4), class: "dropdown-item" %>
-              <%= link_to "Rejected", index_show_claims_process_claims_path(p: 11), class: "dropdown-item" %>
-              <%= link_to "VP Evaluation", index_show_claims_process_claims_path(p: 5), class: "dropdown-item" %>
-              <%= link_to "President Evaluation", index_show_claims_process_claims_path(p: 6), class: "dropdown-item" %>
-              <li><hr class="dropdown-divider"></li>
-              <%= link_to "Documents", claims_claim_documents_path, class: "dropdown-item" %>
-              <%= link_to "Claims Message", claims_claim_remarks_path, class: "dropdown-item" %>
-              <%= link_to "Benefits", benefits_path, class: "dropdown-item" %>
-              <%= link_to "Claim Type", claims_claim_types_path, class: "dropdown-item" %>
-              <%= link_to "Medical Code", claims_causes_path, class: "dropdown-item" %>
-              <%= link_to "Claim Nature", claims_claim_type_natures_path, class: "dropdown-item" %>
-              <%= link_to "Claim Retrieval", claims_claim_retrievals_path, class: "dropdown-item" %>
-              <%= link_to "Claim Fund - Replenish", claims_cf_replenishes_path, class: "dropdown-item" %>
-              <%= link_to "Claim Fund - Availment", claims_cf_availments_path, class: "dropdown-item" %>
-              <%#= link_to "Claims Message", claim_remarks_path, class: "dropdown-item" %>
-              <%= link_to "User Levels", user_levels_path, class: "dropdown-item" %>
-              <%= link_to "Claims fund", claims_cf_accounts_path, class: "dropdown-item" %>
             <% end %>
-            <% when 14 %>
-            <%= render 'layouts/partials/nav_dropdown', title: "A&R" do %>
-              <%= link_to "Reinsurer", reinsurers_path, class: "dropdown-item" %>
-              <%= link_to "Life Reinsurance", reinsurances_path, class: "dropdown-item" %>
-              <%= link_to "Life Reserves", actuarial_reserves_path, class: "dropdown-item" %>
-            <% end %>
-          <% else %>
-            <% if current_user.senior_officer? %>
-              <%= render 'layouts/partials/nav_dropdown', title: "Dashboard" do %>
-                <%#= link_to "Cooperative", pages_coop_path, class: "dropdown-item", data: { turbo: false } %>
-                <%= link_to "C.O.S.O.", pages_coso_path, class: "dropdown-item", data: { turbo: false } %>
-                <%= link_to "President", pages_president_path, class: "dropdown-item", data: { turbo: false } %>
-              <% end %>
-            <% end %>
-            <%= render 'layouts/partials/nav_dropdown', title: 'Data Entries' do %>
-              <% if current_user.admin? %>
-                <%= link_to "Agreement", agreements_path, class: "dropdown-item" %>
-                <%= link_to "EmpAgreement", emp_agreements_path, class: "dropdown-item" %>
-                <%= link_to "Approver", emp_approvers_path, class: "dropdown-item" %>
-                <%= link_to "Authority Levels", authority_levels_path, class: "dropdown-item" %>
-                <%= link_to "Plans", plans_path, class: "dropdown-item" %>
-                <%= link_to "Benefits", benefits_path, class: "dropdown-item" %>
-                <li><hr class="dropdown-divider"></li>
-                <%= link_to "Cooperative", cooperatives_path, class: "dropdown-item" %>
-                <li><hr class="dropdown-divider"></li>
-                <%= link_to "Meeting Schedule", demo_schedules_path, class: "dropdown-item" %>
-                <%= link_to "Employees", employees_path, class: "dropdown-item" %>
-                <%= link_to "User Levels", user_levels_path, class: "dropdown-item" %>
-                <%= link_to "Cooperative User", coop_users_path, class: "dropdown-item" %>
-                <%= link_to "Agents", agents_path, class: "dropdown-item" %>
-                <%= link_to "Pending Users", user_index_path, class: "dropdown-item" %>
-                <li><hr class="dropdown-divider"></li>
-                <%= link_to "Teams", teams_path, class: "dropdown-item" %>
-              <% end %>
-            <% end %>
+        <% end %>
+        <% if current_user.admin? %>
+          <%= render 'layouts/partials/nav_dropdown', title: 'Data Entries' do %>
+            <%= link_to "Agreement", agreements_path, class: "dropdown-item" %>
+            <%= link_to "EmpAgreement", emp_agreements_path, class: "dropdown-item" %>
+            <%= link_to "Approver", emp_approvers_path, class: "dropdown-item" %>
+            <%= link_to "Authority Levels", authority_levels_path, class: "dropdown-item" %>
+            <%= link_to "Plans", plans_path, class: "dropdown-item" %>
+            <%= link_to "Benefits", benefits_path, class: "dropdown-item" %>
+            <li><hr class="dropdown-divider"></li>
+            <%= link_to "Cooperative", cooperatives_path, class: "dropdown-item" %>
+            <li><hr class="dropdown-divider"></li>
+            <%= link_to "Meeting Schedule", demo_schedules_path, class: "dropdown-item" %>
+            <%= link_to "Employees", employees_path, class: "dropdown-item" %>
+            <%= link_to "User Levels", user_levels_path, class: "dropdown-item" %>
+            <%= link_to "Cooperative User", coop_users_path, class: "dropdown-item" %>
+            <%= link_to "Agents", agents_path, class: "dropdown-item" %>
+            <%= link_to "Pending Users", user_index_path, class: "dropdown-item" %>
+            <li><hr class="dropdown-divider"></li>
+            <%= link_to "Teams", teams_path, class: "dropdown-item" %>
           <% end %>
         <% end %>
         <%= render 'layouts/partials/nav_dropdown', title: "<i class=\"bi bi-person-circle\"></i> <small> Hi, #{current_user.userable.first_name}</small>".html_safe do %>

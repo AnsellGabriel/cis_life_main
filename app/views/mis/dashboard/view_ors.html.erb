@@ -59,7 +59,7 @@
             <% end %>
           </tr>
         <% else %>
-          <% @filtered_ors.each do |group_remit| %>
+          <% @filtered_ors.order(created_at: :desc).each do |group_remit| %>
             <tr class="text-center">
               <% if @type == "nt" %>
                 <td><%= check_box_tag "b_ids[]", group_remit.id, false, id: "b_ids[#{group_remit.id}]", data: { checkbox_select_all_target: "child", action: "change->checkbox-select-all#toggleParent" } %></td>
@@ -93,7 +93,7 @@
           <td colspan=6 class="lead text-center">NO RECORD(S).</td>
         </tr>
       <% else %>
-        <% @filtered_ors.each do |payment| %>
+        <% @filtered_ors.order(created_at: :desc).each do |payment| %>
           <tr>
             <td class="<%= centered_cell %>" ><%= payment.or_no %></td>
             <td class="<%= centered_cell %>" ><%= payment.or_date %></td>

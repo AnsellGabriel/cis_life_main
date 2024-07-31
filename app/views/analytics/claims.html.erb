@@ -1,0 +1,66 @@
+<div class="row mb-2">
+  <div class="col-6">
+    <%#= pie_chart @age_bracket, title: "Age Demographic" %>
+  </div>
+  <div class="col-6">
+    <%#= pie_chart @gender_counts, title: "Gender Demographic" %>
+  </div>
+</div>
+<%# process_claims_data = @process_claims.group(:cause_id).count %>
+<%# process_claims_data = Claims::ProcessClaim.joins(:cause).group('causes.name').count %>
+<% @claim_causes = Claims::ProcessClaim.joins(:cause)
+                                        .where.not(causes: { name: 'Unknown' })
+                                       .group('causes.name')
+                                       .order('count_all DESC')
+                                       .limit(10)
+                                       .count %>
+<% @claim_cause_amount = Claims::ProcessClaim.joins(:cause, :claim_benefits)
+                                              .where.not(causes: { name: 'Unknown' })
+                                              .group('causes.name')
+                                              .limit(10)
+                                              .sum('claim_benefits.amount') %>
+<% @claim_nature = Claims::ProcessClaim.joins(:claim_type_nature)
+                                        .where.not(claim_type_natures: { name: 'Natural Death' })
+                                       .group('claim_type_natures.name')
+                                       .order('count_all DESC')
+                                       .limit(8)
+                                       .count %>
+<% @claim_types = Claims::ProcessClaim.joins(:claim_type)
+                                       .group('claim_types.name')
+                                       .order('count_all DESC')
+                                       .count %>
+<% @claim_type_amount = Claims::ProcessClaim.joins(:claim_type, :claim_benefits)
+                                       .group('claim_types.name')
+                                       .sum('claim_benefits.amount') %>
+        
+<% @claim_types = Claims::ProcessClaim.joins(:claim_type)
+                                       .group('claim_types.name')
+                                       .order('count_all DESC')
+                                       .count %>            
+<% @claim_benefits = Claims::ClaimBenefit.joins(:benefit, :process_claim)
+                                          .group('benefits.name') 
+                                          .sum(:amount) %>
+                                                              
+<div class="row">
+    <div class="col-md-6">
+        <%= content_tag :h5, 'Type of Claims' %>
+        <%= pie_chart @claim_types %>
+    </div>
+    <div class="col-md-6">
+      <%= content_tag :h5, 'Type of Claims (Amount)' %>
+      <%= pie_chart @claim_type_amount %>
+    </div>
+</div>
+ <%= content_tag :h5, 'Benefits' %>
+<%= column_chart @claim_benefits %>
+<hr>
+<%= content_tag :h5, 'Natural Causes of Claim (Count)' %>
+<%= column_chart @claim_causes %>
+<%= content_tag :h5, 'Natural Causes of Claim (Amount)' %>
+<% @claim_cause_amount = @claim_cause_amount.sort_by { |cause_name, total_amount| -total_amount } %>
+<%= column_chart @claim_cause_amount %>
+<hr>
+<%= content_tag :h5, 'Nature of Claims' %>
+<%= column_chart @claim_nature %>
+
+<%#= console %>

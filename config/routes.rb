@@ -38,10 +38,10 @@ Rails.application.routes.draw do
   resources :reinsurances do
     get :reserves_index, on: :collection
   end
-  namespace :claims do 
+  namespace :claims do
     resources :claim_types, :claim_documents, :claim_type_benefits, :claim_confinements, :claim_benefits, :claim_coverages, :claim_distributions, :claim_type_natures, :claim_type_agreements, :claim_retrievals
-    
-    resources :cf_accounts do 
+
+    resources :cf_accounts do
       get :index_critical, to: "cf_accounts#index_critical", on: :collection
     end
 
@@ -72,6 +72,7 @@ Rails.application.routes.draw do
       post :create_coop, to: "process_claims#create_coop", on: :collection
       get :index_coop, to: "process_claims#index_coop", on: :collection
       get :index_show, on: :collection
+      get :index_claim_type, on: :collection
       get :show_coop, on: :member
       get :claim_route, on: :member
       get :claims_file, on: :member
@@ -131,6 +132,11 @@ Rails.application.routes.draw do
     get :treasury, on: :collection
     get :accounting, on: :collection
     get :coso, on: :collection
+    get :admin, on: :collection
+  end
+  
+  resources :analytics do 
+    get :claims, on: :collection
   end
 
   resources :user do

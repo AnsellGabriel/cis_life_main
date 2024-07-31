@@ -6,7 +6,8 @@ class ApplicationController < ActionController::Base
 
   def root
     if current_user.admin?
-      redirect_to admin_dashboard_user_index_path
+      redirect_to admin_dashboards_path
+      # redirect_to admin_dashboard_user_index_path
     else
       case current_user.userable_type
       when "Agent" then redirect_to agents_path

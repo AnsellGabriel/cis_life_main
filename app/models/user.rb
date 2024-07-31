@@ -37,6 +37,14 @@ class User < ApplicationRecord
           #             .where.not(read_messages: { user_id: id }))
   end
 
+  def self.ransackable_attributes(auth_object = nil)
+    ["userable", "agreement_benefit_id", "agreement_id", "approval", "cause_id", "claim_filed", "claim_route", "claim_type_id", "claim_type_nature_id", "claimant_contact_no", "claimant_email", "claimant_name", "coop_member_id", "cooperative_id", "created_at", "date_file", "date_incident", "entry_type", "id", "payment", "payout_type", "processing", "relationship", "status", "updated_at"]
+  end
+
+  def self.ransackable_associations(auth_object = nil)
+    ["userable"]
+  end
+
   def to_s
     userable.to_s
   end
@@ -46,7 +54,7 @@ class User < ApplicationRecord
   end
 
   def get_fullname
-    self.userable.last_name
+    self.userable.last_name + ', ' + self.userable.first_name
   end
 
   # Override Devise method to prevent login if not approved

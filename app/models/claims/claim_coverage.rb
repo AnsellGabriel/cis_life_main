@@ -7,13 +7,16 @@ class Claims::ClaimCoverage < ApplicationRecord
   Status = ["Approved", "Denied", "Pending", "Reconsider"]
 
   def get_duration
-    years = expiry.year - process_claim.date_file.year
-    months = expiry.month - effectivity.month
-    days = expiry.day - effectivity.day
-
+    date_start = effectivity
+    date_end = process_claim.date_incident
+    years = date_end.year - date_start.year
+    months = date_end.month - date_start.month
+    days = date_end.day - date_start.day
+    
     if days < 0
       months -= 1
-      days += (expiry.prev_month.end_of_month.day - effectivity.day + expiry.day)
+      # days += (date_end.prev_month.end_of_month.day - date_start.day + date_end.day)
+      days += (date_start.next_month - date_start).day
     end
     if months < 0
       years -= 1
