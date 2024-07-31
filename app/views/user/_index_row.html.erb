@@ -1,0 +1,25 @@
+    <td>
+        <%= u.id %></td>
+            <td><% if u.userable_type == "CoopUser" %>
+                <% @coop = CoopUser.find_by(id: u.userable_id) %>
+                <% unless @coop.nil? %>
+                    <strong><%= @coop %></strong>
+                <% end %>
+                <% elsif u.userable_type == "Employee" %>
+                <% emp = Employee.find(u.userable_id) %>
+                <strong><%= emp %></strong> <%= emp.designation %>
+                <% end %> <br>
+                <small><%= u.email %> | <%= u.userable_type %> </small> | 
+                <%= content_tag :span, 'Pending', class: "badge rounded-pill text-bg-warning" unless u.approved %>
+            </td>
+            <td>
+                <% if u.approved? %>
+                <%= link_to '<i class="bi bi-check-circle"></i> Pending'.html_safe, approved_user_path(u),  data: { turbo_confirm: 'Are you sure?' }, class: 'btn btn-warning btn-sm' %>
+                  <% else %>
+                <%= link_to '<i class="bi bi-check-circle"></i> Approve'.html_safe, approved_user_path(u),  data: { turbo_confirm: 'Are you sure?' }, class: 'btn btn-primary btn-sm' %>
+                <% end %>
+                <%= link_to "Delete", u, class: "btn btn-danger btn-sm", method: :delete, data: { "turbo-method": :delete, turbo_confirm: "Are you sure?" } %>
+                <%#= link_to 'View', product_benefit, class: 'btn' %>
+                <%#= link_to 'Edit', edit_product_benefit_path(product_benefit), class: 'btn' %>
+                <%#= link_to 'Delete', product_benefit, method: :delete, data: { confirm: 'Are you sure?' }, class: 'btn' %>
+          </td>

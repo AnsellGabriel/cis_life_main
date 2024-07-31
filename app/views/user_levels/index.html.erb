@@ -4,7 +4,6 @@
     New User Level
   <% end %>
 </div>
-<table class ="table table-striped">
   <table class="table table-striped table-bordered table-hover">
     <thead>
       <tr>
@@ -14,20 +13,41 @@
       </tr>
     </thead>
     <tbody>
-      <% @user_levels.each do |user_level| %>
+      <% @uls = @user_levels.find_by_sql('select user_id from user_levels group by user_id') %>
+      <% @uls.each do |user_id| %>
         <tr>
-          <th scope="row"><%= user_level.id %></th>
-          <td><%= user_level.user.get_fullname %> <br>
- <small><%= user_level.user.userable.designation %></small> <br>
-            <small><%= user_level.authority_level.name %> - <%= to_currency(user_level.authority_level.maxAmount) %></small> <br>
-            <small><%= badge_pill(user_level.active) %></small></td>
+          <% user = User.find(user_id.user_id) %>
+          <th scope="row"><%= user.id %></th>
+          <td><strong><%= user.get_fullname %></strong> <br>
+            <small><%= user.userable.designation %></small> <br>
+            
+            <table class="table">
+              <thead><tr>
+                <td>Authority Level</td>
+                <td>Amount</td>
+                <th></th>
+              </tr></thead>
+              <tbody>
+                <% @user_levels.where(user_id: user_id.user_id).each do |user_level| %>
+                  <tr>
+                    <td><small><%= user_level.authority_level.name %></small>  <small><%= badge_pill(user_level.active) %></small></td>
+                    <td><%= to_currency(user_level.authority_level.maxAmount) %></td>
+                    <td>
+                      <%= link_to 'Edit', edit_user_level_path(user_level), class: 'btn btn-secondary btn-sm' %>
+                      <%= link_to "Delete", user_level, class: "btn btn-danger btn-sm", method: :delete, data: { "turbo-method": :delete, turbo_confirm: "Are you sure?" } %></td>
+                  </tr>
+                <% end %>
+
+              </tbody>
+            </table>
+          </td>
           <td>
             <%#= link_to 'View', user_level, class: 'btn btn-secondary btn-sm' %>
-            <%= link_to 'Edit', edit_user_level_path(user_level), class: 'btn btn-secondary btn-sm' %>
-            <%= link_to "Delete", user_level, class: "btn btn-danger btn-sm", method: :delete, data: { "turbo-method": :delete, turbo_confirm: "Are you sure?" } %>
+            
           </td>
         </tr>
       <% end %>
     </tbody>
   </table>
-</div>
+
+<%# console %>

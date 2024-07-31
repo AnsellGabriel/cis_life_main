@@ -61,4 +61,12 @@ class Employee < ApplicationRecord
   def get_approved_count
     processor_pcs.where(status: :approved).count
   end
+
+  def self.ransackable_attributes(auth_object = nil)
+    ["first_name", "last_name"]
+  end
+
+  def self.ransackable_associations(auth_object = nil)
+    ["user"]
+  end
 end

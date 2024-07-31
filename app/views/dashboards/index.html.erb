@@ -6,6 +6,8 @@
 
   <% if current_user.userable_type == "CoopUser" %>
     <%= render 'cooperative' %>
+  <% elsif current_user.admin? %>
+    <%= render 'admin' %>
   <% elsif current_user.userable_type == "Employee" %>
     <% case current_user.userable.department_id %>
       <% when 14 %>

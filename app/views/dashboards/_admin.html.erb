@@ -1,0 +1,37 @@
+<div class="row">
+    <div class="col-md-6">
+        <div class="card text-dark bg-info mb-3 h-100">
+            <div class="card-body">
+                <% un_approve = @users.where(approved: 0) %>
+                <% if un_approve == 0 %>
+                    <h5 class="card-title">Great news,</h5>
+                    <small class="text-muted">You currently have no pending users for approval.</small>
+                <% else %>
+                    <h5 class="card-title">User Approval</h5>
+                    <small>While you were away, the following claims have been assigned to you for verification:</small><br>
+                    <h2 class="text-center mt-3"><%= link_to un_approve.count, user_index_path, class: "text-dark" %></h2>
+                <% end %>
+            </div>
+            <div class="card-footer">
+                <%= link_to 'See Details <i class="bi bi-box-arrow-right"></i>'.html_safe, user_index_path, class: "text-dark" %>     
+            </div>
+        </div>
+    </div>
+    <div class="col-md-6">
+        <div class="card text-dark bg-light mb-3 h-100">
+            <div class="card-body">    
+                <% if @schedules.count == 0 %>
+                    <h5 class="card-title">Great news,</h5>
+                    <small class="text-muted">You currently have no schedule demo appointment.</small>
+                <% else %>
+                    <h5 class="card-title">Demo Schedule</h5>
+                    <small>While you were away, the following claims have been assigned to you for verification:</small><br>
+                    <h2 class="text-center mt-3"><%= link_to @schedules.count, demo_schedules_path, class: "text-dark" %></h2>
+                <% end %>
+            </div>
+            <div class="card-footer">
+                <%= link_to 'See Details <i class="bi bi-box-arrow-right"></i>'.html_safe, demo_schedules_path, class: "text-dark" %>     
+            </div>
+        </div>
+    </div>
+</div>

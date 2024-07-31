@@ -1,4 +1,19 @@
-<%= content_tag :h3, 'Pending Users' %>
+<%= content_tag :h3, 'Users' %>
+
+<div class="<%= flex_justify_align('between', 'center') %> mb-3">
+  <div class="text-end">
+    <%= search_form_for @q, url: user_index_path, method: :get do |f| %>
+      <div class="form-group d-flex justify-content-end gap-1">
+        <%= f.text_field :userable_of_Employee_type_last_name_or_userable_of_Employee_type_first_name_cont, class: 'form-control', placeholder: 'Search full name' %>
+        <%= button_tag(type: 'submit', class: small_btn('warning'), style: "width: 40px") do %>
+          <i class='bi bi-search'></i>
+        <% end %>
+      </div>
+    <% end %>
+  </div>
+  <%== pagy_bootstrap_nav(@pagy) %>
+</div>
+
 <div class="table-responsive">
   <table class="table table-striped table-bordered table-hover">
     <thead>
@@ -9,25 +24,16 @@
       </tr>
     </thead>
     <tbody>
-      <% @users.each do |u| %>
+      <tr><td colspan="3"><strong>Pending</strong></td></tr>
+      <% @users.where(approved: 0).each do |u| %>
         <tr>
-          <td><%= u.id %></td>
-          <td><% if u.userable_type == "CoopUser" %>
-              <% @coop = CoopUser.find(u.userable_id) %>
-              <strong><%= @coop %></strong>
-            <% elsif u.userable_type == "Employee" %>
-              <% emp = Employee.find(u.userable_id) %>
-              <strong><%= emp %></strong> <%= emp.designation %>
-            <% end %> <br>
-            <small><%= u.email %> | <%= u.userable_type %> </small> | 
-            <%= content_tag :span, 'Pending', class: "badge rounded-pill text-bg-warning" unless u.approved %>
-          </td>
-          <td>
-            <%= link_to '<i class="bi bi-check-circle"></i> Approve'.html_safe, approved_user_path(u),  data: { turbo_confirm: 'Are you sure?' }, class: 'btn btn-primary btn-sm' %>
-            <%#= link_to 'View', product_benefit, class: 'btn' %>
-            <%#= link_to 'Edit', edit_product_benefit_path(product_benefit), class: 'btn' %>
-            <%#= link_to 'Delete', product_benefit, method: :delete, data: { confirm: 'Are you sure?' }, class: 'btn' %>
-          </td>
+          <%= render 'index_row', u: u %>
+        </tr>
+      <% end %>
+      <tr><td colspan="3"><strong>Everything else</strong></td></tr>
+      <% @users.where(approved: 1).each do |u| %>
+        <tr>
+          <%= render 'index_row', u: u %>
         </tr>
       <% end %>
     </tbody>

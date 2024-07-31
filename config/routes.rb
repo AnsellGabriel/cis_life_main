@@ -72,6 +72,7 @@ Rails.application.routes.draw do
       post :create_coop, to: "process_claims#create_coop", on: :collection
       get :index_coop, to: "process_claims#index_coop", on: :collection
       get :index_show, on: :collection
+      get :index_claim_type, on: :collection
       get :show_coop, on: :member
       get :claim_route, on: :member
       get :claims_file, on: :member
@@ -130,6 +131,11 @@ Rails.application.routes.draw do
     get :coop, on: :collection
     get :treasury, on: :collection
     get :accounting, on: :collection
+    get :admin, on: :collection
+  end
+  
+  resources :analytics do 
+    get :claims, on: :collection
   end
 
   resources :user do

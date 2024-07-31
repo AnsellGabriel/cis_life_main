@@ -22,6 +22,8 @@
         <dt class="col-sm-4">Retrieval:</dt>
         <dd class="col-sm-8"><%= @process_claim.claim_retrieval %></dd>
       <% end %>
+      <dt class="col-sm-4">Date Filed:</dt>
+      <dd class="col-sm-8"><%= to_shortdate(@process_claim.date_file) %></dd>
       <dt class="col-sm-4">Status</dt>
       <dd class="col-sm-8"><%= @process_claim.status.humanize unless @process_claim.status.nil? %></dd>
       <dt class="col-sm-4">Date Incident:</dt>
@@ -32,27 +34,27 @@
       <dt class="col-sm-4">Cause</dt>
       <dd class="col-sm-8"><%= @process_claim.cause %></dd>
       <% unless @process_claim.claim_cause.nil? %>
-        <% unless @process_claim.claim_cause.icd == "" %>
+        <% unless @process_claim.claim_cause.icd == "" || @process_claim.claim_cause.icd.nil? %>
           <%= content_tag :dt, 'ICD', class: "col-sm-4" %>
           <%= content_tag :dd, @process_claim.claim_cause.icd, class: "col-sm-8" %>
         <% end %>
-        <% unless @process_claim.claim_cause.acd == "" %>
+        <% unless @process_claim.claim_cause.acd == "" || @process_claim.claim_cause.acd.nil? %>
           <%= content_tag :dt, 'ACD', class: "col-sm-4" %>
           <%= content_tag :dd, @process_claim.claim_cause.acd, class: "col-sm-8" %>
         <% end %>
-        <% unless @process_claim.claim_cause.ucd == "" %>
+        <% unless @process_claim.claim_cause.ucd == "" || @process_claim.claim_cause.ucd.nil? %>
           <%= content_tag :dt, 'UCD', class: "col-sm-4" %>
           <%= content_tag :dd, @process_claim.claim_cause.ucd, class: "col-sm-8" %>
         <% end %>
-        <% unless @process_claim.claim_cause.osccd == "" %>
+        <% unless @process_claim.claim_cause.osccd == "" || @process_claim.claim_cause.osccd.nil? %>
           <%= content_tag :dt, 'OSCCD', class: "col-sm-4" %>
           <%= content_tag :dd, @process_claim.claim_cause.osccd, class: "col-sm-8" %>
         <% end %>
-        <% unless @process_claim.claim_cause.postmortem == "" %>
+        <% unless @process_claim.claim_cause.postmortem == "" || @process_claim.claim_cause.postmortem.nil? %>
           <%= content_tag :dt, 'POST MORTEM', class: "col-sm-4" %>
           <%= content_tag :dd, @process_claim.claim_cause.postmortem, class: "col-sm-8" %>
         <% end %>
-        <% unless @process_claim.claim_cause.cause_of_incident == "" %>
+        <% unless @process_claim.claim_cause.cause_of_incident == "" || @process_claim.claim_cause.cause_of_incident.nil? %>
           <%= content_tag :dt, 'CAUSE OF INCIDENT', class: "col-sm-4" %>
           <%= content_tag :dd, @process_claim.claim_cause.cause_of_incident, class: "col-sm-8" %>
         <% end %>

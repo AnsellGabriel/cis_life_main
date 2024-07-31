@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2024_07_26_074043) do
+ActiveRecord::Schema[7.0].define(version: 2024_07_22_064709) do
   create_table "accounting_journal_entries", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.string "journable_type", null: false
     t.bigint "journable_id", null: false
@@ -202,6 +202,7 @@ ActiveRecord::Schema[7.0].define(version: 2024_07_26_074043) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.string "code"
+    t.string "full_name"
     t.index ["agent_group_id"], name: "index_agents_on_agent_group_id"
   end
 
@@ -1322,16 +1323,20 @@ ActiveRecord::Schema[7.0].define(version: 2024_07_26_074043) do
     t.integer "status"
     t.integer "payout_type"
     t.bigint "claim_type_nature_id"
-    t.bigint "coop_member_id"
     t.bigint "claim_retrieval_id"
+    t.string "old_code"
+    t.bigint "user_id"
+    t.string "insurable_type", null: false
+    t.bigint "insurable_id", null: false
     t.index ["agreement_benefit_id"], name: "index_process_claims_on_agreement_benefit_id"
     t.index ["agreement_id"], name: "index_process_claims_on_agreement_id"
     t.index ["cause_id"], name: "index_process_claims_on_cause_id"
     t.index ["claim_retrieval_id"], name: "index_process_claims_on_claim_retrieval_id"
     t.index ["claim_type_id"], name: "index_process_claims_on_claim_type_id"
     t.index ["claim_type_nature_id"], name: "index_process_claims_on_claim_type_nature_id"
-    t.index ["coop_member_id"], name: "index_process_claims_on_coop_member_id"
     t.index ["cooperative_id"], name: "index_process_claims_on_cooperative_id"
+    t.index ["insurable_type", "insurable_id"], name: "index_process_claims_on_insurable"
+    t.index ["user_id"], name: "index_process_claims_on_user_id"
   end
 
   create_table "process_coverages", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|

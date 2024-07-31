@@ -15,8 +15,4 @@ class Agent < ApplicationRecord
     # test = 5
     full_name
   end
-
-  def full_name
-    "#{first_name} #{last_name}"
-  end
 end

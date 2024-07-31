@@ -4,7 +4,7 @@
   <div class="text-end">
     <%= search_form_for @q do |f| %>
       <div class="form-group d-flex justify-content-end gap-1">
-        <%= f.text_field :coop_member_full_name_cont, class: 'form-control', placeholder: 'Search full name' %>
+        <%= f.text_field :insurable_of_CoopMember_type_full_name_cont, class: 'form-control', placeholder: 'Search full name' %>
         <%= button_tag(type: 'submit', class: small_btn('warning'), style: "width: 40px") do %>
           <i class='bi bi-search'></i>
         <% end %>
@@ -28,13 +28,13 @@
   </thead>
   <tbody>
     <tr class="table-warning"><td colspan="4"><strong>Microinsurance</strong></td></tr>
-    <% @process_claims.joins(agreement: :plan).where(plans: { micro: 1 }).each do |process_claim| %>
+    <% @process_claims.joins(agreement: :plan).where(plans: { micro: 1 }).order(date_file: :desc).each do |process_claim| %>
       <tr>
         <%= render 'index_row', process_claim: process_claim %>
       </tr>
     <% end %>
     <tr class="table-primary"><td colspan="4"><strong>Everything else</strong></td></tr>
-    <% @process_claims.joins(agreement: :plan).where(plans: { micro: 0 }).each do |process_claim| %>
+    <% @process_claims.joins(agreement: :plan).where(plans: { micro: 0 }).order(date_file: :desc).each do |process_claim| %>
       <tr>
         <%= render 'index_row', process_claim: process_claim %>
       </tr>

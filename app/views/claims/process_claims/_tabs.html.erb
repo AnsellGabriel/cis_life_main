@@ -41,7 +41,7 @@
     </div>
     <% unless @process_claim.claim_reinsurance.nil? %>
       <div class="tab-pane fade show" role="tabpanel" id="reinsurance" aria-labelledby="reinsurance-tab">
-        <%= render 'claims/claim_coverage_reinsurances/show_coverage_reinsurances' %>
+        <%= render 'claims/claim_coverage_reinsurances/show_coverage_reinsurances' unless @process_claim.claim_reinsurance.nil? %>
       </div>
     <% end %>
 

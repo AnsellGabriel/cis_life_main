@@ -1,5 +1,11 @@
 class DashboardsController < ApplicationController
     include ProcessClaimHelper
+    
+    def admin 
+      @users = User.all 
+      @schedules = DemoSchedule.all
+      render :index
+    end
 
     def actuarial
         @claim_reinsurance = Claims::ClaimReinsurance.where(status: 0)
