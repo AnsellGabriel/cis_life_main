@@ -23,7 +23,10 @@
     <div class="card-footer"><small class="text-muted"> <%= link_to 'See Details <i class="bi bi-box-arrow-right"></i>'.html_safe, accounting_voucher_requests_path(pt: :journal_voucher), class: "text-muted" %></small></div>
   </div>
 </div>
-<h3>DISBURSEMENT MONITORING</h3>
+<div class="<%= flex_justify_align('between','center') %>">
+  <h3>DISBURSEMENT MONITORING</h3>
+  <%= render 'accounting/shared/date_filter', url: accounting_dashboards_path, req_type: nil %>
+</div>
 <div class="mb-3 d-flex gap-3">
   <div class="card w-100">
     <div class="card-body">
@@ -39,35 +42,35 @@
             <tr>
               <td class="text-primary">Overall</td>
               <td class="text-center">
-                <%= link_to @check_vouchers.count, accounting_checks_path(e: current_user.userable.id) %>
+                <%= link_to @check_vouchers.count, accounting_dashboard_link(:check) %>
               </td>
               <td class="text-end"><%= to_number(@check_vouchers.sum(:amount)) %></td>
             </tr>
             <tr>
               <td class="text-success">Posted</td>
               <td class="text-center">
-                <%= link_to @check_vouchers.posted.count, accounting_checks_path(e: current_user.userable.id, status: :posted) %>
+                <%= link_to @check_vouchers.posted.count, accounting_dashboard_link(:check, :posted) %>
               </td>
               <td class="text-end"><%= to_number(@check_vouchers.posted.sum(:amount)) %></td>
             </tr>
             <tr>
               <td class="text-danger">Cancelled</td>
               <td class="text-center">
-                <%= link_to @check_vouchers.cancelled.count, accounting_checks_path(e: current_user.userable.id, status: :cancelled) %>
+                <%= link_to @check_vouchers.cancelled.count, accounting_dashboard_link(:check, :cancelled) %>
               </td>
               <td class="text-end"><%= to_number(@check_vouchers.cancelled.sum(:amount)) %></td>
             </tr>
             <tr>
               <td class="text-warning">For Approval</td>
               <td class="text-center">
-                <%= link_to @check_vouchers.for_approval.count, accounting_checks_path(e: current_user.userable.id, status: :for_approval) %>
+                <%= link_to @check_vouchers.for_approval.count, accounting_dashboard_link(:check, :for_approval) %>
               </td>
               <td class="text-end"><%= to_number(@check_vouchers.for_approval.sum(:amount)) %></td>
             </tr>
             <tr>
               <td class="text-warning">Pending</td>
               <td class="text-center">
-                <%= link_to @check_vouchers.pending.count, accounting_checks_path(e: current_user.userable.id, status: :pending) %>
+                <%= link_to @check_vouchers.pending.count, accounting_dashboard_link(:check, :pending) %>
               </td>
               <td class="text-end"><%= to_number(@check_vouchers.pending.sum(:amount)) %></td>
             </tr>
@@ -89,35 +92,35 @@
             <tr>
               <td class="text-primary">Overall</td>
               <td class="text-center">
-                <%= link_to @journal_vouchers.count, accounting_journals_path(e: current_user.userable.id) %>
+                <%= link_to @journal_vouchers.count, accounting_dashboard_link(:journal) %>
               </td>
               <td class="text-end"><%= to_number(@journal_vouchers.sum(:amount)) %></td>
             </tr>
             <tr>
               <td class="text-success">Posted</td>
               <td class="text-center">
-                <%= link_to @journal_vouchers.posted.count, accounting_journals_path(e: current_user.userable.id, status: :posted) %>
+                <%= link_to @journal_vouchers.posted.count, accounting_dashboard_link(:journal, :posted) %>
               </td>
               <td class="text-end"><%= to_number(@journal_vouchers.posted.sum(:amount)) %></td>
             </tr>
             <tr>
               <td class="text-danger">Cancelled</td>
               <td class="text-center">
-                <%= link_to @journal_vouchers.cancelled.count, accounting_journals_path(e: current_user.userable.id, status: :cancelled) %>
+                <%= link_to @journal_vouchers.cancelled.count, accounting_dashboard_link(:journal, :cancelled) %>
               </td>
               <td class="text-end"><%= to_number(@journal_vouchers.cancelled.sum(:amount)) %></td>
             </tr>
             <tr>
               <td class="text-warning">For Approval</td>
               <td class="text-center">
-                <%= link_to @journal_vouchers.for_approval.count, accounting_journals_path(e: current_user.userable.id, status: :for_approval) %>
+                <%= link_to @journal_vouchers.for_approval.count, accounting_dashboard_link(:journal, :for_approval) %>
               </td>
               <td class="text-end"><%= to_number(@journal_vouchers.for_approval.sum(:amount)) %></td>
             </tr>
             <tr>
               <td class="text-warning">Pending</td>
               <td class="text-center">
-                <%= link_to @journal_vouchers.pending.count, accounting_journals_path(e: current_user.userable.id, status: :pending) %>
+                <%= link_to @journal_vouchers.pending.count, accounting_dashboard_link(:journal, :pending) %>
               </td>
               <td class="text-end"><%= to_number(@journal_vouchers.pending.sum(:amount)) %></td>
             </tr>

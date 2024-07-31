@@ -1,5 +1,5 @@
 class ProcessCoverage < ApplicationRecord
-  attr_accessor :premium, :loan_amount
+  attr_accessor :premium, :loan_amount, :payment_type
 
   belongs_to :group_remit
 
@@ -252,7 +252,7 @@ class ProcessCoverage < ApplicationRecord
   def get_lppi_expiry
     self.group_remit.batches.order(expiry_date: :asc).pluck(:expiry_date).last
   end
-
+  
 
   def self.index_cov_list(approver_id, status, date_range)
     # joins(group_remit: { agreement: { emp_agreements: {employee: :emp_approver} } }).where( emp_approver: { approver_id: approver_id }, emp_agreements: { active: true}).where(status: status, created_at: date_range)
@@ -274,6 +274,14 @@ class ProcessCoverage < ApplicationRecord
       where(team: user.team, status: ["for_head_approval", "for_vp_approval"])
     when "selected"
       where(processor: user, status: ["for_process", "pending"])
+    when "approved"
+      where(status: :approved).where(arel_pcs[:who_approved_id].eq(user.id).or(arel_pcs[:who_processed_id].eq(user.id).and(arel_pcs[:who_approved_id].not_eq(nil))))
+    when "denied"
+      where(status: :denied).where(arel_pcs[:who_approved_id].eq(user.id).or(arel_pcs[:who_processed_id].eq(user.id).and(arel_pcs[:who_approved_id].not_eq(nil))))
+    when "pending"
+      where(status: :for_process, processor: user)
+    when "for_process"
+      where(status: ["for_process", "pending"], processor: user)
     end
   end
 

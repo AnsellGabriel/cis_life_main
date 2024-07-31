@@ -40,12 +40,12 @@ class Accounting::DebitAdvicesController < ApplicationController
 
   # POST /accounting/debit_advices
   def create
-    @debit_advice = Accounting::DebitAdvice.new(modified_da_params)
+    @debit_advice = Accounting::DebitAdvice.new(da_params)
     @debit_advice.employee = current_user.userable
-    @debit_advice.branch = current_user.userable.branch_before_type_cast
+    @debit_advice.branch = current_user.userable.branch
 
     ActiveRecord::Base.transaction do
-      if @debit_advice.save
+      if @debit_advice.save!
         if params[:rid].present?
           @request = Accounting::VoucherRequest.find(params[:rid])
           @request.voucher_generated!
@@ -68,7 +68,7 @@ class Accounting::DebitAdvicesController < ApplicationController
 
   # PATCH/PUT /accounting/debit_advices/1
   def update
-    if @debit_advice.update(modified_da_params)
+    if @debit_advice.update(da_params)
       redirect_to @debit_advice, notice: "Debit advice updated."
     else
       render :edit, status: :unprocessable_entity
@@ -121,13 +121,13 @@ class Accounting::DebitAdvicesController < ApplicationController
 
   # Only allow a list of trusted parameters through.
   def da_params
-    params.require(:accounting_debit_advice).permit(:treasury_account, :date_voucher, :voucher, :global_payable, :particulars, :treasury_account_id, :amount, :payable_id)
+    params.require(:accounting_debit_advice).permit(:treasury_account, :date_voucher, :voucher, :global_payable, :particulars, :treasury_account_id, :amount, :payable_id, :branch_id)
   end
 
-  def modified_da_params
-    da_params[:amount] = da_params[:amount].to_f
-    da_params
-  end
+  # def modified_da_params
+  #   da_params[:amount] = da_params[:amount].to_f
+  #   da_params
+  # end
 
   # collection of payees
   def set_payables

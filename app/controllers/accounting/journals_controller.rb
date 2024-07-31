@@ -73,7 +73,7 @@ class Accounting::JournalsController < ApplicationController
   def create
     @journal = Accounting::Journal.new(journal_params)
     @journal.employee = current_user.userable
-    @journal.branch = current_user.userable.branch_before_type_cast
+    @journal.branch = current_user.userable.branch
 
     if @journal.save
       if params[:rid].present?
@@ -123,6 +123,6 @@ class Accounting::JournalsController < ApplicationController
 
   # Only allow a list of trusted parameters through.
   def journal_params
-    params.require(:accounting_journal).permit(:date_voucher, :voucher, :global_payable, :particulars, :amount)
+    params.require(:accounting_journal).permit(:date_voucher, :voucher, :global_payable, :particulars, :amount, :branch_id)
   end
 end

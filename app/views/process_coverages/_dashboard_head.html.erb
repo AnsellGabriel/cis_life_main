@@ -45,20 +45,6 @@
       </div>
     </div>
     <div class="row">
-      <div class="col">
-        <div class="card text-light bg-primary">
-          <div class="card-header">
-            For Re-assessment Coverages
-          </div>
-          <div class="card-body">
-          Year: <%= link_to pluralize(@reassess_coverages.where(created_at: current_date.beginning_of_year..current_date.end_of_year).count, "Coverage"), cov_list_process_coverages_path(cov_type: "Reassess", title: "Re-assessment PCs (Yearly)", current_date: current_date, date_type: "yearly"), class: "link-light", data: { turbo_frame: "remote_modal" } %> <br>
-          Month: <%= link_to pluralize(@reassess_coverages.where(created_at: start_month(current_date)..end_month(current_date)).count, "Coverage"), cov_list_process_coverages_path(cov_type: "Reassess", title: "Re-assessment PCs (Monthly)", current_date: current_date, date_type: "monthly"), class: "link-light", data: { turbo_frame: "remote_modal" } %> <br>
-          Week: <%= link_to pluralize(@reassess_coverages.where(created_at: start_week(current_date)..end_week(current_date.end_of_year)).count, "Coverage"), cov_list_process_coverages_path(cov_type: "Reassess", title: "Re-assessment PCs (Weekly)", current_date: current_date, date_type: "weekly"), class: "link-light", data: { turbo_frame: "remote_modal" } %>
-          </div>
-        </div>
-      </div>
-    </div>
-    <div class="row">
       <% if current_user.rank == "head" %>
         <div class="col">
           <%= render "process_coverages/partials/head_approval", process_coverages: @process_coverages, vp: false %>
@@ -112,7 +98,7 @@
       </div>
       
       
-      <%= render "process_coverages/analysts_inventory" %>
+      <%= render "process_coverages/inventory" %>
     </div>
     <div class="row mt-3">
       <div class="col-12">
@@ -127,7 +113,7 @@
               <%= content_tag :a, "Analyst Inventory", 
                   class: reg_btn('outline-success'), 
                   data: {bs_toggle: "modal",
-                    bs_target: "#benefitsModal"
+                    bs_target: "#inventoryModal"
                   }
               %>
             </div>
@@ -140,3 +126,180 @@
     </div>
   </div>
 </div>
+
+<!-- 
+<% @user_levels = current_user.user_levels.where(active: 1) %>
+<div class="row">
+  <div class="col-md-4 mb-3">
+    <div class="card-text-dark bg-light mb-3 h-100">
+      <div class="card-body">
+        <small class="text-muted">
+          We'd like to remind you of you current authority level for underwriting. Here are the details:
+        </small>
+        <br>
+        <dl class="row">
+          <% @user_levels.each do |ul| %>
+            <dt class="col-sm-8">
+              <small>
+                <%= ul.authority_level.name %>
+              </small>
+            </dt>
+            <dd class="col-sm-4">
+              <%= to_curr(ul.authority_level.maxAmount) %>
+            </dd>
+          <% end %>
+        </dl>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-8 mb-3">
+    <div class="card-group h-100">
+      <div class="card bg-info">
+        <div class="card-body">
+          <p class="text-dark card-title">
+            OVERALL
+          </p>
+          <h2 class="text-dark">
+            <%= @overall_coverages.count %>
+          </h2>
+        </div>
+        <div class="card-footer text-dark">
+          <small>
+            <%= link_to "#", class: "text-dark" do %>
+              See Details <%= bootstrap_icon "box-arrow-right" %>
+            <% end %>
+          </small>
+        </div>
+      </div>
+      <div class="card bg-success text-light">
+        <div class="card-body">
+          <p class="card-title">APPROVED</p>
+          <h2><%= @approved_coverages.count %></h2>
+        </div>
+        <div class="card-footer">
+          <small>
+            <%= link_to "#", class: "text-light" do %>
+              See Details <%= bootstrap_icon "box-arrow-right" %>
+            <% end %>
+          </small>
+        </div>
+      </div>
+      <div class="card bg-danger text-light">
+        <div class="card-body">
+          <p class="card-title">DENIED</p>
+          <h2><%= @denied_coverages.count %></h2>
+        </div>
+        <div class="card-footer">
+          <small>
+            <%= link_to "#", class: "text-light" do %>
+              See Details <%= bootstrap_icon "box-arrow-right" %>
+            <% end %>
+          </small>
+        </div>
+      </div>
+      <div class="card bg-warning text-dark">
+        <div class="card-body">
+          <p class="card-title">PENDING</p>
+          <h2><%= @on_process_coverages.count %></h2>
+        </div>
+        <div class="card-footer">
+          <small>
+            <%= link_to "#", class: "text-dark" do %>
+              See Details <%= bootstrap_icon "box-arrow-right" %>
+            <% end %>
+          </small>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="row">
+  <div class="col-md-6 mb-3">
+    <div class="card-group h-100">
+      <div class="card bg-success text-light">
+        <div class="card-body">
+          <p class="card-title">APPROVED (YEAR)</p>
+          <h2>1200</h2>
+        </div>
+        <div class="card-footer">
+          <small>
+            <%= link_to "#", class: "text-light" do %>
+              See Details <%= bootstrap_icon "box-arrow-right" %>
+            <% end %>
+          </small>
+        </div>
+      </div>
+      <div class="card bg-success text-light">
+        <div class="card-body">
+          <p class="card-title">APPROVED (MONTH)</p>
+          <h2>1200</h2>
+        </div>
+        <div class="card-footer">
+          <small>
+            <%= link_to "#", class: "text-light" do %>
+              See Details <%= bootstrap_icon "box-arrow-right" %>
+            <% end %>
+          </small>
+        </div>
+      </div>
+      <div class="card bg-success text-light">
+        <div class="card-body">
+          <p class="card-title">APPROVED (WEEK)</p>
+          <h2>1200</h2>
+        </div>
+        <div class="card-footer">
+          <small>
+            <%= link_to "#", class: "text-light" do %>
+              See Details <%= bootstrap_icon "box-arrow-right" %>
+            <% end %>
+          </small>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-6 mb-3">
+    <div class="card-group h-100">
+      <div class="card bg-danger text-light">
+        <div class="card-body">
+          <p class="card-title">APPROVED (YEAR)</p>
+          <h2>1200</h2>
+        </div>
+        <div class="card-footer">
+          <small>
+            <%= link_to "#", class: "text-light" do %>
+              See Details <%= bootstrap_icon "box-arrow-right" %>
+            <% end %>
+          </small>
+        </div>
+      </div>
+      <div class="card bg-danger text-light">
+        <div class="card-body">
+          <p class="card-title">APPROVED (MONTH)</p>
+          <h2>1200</h2>
+        </div>
+        <div class="card-footer">
+          <small>
+            <%= link_to "#", class: "text-light" do %>
+              See Details <%= bootstrap_icon "box-arrow-right" %>
+            <% end %>
+          </small>
+        </div>
+      </div>
+      <div class="card bg-danger text-light">
+        <div class="card-body">
+          <p class="card-title">APPROVED (WEEK)</p>
+          <h2>1200</h2>
+        </div>
+        <div class="card-footer">
+          <small>
+            <%= link_to "#", class: "text-light" do %>
+              See Details <%= bootstrap_icon "box-arrow-right" %>
+            <% end %>
+          </small>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+-->

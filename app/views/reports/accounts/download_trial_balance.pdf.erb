@@ -1,6 +1,6 @@
 <%= render 'layouts/pdf_partials/html_template' do %>
   <div class="row mb-3">
-    <%= image_tag wicked_pdf_asset_base64("1cisp_logo.png"), style: "height: 150px; width: auto;", class: '' %>
+    <%= image_tag asset_path("1cisp_logo.png"), style: "height: 150px; width: auto;" %>
     <div class="">
       <p>1 COOPERATIVE INSURANCE SYSTEM OF THE PHILIPPINES</p>
       <p class="mb-5">LIFE AND GENERAL INSURANCE</p>
@@ -40,4 +40,8 @@
         <td class="text-end" style="font-size: 1.1rem; font-weight: bold; border: 2px solid black"><%= number_to_currency(@ytd_total_credit, unit: '') %></td>
       </tr>
     </tbody>
+  </table>
+  <div class="row text-center fst-italic mt-5">
+    <div class="col-12">This is a system-generated document and does not require a signature.</div>
+  </div>
 <% end %>

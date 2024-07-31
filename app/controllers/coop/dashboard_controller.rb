@@ -2,6 +2,9 @@ class Coop::DashboardController < ApplicationController
   def index
     @cooperative = current_user.userable.cooperative
     @notifications = @cooperative.notifications
+
+    @coop_group_remits = @cooperative.group_remits
+    @pending_lppi = LoanInsurance::Batch.get_pending_lppi(@coop_group_remits)
     
     #for graphs
     @age_bracket = [

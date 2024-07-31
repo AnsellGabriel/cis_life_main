@@ -21,10 +21,12 @@
               <%= content_tag :span, "(#{to_curr(group_remit.total_coop_commissions)})", style: "font-size: .8rem; color: var(--bs-green)"%>
             </div>      
           <% end %>
-          <div class="text-secondary d-flex justify-content-between">
-            <%= content_tag :span, "Unused premium", style: "font-size: .8rem" %>
-            <%= content_tag :span, "(#{to_curr(group_remit.total_unused_premium)})", style: "font-size: .8rem; color: var(--bs-green)"%>
-          </div>
+          <% if agreement.unusable? %>
+            <div class="text-secondary d-flex justify-content-between">
+              <%= content_tag :span, "Unused premium", style: "font-size: .8rem" %>
+              <%= content_tag :span, "(#{to_curr(group_remit.total_unused_premium)})", style: "font-size: .8rem; color: var(--bs-green)"%>
+            </div>
+          <% end %>
           <div class="text-secondary d-flex justify-content-between">
             <%= content_tag :span, "#{group_remit.pending? ? "For review" : "Denied"} premium", style: "font-size: .8rem" %>
             <%= content_tag :span, "(#{to_curr(group_remit.denied_principal_premiums)})", style: "font-size: .8rem; color: var(--bs-red)"%>

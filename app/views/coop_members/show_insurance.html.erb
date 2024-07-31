@@ -26,7 +26,7 @@
         <tbody>
           <% @batch_gyrt.group_by(&:agreement_benefit).each do |agreement_benefit, batch| %>
             <tr>
-              <td colspan=5> <strong><%= agreement_benefit.agreement.plan %></strong> <br>
+              <td colspan=5> <strong><%= agreement_benefit.agreement&.plan %></strong> <br>
                 <%= agreement_benefit.name %> <br>
                 <%# add view claims button %>
                 <% unless current_user.is_mis? %>

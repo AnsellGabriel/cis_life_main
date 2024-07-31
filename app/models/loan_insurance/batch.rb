@@ -67,8 +67,13 @@ class LoanInsurance::Batch < Batch
     self.premium = (loan_amount / 1000 ) * ((loan_rate.annual_rate / 12) * terms)
     self.unused = 0
     self.premium_due = premium
-    self.agent_sf_amount = calculate_service_fee(loan_rate.agent_sf, premium_due)
     self.coop_sf_amount = calculate_service_fee(loan_rate.coop_sf, premium_due)
+
+    if self.group_remit.agreement.comm_type == "Net Commission"
+      self.agent_sf_amount = calculate_service_fee(loan_rate.agent_sf, premium_due - self.coop_sf_amount)
+    else
+      self.agent_sf_amount = calculate_service_fee(loan_rate.agent_sf, premium_due)
+    end
   end
 
   def sii_set_terms_and_details(agreement)
@@ -202,8 +207,13 @@ class LoanInsurance::Batch < Batch
         self.adjusted_premium_due = self.adjusted_prem
       end
 
-      self.adjusted_agent_sf = calculate_service_fee(self.rate.agent_sf, self.adjusted_prem)
       self.adjusted_coop_sf = calculate_service_fee(self.rate.coop_sf, self.adjusted_prem)
+
+      if self.group_remit.agreement.comm_type == "Net Commission"
+        self.adjusted_agent_sf = calculate_service_fee(self.rate.agent_sf, self.adjusted_prem - self.adjusted_coop_sf)
+      else
+        self.adjusted_agent_sf = calculate_service_fee(self.rate.agent_sf, self.adjusted_prem)
+      end
 
       batch_remarks.build(remark: "Adjusted premium accepted. : #{self.adjusted_prem}", status: :prem_adjust, user: current_user.userable)
     when "cov"
@@ -293,7 +303,12 @@ class LoanInsurance::Batch < Batch
     else
       self.coop_sf_amount = calculate_service_fee(loan_rate.coop_sf, premium_due)
     end
-    self.agent_sf_amount = calculate_service_fee(loan_rate.agent_sf, premium_due)
+
+    if self.group_remit.agreement.comm_type == "Net Commission"
+      self.agent_sf_amount = calculate_service_fee(loan_rate.agent_sf, premium_due - self.coop_sf_amount)
+    else
+      self.agent_sf_amount = calculate_service_fee(loan_rate.agent_sf, premium_due)
+    end
   end
 
   def compute_premium(encoded_premium, agreement)
@@ -333,6 +348,10 @@ class LoanInsurance::Batch < Batch
     when "sf"
       calculate_service_fee(percentage, premium)
     end
+  end
+
+  def self.get_pending_lppi(group_remits)
+    where(group_remit: group_remits).where(insurance_status: :pending)
   end
 
   private

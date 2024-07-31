@@ -1,7 +1,7 @@
 class Payee < ApplicationRecord
   validates_presence_of :payee_type
-  validates_presence_of :cooperative_id, if: :cooperative?
-  validates :name, presence: true, uniqueness: true
+  # validates_presence_of :cooperative_id, if: :cooperative?
+  # validates :name, presence: true, uniqueness: true
 
   belongs_to :cooperative, optional: true
 

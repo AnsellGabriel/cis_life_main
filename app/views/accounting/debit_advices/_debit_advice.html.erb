@@ -5,8 +5,9 @@
         <div class="<%= flex_justify_align('between','center') %>">
           <div class="<%= flex_justify_align('','center') %> gap-1">
             <p class="text-muted"><small>Debit Advice</small></p>
-            <p class="badge bg-<%= debit_advice.decorate.status_badge %>"><%= debit_advice.status.humanize %></p>
-            <p class="badge bg-<%= debit_advice.decorate.payout_status_badge %>"><%= debit_advice.payout_status.humanize %></p>
+            <p class="badge bg-primary"><%= debit_advice.branch.name.upcase %></p>
+            <p class="badge bg-<%= debit_advice.decorate.status_badge %>"><%= debit_advice.status.humanize.upcase %></p>
+            <p class="badge bg-<%= debit_advice.decorate.payout_status_badge %>"><%= debit_advice.payout_status.humanize.upcase %></p>
           </div>
           <div class="">
             <% if current_user.is_accountant? %>

@@ -32,7 +32,9 @@
         error: '*Required'
       %>
     <% end %>
-    <%= f.input :amount, error: '*Required' %>
+    <div class="row">
+      <%= f.input :amount, error: '*Required', wrapper_html: {class: 'col-6'} %>
+    </div>
     <%= f.input :particulars, error: '*Required' %>
 
   </div>

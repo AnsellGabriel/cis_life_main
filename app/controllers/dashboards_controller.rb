@@ -32,6 +32,14 @@ class DashboardsController < ApplicationController
         @notifications = @cooperative.notifications
         @coop_messages = Claims::ClaimRemark.where(coop: 1)
         @process_claims = Claims::ProcessClaim.where(cooperative: @cooperative)
+
+        @coop_group_remits = @cooperative.group_remits
+        @pending_lppi = LoanInsurance::Batch.get_pending_lppi(@coop_group_remits)
+        @pending_gyrt = Batch.get_pending_gyrt(@coop_group_remits)
+
+        @group_remits_pending = @cooperative.group_remits.where(status: :pending)
+        
+
         #for graphs
         @age_bracket = [
           ["18-65", @cooperative.get_age_demo("regular")],
@@ -75,9 +83,10 @@ class DashboardsController < ApplicationController
     end
 
     def accounting
-      @check_vouchers = Accounting::Check.where(employee: current_user.userable)
-      @debit_advices = Accounting::DebitAdvice.where(employee: current_user.userable)
-      @journal_vouchers = Accounting::Journal.where(employee: current_user.userable)
+      date_range = params[:date_from]&.to_date&.beginning_of_day..params[:date_to]&.to_date&.end_of_day
+      @check_vouchers = Accounting::Check.where(employee: current_user.userable, date_voucher: date_range)
+      @debit_advices = Accounting::DebitAdvice.where(employee: current_user.userable, date_voucher: date_range)
+      @journal_vouchers = Accounting::Journal.where(employee: current_user.userable, date_voucher: date_range)
 
       request = Accounting::VoucherRequest.pending
       @check_req = request.check_voucher

@@ -76,9 +76,11 @@
       <% end %>
     </div>
   </div>
-  <div class="mb-3 ">
-    <%= turbo_frame_tag "member loans" %>
-  </div>
+  <% if batch.group_remit.agreement.unusable?  %>
+    <div class="mb-3 ">
+      <%= turbo_frame_tag "member loans" %>
+    </div>
+  <% end %>
   <div class="form-actions text-center">
     <%= f.button :submit, "#{batch.persisted? ? "Update" : "Add"}", class: small_btn('primary') %> 
   </div>

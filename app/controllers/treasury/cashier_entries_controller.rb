@@ -6,7 +6,7 @@ class Treasury::CashierEntriesController < ApplicationController
     @receipt = Treasury::CashierEntry.find(params[:id])
     @entry = @receipt.entriable.instance_of?(Payment) ? @receipt.entriable.payable.agreement.cooperative : @receipt.entriable
     @amount_in_words = amount_to_words(@receipt.amount)
-    @payment_type = @receipt.treasury_payment_type.name
+    @payment_type = @receipt.particulars
     @vat = @receipt.vat
 
     respond_to do |format|
@@ -21,7 +21,7 @@ class Treasury::CashierEntriesController < ApplicationController
     @receipt = Treasury::CashierEntry.find(params[:id])
     @entry = @receipt.entriable.instance_of?(Payment) ? @receipt.entriable.payable.agreement.cooperative : @receipt.entriable
     @amount_in_words = amount_to_words(@receipt.amount)
-    @payment_type = @receipt.treasury_payment_type.name
+    @payment_type = @receipt.particulars
     @vat = @receipt.vat
     # @positions = analyze_pdf("app/assets/pdfs/or_format.pdf", @receipt)
 
@@ -83,13 +83,14 @@ class Treasury::CashierEntriesController < ApplicationController
 
   def create
     @entry = Treasury::CashierEntry.new(entry_params.merge(employee: current_user.userable))
-    @entry.branch = current_user.userable.branch_before_type_cast # assign employee branch to entry
+    @entry.branch = current_user.userable.branch
 
     if @entry.entriable_type == "Remittance"
       @group_remit = @entry.entriable
     end
 
     @entry.check_agreement
+
     if @entry.save
       # if @entry.entriable_type == "Remittance"
       #   approve_payment(@group_remit.payments.last.id)
@@ -136,7 +137,7 @@ class Treasury::CashierEntriesController < ApplicationController
 
   # Only allow a list of trusted parameters through.
   def entry_params
-    params.require(:treasury_cashier_entry).permit(:deposit, :service_fee, :or_no, :or_date, :global_entriable, :treasury_payment_type_id, :treasury_account_id, :amount, :agreement_id, :plan_id, :agent_id)
+    params.require(:treasury_cashier_entry).permit(:deposit, :service_fee, :or_no, :or_date, :global_entriable, :treasury_account_id, :amount, :agreement_id, :plan_id, :agent_id, :vatable, :unuse, :discount, :withholding_tax, :vatable_amount, :vat_exempt, :zero_rated, :vat, :insurance, :discounted, :particulars)
   end
 
   def amount_to_words(amount)

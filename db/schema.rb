@@ -904,8 +904,9 @@ ActiveRecord::Schema[7.0].define(version: 2024_07_22_064709) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.bigint "department_id", null: false
-    t.integer "branch"
     t.string "report"
+    t.bigint "branch_id"
+    t.index ["branch_id"], name: "index_employees_on_branch_id"
     t.index ["department_id"], name: "index_employees_on_department_id"
   end
 
@@ -1619,7 +1620,6 @@ ActiveRecord::Schema[7.0].define(version: 2024_07_22_064709) do
     t.decimal "net_amount", precision: 15, scale: 2, default: "0.0"
     t.decimal "withholding_tax", precision: 15, scale: 2, default: "0.0"
     t.boolean "vatable", default: false
-    t.bigint "treasury_payment_type_id", null: false
     t.integer "branch"
     t.bigint "agreement_id"
     t.bigint "plan_id"
@@ -1635,6 +1635,7 @@ ActiveRecord::Schema[7.0].define(version: 2024_07_22_064709) do
     t.decimal "vatable_amount", precision: 15, scale: 2, default: "0.0"
     t.boolean "insurance", default: false
     t.boolean "discounted", default: false
+    t.text "particulars"
     t.index ["agent_id"], name: "index_treasury_cashier_entries_on_agent_id"
     t.index ["agreement_id"], name: "index_treasury_cashier_entries_on_agreement_id"
     t.index ["branch_id"], name: "index_treasury_cashier_entries_on_branch_id"
@@ -1642,7 +1643,6 @@ ActiveRecord::Schema[7.0].define(version: 2024_07_22_064709) do
     t.index ["entriable_type", "entriable_id"], name: "index_treasury_cashier_entries_on_entriable"
     t.index ["plan_id"], name: "index_treasury_cashier_entries_on_plan_id"
     t.index ["treasury_account_id"], name: "index_treasury_cashier_entries_on_treasury_account_id"
-    t.index ["treasury_payment_type_id"], name: "index_treasury_cashier_entries_on_treasury_payment_type_id"
   end
 
   create_table "treasury_payment_types", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
@@ -1817,7 +1817,6 @@ ActiveRecord::Schema[7.0].define(version: 2024_07_22_064709) do
   add_foreign_key "treasury_cashier_entries", "branches"
   add_foreign_key "treasury_cashier_entries", "employees"
   add_foreign_key "treasury_cashier_entries", "treasury_accounts"
-  add_foreign_key "treasury_cashier_entries", "treasury_payment_types"
   add_foreign_key "treasury_payments", "treasury_accounts", column: "account_id"
   add_foreign_key "treasury_payments", "treasury_cashier_entries", column: "cashier_entry_id"
   add_foreign_key "voucher_requests", "treasury_accounts", column: "account_id"

@@ -1,29 +1,53 @@
 <%= simple_form_for(entry, url: entry.persisted? ? payment_entry_path(payment, entry) : payment_entries_path(payment)) do |f| %>
 
-  <div class="form-inputs mb-3">
+  <div class="form-inputs mb-3" data-controller="hider">
     <div class="row">
-      <div class="col-6">
-        <%= f.input :or_no, label: 'OR Number', error: '*Required' %>
+      <div class="col-3">
+        <%= f.input :or_no, label: 'Invoice Number', error: '*Required' %>
       </div>
-      <div class="col-6">
+      <div class="col-3">
         <%= f.input :or_date, as: :string, input_html: {data: {
           controller: "flatpickr",
           flatpickr_max_date: Date.today,
           flatpickr_next_arrow: "Next",
           flatpickr_prev_arrow: "Prev" }
-          }, label: 'OR Date',
+          }, label: 'Invoice Date',
           error: '*Required'
         %> 
       </div>
+      <div class="col-6 <%= flex_justify_align('around', 'center') %>">
+        <input type="hidden" name="treasury_cashier_entry[vatable]" value="" autocomplete="off">
+        <span class="d-flex gap-1 mb-3">
+          <input type="radio" value="true" name="treasury_cashier_entry[vatable]" id="treasury_cashier_entry_vat_true" data-action="input->hider#toggleVat" data-hider-target="vat" <%= 'checked' if entry.vatable? %>>
+          <label class="collection_radio_buttons" for="treasury_cashier_entry_vatable_true">VAT</label>
+        </span>
+        <span class="d-flex gap-1 mb-3">
+          <input type="radio" value="false" name="treasury_cashier_entry[vatable]" id="treasury_cashier_entry_vat_false" data-action="input->hider#toggleVat" data-hider-target="vatFalse" <%= 'checked' unless entry.vatable? %>>
+          <label class="collection_radio_buttons" for="treasury_cashier_entry_vatable_false">Non-VAT</label>
+        </span>
+      </div>
     </div>
-    <%= f.input :dummy_payee, label: 'Payee', input_html: {value: @payment.coop}, readonly: true  %>
-    <%= f.association :treasury_account, label: 'Account', error: '*Required', input_html: { data: { controller: "ts--select" } }  %>
-    <%= f.association :treasury_payment_type, label: 'Entry type', error: '*Required', input_html: { data: { controller: "ts--select" } } %>
-    <%= f.input :amount, input_html: {value: @payment.amount + @payment.payable.coop_commission}, error: '*Required' %>
+    <%= f.input :dummy_payee, label: 'Payor', input_html: {value: @payment.coop}, readonly: true  %>
+    <%= f.association :treasury_account, collection: Treasury::Account.child_accounts, label: 'Deposited To', error: '*Required', input_html: { data: { controller: "ts--select" } }%>
     <div class="row">
-      <%= f.input :deposit, input_html: {value: @payment.amount}, error: '*Required', wrapper_html: {class: 'col-6'} %>
-      <%= f.input :service_fee, input_html: {value: @payment.payable.coop_commission}, error: '*Required', wrapper_html: {class: 'col-6'} %>
+      <%= f.input :amount, label: 'Amount Deposited', input_html: {value: @payment.amount + @payment.payable.coop_commission}, error: '*Required', wrapper_html: {class: 'col-3'} %>
+      <%= f.input :deposit, label: 'Total Sales', input_html: {value: @payment.amount}, error: '*Required', wrapper_html: {class: 'col-3'} %>
+      <%= f.input :service_fee, input_html: {value: @payment.payable.coop_commission}, error: '*Required', wrapper_html: {class: 'col-3'} %>
+      <%= f.input :unuse,label: 'Others', error: '*Required', wrapper_html: {class: 'col-3'} %>
     </div>
+    <div class="hidden" data-hider-target="vatContainer">
+      <div class="row">
+        <%= f.input :vatable_amount, label: 'VATable Sales', error: '*Required', wrapper_html: {class: 'col-3'} %>
+        <%= f.input :vat_exempt, label: 'VAT-Exempt Sales', error: '*Required', wrapper_html: {class: 'col-3'} %>
+        <%= f.input :zero_rated, label: 'Zero Rated Sales', error: '*Required', wrapper_html: {class: 'col-3'} %>
+        <%= f.input :vat, label: 'Value Added Tax', error: '*Required', wrapper_html: {class: 'col-3'} %>
+      </div>
+    </div>
+    <div class="row">
+      <%= f.input :agent, input_html: {value: @payment.agent}, label: 'Agent', wrapper_html: {class: 'col-6'}, readonly: true  %>
+      <%= f.input :plan, input_html: {value: @payment.plan}, label: 'Plan', wrapper_html: {class: 'col-6'}, readonly: true %>
+    </div>
+    <%= f.input :particulars, error: '*Required' %>
   </div>
 
   <div class="form-actions text-center">

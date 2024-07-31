@@ -4,7 +4,7 @@ class ProcessCoveragesController < ApplicationController
   before_action :authenticate_user!
   before_action :check_emp_department, except: :modal_remarks
   before_action :set_process_coverage,
-  only: %i[ show edit update destroy approve_batch deny_batch pending_batch reconsider_batch pdf set_premium_batch update_batch_prem transfer_to_md update_batch_cov adjust_lppi_cov refund psheet set_processor set_processor]
+  only: %i[ show edit update destroy approve_batch deny_batch pending_batch reconsider_batch pdf set_premium_batch update_batch_prem transfer_to_md update_batch_cov adjust_lppi_cov refund psheet set_processor set_processor refund_form ]
 
   # GET /process_coverages
   def index
@@ -36,6 +36,11 @@ class ProcessCoveragesController < ApplicationController
 
     elsif current_user.rank == "head"
 
+      @overall_coverages = ProcessCoverage.where(team: current_user.userable.team)
+      @approved_coverages = @overall_coverages.where(status: :approved)
+      @denied_coverages = @overall_coverages.where(status: :denied)
+      @on_process_coverages = @overall_coverages.where(status: :for_process)
+
       @process_coverages_x = ProcessCoverage.all
       @for_process_coverages = @process_coverages_x.where(status: :for_process)
       @approved_process_coverages = @process_coverages_x.where(status: :approved)
@@ -62,21 +67,27 @@ class ProcessCoveragesController < ApplicationController
 
     elsif current_user.analyst?
       # @process_coverages_x = ProcessCoverage.joins(group_remit: { agreement: :plan, batches: {} }).where(team: current_user.userable.team)
-      @process_coverages_x = ProcessCoverage.joins(group_remit: { agreement: :plan }).where(team: current_user.userable.team)
-      @for_process_coverages = @process_coverages_x.where(status: :for_process, processor: nil)
+      @process_coverages_team = ProcessCoverage.joins(group_remit: { agreement: :plan }).where(team: current_user.userable.team)
+      @self_process_coverages = ProcessCoverage.joins(group_remit: { agreement: :plan }).where(processor: current_user.userable)
+      @for_process_coverages = @process_coverages_team.where(status: :for_process, processor: nil)
       # @for_process_coverages = @process_coverages_x.where(processor: nil)
       # @approved_process_coverages = @process_coverages_x.where(status: :approved, who_approved: current_user.userable)
-      @approved_process_coverages = @process_coverages_x.where(status: :approved).where(@arel_pcs[:who_approved_id].eq(current_user.userable_id).or(@arel_pcs[:who_processed_id].eq(current_user.userable_id).and(@arel_pcs[:who_approved_id].not_eq(nil))))
+      @approved_process_coverages = @process_coverages_team.where(status: :approved).where(@arel_pcs[:who_approved_id].eq(current_user.userable_id).or(@arel_pcs[:who_processed_id].eq(current_user.userable_id).and(@arel_pcs[:who_approved_id].not_eq(nil))))
       # @pending_process_coverages = ProcessCoverage.where(status: :pending)
-      @reprocess_coverages = @process_coverages_x.where(status: :reprocess)
-      @reassess_coverages = @process_coverages_x.where(status: :reassess)
-      @denied_process_coverages = @process_coverages_x.where(status: :denied)
-      @evaluated_process_coverages = @process_coverages_x.where(status: [:for_head_approval, :for_vp_approval])
-      @selected_process_coverages = @process_coverages_x.where(processor: current_user.userable, status: [:pending, :for_process])
+      @reprocess_coverages = @process_coverages_team.where(status: :reprocess)
+      @reassess_coverages = @process_coverages_team.where(status: :reassess)
+      @denied_process_coverages = @process_coverages_team.where(status: :denied)
+      @evaluated_process_coverages = @process_coverages_team.where(status: [:for_head_approval, :for_vp_approval])
+      @selected_process_coverages = @process_coverages_team.where(processor: current_user.userable, status: [:pending, :for_process])
 
       @coverages_total_processed = ProcessCoverage.where(status: [:approved, :denied, :reprocess])
 
+      @with_voucher_requests = @self_process_coverages.joins(:voucher_request)
+
+      @process_coverages_x = @self_process_coverages
+
       @md_reviewed= 0
+
       @for_md_review = 0
       @reviewed_batch = []
       @for_review_batch = []
@@ -120,7 +131,7 @@ class ProcessCoveragesController < ApplicationController
       @analysts = @analysts_x.joins(:emp_approver)
       # @analysts = @analysts_x.joins(:emp_approver).where(emp_approver: { approver: current_user.userable_id })
     end
-    
+
     @pagy_pc, @filtered_pc = pagy(@process_coverages.order(@arel_pcs[:processor_id].eq(current_user.userable_id).desc), items: 5, page_param: :process_coverage, link_extra: 'data-turbo-frame="pro_cov_pagination"')
     @notifications = current_user.userable.team.notifications.where(created_at: @current_date.beginning_of_week..@current_date.end_of_week)
     # if params[:search].present?
@@ -268,6 +279,11 @@ class ProcessCoveragesController < ApplicationController
           ProcessCoverage.cov_list_analyst(current_user.userable, "", "process")
         end
 
+      when "Denied"
+        if current_user.analyst?
+          ProcessCoverage.cov_list_analyst(current_user.userable, "", "denied")
+        end
+
       when "Approved"
         # ProcessCoverage.where(status: :approved, created_at: start_date..end_date)
         if current_user.head?
@@ -275,6 +291,8 @@ class ProcessCoveragesController < ApplicationController
           # ProcessCoverage.joins(group_remit: { agreement: { emp_agreements: {employee: :emp_approver} } }).where( emp_approver: { approver_id: current_user.userable_id }, emp_agreements: { active: true}).where(status: :approved, created_at: start_date..end_date)
         elsif current_user.senior_officer?
           ProcessCoverage.where(status: :approved, created_at: start_date..end_date)
+        elsif current_user.analyst?
+          ProcessCoverage.cov_list_analyst(current_user.userable, "", "approved")
         end
 
       when "Reconsider"
@@ -596,8 +614,22 @@ class ProcessCoveragesController < ApplicationController
     @process_coverage.group_remit.set_total_premiums_and_fees
   end
 
+  def refund_form
+    @request_type = params[:type]
+    @amount = @process_coverage.group_remit.denied_premiums
+  end
+
   def refund
-    request = CheckVoucherRequestService.new(@process_coverage, @process_coverage.group_remit.refund_amount, :refund, current_user)
+    request_type = params[:process_coverage][:request_type]
+
+    if request_type.present?
+      amount = params[:process_coverage][:amount].to_f
+      payment_type = params[:process_coverage][:payment_type].to_i
+      
+      request = VoucherRequestService.new(@process_coverage, amount, :refund, current_user, payment_type, nil, request_type)
+    else
+      request = VoucherRequestService.new(@process_coverage, @process_coverage.group_remit.refund_amount, :refund, current_user)
+    end
 
     if request.create_request
       redirect_to process_coverage_path(@process_coverage), notice: "Refund request sent!"

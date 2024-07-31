@@ -34,15 +34,13 @@
         input_html: {data: {controller: 'ts--select'}}
       %>
     <% end %>
+    <%= f.association :treasury_account, collection: Treasury::Account.child_accounts, label: 'Bank', error: '*Required', input_html: {data: {controller: 'ts--select'}} %>
     <div class="row">
-      <div class="col-7">
-        <%= f.association :treasury_account, label: 'Bank', error: '*Required', input_html: {data: {controller: 'ts--select'}} %>
-      </div>
-      <div class="col-5">
+      <div class="col-6">
         <% if params[:rid].present? %>
-          <%= f.input :amount, as: :string, error: '*Required', input_html: {data: {number_formatter_target: 'input'}, readonly: true  } %>
+          <%= f.input :amount, error: '*Required', input_html: {readonly: true  } %>
         <% else %>
-          <%= f.input :amount, as: :string, error: '*Required', input_html: {data: {number_formatter_target: 'input'} } %>
+          <%= f.input :amount, error: '*Required' %>
         <% end %>
       </div>
     </div>

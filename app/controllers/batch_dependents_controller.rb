@@ -35,7 +35,6 @@ class BatchDependentsController < InheritedResources::Base
       return redirect_to group_remit_batch_path(@group_remit, @batch), alert: "Please choose a dependent"
     end
 
-    # ! dependent agreement benefits' prefix must be principal agreement benefit's name
     dependent_agreement_benefits = agreement.agreement_benefits
                                     .with_name_like(@batch.agreement_benefit.name.split(" - ").first)
                                     .find_by(insured_type: insured_type)
@@ -43,6 +42,12 @@ class BatchDependentsController < InheritedResources::Base
     unless dependent_agreement_benefits.present?
       dependent_agreement_benefits = agreement.agreement_benefits.find_by(insured_type: insured_type)
     end
+
+    if dependent_agreement_benefits.blank?
+      return redirect_to group_remit_batch_path(@group_remit, @batch), alert: "No benefit found for #{@batch_dependent.member_dependent.relationship.downcase} dependents. Please contact your customer service for assistance."
+    end
+
+
     # model/concerns/calculate.rb
     @batch_dependent.set_premium_and_service_fees(dependent_agreement_benefits, group_remit)
     dependent = @batch_dependent.member_dependent
@@ -140,5 +145,4 @@ class BatchDependentsController < InheritedResources::Base
     relationship = @batch_dependent.member_dependent.relationship
     insured_type = @batch_dependent.insured_type(relationship)
   end
-
 end
