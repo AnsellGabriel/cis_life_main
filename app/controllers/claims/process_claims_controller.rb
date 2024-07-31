@@ -18,7 +18,6 @@ class Claims::ProcessClaimsController < ApplicationController
 
   def index_coop
     @process_claims = Claims::ProcessClaim.where(cooperative: @cooperative)
-
   end
 
   def index_show
@@ -35,11 +34,19 @@ class Claims::ProcessClaimsController < ApplicationController
         @display = "Approved Claims"
       end
     end
-
     # use pagy
     @pagy, @process_claims = pagy(@process_claims, items: 5)
     render :index
     # raise "errors"
+  end
+
+  def index_claim_type 
+    @q = Claims::ProcessClaim.ransack(params[:q])
+    @process_claims = @q.result(distinct: true)
+    @claim_type = Claims::ClaimType.find(params[:p])
+    @process_claims = @process_claims.where(claim_type: @claim_type)
+    @pagy, @process_claims = pagy(@process_claims, items: 5)
+    render :index
   end
 
   def print_sheet
@@ -48,7 +55,7 @@ class Claims::ProcessClaimsController < ApplicationController
     #   format.pdf do
         pdf = ClaimsPdf.new(@process_claim, view_context)
         send_data pdf.render,
-          filename: "#{@process_claim.coop_member.get_fullname}.pdf",
+          filename: "#{@process_claim.insurable.get_fullname}.pdf",
           type: 'application/pdf',
           disposition: 'inline'
     #   end
@@ -337,12 +344,14 @@ class Claims::ProcessClaimsController < ApplicationController
         unless @claim_track.reconsider?
             case @claim_track.route_id
             when 1
-              @process_claim.update!(claim_route: @claim_track.route_id, status: :process, claim_filed: 0, processing: 0, approval: 0, payment: 0)
+              @process_claim.update!(claim_route: @claim_track.route_id, status: :filing, claim_filed: 0, processing: 0, approval: 0, payment: 0)
             when 2
               import_product_benefit if @process_claim.documentation_review?
-              @process_claim.update!(claim_route: @claim_track.route_id, status: :process, claim_filed: 1, processing: 0)
+              @process_claim.update!(claim_route: @claim_track.route_id, status: :assessment, claim_filed: 1, processing: 0, approval: 0, payment: 0)
             when 3
               @process_claim.update!(claim_route: @claim_track.route_id, status: :process, processing: 1)
+            when 4
+              @process_claim.update!(claim_route: @claim_track.route_id, user_id: current_user)
             when 8
               @process_claim.update!(claim_route: @claim_track.route_id, status: :approved, payment: 1)
               ActiveRecord::Base.transaction do
@@ -458,7 +467,7 @@ class Claims::ProcessClaimsController < ApplicationController
 
   # Only allow a list of trusted parameters through.
   def process_claim_params
-    params.require(:claims_process_claim).permit(:coop_bank, :claim_retrieval_id, :claim_type_nature_id, :cooperative_id, :coop_member_id, :claim_route, :agreement_id, :agreement_benefit_id, :batch_id, :coop_member_id, :cause_id, :claim_type_id, :date_file, :claim_filed, :processing, :approval, :payment, :coop_member_type, :date_incident, :entry_type, :claimant_name, :claimant_email, :claimant_contact_no, :nature_of_claim, :agreement_benefit_id, :relationship, :old_code
+    params.require(:claims_process_claim).permit(:coop_bank, :claim_retrieval_id, :claim_type_nature_id, :cooperative_id, :coop_member_id, :claim_route, :agreement_id, :agreement_benefit_id, :batch_id, :coop_member_id, :cause_id, :claim_type_id, :date_file, :claim_filed, :processing, :approval, :payment, :coop_member_type, :date_incident, :entry_type, :claimant_name, :claimant_email, :claimant_contact_no, :nature_of_claim, :agreement_benefit_id, :relationship, :old_code, :user_id,
       claim_documents_attributes: [:id, :document, :document_type, :_destroy],
       process_tracks_attributes: [:id, :description, :route_id, :trackable_type, :trackable_id ],
       claim_benefits_param: [:id, :benefit_id, :amount, :status],

@@ -41,8 +41,8 @@ class ClaimsPdf < Prawn::Document
           text "Insured:", size: 9
         end
         bounding_box([100, y_position - gap], width: 190, height: 20) do
-          text @pc.coop_member.get_fullname.titleize, size: 9, style: :bold
-          text "Birthdate: #{to_shortdate(@pc.coop_member.birthdate)} Age: #{@pc.age}", size: 9
+          text @pc.insurable.get_fullname.titleize, size: 9, style: :bold
+          text "Birthdate: #{to_shortdate(@pc.insurable.birthdate)} Age: #{@pc.age}", size: 9
           # transparent(0.5) { stroke_bounds }
         end
         y_position -= 25
@@ -70,7 +70,13 @@ class ClaimsPdf < Prawn::Document
         gap = 15
         y_position -= gap
         bounding_box([0, y_position], width: 100, height: 10) do
-          
+          text "Date Filed:", size: 9
+        end
+        bounding_box([100, y_position], width: 180, height: 10) do
+          text to_shortdate(@pc.date_file), size: 9
+        end
+        y_position -= gap
+        bounding_box([0, y_position], width: 100, height: 10) do
           text "Date Incident:", size: 9
         end
         bounding_box([100, y_position], width: 180, height: 10) do
@@ -105,7 +111,7 @@ class ClaimsPdf < Prawn::Document
         end
         y_position -= gap
         unless @pc.claim_cause.nil?
-          unless @pc.claim_cause.icd == ""
+          unless @pc.claim_cause.icd == "" || @pc.claim_cause.icd.nil?
             bounding_box([0, y_position], width: 100, height: 10) do
               text "ICD:", size: 9
             end
@@ -114,7 +120,7 @@ class ClaimsPdf < Prawn::Document
               text @pc.claim_cause.icd, size: 9, align: :justify
             end
           end
-          unless @pc.claim_cause.acd == ""
+          unless @pc.claim_cause.acd == "" || @pc.claim_cause.acd.nil?
             y_position = cursor - 5
             bounding_box([0, y_position], width: 100, height: 10) do
               text "ACD:", size: 9
@@ -124,7 +130,7 @@ class ClaimsPdf < Prawn::Document
               text @pc.claim_cause.acd, size: 9, align: :justify
             end
           end
-          unless @pc.claim_cause.ucd == ""
+          unless @pc.claim_cause.ucd == "" || @pc.claim_cause.ucd.nil?
             y_position = cursor - 5
             bounding_box([0, y_position], width: 100, height: 10) do
               text "UCD:", size: 9
@@ -134,7 +140,7 @@ class ClaimsPdf < Prawn::Document
               text @pc.claim_cause.ucd, size: 9, align: :justify
             end
           end
-          unless @pc.claim_cause.osccd == ""
+          unless @pc.claim_cause.osccd == "" || @pc.claim_cause.osccd.nil?
             y_position = cursor - 5
             bounding_box([0, y_position], width: 100, height: 10) do
               text "OSCCD:", size: 9
@@ -144,7 +150,7 @@ class ClaimsPdf < Prawn::Document
               text @pc.claim_cause.osccd, size: 9, align: :justify
             end
           end
-          unless @pc.claim_cause.postmortem == ""
+          unless @pc.claim_cause.postmortem == "" || @pc.claim_cause.postmortem.nil?
             y_position = cursor - 5
             bounding_box([0, y_position], width: 100, height: 10) do
               text "Postmortem:", size: 9
@@ -154,7 +160,7 @@ class ClaimsPdf < Prawn::Document
               text @pc.claim_cause.postmortem, size: 9, align: :justify
             end
           end
-          unless @pc.claim_cause.cause_of_incident == ""
+          unless @pc.claim_cause.cause_of_incident == "" || @pc.claim_cause.cause_of_incident.nil?
             y_position = cursor - 5
             bounding_box([0, y_position], width: 100, height: 10) do
               text "Cause of Incident:", size: 9
@@ -256,25 +262,27 @@ class ClaimsPdf < Prawn::Document
       # transparent(0.5) { stroke_bounds }
       text "V. Policy Coverage", size: 10, style: :bold
       indent(10) do 
-        data = [["ORNO", "ORdate", "Effectivity","Expiry","Amount Insured","Benefit","Status","Duration","#"]]
+        data = [["#","ORNO", "ORdate", "Effectivity","Expiry","Amount Insured","Benefit","Status","Duration"]]
         data += [[ {content: "Current", colspan: 9} ]]
         i = 1
         @pc.claim_coverages.where(coverage_type: "Current").each do |cc|
-          data += [["#{cc.orno}","#{to_shortdate(cc.or_date)}","#{to_shortdate(cc.effectivity)}","#{to_shortdate(cc.expiry)}","#{num_format(cc.amount)}","#{num_format(cc.amount_cover)}","#{cc.status}","#{cc.get_duration}",i]]
+          data += [["#{i}","#{cc.orno}","#{to_shortdate(cc.or_date)}","#{to_shortdate(cc.effectivity)}","#{to_shortdate(cc.expiry)}","#{num_format(cc.amount)}","#{num_format(cc.amount_cover)}","#{cc.status}","#{cc.get_duration}"]]
           i += 1
         end
         previous = @pc.claim_coverages.where(coverage_type: "Previous")
         unless previous.empty?
           data += [[ {content: "Previous", colspan: 9} ]]
           previous.each do |cc|
-            data += [["#{cc.orno}","#{to_shortdate(cc.or_date)}","#{to_shortdate(cc.effectivity)}","#{to_shortdate(cc.expiry)}","#{num_format(cc.amount)}","#{num_format(cc.amount_cover)}","#{cc.status}","#{cc.get_duration}",i]]
+            data += [["#{i}","#{cc.orno}","#{to_shortdate(cc.or_date)}","#{to_shortdate(cc.effectivity)}","#{to_shortdate(cc.expiry)}","#{num_format(cc.amount)}","#{num_format(cc.amount_cover)}","",""]]
+            i += 1
           end
         end
         table data do
           row(0).font_style = :bold
           # columns(0).align = :center
           columns(4..6).align = :right
-          self.column_widths = [40,60,60,60,60,60,40,110]
+          # self.column_widths = [40,60,60,60,60,60,40,110]
+          # self.column_widths = bounds.width / data.first.size
           self.cell_style = {:size => 8}
         end
       end

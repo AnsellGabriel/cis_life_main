@@ -5,7 +5,7 @@
   <div class="col-md-6">
     <%= render 'claims_detail' %>
     <%= render 'insured_details' if @process_claim.incomplete_document? || @process_claim.analyst_file? %>
-    <%= render 'claimant_details' %>
+    <%= render 'claimant_details' unless @process_claim.claimant_name.nil? %>
     
   </div>
   <div class="col-md-6">

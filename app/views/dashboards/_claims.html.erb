@@ -95,6 +95,29 @@
                 </div>
             <% end %>
             <div class="card-group mb-3">
+              <div class="card">
+                  <div class="card-body">
+                  <p class="text-primary card-title">HOSPITALIZATION</p>
+                  <h2 class="text-muted"><%= @process_claims.where(claim_type_id: 2).count %></h2>
+                  </div>
+                  <div class="card-footer"><small class="text-muted"> <%= link_to 'See Details <i class="bi bi-box-arrow-right"></i>'.html_safe, index_claim_type_claims_process_claims_path(p: 2), class: "text-muted" %></small></div>
+              </div>
+              <div class="card">
+                  <div class="card-body">
+                  <p class="text-primary card-title">MEDICAL ASSISTANCE</p>
+                  <h2 class="text-muted"><%= @process_claims.where(claim_type_id: 3).count %></h2>
+                  </div>
+                  <div class="card-footer"><small class="text-muted"> <%= link_to 'See Details <i class="bi bi-box-arrow-right"></i>'.html_safe, index_claim_type_claims_process_claims_path(p: 3), class: "text-muted" %></small></div>
+              </div>
+              <div class="card">
+                  <div class="card-body">
+                  <p class="text-primary card-title">AWOL</p>
+                  <h2 class="text-muted"><%= @process_claims.where(claim_type_id: 4).count %></h2>
+                  </div>
+                  <div class="card-footer"><small class="text-muted"> <%= link_to 'See Details <i class="bi bi-box-arrow-right"></i>'.html_safe, index_claim_type_claims_process_claims_path(p: 4), class: "text-muted" %></small></div>
+              </div>
+            </div>
+            <div class="card-group mb-3">
                 <div class="card">
                     <div class="card-body">
                     <p class="text-primary card-title">COOP FILED</p>
@@ -160,7 +183,8 @@
                 </div>
                 
             </div>
-        </div>
+            
+          </div>
         
     </div>
     <div class="col-md-6">
