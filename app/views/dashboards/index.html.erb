@@ -24,6 +24,8 @@
         <% if current_user.senior_officer? %>
           <%= render 'coso' %>
         <% end %>
+      <% when 28 %>
+        <%= render 'admin_marketing' %>
     <% end %>
   <% end %>
 </div>

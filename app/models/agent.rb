@@ -13,6 +13,6 @@ class Agent < ApplicationRecord
 
   def to_s
     # test = 5
-    full_name
+    full_name.present? ? full_name : "#{last_name}, #{first_name}"
   end
 end

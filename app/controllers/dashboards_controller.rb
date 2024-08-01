@@ -177,4 +177,12 @@ class DashboardsController < ApplicationController
     render :index
   end
 
+  def admin_marketing
+    @agreements = Agreement.all
+
+    @pagy_agreements, @filtered_agreements = pagy(@agreements, items: 10, page_param: :agreement, link_extra: 'data-turbo-frame="agree_pagination"')
+
+    render :index
+  end
+
 end
