@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2024_07_22_064709) do
+ActiveRecord::Schema[7.0].define(version: 2024_07_30_062019) do
   create_table "accounting_journal_entries", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.string "journable_type", null: false
     t.bigint "journable_id", null: false
@@ -1075,7 +1075,7 @@ ActiveRecord::Schema[7.0].define(version: 2024_07_22_064709) do
     t.decimal "agent_sf_amount", precision: 10, scale: 2
     t.boolean "valid_health_dec", default: false
     t.decimal "loan_amount", precision: 10, scale: 2
-    t.bigint "loan_insurance_rate_id"
+    t.bigint "loan_insurance_rate_id", null: false
     t.boolean "reinsurance"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
@@ -1778,6 +1778,7 @@ ActiveRecord::Schema[7.0].define(version: 2024_07_22_064709) do
   add_foreign_key "dependent_health_decs", "batch_dependents"
   add_foreign_key "dependent_remarks", "batch_dependents"
   add_foreign_key "emp_approvers", "employees", column: "approver_id"
+  add_foreign_key "employees", "branches"
   add_foreign_key "employees", "departments"
   add_foreign_key "general_ledgers", "treasury_accounts", column: "account_id"
   add_foreign_key "general_ledgers", "treasury_sub_accounts", column: "sub_account_id"
