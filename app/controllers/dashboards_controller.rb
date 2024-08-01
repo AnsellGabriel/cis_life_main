@@ -67,6 +67,8 @@ class DashboardsController < ApplicationController
       @payments = Payment.for_review
       @for_business_checks = Accounting::Check.approved.posted.where(claimable: false)
       @for_debit_advice = Accounting::DebitAdvice.approved.pending_payout
+
+      render :index
     end
 
   # def actuarial

@@ -15,6 +15,7 @@
     </thead>
     <tbody>
       <% @user_levels.each do |user_level| %>
+        <% next if user_level.user.nil? %>
         <tr>
           <th scope="row"><%= user_level.id %></th>
           <td><%= user_level.user.get_fullname %> <br>

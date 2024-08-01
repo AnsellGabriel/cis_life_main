@@ -40,7 +40,7 @@ class Claims::ProcessClaimsController < ApplicationController
     # raise "errors"
   end
 
-  def index_claim_type 
+  def index_claim_type
     @q = Claims::ProcessClaim.ransack(params[:q])
     @process_claims = @q.result(distinct: true)
     @claim_type = Claims::ClaimType.find(params[:p])
@@ -63,9 +63,9 @@ class Claims::ProcessClaimsController < ApplicationController
     # pdf = Prawn::Document.new
     # pdf = ClaimsPrintSheetPdf.new
     # pdf.text "Claims Processing Sheet"
-    # pdf.text @process_claim.coop_member.get_fullname.titleize, size: 15, style: :bold
+    # pdf.text @process_claim.insurable.get_fullname.titleize, size: 15, style: :bold
     # pdf.text @process_claim.cooperative.name
-    # send_data(pdf.render, filename: "#{@process_claim.coop_member.get_fullname}.pdf", type: 'application/pdf', disposition: 'inline')
+    # send_data(pdf.render, filename: "#{@process_claim.insurable.get_fullname}.pdf", type: 'application/pdf', disposition: 'inline')
   end
   # GET /process_claims/1
   def show
@@ -110,7 +110,7 @@ class Claims::ProcessClaimsController < ApplicationController
     @process_claim.agreement = Agreement.find(params[:a]) if params[:a].present?
     @process_claim.agreement_benefit = AgreementBenefit.find(params[:ab]) if params[:ab].present?
     @coop_member = CoopMember.find(params[:cm])
-    @process_claim.coop_member = @coop_member
+    @process_claim.insurable = @coop_member
     @process_claim.cooperative = @coop_member.cooperative
 
 
@@ -124,7 +124,7 @@ class Claims::ProcessClaimsController < ApplicationController
     # raise "errors"
     @process_claim = Claims::ProcessClaim.new
     @coop_member = CoopMember.find(params[:cm])
-    @process_claim.coop_member = @coop_member
+    @process_claim.insurable = @coop_member
     @process_claim.cooperative = @coop_member.cooperative
     @claim_cause = @process_claim.build_claim_cause
     @agreement = Agreement.where(cooperative: @process_claim.cooperative)
@@ -208,7 +208,7 @@ class Claims::ProcessClaimsController < ApplicationController
 
   # GET /process_claims/1/edit
   def edit
-    @coop_member = @process_claim.coop_member
+    @coop_member = @process_claim.insurable
   end
 
   def edit_ca
@@ -278,9 +278,9 @@ class Claims::ProcessClaimsController < ApplicationController
     end
 
     if params[:process_claim][:coop_member_type] == "Batch"
-      @process_claim.coop_member = Batch.find(params[:process_claim][:coop_member_id])
+      @process_claim.insurable = Batch.find(params[:process_claim][:coop_member_id])
     else
-      @process_claim.coop_member = BatchDependent.find(params[:process_claim][:coop_member_id])
+      @process_claim.insurable = BatchDependent.find(params[:process_claim][:coop_member_id])
     end
 
     begin
@@ -402,7 +402,7 @@ class Claims::ProcessClaimsController < ApplicationController
         @process_claim.claim_benefits.create(process_claim_id: @process_claim.id, benefit_id: pb.benefit_id, amount: pb.coverage_amount)
       end
     end
-    @batch = Batch.where(coop_member: @process_claim.coop_member, agreement_benefit: @process_claim.agreement_benefit)
+    @batch = Batch.where(coop_member: @process_claim.insurable, agreement_benefit: @process_claim.agreement_benefit)
     @batch.each do |b|
       @process_claim.claim_coverages.create(process_claim: @process_claim, coverageable: b)
     end
@@ -439,7 +439,7 @@ class Claims::ProcessClaimsController < ApplicationController
 
   # DELETE /process_claims/1
   def destroy
-    @coop_member = @process_claim.coop_member
+    @coop_member = @process_claim.insurable
 
     @process_claim.destroy
     redirect_to show_insurance_coop_member_path(@coop_member), alert: "Claim cancelled"
@@ -467,7 +467,7 @@ class Claims::ProcessClaimsController < ApplicationController
 
   # Only allow a list of trusted parameters through.
   def process_claim_params
-    params.require(:claims_process_claim).permit(:coop_bank, :claim_retrieval_id, :claim_type_nature_id, :cooperative_id, :coop_member_id, :claim_route, :agreement_id, :agreement_benefit_id, :batch_id, :coop_member_id, :cause_id, :claim_type_id, :date_file, :claim_filed, :processing, :approval, :payment, :coop_member_type, :date_incident, :entry_type, :claimant_name, :claimant_email, :claimant_contact_no, :nature_of_claim, :agreement_benefit_id, :relationship, :old_code, :user_id,
+    params.require(:claims_process_claim).permit(:insurable_type, :insurable_id, :coop_bank, :claim_retrieval_id, :claim_type_nature_id, :cooperative_id, :coop_member_id, :claim_route, :agreement_id, :agreement_benefit_id, :batch_id, :coop_member_id, :cause_id, :claim_type_id, :date_file, :claim_filed, :processing, :approval, :payment, :coop_member_type, :date_incident, :entry_type, :claimant_name, :claimant_email, :claimant_contact_no, :nature_of_claim, :agreement_benefit_id, :relationship, :old_code, :user_id,
       claim_documents_attributes: [:id, :document, :document_type, :_destroy],
       process_tracks_attributes: [:id, :description, :route_id, :trackable_type, :trackable_id ],
       claim_benefits_param: [:id, :benefit_id, :amount, :status],
