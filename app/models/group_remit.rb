@@ -399,7 +399,7 @@ class GroupRemit < ApplicationRecord
       terms = set_terms(anniversary_date)
       self.terms = terms <= 0 ? terms + 12 : terms
       self.effectivity_date = Date.today
-      self.expiry_date = anniversary_date
+      self.expiry_date = anniversary_date < Date.today ? anniversary_date + 1.year : anniversary_date
 
       if anniversary_date.day > Date.today.day
         self.terms += 1

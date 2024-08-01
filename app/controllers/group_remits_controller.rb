@@ -176,7 +176,7 @@ class GroupRemitsController < InheritedResources::Base
   def set_anniversary(anniversary_type, anniv_id)
     if anniversary_type.downcase == "single" || anniversary_type.downcase == "multiple"
       anniv_date = @agreement.anniversaries.find_by(id: anniv_id)
-      anniv_date.anniversary_date
+      anniv_date.anniversary_date 
     elsif (anniversary_type.downcase == "12 months" or anniversary_type.nil?)
       Date.today.prev_month.end_of_month.next_year
     end
