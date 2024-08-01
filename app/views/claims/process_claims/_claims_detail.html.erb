@@ -15,7 +15,11 @@
   <div class="card-body">
     <dl class="row">
       <dt class="col-sm-4">Claim ID:</dt>
-      <dd class="col-sm-8"><%= @process_claim.id %></dd>
+      <dd class="col-sm-8"><%= @process_claim.id %></dd> 
+      <% unless @process_claim.user_id.nil? %>
+        <dt class="col-sm-4">Process by:</dt>
+        <dd class="col-sm-8"><%= @process_claim.user %></dd>
+      <% end %>
       <dt class="col-sm-4">Route:</dt>
       <dd class="col-sm-8"><%= @process_claim.claim_route.humanize.titleize %></dd>
       <% if @process_claim.retrieval? %>
