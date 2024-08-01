@@ -24,7 +24,7 @@ class ApplicationController < ActionController::Base
             when 27 then redirect_to audit_for_audits_path
             # when 11 then redirect_to accounting_dashboard_path
             when 11 then redirect_to accounting_dashboards_path
-            when 17, 13 
+            when 17, 13
               if current_user.senior_officer?
                 redirect_to coso_dashboards_path
               else
@@ -34,7 +34,7 @@ class ApplicationController < ActionController::Base
             when 14 then redirect_to actuarial_dashboards_path
             # when 19 then redirect_to claims_dashboard_claims_process_claims_path
             when 19 then redirect_to claims_dashboards_path
-w           when 28 then redirect_to admin_marketing_dashboards_path
+            when 28 then redirect_to admin_marketing_dashboards_path
             else redirect_to employees_path
           end
         end
