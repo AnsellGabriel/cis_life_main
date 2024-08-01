@@ -133,6 +133,7 @@ Rails.application.routes.draw do
     get :accounting, on: :collection
     get :coso, on: :collection
     get :admin, on: :collection
+    get :admin_marketing, on: :collection
   end
   
   resources :analytics do 

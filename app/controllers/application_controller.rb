@@ -34,6 +34,7 @@ class ApplicationController < ActionController::Base
             when 14 then redirect_to actuarial_dashboards_path
             # when 19 then redirect_to claims_dashboard_claims_process_claims_path
             when 19 then redirect_to claims_dashboards_path
+w           when 28 then redirect_to admin_marketing_dashboards_path
             else redirect_to employees_path
           end
         end
