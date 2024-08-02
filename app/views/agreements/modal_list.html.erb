@@ -1,0 +1,39 @@
+<%= turbo_frame_tag 'modal-xl' do %>
+  <div class="modal-header">
+    <%= content_tag :h5, class: 'modal-title text-primary' do %>
+      <%= bootstrap_icon "file-earmark-text-fill" %> AGREEMENTS
+    <% end %>
+    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+  </div>
+  <div class="modal-body">
+    <%= turbo_frame_tag "agree_pagination" do %>
+      <table class="table">
+        <thead>
+          <th>Cooperative</th>
+          <th>Plan</th>
+          <th>Marketing</th>
+          <th></th>
+        </thead>
+        <tbody>
+          <% @filtered_agreements.each do |agreement| %>
+            <tr>
+              <td><%= agreement&.cooperative&.name.upcase %></td>
+              <td><%= agreement&.plan&.acronym.upcase %></td>
+              <td>
+                <% if agreement.agent.present? %>
+                  <%= agreement&.agent&.to_s.upcase %>
+                <% else %>
+                  <%= content_tag :span, "No Agent." %>
+                <% end %>
+              </td>
+              <td><%= link_to "View", agreement, data: { turbo: false }, class: "btn btn-sm btn-primary" %></td>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
+      <div class="mb-2 ms-2">
+        <%= render PaginationComponent.new(results: @pagy_agreements) %>
+      </div>
+    <% end %>
+  </div>
+<% end %>

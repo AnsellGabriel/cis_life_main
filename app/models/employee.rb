@@ -47,6 +47,10 @@ class Employee < ApplicationRecord
     "#{first_name} #{middle_name[0]}. #{last_name}".titleize
   end
 
+  def emp_email
+    "#{get_fullname} - #{user.email}"
+  end
+
   def delete_uploaded_report
     if self.report.identifier.present?
       # Delete the file using CarrierWave

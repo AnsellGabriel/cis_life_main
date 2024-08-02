@@ -176,10 +176,11 @@ class DashboardsController < ApplicationController
   end
 
   def admin_marketing
-    @agreements = Agreement.all
-
-    @pagy_agreements, @filtered_agreements = pagy(@agreements, items: 10, page_param: :agreement, link_extra: 'data-turbo-frame="agree_pagination"')
-
+    @cooperatives = Cooperative.all
+    @agreements = current_user.userable.team.agreements.distinct(:plan)
+    @lppi_agreements = @agreements.includes(:plan).where(plan: { acronym: "LPPI" })
+    @gyrt_agreements = @agreements.includes(:plan).references(:plans).where("plans.acronym LIKE ?", "%GYRT%")
+    
     render :index
   end
 
