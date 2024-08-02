@@ -29,6 +29,18 @@ class AgreementsController < ApplicationController
   def show_details
   end
 
+  def modal_list
+    current_user_agreements = current_user.userable.team.agreements.distinct(:plan)
+    
+    @agreements = case params[:agreements]
+      when "all" then current_user_agreements
+      when "lppi" then current_user_agreements.includes(:plan).where(plan: { acronym: "LPPI" })
+      when "gyrt" then current_user_agreements.includes(:plan).references(:plans).where("plans.acronym LIKE ?", "%GYRT%")
+    end
+
+    @pagy_agreements, @filtered_agreements = pagy(@agreements, items: 10, page_param: :agreement, link_extra: 'data-turbo-frame="agree_pagination"')
+  end
+
   def update_ors
     @ors = Treasury::CashierEntry.get_ors(@agreement)
     if @ors.update(agreement: @agreement)
