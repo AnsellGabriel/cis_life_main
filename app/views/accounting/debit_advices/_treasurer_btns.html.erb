@@ -1,6 +1,6 @@
 <div class="mb-1">
   <%= render 'back_btn', link: treasury_debit_advices_path %>
-  <% if @request.requestable.remarks.present? %>
+  <% if @request&.requestable&.remarks.present? %>
     <% if @request.requestable.is_a?(Claims::ProcessClaim) %>
       <%= link_to claims_process_claim_remarks_path(@request.requestable), class: "btn btn-outline-primary btn-sm position-relative", data: { turbo_frame: "reg_form_modal" }, title: 'Notes' do %>
         <i class="bi bi-journal-bookmark-fill"></i> Notes
