@@ -146,4 +146,13 @@ class Treasury::CashierEntry < ApplicationRecord
       self.vat = 0
     end
   end
+
+  def set_agent_commission
+    if self.agent.present?
+      if self.entriable_type == "Cooperative"
+        
+      end
+    end
+  end
+
 end

@@ -4,9 +4,8 @@
   <% ledgers_with_transaction_date = a.general_ledgers.with_transaction_date(@date_from, @date_to) %>
   <% year_to_date_ledgers = a.general_ledgers.with_transaction_date(Date.today.beginning_of_year.beginning_of_day, @date_to) %>
   <% ytd_difference = year_to_date_ledgers.total_debit - year_to_date_ledgers.total_credit %>
-
-  <%# next if ledgers_with_transaction_date.empty? %>
   <% difference = ledgers_with_transaction_date.total_debit - ledgers_with_transaction_date.total_credit %>
+  <% next if difference == 0 and ytd_difference == 0%>
 
   <% if switch %>
     <tr>
