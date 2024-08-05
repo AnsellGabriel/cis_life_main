@@ -39,6 +39,14 @@ namespace :deploy do
   end
 end
 
+task :restart_sidekiq do
+  on roles(:app) do
+    execute :sudo, :service, "sidekiq", "restart"
+  end
+end
+
+after :publishing, :restart_sidekiq
+
 append :linked_dirs, "log", "tmp/pids", "tmp/cache", "tmp/sockets", "vendor/bundle", ".bundle", "public/system", "public/uploads"
 # Default branch is :master
 # ask :branch, `git rev-parse --abbrev-ref HEAD`.chomp
