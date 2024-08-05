@@ -39,13 +39,33 @@ namespace :deploy do
   end
 end
 
-task :restart_sidekiq do
-  on roles(:app) do
-    execute :sudo, :service, "sidekiq", "restart"
+namespace :sidekiq do
+  desc "Tell sidekiq to stop accepting new work (via TSTP)"
+  task :quiet do
+    on roles :all do
+      fetch(:sidekiq_systemctl_ids).each do |systemctl_id|
+        execute "sudo systemctl kill -s TSTP #{systemctl_id}"
+      end
+    end
+  end
+
+  desc "Restart sidekiq"
+  task :restart do
+    # NOTE: this assume we have the correct setup allowing passwordless (see ansible repo)
+    on roles :all do
+      fetch(:sidekiq_systemctl_ids).each do |systemctl_id|
+        execute "sudo systemctl restart #{systemctl_id}"
+      end
+    end
   end
 end
 
-after :publishing, :restart_sidekiq
+# this sends TSTP so process is alive but not accepting work anymore
+after 'deploy:starting', 'sidekiq:quiet'
+
+# restart on all types of exit, in order to avoid remaining in TSTP mode
+after 'deploy:reverted', 'sidekiq:restart'
+after 'deploy:published', 'sidekiq:restart'
 
 append :linked_dirs, "log", "tmp/pids", "tmp/cache", "tmp/sockets", "vendor/bundle", ".bundle", "public/system", "public/uploads"
 # Default branch is :master
