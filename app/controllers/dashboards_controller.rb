@@ -163,11 +163,28 @@ class DashboardsController < ApplicationController
   def coso
     @user_levels = current_user.user_levels.where(active: 1) if current_user
 
+    #UNDERWRITING
     @process_coverages = ProcessCoverage.includes(:group_remit).where.not(group_remit: { gross_premium: nil })
     @for_approval_pcs = ProcessCoverage.where(status: :for_vp_approval)
     @approved_pcs = ProcessCoverage.where(status: :approved)
     @denied_pcs = ProcessCoverage.where(status: :denied)
     @pending_pcs = ProcessCoverage.where(status: [:pending, :for_head_approval, :for_vp_approval])
+
+    #CLAIMS
+    @for_evaluation = Claims::ProcessClaim.where(claim_route: get_route_evaluators) if current_user.userable_type == "Employee" unless @claims_user_authority_level.nil?
+    
+    @coop_messages = Claims::ClaimRemark.where(coop: 1)
+    @process_claims = Claims::ProcessClaim.all
+    @claim_reinsurances = Claims::ClaimReinsurance.all
+    @claims_fund = Claims::CfAccount.all
+    @cf_availments = Claims::CfAvailment.all
+    @cf_replenishes = Claims::CfReplenish.all
+
+    @cooperatives = Cooperative.all
+
+    @agreements = Agreement.all
+    @lppi_agreements = @agreements.includes(:plan).where(plan: { acronym: "LPPI" })
+    @gyrt_agreements = @agreements.includes(:plan).references(:plans).where("plans.acronym LIKE ?", "%GYRT%") 
 
     @total_gross_premium = @process_coverages.to_a.sum { |pc| pc.group_remit.gross_premium }
     @total_approved_gross_premium = @approved_pcs.to_a.sum { |pc| pc.group_remit.gross_premium }
@@ -182,6 +199,8 @@ class DashboardsController < ApplicationController
     @agreements = current_user.userable.team.agreements.distinct(:plan)
     @lppi_agreements = @agreements.includes(:plan).where(plan: { acronym: "LPPI" })
     @gyrt_agreements = @agreements.includes(:plan).references(:plans).where("plans.acronym LIKE ?", "%GYRT%")
+
+    @team = current_user.userable.team
     
     render :index
   end

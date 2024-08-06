@@ -51,3 +51,17 @@
     </div>
   </div>
 </div>
+
+<div class="row mt-2">
+  <div class="col-md-4">
+    <div class="card text-dark bg-light mb-3 h-100">
+      <div class="card-body">
+        <h4 class="text-dark card-title"><%= @team.name %></h3>
+        <h2 class="text-dark"><%= num_delimit(@team.employees.count) %></h2>
+      </div>
+      <div class="card-footer"><small>
+        <%= link_to "See members", @team, class: "link-primary" %> 
+      </small></div>
+    </div>
+  </div>
+</div>

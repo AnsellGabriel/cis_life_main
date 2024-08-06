@@ -48,7 +48,7 @@ class Employee < ApplicationRecord
   end
 
   def emp_email
-    "#{get_fullname} - #{user.email}"
+    "#{get_fullname} - #{user&.email}"
   end
 
   def delete_uploaded_report
