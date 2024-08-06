@@ -269,8 +269,8 @@ class ProcessCoverage < ApplicationRecord
       # where(processor: user, status: ["approved", "denied"])
       where(status: ["approved", "denied"]).where(arel_pcs[:who_approved_id].eq(user.id).or(arel_pcs[:who_processed_id].eq(user.id).and(arel_pcs[:who_approved_id].not_eq(nil))))
       # where(team: user.team, status: ["approved", "denied"])
-    # when "eval"
-    #   # where(processor: user, status: ["for_head_approval", "for_vp_approval"])
+    when "eval"
+      where(processor: user, status: ["for_head_approval", "for_vp_approval"])
     #   where(team: user.team, status: ["for_head_approval", "for_vp_approval"])
     when "selected"
       where(processor: user, status: ["for_process", "pending", "for_head_approval", "for_vp_approval"])

@@ -77,7 +77,9 @@ class ProcessCoveragesController < ApplicationController
       # @pending_process_coverages = ProcessCoverage.where(status: :pending)
       @reprocess_coverages = @process_coverages_team.where(status: :reprocess)
       @reassess_coverages = @process_coverages_team.where(status: :reassess)
+      @self_for_approvals_pcs = @self_process_coverages.where(status: [:for_head_approval, :for_vp_approval])
       @evaluated_process_coverages = @process_coverages_team.where(status: [:for_head_approval, :for_vp_approval])
+
       @selected_process_coverages = @process_coverages_team.where(processor: current_user.userable, status: [:pending, :for_process, :for_head_approval, :for_vp_approval])
 
       @coverages_total_processed = ProcessCoverage.where(status: [:approved, :denied, :reprocess])

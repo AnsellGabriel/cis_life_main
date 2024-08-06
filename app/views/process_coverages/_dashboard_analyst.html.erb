@@ -64,6 +64,23 @@
         </div>
       </div>
     </div>
+    
+    <% if @self_for_approvals_pcs.count > 0 %>
+      <div class="row mb-3">
+        <div class="card-group h-100">
+          <div class="card text-light bg-secondary h-100">
+            <div class="card-body">
+              <h5 class="card-title">For Approval</h5>
+              <small class="text-light">
+                While you were away, the following claims have been assigned to you for evaluation:
+              </small>
+              <br>
+              <h2 class="text-center mt-3"><%= link_to @self_for_approvals_pcs.count, cov_list_process_coverages_path(cov_type: "Evaluated", current_date: @current_date, date_type: "yearly", title: "FOR APPROVAL"), class: "text-light", data: {turbo_frame: "remote_modal"} %></h2>
+            </div>
+          </div>
+        </div>
+      </div>
+    <% end %>
 
     <div class="row">
       <div class="col">
