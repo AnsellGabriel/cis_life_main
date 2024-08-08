@@ -3,10 +3,17 @@ import { Controller } from "@hotwired/stimulus"
 
 // Connects to data-controller="hider"
 export default class extends Controller {
-  static targets = ["input", "hideme", "plan", "amounts", "vat", "vatContainer", "discount", "discountContainer"]
+  static targets = ["input", "hideme", "plan", "amounts", "vat", "vatContainer", "discount", "discountContainer", "welcomeDiv"]
   connect() {
-    this.toggle()
-    this.toggleVat()
+    if (this.hasWelcomeDivTarget) {
+      setTimeout(() => {
+        this.hideDiv()
+      }, 5000)
+    } else {
+      this.toggle()
+      this.toggleVat()
+    }
+
   }
 
   toggle() {
@@ -31,5 +38,10 @@ export default class extends Controller {
     } else {
       this.vatContainerTarget.classList.add("hidden");
     }
+  }
+
+  hideDiv() {
+    console.log("connected to hideDiv")
+    this.welcomeDivTarget.style.display = "none";
   }
 }

@@ -10,6 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
+
 ActiveRecord::Schema[7.0].define(version: 2024_08_05_011949) do
   create_table "accounting_journal_entries", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.string "journable_type", null: false
@@ -1345,12 +1346,6 @@ ActiveRecord::Schema[7.0].define(version: 2024_08_05_011949) do
     t.date "effectivity"
     t.date "expiry"
     t.integer "status"
-    t.integer "approved_count"
-    t.decimal "approved_total_coverage", precision: 20, scale: 4
-    t.decimal "approved_total_prem", precision: 20, scale: 4
-    t.integer "denied_count"
-    t.decimal "denied_total_coverage", precision: 20, scale: 4
-    t.decimal "denied_total_prem", precision: 20, scale: 4
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.integer "und_route"

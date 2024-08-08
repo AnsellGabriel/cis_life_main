@@ -362,7 +362,7 @@ class ProcessCoveragesController < ApplicationController
             Batch.where(id: ids).update_all(insurance_status: :approved)
           end
 
-          @pro_cov.increment!(:approved_count, ids.length)
+          # @pro_cov.increment!(:approved_count, ids.length)
           # redirect_to process_coverage_path(@pro_cov), notice: "Selected Coverages Approved!"
           format.html { redirect_back fallback_location: @pro_cov, notice: "Selected Coverages Approved!" }
 
@@ -374,7 +374,7 @@ class ProcessCoveragesController < ApplicationController
             Batch.where(id: ids).update_all(insurance_status: :denied)
           end
 
-          @pro_cov.increment!(:denied_count, ids.length)
+          # @pro_cov.increment!(:denied_count, ids.length)
           # redirect_to process_coverage_path(@pro_cov), alert: "Selected Coverages Denied!"
           format.html { redirect_back fallback_location: @pro_cov, notice: "Selected Coverages Denied!" }
         end
@@ -711,7 +711,7 @@ class ProcessCoveragesController < ApplicationController
         if @batch.update_attribute(:insurance_status, 0)
           # @process_coverage.increment!(:approved_count)
           # @process_coverage.update(approved_count: @process_coverage.count_batches_approved(params[:batch_type]), denied_count: @process_coverage.count_batches_denied(params[:batch_type]))
-          @process_coverage.update(approved_count: @process_coverage.count_batches("approved"), denied_count: @process_coverage.count_batches("denied"))
+          # @process_coverage.update(approved_count: @process_coverage.count_batches("approved"), denied_count: @process_coverage.count_batches("denied"))
           format.html { redirect_to process_coverage_path(@process_coverage), notice: "Batch Approved!" }
         end
       end
@@ -766,7 +766,7 @@ class ProcessCoveragesController < ApplicationController
       respond_to do |format|
         if @batch.update_attribute(:insurance_status, 1)
           # @process_coverage.update(approved_count: @process_coverage.count_batches_approved(params[:batch_type]), denied_count: @process_coverage.count_batches_denied(params[:batch_type]))
-          @process_coverage.update(approved_count: @process_coverage.count_batches("approved"), denied_count: @process_coverage.("denied"))
+          # @process_coverage.update(approved_count: @process_coverage.count_batches("approved"), denied_count: @process_coverage.("denied"))
           format.html { redirect_to process_coverage_path(@process_coverage), alert: "Batch Denied!" }
         end
       end
@@ -863,8 +863,7 @@ class ProcessCoveragesController < ApplicationController
 
   # Only allow a list of trusted parameters through.
   def process_coverage_params
-    params.require(:process_coverage).permit(:group_remit_id, :agent_id, :effectivity, :expiry, :status, :approved_count, :approved_total_coverage, :approved_total_prem, :denied_count,
-  :denied_total_coverage, :denied_total_prem)
+    params.require(:process_coverage).permit(:group_remit_id, :agent_id, :effectivity, :expiry, :status)
   end
 
   # def check_emp_department
