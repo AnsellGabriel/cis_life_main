@@ -1,4 +1,5 @@
 <%= turbo_stream.update "remote_modal_body" do %>
-  <%= render "form", url: claims_claim_distributions_path(v: @process_claim), meth: 'post' %>
+  <%#= render "form", url: claims_claim_distributions_path(v: @process_claim), meth: 'post' %>
   <%# <%= render "form", url: benefit_claims_path(v: @process_claim), meth: 'post' %>
+  <%= render "form", claim_distribution: @claim_distribution %>
 <% end %>

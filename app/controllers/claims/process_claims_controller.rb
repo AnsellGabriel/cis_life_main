@@ -124,7 +124,7 @@ class Claims::ProcessClaimsController < ApplicationController
     # raise "errors"
     @process_claim = Claims::ProcessClaim.new
     @coop_member = CoopMember.find(params[:cm])
-    @process_claim.coop_member = @coop_member
+    @process_claim.insurable = @coop_member
     @process_claim.cooperative = @coop_member.cooperative
     @claim_cause = @process_claim.build_claim_cause
     @agreement = Agreement.where(cooperative: @process_claim.cooperative)
@@ -177,8 +177,9 @@ class Claims::ProcessClaimsController < ApplicationController
     # @process_claim.micro = 1 if @process_claim.agreement.plan.micro
     @process_claim.age = @process_claim.get_age.to_i
     # raise "errors"
+
     respond_to do |format|
-      if @process_claim.save
+      if @process_claim.save!
         @process_claim.process_tracks.create(route_id: 17, user: current_user)
         format.html { redirect_to claim_process_claims_process_claim_path(@process_claim), notice: "Claims was successfully added." }
         format.json { render :show, status: :created, location: @process_claim }
@@ -467,7 +468,7 @@ class Claims::ProcessClaimsController < ApplicationController
 
   # Only allow a list of trusted parameters through.
   def process_claim_params
-    params.require(:claims_process_claim).permit(:coop_bank, :claim_retrieval_id, :claim_type_nature_id, :cooperative_id, :coop_member_id, :claim_route, :agreement_id, :agreement_benefit_id, :batch_id, :coop_member_id, :cause_id, :claim_type_id, :date_file, :claim_filed, :processing, :approval, :payment, :coop_member_type, :date_incident, :entry_type, :claimant_name, :claimant_email, :claimant_contact_no, :nature_of_claim, :agreement_benefit_id, :relationship, :old_code, :user_id,
+    params.require(:claims_process_claim).permit(:coop_bank, :claim_retrieval_id, :claim_type_nature_id, :cooperative_id, :coop_member_id, :claim_route, :agreement_id, :agreement_benefit_id, :batch_id, :coop_member_id, :cause_id, :claim_type_id, :date_file, :claim_filed, :processing, :approval, :payment, :coop_member_type, :date_incident, :entry_type, :claimant_name, :claimant_email, :claimant_contact_no, :nature_of_claim, :agreement_benefit_id, :relationship, :old_code, :user_id, :insurable,
       claim_documents_attributes: [:id, :document, :document_type, :_destroy],
       process_tracks_attributes: [:id, :description, :route_id, :trackable_type, :trackable_id ],
       claim_benefits_param: [:id, :benefit_id, :amount, :status],

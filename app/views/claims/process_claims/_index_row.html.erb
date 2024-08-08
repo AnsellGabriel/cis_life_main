@@ -19,7 +19,7 @@
         <td><strong><%= process_claim.agreement.plan %></strong> <%= content_tag :span, 'Micro', class: 'badge rounded-pill bg-warning text-dark' if process_claim.agreement.plan.micro %> <br>
           <%= content_tag :small, process_claim.claim_type %> <br>
           <%= to_curr(process_claim.get_benefit_claim_total) %> <br>
-          <% unless process_claim.user.nil? %>
+          <% unless process_claim.user_id.nil? %>
             Process: <%= process_claim.user %>
           <% end %>
           </td>

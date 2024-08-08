@@ -15,8 +15,8 @@ class Claims::ClaimCoverage < ApplicationRecord
     
     if days < 0
       months -= 1
-      # days += (date_end.prev_month.end_of_month.day - date_start.day + date_end.day)
-      days += (date_start.next_month - date_start).day
+      days = (date_end.prev_month.end_of_month.day - date_start.day) + date_end.day
+      # days += (date_start.next_month - date_start).day
     end
     if months < 0
       years -= 1

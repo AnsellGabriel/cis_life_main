@@ -1,3 +1,4 @@
-<%= render "remote_modal", title: "Edit claims distribution" do %>
-  <%= render "form", url: claims_claim_distribution_path(@claim_distribution), meth: 'patch' %>
+<%= render "layouts/modal/remote_modal", title:"Edit" do %>
+  <%#= render "form", url: claims_claim_distribution_path(@claim_distribution), meth: 'patch' %>
+  <%= render "form", claim_distribution: @claim_distribution %>
 <% end %>

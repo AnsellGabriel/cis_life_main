@@ -5,18 +5,20 @@
     <div class="row">
       <%= f.input :orno, label: "ORNO", wrapper_html: { class: "col-md-6" } %>
       <%#= f.input :or_date, label: "OR date", wrapper_html: { class: "col-md-6" } %>
-      <%= f.input :or_date, label: "OR date", as: :string, wrapper_html: { class: "col-md-6" }, 
+      <%#= f.input :or_date, label: "OR date", as: :string, wrapper_html: { class: "col-md-6" }, 
               input_html: { data: { controller: "flatpickr",
                   flatpickr_max_date: Time.zone.now,
                   flatpickr_next_arrow: "Next",
                   flatpickr_prev_arrow: "Prev" } } %>
+      <%= f.input :or_date, as: :string, input_html: { type: 'date' }, wrapper_html: { class: 'col-md-6' } %>
       <%= f.input :bsno, label: "BSNO", wrapper_html: { class: "col-md-6" } %>
       <%#= f.input :or_date, label: "OR date", wrapper_html: { class: "col-md-6" } %>
-      <%= f.input :bs_date, label: "BS date", as: :string, wrapper_html: { class: "col-md-6" }, 
+      <%#= f.input :bs_date, label: "BS date", as: :string, wrapper_html: { class: "col-md-6" }, 
               input_html: { data: { controller: "flatpickr",
                   flatpickr_max_date: Time.zone.now,
                   flatpickr_next_arrow: "Next",
                   flatpickr_prev_arrow: "Prev" } } %>
+      <%= f.input :bs_date, as: :string, input_html: { type: 'date' }, wrapper_html: { class: 'col-md-6' } %>
     </div>
     <%# <div class="row"> %>
     <%#= f.input :bsno, label: "BSNO", wrapper_html: { class: "col-md-6" } %>
@@ -25,11 +27,13 @@
     <div class="row">
       <%#= f.input :effectivity, wrapper_html: { class: "col-md-6" } %>
       <%#= f.input :expiry, wrapper_html: { class: "col-md-6" } %>
-      <%= f.input :effectivity, label: "Effectivity", as: :string, wrapper_html: { class: "col-md-6" }, 
+      <%= f.input :effectivity, as: :string, input_html: { type: 'date' }, wrapper_html: { class: 'col-md-6' } %>
+      <%= f.input :expiry, as: :string, input_html: { type: 'date' }, wrapper_html: { class: 'col-md-6' } %>
+      <%#= f.input :effectivity, label: "Effectivity", as: :string, wrapper_html: { class: "col-md-6" }, 
               input_html: { data: { controller: "flatpickr",
                   flatpickr_next_arrow: "Next",
                   flatpickr_prev_arrow: "Prev" } } %>
-      <%= f.input :expiry, label: "Expiry", as: :string, wrapper_html: { class: "col-md-6" }, 
+      <%#= f.input :expiry, label: "Expiry", as: :string, wrapper_html: { class: "col-md-6" }, 
               input_html: { data: { controller: "flatpickr",
                   flatpickr_next_arrow: "Next",
                   flatpickr_prev_arrow: "Prev" } } %>

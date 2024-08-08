@@ -1,3 +1,3 @@
-  <%= render "remote_modal", title: "New confinement" do %>
+<%= render "layouts/modal/remote_modal", title: "New Confinement" do %>
   <%= render "form", url: claims_claim_confinements_path(v: @process_claim), meth: 'post' %>
 <% end %>

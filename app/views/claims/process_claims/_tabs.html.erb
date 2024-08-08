@@ -52,6 +52,7 @@
         </div>
         <div class="col-md-6">
           <%= render 'request_payment' if @process_claim.payment_preparation? && @process_claim.claim_distributions.present? && !current_user.is_coop_user? %>
+          <%= render 'coop_banks/show_coop_banks', cooperative: @process_claim.cooperative %>
         </div>
       </div>
     </div>
@@ -79,3 +80,4 @@
     <%# </div> %>
   </div>
 </div>
+<%# console %>

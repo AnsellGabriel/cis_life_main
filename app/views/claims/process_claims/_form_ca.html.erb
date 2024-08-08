@@ -20,15 +20,15 @@
             <dt class="col-sm-4">Cooperative</dt>
             <dd class="col-sm-8"><%= @process_claim.cooperative %></dd>
             <dt class="col-sm-4">Name:</dt>
-            <dd class="col-sm-8 text-primary"><%= @process_claim.coop_member.get_fullname %></dd>
+            <dd class="col-sm-8 text-primary"><%= @process_claim.insurable.get_fullname %></dd>
             <dt class="col-sm-4">Birthdate</dt>
-            <dd class="col-sm-8"> <%= to_shortdate(@process_claim.coop_member.member.birth_date) %></dd>
+            <dd class="col-sm-8"> <%= to_shortdate(@process_claim.insurable.member.birth_date) %></dd>
             <dt class="col-sm-4">Branch:</dt>
-            <dd class="col-sm-8"><%= @process_claim.coop_member.coop_branch %></dd>
+            <dd class="col-sm-8"><%= @process_claim.insurable.coop_branch %></dd>
             <dt class="col-sm-4">Mobile number:</dt>
-            <dd class="col-sm-8"><%= @process_claim.coop_member.member.mobile_number %></dd>
+            <dd class="col-sm-8"><%= @process_claim.insurable.member.mobile_number %></dd>
             <dt class="col-sm-4">Email:</dt>
-            <dd class="col-sm-8"><%= @process_claim.coop_member.member.email %> </dd>
+            <dd class="col-sm-8"><%= @process_claim.insurable.member.email %> </dd>
           </dl>
         </div>
       </div>
@@ -46,19 +46,22 @@
           <div class="row">
             <%= f.hidden_field :agreement_id %>
             <%= f.hidden_field :cooperative_id %>
-            <%= f.hidden_field :coop_member_id %>
+            <%= f.hidden_field :insurable_type, value: @process_claim.insurable.class.name %>
+            <%= f.hidden_field :insurable_id, value: @process_claim.insurable_id %>
             <%#= f.input :date_file %>
             <%= f.association :claim_retrieval, prompt: "Select claim type" if @process_claim.retrieval? %>
-            <%= f.input :date_file, label: "Date Filed", as: :string, wrapper_html: { class: "col-md-6" }, 
+            <%#= f.input :date_file, label: "Date Filed", as: :string, wrapper_html: { class: "col-md-6" }, 
               input_html: { data: { controller: "flatpickr",
                   flatpickr_max_date: Time.zone.now,
                   flatpickr_next_arrow: "Next",
                   flatpickr_prev_arrow: "Prev" } } %>
-            <%= f.input :date_incident, label: "Date incident", as: :string, wrapper_html: { class: "col-md-6" }, 
+            <%#= f.input :date_incident, label: "Date incident", as: :string, wrapper_html: { class: "col-md-6" }, 
                   input_html: { data: { controller: "flatpickr",
                   flatpickr_max_date: Time.zone.now,
                   flatpickr_next_arrow: "Next",
                   flatpickr_prev_arrow: "Prev" } } %>
+            <%= f.input :date_file, as: :string, input_html: { type: 'date' }, wrapper_html: { class: 'col-md-6' } %>
+            <%= f.input :date_incident, as: :string, input_html: { type: 'date' }, wrapper_html: { class: 'col-md-6' } %>
             <%= f.association :claim_type, prompt: "Select claim type", collection: Claims::ClaimType.order(:name), wrapper_html: { class: 'col-md-6' }, input_html: { id: "type_id", data: { action: "change->claims#toggleTargets", claims_target: "typeSelect" } } %>
             <%= f.association :cause, prompt: "Select a cause", collection: Claims::Cause.order(:name), wrapper_html: { class: 'col-md-6' } %>
             <%= f.association :claim_type_nature, label: "Nature of claim", prompt: "Select a nature of claim", collection: Claims::ClaimTypeNature.order(:name) %>

@@ -1,3 +1,3 @@
-<%= render "remote_modal", title: "Edit benefit" do %>
+<%= render "layouts/modal/remote_modal", title: "Edit" do %>
   <%= render "form", url: claims_claim_confinement_path(@claim_confinement), meth: 'patch' %>
 <% end %>

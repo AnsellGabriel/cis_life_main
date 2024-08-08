@@ -4,7 +4,7 @@ module ProcessClaimHelper
         content_tag :tr do
 
           concat content_tag(:td, label)
-          concat content_tag(:td, class: 'text-center') { link_to @process_claims.where(claim_route: route_id).count, index_show_claims_process_claims_path(p: route_id) }
+          concat content_tag(:td, class: 'text-center') { link_to number_with_delimiter(@process_claims.where(claim_route: route_id).count), index_show_claims_process_claims_path(p: route_id) }
         end
     end
 

@@ -3,13 +3,20 @@ class Claims::ClaimDistributionsController < ApplicationController
 
     def new 
         @process_claim = Claims::ProcessClaim.find(params[:v])
-        @claim_distribution = @process_claim.claim_distributions.build
-        @claim_distribution.name = FFaker::NamePH.name if Rails.env.development?
+        @claim_distribution = Claims::ClaimDistribution.new() 
+        @claim_distribution.process_claim = @process_claim
+        # @claim_distribution.name = FFaker::NamePH.name if Rails.env.development?
+        unless params[:cb].nil?
+          @coop_bank = CoopBank.find(params[:cb])
+          @claim_distribution.name = @coop_bank.name
+          @claim_distribution.coop_bank = @coop_bank
+          @claim_distribution.relationship = "Cooperative"
+        end
     end
     
     def create 
-        @process_claim = Claims::ProcessClaim.find(params[:v])
-        @claim_distribution = @process_claim.claim_distributions.build(claim_distribution_params)
+      @claim_distribution = Claims::ClaimDistribution.new(claim_distribution_params)
+      @process_claim = @claim_distribution.process_claim
         # @claim_benefit = ClaimBenefit.new(claim_benefit_params)
         respond_to do |format|
             if @claim_distribution.save
@@ -60,6 +67,6 @@ class Claims::ClaimDistributionsController < ApplicationController
   def claim_distribution_params
     # params.require(:claim_coverage).permit(:process_claim_id, :batch, :amount_cover, :coverage_type,
           # batch_attributes: [:id, :effectivity, :expiry])
-    params.require(:claims_claim_distribution).permit(:name, :relationship, :amount, :process_claim_id)
+    params.require(:claims_claim_distribution).permit(:name, :relationship, :amount, :process_claim_id, :coop_bank_id)
   end
 end

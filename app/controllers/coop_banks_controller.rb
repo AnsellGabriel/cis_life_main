@@ -12,8 +12,9 @@ class CoopBanksController < ApplicationController
 
   # GET /coop_banks/new
   def new
-    @coop = Cooperative.find(params[:cooperative_id])
-    @bank = @coop.coop_banks.new
+    @coop = Cooperative.find(params[:p])
+    @coop_bank = CoopBank.new()
+    @coop_bank.cooperative = @coop
   end
 
   # GET /coop_banks/1/edit
@@ -23,11 +24,10 @@ class CoopBanksController < ApplicationController
 
   # POST /coop_banks
   def create
-    @coop = Cooperative.find(params[:cooperative_id])
-    @bank = @coop.coop_banks.build(coop_bank_params)
-
-    if @bank.save
-        redirect_to approve_claim_debit_claims_process_claim_path(params[:pc_id]), notice: "Bank successfully added"
+    @coop_bank = CoopBank.new(coop_bank_params)
+    # raise "errors"
+    if @coop_bank.save!
+      return redirect_to member_url(@member), notice: "Bank account was successfully created."
     else
       render :new, status: :unprocessable_entity
     end
@@ -56,6 +56,6 @@ class CoopBanksController < ApplicationController
 
     # Only allow a list of trusted parameters through.
     def coop_bank_params
-      params.require(:coop_bank).permit(:name, :account_number, :branch)
+      params.require(:coop_bank).permit(:name, :account_number, :branch, :bank_id, :cooperative_id)
     end
 end

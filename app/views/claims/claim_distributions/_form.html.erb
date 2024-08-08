@@ -1,10 +1,12 @@
-<%= simple_form_for(@claim_distribution, url: url, method: meth) do |f| %>
+<%= simple_form_for(@claim_distribution) do |f| %>
   <%= f.error_notification %>
   <%= f.error_notification message: f.object.errors[:base].to_sentence if f.object.errors[:base].present? %>
   <div class="form-inputs">
     <%= f.input :name %>
     <%= f.input :relationship %>
     <%= f.input :amount %>
+    <%= f.hidden_field :process_claim_id %>
+    <%= f.hidden_field :coop_bank_id %>
     <%#= f.input :status,collection: ClaimBenefit::Status, prompt: "Select a status" %>
   </div>
   <br>

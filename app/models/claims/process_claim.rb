@@ -123,7 +123,7 @@ class Claims::ProcessClaim < ApplicationRecord
   def get_age
     unless self.date_incident.nil?
       today = self.date_incident
-      birthdate = self.coop_member.birthdate
+      birthdate = self.insurable.birthdate
       age = today.year - birthdate.year
 
       # Adjust age if the user's birthday hasn't occurred yet this year

@@ -1,13 +1,14 @@
 
-<%= simple_form_for(@bank, url: cooperative_coop_banks_path(coop, pc_id: params[:pc_id])) do |f| %>
+<%= simple_form_for(@coop_bank) do |f| %>
   <div class="form-inputs mb-3">
-    <%= f.input :name, label: 'Bank' %>
-    <%= f.input :branch, label: 'Branch' %>
+    <%= f.input :name, label: 'Account Name' %>
     <%= f.input :account_number, input_html: { type: 'text', pattern: '\d*', title: 'Only numbers are allowed' } %>
+    <%= f.association :bank %>
+    <%= f.input :branch, label: 'Branch' %>
+    <%= f.hidden_field :cooperative_id %>
   </div>
 
   <div class="form-actions text-center">
     <%= f.button :submit, 'Add Bank', class: 'btn-success' %>
-    <%= link_to 'Back', approve_claim_debit_claims_process_claim_path(params[:pc_id]), class: 'btn btn-secondary' %>
   </div>
 <% end %>

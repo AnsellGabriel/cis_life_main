@@ -1,0 +1,38 @@
+<%= content_tag :h1, "List of Banks" %>
+
+
+<div class="text-end mb-3">
+  <%= link_to new_bank_path, class: 'btn btn-primary', data: { turbo_frame: "remote_modal" } do %>
+    New Bank
+  <% end %>
+</div>
+
+
+  <table class="table table-striped table-bordered table-hover">
+    <thead>
+      <tr>
+      <th>#</th>
+            <th>Name</th>
+            <th>Description</th>
+            <th></th>
+        </tr>
+    </thead>
+
+    <tbody>
+      <% @banks.each do |bank| %>
+        <tr>
+
+        <th scope="row"><%= bank.id %></th>
+        <td><%= bank.name %></td>
+        <td><%= bank.description %></td>
+    
+          <td>
+            <%= link_to 'View', bank, class: 'btn btn-secondary btn-sm' %>
+            <%= link_to 'Edit', edit_bank_path(bank), class: 'btn btn-secondary btn-sm' %>
+            <%= link_to "Delete", bank, class: "btn btn-danger btn-sm", method: :delete, data: { "turbo-method": :delete, turbo_confirm: "Are you sure?" } %>
+          </td>
+
+        </tr>
+      <% end %>
+    </tbody>
+  </table>

@@ -22,7 +22,7 @@
         <div class="card bg-info">
         <div class="card-body">
           <p class="text-dark card-title">OVERALL</p>
-          <h2 class="text-dark"><%= @process_claims.count %></h2>
+          <h2 class="text-dark"><%= number_with_delimiter(@process_claims.count) %></h2>
           <small class="text-dark"><%= to_currency(@process_claims.to_a.sum(&:get_benefit_claim_total)) %></small>
         </div>
         <div class="card-footer"><small> <%= link_to 'See Details <i class="bi bi-box-arrow-right"></i>'.html_safe, claims_process_claims_path, class: "text-dark" %></small></div>

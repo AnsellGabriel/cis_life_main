@@ -3,7 +3,7 @@ class Cooperative < ApplicationRecord
 
   has_many :coop_users
   has_many :coop_branches, dependent: :destroy
-  has_many :coop_banks
+  has_many :coop_banks, dependent: :destroy
   has_many :treasury_accounts, through: :coop_banks
 
   has_many :coop_members, dependent: :destroy

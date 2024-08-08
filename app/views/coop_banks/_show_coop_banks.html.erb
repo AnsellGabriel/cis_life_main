@@ -1,0 +1,21 @@
+<%= link_to 'New Bank', new_bank_path, class: 'btn btn-outline-secondary btn-sm', data: { turbo_frame: "remote_modal" } %>
+<table class="table">
+    <thead>
+        <tr>
+            <th scope="col">Account</th>
+            <th scope="col"><%= link_to 'New Account', new_coop_bank_path(p: @cooperative), class: 'btn btn-outline-secondary btn-sm', data: { turbo_frame: "remote_modal" } %>
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+        <% @cooperative.coop_banks.each do |cb| %>
+            <tr>
+                <td><strong><%= cb.name %></strong><br><small><%= cb.account_number %></small> |
+                <%= cb.bank %> - <small><%= cb.branch %></small></td>
+                <td> 
+                    <%= link_to 'Add', new_claims_claim_distribution_path(v: @process_claim, cb: cb), class: 'btn btn-outline-primary btn-sm', data: { turbo_frame: "remote_modal" } %>
+                </td>
+            </tr>
+        <% end %>
+    </tbody>
+</table>

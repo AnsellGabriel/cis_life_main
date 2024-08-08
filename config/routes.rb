@@ -2,6 +2,7 @@
 require "sidekiq/web"
 
 Rails.application.routes.draw do
+  resources :banks
   resources :branches
   resources :employee_teams
   resources :teams do
@@ -201,8 +202,8 @@ Rails.application.routes.draw do
     get :select_agreement, on: :member
     get :details, on: :member
     get :get_plan, on: :member
-    resources :coop_banks
   end
+  resources :coop_banks
   resources :coop_branches
 
   resources :members do

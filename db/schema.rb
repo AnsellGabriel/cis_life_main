@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2024_07_22_064709) do
+ActiveRecord::Schema[7.0].define(version: 2024_08_06_064314) do
   create_table "accounting_journal_entries", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.string "journable_type", null: false
     t.bigint "journable_id", null: false
@@ -297,6 +297,13 @@ ActiveRecord::Schema[7.0].define(version: 2024_07_22_064709) do
     t.integer "entry_type"
   end
 
+  create_table "banks", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+    t.string "name"
+    t.string "description"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
   create_table "batch_beneficiaries", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.bigint "batch_id", null: false
     t.bigint "member_dependent_id", null: false
@@ -569,6 +576,8 @@ ActiveRecord::Schema[7.0].define(version: 2024_07_22_064709) do
     t.decimal "amount", precision: 10, scale: 2
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.bigint "coop_bank_id"
+    t.index ["coop_bank_id"], name: "index_claim_distributions_on_coop_bank_id"
     t.index ["process_claim_id"], name: "index_claim_distributions_on_process_claim_id"
   end
 
@@ -688,6 +697,8 @@ ActiveRecord::Schema[7.0].define(version: 2024_07_22_064709) do
     t.string "name"
     t.string "branch"
     t.string "account_number"
+    t.bigint "bank_id"
+    t.index ["bank_id"], name: "index_coop_banks_on_bank_id"
     t.index ["cooperative_id"], name: "index_coop_banks_on_cooperative_id"
   end
 
@@ -904,9 +915,8 @@ ActiveRecord::Schema[7.0].define(version: 2024_07_22_064709) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.bigint "department_id", null: false
+    t.integer "branch"
     t.string "report"
-    t.bigint "branch_id"
-    t.index ["branch_id"], name: "index_employees_on_branch_id"
     t.index ["department_id"], name: "index_employees_on_department_id"
   end
 

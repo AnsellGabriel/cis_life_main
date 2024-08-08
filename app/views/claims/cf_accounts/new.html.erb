@@ -4,7 +4,6 @@
   <div class="card-body"> %>
   <%# </div>
 </div> %>
-
-<%= render "claims/claim_confinements/remote_modal", title: "New reinsurance" do %>
+<%= render "layouts/modal/remote_modal", title: "New Account" do %>
     <%= render "form", cf_account: @cf_account %>
 <% end %>

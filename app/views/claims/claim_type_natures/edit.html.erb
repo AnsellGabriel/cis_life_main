@@ -1,3 +1,3 @@
-<%= render "remote_modal", title: "Edit Nature of Claim" do %>
+<%= render "layouts/modal/remote_modal", title: "Edit" do %>
   <%= render "form", url: claims_claim_type_nature_path(@claim_type_nature), meth: 'patch' %>
 <% end %>
