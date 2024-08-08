@@ -1,5 +1,5 @@
 <div class="container mt-5">
-  <div class="welcome-message text-center">
+  <div class="welcome-message text-center" data-controller= "hider" data-hider-target="welcomeDiv">
     <h1 class="display-4">Welcome back, <%= current_user.userable.get_fullname %>!</h1>
     <p class="lead">We hope you’re having a great day. Here's what’s happening in your account today:</p>
   </div>
