@@ -1,6 +1,7 @@
 class Treasury::CashierEntry < ApplicationRecord
   attr_accessor :dummy_payee, :dummy_entry_type, :product_check, :vat_check, :discount_check
-  before_save :add_deposit, :check_fields, :unique_or_no #, :format_or_no
+  before_save :add_deposit, :check_fields #, :format_or_no
+  before_validation :unique_or_no
 
   validates_presence_of :or_no, :or_date, :treasury_account_id, :amount, :employee_id, :branch_id, :global_entriable, :particulars
 
@@ -114,7 +115,7 @@ class Treasury::CashierEntry < ApplicationRecord
 
   def unique_or_no
     if self.new_record?
-      if Treasury::CashierEntry.where(vatable: self.vatable, or_no: self.or_no).present?
+      if Treasury::CashierEntry.where(status: :posted, vatable: self.vatable, or_no: self.or_no).present?
         errors.add(:or_no, "has already been taken")
       end
     end
@@ -146,4 +147,13 @@ class Treasury::CashierEntry < ApplicationRecord
       self.vat = 0
     end
   end
+
+  # def set_agent_commission
+  #   if self.agent.present?
+  #     if self.entriable_type == "Cooperative"
+
+  #     end
+  #   end
+  # end
+
 end
